@@ -8,7 +8,7 @@
   },
   "author": "Nordic Semiconductor ASA",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "babel-core": "6.22.1",
     "babel-loader": "6.2.10",
     "babel-plugin-add-module-exports": "0.2.1",
@@ -47,6 +47,5 @@
     "semver": "5.3.0",
     "style-loader": "0.13.1",
     "webpack": "2.2.1"
-  },
-  "dependencies": {}
+  }
 }
