@@ -8,6 +8,9 @@
   },
   "author": "Nordic Semiconductor ASA",
   "license": "ISC",
+  "bin": {
+    "nrfconnect-scripts": "./bin/nrfconnect-scripts.js"
+  },
   "dependencies": {
     "babel-core": "6.24.1",
     "babel-loader": "7.0.0",
