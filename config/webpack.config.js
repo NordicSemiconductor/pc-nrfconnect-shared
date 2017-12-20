@@ -63,7 +63,7 @@ module.exports = {
             test: /\.json$/,
             loader: require.resolve('json-loader'),
         }, {
-            test: /\.less$/,
+            test: /\.less|\.css$/,
             loaders: [
                 require.resolve('style-loader'),
                 require.resolve('css-loader'),
