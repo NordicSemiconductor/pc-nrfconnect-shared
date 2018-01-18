@@ -16,6 +16,7 @@ function createExternals() {
         'pc-ble-driver-js',
         'pc-nrfjprog-js',
         'serialport',
+        'usb',
         'electron',
         'nrfconnect/core',
     ];
