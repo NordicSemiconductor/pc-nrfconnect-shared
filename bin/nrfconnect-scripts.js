@@ -39,6 +39,7 @@
 
 'use strict';
 
+const path = require('path');
 const spawnSync = require('child_process').spawnSync;
 
 const args = process.argv.slice(2);
@@ -53,5 +54,9 @@ const SCRIPTS = {
     'test': [require.resolve('../scripts/test.js')].concat(extraArgs),
 };
 
-const result = spawnSync('node', SCRIPTS[script], { stdio: 'inherit' });
+const env = Object.assign({}, process.env, {
+    NODE_PATH: path.join(__dirname, '..', 'node_modules'),
+});
+
+const result = spawnSync('node', SCRIPTS[script], { stdio: 'inherit', env });
 process.exit(result.status);
