@@ -51,6 +51,7 @@ try {
 }
 
 const argv = process.argv.slice(2);
+argv.unshift('--ext', 'js,jsx');
 argv.unshift('--config', configFile);
 
 const options = {
