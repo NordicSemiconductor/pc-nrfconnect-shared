@@ -1,6 +1,6 @@
 {
   "name": "pc-nrfconnect-devdep",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Common development dependencies for pc-nrfconnect-* packages.",
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
     "eslint": "3.19.0",
     "eslint-config-airbnb": "15.0.0",
     "eslint-loader": "1.7.1",
-    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-import": "2.9.0",
     "eslint-plugin-jsx-a11y": "5.0.1",
     "eslint-plugin-react": "7.0.1",
     "file-loader": "0.11.1",
