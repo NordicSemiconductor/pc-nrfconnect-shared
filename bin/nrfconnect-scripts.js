@@ -52,6 +52,7 @@ const SCRIPTS = {
     'build-prod': [require.resolve('../scripts/build.js'), '--prod'],
     'lint': [require.resolve('../scripts/lint.js')].concat(extraArgs),
     'test': [require.resolve('../scripts/test.js')].concat(extraArgs),
+    'nordic-publish': [require.resolve('../scripts/nordic-publish.js')].concat(extraArgs),
 };
 
 const env = Object.assign({}, process.env, {
