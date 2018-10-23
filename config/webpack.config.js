@@ -17,6 +17,7 @@ function createExternals() {
         'pc-nrfjprog-js',
         'serialport',
         'usb',
+        'nrf-usb',
         'electron',
         'nrfconnect/core',
     ];
