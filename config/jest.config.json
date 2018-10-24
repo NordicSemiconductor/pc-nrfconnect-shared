@@ -6,6 +6,11 @@
     "nrfconnect/core": "<rootDir>/node_modules/pc-nrfconnect-devdep/mocks/coreMock.js",
     "pc-ble-driver-js": "<rootDir>/node_modules/pc-nrfconnect-devdep/mocks/bleDriverMock.js",
     "pc-nrfjprog-js": "<rootDir>/node_modules/pc-nrfconnect-devdep/mocks/nrfjprogMock.js",
-    "serialport": "<rootDir>/node_modules/pc-nrfconnect-devdep/mocks/serialportMock.js"
-  }
+    "serialport": "<rootDir>/node_modules/pc-nrfconnect-devdep/mocks/serialportMock.js",
+    "usb": "<rootDir>/node_modules/pc-nrfconnect-devdep/mocks/usbMock.js"
+  },
+  "transform": {
+    "^.+\\.jsx?$": "babel-jest"
+  },
+  "testURL": "file:/"
 }

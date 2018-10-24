@@ -39,6 +39,7 @@
 
 'use strict';
 
+const path = require('path');
 const spawnSync = require('child_process').spawnSync;
 
 const args = process.argv.slice(2);
@@ -51,7 +52,12 @@ const SCRIPTS = {
     'build-prod': [require.resolve('../scripts/build.js'), '--prod'],
     'lint': [require.resolve('../scripts/lint.js')].concat(extraArgs),
     'test': [require.resolve('../scripts/test.js')].concat(extraArgs),
+    'nordic-publish': [require.resolve('../scripts/nordic-publish.js')].concat(extraArgs),
 };
 
-const result = spawnSync('node', SCRIPTS[script], { stdio: 'inherit' });
+const env = Object.assign({}, process.env, {
+    NODE_PATH: path.join(__dirname, '..', 'node_modules'),
+});
+
+const result = spawnSync('node', SCRIPTS[script], { stdio: 'inherit', env });
 process.exit(result.status);

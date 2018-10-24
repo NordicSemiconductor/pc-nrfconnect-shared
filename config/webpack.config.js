@@ -16,6 +16,8 @@ function createExternals() {
         'pc-ble-driver-js',
         'pc-nrfjprog-js',
         'serialport',
+        'usb',
+        'nrf-usb',
         'electron',
         'nrfconnect/core',
     ];
@@ -35,9 +37,19 @@ try {
     eslintConfig = require.resolve('./eslintrc.json');
 }
 
+function findEntryPoint() {
+    const files = ['./src/index.jsx', './lib/index.jsx', './index.jsx'];
+    while (files.length) {
+        const file = files.shift();
+        if (fs.existsSync(file)) {
+            return file;
+        }
+    }
+}
+
 module.exports = {
     devtool: isProd ? 'hidden-source-map' : 'inline-cheap-source-map',
-    entry: './index.jsx',
+    entry: findEntryPoint(),
     output: {
         path: path.join(appDirectory, 'dist'),
         publicPath: './dist/',
