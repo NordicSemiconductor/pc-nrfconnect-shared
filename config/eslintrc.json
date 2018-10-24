@@ -39,7 +39,15 @@
         "import/no-unresolved": [
             "error",
             {
-                "ignore": [ "nrfconnect/.*", "pc-ble-driver-js", "pc-nrfjprog-js", "serialport", "usb", "electron" ]
+                "ignore": [
+                    "nrfconnect/.*",
+                    "pc-ble-driver-js",
+                    "pc-nrfjprog-js",
+                    "serialport",
+                    "nrf-usb",
+                    "nrf-device-setup",
+                    "electron"
+                ]
             }
         ],
         "import/extensions": ["off"]
