@@ -13,12 +13,12 @@ function createExternals() {
         'react',
         'react-dom',
         'react-redux',
+        'electron',
+        'serialport',
         'pc-ble-driver-js',
         'pc-nrfjprog-js',
-        'serialport',
-        'usb',
         'nrf-usb',
-        'electron',
+        'nrf-device-setup',
         'nrfconnect/core',
     ];
 
