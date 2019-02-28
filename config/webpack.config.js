@@ -17,7 +17,7 @@ function createExternals() {
         'serialport',
         'pc-ble-driver-js',
         'pc-nrfjprog-js',
-        'nrf-usb',
+        'usb',
         'nrf-device-setup',
         'nrfconnect/core',
     ];
@@ -71,9 +71,6 @@ module.exports = {
                 }
             }],
             exclude: /node_modules/,
-        }, {
-            test: /\.json$/,
-            loader: require.resolve('json-loader'),
         }, {
             test: /\.less|\.css$/,
             loaders: [
