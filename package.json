@@ -38,7 +38,6 @@
     "immutable": "3.8.2",
     "jest": "24.1.0",
     "jest-bamboo-formatter": "1.0.1",
-    "json-loader": "0.5.7",
     "less": "3.9.0",
     "less-loader": "4.1.0",
     "raw-loader": "1.0.0",
