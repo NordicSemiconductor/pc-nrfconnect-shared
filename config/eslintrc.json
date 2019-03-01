@@ -21,6 +21,7 @@
             4
         ],
         "react/jsx-one-expression-per-line": 0,
+        "react-hooks/rules-of-hooks": "error",
         "quotes": [
             "error",
             "single"
@@ -62,7 +63,8 @@
     "no-unused-vars": 1,
     "plugins": [
         "react",
-        "import"
+        "import",
+        "react-hooks"
     ],
     "env": {
         "es6": true,
