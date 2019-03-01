@@ -12,5 +12,8 @@
   "transform": {
     "^.+\\.jsx?$": "babel-jest"
   },
-  "testURL": "file:/"
+  "testURL": "file:/",
+  "setupFilesAfterEnv": [
+    "<rootDir>/node_modules/pc-nrfconnect-devdep/test/setupTests.js"
+  ]
 }
