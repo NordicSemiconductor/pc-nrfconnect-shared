@@ -17,7 +17,7 @@ function createExternals() {
         'serialport',
         'pc-ble-driver-js',
         'pc-nrfjprog-js',
-        'nrf-usb',
+        'usb',
         'nrf-device-setup',
         'nrfconnect/core',
     ];
@@ -48,6 +48,7 @@ function findEntryPoint() {
 }
 
 module.exports = {
+    mode: nodeEnv,
     devtool: isProd ? 'hidden-source-map' : 'inline-cheap-source-map',
     entry: findEntryPoint(),
     output: {
@@ -71,9 +72,6 @@ module.exports = {
                 }
             }],
             exclude: /node_modules/,
-        }, {
-            test: /\.json$/,
-            loader: require.resolve('json-loader'),
         }, {
             test: /\.less|\.css$/,
             loaders: [
