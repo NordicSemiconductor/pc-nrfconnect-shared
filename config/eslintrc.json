@@ -57,10 +57,10 @@
                 ]
             }
         ],
-        "import/extensions": ["off"]
+        "import/extensions": ["off"],
+        "no-undef": 1,
+        "no-unused-vars": 1
     },
-    "no-undef": 1,
-    "no-unused-vars": 1,
     "plugins": [
         "react",
         "import",
