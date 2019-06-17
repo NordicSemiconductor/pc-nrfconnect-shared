@@ -7,7 +7,8 @@
     "pc-ble-driver-js": "<rootDir>/node_modules/pc-nrfconnect-devdep/mocks/bleDriverMock.js",
     "pc-nrfjprog-js": "<rootDir>/node_modules/pc-nrfconnect-devdep/mocks/nrfjprogMock.js",
     "serialport": "<rootDir>/node_modules/pc-nrfconnect-devdep/mocks/serialportMock.js",
-    "usb": "<rootDir>/node_modules/pc-nrfconnect-devdep/mocks/usbMock.js"
+    "usb": "<rootDir>/node_modules/pc-nrfconnect-devdep/mocks/usbMock.js",
+    "electron": "<rootDir>/node_modules/pc-nrfconnect-devdep/mocks/electronMock.js"
   },
   "transform": {
     "^.+\\.jsx?$": "babel-jest"
