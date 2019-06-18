@@ -52,4 +52,5 @@ fs.copyFile(configFileSource, configFileDestination, err => {
         console.error(err);
         process.exit(1);
     }
+    console.log('.eslintrc is updated according to pc-nrfconnect-devdep');
 });
