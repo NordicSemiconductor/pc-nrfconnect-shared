@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /* Copyright (c) 2015 - 2017, Nordic Semiconductor ASA
  *
  * All rights reserved.
@@ -36,29 +34,22 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 'use strict';
 
+const fs = require('fs');
 const path = require('path');
-const spawnSync = require('child_process').spawnSync;
 
-const args = process.argv.slice(2);
-const script = args[0];
-const extraArgs = args.slice(1);
+const configFileSource = path.join(
+    'node_modules',
+    'pc-nrfconnect-devdep',
+    'config',
+    'eslintrc.json'
+);
+const configFileDestination = path.join('.eslintrc');
 
-const SCRIPTS = {
-    'build-watch': [require.resolve('../scripts/build.js'), '--watch'],
-    'build-dev': [require.resolve('../scripts/build.js'), '--dev'],
-    'build-prod': [require.resolve('../scripts/build.js'), '--prod'],
-    'lint': [require.resolve('../scripts/lint.js')].concat(extraArgs),
-    'lint-init': [require.resolve('../scripts/lint-init.js')].concat(extraArgs),
-    'test': [require.resolve('../scripts/test.js')].concat(extraArgs),
-    'nordic-publish': [require.resolve('../scripts/nordic-publish.js')].concat(extraArgs),
-};
-
-const env = Object.assign({}, process.env, {
-    NODE_PATH: path.join(__dirname, '..', 'node_modules'),
+fs.copyFile(configFileSource, configFileDestination, err => {
+    if (err) {
+        console.error(err);
+        process.exit(1);
+    }
 });
-
-const result = spawnSync('node', SCRIPTS[script], { stdio: 'inherit', env });
-process.exit(result.status);
