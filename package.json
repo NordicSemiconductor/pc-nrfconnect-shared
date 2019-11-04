@@ -1,6 +1,6 @@
 {
   "name": "pc-nrfconnect-devdep",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "description": "Common development dependencies for pc-nrfconnect-* packages.",
   "repository": {
     "type": "git",
@@ -48,6 +48,8 @@
     "react-redux": "7.1.0",
     "react-test-renderer": "16.8.6",
     "redux": "4.0.1",
+    "redux-devtools-extension": "2.13.8",
+    "redux-thunk": "2.3.0",
     "rimraf": "2.6.3",
     "sass": "1.23.3",
     "sass-loader": "7.1.0",
