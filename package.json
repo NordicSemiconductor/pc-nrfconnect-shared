@@ -1,6 +1,6 @@
 {
   "name": "pc-nrfconnect-devdep",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Common development dependencies for pc-nrfconnect-* packages.",
   "repository": {
     "type": "git",
