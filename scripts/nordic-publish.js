@@ -155,6 +155,15 @@ function getShasum(filePath) {
     });
 }
 
+function uploadChangelog(packageName) {
+  const changelogFilename = 'Changelog.md';
+  if (fs.existsSync(changelogFilename)) {
+    return putFile(changelogFilename, `${packageName}-${changelogFilename}`);
+  } else {
+    console.warn(`There should be a changelog called "${changelogFilename}". Please provide it!`);
+  }
+}
+
 let thisPackage;
 
 Promise.resolve()
@@ -184,7 +193,6 @@ Promise.resolve()
 
             if (semver.lte(thisPackage.version, latest)) {
                 throw new Error('Current package version cannot be published, bump it higher');
-                return;
             }
         }
 
@@ -201,6 +209,7 @@ Promise.resolve()
     })
     .then(meta => putFile(new Buffer(JSON.stringify(meta)), thisPackage.name))
     .then(() => putFile(thisPackage.filename, thisPackage.filename))
+    .then(() => uploadChangelog(thisPackage.name))
     .then(() => console.log('Done'))
     .catch(err => console.log(err.message))
     .then(() => client.end());
