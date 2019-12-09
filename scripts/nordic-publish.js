@@ -41,6 +41,8 @@ const fs = require('fs');
 const semver = require('semver');
 const shasum = require('shasum');
 const FtpClient = require('ftp');
+const args = process.argv.slice(2);
+const nonOffcialSource = args[0];
 
 /*
  * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
@@ -52,8 +54,13 @@ const config = {
     password: process.env.REPO_PASS || 'anonymous@',
 };
 
-const repoDir = `/${process.env.REPO_DIR || '.pc-tools/nrfconnect-apps'}`;
-const repoUrl = process.env.REPO_URL || 'https://developer.nordicsemi.com/.pc-tools/nrfconnect-apps';
+const repoDirOfficial = '.pc-tools/nrfconnect-apps';
+const repoDirNonOfficial = nonOffcialSource? `${repoDirOfficial}/${nonOffcialSource}` : undefined;
+const repoDir = `/${process.env.REPO_DIR || repoDirNonOfficial || repoDirOfficial}`;
+
+const repoUrlOfficial = 'https://developer.nordicsemi.com/.pc-tools/nrfconnect-apps';
+const repoUrlNonOfficial = nonOffcialSource? `${repoUrlOfficial}/${nonOffcialSource}` : undefined;
+const repoUrl = process.env.REPO_URL || repoUrlNonOfficial || repoUrlOfficial;
 
 const client = new FtpClient();
 
