@@ -199,7 +199,6 @@ Promise.resolve()
             console.log(`Latest published version ${latest}`);
 
             if (semver.lte(thisPackage.version, latest)) {
-                process.exit(1);
                 throw new Error('Current package version cannot be published, bump it higher');
             }
         }
@@ -219,5 +218,8 @@ Promise.resolve()
     .then(() => putFile(thisPackage.filename, thisPackage.filename))
     .then(() => uploadChangelog(thisPackage.name))
     .then(() => console.log('Done'))
-    .catch(err => console.log(err.message))
+    .catch(err => {
+        console.error(err.message);
+        process.exit(1);
+    })
     .then(() => client.end());
