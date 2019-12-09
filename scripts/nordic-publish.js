@@ -198,7 +198,7 @@ Promise.resolve()
         if (latest) {
             console.log(`Latest published version ${latest}`);
 
-            if (semver.lte(thisPackage.version, latest)) {
+            if (semver.lte(thisPackage.version, latest) && !nonOffcialSource) {
                 throw new Error('Current package version cannot be published, bump it higher');
             }
         }
