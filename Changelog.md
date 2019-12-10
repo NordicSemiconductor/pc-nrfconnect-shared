@@ -1,3 +1,9 @@
+## Version 3.5
+### Added
+- Possibility to use the new architecture through “nrfconnect/shared”
+### Changed
+- Updated dependencies
+
 ## Version 3.4
 ### Added
 - Internal publishing

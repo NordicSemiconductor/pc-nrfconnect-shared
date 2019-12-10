@@ -13,6 +13,8 @@ function createExternals() {
         'react',
         'react-dom',
         'react-redux',
+        'redux-devtools-extension',
+        'redux-thunk',
         'electron',
         'serialport',
         'pc-ble-driver-js',
@@ -20,6 +22,7 @@ function createExternals() {
         'usb',
         'nrf-device-setup',
         'nrfconnect/core',
+        'nrfconnect/shared',
     ];
 
     // Libs provided by the app at runtime
