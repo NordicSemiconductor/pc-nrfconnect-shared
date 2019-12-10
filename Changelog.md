@@ -1,3 +1,7 @@
+## Version 3.4
+### Added
+- Internal publishing
+
 ## Version 3.3
 ### Added
 - Upload Changelog.md of apps when publishing
