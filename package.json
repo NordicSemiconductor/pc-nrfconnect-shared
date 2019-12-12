@@ -11,6 +11,7 @@
   "bin": {
     "nrfconnect-scripts": "./bin/nrfconnect-scripts.js"
   },
+  "main": "src",
   "dependencies": {
     "@babel/core": "7.5.0",
     "@babel/plugin-proposal-class-properties": "7.5.0",
