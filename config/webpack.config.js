@@ -22,7 +22,7 @@ function createExternals() {
         'usb',
         'nrf-device-setup',
         'nrfconnect/core',
-        'nrfconnect/shared',
+        'pc-nrfconnect-devdep',
     ];
 
     // Libs provided by the app at runtime
@@ -67,6 +67,7 @@ module.exports = {
                 loader: require.resolve('babel-loader'),
                 options: {
                     cacheDirectory: true,
+                    configFile: './node_modules/pc-nrfconnect-devdep/config/babel.config.js',
                 }
             }, {
                 loader: require.resolve('eslint-loader'),
@@ -74,7 +75,7 @@ module.exports = {
                     configFile: eslintConfig,
                 }
             }],
-            exclude: /node_modules/,
+            exclude: /node_modules\/(?!pc-nrfconnect-devdep\/)/,
         }, {
             test: /\.scss|\.css$/,
             use: [

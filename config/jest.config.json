@@ -9,10 +9,12 @@
     "electron": "<rootDir>/node_modules/pc-nrfconnect-devdep/mocks/electronMock.js"
   },
   "transform": {
-    "^.+\\.jsx?$": "babel-jest"
+    "^.+\\.jsx?$": [
+      "babel-jest",
+      { "configFile": "./node_modules/pc-nrfconnect-devdep/config/babel.config.js" }
+    ]
   },
+  "transformIgnorePatterns": [ "node_modules/(?!(pc-nrfconnect-devdep)/)" ],
   "testURL": "file:/",
-  "setupFilesAfterEnv": [
-    "<rootDir>/node_modules/pc-nrfconnect-devdep/test/setupTests.js"
-  ]
+  "setupFilesAfterEnv": [ "<rootDir>/node_modules/pc-nrfconnect-devdep/test/setupTests.js" ]
 }
