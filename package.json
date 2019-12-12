@@ -13,7 +13,9 @@
   },
   "main": "src",
   "scripts": {
-    "lint": "./bin/nrfconnect-scripts.js lint src"
+    "lint": "./bin/nrfconnect-scripts.js lint src",
+    "test": "jest --testResultsProcessor jest-bamboo-formatter src",
+    "test-watch": "jest --watch src"
   },
   "dependencies": {
     "@babel/core": "7.5.0",
@@ -27,7 +29,6 @@
     "@testing-library/jest-dom": "4.2.4",
     "@testing-library/react": "9.3.2",
     "babel-eslint": "10.0.2",
-    "babel-jest": "24.8.0",
     "babel-loader": "8.0.6",
     "babel-plugin-add-module-exports": "1.0.2",
     "cross-env": "5.2.0",
@@ -70,5 +71,24 @@
     "url-loader": "2.0.1",
     "webpack": "4.35.2",
     "winston": "3.2.1"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$": "<rootDir>/mocks/fileMock.js",
+      "\\.(css|scss)$": "<rootDir>/mocks/emptyMock.js",
+      "electron": "<rootDir>/mocks/electronMock.js",
+      "pc-nrfjprog-js|nrf-device-lister|nrf-device-setup": "<rootDir>/mocks/emptyMock.js"
+    },
+    "transform": {
+      "^.+\\.jsx?$": [
+        "babel-jest",
+        {
+          "configFile": "./config/babel.config.js"
+        }
+      ]
+    },
+    "setupFilesAfterEnv": [
+      "<rootDir>/test/setupTests.js"
+    ]
   }
 }
