@@ -1,3 +1,9 @@
+## Version 3.6
+### Changed
+- Moved the shared components from core to this project (They can now be used by importing
+  “pc-nrfconnect-devdep”)
+- Provide a babel config for apps, instead of requiring them to provide one themselves.
+
 ## Version 3.5
 ### Added
 - Possibility to use the new architecture through “nrfconnect/shared”
