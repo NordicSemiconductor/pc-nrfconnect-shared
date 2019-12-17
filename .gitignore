@@ -1,4 +1,4 @@
 node_modules
 package-lock.json
 jest.json
-pc-nrfconnect-devdep-*.tgz
+pc-nrfconnect-shared-*.tgz

@@ -41,7 +41,7 @@ const path = require('path');
 
 const configFileSource = path.join(
     'node_modules',
-    'pc-nrfconnect-devdep',
+    'pc-nrfconnect-shared',
     'config',
     'eslintrc.json'
 );
@@ -52,5 +52,5 @@ fs.copyFile(configFileSource, configFileDestination, err => {
         console.error(err);
         process.exit(1);
     }
-    console.log('.eslintrc is updated according to pc-nrfconnect-devdep');
+    console.log('.eslintrc is updated according to pc-nrfconnect-shared');
 });

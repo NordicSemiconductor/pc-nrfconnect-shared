@@ -1,3 +1,9 @@
+## Version 4.0
+### Breaking change
+- This package was renamed to “pc-nrfconnect-shared”. If you refer to it anywhere under
+  the old name (e.g. in a package.json or import a component from it) then you must
+  update these references when upgrading to version 4.
+
 ## Version 3.6
 ### Changed
 - Moved the shared components from core to this project (They can now be used by importing
