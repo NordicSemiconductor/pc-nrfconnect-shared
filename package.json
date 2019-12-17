@@ -1,10 +1,10 @@
 {
-  "name": "pc-nrfconnect-devdep",
+  "name": "pc-nrfconnect-shared",
   "version": "3.6.0",
-  "description": "Common development dependencies for pc-nrfconnect-* packages.",
+  "description": "Shared commodities for developing pc-nrfconnect-* packages",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NordicSemiconductor/pc-nrfconnect-devdep.git"
+    "url": "https://github.com/NordicSemiconductor/pc-nrfconnect-shared.git"
   },
   "author": "Nordic Semiconductor ASA",
   "license": "ISC",

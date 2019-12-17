@@ -1,3 +1,8 @@
-# pc-nrfconnect-devdep
+# pc-nrfconnect-shared
 
-This project provides common package dependencies for pc-nrfconnect-* packages.
+This project provides Shared commodities for developing nRF Connect for Desktop apps and their launcher:
+
+* React components
+* Build scripts
+* Configurations
+* Test facilities
