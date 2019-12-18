@@ -41,6 +41,8 @@ import Button from 'react-bootstrap/Button';
 
 import { hideDialog } from './errorDialogActions';
 
+import '../../resources/css/error.scss';
+
 const ErrorDialog = () => {
     const { isVisible, messages } = useSelector(state => state.errorDialog);
     const dispatch = useDispatch();
@@ -51,7 +53,7 @@ const ErrorDialog = () => {
             <Modal.Header closeButton>
                 <Modal.Title>Error</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className="core19-error-body">
                 { messages.map(message => <p key={message}>{message}</p>)}
             </Modal.Body>
             <Modal.Footer>
