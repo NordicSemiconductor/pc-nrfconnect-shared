@@ -38,6 +38,7 @@ import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import ReactMarkdown from 'react-markdown';
 
 import { hideDialog } from './errorDialogActions';
 
@@ -54,7 +55,13 @@ const ErrorDialog = () => {
                 <Modal.Title>Error</Modal.Title>
             </Modal.Header>
             <Modal.Body className="core19-error-body">
-                { messages.map(message => <p key={message}>{message}</p>)}
+                { messages.map(message => (
+                    <ReactMarkdown
+                        key={message}
+                        source={message}
+                        linkTarget="_blank"
+                    />
+                ))}
             </Modal.Body>
             <Modal.Footer>
                 <Button onClick={doHideDialog}>Close</Button>
