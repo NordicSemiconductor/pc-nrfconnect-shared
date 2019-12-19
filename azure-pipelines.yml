@@ -1,0 +1,11 @@
+pool:
+  vmImage: 'Ubuntu-16.04'
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: 10
+- bash: |
+    set -o errexit -o pipefail
+    npm i
+    npm run lint
+    npm test
