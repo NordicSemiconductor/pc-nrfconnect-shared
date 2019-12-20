@@ -292,7 +292,7 @@ export const selectAndSetupDevice = (
 
         await releaseCurrentDevice();
 
-        setupDevice(device, { promiseConfirm, promiseChoice, ...deviceSetup })
+        setupDevice(device, { promiseConfirm, promiseChoice, allowCustomDevice, ...deviceSetup })
             .then(preparedDevice => {
                 dispatch(startWatchingDevices(deviceListing, onDeviceDeselected));
                 dispatch(deviceSetupCompleteAction(preparedDevice));
@@ -300,8 +300,7 @@ export const selectAndSetupDevice = (
             })
             .catch(error => {
                 dispatch(deviceSetupErrorAction(device, error));
-                if (!error.message.includes('No firmware defined')) {
-                    // Let app hendle the error if no firmware defined
+                if (!allowCustomDevice) {
                     logger.error(`Error while setting up device ${device.serialNumber}: ${error.message}`);
                     dispatch(deselectDevice(onDeviceDeselected));
                 }
