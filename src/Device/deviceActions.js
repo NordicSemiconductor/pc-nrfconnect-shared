@@ -299,9 +299,8 @@ export const selectAndSetupDevice = (
                 onDeviceIsReady(preparedDevice);
             })
             .catch(error => {
-                logger.error(`Error while setting up device ${device.serialNumber}: ${error.message}`);
+                // Let app handle device setup error
                 dispatch(deviceSetupErrorAction(device, error));
-                dispatch(deselectDevice(onDeviceDeselected));
                 dispatch(startWatchingDevices(deviceListing, onDeviceDeselected));
             });
     }
