@@ -289,10 +289,19 @@ export const selectAndSetupDevice = (
         const promiseChoice = (message, choices) => (
             getDeviceSetupUserInput(dispatch, message, choices)
         );
+        const allowCustomDevice = false;
 
         await releaseCurrentDevice();
 
-        setupDevice(device, { promiseConfirm, promiseChoice, allowCustomDevice, ...deviceSetup })
+        setupDevice(
+            device,
+            {
+                promiseConfirm,
+                promiseChoice,
+                allowCustomDevice,
+                ...deviceSetup,
+            },
+        )
             .then(preparedDevice => {
                 dispatch(startWatchingDevices(deviceListing, onDeviceDeselected));
                 dispatch(deviceSetupCompleteAction(preparedDevice));
