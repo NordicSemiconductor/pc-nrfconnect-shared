@@ -299,8 +299,12 @@ export const selectAndSetupDevice = (
                 onDeviceIsReady(preparedDevice);
             })
             .catch(error => {
-                // Let app handle device setup error
                 dispatch(deviceSetupErrorAction(device, error));
+                if (!error.message.includes('No firmware defined')) {
+                    // Let app hendle the error if no firmware defined
+                    logger.error(`Error while setting up device ${device.serialNumber}: ${error.message}`);
+                    dispatch(deselectDevice(onDeviceDeselected));
+                }
                 dispatch(startWatchingDevices(deviceListing, onDeviceDeselected));
             });
     }
