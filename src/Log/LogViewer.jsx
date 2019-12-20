@@ -46,61 +46,21 @@ import '../../resources/css/log-viewer.scss';
 
 const elementHeight = 20;
 
-class LogViewer extends React.Component {
-    logContainer = createRef();
+const LogViewer = ({ logEntries, autoScroll, dispatch }) => {
+    const logContainer = useRef(null);
 
-    state = {
-        containerHeight: 200,
-    }
+    autoScroll && useEffect(() => { logContainer.current.lastChild.scrollIntoView(); });
+    useEffect(() => { startListening(dispatch); }, []);
 
-    componentDidMount() {
-        const { dispatch } = this.props;
-        startListening(dispatch);
-
-        const { containerHeight } = this.state;
-        if (containerHeight !== this.logContainer.current.offsetHeight) {
-            this.setState({ containerHeight: this.logContainer.current.offsetHeight });
-        }
-    }
-
-    componentDidUpdate() {
-        const { containerHeight } = this.state;
-        if (containerHeight !== this.logContainer.current.offsetHeight) {
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({ containerHeight: this.logContainer.current.offsetHeight });
-        }
-    }
-
-    componentWillUnmount() {
-        stopListening();
-    }
-
-    render() {
-        const { autoScroll, logEntries } = this.props;
-        const { containerHeight } = this.state;
-
-        const infiniteLoadBeginEdgeOffset = Math.max(
-            containerHeight - elementHeight, elementHeight,
-        );
-
-        return (
-            <div className="core19-log-viewer">
-                <LogHeader />
-                <div ref={this.logContainer}>
-                    <Infinite
-                        elementHeight={elementHeight}
-                        containerHeight={containerHeight}
-                        infiniteLoadBeginEdgeOffset={infiniteLoadBeginEdgeOffset}
-                        className="core19-infinite-log"
-                        autoScroll={autoScroll}
-                    >
-                        {logEntries.map(entry => <LogEntry {...{ entry }} key={entry.id} />)}
-                    </Infinite>
-                </div>
+    return (
+        <div className="core19-log-viewer">
+            <LogHeader />
+            <div ref={logContainer} className="core19-infinite-log">
+                { logEntries.map(entry => <LogEntry {...{ entry }} key={entry.id} />) }
             </div>
-        );
-    }
-}
+        </div>
+    );
+};
 
 LogViewer.propTypes = {
     dispatch: func.isRequired,
