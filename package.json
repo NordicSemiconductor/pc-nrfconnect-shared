@@ -73,6 +73,14 @@
     "webpack": "4.35.2",
     "winston": "3.2.1"
   },
+  "devDependencies": {
+    "husky": "3.1.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "scripts/pre-push.sh"
+    }
+  },
   "jest": {
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$": "<rootDir>/mocks/fileMock.js",
