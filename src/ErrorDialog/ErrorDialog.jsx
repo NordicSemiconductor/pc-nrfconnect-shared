@@ -45,9 +45,14 @@ import { hideDialog } from './errorDialogActions';
 import '../../resources/css/error.scss';
 
 const ErrorDialog = () => {
-    const { isVisible, messages } = useSelector(state => state.errorDialog);
     const dispatch = useDispatch();
     const doHideDialog = useCallback(() => dispatch(hideDialog()), [dispatch]);
+
+    const { isVisible, messages } = useSelector(state => state.errorDialog);
+
+    const defaultErrorResolutions = { Close: doHideDialog };
+    const errorResolutions = useSelector(state => state.errorDialog.errorResolutions)
+        || defaultErrorResolutions;
 
     return (
         <Modal show={isVisible} onHide={doHideDialog}>
@@ -64,7 +69,11 @@ const ErrorDialog = () => {
                 ))}
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={doHideDialog}>Close</Button>
+                {Object.entries(errorResolutions).map(([label, handler], index) => (
+                    <Button key={label} onClick={handler} variant={index === 0 ? 'primary' : 'outline-secondary'}>
+                        {label}
+                    </Button>
+                ))}
             </Modal.Footer>
         </Modal>
     );

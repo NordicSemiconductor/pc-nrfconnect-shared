@@ -35,7 +35,9 @@
  */
 
 export const ERROR_DIALOG_SHOW = 'ERROR_DIALOG_SHOW';
-export const showDialog = message => ({ type: ERROR_DIALOG_SHOW, message });
+export const showDialog = (message, errorResolutions) => (
+    { type: ERROR_DIALOG_SHOW, message, errorResolutions }
+);
 
 export const ERROR_DIALOG_HIDE = 'ERROR_DIALOG_HIDE';
 export const hideDialog = () => ({ type: ERROR_DIALOG_HIDE });
