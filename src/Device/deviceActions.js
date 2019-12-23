@@ -297,7 +297,7 @@ export const selectAndSetupDevice = (
             })
             .catch(error => {
                 dispatch(deviceSetupErrorAction(device, error));
-                if (!allowCustomDevice) {
+                if (!deviceSetupConfig.allowCustomDevice) {
                     logger.error(`Error while setting up device ${device.serialNumber}: ${error.message}`);
                     dispatch(deselectDevice(onDeviceDeselected));
                 }
