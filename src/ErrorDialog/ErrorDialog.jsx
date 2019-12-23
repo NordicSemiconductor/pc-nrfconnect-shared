@@ -38,24 +38,42 @@ import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import ReactMarkdown from 'react-markdown';
 
 import { hideDialog } from './errorDialogActions';
 
+import '../../resources/css/error.scss';
+
 const ErrorDialog = () => {
-    const { isVisible, messages } = useSelector(state => state.errorDialog);
     const dispatch = useDispatch();
     const doHideDialog = useCallback(() => dispatch(hideDialog()), [dispatch]);
+
+    const { isVisible, messages } = useSelector(state => state.errorDialog);
+
+    const defaultErrorResolutions = { Close: doHideDialog };
+    const errorResolutions = useSelector(state => state.errorDialog.errorResolutions)
+        || defaultErrorResolutions;
 
     return (
         <Modal show={isVisible} onHide={doHideDialog}>
             <Modal.Header closeButton>
                 <Modal.Title>Error</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                { messages.map(message => <p key={message}>{message}</p>)}
+            <Modal.Body className="core19-error-body">
+                { messages.map(message => (
+                    <ReactMarkdown
+                        key={message}
+                        source={message}
+                        linkTarget="_blank"
+                    />
+                ))}
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={doHideDialog}>Close</Button>
+                {Object.entries(errorResolutions).map(([label, handler], index) => (
+                    <Button key={label} onClick={handler} variant={index === 0 ? 'primary' : 'outline-secondary'}>
+                        {label}
+                    </Button>
+                ))}
             </Modal.Footer>
         </Modal>
     );

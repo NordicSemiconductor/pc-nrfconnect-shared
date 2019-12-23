@@ -1,3 +1,10 @@
+## Version 4.1
+### Changed
+- Enhanced error dialogs:
+    - Made URLs in error messages clickable (and more generally interpret them as markdown)
+    - Made error messages selectable again (regression) to enable copy&pasting them.
+    - Enabled custom error resolutions
+
 ## Version 4.0
 ### Breaking change
 - This package was renamed to “pc-nrfconnect-shared”. If you refer to it anywhere under
