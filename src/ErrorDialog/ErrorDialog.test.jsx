@@ -104,4 +104,17 @@ describe('ErrorDialog', () => {
             await waitForElementToBeRemoved(getDialog);
         });
     });
+
+    it('can have a custom error resolutions', () => {
+        const specialHandling = jest.fn();
+
+        const { getByText } = render(
+            <ErrorDialog />,
+            [showDialog('An error occured', { 'Special Handling': specialHandling })],
+        );
+
+        fireEvent.click(getByText('Special Handling'));
+
+        expect(specialHandling).toHaveBeenCalled();
+    });
 });

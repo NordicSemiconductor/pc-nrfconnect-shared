@@ -39,6 +39,7 @@ import { ERROR_DIALOG_SHOW, ERROR_DIALOG_HIDE } from './errorDialogActions';
 const initialState = {
     messages: [],
     isVisible: false,
+    errorResolutions: undefined,
 };
 
 const appendIfNew = (messages, message) => (messages.includes(message)
@@ -51,12 +52,9 @@ const reducer = (state = initialState, action) => {
             ...state,
             isVisible: true,
             messages: appendIfNew(state.messages, action.message),
+            errorResolutions: action.errorResolutions,
         };
-        case ERROR_DIALOG_HIDE: return {
-            ...state,
-            isVisible: false,
-            messages: [],
-        };
+        case ERROR_DIALOG_HIDE: return initialState;
         default: return state;
     }
 };
