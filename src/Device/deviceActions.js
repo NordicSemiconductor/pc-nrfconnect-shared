@@ -235,7 +235,7 @@ export const stopWatchingDevices = () => {
  * @param {Array<String>} [choices] The choices to display to the user (optional).
  * @returns {Promise<String>} Promise that resolves with the user input.
  */
-const getDeviceSetupUserInput = (dispatch, message, choices) => new Promise((resolve, reject) => {
+const getDeviceSetupUserInput = dispatch => (message, choices) => new Promise((resolve, reject) => {
     deviceSetupCallback = choice => {
         if (!choices) {
             // for confirmation resolve with boolean
@@ -282,26 +282,25 @@ export const selectAndSetupDevice = (
         // lister while setting up the device, and start it again after the
         // device has been set up.
         stopWatchingDevices();
-
-        const promiseConfirm = message => (
-            getDeviceSetupUserInput(dispatch, message)
-        );
-        const promiseChoice = (message, choices) => (
-            getDeviceSetupUserInput(dispatch, message, choices)
-        );
-
         await releaseCurrentDevice();
-
-        setupDevice(device, { promiseConfirm, promiseChoice, ...deviceSetup })
+        const deviceSetupConfig = {
+            promiseConfirm: getDeviceSetupUserInput(dispatch),
+            promiseChoice: getDeviceSetupUserInput(dispatch),
+            allowCustomDevice: false,
+            ...deviceSetup,
+        };
+        setupDevice(device, deviceSetupConfig)
             .then(preparedDevice => {
                 dispatch(startWatchingDevices(deviceListing, onDeviceDeselected));
                 dispatch(deviceSetupCompleteAction(preparedDevice));
                 onDeviceIsReady(preparedDevice);
             })
             .catch(error => {
-                logger.error(`Error while setting up device ${device.serialNumber}: ${error.message}`);
                 dispatch(deviceSetupErrorAction(device, error));
-                dispatch(deselectDevice(onDeviceDeselected));
+                if (!deviceSetupConfig.allowCustomDevice) {
+                    logger.error(`Error while setting up device ${device.serialNumber}: ${error.message}`);
+                    dispatch(deselectDevice(onDeviceDeselected));
+                }
                 dispatch(startWatchingDevices(deviceListing, onDeviceDeselected));
             });
     }
