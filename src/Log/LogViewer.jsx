@@ -34,22 +34,23 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { arrayOf, bool, func } from 'prop-types';
-import Infinite from 'react-infinite';
 import LogHeader from './LogHeader';
 import LogEntry, { entryShape } from './LogEntry';
-import { stopListening, startListening } from './logListener';
+import { startListening } from './logListener';
 
 import '../../resources/css/log-viewer.scss';
-
-const elementHeight = 20;
 
 const LogViewer = ({ logEntries, autoScroll, dispatch }) => {
     const logContainer = useRef(null);
 
-    autoScroll && useEffect(() => { logContainer.current.lastChild.scrollIntoView(); });
+    useEffect(() => {
+        if (autoScroll && logContainer.current.lastChild) {
+            logContainer.current.lastChild.scrollIntoView();
+        }
+    });
     useEffect(() => { startListening(dispatch); }, []);
 
     return (
