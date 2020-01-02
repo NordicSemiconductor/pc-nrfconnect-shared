@@ -1,3 +1,7 @@
+## Version 4.2
+### Changed
+- Enhanced handling custom devices
+
 ## Version 4.1
 ### Changed
 - Enhanced error dialogs:
