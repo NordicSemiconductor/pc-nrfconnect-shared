@@ -4,6 +4,7 @@
     - Made URLs in error messages clickable (and more generally interpret them as markdown)
     - Made error messages selectable again (regression) to enable copy&pasting them.
     - Enabled custom error resolutions
+- Supported custom device
 
 ## Version 4.0
 ### Breaking change
