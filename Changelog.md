@@ -1,10 +1,13 @@
+## Version 4.2
+### Changed
+- Enhanced handling custom devices
+
 ## Version 4.1
 ### Changed
 - Enhanced error dialogs:
     - Made URLs in error messages clickable (and more generally interpret them as markdown)
     - Made error messages selectable again (regression) to enable copy&pasting them.
     - Enabled custom error resolutions
-- Enhanced handling custom devices
 
 ## Version 4.0
 ### Breaking change
