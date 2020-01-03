@@ -13,7 +13,7 @@
   },
   "main": "src",
   "scripts": {
-    "lint": "./bin/nrfconnect-scripts.js lint src",
+    "lint": "node ./bin/nrfconnect-scripts.js lint src",
     "test": "jest --testResultsProcessor jest-bamboo-formatter src",
     "test-watch": "jest --watch src"
   },
@@ -78,7 +78,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "scripts/pre-push.sh"
+      "pre-push": "bash scripts/pre-push.sh"
     }
   },
   "jest": {
