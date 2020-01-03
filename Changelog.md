@@ -1,3 +1,14 @@
+## Version 4.3
+### Added
+- Ease configuration of git hooks #40. If you want to automatically run the `lint` and `test` scripts before pushing changes, add a file `.huskyrc.json` to your project with this content:
+```json
+{
+    "hooks": {
+        "pre-push": "bash node_modules/pc-nrfconnect-shared/scripts/pre-push.sh"
+    }
+}
+```
+
 ## Version 4.2
 ### Changed
 - Enhanced handling custom devices
