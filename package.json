@@ -45,6 +45,7 @@
     "eslint-plugin-react-hooks": "1.6.1",
     "file-loader": "4.0.0",
     "ftp": "0.3.10",
+    "husky": "3.1.0",
     "immutable": "4.0.0-rc.12",
     "jest": "24.9.0",
     "jest-bamboo-formatter": "1.0.1",
@@ -72,14 +73,6 @@
     "url-loader": "2.0.1",
     "webpack": "4.35.2",
     "winston": "3.2.1"
-  },
-  "devDependencies": {
-    "husky": "3.1.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "bash scripts/pre-push.sh"
-    }
   },
   "jest": {
     "moduleNameMapper": {

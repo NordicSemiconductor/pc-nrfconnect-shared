@@ -1,0 +1,5 @@
+{
+  "hooks": {
+    "pre-push": "bash scripts/pre-push.sh"
+  }
+}
