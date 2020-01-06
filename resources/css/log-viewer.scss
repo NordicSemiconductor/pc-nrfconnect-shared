@@ -11,9 +11,9 @@
         position: relative;
         overflow-x: scroll !important;
         background-color: white;
+        height: 155px;
 
         > div {
-            position: absolute;
             display: table;
             min-width: 100%;
         }

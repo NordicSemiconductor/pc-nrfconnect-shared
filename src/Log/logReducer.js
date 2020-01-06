@@ -36,7 +36,7 @@
 
 import { ADD_ENTRIES, CLEAR_ENTRIES, TOGGLE_AUTOSCROLL } from './logActions';
 
-const MAX_ENTRIES = 10000;
+const MAX_ENTRIES = 1000;
 
 const initialState = {
     autoScroll: true,
