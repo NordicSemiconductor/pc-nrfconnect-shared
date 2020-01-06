@@ -34,73 +34,34 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { arrayOf, bool, func } from 'prop-types';
-import Infinite from 'react-infinite';
 import LogHeader from './LogHeader';
 import LogEntry, { entryShape } from './LogEntry';
-import { stopListening, startListening } from './logListener';
+import { startListening } from './logListener';
 
 import '../../resources/css/log-viewer.scss';
 
-const elementHeight = 20;
+const LogViewer = ({ logEntries, autoScroll, dispatch }) => {
+    const logContainer = useRef(null);
 
-class LogViewer extends React.Component {
-    logContainer = createRef();
-
-    state = {
-        containerHeight: 200,
-    }
-
-    componentDidMount() {
-        const { dispatch } = this.props;
-        startListening(dispatch);
-
-        const { containerHeight } = this.state;
-        if (containerHeight !== this.logContainer.current.offsetHeight) {
-            this.setState({ containerHeight: this.logContainer.current.offsetHeight });
+    useEffect(() => {
+        if (autoScroll && logContainer.current.lastChild) {
+            logContainer.current.lastChild.scrollIntoView();
         }
-    }
+    });
+    useEffect(() => { startListening(dispatch); }, []);
 
-    componentDidUpdate() {
-        const { containerHeight } = this.state;
-        if (containerHeight !== this.logContainer.current.offsetHeight) {
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({ containerHeight: this.logContainer.current.offsetHeight });
-        }
-    }
-
-    componentWillUnmount() {
-        stopListening();
-    }
-
-    render() {
-        const { autoScroll, logEntries } = this.props;
-        const { containerHeight } = this.state;
-
-        const infiniteLoadBeginEdgeOffset = Math.max(
-            containerHeight - elementHeight, elementHeight,
-        );
-
-        return (
-            <div className="core19-log-viewer">
-                <LogHeader />
-                <div ref={this.logContainer}>
-                    <Infinite
-                        elementHeight={elementHeight}
-                        containerHeight={containerHeight}
-                        infiniteLoadBeginEdgeOffset={infiniteLoadBeginEdgeOffset}
-                        className="core19-infinite-log"
-                        autoScroll={autoScroll}
-                    >
-                        {logEntries.map(entry => <LogEntry {...{ entry }} key={entry.id} />)}
-                    </Infinite>
-                </div>
+    return (
+        <div className="core19-log-viewer">
+            <LogHeader />
+            <div ref={logContainer} className="core19-infinite-log">
+                { logEntries.map(entry => <LogEntry {...{ entry }} key={entry.id} />) }
             </div>
-        );
-    }
-}
+        </div>
+    );
+};
 
 LogViewer.propTypes = {
     dispatch: func.isRequired,

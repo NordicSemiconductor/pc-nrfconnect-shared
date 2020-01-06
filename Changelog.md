@@ -12,6 +12,7 @@
 ## Version 4.2
 ### Changed
 - Enhanced handling custom devices
+- Remove dependency of react-infinite. #38
 
 ## Version 4.1
 ### Changed
