@@ -1,3 +1,8 @@
+## Unreleased
+### Changed
+- Create and connect store in App component, so this does not need to be done
+  in each app (unless they want to do it themselves).
+
 ## Version 4.7
 ### Changed
 - Add a few peer dependencies

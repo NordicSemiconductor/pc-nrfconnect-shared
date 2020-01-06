@@ -33,51 +33,26 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import React from 'react';
+import { func, node } from 'prop-types';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { Provider } from 'react-redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
 
-import React, { useRef } from 'react';
-import { node, func } from 'prop-types';
+import coreReducers from '../coreReducers';
 
-import LogViewer from '../Log/LogViewer';
-import { HorizontalSplitter, VerticalSplitter } from './Splitter';
+const rootReducer = appReducer => combineReducers({ app: appReducer, ...coreReducers });
+const middleware = composeWithDevTools(applyMiddleware(thunk));
 
-import '../../resources/css/shared.scss';
-import '../../resources/css/app.scss';
-
-import ErrorDialog from '../ErrorDialog/ErrorDialog';
-import AppReloadDialog from '../AppReload/AppReloadDialog';
-import ConnectedToStore from './ConnectedToStore';
-
-const App = ({
-    appReducer, children, navBar, sidePanel,
-}) => {
-    const sidePanelRef = useRef();
-    return (
-        <ConnectedToStore appReducer={appReducer}>
-            <div className="core19-app">
-                {navBar}
-                <div className="core19-app-content">
-                    <div className="core19-app-left">
-                        <div className="core19-main-view">{children}</div>
-                        <HorizontalSplitter />
-                        <LogViewer />
-                    </div>
-                    <VerticalSplitter targetRef={sidePanelRef} />
-                    <div ref={sidePanelRef} className="core19-side-panel">
-                        {sidePanel}
-                    </div>
-                </div>
-                <AppReloadDialog />
-                <ErrorDialog />
-            </div>
-        </ConnectedToStore>
-    );
-};
-
-App.propTypes = {
+const ConnectedToStore = ({ appReducer, children }) => (
+    <Provider store={createStore(rootReducer(appReducer), middleware)}>
+        {children}
+    </Provider>
+);
+ConnectedToStore.propTypes = {
     appReducer: func.isRequired,
     children: node.isRequired,
-    navBar: node.isRequired,
-    sidePanel: node.isRequired,
 };
 
-export default App;
+export default ConnectedToStore;
