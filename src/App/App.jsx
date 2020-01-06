@@ -56,14 +56,14 @@ const App = ({
             <div className="core19-app">
                 {navBar}
                 <div className="core19-app-content">
-                    <div className="core19-app-left">
+                    <div ref={sidePanelRef} className="core19-side-panel">
+                        {sidePanel}
+                    </div>
+                    <VerticalSplitter targetRef={sidePanelRef} />
+                    <div className="core19-main-and-log">
                         <div className="core19-main-view">{children}</div>
                         <HorizontalSplitter />
                         <LogViewer />
-                    </div>
-                    <VerticalSplitter targetRef={sidePanelRef} />
-                    <div ref={sidePanelRef} className="core19-side-panel">
-                        {sidePanel}
                     </div>
                 </div>
                 <AppReloadDialog />
