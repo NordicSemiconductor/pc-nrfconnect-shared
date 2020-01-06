@@ -34,11 +34,11 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { node, func } from 'prop-types';
 
 import LogViewer from '../Log/LogViewer';
-import { HorizontalSplitter, VerticalSplitter } from './Splitter';
+import Splitter from './Splitter';
 
 import '../../resources/css/shared.scss';
 import '../../resources/css/app.scss';
@@ -49,29 +49,26 @@ import ConnectedToStore from './ConnectedToStore';
 
 const App = ({
     appReducer, children, navBar, sidePanel,
-}) => {
-    const sidePanelRef = useRef();
-    return (
-        <ConnectedToStore appReducer={appReducer}>
-            <div className="core19-app">
-                {navBar}
-                <div className="core19-app-content">
-                    <div ref={sidePanelRef} className="core19-side-panel">
-                        {sidePanel}
-                    </div>
-                    <VerticalSplitter targetRef={sidePanelRef} />
-                    <div className="core19-main-and-log">
-                        <div className="core19-main-view">{children}</div>
-                        <HorizontalSplitter />
-                        <LogViewer />
-                    </div>
+}) => (
+    <ConnectedToStore appReducer={appReducer}>
+        <div className="core19-app">
+            {navBar}
+            <div className="core19-app-content">
+                <div className="core19-side-panel">
+                    {sidePanel}
                 </div>
-                <AppReloadDialog />
-                <ErrorDialog />
+                <Splitter />
+                <div className="core19-main-and-log">
+                    <div className="core19-main-view">{children}</div>
+                    <Splitter />
+                    <LogViewer />
+                </div>
             </div>
-        </ConnectedToStore>
-    );
-};
+            <AppReloadDialog />
+            <ErrorDialog />
+        </div>
+    </ConnectedToStore>
+);
 
 App.propTypes = {
     appReducer: func.isRequired,

@@ -2,16 +2,4 @@
     min-width: 3px;
     min-height: 3px;
     background-color: lightgray;
-    transition: background-color 0.5s linear;
-}
-
-.core19-splitter:hover {
-    background-color: darken(lightgray, 30%);
-}
-.core19-splitter.horizontal {
-    cursor: row-resize;
-}
-.core19-splitter.vertical {
-    border-top: 1px solid gray;
-    cursor: col-resize;
 }
