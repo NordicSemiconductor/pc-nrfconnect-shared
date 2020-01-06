@@ -38,7 +38,6 @@ import React from 'react';
 import { node, func } from 'prop-types';
 
 import LogViewer from '../Log/LogViewer';
-import Splitter from './Splitter';
 
 import '../../resources/css/shared.scss';
 import '../../resources/css/app.scss';
@@ -46,6 +45,13 @@ import '../../resources/css/app.scss';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
 import ConnectedToStore from './ConnectedToStore';
+
+const Splitter = () => (
+    <div
+        tabIndex={-1}
+        className="core19-splitter"
+    />
+);
 
 const App = ({
     appReducer, children, navBar, sidePanel,
