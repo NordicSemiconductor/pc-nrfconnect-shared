@@ -36,15 +36,18 @@
 
 import React from 'react';
 import { node, func } from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import LogViewer from '../Log/LogViewer';
 
-import '../../resources/css/shared.scss';
-import '../../resources/css/app.scss';
-
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
+import VisibilityBar from './VisibilityBar';
 import ConnectedToStore from './ConnectedToStore';
+import { isSidebarVisibleSelector, isLogVisibleSelector } from './appLayout';
+
+import '../../resources/css/shared.scss';
+import '../../resources/css/app.scss';
 
 const Splitter = () => (
     <div
@@ -53,34 +56,51 @@ const Splitter = () => (
     />
 );
 
-const App = ({
-    appReducer, children, navBar, sidePanel,
-}) => (
-    <ConnectedToStore appReducer={appReducer}>
+const ConnectedApp = ({
+    children, navBar, sidePanel,
+}) => {
+    const isSidebarVisible = useSelector(isSidebarVisibleSelector);
+    const isLogVisible = useSelector(isLogVisibleSelector);
+
+    return (
         <div className="core19-app">
             {navBar}
             <div className="core19-app-content">
-                <div className="core19-side-panel">
-                    {sidePanel}
-                </div>
-                <Splitter />
+                {isSidebarVisible && (
+                    <>
+                        <div className="core19-side-panel">
+                            {sidePanel}
+                        </div>
+                        <Splitter />
+                    </>
+                )}
                 <div className="core19-main-and-log">
                     <div className="core19-main-view">{children}</div>
-                    <Splitter />
-                    <LogViewer />
+                    {isLogVisible && <> <Splitter /> <LogViewer /> </>}
                 </div>
             </div>
+            <VisibilityBar />
+
             <AppReloadDialog />
             <ErrorDialog />
         </div>
+    );
+};
+
+ConnectedApp.propTypes = {
+    children: node.isRequired,
+    navBar: node.isRequired,
+    sidePanel: node.isRequired,
+};
+
+const App = ({ appReducer, ...props }) => (
+    <ConnectedToStore appReducer={appReducer}>
+        <ConnectedApp {...props} />
     </ConnectedToStore>
 );
 
 App.propTypes = {
     appReducer: func.isRequired,
-    children: node.isRequired,
-    navBar: node.isRequired,
-    sidePanel: node.isRequired,
 };
 
 export default App;

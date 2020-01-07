@@ -34,18 +34,24 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import appReloadDialog from './AppReload/appReloadDialogReducer';
-import device from './Device/deviceReducer';
-import errorDialog from './ErrorDialog/errorDialogReducer';
-import log from './Log/logReducer';
-import navMenu from './App/NavMenu/navMenuReducer';
-import { reducer as appLayout } from './App/appLayout';
+const TOGGLE_LOG_VISIBLE = 'TOGGLE_LOG_VISIBLE';
+const TOGGLE_SIDEBAR_VISIBLE = 'TOGGLE_SIDEBAR_VISIBLE';
 
-export default {
-    appLayout,
-    appReloadDialog,
-    device,
-    errorDialog,
-    log,
-    navMenu,
+export const toggleLogVisible = { type: TOGGLE_LOG_VISIBLE };
+export const toggleSidebarVisible = { type: TOGGLE_SIDEBAR_VISIBLE };
+
+const initialState = {
+    isSidebarVisible: true,
+    isLogVisible: true,
 };
+
+export const reducer = (state = initialState, action) => {
+    switch (action.type) {
+        case TOGGLE_SIDEBAR_VISIBLE: return { ...state, isSidebarVisible: !state.isSidebarVisible };
+        case TOGGLE_LOG_VISIBLE: return { ...state, isLogVisible: !state.isLogVisible };
+        default: return state;
+    }
+};
+
+export const isSidebarVisibleSelector = state => state.appLayout.isSidebarVisible;
+export const isLogVisibleSelector = state => state.appLayout.isLogVisible;

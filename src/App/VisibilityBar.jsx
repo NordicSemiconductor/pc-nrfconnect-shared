@@ -34,18 +34,37 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import appReloadDialog from './AppReload/appReloadDialogReducer';
-import device from './Device/deviceReducer';
-import errorDialog from './ErrorDialog/errorDialogReducer';
-import log from './Log/logReducer';
-import navMenu from './App/NavMenu/navMenuReducer';
-import { reducer as appLayout } from './App/appLayout';
+import React from 'react';
+import Form from 'react-bootstrap/Form';
+import { useDispatch, useSelector } from 'react-redux';
 
-export default {
-    appLayout,
-    appReloadDialog,
-    device,
-    errorDialog,
-    log,
-    navMenu,
+import '../../resources/css/visibility-bar.scss';
+import {
+    isSidebarVisibleSelector, isLogVisibleSelector, toggleSidebarVisible, toggleLogVisible,
+} from './appLayout';
+
+export default () => {
+    const dispatch = useDispatch();
+    const isSidebarVisible = useSelector(isSidebarVisibleSelector);
+    const isLogVisible = useSelector(isLogVisibleSelector);
+    return (
+        <div className="core19-visibility-bar">
+            <div className="core19-visibility-bar-show-sidebar">
+                <Form.Switch
+                    id="visibility-bar-show-sidebar"
+                    label="Show menu"
+                    checked={isSidebarVisible}
+                    onChange={() => dispatch(toggleSidebarVisible)}
+                />
+            </div>
+            <div className="core19-visibility-bar-show-log">
+                <Form.Switch
+                    id="visibility-bar-show-log"
+                    label="Show log"
+                    checked={isLogVisible}
+                    onChange={() => dispatch(toggleLogVisible)}
+                />
+            </div>
+        </div>
+    );
 };

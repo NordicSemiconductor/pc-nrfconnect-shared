@@ -1,0 +1,17 @@
+.core19-visibility-bar {
+    display: flex;
+
+    .core19-visibility-bar-show-sidebar {
+        width: 314px;
+        background-color: lightgray;
+        padding: 5px 10px;
+    }
+
+    .core19-visibility-bar-show-log {
+        background-color: slategrey;
+        width: 100%;
+        text-align: right;
+        color: white;
+        padding: 5px 10px;
+    }
+}
