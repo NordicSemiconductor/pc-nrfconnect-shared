@@ -44,7 +44,7 @@ function getConfig() {
     let config;
     try {
         // Using custom webpack.config.js if it exists in project
-        config = require('../../../webpack.config.js');
+        config = require(path.join(process.cwd(), './webpack.config.js'));
     } catch (err) {
         config = require('../config/webpack.config.js');
     }
