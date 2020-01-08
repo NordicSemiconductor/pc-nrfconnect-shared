@@ -49,13 +49,6 @@ import { isSidebarVisibleSelector, isLogVisibleSelector } from './appLayout';
 import '../../resources/css/shared.scss';
 import '../../resources/css/app.scss';
 
-const Splitter = () => (
-    <div
-        tabIndex={-1}
-        className="core19-splitter"
-    />
-);
-
 const ConnectedApp = ({
     children, navBar, sidePanel,
 }) => {
@@ -67,16 +60,13 @@ const ConnectedApp = ({
             {navBar}
             <div className="core19-app-content">
                 {isSidebarVisible && (
-                    <>
-                        <div className="core19-side-panel">
-                            {sidePanel}
-                        </div>
-                        <Splitter />
-                    </>
+                    <div className="core19-side-panel">
+                        {sidePanel}
+                    </div>
                 )}
                 <div className="core19-main-and-log">
                     <div className="core19-main-view">{children}</div>
-                    {isLogVisible && <> <Splitter /> <LogViewer /> </>}
+                    {isLogVisible && <LogViewer />}
                 </div>
             </div>
             <VisibilityBar />
