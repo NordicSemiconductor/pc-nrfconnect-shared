@@ -1,9 +1,21 @@
+$nordic-blue: #00a9ce;
+
 $white: white;
+
 $blue-gray-50: #eceff1;
 $blue-gray-100: #cfd8dc;
+$blue-gray-200: #b0bec5;
+$blue-gray-300: #90a4ae;
+$blue-gray-400: #78909c;
+$blue-gray-500: #607d8b;
+$blue-gray-600: #546e7a;
+$blue-gray-700: #455a64;
 $blue-gray-800: #37474f;
 $blue-gray-900: #263238;
 
+$theme-colors: (
+    "primary": $nordic-blue,
+);
 
 // below are old entries, check after redesign whether they can be removed
 

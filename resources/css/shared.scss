@@ -23,5 +23,24 @@ body {
 
 // used when tabbing and space
 :focus {
-    outline-color: $gray-medium-lighter !important;
+    outline-color: $nordic-blue !important;
+}
+
+.custom-switch {
+    .custom-control-label::before {
+        background-color: $blue-gray-50 !important;
+    }
+    .custom-control-label::after {
+        background-color: $blue-gray-300 !important;
+    }
+
+    .custom-control-input:checked ~ {
+        .custom-control-label::before {
+            border-color: $blue-gray-300 !important;
+            background-color: $blue-gray-300 !important;
+        }
+        .custom-control-label::after {
+            background-color: $blue-gray-50 !important;
+        }
+    }
 }
