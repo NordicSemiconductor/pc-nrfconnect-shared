@@ -35,24 +35,30 @@
  */
 
 import React from 'react';
+import { useSelector } from 'react-redux';
+
 import { openUrl } from '../open';
-import logo from '../../resources/nordic-logo-gray-icon-only.png';
+import { deviceIsSelected } from '../Device/deviceReducer';
+
+import logoDisconnected from '../../resources/nordic-logo-gray-icon-only.png';
+import logoConnected from '../../resources/nordic-logo-blue-icon-only.png';
 import '../../resources/css/logo.scss';
 
 const goToNRFConnectWebsite = () => openUrl('http://www.nordicsemi.com/nRFConnect');
 
-const Logo = () => (
-    <img
-        className="core19-logo"
-        src={logo}
-        alt="Nordic Semiconductor logo"
+export default () => {
+    const logo = useSelector(deviceIsSelected) ? logoConnected : logoDisconnected;
+    return (
+        <img
+            className="core19-logo"
+            src={logo}
+            alt="Nordic Semiconductor logo"
 
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
-        role="link"
-        onClick={goToNRFConnectWebsite}
-        onKeyPress={() => {}}
-        tabIndex="0"
-    />
-);
-
-export default Logo;
+            // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
+            role="link"
+            onClick={goToNRFConnectWebsite}
+            onKeyPress={() => {}}
+            tabIndex="0"
+        />
+    );
+};

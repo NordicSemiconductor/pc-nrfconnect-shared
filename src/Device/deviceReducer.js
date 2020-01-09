@@ -85,3 +85,5 @@ export default (state = initialState, action) => {
             return state;
     }
 };
+
+export const deviceIsSelected = state => state.device.selectedSerialNumber != null;
