@@ -1,6 +1,11 @@
 $nordic-blue: #00a9ce;
+$blue-slate: #00a9ce;
+
+$primary: $nordic-blue;
+$accent: $blue-slate;
 
 $white: white;
+$black: black;
 
 $blue-gray-50: #eceff1;
 $blue-gray-100: #cfd8dc;
@@ -13,9 +18,15 @@ $blue-gray-700: #455a64;
 $blue-gray-800: #37474f;
 $blue-gray-900: #263238;
 
-$theme-colors: (
-    "primary": $nordic-blue,
-);
+$red: #f44336;
+$indigo: #3f51b5;
+$amber: #ffc107;
+$purple: #9c27b0;
+$green: #4caf50;
+$deep-purple: #673ab7;
+$orange: #ff9800;
+$lime: #cddc39;
+$pink: #e91e63;
 
 // below are old entries, check after redesign whether they can be removed
 
@@ -38,7 +49,7 @@ $icon-color: #0080B7;
 // bootstrap 4 theme colors:
 
 $theme-colors: (
-    "primary":   $brand-primary,
+    "primary": $nordic-blue,
     "secondary": #6c757d,
     "success":   #28a745,
     "info":      #17a2b8,
