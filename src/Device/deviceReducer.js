@@ -44,13 +44,17 @@ import {
     DEVICE_SETUP_INPUT_RECEIVED,
 } from './deviceActions';
 
+const noDialogShown = {
+    isSetupDialogVisible: false,
+    setupDialogText: null,
+    setupDialogChoices: [],
+};
+
 const initialState = {
     devices: [],
     selectedSerialNumber: null,
-    isSetupDialogVisible: false,
     isSetupWaitingForUserInput: false,
-    setupDialogText: null,
-    setupDialogChoices: [],
+    ...noDialogShown,
 };
 
 export default (state = initialState, action) => {
@@ -60,14 +64,12 @@ export default (state = initialState, action) => {
         case DEVICE_SELECTED:
             return { ...state, selectedSerialNumber: action.device.serialNumber };
         case DEVICE_DESELECTED:
-            return { ...state, selectedSerialNumber: initialState.selectedSerialNumber };
+            return { ...state, selectedSerialNumber: null };
         case DEVICE_SETUP_COMPLETE:
         case DEVICE_SETUP_ERROR:
             return {
                 ...state,
-                isSetupDialogVisible: initialState.isSetupDialogVisible,
-                setupDialogText: initialState.setupDialogText,
-                setupDialogChoices: initialState.setupDialogChoices,
+                ...noDialogShown,
             };
         case DEVICE_SETUP_INPUT_REQUIRED:
             return {
