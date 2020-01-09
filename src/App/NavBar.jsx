@@ -37,16 +37,10 @@
 import React from 'react';
 import { node, string } from 'prop-types';
 
-import MainMenu from './MainMenu';
 import NavMenu, { navMenuItemsType } from './NavMenu/NavMenu';
 import Logo from './Logo';
 
 import '../../resources/css/nav-bar.scss';
-
-const NavBarItem = ({ children }) => <div className="core19-nav-bar-item">{children}</div>;
-NavBarItem.propTypes = {
-    children: node.isRequired,
-};
 
 const NavBar = ({ deviceSelect, navMenu, title }) => (
     <div className="core19-nav-bar">
