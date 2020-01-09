@@ -40,21 +40,21 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import '../../resources/css/visibility-bar.scss';
 import {
-    isSidebarVisibleSelector, isLogVisibleSelector, toggleSidebarVisible, toggleLogVisible,
+    isSidePanelVisibleSelector, isLogVisibleSelector, toggleSidePanelVisible, toggleLogVisible,
 } from './appLayout';
 
 export default () => {
     const dispatch = useDispatch();
-    const isSidebarVisible = useSelector(isSidebarVisibleSelector);
+    const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);
     return (
         <div className="core19-visibility-bar">
-            <div className="core19-visibility-bar-show-sidebar">
+            <div className="core19-visibility-bar-show-side-panel">
                 <Form.Switch
-                    id="visibility-bar-show-sidebar"
-                    label="Show menu"
-                    checked={isSidebarVisible}
-                    onChange={() => dispatch(toggleSidebarVisible)}
+                    id="visibility-bar-show-side-panel"
+                    label="Show side panel"
+                    checked={isSidePanelVisible}
+                    onChange={() => dispatch(toggleSidePanelVisible)}
                 />
             </div>
             <div className="core19-visibility-bar-show-log">

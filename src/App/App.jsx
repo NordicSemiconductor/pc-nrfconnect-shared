@@ -44,7 +44,7 @@ import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
 import VisibilityBar from './VisibilityBar';
 import ConnectedToStore from './ConnectedToStore';
-import { isSidebarVisibleSelector, isLogVisibleSelector } from './appLayout';
+import { isSidePanelVisibleSelector, isLogVisibleSelector } from './appLayout';
 
 import '../../resources/css/shared.scss';
 import '../../resources/css/app.scss';
@@ -52,14 +52,14 @@ import '../../resources/css/app.scss';
 const ConnectedApp = ({
     children, navBar, sidePanel,
 }) => {
-    const isSidebarVisible = useSelector(isSidebarVisibleSelector);
+    const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);
 
     return (
         <div className="core19-app">
             {navBar}
             <div className="core19-app-content">
-                {isSidebarVisible && (
+                {isSidePanelVisible && (
                     <div className="core19-side-panel">
                         {sidePanel}
                     </div>

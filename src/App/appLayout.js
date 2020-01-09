@@ -35,23 +35,23 @@
  */
 
 const TOGGLE_LOG_VISIBLE = 'TOGGLE_LOG_VISIBLE';
-const TOGGLE_SIDEBAR_VISIBLE = 'TOGGLE_SIDEBAR_VISIBLE';
+const TOGGLE_SIDE_PANEL_VISIBLE = 'TOGGLE_SIDE_PANEL_VISIBLE';
 
 export const toggleLogVisible = { type: TOGGLE_LOG_VISIBLE };
-export const toggleSidebarVisible = { type: TOGGLE_SIDEBAR_VISIBLE };
+export const toggleSidePanelVisible = { type: TOGGLE_SIDE_PANEL_VISIBLE };
 
 const initialState = {
-    isSidebarVisible: true,
+    isSidePanelVisible: true,
     isLogVisible: true,
 };
 
 export const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case TOGGLE_SIDEBAR_VISIBLE: return { ...state, isSidebarVisible: !state.isSidebarVisible };
+        case TOGGLE_SIDE_PANEL_VISIBLE: return { ...state, isSidePanelVisible: !state.isSidePanelVisible };
         case TOGGLE_LOG_VISIBLE: return { ...state, isLogVisible: !state.isLogVisible };
         default: return state;
     }
 };
 
-export const isSidebarVisibleSelector = state => state.appLayout.isSidebarVisible;
+export const isSidePanelVisibleSelector = state => state.appLayout.isSidePanelVisible;
 export const isLogVisibleSelector = state => state.appLayout.isLogVisible;
