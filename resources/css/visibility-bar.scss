@@ -1,17 +1,19 @@
+@import "./variables";
+
 .core19-visibility-bar {
     display: flex;
 
     .core19-visibility-bar-show-sidebar {
-        width: 314px;
-        background-color: lightgray;
+        width: $sidebar-width;
+        background-color: $blue-gray-100;
         padding: 5px 10px;
     }
 
     .core19-visibility-bar-show-log {
-        background-color: slategrey;
-        width: 100%;
-        text-align: right;
+        flex-grow: 1;
+        background-color: $blue-gray-900;
         color: white;
         padding: 5px 10px;
+        text-align: right;
     }
 }
