@@ -89,7 +89,6 @@ DeviceSelector.propTypes = {
         dfu: object,
         needSerialport: bool,
     }).isRequired,
-    portIndicatorStatus: oneOf(['on', 'off']).isRequired,
     releaseCurrentDevice: func, // () => {}
     onDeviceSelected: func, // (device) => {}
     onDeviceDeselected: func, // () => {}

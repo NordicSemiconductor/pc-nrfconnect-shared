@@ -132,7 +132,6 @@ export default class DeviceSelector extends React.Component {
         const {
             selectedSerialNumber,
             devices,
-            portIndicatorStatus,
         } = this.props;
 
         const hasDevices = devices && (devices.length > 0 || devices.size > 0);
@@ -160,7 +159,6 @@ export default class DeviceSelector extends React.Component {
                     { devices.map(device => this.getItemFromDevice(device)) }
                     { displayCloseItem ? this.getCloseItem() : null }
                 </HotkeyedDropdown>
-                <div className={`core19-device-port-indicator ${portIndicatorStatus}`} />
                 <DeviceSetup />
             </>
         );
@@ -170,7 +168,6 @@ export default class DeviceSelector extends React.Component {
 DeviceSelector.propTypes = {
     onSelect: func.isRequired,
     onDeselect: func.isRequired,
-    portIndicatorStatus: string.isRequired,
     devices: instanceOf(Array).isRequired,
     selectedSerialNumber: oneOfType([string, number]),
     onMount: func.isRequired,

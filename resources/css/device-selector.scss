@@ -29,22 +29,3 @@ ul.core19-device-selector-item-details {
     padding-left: 25px;
     margin-bottom: 0;
 }
-
-.core19-device-port-indicator {
-    display: inline-block;
-    height: 11px;
-    width: 11px;
-    border-radius: 50%;
-    border: 1px solid #645e5e;
-    margin-left: 10px;
-
-    &.on {
-        background-color: $brand-success;
-    }
-    &.off {
-        background-color: #cfcfcf;
-    }
-    &.error {
-        background-color: $brand-danger;
-    }
-}
