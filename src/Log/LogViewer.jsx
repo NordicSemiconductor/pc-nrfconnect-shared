@@ -56,7 +56,7 @@ const LogViewer = ({ logEntries, autoScroll, dispatch }) => {
     return (
         <div className="core19-log-viewer">
             <LogHeader />
-            <div ref={logContainer} className="core19-infinite-log">
+            <div ref={logContainer} className="core19-log">
                 { logEntries.map(entry => <LogEntry {...{ entry }} key={entry.id} />) }
             </div>
         </div>

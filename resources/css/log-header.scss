@@ -1,7 +1,10 @@
+@import "./variables";
+
 .core19-log-header {
     display: flex;
     flex-direction: row;
     align-items: center;
+    background-color: $blue-gray-800;
 }
 
 .core19-log-header-text {

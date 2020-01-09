@@ -7,10 +7,10 @@
     overflow: hidden;
     width: 100%;
 
-    .core19-infinite-log {
+    .core19-log {
         position: relative;
-        overflow-x: scroll !important;
-        background-color: white;
+        overflow: auto;
+        background-color: $blue-gray-800;
         height: 155px;
 
         > div {
