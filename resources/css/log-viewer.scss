@@ -1,7 +1,8 @@
 @import "./variables";
 
 .core19-log-viewer {
-    background-color: $background-color;
+    background-color: $blue-gray-800;
+    color: $blue-gray-100;
 
     border-top: 1px solid gray;
     overflow: hidden;
@@ -10,7 +11,6 @@
     .core19-log {
         position: relative;
         overflow: auto;
-        background-color: $blue-gray-800;
         height: 155px;
 
         > div {

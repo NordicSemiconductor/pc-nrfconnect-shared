@@ -3,15 +3,13 @@
 .core19-log-entry {
     height: 20px;
     white-space: nowrap;
-    background-color: $blue-gray-800;
     display: table-row;
     min-width: 100%;
+    border-bottom: 1px solid $blue-gray-100;
 
     .core19-log-cell {
         display: table-cell;
         padding: 0 20px;
-        border-right: 1px dotted gray;
-        border-bottom: 1px dotted gray;
         height: 20px;
         line-height: 20px;
         user-select: text;
