@@ -36,7 +36,7 @@
 
 import { connect } from 'react-redux';
 import {
-    bool, exact, func, object, oneOf,
+    bool, exact, func, object,
 } from 'prop-types';
 
 import DeviceSelectorView from './DeviceSelectorView';

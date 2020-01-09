@@ -47,9 +47,12 @@ const initialState = {
 
 export const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case TOGGLE_SIDE_PANEL_VISIBLE: return { ...state, isSidePanelVisible: !state.isSidePanelVisible };
-        case TOGGLE_LOG_VISIBLE: return { ...state, isLogVisible: !state.isLogVisible };
-        default: return state;
+        case TOGGLE_SIDE_PANEL_VISIBLE:
+            return { ...state, isSidePanelVisible: !state.isSidePanelVisible };
+        case TOGGLE_LOG_VISIBLE:
+            return { ...state, isLogVisible: !state.isLogVisible };
+        default:
+            return state;
     }
 };
 
