@@ -1,3 +1,16 @@
-.core19-nav-menu-item {
-    margin-right: 5px;
+.core19-nav-menu {
+    margin-left: 20px;
+    display: flex;
+
+    font-size: 14px;
+    text-transform: uppercase;
+
+    .core19-nav-menu-item {
+        font-weight: 200;
+        margin-right: 29px;
+
+        &.selected {
+            font-weight: bold;
+        }
+    }
 }

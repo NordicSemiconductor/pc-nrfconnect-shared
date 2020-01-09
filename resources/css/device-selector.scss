@@ -8,6 +8,11 @@
     .dropdown-toggle::after {
         margin-left: 12px;
     }
+
+    .btn-primary {
+        background-color: $primary;
+        border: none;
+    }
 }
 
 .core19-device-selector-item {

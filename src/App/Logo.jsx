@@ -36,25 +36,23 @@
 
 import React from 'react';
 import { openUrl } from '../open';
-import logo from '../../resources/nordic-logo-white-icon-only.png';
+import logo from '../../resources/nordic-logo-gray-icon-only.png';
 import '../../resources/css/logo.scss';
 
 const goToNRFConnectWebsite = () => openUrl('http://www.nordicsemi.com/nRFConnect');
 
 const Logo = () => (
-    <div
-        className="core19-logo-container"
+    <img
+        className="core19-logo"
+        src={logo}
+        alt="Nordic Semiconductor logo"
+
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
         role="link"
         onClick={goToNRFConnectWebsite}
         onKeyPress={() => {}}
         tabIndex="0"
-    >
-        <img
-            className="core19-logo"
-            src={logo}
-            alt="Nordic Semiconductor logo"
-        />
-    </div>
+    />
 );
 
 export default Logo;

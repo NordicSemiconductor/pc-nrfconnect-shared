@@ -36,17 +36,22 @@
 
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { arrayOf, shape } from 'prop-types';
+import { arrayOf, shape, string } from 'prop-types';
 import NavMenuItem, { navMenuItemType } from './NavMenuItem';
 import { selectItem } from './navMenuActions';
 
-const NavMenu = ({ items }) => {
+import '../../../resources/css/nav-menu.scss';
+
+const NavMenu = ({ items, title }) => {
     const selectedItem = useSelector(state => state.navMenu.selectedItem);
     const dispatch = useDispatch();
 
     return (
-        <div data-testid="nav-menu">
-            { items.map((item, index) => (
+        <div className="core19-nav-menu" data-testid="nav-menu">
+
+            <div className="core19-nav-menu-item selected">{ title != null && title} </div>
+            <div className="core19-nav-menu-item">About</div>
+            {items.map((item, index) => (
                 <NavMenuItem
                     key={index} // eslint-disable-line react/no-array-index-key
                     id={index}
@@ -64,7 +69,13 @@ const NavMenu = ({ items }) => {
 export const navMenuItemsType = arrayOf(shape(navMenuItemType).isRequired);
 
 NavMenu.propTypes = {
-    items: navMenuItemsType.isRequired,
+    items: navMenuItemsType,
+    title: string,
+};
+
+NavMenu.defaultProps = {
+    items: [],
+    title: null,
 };
 
 export default NavMenu;

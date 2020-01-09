@@ -50,10 +50,10 @@ NavBarItem.propTypes = {
 
 const NavBar = ({ deviceSelect, navMenu, title }) => (
     <div className="core19-nav-bar">
-        <NavBarItem><MainMenu /></NavBarItem>
-        {deviceSelect != null && <NavBarItem>{deviceSelect}</NavBarItem>}
-        <NavBarItem><div>{title}</div></NavBarItem>
-        <NavMenu items={navMenu} />
+        <div className="core19-nav-bar-device-selector">
+            {deviceSelect != null && deviceSelect}
+        </div>
+        <NavMenu items={navMenu} title={title} />
         <Logo />
     </div>
 );
