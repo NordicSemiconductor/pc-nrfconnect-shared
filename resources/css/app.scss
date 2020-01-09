@@ -20,12 +20,13 @@
         flex-flow: column;
         min-width: 0;
         position: relative;
+        background-color: $blue-gray-100;
 
         .core19-main-view {
+            margin: 8px;
             padding: 10px 15px;
             flex: 1;
-            border-top: 1px solid gray;
-            box-shadow: inset -0px 0px 6px 0px gray;
+            background-color: $white;
             overflow: hidden;
         }
     }
