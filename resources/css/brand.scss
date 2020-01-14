@@ -7,16 +7,16 @@ $accent: $blue-slate;
 $white: white;
 $black: black;
 
-$blue-gray-50: #eceff1;
-$blue-gray-100: #cfd8dc;
-$blue-gray-200: #b0bec5;
-$blue-gray-300: #90a4ae;
-$blue-gray-400: #78909c;
-$blue-gray-500: #607d8b;
-$blue-gray-600: #546e7a;
-$blue-gray-700: #455a64;
-$blue-gray-800: #37474f;
-$blue-gray-900: #263238;
+$gray-50: #eceff1;
+$gray-100: #cfd8dc;
+$gray-200: #b0bec5;
+$gray-300: #90a4ae;
+$gray-400: #78909c;
+$gray-500: #607d8b;
+$gray-600: #546e7a;
+$gray-700: #455a64;
+$gray-800: #37474f;
+$gray-900: #263238;
 
 $red: #f44336;
 $indigo: #3f51b5;
@@ -35,26 +35,13 @@ $brand-primary:         #0080B7; // Nordic secondary dark blue
 $brand-info:            #6dcff6; // Nordic secondary light blue
 $brand-base:            #ffffff; // White
 
-$brand-success:         #5cb85c;
-$brand-warning:         #f0ad4e;
-$brand-danger:          #d9534f;
+$brand-success: $green;
+$brand-warning: $orange;
+$brand-danger: $red;
 
-$bar1-color: rgb(179, 225, 245);
-$bar2-color: rgb(102, 196, 235);
-$bar3-color: rgb(0,   156, 222);
+$brand-primary-dark:    darken($brand-primary, 5%);     // #006e9e //used by button border
+$brand-primary-darker:  darken($brand-primary, 10%);    // #005c84 //used by focus and active
+$brand-primary-darkest: darken($brand-primary, 17%);    // #005c84 //used whe both focus and active at the same time
 
-$icon-color: #0080B7;
-
-
-// bootstrap 4 theme colors:
-
-$theme-colors: (
-    "primary": $nordic-blue,
-    "secondary": #6c757d,
-    "success":   #28a745,
-    "info":      #17a2b8,
-    "warning":   #ffc107,
-    "danger":    #dc3545,
-    "light":     #f8f9fa,
-    "dark":      #343a40
-);
+$custom-control-indicator-bg: $gray-50;
+$custom-control-indicator-checked-bg: $gray-300;

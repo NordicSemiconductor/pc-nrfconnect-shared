@@ -1,7 +1,7 @@
 @import "./variables";
 
 .core19-app {
-    background-color: $background-color;
+    background-color: $gray-50;
     width: 100%;
     height: 100%;
     display: flex;
@@ -19,7 +19,7 @@
         flex-flow: column;
         min-width: 0;
         position: relative;
-        background-color: $blue-gray-100;
+        background-color: $gray-100;
 
         .core19-main-view {
             margin: 8px;
@@ -33,7 +33,7 @@
     .core19-side-panel {
         width: $side-panel-width;
         padding: 24px 23px;
-        background-color: $blue-gray-50;
+        background-color: $gray-50;
         overflow: auto;
         height: 100%;
     }
