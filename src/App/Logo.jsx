@@ -35,19 +35,30 @@
  */
 
 import React from 'react';
+import { bool } from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import { openUrl } from '../open';
-import { deviceIsSelected } from '../Device/deviceReducer';
+import { deviceIsSelected as deviceIsSelectedSelector } from '../Device/deviceReducer';
 
+import logoUniform from '../../resources/nordic-logo-white-icon-only.png';
 import logoDisconnected from '../../resources/nordic-logo-gray-icon-only.png';
 import logoConnected from '../../resources/nordic-logo-blue-icon-only.png';
 import '../../resources/css/logo.scss';
 
 const goToNRFConnectWebsite = () => openUrl('http://www.nordicsemi.com/nRFConnect');
 
-export default () => {
-    const logo = useSelector(deviceIsSelected) ? logoConnected : logoDisconnected;
+const chooseLogo = (changeWithDeviceState, deviceIsSelected) => {
+    if (!changeWithDeviceState) {
+        return logoUniform;
+    }
+
+    return deviceIsSelected ? logoConnected : logoDisconnected;
+};
+
+const Logo = ({ changeWithDeviceState }) => {
+    const deviceIsSelected = useSelector(deviceIsSelectedSelector);
+    const logo = chooseLogo(changeWithDeviceState, deviceIsSelected);
     return (
         <img
             className="core19-logo"
@@ -62,3 +73,8 @@ export default () => {
         />
     );
 };
+
+Logo.propTypes = { changeWithDeviceState: bool };
+Logo.defaultProps = { changeWithDeviceState: false };
+
+export default Logo;

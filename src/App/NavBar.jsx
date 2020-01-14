@@ -48,7 +48,7 @@ const NavBar = ({ deviceSelect, navMenu, title }) => (
             {deviceSelect != null && deviceSelect}
         </div>
         <NavMenu items={navMenu} title={title} />
-        <Logo />
+        <Logo changeWithDeviceState />
     </div>
 );
 
