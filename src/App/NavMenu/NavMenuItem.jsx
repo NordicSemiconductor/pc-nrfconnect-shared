@@ -35,48 +35,37 @@
  */
 
 import React from 'react';
-import { bool, func, string } from 'prop-types';
-import Mousetrap from 'mousetrap';
+import { bool, elementType, string } from 'prop-types';
+import { useDispatch } from 'react-redux';
+import Button from 'react-bootstrap/Button';
 
-import '../../../resources/css/nav-menu.scss';
+import { setMainComponent } from '../appLayout';
 
-export default class NavMenuItem extends React.Component {
-    componentDidMount() {
-        const { onClick } = this.props;
-        Mousetrap.bind(this.hotkey(), onClick);
-    }
+import '../../../resources/css/nav-menu-item.scss';
 
-    componentWillUnmount() {
-        Mousetrap.unbind(this.hotkey());
-    }
+const NavMenuItem = ({
+    component, isFirst, isSelected, label,
+}) => {
+    const dispatch = useDispatch();
 
-    // eslint-disable-next-line react/destructuring-assignment
-    hotkey = () => this.props.hotkey.toLowerCase()
-
-    render() {
-        const {
-            hotkey, iconClass, isSelected, onClick, text,
-        } = this.props;
-
-        return (
-            <button
-                title={`${text} (${hotkey})`}
-                className={`core19-nav-menu-item btn btn-primary ${isSelected ? 'active' : ''}`}
-                onClick={onClick}
-                type="button"
-            >
-                <span className={iconClass} data-testid={iconClass} />
-                <span>{text}</span>
-            </button>
-        );
-    }
-}
-
-export const navMenuItemType = { text: string.isRequired, iconClass: string.isRequired };
+    return (
+        <Button
+            variant="link"
+            active={false}
+            className={`core19-nav-menu-item ${isSelected ? 'selected' : ''} ${isFirst ? 'first' : ''}`}
+            onClick={() => dispatch(setMainComponent(component))}
+            type="button"
+        >
+            {label}
+        </Button>
+    );
+};
 
 NavMenuItem.propTypes = {
-    ...navMenuItemType,
+    component: elementType.isRequired,
+    isFirst: bool.isRequired,
     isSelected: bool.isRequired,
-    onClick: func.isRequired,
-    hotkey: string.isRequired,
+    label: string.isRequired,
 };
+
+export default NavMenuItem;

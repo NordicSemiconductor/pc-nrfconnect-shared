@@ -35,33 +35,30 @@
  */
 
 import React from 'react';
-import { node, string } from 'prop-types';
+import { array, arrayOf, node } from 'prop-types';
 
-import NavMenu, { navMenuItemsType } from './NavMenu/NavMenu';
+import NavMenu from './NavMenu/NavMenu';
 import Logo from './Logo';
 
 import '../../resources/css/nav-bar.scss';
 
-const NavBar = ({ deviceSelect, navMenu, title }) => (
+const NavBar = ({ deviceSelect, panes }) => (
     <div className="core19-nav-bar">
         <div className="core19-nav-bar-device-selector">
             {deviceSelect != null && deviceSelect}
         </div>
-        <NavMenu items={navMenu} title={title} />
+        <NavMenu panes={panes} />
         <Logo changeWithDeviceState />
     </div>
 );
 
 NavBar.propTypes = {
     deviceSelect: node,
-    navMenu: navMenuItemsType,
-    title: string,
+    panes: arrayOf(array.isRequired).isRequired,
 };
 
 NavBar.defaultProps = ({
     deviceSelect: null,
-    navMenu: [],
-    title: '',
 });
 
 export default NavBar;

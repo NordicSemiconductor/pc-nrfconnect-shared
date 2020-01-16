@@ -35,29 +35,36 @@
  */
 
 import React from 'react';
-import { node, func } from 'prop-types';
+import {
+    array, arrayOf, func, node,
+} from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import LogViewer from '../Log/LogViewer';
 
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
+import NavBar from './NavBar';
 import VisibilityBar from './VisibilityBar';
 import ConnectedToStore from './ConnectedToStore';
-import { isSidePanelVisibleSelector, isLogVisibleSelector } from './appLayout';
+import { isSidePanelVisibleSelector, isLogVisibleSelector, mainComponentSelector } from './appLayout';
 
 import '../../resources/css/shared.scss';
 import '../../resources/css/app.scss';
 
 const ConnectedApp = ({
-    children, navBar, sidePanel,
+    deviceSelect, panes, sidePanel,
 }) => {
     const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);
+    const MainComponent = useSelector(mainComponentSelector(panes));
 
     return (
         <div className="core19-app">
-            {navBar}
+            <NavBar
+                deviceSelect={deviceSelect}
+                panes={panes}
+            />
             <div className="core19-app-content">
                 {isSidePanelVisible && (
                     <div className="core19-side-panel">
@@ -65,7 +72,7 @@ const ConnectedApp = ({
                     </div>
                 )}
                 <div className="core19-main-and-log">
-                    <div className="core19-main-view">{children}</div>
+                    <div className="core19-main-view"><MainComponent /></div>
                     {isLogVisible && <LogViewer />}
                 </div>
             </div>
@@ -78,8 +85,8 @@ const ConnectedApp = ({
 };
 
 ConnectedApp.propTypes = {
-    children: node.isRequired,
-    navBar: node.isRequired,
+    deviceSelect: node.isRequired,
+    panes: arrayOf(array.isRequired).isRequired,
     sidePanel: node.isRequired,
 };
 

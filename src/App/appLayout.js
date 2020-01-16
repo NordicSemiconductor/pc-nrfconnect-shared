@@ -36,9 +36,11 @@
 
 const TOGGLE_LOG_VISIBLE = 'TOGGLE_LOG_VISIBLE';
 const TOGGLE_SIDE_PANEL_VISIBLE = 'TOGGLE_SIDE_PANEL_VISIBLE';
+const SET_MAIN_COMPONENT = 'SET_MAIN_COMPONENT';
 
-export const toggleLogVisible = { type: TOGGLE_LOG_VISIBLE };
-export const toggleSidePanelVisible = { type: TOGGLE_SIDE_PANEL_VISIBLE };
+export const toggleLogVisible = () => ({ type: TOGGLE_LOG_VISIBLE });
+export const toggleSidePanelVisible = () => ({ type: TOGGLE_SIDE_PANEL_VISIBLE });
+export const setMainComponent = mainComponent => ({ type: SET_MAIN_COMPONENT, mainComponent });
 
 const initialState = {
     isSidePanelVisible: true,
@@ -51,6 +53,8 @@ export const reducer = (state = initialState, action) => {
             return { ...state, isSidePanelVisible: !state.isSidePanelVisible };
         case TOGGLE_LOG_VISIBLE:
             return { ...state, isLogVisible: !state.isLogVisible };
+        case SET_MAIN_COMPONENT:
+            return { ...state, mainComponent: action.mainComponent };
         default:
             return state;
     }
@@ -58,3 +62,8 @@ export const reducer = (state = initialState, action) => {
 
 export const isSidePanelVisibleSelector = state => state.appLayout.isSidePanelVisible;
 export const isLogVisibleSelector = state => state.appLayout.isLogVisible;
+
+export const mainComponentSelector = panes => state => {
+    const defaultMainComponent = panes[0][1];
+    return state.appLayout.mainComponent || defaultMainComponent;
+};

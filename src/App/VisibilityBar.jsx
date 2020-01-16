@@ -54,7 +54,7 @@ export default () => {
                     id="visibility-bar-show-side-panel"
                     label="Show side panel"
                     checked={isSidePanelVisible}
-                    onChange={() => dispatch(toggleSidePanelVisible)}
+                    onChange={() => dispatch(toggleSidePanelVisible())}
                 />
             </div>
             <div className="core19-visibility-bar-show-log">
@@ -62,7 +62,7 @@ export default () => {
                     id="visibility-bar-show-log"
                     label="Show log"
                     checked={isLogVisible}
-                    onChange={() => dispatch(toggleLogVisible)}
+                    onChange={() => dispatch(toggleLogVisible())}
                 />
             </div>
         </div>

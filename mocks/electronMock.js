@@ -10,4 +10,8 @@ module.exports = {
     app: jest.fn(),
     remote: jest.fn(),
     dialog: jest.fn(),
+    ipcRenderer: {
+        once: jest.fn(),
+        send: jest.fn(),
+    },
 };

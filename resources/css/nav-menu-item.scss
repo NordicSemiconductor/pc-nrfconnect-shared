@@ -1,0 +1,25 @@
+@import "./variables";
+
+// This cannot be only .core19-nav-menu-item, because then it would be overriden by the normal .btn style
+.btn.core19-nav-menu-item {
+    margin-left: 29px;
+
+    &.first {
+        margin-left: 20px;
+    }
+
+    padding: 0;
+
+    font-size: 14px;
+    font-weight: 200;
+    color: $gray-500;
+    text-transform: uppercase;
+
+    &.selected {
+        font-weight: bold;
+    }
+
+    &:focus, &:hover {
+        text-decoration: none;
+    }
+}

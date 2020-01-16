@@ -39,58 +39,62 @@ import { fireEvent } from '@testing-library/react';
 
 import render from '../../../test/testrenderer';
 
+import App from '../App';
 import NavMenu from './NavMenu';
 
-const aMenuItem = { text: 'an item', iconClass: 'an icon class' };
-const anotherMenuItem = { text: 'another item', iconClass: 'another icon class' };
-const menuItems = [aMenuItem, anotherMenuItem];
+const aPane = ['an menu item', () => <div>A pane</div>];
+const anotherPane = ['another menu item', () => <div>Another pane</div>];
+
+const renderApp = panes => {
+    const dummyReducer = (s = null) => s;
+    const dummyNode = <div />;
+
+    return render(<App
+        appReducer={dummyReducer}
+        deviceSelect={dummyNode}
+        sidePanel={dummyNode}
+        panes={panes}
+    />);
+};
+
+expect.extend({
+    toBeHighlighted(element) {
+        const pass = element.classList.contains('selected');
+        const not = pass ? 'not ' : '';
+        const message = () => (
+            `Expected the element to ${not}contain a class 'selected' to signify that `
+            + `it is ${not}highlighted. It actually contained: ${element.className}`
+        );
+        return { pass, message };
+    },
+});
 
 describe('NavMenu', () => {
-    it('can be empty', () => {
-        const { getByTestId, queryByText } = render(<NavMenu items={[]} />);
-
-        expect(getByTestId('nav-menu')).toBeEmpty();
-        expect(queryByText('an item')).not.toBeInTheDocument();
-    });
-
     it('displays multiple items', () => {
-        const { getByText } = render(<NavMenu items={menuItems} />);
+        const { getByText } = render(<NavMenu panes={[aPane, anotherPane]} />);
 
-        expect(getByText('an item')).toBeInTheDocument();
-        expect(getByText('another item')).toBeInTheDocument();
+        expect(getByText('an menu item')).toBeInTheDocument();
+        expect(getByText('another menu item')).toBeInTheDocument();
     });
 
-    it('an item is displayed correctly', () => {
-        const { getByText, getByTestId } = render(<NavMenu items={menuItems} />);
-        const icon = getByTestId('an icon class');
-        const button = getByText('an item').parentNode;
+    it('has items that can be selected', () => {
+        const { getByText, queryByText } = renderApp([aPane, anotherPane]);
+        const menuItem = getByText('another menu item');
 
-        expect(button).toContainElement(icon);
-        expect(button).toHaveAttribute('title', 'an item (Alt+1)');
-        expect(button).toHaveTextContent('an item');
+        expect(menuItem).not.toBeHighlighted();
+        expect(getByText('A pane')).toBeInTheDocument();
+        expect(queryByText('Another pane')).not.toBeInTheDocument();
+
+        fireEvent.click(menuItem);
+
+        expect(menuItem).toBeHighlighted();
+        expect(queryByText('A pane')).not.toBeInTheDocument();
+        expect(getByText('Another pane')).toBeInTheDocument();
     });
 
-    it('a selected item is highligthed', async () => {
-        const { getByText } = render(<NavMenu items={menuItems} />);
-        const button = getByText('another item').parentNode;
+    it('automatically gets an About pane attached', () => {
+        const { getByText } = render(<NavMenu panes={[aPane, anotherPane]} />);
 
-        expect(button).not.toHaveClass('active');
-
-        fireEvent.click(button);
-
-        expect(button).toHaveClass('active');
-    });
-
-    it('a item can be selected by hotkey', async () => {
-        const { getByText } = render(<NavMenu items={menuItems} />);
-        const button = getByText('an item').parentNode;
-
-        expect(button).not.toHaveClass('active');
-
-        const charCodeOfOne = '1'.charCodeAt(0); // mousetrap.js needs 'which' to be set
-        const altOne = { code: 'Digit1', which: charCodeOfOne, altKey: true };
-        fireEvent.keyDown(document.body, altOne);
-
-        expect(button).toHaveClass('active');
+        expect(getByText('About')).toBeInTheDocument();
     });
 });

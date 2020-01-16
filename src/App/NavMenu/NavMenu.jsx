@@ -35,47 +35,34 @@
  */
 
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { arrayOf, shape, string } from 'prop-types';
-import NavMenuItem, { navMenuItemType } from './NavMenuItem';
-import { selectItem } from './navMenuActions';
+import { array, arrayOf } from 'prop-types';
+import { useSelector } from 'react-redux';
 
-import '../../../resources/css/nav-menu.scss';
+import { mainComponentSelector } from '../appLayout';
+import About from '../About';
+import NavMenuItem from './NavMenuItem';
 
-const NavMenu = ({ items, title }) => {
-    const selectedItem = useSelector(state => state.navMenu.selectedItem);
-    const dispatch = useDispatch();
+const NavMenu = ({ panes }) => {
+    const currentMainComponent = useSelector(mainComponentSelector(panes));
+    const allPanes = [...panes, ['About', About]];
 
     return (
-        <div className="core19-nav-menu" data-testid="nav-menu">
-
-            <div className="core19-nav-menu-item selected">{ title != null && title} </div>
-            <div className="core19-nav-menu-item">About</div>
-            {items.map((item, index) => (
+        <div data-testid="nav-menu">
+            {allPanes.map(([name, component], index) => (
                 <NavMenuItem
-                    key={index} // eslint-disable-line react/no-array-index-key
-                    id={index}
-                    isSelected={index === selectedItem}
-                    text={item.text}
-                    hotkey={`Alt+${index + 1}`}
-                    iconClass={item.iconClass}
-                    onClick={() => dispatch(selectItem(index))}
+                    key={name}
+                    component={component}
+                    isFirst={index === 0}
+                    isSelected={currentMainComponent === component}
+                    label={name}
                 />
             ))}
         </div>
     );
 };
 
-export const navMenuItemsType = arrayOf(shape(navMenuItemType).isRequired);
-
 NavMenu.propTypes = {
-    items: navMenuItemsType,
-    title: string,
-};
-
-NavMenu.defaultProps = {
-    items: [],
-    title: null,
+    panes: arrayOf(array.isRequired).isRequired,
 };
 
 export default NavMenu;
