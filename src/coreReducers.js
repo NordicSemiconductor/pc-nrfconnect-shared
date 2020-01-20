@@ -38,7 +38,6 @@ import appReloadDialog from './AppReload/appReloadDialogReducer';
 import device from './Device/deviceReducer';
 import errorDialog from './ErrorDialog/errorDialogReducer';
 import log from './Log/logReducer';
-import navMenu from './App/NavMenu/navMenuReducer';
 import { reducer as appLayout } from './App/appLayout';
 
 export default {
@@ -47,5 +46,4 @@ export default {
     device,
     errorDialog,
     log,
-    navMenu,
 };
