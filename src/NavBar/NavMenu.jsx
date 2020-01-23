@@ -35,37 +35,34 @@
  */
 
 import React from 'react';
-import { bool, elementType, string } from 'prop-types';
-import { useDispatch } from 'react-redux';
-import Button from 'react-bootstrap/Button';
+import { array, arrayOf } from 'prop-types';
+import { useSelector } from 'react-redux';
 
-import { setMainComponent } from '../appLayout';
+import { mainComponentSelector } from '../App/appLayout';
+import About from '../About';
+import NavMenuItem from './NavMenuItem';
 
-import './nav-menu-item.scss';
-
-const NavMenuItem = ({
-    component, isFirst, isSelected, label,
-}) => {
-    const dispatch = useDispatch();
+const NavMenu = ({ panes }) => {
+    const currentMainComponent = useSelector(mainComponentSelector(panes));
+    const allPanes = [...panes, ['About', About]];
 
     return (
-        <Button
-            variant="link"
-            active={false}
-            className={`core19-nav-menu-item ${isSelected ? 'selected' : ''} ${isFirst ? 'first' : ''}`}
-            onClick={() => dispatch(setMainComponent(component))}
-            type="button"
-        >
-            {label}
-        </Button>
+        <div data-testid="nav-menu">
+            {allPanes.map(([name, component], index) => (
+                <NavMenuItem
+                    key={name}
+                    component={component}
+                    isFirst={index === 0}
+                    isSelected={currentMainComponent === component}
+                    label={name}
+                />
+            ))}
+        </div>
     );
 };
 
-NavMenuItem.propTypes = {
-    component: elementType.isRequired,
-    isFirst: bool.isRequired,
-    isSelected: bool.isRequired,
-    label: string.isRequired,
+NavMenu.propTypes = {
+    panes: arrayOf(array.isRequired).isRequired,
 };
 
-export default NavMenuItem;
+export default NavMenu;

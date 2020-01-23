@@ -44,7 +44,7 @@ import LogViewer from '../Log/LogViewer';
 
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
-import NavBar from './NavBar';
+import NavBar from '../NavBar/NavBar';
 import VisibilityBar from './VisibilityBar';
 import ConnectedToStore from './ConnectedToStore';
 import { isSidePanelVisibleSelector, isLogVisibleSelector, mainComponentSelector } from './appLayout';

@@ -35,30 +35,37 @@
  */
 
 import React from 'react';
-import { array, arrayOf, node } from 'prop-types';
+import { bool, elementType, string } from 'prop-types';
+import { useDispatch } from 'react-redux';
+import Button from 'react-bootstrap/Button';
 
-import Logo from '../Logo/Logo';
-import NavMenu from './NavMenu/NavMenu';
+import { setMainComponent } from '../App/appLayout';
 
-import './nav-bar.scss';
+import './nav-menu-item.scss';
 
-const NavBar = ({ deviceSelect, panes }) => (
-    <div className="core19-nav-bar">
-        <div className="core19-nav-bar-device-selector">
-            {deviceSelect != null && deviceSelect}
-        </div>
-        <NavMenu panes={panes} />
-        <Logo changeWithDeviceState />
-    </div>
-);
+const NavMenuItem = ({
+    component, isFirst, isSelected, label,
+}) => {
+    const dispatch = useDispatch();
 
-NavBar.propTypes = {
-    deviceSelect: node,
-    panes: arrayOf(array.isRequired).isRequired,
+    return (
+        <Button
+            variant="link"
+            active={false}
+            className={`core19-nav-menu-item ${isSelected ? 'selected' : ''} ${isFirst ? 'first' : ''}`}
+            onClick={() => dispatch(setMainComponent(component))}
+            type="button"
+        >
+            {label}
+        </Button>
+    );
 };
 
-NavBar.defaultProps = ({
-    deviceSelect: null,
-});
+NavMenuItem.propTypes = {
+    component: elementType.isRequired,
+    isFirst: bool.isRequired,
+    isSelected: bool.isRequired,
+    label: string.isRequired,
+};
 
-export default NavBar;
+export default NavMenuItem;

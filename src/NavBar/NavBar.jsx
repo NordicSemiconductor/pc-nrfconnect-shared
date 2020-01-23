@@ -35,34 +35,30 @@
  */
 
 import React from 'react';
-import { array, arrayOf } from 'prop-types';
-import { useSelector } from 'react-redux';
+import { array, arrayOf, node } from 'prop-types';
 
-import { mainComponentSelector } from '../appLayout';
-import About from '../About';
-import NavMenuItem from './NavMenuItem';
+import Logo from '../Logo/Logo';
+import NavMenu from './NavMenu';
 
-const NavMenu = ({ panes }) => {
-    const currentMainComponent = useSelector(mainComponentSelector(panes));
-    const allPanes = [...panes, ['About', About]];
+import './nav-bar.scss';
 
-    return (
-        <div data-testid="nav-menu">
-            {allPanes.map(([name, component], index) => (
-                <NavMenuItem
-                    key={name}
-                    component={component}
-                    isFirst={index === 0}
-                    isSelected={currentMainComponent === component}
-                    label={name}
-                />
-            ))}
+const NavBar = ({ deviceSelect, panes }) => (
+    <div className="core19-nav-bar">
+        <div className="core19-nav-bar-device-selector">
+            {deviceSelect != null && deviceSelect}
         </div>
-    );
-};
+        <NavMenu panes={panes} />
+        <Logo changeWithDeviceState />
+    </div>
+);
 
-NavMenu.propTypes = {
+NavBar.propTypes = {
+    deviceSelect: node,
     panes: arrayOf(array.isRequired).isRequired,
 };
 
-export default NavMenu;
+NavBar.defaultProps = ({
+    deviceSelect: null,
+});
+
+export default NavBar;

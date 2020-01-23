@@ -37,9 +37,9 @@
 import React from 'react';
 import { fireEvent } from '@testing-library/react';
 
-import render from '../../../test/testrenderer';
+import render from '../../test/testrenderer';
 
-import App from '../App';
+import App from '../App/App';
 import NavMenu from './NavMenu';
 
 const aPane = ['an menu item', () => <div>A pane</div>];
