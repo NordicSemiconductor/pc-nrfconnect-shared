@@ -41,7 +41,7 @@ import Button from 'react-bootstrap/Button';
 
 import { setMainComponent } from '../appLayout';
 
-import '../../../resources/css/nav-menu-item.scss';
+import './nav-menu-item.scss';
 
 const NavMenuItem = ({
     component, isFirst, isSelected, label,

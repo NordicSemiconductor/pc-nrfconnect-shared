@@ -49,8 +49,8 @@ import VisibilityBar from './VisibilityBar';
 import ConnectedToStore from './ConnectedToStore';
 import { isSidePanelVisibleSelector, isLogVisibleSelector, mainComponentSelector } from './appLayout';
 
-import '../../resources/css/shared.scss';
-import '../../resources/css/app.scss';
+import './shared.scss';
+import './app.scss';
 
 const ConnectedApp = ({
     deviceSelect, panes, sidePanel,

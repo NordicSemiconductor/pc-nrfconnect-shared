@@ -43,7 +43,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import HotkeyedDropdown from './HotkeyedDropdown';
 import DeviceSetup from './DeviceSetup';
 
-import '../../resources/css/device-selector.scss';
+import './device-selector.scss';
 
 const menuItemCssClass = 'core19-device-selector-item btn-primary';
 

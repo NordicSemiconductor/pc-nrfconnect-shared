@@ -43,7 +43,7 @@ import logger from '../logging';
 import { clear, toggleAutoScroll } from './logActions';
 import LogHeaderButton from './LogHeaderButton';
 
-import '../../resources/css/log-header.scss';
+import './log-header.scss';
 
 const LogHeader = ({ autoScroll, dispatch }) => (
     <div className="core19-log-header">

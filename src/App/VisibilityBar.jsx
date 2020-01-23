@@ -38,7 +38,7 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 
-import '../../resources/css/visibility-bar.scss';
+import './visibility-bar.scss';
 import {
     isSidePanelVisibleSelector, isLogVisibleSelector, toggleSidePanelVisible, toggleLogVisible,
 } from './appLayout';

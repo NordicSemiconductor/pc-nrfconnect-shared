@@ -41,10 +41,10 @@ import { useSelector } from 'react-redux';
 import { openUrl } from '../open';
 import { deviceIsSelected as deviceIsSelectedSelector } from '../Device/deviceReducer';
 
-import logoUniform from '../../resources/nordic-logo-white-icon-only.png';
-import logoDisconnected from '../../resources/nordic-logo-gray-icon-only.png';
-import logoConnected from '../../resources/nordic-logo-blue-icon-only.png';
-import '../../resources/css/logo.scss';
+import logoUniform from './nordic-logo-white-icon-only.png';
+import logoDisconnected from './nordic-logo-gray-icon-only.png';
+import logoConnected from './nordic-logo-blue-icon-only.png';
+import './logo.scss';
 
 const goToNRFConnectWebsite = () => openUrl('http://www.nordicsemi.com/nRFConnect');
 

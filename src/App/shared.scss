@@ -2,7 +2,7 @@ $roboto-font-path: "~roboto-fontface/fonts" !default;
 @import "~roboto-fontface/css/roboto/sass/roboto-fontface";
 
 @import "~@mdi/font/css/materialdesignicons.min.css";
-@import "./variables";
+@import "../variables";
 @import "~bootstrap/scss/bootstrap";
 
 @each $color, $value in $theme-colors {

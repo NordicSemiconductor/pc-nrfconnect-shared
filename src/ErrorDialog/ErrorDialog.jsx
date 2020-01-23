@@ -42,7 +42,7 @@ import ReactMarkdown from 'react-markdown';
 
 import { hideDialog } from './errorDialogActions';
 
-import '../../resources/css/error.scss';
+import './error.scss';
 
 const ErrorDialog = () => {
     const dispatch = useDispatch();

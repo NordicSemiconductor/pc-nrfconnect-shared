@@ -41,7 +41,7 @@ import LogHeader from './LogHeader';
 import LogEntry, { entryShape } from './LogEntry';
 import { startListening } from './logListener';
 
-import '../../resources/css/log-viewer.scss';
+import './log-viewer.scss';
 
 const LogViewer = ({ logEntries, autoScroll, dispatch }) => {
     const logContainer = useRef(null);

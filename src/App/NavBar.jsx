@@ -40,7 +40,7 @@ import { array, arrayOf, node } from 'prop-types';
 import NavMenu from './NavMenu/NavMenu';
 import Logo from './Logo';
 
-import '../../resources/css/nav-bar.scss';
+import './nav-bar.scss';
 
 const NavBar = ({ deviceSelect, panes }) => (
     <div className="core19-nav-bar">

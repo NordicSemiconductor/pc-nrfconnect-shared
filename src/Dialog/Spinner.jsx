@@ -35,7 +35,7 @@
  */
 
 import React from 'react';
-import spinnerImg from '../../resources/ajax-loader.gif';
+import spinnerImg from './ajax-loader.gif';
 
 export default () => (
     <img
