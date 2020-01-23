@@ -34,26 +34,26 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+import { useEffect, useRef, useState } from 'react';
 
-export { ErrorDialogActions };
+/**
+ * Observe and return the width of an element
+ *
+ * @returns {[elementWidth, elementRef]} The width of the element and the ref which has to be
+ * attached to the target element.
+ */
+export default () => {
+    const elementRef = useRef();
+    const [elementWidth, setElementWidth] = useState();
+    const reportWidth = () => setElementWidth(elementRef.current.clientWidth);
 
-export { default as App } from './App/App';
-export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
-export { default as Slider } from './Slider/Slider';
+    useEffect(() => {
+        reportWidth();
 
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
+        const widthObserver = new ResizeObserver(reportWidth);
+        widthObserver.observe(elementRef.current);
+        return () => widthObserver.disconnect();
+    }, [elementRef.current]);
 
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as logger } from './logging';
-
-export {
-    setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
-} from './appDirs';
-
-export { openFile, openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as userData } from './userData';
+    return [elementWidth, elementRef];
+};

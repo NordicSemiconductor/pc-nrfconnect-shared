@@ -34,26 +34,54 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+import React from 'react';
+import {
+    arrayOf, func, number, string,
+} from 'prop-types';
 
-export { ErrorDialogActions };
+import Bar from './Bar';
+import Handle from './Handle';
+import useWidthObserver from './useWidthObserver';
+import rangeShape from './rangeShape';
 
-export { default as App } from './App/App';
-export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
-export { default as Slider } from './Slider/Slider';
+import './slider.scss';
 
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
+const Slider = ({
+    id, values, range, onChange, onChangeComplete,
+}) => {
+    if (values.length === 0) console.error('"values" must contain at least on element');
+    if (values.length !== onChange.length) console.error(`Props 'values' and 'onChange' must have the same size but were ${values} and ${onChange}`);
+    if (range.min > range.max) console.error(`range.min must not be higher than range.max: ${JSON.stringify(range)}`);
 
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as logger } from './logging';
+    const [sliderWidth, sliderRef] = useWidthObserver();
 
-export {
-    setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
-} from './appDirs';
+    return (
+        <div className="slider" id={id} ref={sliderRef}>
+            <Bar values={values} range={range} />
+            {values.map((value, index) => (
+                <Handle
+                    key={index} // eslint-disable-line react/no-array-index-key
+                    value={value}
+                    range={range}
+                    onChange={onChange[index]}
+                    onChangeComplete={onChangeComplete}
+                    sliderWidth={sliderWidth}
+                />
+            ))}
+        </div>
+    );
+};
 
-export { openFile, openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as userData } from './userData';
+Slider.propTypes = {
+    id: string,
+    values: arrayOf(number.isRequired).isRequired,
+    range: rangeShape.isRequired,
+    onChange: arrayOf(func.isRequired).isRequired,
+    onChangeComplete: func,
+};
+Slider.defaultProps = {
+    id: null,
+    onChangeComplete: () => {},
+};
+
+export default Slider;

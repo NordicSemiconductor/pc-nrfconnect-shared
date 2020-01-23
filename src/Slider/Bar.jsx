@@ -34,26 +34,32 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+import React from 'react';
+import { arrayOf, number } from 'prop-types';
+import rangeShape from './rangeShape';
+import { toPercentage } from './percentage';
 
-export { ErrorDialogActions };
+const Bar = ({ values, range }) => {
+    const start = values.length === 1 ? 0 : toPercentage(Math.min(...values), range);
+    const end = toPercentage(Math.max(...values), range);
 
-export { default as App } from './App/App';
-export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
-export { default as Slider } from './Slider/Slider';
+    return (
+        <>
+            <div className="slider-bar background" />
+            <div
+                className="slider-bar foreground"
+                style={{
+                    left: `${start}%`,
+                    width: `${end - start}%`,
+                }}
+            />
+        </>
+    );
+};
+Bar.propTypes = {
+    values: arrayOf(number.isRequired).isRequired,
+    range: rangeShape.isRequired,
+};
 
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
 
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as logger } from './logging';
-
-export {
-    setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
-} from './appDirs';
-
-export { openFile, openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as userData } from './userData';
+export default Bar;
