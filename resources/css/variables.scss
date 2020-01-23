@@ -1,16 +1,75 @@
-/* Copyright (c) 2016 Nordic Semiconductor. All Rights Reserved.
+/* Copyright (c) 2015 - 2017, Nordic Semiconductor ASA
  *
- * The information contained herein is property of Nordic Semiconductor ASA.
- * Terms and conditions of usage are described in detail in NORDIC
- * SEMICONDUCTOR STANDARD SOFTWARE LICENSE AGREEMENT.
+ * All rights reserved.
  *
- * Licensees are granted free, non-transferable use of the information. NO
- * WARRANTY of ANY KIND is provided. This heading must NOT be removed from
- * the file.
+ * Use in source and binary forms, redistribution in binary form only, with
+ * or without modification, are permitted provided that the following conditions
+ * are met:
  *
+ * 1. Redistributions in binary form, except as embedded into a Nordic
+ *    Semiconductor ASA integrated circuit in a product or a software update for
+ *    such product, must reproduce the above copyright notice, this list of
+ *    conditions and the following disclaimer in the documentation and/or other
+ *    materials provided with the distribution.
+ *
+ * 2. Neither the name of Nordic Semiconductor ASA nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
+ *
+ * 3. This software, with or without modification, must only be used with a Nordic
+ *    Semiconductor ASA integrated circuit.
+ *
+ * 4. Any software provided in binary form under this license must not be reverse
+ *    engineered, decompiled, modified and/or disassembled.
+ *
+ * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "./brand.scss";
+$nordic-blue: #00a9ce;
+$blue-slate: #0033a0;
+
+$primary: $nordic-blue;
+$accent: $blue-slate;
+
+$white: white;
+$black: black;
+
+$gray-50: #eceff1;
+$gray-100: #cfd8dc;
+$gray-200: #b0bec5;
+$gray-300: #90a4ae;
+$gray-400: #78909c;
+$gray-500: #607d8b;
+$gray-600: #546e7a;
+$gray-700: #455a64;
+$gray-800: #37474f;
+$gray-900: #263238;
+
+$red: #f44336;
+$indigo: #3f51b5;
+$amber: #ffc107;
+$purple: #9c27b0;
+$green: #4caf50;
+$deep-purple: #673ab7;
+$orange: #ff9800;
+$lime: #cddc39;
+$pink: #e91e63;
+
+$brand-success: $green;
+$brand-warning: $orange;
+$brand-danger: $red;
+
+$custom-control-indicator-bg: $gray-50;
+$custom-control-indicator-checked-bg: $gray-300;
 
 $side-panel-width: 260px;
 
@@ -28,7 +87,7 @@ $body-bg:               #fff;
 $text-color:            $gray-900;
 
 //** Global textual link color.
-$link-color:            $brand-primary;
+$link-color:            $primary;
 //** Link hover color set via `darken()` function.
 $link-hover-color:      darken($link-color, 15%);
 //** Link hover decoration.
@@ -93,7 +152,7 @@ $border-radius-small:       3px;
 //** Global color for active items (e.g., navs or dropdowns).
 $component-active-color:    #fff;
 //** Global background color for active items (e.g., navs or dropdowns).
-$component-active-bg:       $brand-primary;
+$component-active-bg:       $primary;
 
 //** Width of the `border` for generating carets that indicator dropdowns.
 $caret-width-base:          4px;
@@ -133,7 +192,7 @@ $btn-default-bg:                 #fff;
 $btn-default-border:             #ccc;
 
 $btn-primary-color:              #fff;
-$btn-primary-bg:                 $brand-primary;
+$btn-primary-bg:                 $primary;
 $btn-primary-border:             darken($btn-primary-bg, 5%);
 
 $btn-success-color:              #fff;
@@ -141,7 +200,7 @@ $btn-success-bg:                 $brand-success;
 $btn-success-border:             darken($btn-success-bg, 5%);
 
 $btn-info-color:                 #fff;
-$btn-info-bg:                    $brand-info;
+$btn-info-bg:                    $accent;
 $btn-info-border:                darken($btn-info-bg, 5%);
 
 $btn-warning-color:              #fff;
@@ -440,8 +499,8 @@ $pagination-hover-bg:                  $gray-50;
 $pagination-hover-border:              #ddd;
 
 $pagination-active-color:              #fff;
-$pagination-active-bg:                 $brand-primary;
-$pagination-active-border:             $brand-primary;
+$pagination-active-bg:                 $primary;
+$pagination-active-border:             $primary;
 
 $pagination-disabled-color:            $gray-400;
 $pagination-disabled-bg:               #fff;
@@ -551,11 +610,11 @@ $popover-arrow-outer-fallback-color:  darken($popover-fallback-border-color, 20%
 //** Default label background color
 $label-default-bg:            $gray-400;
 //** Primary label background color
-$label-primary-bg:            $brand-primary;
+$label-primary-bg:            $primary;
 //** Success label background color
 $label-success-bg:            $brand-success;
 //** Info label background color
-$label-info-bg:               $brand-info;
+$label-info-bg:               $accent;
 //** Warning label background color
 $label-warning-bg:            $brand-warning;
 //** Danger label background color
@@ -637,7 +696,7 @@ $progress-bar-color:          #fff;
 $progress-border-radius:      $border-radius-base;
 
 //** Default progress bar color
-$progress-bar-bg:             $brand-primary;
+$progress-bar-bg:             $primary;
 //** Success progress bar color
 $progress-bar-success-bg:     $brand-success;
 //** Warning progress bar color
@@ -645,7 +704,7 @@ $progress-bar-warning-bg:     $brand-warning;
 //** Danger progress bar color
 $progress-bar-danger-bg:      $brand-danger;
 //** Info progress bar color
-$progress-bar-info-bg:        $brand-info;
+$progress-bar-info-bg:        $accent;
 
 
 //== List group
@@ -701,8 +760,8 @@ $panel-default-border:        #ddd;
 $panel-default-heading-bg:    #f5f5f5;
 
 $panel-primary-text:          #fff;
-$panel-primary-border:        $brand-primary;
-$panel-primary-heading-bg:    $brand-primary;
+$panel-primary-border:        $primary;
+$panel-primary-heading-bg:    $primary;
 
 $panel-success-text:          $state-success-text;
 $panel-success-border:        $state-success-border;
