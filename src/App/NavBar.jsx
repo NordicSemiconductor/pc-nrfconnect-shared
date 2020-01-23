@@ -37,8 +37,8 @@
 import React from 'react';
 import { array, arrayOf, node } from 'prop-types';
 
+import Logo from '../Logo/Logo';
 import NavMenu from './NavMenu/NavMenu';
-import Logo from './Logo';
 
 import './nav-bar.scss';
 
