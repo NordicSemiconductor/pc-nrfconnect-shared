@@ -8,16 +8,19 @@ $handle-radius-selected: 8px;
     height: 2*$handle-radius-selected;
 
     position: relative;
+    margin: 0 $handle-radius;
 }
 
 .slider .slider-bar {
     position: absolute;
     top: $handle-radius-selected - 0.5 * $bar-height;
     height: $bar-height;
+    margin: 0 (-$handle-radius);
 }
 
 .slider .slider-bar.background {
-    width: 100%;
+    left: 0;
+    right: 0;
     background-color: $gray-200;
 }
 
