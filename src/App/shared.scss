@@ -7,7 +7,12 @@ $roboto-font-path: "~roboto-fontface/fonts" !default;
 
 @each $color, $value in $theme-colors {
     .btn-#{$color} {
-        border-color: darken($value, 5%);
+        border-color: $gray-200;
+
+        &.disabled,&:disabled {
+            color: $gray-300;
+            border-color: $gray-100;
+        }
     }
 }
 
