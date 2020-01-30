@@ -36,14 +36,16 @@
 
 import React, { useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { arrayOf, bool, func } from 'prop-types';
+import { arrayOf, bool } from 'prop-types';
 import LogHeader from './LogHeader';
 import LogEntry, { entryShape } from './LogEntry';
-import { startListening } from './logListener';
+import { useLogListener } from './logListener';
 
 import './log-viewer.scss';
 
-const LogViewer = ({ logEntries, autoScroll, dispatch }) => {
+const LogViewer = ({ logEntries, autoScroll }) => {
+    useLogListener();
+
     const logContainer = useRef(null);
 
     useEffect(() => {
@@ -51,7 +53,6 @@ const LogViewer = ({ logEntries, autoScroll, dispatch }) => {
             logContainer.current.lastChild.scrollIntoView();
         }
     });
-    useEffect(() => { startListening(dispatch); }, []);
 
     return (
         <div className="core19-log-viewer">
@@ -64,7 +65,6 @@ const LogViewer = ({ logEntries, autoScroll, dispatch }) => {
 };
 
 LogViewer.propTypes = {
-    dispatch: func.isRequired,
     logEntries: arrayOf(entryShape.isRequired).isRequired,
     autoScroll: bool.isRequired,
 };
