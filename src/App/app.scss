@@ -21,12 +21,10 @@
         position: relative;
         background-color: $gray-100;
 
-        .core19-main-view {
-            margin: 8px;
-            padding: 10px 15px;
+        .core19-main-container {
+            margin: 1em;
             flex: 1;
-            background-color: $white;
-            overflow: hidden;
+            overflow: auto;
         }
     }
 

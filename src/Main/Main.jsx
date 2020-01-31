@@ -34,27 +34,13 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+import React from 'react';
+import { node } from 'prop-types';
 
-export { ErrorDialogActions };
+import './main.scss';
 
-export { default as App } from './App/App';
-export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
-export { default as Slider } from './Slider/Slider';
-export { default as Main } from './Main/Main';
+const Main = ({ children }) => <div className="core19-main-view">{children}</div>;
 
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
+Main.propTypes = { children: node }; // eslint-disable-line react/require-default-props
 
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as logger } from './logging';
-
-export {
-    setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
-} from './appDirs';
-
-export { openFile, openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as userData } from './userData';
+export default Main;

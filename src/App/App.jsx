@@ -72,7 +72,7 @@ const ConnectedApp = ({
                     </div>
                 )}
                 <div className="core19-main-and-log">
-                    <div className="core19-main-view"><MainComponent /></div>
+                    <div className="core19-main-container"><MainComponent /></div>
                     {isLogVisible && <LogViewer />}
                 </div>
             </div>
