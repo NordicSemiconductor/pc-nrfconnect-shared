@@ -1,3 +1,6 @@
+## Version 4.4
+- Update Jest
+
 ## Version 4.3
 ### Added
 - Ease configuration of git hooks #40. If you want to automatically run the `lint` and `test` scripts before pushing changes, add a file `.huskyrc.json` to your project with this content:
