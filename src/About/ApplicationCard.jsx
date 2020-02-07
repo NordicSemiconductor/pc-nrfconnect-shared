@@ -34,35 +34,50 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react';
-import { array, arrayOf } from 'prop-types';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { string } from 'prop-types';
+import { ipcRenderer } from 'electron';
+import { openUrl } from '../open';
+import AboutButton from './AboutButton';
+import Card from './Card';
+import Section from './Section';
 
-import { mainComponentSelector } from '../App/appLayout';
-import About from '../About/About';
-import NavMenuItem from './NavMenuItem';
+const GetSourceCode = ({ repositoryUrl }) => (
+    <AboutButton
+        disabled={!repositoryUrl}
+        onClick={() => openUrl(repositoryUrl)}
+    >
+        Get source code
+    </AboutButton>
+);
+GetSourceCode.propTypes = {
+    repositoryUrl: string, // eslint-disable-line react/require-default-props
+};
 
-const NavMenu = ({ panes }) => {
-    const currentMainComponent = useSelector(mainComponentSelector(panes));
-    const allPanes = [...panes, ['About', About]];
+const ApplicationCard = () => {
+    const [appInfo, setAppInfo] = useState();
+
+    useEffect(() => {
+        ipcRenderer.once('app-details', (_, details) => {
+            setAppInfo(details);
+        });
+        ipcRenderer.send('get-app-details');
+    }, [setAppInfo]);
+
+    if (appInfo == null) return null;
 
     return (
-        <div data-testid="nav-menu">
-            {allPanes.map(([name, component], index) => (
-                <NavMenuItem
-                    key={name}
-                    component={component}
-                    isFirst={index === 0}
-                    isSelected={currentMainComponent === component}
-                    label={name}
-                />
-            ))}
-        </div>
+        <Card title="Application">
+            <Section title="Title">{appInfo.displayName}</Section>
+            <Section title="Purpose">{appInfo.description}</Section>
+            <Section title="Version">{appInfo.currentVersion}</Section>
+            <Section title="Official">{appInfo.isOfficial.toString()}</Section>
+            <Section title="Supported engines">nRF Connect {appInfo.engineVersion}</Section>
+            <Section title="Current engine">nRF Connect {appInfo.coreVersion}</Section>
+            <Section title="App directory">{appInfo.path}</Section>
+            <Section><GetSourceCode repositoryUrl={appInfo.repositoryUrl} /></Section>
+        </Card>
     );
 };
 
-NavMenu.propTypes = {
-    panes: arrayOf(array.isRequired).isRequired,
-};
-
-export default NavMenu;
+export default ApplicationCard;

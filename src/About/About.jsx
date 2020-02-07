@@ -35,34 +35,13 @@
  */
 
 import React from 'react';
-import { array, arrayOf } from 'prop-types';
-import { useSelector } from 'react-redux';
+import ApplicationCard from './ApplicationCard';
+import Card from './Card';
 
-import { mainComponentSelector } from '../App/appLayout';
-import About from '../About/About';
-import NavMenuItem from './NavMenuItem';
-
-const NavMenu = ({ panes }) => {
-    const currentMainComponent = useSelector(mainComponentSelector(panes));
-    const allPanes = [...panes, ['About', About]];
-
-    return (
-        <div data-testid="nav-menu">
-            {allPanes.map(([name, component], index) => (
-                <NavMenuItem
-                    key={name}
-                    component={component}
-                    isFirst={index === 0}
-                    isSelected={currentMainComponent === component}
-                    label={name}
-                />
-            ))}
-        </div>
-    );
-};
-
-NavMenu.propTypes = {
-    panes: arrayOf(array.isRequired).isRequired,
-};
-
-export default NavMenu;
+export default () => (
+    <div className="about">
+        <ApplicationCard />
+        <Card title="Device">fnord</Card>
+        <Card title="Support">fnord</Card>
+    </div>
+);

@@ -35,5 +35,22 @@
  */
 
 import React from 'react';
+import { node } from 'prop-types';
+import Button from 'react-bootstrap/Button';
 
-export default () => <div>FIXME: About!</div>;
+import './about.scss';
+
+const AboutButton = ({ children, ...otherProps }) => (
+    <Button
+        {...otherProps}
+        className="about-button"
+        variant="secondary"
+    >
+        {children}
+    </Button>
+);
+AboutButton.propTypes = {
+    children: node.isRequired,
+};
+
+export default AboutButton;
