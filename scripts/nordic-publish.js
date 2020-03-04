@@ -207,7 +207,6 @@ Promise.resolve()
 
         thisPackage = parsePackageName(filename);
         console.log(`Package name: ${thisPackage.name} version: ${thisPackage.version}`);
-        process.exit();
     })
     .then(() => getShasum(thisPackage.filename))
     .then(shasum => { thisPackage.shasum = shasum; })
