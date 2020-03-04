@@ -36,13 +36,26 @@
 
 'use strict';
 
+const { version } = require('../package.json');
 const execSync = require('child_process').execSync;
 const fs = require('fs');
 const semver = require('semver');
 const shasum = require('shasum');
 const FtpClient = require('ftp');
-const args = process.argv.slice(2);
-const nonOffcialSource = args[0];
+const args = require('commander');
+// const args = process.argv.slice(2);
+// const nonOffcialSource = args[0];
+args
+    .version(version)
+    .description('Publish to nordic repository')
+    .option('-s, --source [source]', 'Specify the source to publish. Do not specify if publish to official.')
+    .option('-n, --no-pack', 'Publish existing .tgz file at the root directory without npm pack.')
+    .parse(process.argv);
+
+console.log(args);
+console.log(args.source);
+console.log(args.noPack);
+process.exit();
 
 /*
  * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set

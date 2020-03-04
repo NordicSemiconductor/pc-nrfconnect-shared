@@ -31,6 +31,7 @@
     "babel-eslint": "10.0.2",
     "babel-loader": "8.0.6",
     "babel-plugin-add-module-exports": "1.0.2",
+    "commander": "4.1.1",
     "cross-env": "5.2.0",
     "css-loader": "3.0.0",
     "enzyme": "3.10.0",
