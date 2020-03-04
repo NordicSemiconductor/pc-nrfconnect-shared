@@ -1,3 +1,7 @@
+## Version 4.5
+### Added
+- Enable to publish existing artifact instead of packing from source
+
 ## Version 4.4
 - Update Jest
 

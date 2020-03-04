@@ -43,19 +43,23 @@ const semver = require('semver');
 const shasum = require('shasum');
 const FtpClient = require('ftp');
 const args = require('commander');
-// const args = process.argv.slice(2);
-// const nonOffcialSource = args[0];
+let nonOffcialSource;
+
 args
     .version(version)
     .description('Publish to nordic repository')
-    .option('-s, --source [source]', 'Specify the source to publish. Do not specify if publish to official.')
+    .option('-s, --source [source]', 'Specify the source to publish (e.g. official).')
     .option('-n, --no-pack', 'Publish existing .tgz file at the root directory without npm pack.')
     .parse(process.argv);
 
-console.log(args);
-console.log(args.source);
-console.log(args.noPack);
-process.exit();
+/*
+ * To specify the source to publish to
+ */
+if (!args.source) {
+    console.error('Source to publish to is not specified.');
+    process.exit(1);
+}
+nonOffcialSource = args.source !== 'offcial' ? args.source : nonOffcialSource;
 
 /*
  * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
@@ -188,11 +192,22 @@ let thisPackage;
 
 Promise.resolve()
     .then(() => {
-        console.log('Packing current package');
-        const filename = execSync('npm pack').toString().trim();
-        thisPackage = parsePackageName(filename);
+        let filename;
+        if (args.pack) {
+            console.log('Packing current package');
+            filename = execSync('npm pack').toString().trim();
+        } else {
+            const files = fs.readdirSync('.');
+            filename = files.find(f => f.includes('.tgz'));
+            if (!filename) {
+                console.error('Package to publish is not found');
+                process.exit(1);
+            }
+        }
 
+        thisPackage = parsePackageName(filename);
         console.log(`Package name: ${thisPackage.name} version: ${thisPackage.version}`);
+        process.exit();
     })
     .then(() => getShasum(thisPackage.filename))
     .then(shasum => { thisPackage.shasum = shasum; })
