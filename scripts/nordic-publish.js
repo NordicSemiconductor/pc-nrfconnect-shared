@@ -48,7 +48,7 @@ let nonOffcialSource;
 args
     .version(version)
     .description('Publish to nordic repository')
-    .reqiredOption('-s, --source [source]', 'Specify the source to publish (e.g. official).')
+    .requiredOption('-s, --source [source]', 'Specify the source to publish (e.g. official).')
     .option('-n, --no-pack', 'Publish existing .tgz file at the root directory without npm pack.')
     .parse(process.argv);
 
