@@ -59,7 +59,7 @@ if (!args.source) {
     console.error('Source to publish to is not specified.');
     process.exit(1);
 }
-nonOffcialSource = args.source !== 'offcial' ? args.source : undefined;
+nonOffcialSource = args.source !== 'official' ? args.source : undefined;
 
 /*
  * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
