@@ -48,7 +48,7 @@ let nonOffcialSource;
 args
     .version(version)
     .description('Publish to nordic repository')
-    .option('-s, --source [source]', 'Specify the source to publish (e.g. official).')
+    .reqiredOption('-s, --source [source]', 'Specify the source to publish (e.g. official).')
     .option('-n, --no-pack', 'Publish existing .tgz file at the root directory without npm pack.')
     .parse(process.argv);
 
@@ -59,7 +59,7 @@ if (!args.source) {
     console.error('Source to publish to is not specified.');
     process.exit(1);
 }
-nonOffcialSource = args.source !== 'offcial' ? args.source : nonOffcialSource;
+nonOffcialSource = args.source !== 'offcial' ? args.source : undefined;
 
 /*
  * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
