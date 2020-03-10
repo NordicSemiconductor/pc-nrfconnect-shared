@@ -94,6 +94,7 @@ const sendEvent = (category, action, label) => reactGA.event({
 
 
 export default {
+    init,
     sendEvent,
     EventCategory,
     EventAction,
