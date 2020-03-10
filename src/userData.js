@@ -1,4 +1,4 @@
-/* Copyright (c) 2015 - 2017, Nordic Semiconductor ASA
+/* Copyright (c) 2105 - 2019, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -34,27 +34,32 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+const reactGA = require('react-ga');
 
-export { ErrorDialogActions };
+reactGA.initialize('UA-64174722-5', {
+    debug: false,
+    titleCase: false,
+    gaOptions: {
+        storage: 'none',
+        storeGac: false,
+        clientId: '123',
+    },
+});
 
-export { default as App } from './App/App';
-export { default as Logo } from './App/Logo';
-export { default as NavBar } from './App/NavBar';
-export { default as DeviceSelector } from './Device/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
+reactGA.set({
+    checkProtocolTask: null,
+});
 
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
+const sendEvent = ({
+    category,
+    action,
+    label,
+}) => reactGA.event({
+    category,
+    action,
+    label,
+});
 
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as coreReducers } from './coreReducers';
-export { default as logger } from './logging';
-
-export {
-    setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
-} from './appDirs';
-
-export { openFile, openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as userData } from './userData';
+export default {
+    sendEvent,
+}
