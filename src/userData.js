@@ -34,32 +34,68 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const reactGA = require('react-ga');
+import reactGA from 'react-ga';
+import si from 'systeminformation';
 
-reactGA.initialize('UA-64174722-5', {
-    debug: false,
-    titleCase: false,
-    gaOptions: {
-        storage: 'none',
-        storeGac: false,
-        clientId: '123',
-    },
-});
+const EventCategory = {
+    APP_LAUNCH_CATEGORY: 'App launch',
+};
 
-reactGA.set({
-    checkProtocolTask: null,
-});
+const EventAction = {
+    // APP_LAUNCH_CATEGORY
+    LAUNCH_LAUNCHER_ACTION: 'Launch launcher',
+    LAUNCH_BLE_ACTION: 'Launch BLE app',
+    LAUNCH_PROGRAMMER_ACTION: 'Launch Programmer app',
+    LAUNCH_DTM_ACTION: 'Launch DTM app',
+};
 
-const sendEvent = ({
+const EventLabel = {
+    // LAUNCH_LAUNCHER_ACTION
+    LAUNCHER_USER_DATA_ON: 'User data on',
+    LAUNCHER_USER_DATA_OFF: 'User data off',
+};
+
+
+/**
+ * Initialize instance to send user data
+ * @param {*} appName
+ */
+const init = async appName => {
+    const { mac: clientId } = await si.networkInterfaces();
+    reactGA.initialize('UA-64174722-5', {
+        debug: false,
+        titleCase: false,
+        gaOptions: {
+            storage: 'none',
+            storeGac: false,
+            clientId,
+        },
+    });
+
+    reactGA.set({
+        checkProtocolTask: null,
+    });
+
+    reactGA.pageview(appName);
+};
+
+/**
+ * Send event
+ * @param {EventCategory} category
+ * @param {EventAction} action
+ * @param {EventLabel} label
+ */
+const sendEvent = (category, action, label) => reactGA.event({
     category,
     action,
     label,
-}) => reactGA.event({
-    category,
-    action,
-    label,
 });
+
+
 
 export default {
     sendEvent,
+    EventCategory,
+    EventAction,
+    EventLabel,
 }
