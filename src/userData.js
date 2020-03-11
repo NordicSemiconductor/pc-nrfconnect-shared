@@ -39,22 +39,22 @@ import si from 'systeminformation';
 import shasum from 'shasum';
 
 const EventCategory = {
-    APP_LAUNCH_CATEGORY,
-    PROGRAMMER_CATEGORY,
+    APP_LAUNCH_CATEGORY: 'Launcher',
+    PROGRAMMER_CATEGORY: 'Programmer',
 };
 
 const EventAction = {
     // APP_LAUNCH_CATEGORY
-    LAUNCH_LAUNCHER_ACTION,
-    LAUNCH_BLE_ACTION,
-    LAUNCH_PROGRAMMER_ACTION,
-    LAUNCH_DTM_ACTION,
+    LAUNCH_LAUNCHER_ACTION: 'Launch launcher',
+    LAUNCH_BLE_ACTION: 'Launch BLE',
+    LAUNCH_PROGRAMMER_ACTION: 'Launch Programmer',
+    LAUNCH_DTM_ACTION: 'Launch DTM',
 };
 
 const EventLabel = {
     // LAUNCH_LAUNCHER_ACTION
-    LAUNCHER_USER_DATA_ON,
-    LAUNCHER_USER_DATA_OFF,
+    LAUNCHER_USER_DATA_ON: 'User data on',
+    LAUNCHER_USER_DATA_OFF: 'User data off',
 };
 
 
