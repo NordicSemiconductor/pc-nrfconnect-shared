@@ -49,12 +49,15 @@ const EventAction = {
     LAUNCH_BLE_ACTION: 'Launch BLE',
     LAUNCH_PROGRAMMER_ACTION: 'Launch Programmer',
     LAUNCH_DTM_ACTION: 'Launch DTM',
+    SET_USER_DATA_ON: 'Set user data on',
+    SET_USER_DATA_OFF: 'Set user data off',
 };
 
 const EventLabel = {
     // LAUNCH_LAUNCHER_ACTION
     LAUNCHER_USER_DATA_ON: 'User data on',
     LAUNCHER_USER_DATA_OFF: 'User data off',
+    LAUNCHER_USER_DATA_NOT_SET: 'User data not set',
 };
 
 
@@ -97,8 +100,6 @@ const sendEvent = (category, action, label) => reactGA.event({
     action,
     label,
 });
-
-
 
 export default {
     init,
