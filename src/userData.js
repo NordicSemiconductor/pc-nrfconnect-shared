@@ -39,12 +39,12 @@ import si from 'systeminformation';
 import shasum from 'shasum';
 
 const EventCategory = {
-    APP_LAUNCH_CATEGORY: 'Launcher',
+    LAUNCHER_CATEGORY: 'Launcher',
     PROGRAMMER_CATEGORY: 'Programmer',
 };
 
 const EventAction = {
-    // APP_LAUNCH_CATEGORY
+    // LAUNCHER_CATEGORY
     LAUNCH_LAUNCHER_ACTION: 'Launch launcher',
     LAUNCH_BLE_ACTION: 'Launch BLE',
     LAUNCH_PROGRAMMER_ACTION: 'Launch Programmer',
