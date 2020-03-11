@@ -63,9 +63,12 @@ const EventLabel = {
  * @param {*} appName
  */
 const init = async appName => {
-    const interfaces = await si.networkInterfaces();
-    const interface = interfaces.find(i => ((!i.virtual && i.mac) || i.iface === 'eth0'));
-    const clientId = interface ? shasum(interface.ip4 + interface.mac) : 'unknown';
+    const networkInterfaces = await si.networkInterfaces();
+    const networkInterface = networkInterfaces.find(i =>
+        ((!i.virtual && i.mac) || i.iface === 'eth0'));
+    const clientId = networkInterface
+        ? shasum(networkInterface.ip4 + networkInterface.mac)
+        : 'unknown';
     reactGA.initialize('UA-64174722-5', {
         debug: false,
         titleCase: false,
