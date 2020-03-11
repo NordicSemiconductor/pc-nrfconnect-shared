@@ -36,23 +36,25 @@
 
 import reactGA from 'react-ga';
 import si from 'systeminformation';
+import shasum from 'shasum';
 
 const EventCategory = {
-    APP_LAUNCH_CATEGORY: 'App launch',
+    APP_LAUNCH_CATEGORY,
+    PROGRAMMER_CATEGORY,
 };
 
 const EventAction = {
     // APP_LAUNCH_CATEGORY
-    LAUNCH_LAUNCHER_ACTION: 'Launch launcher',
-    LAUNCH_BLE_ACTION: 'Launch BLE app',
-    LAUNCH_PROGRAMMER_ACTION: 'Launch Programmer app',
-    LAUNCH_DTM_ACTION: 'Launch DTM app',
+    LAUNCH_LAUNCHER_ACTION,
+    LAUNCH_BLE_ACTION,
+    LAUNCH_PROGRAMMER_ACTION,
+    LAUNCH_DTM_ACTION,
 };
 
 const EventLabel = {
     // LAUNCH_LAUNCHER_ACTION
-    LAUNCHER_USER_DATA_ON: 'User data on',
-    LAUNCHER_USER_DATA_OFF: 'User data off',
+    LAUNCHER_USER_DATA_ON,
+    LAUNCHER_USER_DATA_OFF,
 };
 
 
@@ -61,7 +63,9 @@ const EventLabel = {
  * @param {*} appName
  */
 const init = async appName => {
-    const { mac: clientId } = await si.networkInterfaces();
+    const interfaces = await si.networkInterfaces();
+    const interface = interfaces.find(i => ((!i.virtual && i.mac) || i.iface === 'eth0'));
+    const clientId = interface ? shasum(interface.ip4 + interface.mac) : 'unknown';
     reactGA.initialize('UA-64174722-5', {
         debug: false,
         titleCase: false,
