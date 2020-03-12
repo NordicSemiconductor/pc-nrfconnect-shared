@@ -40,26 +40,28 @@ import shasum from 'shasum';
 
 const EventCategory = {
     LAUNCHER_CATEGORY: 'Launcher',
+    BLUETOOTH_LOW_ENERGY_CATEGORY: 'Bluetooth Low Energy',
     PROGRAMMER_CATEGORY: 'Programmer',
+    LTE_LINK_MONITOR_CATEGORY: 'LET Link Monitor',
+    TRACE_COLLECTOR_CATEGORY: 'Trace Collector',
+    POWER_PROFILER_CATEGORY: 'Power Profiler',
+    RSSI_CATEGORY: 'RSSI',
+    DIRECT_TEST_MODE_CATEGORY: 'Direct Test Mode',
+    TOOLCHAIN_MANAGER_CATEGORY: 'Toolchain Manager',
 };
 
 const EventAction = {
     // LAUNCHER_CATEGORY
-    LAUNCH_LAUNCHER_ACTION: 'Launch launcher',
-    LAUNCH_BLE_ACTION: 'Launch BLE',
-    LAUNCH_PROGRAMMER_ACTION: 'Launch Programmer',
-    LAUNCH_DTM_ACTION: 'Launch DTM',
     SET_USER_DATA_ON: 'Set user data on',
     SET_USER_DATA_OFF: 'Set user data off',
 };
 
 const EventLabel = {
-    // LAUNCH_LAUNCHER_ACTION
+    // LAUNCHER_ACTION
     LAUNCHER_USER_DATA_ON: 'User data on',
     LAUNCHER_USER_DATA_OFF: 'User data off',
     LAUNCHER_USER_DATA_NOT_SET: 'User data not set',
 };
-
 
 /**
  * Initialize instance to send user data
@@ -72,7 +74,7 @@ const init = async appName => {
     const clientId = networkInterface
         ? shasum(networkInterface.ip4 + networkInterface.mac)
         : 'unknown';
-    reactGA.initialize('UA-64174722-5', {
+    reactGA.initialize('UA-160398011-1', {
         debug: false,
         titleCase: false,
         gaOptions: {
