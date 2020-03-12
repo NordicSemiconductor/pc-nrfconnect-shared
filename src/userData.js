@@ -1,4 +1,4 @@
-/* Copyright (c) 2105 - 2019, Nordic Semiconductor ASA
+/* Copyright (c) 2105 - 2020, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -38,18 +38,7 @@ import reactGA from 'react-ga';
 import si from 'systeminformation';
 import shasum from 'shasum';
 
-const EventCategory = {
-    LAUNCHER_CATEGORY: 'Launcher',
-    BLUETOOTH_LOW_ENERGY_CATEGORY: 'Bluetooth Low Energy',
-    PROGRAMMER_CATEGORY: 'Programmer',
-    LTE_LINK_MONITOR_CATEGORY: 'LTE Link Monitor',
-    TRACE_COLLECTOR_CATEGORY: 'Trace Collector',
-    POWER_PROFILER_CATEGORY: 'Power Profiler',
-    RSSI_CATEGORY: 'RSSI',
-    DIRECT_TEST_MODE_CATEGORY: 'Direct Test Mode',
-    TOOLCHAIN_MANAGER_CATEGORY: 'Toolchain Manager',
-};
-
+const trackId = 'UA-160398011-1';
 /**
  * Initialize instance to send user data
  * @param {*} appName the app's name e.g. Launcher
@@ -63,7 +52,7 @@ const init = async appName => {
     const clientId = networkInterface
         ? shasum(networkInterface.ip4 + networkInterface.mac)
         : 'unknown';
-    reactGA.initialize('UA-160398011-1', {
+    reactGA.initialize(trackId, {
         debug: false,
         titleCase: false,
         gaOptions: {
@@ -82,7 +71,7 @@ const init = async appName => {
 
 /**
  * Send event
- * @param {EventCategory} category launcher or apps
+ * @param {string} category launcher or apps
  * @param {string} action action to collect
  * @param {string} label details for an action
  *
@@ -97,5 +86,4 @@ const sendEvent = (category, action, label) => reactGA.event({
 export default {
     init,
     sendEvent,
-    EventCategory,
 };
