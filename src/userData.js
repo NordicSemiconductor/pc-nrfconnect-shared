@@ -50,7 +50,7 @@ const init = async appName => {
     const networkInterface = networkInterfaces.find(i => (
         (!i.virtual && i.mac) || i.iface === 'eth0'));
     const clientId = networkInterface
-        ? shasum(networkInterface.ip4 + networkInterface.mac)
+        ? shasum(networkInterface.ip4 || networkInterface.ip6 + networkInterface.mac)
         : 'unknown';
     reactGA.initialize(trackId, {
         debug: false,
