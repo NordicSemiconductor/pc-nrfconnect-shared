@@ -1,3 +1,7 @@
+## Version 4.6
+### Added
+- Enable to send user data
+
 ## Version 4.5
 ### Added
 - Enable to publish existing artifact instead of packing from source
