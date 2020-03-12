@@ -56,13 +56,6 @@ const EventAction = {
     SET_USER_DATA_OFF: 'Set user data off',
 };
 
-const EventLabel = {
-    // LAUNCHER_ACTION
-    LAUNCHER_USER_DATA_ON: 'User data on',
-    LAUNCHER_USER_DATA_OFF: 'User data off',
-    LAUNCHER_USER_DATA_NOT_SET: 'User data not set',
-};
-
 /**
  * Initialize instance to send user data
  * @param {*} appName
