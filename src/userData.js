@@ -50,12 +50,6 @@ const EventCategory = {
     TOOLCHAIN_MANAGER_CATEGORY: 'Toolchain Manager',
 };
 
-const EventAction = {
-    // LAUNCHER_CATEGORY
-    SET_USER_DATA_ON: 'Set user data on',
-    SET_USER_DATA_OFF: 'Set user data off',
-};
-
 /**
  * Initialize instance to send user data
  * @param {*} appName
