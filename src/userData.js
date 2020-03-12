@@ -52,12 +52,14 @@ const EventCategory = {
 
 /**
  * Initialize instance to send user data
- * @param {*} appName
+ * @param {*} appName the app's name e.g. Launcher
+ *
+ * @returns {void}
  */
 const init = async appName => {
     const networkInterfaces = await si.networkInterfaces();
-    const networkInterface = networkInterfaces.find(i =>
-        ((!i.virtual && i.mac) || i.iface === 'eth0'));
+    const networkInterface = networkInterfaces.find(i => (
+        (!i.virtual && i.mac) || i.iface === 'eth0'));
     const clientId = networkInterface
         ? shasum(networkInterface.ip4 + networkInterface.mac)
         : 'unknown';
@@ -80,9 +82,11 @@ const init = async appName => {
 
 /**
  * Send event
- * @param {EventCategory} category
- * @param {EventAction} action
- * @param {EventLabel} label
+ * @param {EventCategory} category launcher or apps
+ * @param {string} action action to collect
+ * @param {string} label details for an action
+ *
+ * @returns {void}
  */
 const sendEvent = (category, action, label) => reactGA.event({
     category,
@@ -94,6 +98,4 @@ export default {
     init,
     sendEvent,
     EventCategory,
-    EventAction,
-    EventLabel,
-}
+};
