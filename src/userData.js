@@ -1,4 +1,4 @@
-/* Copyright (c) 2015 - 2017, Nordic Semiconductor ASA
+/* Copyright (c) 2105 - 2020, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -34,27 +34,56 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+import reactGA from 'react-ga';
+import si from 'systeminformation';
+import shasum from 'shasum';
 
-export { ErrorDialogActions };
+const trackId = 'UA-160398011-1';
+/**
+ * Initialize instance to send user data
+ * @param {*} appName the app's name e.g. Launcher
+ *
+ * @returns {void}
+ */
+const init = async appName => {
+    const networkInterfaces = await si.networkInterfaces();
+    const networkInterface = networkInterfaces.find(i => (
+        (!i.virtual && i.mac) || i.iface === 'eth0'));
+    const clientId = networkInterface
+        ? shasum(networkInterface.ip4 || networkInterface.ip6 + networkInterface.mac)
+        : 'unknown';
+    reactGA.initialize(trackId, {
+        debug: false,
+        titleCase: false,
+        gaOptions: {
+            storage: 'none',
+            storeGac: false,
+            clientId,
+        },
+    });
 
-export { default as App } from './App/App';
-export { default as Logo } from './App/Logo';
-export { default as NavBar } from './App/NavBar';
-export { default as DeviceSelector } from './Device/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
+    reactGA.set({
+        checkProtocolTask: null,
+    });
 
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
+    reactGA.pageview(appName);
+};
 
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as coreReducers } from './coreReducers';
-export { default as logger } from './logging';
+/**
+ * Send event
+ * @param {string} category launcher or apps
+ * @param {string} action action to collect
+ * @param {string} label details for an action
+ *
+ * @returns {void}
+ */
+const sendEvent = (category, action, label) => reactGA.event({
+    category,
+    action,
+    label,
+});
 
-export {
-    setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
-} from './appDirs';
-
-export { openFile, openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as userData } from './userData';
+export default {
+    init,
+    sendEvent,
+};
