@@ -42,7 +42,7 @@ const EventCategory = {
     LAUNCHER_CATEGORY: 'Launcher',
     BLUETOOTH_LOW_ENERGY_CATEGORY: 'Bluetooth Low Energy',
     PROGRAMMER_CATEGORY: 'Programmer',
-    LTE_LINK_MONITOR_CATEGORY: 'LET Link Monitor',
+    LTE_LINK_MONITOR_CATEGORY: 'LTE Link Monitor',
     TRACE_COLLECTOR_CATEGORY: 'Trace Collector',
     POWER_PROFILER_CATEGORY: 'Power Profiler',
     RSSI_CATEGORY: 'RSSI',
