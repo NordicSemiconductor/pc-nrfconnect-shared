@@ -59,8 +59,7 @@ export default class DeviceSelector extends React.Component {
     static mapSerialPortsToListItems(device) {
         return Object.keys(device)
             .filter(key => key.startsWith('serialport'))
-            // eslint-disable-next-line react/no-array-index-key
-            .map((key, index) => <li key={index}>Serial port: {device[key].path}</li>);
+            .map(key => <li key={key}>Serial port: {device[key].path}</li>);
     }
 
     componentDidMount() {
