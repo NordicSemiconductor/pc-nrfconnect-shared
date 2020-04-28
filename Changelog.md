@@ -1,3 +1,7 @@
+## Version 4.7
+### Changed
+- Add a few peer dependencies
+
 ## Version 4.6
 ### Added
 - Enable to send user data
