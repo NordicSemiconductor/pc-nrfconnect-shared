@@ -50,7 +50,7 @@
     "immutable": "4.0.0-rc.12",
     "jest": "25.1.0",
     "jest-bamboo-formatter": "1.0.1",
-    "jquery": "1.9.1",
+    "jquery": "3.5.0",
     "moment": "2.24.0",
     "mousetrap": "1.6.3",
     "prettysize": "2.0.0",
