@@ -56,7 +56,7 @@
     "prettysize": "2.0.0",
     "raw-loader": "3.0.0",
     "react": "16.12.0",
-    "react-bootstrap": "1.0.0-beta.16",
+    "react-bootstrap": "1.0.1",
     "react-dom": "16.12.0",
     "react-ga": "2.7.0",
     "react-markdown": "4.2.2",
