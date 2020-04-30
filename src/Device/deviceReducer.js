@@ -53,6 +53,7 @@ const noDialogShown = {
 const initialState = {
     devices: [],
     selectedSerialNumber: null,
+    deviceInfo: null,
     isSetupWaitingForUserInput: false,
     ...noDialogShown,
 };
@@ -64,8 +65,13 @@ export default (state = initialState, action) => {
         case DEVICE_SELECTED:
             return { ...state, selectedSerialNumber: action.device.serialNumber };
         case DEVICE_DESELECTED:
-            return { ...state, selectedSerialNumber: null };
+            return { ...state, selectedSerialNumber: null, deviceInfo: null };
         case DEVICE_SETUP_COMPLETE:
+            return {
+                ...state,
+                ...noDialogShown,
+                deviceInfo: action.device.deviceInfo,
+            };
         case DEVICE_SETUP_ERROR:
             return {
                 ...state,
@@ -86,4 +92,13 @@ export default (state = initialState, action) => {
     }
 };
 
-export const deviceIsSelected = state => state.device.selectedSerialNumber != null;
+export const deviceIsSelected = state => (
+    state.device != null
+    && state.device.selectedSerialNumber != null
+);
+
+export const selectedDevice = state => (
+    state.device.devices.find(device => device.serialNumber === state.device.selectedSerialNumber)
+);
+
+export const deviceInfo = state => state.device.deviceInfo;

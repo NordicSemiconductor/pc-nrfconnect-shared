@@ -35,19 +35,56 @@
  */
 
 import React from 'react';
-import { node, string } from 'prop-types';
+import { useSelector } from 'react-redux';
+import AboutButton from './AboutButton';
+import Card from './Card';
+import Section from './Section';
 
-import './about.scss';
+import { selectedDevice, deviceInfo as deviceInfoSelector } from '../Device/deviceReducer';
+import {
+    cores, deviceName, productPageUrl, buyOnlineUrl,
+} from '../Device/device';
 
-const Section = ({ children, title }) => (
-    <div className="about-section">
-        {title != null && <h3 className="about-card-section-title">{title}</h3>}
-        {children}
-    </div>
-);
-Section.propTypes = {
-    title: string, // eslint-disable-line react/require-default-props
-    children: node, // eslint-disable-line react/require-default-props
+const name = device => {
+    if (deviceName(device.boardVersion)) {
+        return deviceName(device.boardVersion);
+    }
+
+    if (device.usb && device.usb.product) {
+        return device.usb.product;
+    }
+
+    return null;
 };
 
-export default Section;
+const memorySize = memoryInBytes => {
+    if (memoryInBytes == null) {
+        return 'Unknown';
+    }
+
+    return `${memoryInBytes / 1024}KiB`;
+};
+
+export default () => {
+    const device = useSelector(selectedDevice);
+    const deviceInfo = useSelector(deviceInfoSelector) || {};
+
+    if (device == null) {
+        return <Card title="Device"><Section title="No device selected" /></Card>;
+    }
+
+    const pca = device.boardVersion;
+
+    return (
+        <Card title="Device">
+            <Section title="Name">{name(device) || 'Unknown'}</Section>
+            <Section title="ID">{device.serialNumber}</Section>
+            <Section title="PCA">{pca || 'Unknown'}</Section>
+            <Section title="Cores">{cores(pca) || 'Unknown'}</Section>
+            <Section title="RAM">{memorySize(deviceInfo.ramSize)}</Section>
+            <Section title="Flash">{memorySize(deviceInfo.codeSize)}</Section>
+            <Section><AboutButton url={buyOnlineUrl(pca)} label="Find distributor" /></Section>
+            <Section><AboutButton url={productPageUrl(pca)} label="Go to product page" /></Section>
+        </Card>
+    );
+};

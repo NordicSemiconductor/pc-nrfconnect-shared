@@ -35,22 +35,25 @@
  */
 
 import React from 'react';
-import { node } from 'prop-types';
+import { string } from 'prop-types';
 import Button from 'react-bootstrap/Button';
 
 import './about.scss';
+import { openUrl } from '../open';
 
-const AboutButton = ({ children, ...otherProps }) => (
+const AboutButton = ({ url, label }) => (
     <Button
-        {...otherProps}
         className="about-button"
         variant="secondary"
+        disabled={!url}
+        onClick={() => openUrl(url)}
     >
-        {children}
+        {label}
     </Button>
 );
 AboutButton.propTypes = {
-    children: node.isRequired,
+    url: string, // eslint-disable-line react/require-default-props
+    label: string.isRequired,
 };
 
 export default AboutButton;

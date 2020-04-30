@@ -37,11 +37,12 @@
 import React from 'react';
 import ApplicationCard from './ApplicationCard';
 import Card from './Card';
+import DeviceCard from './DeviceCard';
 
 export default () => (
     <div className="about">
         <ApplicationCard />
-        <Card title="Device">fnord</Card>
-        <Card title="Support">fnord</Card>
+        <DeviceCard />
+        <Card title="Support">FIXME</Card>
     </div>
 );

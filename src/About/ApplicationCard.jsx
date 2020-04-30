@@ -35,26 +35,12 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { string } from 'prop-types';
 import { ipcRenderer } from 'electron';
-import { openUrl } from '../open';
 import AboutButton from './AboutButton';
 import Card from './Card';
 import Section from './Section';
 
-const GetSourceCode = ({ repositoryUrl }) => (
-    <AboutButton
-        disabled={!repositoryUrl}
-        onClick={() => openUrl(repositoryUrl)}
-    >
-        Get source code
-    </AboutButton>
-);
-GetSourceCode.propTypes = {
-    repositoryUrl: string, // eslint-disable-line react/require-default-props
-};
-
-const ApplicationCard = () => {
+export default () => {
     const [appInfo, setAppInfo] = useState();
 
     useEffect(() => {
@@ -75,9 +61,7 @@ const ApplicationCard = () => {
             <Section title="Supported engines">nRF Connect {appInfo.engineVersion}</Section>
             <Section title="Current engine">nRF Connect {appInfo.coreVersion}</Section>
             <Section title="App directory">{appInfo.path}</Section>
-            <Section><GetSourceCode repositoryUrl={appInfo.repositoryUrl} /></Section>
+            <Section><AboutButton url={appInfo.repositoryUrl} label="Get source code" /></Section>
         </Card>
     );
 };
-
-export default ApplicationCard;
