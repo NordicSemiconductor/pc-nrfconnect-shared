@@ -45,8 +45,7 @@ import { openFile } from './open';
 
 /* eslint-disable object-curly-newline */
 
-async function report() {
-    const timestamp = new Date().toISOString().replace(/:/g, '-');
+async function report(timestamp) {
     const [
         { manufacturer, model },
         { vendor, version },
@@ -59,31 +58,28 @@ async function report() {
         si.system(), si.bios(), si.osInfo(), si.versions(), si.cpu(), si.mem(), si.fsSize(),
     ]);
 
-    return {
-        timestamp,
-        coreReport: [
-            `# nRFConnect System Report - ${timestamp}`,
-            '',
-            `- System:     ${manufacturer} ${model}`,
-            `- BIOS:       ${vendor} ${version}`,
-            `- CPU:        ${processors} x ${cpuManufacturer} ${brand} ${speed} GHz`
+    return [
+        `# nRFConnect System Report - ${timestamp}`,
+        '',
+        `- System:     ${manufacturer} ${model}`,
+        `- BIOS:       ${vendor} ${version}`,
+        `- CPU:        ${processors} x ${cpuManufacturer} ${brand} ${speed} GHz`
             + ` ${cores} cores (${physicalCores} physical)`,
-            `- Memory:     ${pretty(free)} free of ${pretty(total)} total`,
-            `- Filesystem: ${fsSize[0].fs} (${fsSize[0].type})`
+        `- Memory:     ${pretty(free)} free of ${pretty(total)} total`,
+        `- Filesystem: ${fsSize[0].fs} (${fsSize[0].type})`
             + ` ${pretty(Number(fsSize[0].size) || 0)}`
             + ` ${fsSize[0].use.toFixed(1)}% used`,
-            '',
-            `- OS:         ${distro} (${release}) ${platform} ${arch}`,
-            '',
-            '- Versions',
-            `    - kernel: ${kernel}`,
-            `    - git: ${git}`,
-            `    - node: ${node}`,
-            `    - python: ${python}`,
-            `    - python3: ${python3}`,
-            '\n',
-        ].join('\n'),
-    };
+        '',
+        `- OS:         ${distro} (${release}) ${platform} ${arch}`,
+        '',
+        '- Versions',
+        `    - kernel: ${kernel}`,
+        `    - git: ${git}`,
+        `    - node: ${node}`,
+        `    - python: ${python}`,
+        `    - python3: ${python3}`,
+        '\n',
+    ].join('\n');
 }
 
 // The parameter decoratedSystemReport can be removed when support for legacy apps is dropped
@@ -91,7 +87,9 @@ export default function systemReport(decoratedSystemReport = coreReport => coreR
     return async () => {
         logger.info('Generating system report...');
 
-        const { timestamp, coreReport } = await report();
+        const timestamp = new Date().toISOString().replace(/:/g, '-');
+
+        const coreReport = await report(timestamp);
         const decoratedReport = decoratedSystemReport(coreReport);
         const finalReport = decoratedReport.replace(/\n/g, EOL);
 
