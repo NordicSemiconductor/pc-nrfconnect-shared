@@ -78,35 +78,30 @@ async function report(timestamp) {
         `    - node: ${node}`,
         `    - python: ${python}`,
         `    - python3: ${python3}`,
-        '\n',
-    ].join('\n');
+        EOL,
+    ].join(EOL);
 }
 
-// The parameter decoratedSystemReport can be removed when support for legacy apps is dropped
-export default function systemReport(decoratedSystemReport = coreReport => coreReport) {
-    return async () => {
-        logger.info('Generating system report...');
+export default async function systemReport() {
+    logger.info('Generating system report...');
 
-        const timestamp = new Date().toISOString().replace(/:/g, '-');
+    const timestamp = new Date().toISOString().replace(/:/g, '-');
 
-        const coreReport = await report(timestamp);
-        const decoratedReport = decoratedSystemReport(coreReport);
-        const finalReport = decoratedReport.replace(/\n/g, EOL);
+    const coreReport = await report(timestamp);
 
-        const fileName = `nrfconnect-system-report-${timestamp}.txt`;
-        const filePath = path.resolve(getAppDataDir(), fileName);
+    const fileName = `nrfconnect-system-report-${timestamp}.txt`;
+    const filePath = path.resolve(getAppDataDir(), fileName);
 
-        return new Promise((resolve, reject) => {
-            fs.writeFile(filePath, finalReport, err => (err ? reject(err) : resolve()));
-        })
-            .then(() => {
-                logger.info(`System report: ${filePath}`);
-                return new Promise((resolve, reject) => {
-                    openFile(filePath, err => (err ? reject(err) : resolve()));
-                });
-            })
-            .catch(err => {
-                logger.error(`Failed to generate system report: ${err.message}`);
+    return new Promise((resolve, reject) => {
+        fs.writeFile(filePath, coreReport, err => (err ? reject(err) : resolve()));
+    })
+        .then(() => {
+            logger.info(`System report: ${filePath}`);
+            return new Promise((resolve, reject) => {
+                openFile(filePath, err => (err ? reject(err) : resolve()));
             });
-    };
+        })
+        .catch(err => {
+            logger.error(`Failed to generate system report: ${err.message}`);
+        });
 }
