@@ -44,8 +44,7 @@ import logger from './logging';
 import { openFile } from './open';
 
 /* eslint-disable object-curly-newline */
-
-async function report(timestamp) {
+const generalInfoReport = async () => {
     const [
         { manufacturer, model },
         { vendor, version },
@@ -59,8 +58,6 @@ async function report(timestamp) {
     ]);
 
     return [
-        `# nRFConnect System Report - ${timestamp}`,
-        '',
         `- System:     ${manufacturer} ${model}`,
         `- BIOS:       ${vendor} ${version}`,
         `- CPU:        ${processors} x ${cpuManufacturer} ${brand} ${speed} GHz`
@@ -78,22 +75,69 @@ async function report(timestamp) {
         `    - node: ${node}`,
         `    - python: ${python}`,
         `    - python3: ${python3}`,
-        EOL,
-    ].join(EOL);
-}
+        '',
+    ];
+};
 
-export default async function systemReport() {
+const allDevicesReport = allDevices => [
+    '- Connected devices:',
+    ...allDevices.map(d => `    - ${d.serialport.path}: ${d.serialNumber} ${d.boardVersion || ''}`),
+    '',
+];
+
+const hexpad2 = n => (n == null
+    ? 'Unknown'
+    : `0x${n.toString(16).toUpperCase().padStart(2, '0')}`);
+
+const hexToKiB = n => (n == null
+    ? 'Unknown'
+    : `${n / 1024} KiB`);
+
+const currentDeviceReport = (serialNumber, device) => {
+    if (device == null) {
+        return [];
+    }
+
+    return [
+        '- Current device:',
+        `    - serialNumber:    ${serialNumber}`,
+        `    - family:          ${device.family}`,
+        `    - type:            ${device.deviceType}`,
+        `    - codeAddress      ${hexpad2(device.codeAddress)}`,
+        `    - codePageSize     ${hexToKiB(device.codePageSize)}`,
+        `    - codeSize         ${hexToKiB(device.codeSize)}`,
+        `    - uicrAddress      ${hexpad2(device.uicrAddress)}`,
+        `    - infoPageSize     ${hexToKiB(device.infoPageSize)}`,
+        `    - codeRamPresent   ${device.codeRamPresent}`,
+        `    - codeRamAddress   ${hexpad2(device.codeRamAddress)}`,
+        `    - dataRamAddress   ${hexpad2(device.dataRamAddress)}`,
+        `    - ramSize          ${hexToKiB(device.ramSize)}`,
+        `    - qspiPresent      ${device.qspiPresent}`,
+        `    - xipAddress       ${hexpad2(device.xipAddress)}`,
+        `    - xipSize          ${hexToKiB(device.xipSize)}`,
+        `    - pinResetPin      ${device.pinResetPin}`,
+        '',
+    ];
+};
+
+export default async (allDevices, currentSerialNumber, currentDevice) => {
     logger.info('Generating system report...');
 
     const timestamp = new Date().toISOString().replace(/:/g, '-');
 
-    const coreReport = await report(timestamp);
+    const report = [
+        `# nRFConnect System Report - ${timestamp}`,
+        '',
+        ...await generalInfoReport(),
+        ...allDevicesReport(allDevices),
+        ...currentDeviceReport(currentSerialNumber, currentDevice),
+    ].join(EOL);
 
     const fileName = `nrfconnect-system-report-${timestamp}.txt`;
     const filePath = path.resolve(getAppDataDir(), fileName);
 
     return new Promise((resolve, reject) => {
-        fs.writeFile(filePath, coreReport, err => (err ? reject(err) : resolve()));
+        fs.writeFile(filePath, report, err => (err ? reject(err) : resolve()));
     })
         .then(() => {
             logger.info(`System report: ${filePath}`);
@@ -104,4 +148,4 @@ export default async function systemReport() {
         .catch(err => {
             logger.error(`Failed to generate system report: ${err.message}`);
         });
-}
+};
