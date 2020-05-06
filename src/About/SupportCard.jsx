@@ -35,14 +35,41 @@
  */
 
 import React from 'react';
-import ApplicationCard from './ApplicationCard';
-import DeviceCard from './DeviceCard';
-import SupportCard from './SupportCard';
+import { useSelector } from 'react-redux';
+import Button from 'react-bootstrap/Button';
+import systemReport from '../systemReport';
+import { devices, deviceInfo, selectedSerialNumber } from '../Device/deviceReducer';
+import AboutButton from './AboutButton';
+import Card from './Card';
+import Section from './Section';
 
-export default () => (
-    <div className="about">
-        <ApplicationCard />
-        <DeviceCard />
-        <SupportCard />
-    </div>
-);
+import './about.scss';
+
+export default () => {
+    const allDevices = useSelector(devices);
+    const currentSerialNumber = useSelector(selectedSerialNumber);
+    const currentDevice = useSelector(deviceInfo);
+
+    return (
+        <Card title="Support">
+            <Section title="DevZone">
+                <p>All support requests must be sent through our developer portal DevZone.</p>
+                <AboutButton url="https://devzone.nordicsemi.com" label="Go to DevZone" />
+            </Section>
+            <Section title="System report">
+                <p>
+                In order to get the best support it is helpful for our employees to know details
+                about your operating system and related software. Create a system report and add
+                to your suport request.
+                </p>
+                <Button
+                    className="about-button"
+                    variant="secondary"
+                    onClick={() => systemReport(allDevices, currentSerialNumber, currentDevice)}
+                >
+                Create system report
+                </Button>
+            </Section>
+        </Card>
+    );
+};
