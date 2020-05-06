@@ -55,6 +55,6 @@ export {
     setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
 } from './appDirs';
 
-export { openFile, openUrl } from './open';
+export { openUrl } from './open';
 export { default as systemReport } from './systemReport';
 export { default as userData } from './userData';

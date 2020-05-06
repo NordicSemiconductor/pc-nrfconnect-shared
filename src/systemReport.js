@@ -136,16 +136,11 @@ export default async (allDevices, currentSerialNumber, currentDevice) => {
     const fileName = `nrfconnect-system-report-${timestamp}.txt`;
     const filePath = path.resolve(getAppDataDir(), fileName);
 
-    return new Promise((resolve, reject) => {
-        fs.writeFile(filePath, report, err => (err ? reject(err) : resolve()));
-    })
-        .then(() => {
-            logger.info(`System report: ${filePath}`);
-            return new Promise((resolve, reject) => {
-                openFile(filePath, err => (err ? reject(err) : resolve()));
-            });
-        })
-        .catch(err => {
-            logger.error(`Failed to generate system report: ${err.message}`);
-        });
+    try {
+        fs.writeFileSync(filePath, report);
+        logger.info(`System report: ${filePath}`);
+        openFile(filePath);
+    } catch (error) {
+        logger.error(`Failed to generate system report: ${error.message}`);
+    }
 };
