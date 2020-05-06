@@ -2,6 +2,7 @@
 ### Changed
 - Create and connect store in App component, so this does not need to be done
   in each app (unless they want to do it themselves).
+- New design for apps using the new app architecture.
 
 ## Version 4.7
 ### Changed
