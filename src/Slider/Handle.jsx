@@ -72,7 +72,7 @@ const Handle = ({
     const dragHandle = event => {
         const oldMousePosition = onMouseDragStart.current.mousePosition;
         const newMousePosition = event.clientX;
-        const percentageChange = (oldMousePosition - newMousePosition) * 100 / sliderWidth;
+        const percentageChange = ((oldMousePosition - newMousePosition) * 100) / sliderWidth;
 
         const oldPercentage = onMouseDragStart.current.percentage;
         const newPercentage = constrainedToPercentage(oldPercentage - percentageChange);

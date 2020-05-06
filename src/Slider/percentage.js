@@ -40,5 +40,5 @@ export const constrainedToPercentage = percentage => {
     return percentage;
 };
 
-export const toPercentage = (v, { min, max }) => (v - min) * 100 / (max - min);
-export const fromPercentage = (v, { min, max }) => Math.round(v * (max - min) / 100 + min);
+export const toPercentage = (v, { min, max }) => ((v - min) * 100) / (max - min);
+export const fromPercentage = (v, { min, max }) => Math.round((v * (max - min)) / 100 + min);
