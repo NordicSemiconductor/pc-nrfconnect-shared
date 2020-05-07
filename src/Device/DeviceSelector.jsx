@@ -34,10 +34,16 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
 import {
     bool, exact, func, object,
 } from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+
+import {
+    selectedSerialNumber as selectedSerialNumberSelector,
+    devices as devicesSelector,
+} from './deviceReducer';
 
 import DeviceSelectorView from './DeviceSelectorView';
 import {
@@ -47,33 +53,42 @@ import {
     stopWatchingDevices,
 } from './deviceActions';
 
-const mapState = ({ device: { devices, selectedSerialNumber } }) => ({
-    devices, selectedSerialNumber,
-});
-
 const noop = () => {};
-const mapDispatch = (dispatch, {
+const DeviceSelector = ({
     deviceListing,
     deviceSetup,
+    releaseCurrentDevice = noop,
     onDeviceSelected = noop,
     onDeviceDeselected = noop,
     onDeviceIsReady = noop,
-    releaseCurrentDevice = noop,
-}) => ({
-    onMount: () => dispatch(startWatchingDevices(deviceListing, onDeviceDeselected)),
-    onUnmount: stopWatchingDevices,
-    onSelect: device => dispatch(selectAndSetupDevice(
-        device,
-        deviceListing,
-        deviceSetup,
-        releaseCurrentDevice,
-        onDeviceDeselected,
-        onDeviceSelected,
-        onDeviceIsReady,
-    )),
-    onDeselect: () => { dispatch(deselectDevice(onDeviceDeselected)); },
-});
-const DeviceSelector = connect(mapState, mapDispatch)(DeviceSelectorView);
+}) => {
+    const dispatch = useDispatch();
+    const selectedSerialNumber = useSelector(selectedSerialNumberSelector);
+    const devices = useSelector(devicesSelector);
+
+    useEffect(() => {
+        dispatch(startWatchingDevices(deviceListing, onDeviceDeselected));
+
+        return stopWatchingDevices;
+    }, [dispatch, deviceListing, onDeviceDeselected]);
+
+    return (
+        <DeviceSelectorView
+            devices={devices}
+            selectedSerialNumber={selectedSerialNumber}
+            onSelect={device => dispatch(selectAndSetupDevice(
+                device,
+                deviceListing,
+                deviceSetup,
+                releaseCurrentDevice,
+                onDeviceDeselected,
+                onDeviceSelected,
+                onDeviceIsReady,
+            ))}
+            onDeselect={() => dispatch(deselectDevice(onDeviceDeselected))}
+        />
+    );
+};
 
 DeviceSelector.propTypes = {
     deviceListing: exact({
@@ -89,11 +104,11 @@ DeviceSelector.propTypes = {
         dfu: object,
         needSerialport: bool,
     }).isRequired,
+    /* eslint-disable react/require-default-props */
     releaseCurrentDevice: func, // () => {}
     onDeviceSelected: func, // (device) => {}
     onDeviceDeselected: func, // () => {}
     onDeviceIsReady: func, // (device) => {}
-
 };
 
 export default DeviceSelector;

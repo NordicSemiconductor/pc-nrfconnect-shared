@@ -34,6 +34,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* FIXME: Remove when not needed anymore */
 import React from 'react';
 import {
     func, instanceOf, number, oneOfType, string,
