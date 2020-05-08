@@ -40,6 +40,9 @@ import {
 } from 'prop-types';
 import { useSelector } from 'react-redux';
 
+import Mousetrap from 'mousetrap';
+import { ipcRenderer } from 'electron';
+
 import LogViewer from '../Log/LogViewer';
 
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
@@ -58,6 +61,10 @@ const ConnectedApp = ({
     const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);
     const MainComponent = useSelector(mainComponentSelector(panes));
+
+    useEffect(() => {
+        Mousetrap.bind('alt+l', () => ipcRenderer.send('open-app-launcher'));
+    }, []);
 
     return (
         <div className="core19-app">
