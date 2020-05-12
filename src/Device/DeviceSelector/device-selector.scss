@@ -1,0 +1,14 @@
+@import "../../variables";
+
+.core19-device-selector {
+    width: $side-panel-width;
+    z-index: 1;
+
+    color: $white;
+    background: $primary;
+
+    &.device-list-visible {
+        height: 100vh;
+        position: relative;
+    }
+}

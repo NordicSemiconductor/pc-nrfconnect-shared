@@ -34,27 +34,24 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+import { connect } from 'react-redux';
+import * as DeviceActions from '../deviceActions';
+import DeviceSetupView from './DeviceSetupView';
 
-export { ErrorDialogActions };
+const mapStateToProps = ({
+    device: {
+        isSetupDialogVisible, isSetupWaitingForUserInput, setupDialogText, setupDialogChoices,
+    },
+}) => ({
+    isVisible: isSetupDialogVisible,
+    isInProgress: isSetupDialogVisible && !isSetupWaitingForUserInput,
+    text: setupDialogText,
+    choices: setupDialogChoices,
+});
 
-export { default as App } from './App/App';
-export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
-export { default as Slider } from './Slider/Slider';
-export { default as Main } from './Main/Main';
+const mapDispatchToProps = dispatch => ({
+    onOk: input => dispatch(DeviceActions.deviceSetupInputReceived(input)),
+    onCancel: () => dispatch(DeviceActions.deviceSetupInputReceived(false)),
+});
 
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
-
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as logger } from './logging';
-
-export {
-    setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
-} from './appDirs';
-
-export { openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as userData } from './userData';
+export default connect(mapStateToProps, mapDispatchToProps)(DeviceSetupView);

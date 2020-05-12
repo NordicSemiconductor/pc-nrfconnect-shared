@@ -34,24 +34,25 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     bool, exact, func, object,
 } from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
-import {
-    selectedSerialNumber as selectedSerialNumberSelector,
-    devices as devicesSelector,
-} from './deviceReducer';
-
-import DeviceSelectorView from './DeviceSelectorView';
+import { devices as devicesSelector } from '../deviceReducer';
 import {
     deselectDevice,
     selectAndSetupDevice,
     startWatchingDevices,
     stopWatchingDevices,
-} from './deviceActions';
+} from '../deviceActions';
+import DeviceSetup from '../DeviceSetup/DeviceSetup';
+
+import DeviceList from './DeviceList/DeviceList';
+import SelectorButton from './SelectorButton';
+
+import './device-selector.scss';
 
 const noop = () => {};
 const DeviceSelector = ({
@@ -63,7 +64,6 @@ const DeviceSelector = ({
     onDeviceIsReady = noop,
 }) => {
     const dispatch = useDispatch();
-    const selectedSerialNumber = useSelector(selectedSerialNumberSelector);
     const devices = useSelector(devicesSelector);
 
     useEffect(() => {
@@ -72,21 +72,34 @@ const DeviceSelector = ({
         return stopWatchingDevices;
     }, [dispatch, deviceListing, onDeviceDeselected]);
 
+    const [deviceListVisible, setDeviceListVisible] = useState(false);
+
+    const doSelectDevice = device => {
+        setDeviceListVisible(false);
+        dispatch(selectAndSetupDevice(
+            device,
+            deviceListing,
+            deviceSetup,
+            releaseCurrentDevice,
+            onDeviceDeselected,
+            onDeviceSelected,
+            onDeviceIsReady,
+        ));
+    };
+
+    const doDeselectDevice = () => { dispatch(deselectDevice(onDeviceDeselected)); };
+
     return (
-        <DeviceSelectorView
-            devices={devices}
-            selectedSerialNumber={selectedSerialNumber}
-            onSelect={device => dispatch(selectAndSetupDevice(
-                device,
-                deviceListing,
-                deviceSetup,
-                releaseCurrentDevice,
-                onDeviceDeselected,
-                onDeviceSelected,
-                onDeviceIsReady,
-            ))}
-            onDeselect={() => dispatch(deselectDevice(onDeviceDeselected))}
-        />
+        <div className={`core19-device-selector ${deviceListVisible ? 'device-list-visible' : ''}`}>
+            <SelectorButton
+                deviceListVisible={deviceListVisible}
+                setDeviceListVisible={setDeviceListVisible}
+                doDeselectDevice={doDeselectDevice}
+            />
+            { deviceListVisible && <DeviceList devices={devices} doSelectDevice={doSelectDevice} />}
+
+            <DeviceSetup />
+        </div>
     );
 };
 

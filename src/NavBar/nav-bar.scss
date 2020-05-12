@@ -2,7 +2,7 @@
 
 .core19-nav-bar {
     width: 100%;
-    height: 40px;
+    height: $nav-bar-height;
 
     background-color: $white;
 
@@ -11,14 +11,10 @@
     flex-direction: row;
     align-items: center;
 
+    z-index: 1;
+
     .core19-nav-bar-device-selector {
         width: $side-panel-width;
-        height: 100%;
-
-        background-color: $primary;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        align-self: start;
     }
 }

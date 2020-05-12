@@ -34,27 +34,29 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+import React from 'react';
+import { bool } from 'prop-types';
+import { deviceIcons } from '../deviceInfo/deviceInfo';
+import deviceShape from './deviceShape';
 
-export { ErrorDialogActions };
+import './device-icon.scss';
 
-export { default as App } from './App/App';
-export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
-export { default as Slider } from './Slider/Slider';
-export { default as Main } from './Main/Main';
+const DeviceIcon = ({ device, whiteBackground }) => {
+    if (device == null || deviceIcons(device) == null) {
+        return <div className="icon" />;
+    }
 
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
+    const bgClassname = whiteBackground ? 'on-white' : 'on-blue';
+    return (
+        <div className="icon">
+            <img className={`white ${bgClassname}`} src={deviceIcons(device).white} alt="" />
+            <img className={`blue ${bgClassname}`} src={deviceIcons(device).blue} alt="" />
+        </div>
+    );
+};
+DeviceIcon.propTypes = {
+    device: deviceShape, // eslint-disable-line react/require-default-props
+    whiteBackground: bool.isRequired,
+};
 
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as logger } from './logging';
-
-export {
-    setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
-} from './appDirs';
-
-export { openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as userData } from './userData';
+export default DeviceIcon;

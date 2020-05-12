@@ -34,24 +34,41 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { connect } from 'react-redux';
-import DeviceSetupView from './DeviceSetupView';
-import * as DeviceActions from './deviceActions';
+import React from 'react';
+import { func, node, string } from 'prop-types';
 
-const mapStateToProps = ({
-    device: {
-        isSetupDialogVisible, isSetupWaitingForUserInput, setupDialogText, setupDialogChoices,
-    },
-}) => ({
-    isVisible: isSetupDialogVisible,
-    isInProgress: isSetupDialogVisible && !isSetupWaitingForUserInput,
-    text: setupDialogText,
-    choices: setupDialogChoices,
-});
+import './pseudo-button.scss';
 
-const mapDispatchToProps = dispatch => ({
-    onOk: input => dispatch(DeviceActions.deviceSetupInputReceived(input)),
-    onCancel: () => dispatch(DeviceActions.deviceSetupInputReceived(false)),
-});
+const invokeIfSpaceOrEnterPressed = onClick => event => {
+    event.stopPropagation();
+    if (event.key === ' ' || event.key === 'Enter') {
+        onClick();
+    }
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(DeviceSetupView);
+const blurAndInvoke = onClick => event => {
+    event.stopPropagation();
+    event.currentTarget.blur();
+    onClick();
+};
+
+// Motivation for this class: A normal button in HTML must not contain divs or other buttons,
+// but we do have things that behave like buttons and at the same time should contain such things
+const PseudoButton = ({ onClick, className = '', children }) => (
+    <div
+        role="button"
+        className={`core19-pseudo-button ${className}`}
+        tabIndex={0}
+        onClick={blurAndInvoke(onClick)}
+        onKeyUp={invokeIfSpaceOrEnterPressed(onClick)}
+    >
+        {children}
+    </div>
+);
+PseudoButton.propTypes = {
+    onClick: func.isRequired,
+    className: string, // eslint-disable-line react/require-default-props
+    children: node, // eslint-disable-line react/require-default-props
+};
+
+export default PseudoButton;

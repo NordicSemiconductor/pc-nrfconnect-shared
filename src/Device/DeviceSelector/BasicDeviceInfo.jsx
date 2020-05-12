@@ -34,27 +34,35 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+import React from 'react';
+import { bool, node } from 'prop-types';
+import { deviceName } from '../deviceInfo/deviceInfo';
+import deviceShape from './deviceShape';
+import DeviceIcon from './DeviceIcon';
 
-export { ErrorDialogActions };
+import './basic-device-info.scss';
 
-export { default as App } from './App/App';
-export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
-export { default as Slider } from './Slider/Slider';
-export { default as Main } from './Main/Main';
+const DeviceDetails = ({ device }) => (
+    <div className="details">
+        <div>{deviceName(device) || device.boardVersion || 'Unknown'}</div>
+        <div className="serial-number">{device.serialNumber}</div>
+    </div>
+);
+DeviceDetails.propTypes = {
+    device: deviceShape.isRequired,
+};
 
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
+const BasicDeviceInfo = ({ device, whiteBackground, rightElement }) => (
+    <div className="basic-device-info">
+        <DeviceIcon device={device} whiteBackground={whiteBackground} />
+        <DeviceDetails device={device} />
+        {rightElement}
+    </div>
+);
+BasicDeviceInfo.propTypes = {
+    device: deviceShape.isRequired,
+    whiteBackground: bool.isRequired,
+    rightElement: node.isRequired,
+};
 
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as logger } from './logging';
-
-export {
-    setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
-} from './appDirs';
-
-export { openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as userData } from './userData';
+export default BasicDeviceInfo;

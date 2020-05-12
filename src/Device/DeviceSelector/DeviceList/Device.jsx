@@ -34,27 +34,69 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+import React, { useState } from 'react';
+import {
+    arrayOf, bool, func, shape, string,
+} from 'prop-types';
+import { serialports } from '../../deviceInfo/deviceInfo';
+import PseudoButton from '../../../PseudoButton/PseudoButton';
+import deviceShape from '../deviceShape';
+import BasicDeviceInfo from '../BasicDeviceInfo';
 
-export { ErrorDialogActions };
+import './device.scss';
 
-export { default as App } from './App/App';
-export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
-export { default as Slider } from './Slider/Slider';
-export { default as Main } from './Main/Main';
+const Serialports = ({ ports }) => (
+    <ul className="ports">
+        {ports.map(port => <li key={port.path}>{port.path}</li>)}
+    </ul>
+);
+Serialports.propTypes = {
+    ports: arrayOf(
+        shape({
+            path: string.isRequired,
+        }).isRequired,
+    ).isRequired,
+};
 
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
+const MoreDeviceInfo = ({ device }) => (
+    <Serialports ports={serialports(device)} />
+);
+MoreDeviceInfo.propTypes = {
+    device: deviceShape.isRequired,
+};
 
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as logger } from './logging';
+const additionalClassName = (moreVisible, isSelected) => {
+    if (moreVisible) return 'more-infos-visible';
+    if (isSelected) return 'selected-device';
+    return '';
+};
 
-export {
-    setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
-} from './appDirs';
+const Device = ({ device, isSelected, doSelectDevice }) => {
+    const [moreVisible, setMoreVisible] = useState(false);
 
-export { openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as userData } from './userData';
+    const showMoreInfos = (
+        <PseudoButton
+            className={`show-more mdi mdi-chevron-${moreVisible ? 'up' : 'down'}`}
+            onClick={() => setMoreVisible(!moreVisible)}
+        />
+    );
+
+    return (
+        <PseudoButton
+            className={`device ${additionalClassName(moreVisible, isSelected)}`}
+            onClick={() => doSelectDevice(device)}
+        >
+            <BasicDeviceInfo device={device} whiteBackground={false} rightElement={showMoreInfos} />
+            <div className="more-infos">
+                {moreVisible && <MoreDeviceInfo device={device} />}
+            </div>
+        </PseudoButton>
+    );
+};
+Device.propTypes = {
+    device: deviceShape.isRequired,
+    isSelected: bool.isRequired,
+    doSelectDevice: func.isRequired,
+};
+
+export default Device;

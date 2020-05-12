@@ -1,0 +1,37 @@
+@import "../../../variables";
+
+.core19-device-selector {
+    .device {
+        display: flex;
+        flex-direction: column;
+
+        padding-top: 20px;
+        padding-bottom: 13px;
+
+        &:hover, &.more-infos-visible {
+            background: $white;
+            color: $primary;
+            .serial-number { color: $primary; }
+        }
+
+        &.selected-device:not(:hover) {
+            background: $primary-darkened;
+        }
+
+        .show-more {
+            margin-right: 20px;
+            margin-left: 10px;
+        }
+
+        .more-infos {
+            padding-left: 68px;
+
+            .ports {
+                list-style: none;
+                padding: 0;
+
+                margin-top: 1em;
+            }
+        }
+    }
+}

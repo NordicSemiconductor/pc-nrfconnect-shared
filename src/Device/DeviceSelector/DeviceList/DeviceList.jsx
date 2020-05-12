@@ -34,27 +34,51 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+import React from 'react';
+import { arrayOf, func } from 'prop-types';
+import { useSelector } from 'react-redux';
+import { selectedSerialNumber as selectedSerialNumberSelector } from '../../deviceReducer';
+import Device from './Device';
+import deviceShape from '../deviceShape';
 
-export { ErrorDialogActions };
+import './device-list.scss';
 
-export { default as App } from './App/App';
-export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
-export { default as Slider } from './Slider/Slider';
-export { default as Main } from './Main/Main';
+const NoDevicesConnected = () => (
+    <p className="no-devices-connected">
+        Connect a{' '}
+        <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://www.nordicsemi.com/Software-and-tools/Development-Kits"
+        >
+            Nordic development kit
+        </a>
+        {' '}to your computer.
+    </p>
+);
 
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
+const DeviceList = ({ devices, doSelectDevice }) => {
+    const selectedSerialNumber = useSelector(selectedSerialNumberSelector);
 
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as logger } from './logging';
+    if (devices.length === 0) return <NoDevicesConnected />;
 
-export {
-    setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
-} from './appDirs';
+    return (
+        <ul className="device-list">
+            {devices.map(device => (
+                <li key={device.serialNumber}>
+                    <Device
+                        device={device}
+                        isSelected={selectedSerialNumber === device.serialNumber}
+                        doSelectDevice={doSelectDevice}
+                    />
+                </li>
+            ))}
+        </ul>
+    );
+};
+DeviceList.propTypes = {
+    devices: arrayOf(deviceShape.isRequired).isRequired,
+    doSelectDevice: func.isRequired,
+};
 
-export { openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as userData } from './userData';
+export default DeviceList;
