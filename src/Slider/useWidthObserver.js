@@ -53,7 +53,7 @@ export default () => {
         const widthObserver = new ResizeObserver(reportWidth);
         widthObserver.observe(elementRef.current);
         return () => widthObserver.disconnect();
-    }, [elementRef.current]);
+    }, []);
 
     return [elementWidth, elementRef];
 };
