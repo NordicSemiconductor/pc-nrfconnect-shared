@@ -69,7 +69,7 @@ export function deselectDevice(onDeviceDeselected) {
  * @param {Object} device Device object as given by nrf-device-lister.
  */
 export const DEVICE_SETUP_COMPLETE = 'DEVICE_SETUP_COMPLETE';
-const deviceSetupCompleteAction = device => ({
+const deviceSetupComplete = device => ({
     type: DEVICE_SETUP_COMPLETE,
     device,
 });
@@ -81,7 +81,7 @@ const deviceSetupCompleteAction = device => ({
  * @param {Object} error Error object describing the error.
  */
 export const DEVICE_SETUP_ERROR = 'DEVICE_SETUP_ERROR';
-const deviceSetupErrorAction = (device, error) => ({
+const deviceSetupError = (device, error) => ({
     type: DEVICE_SETUP_ERROR,
     device,
     error,
@@ -96,7 +96,7 @@ const deviceSetupErrorAction = (device, error) => ({
  * @param {Array<String>} [choices] Values that the user can choose from (optional).
  */
 export const DEVICE_SETUP_INPUT_REQUIRED = 'DEVICE_SETUP_INPUT_REQUIRED';
-const deviceSetupInputRequiredAction = (message, choices) => ({
+const deviceSetupInputRequired = (message, choices) => ({
     type: DEVICE_SETUP_INPUT_REQUIRED,
     message,
     choices,
@@ -109,7 +109,7 @@ const deviceSetupInputRequiredAction = (message, choices) => ({
  * @param {Boolean|String} input The input made by the user.
  */
 export const DEVICE_SETUP_INPUT_RECEIVED = 'DEVICE_SETUP_INPUT_RECEIVED';
-const deviceSetupInputReceivedAction = input => ({
+const deviceSetupInputReceived = input => ({
     type: DEVICE_SETUP_INPUT_RECEIVED,
     input,
 });
@@ -122,7 +122,7 @@ const deviceSetupInputReceivedAction = input => ({
  * @param {Array} devices Array of all attached devices, ref. nrf-device-lister.
  */
 export const DEVICES_DETECTED = 'DEVICES_DETECTED';
-const devicesDetectedAction = devices => ({
+const devicesDetected = devices => ({
     type: DEVICES_DETECTED,
     devices,
 });
@@ -197,7 +197,7 @@ export const startWatchingDevices = (deviceListing, onDeviceDeselected) => (disp
             dispatch(deselectDevice(onDeviceDeselected));
         }
 
-        dispatch(devicesDetectedAction(Array.from(devices.values())));
+        dispatch(devicesDetected(Array.from(devices.values())));
     });
     deviceLister.on('error', error => dispatch(logDeviceListerError(error)));
     deviceLister.start();
@@ -236,7 +236,7 @@ const getDeviceSetupUserInput = dispatch => (message, choices) => new Promise((r
             reject(new Error('Cancelled by user.'));
         }
     };
-    dispatch(deviceSetupInputRequiredAction(message, choices));
+    dispatch(deviceSetupInputRequired(message, choices));
 });
 
 /**
@@ -276,11 +276,11 @@ export const setupDevice = (
     nrfDeviceSetup.setupDevice(device, deviceSetupConfig)
         .then(preparedDevice => {
             dispatch(startWatchingDevices(deviceListing, onDeviceDeselected));
-            dispatch(deviceSetupCompleteAction(preparedDevice));
+            dispatch(deviceSetupComplete(preparedDevice));
             onDeviceIsReady(preparedDevice);
         })
         .catch(error => {
-            dispatch(deviceSetupErrorAction(device, error));
+            dispatch(deviceSetupError(device, error));
             if (!deviceSetupConfig.allowCustomDevice) {
                 logger.error(`Error while setting up device ${device.serialNumber}: ${error.message}`);
                 dispatch(deselectDevice(onDeviceDeselected));
@@ -296,8 +296,8 @@ export const setupDevice = (
  * @param {Boolean|String} input Input made by the user.
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
-export const deviceSetupInputReceived = input => dispatch => {
-    dispatch(deviceSetupInputReceivedAction(input));
+export const receiveDeviceSetupInput = input => dispatch => {
+    dispatch(deviceSetupInputReceived(input));
     if (deviceSetupCallback) {
         deviceSetupCallback(input);
         deviceSetupCallback = undefined;

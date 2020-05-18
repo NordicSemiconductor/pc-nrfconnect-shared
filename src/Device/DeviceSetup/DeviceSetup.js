@@ -35,7 +35,7 @@
  */
 
 import { connect } from 'react-redux';
-import * as DeviceActions from '../deviceActions';
+import { receiveDeviceSetupInput } from '../deviceActions';
 import DeviceSetupView from './DeviceSetupView';
 
 const mapStateToProps = ({
@@ -50,8 +50,8 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onOk: input => dispatch(DeviceActions.deviceSetupInputReceived(input)),
-    onCancel: () => dispatch(DeviceActions.deviceSetupInputReceived(false)),
+    onOk: input => dispatch(receiveDeviceSetupInput(input)),
+    onCancel: () => dispatch(receiveDeviceSetupInput(false)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeviceSetupView);
