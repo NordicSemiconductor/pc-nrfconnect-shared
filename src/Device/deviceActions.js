@@ -35,31 +35,23 @@
  */
 
 import DeviceLister from 'nrf-device-lister'; // eslint-disable-line import/no-unresolved
-import { setupDevice } from 'nrf-device-setup';
+import nrfDeviceSetup from 'nrf-device-setup';
 import logger from '../logging';
 import { showDialog as showAppReloadDialog } from '../AppReload/appReloadDialogActions';
 
 /**
  * Indicates that a device has been selected.
  *
- * Apps can listen to this action in their middleware to add custom behavior when
- * the device is selected. Apps can also dispatch this action themselves to make
- * the device appear as selected in the DeviceSelector.
- *
  * @param {Object} device Device object as given by nrf-device-lister.
  */
 export const DEVICE_SELECTED = 'DEVICE_SELECTED';
-const deviceSelectedAction = device => ({
+export const selectDevice = device => ({
     type: DEVICE_SELECTED,
     device,
 });
 
 /**
  * Indicates that the currently selected device has been deselected.
- *
- * Apps can listen to this action in their middleware to add custom behavior when
- * the device is deselected, f.ex. closing the device. Apps can also dispatch this
- * action themselves to clear a selection in the DeviceSelector.
  */
 export const DEVICE_DESELECTED = 'DEVICE_DESELECTED';
 export function deselectDevice(onDeviceDeselected) {
@@ -72,8 +64,7 @@ export function deselectDevice(onDeviceDeselected) {
 /**
  * Indicates that device setup is complete. This means that the device is
  * ready for use according to the `config.deviceSetup` configuration provided
- * by the app. Apps can listen to this action in their middleware to add custom
- * behavior when device setup has completed.
+ * by the app.
  *
  * @param {Object} device Device object as given by nrf-device-lister.
  */
@@ -84,8 +75,7 @@ const deviceSetupCompleteAction = device => ({
 });
 
 /**
- * Indicates that device setup failed. Apps can listen to this action in their
- * middleware to add custom behavior when device setup fails.
+ * Indicates that device setup failed.
  *
  * @param {Object} device Device object as given by nrf-device-lister.
  * @param {Object} error Error object describing the error.
@@ -254,56 +244,49 @@ const getDeviceSetupUserInput = dispatch => (message, choices) => new Promise((r
  * configuration given by the app.
  *
  * @param {Object} device Device object, ref. nrf-device-lister.
+ * @param {Object} deviceSetup The object describing how to do the device setup
  * @param {Object} deviceListing The configuration for the DeviceLister
- * @param {Object} deviceSetup If defined, the object describing how to do the device setup
- * @param {function()} releaseCurrentDevice Callback invoked before the device is set up
+ * @param {function()} releaseCurrentDevice Callback invoked after stopping watching for devices
+ *                     and before setting up the new device
  * @param {function()} onDeviceDeselected Callback invoked when the current device is deselected
- * @param {function(device)} onDeviceSelected Callback invoked with the device when it is selected
- * @param {function(device)} onDeviceIsReady Callback invoked with the device when it is ready
- *                   (selected and potential setup complete)
+ * @param {function(device)} onDeviceIsReady Callback invoked with the device when setup is complete
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
-export const selectAndSetupDevice = (
+export const setupDevice = (
     device,
-    deviceListing,
     deviceSetup,
+    deviceListing,
     releaseCurrentDevice,
     onDeviceDeselected,
-    onDeviceSelected,
     onDeviceIsReady,
 ) => async dispatch => {
-    dispatch(deviceSelectedAction(device));
-    onDeviceSelected(device);
-
-    if (deviceSetup) {
-        // During device setup, the device may go in and out of bootloader
-        // mode. This will make it appear as detached in the device lister,
-        // causing a DESELECT_DEVICE. To avoid this, we stop the device
-        // lister while setting up the device, and start it again after the
-        // device has been set up.
-        stopWatchingDevices();
-        await releaseCurrentDevice();
-        const deviceSetupConfig = {
-            promiseConfirm: getDeviceSetupUserInput(dispatch),
-            promiseChoice: getDeviceSetupUserInput(dispatch),
-            allowCustomDevice: false,
-            ...deviceSetup,
-        };
-        setupDevice(device, deviceSetupConfig)
-            .then(preparedDevice => {
-                dispatch(startWatchingDevices(deviceListing, onDeviceDeselected));
-                dispatch(deviceSetupCompleteAction(preparedDevice));
-                onDeviceIsReady(preparedDevice);
-            })
-            .catch(error => {
-                dispatch(deviceSetupErrorAction(device, error));
-                if (!deviceSetupConfig.allowCustomDevice) {
-                    logger.error(`Error while setting up device ${device.serialNumber}: ${error.message}`);
-                    dispatch(deselectDevice(onDeviceDeselected));
-                }
-                dispatch(startWatchingDevices(deviceListing, onDeviceDeselected));
-            });
-    }
+    // During device setup, the device may go in and out of bootloader
+    // mode. This will make it appear as detached in the device lister,
+    // causing a DESELECT_DEVICE. To avoid this, we stop the device
+    // lister while setting up the device, and start it again after the
+    // device has been set up.
+    stopWatchingDevices();
+    await releaseCurrentDevice();
+    const deviceSetupConfig = {
+        promiseConfirm: getDeviceSetupUserInput(dispatch),
+        promiseChoice: getDeviceSetupUserInput(dispatch),
+        allowCustomDevice: false,
+        ...deviceSetup,
+    };
+    nrfDeviceSetup.setupDevice(device, deviceSetupConfig)
+        .then(preparedDevice => {
+            dispatch(startWatchingDevices(deviceListing, onDeviceDeselected));
+            dispatch(deviceSetupCompleteAction(preparedDevice));
+            onDeviceIsReady(preparedDevice);
+        })
+        .catch(error => {
+            dispatch(deviceSetupErrorAction(device, error));
+            if (!deviceSetupConfig.allowCustomDevice) {
+                logger.error(`Error while setting up device ${device.serialNumber}: ${error.message}`);
+                dispatch(deselectDevice(onDeviceDeselected));
+            }
+            dispatch(startWatchingDevices(deviceListing, onDeviceDeselected));
+        });
 };
 
 /**

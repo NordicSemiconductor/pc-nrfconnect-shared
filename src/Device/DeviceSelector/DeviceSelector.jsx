@@ -43,7 +43,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { devices as devicesSelector } from '../deviceReducer';
 import {
     deselectDevice,
-    selectAndSetupDevice,
+    selectDevice,
+    setupDevice,
     startWatchingDevices,
     stopWatchingDevices,
 } from '../deviceActions';
@@ -76,15 +77,18 @@ const DeviceSelector = ({
 
     const doSelectDevice = device => {
         setDeviceListVisible(false);
-        dispatch(selectAndSetupDevice(
-            device,
-            deviceListing,
-            deviceSetup,
-            releaseCurrentDevice,
-            onDeviceDeselected,
-            onDeviceSelected,
-            onDeviceIsReady,
-        ));
+        dispatch(selectDevice(device));
+        onDeviceSelected(device);
+        if (deviceSetup) {
+            dispatch(setupDevice(
+                device,
+                deviceSetup,
+                deviceListing,
+                releaseCurrentDevice,
+                onDeviceDeselected,
+                onDeviceIsReady,
+            ));
+        }
     };
 
     const doDeselectDevice = () => { dispatch(deselectDevice(onDeviceDeselected)); };
