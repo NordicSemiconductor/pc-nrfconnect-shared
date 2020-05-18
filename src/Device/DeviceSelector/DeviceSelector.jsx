@@ -34,7 +34,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
     bool, exact, func, object,
 } from 'prop-types';
@@ -67,13 +67,20 @@ const DeviceSelector = ({
     const dispatch = useDispatch();
     const devices = useSelector(devicesSelector);
 
-    useEffect(() => {
-        dispatch(startWatchingDevices(deviceListing, onDeviceDeselected));
-
-        return stopWatchingDevices;
-    }, [dispatch, deviceListing, onDeviceDeselected]);
-
     const [deviceListVisible, setDeviceListVisible] = useState(false);
+
+    const doDeselectDevice = useCallback(
+        () => {
+            onDeviceDeselected();
+            dispatch(deselectDevice());
+        },
+        [dispatch, onDeviceDeselected],
+    );
+
+    const doStartWatchingDevices = useCallback(
+        () => dispatch(startWatchingDevices(deviceListing, doDeselectDevice)),
+        [deviceListing, dispatch, doDeselectDevice],
+    );
 
     const doSelectDevice = device => {
         setDeviceListVisible(false);
@@ -83,22 +90,25 @@ const DeviceSelector = ({
             dispatch(setupDevice(
                 device,
                 deviceSetup,
-                deviceListing,
                 releaseCurrentDevice,
-                onDeviceDeselected,
                 onDeviceIsReady,
+                doStartWatchingDevices,
+                doDeselectDevice,
             ));
         }
     };
 
-    const doDeselectDevice = () => { dispatch(deselectDevice(onDeviceDeselected)); };
+    useEffect(() => {
+        doStartWatchingDevices();
+        return stopWatchingDevices;
+    }, [doStartWatchingDevices]);
 
     return (
         <div className={`core19-device-selector ${deviceListVisible ? 'device-list-visible' : ''}`}>
             <SelectorButton
                 deviceListVisible={deviceListVisible}
                 setDeviceListVisible={setDeviceListVisible}
-                doDeselectDevice={doDeselectDevice}
+                doDeselectDevice={onDeviceDeselected}
             />
             { deviceListVisible && <DeviceList devices={devices} doSelectDevice={doSelectDevice} />}
 

@@ -54,8 +54,7 @@ export const selectDevice = device => ({
  * Indicates that the currently selected device has been deselected.
  */
 export const DEVICE_DESELECTED = 'DEVICE_DESELECTED';
-export function deselectDevice(onDeviceDeselected) {
-    onDeviceDeselected();
+export function deselectDevice() {
     return {
         type: DEVICE_DESELECTED,
     };
@@ -181,10 +180,10 @@ const logDeviceListerError = error => dispatch => {
  * will dispatch DEVICES_DETECTED with a complete list of attached devices.
  *
  * @param {Object} deviceListing The configuration for the DeviceLister
- * @param {function()} onDeviceDeselected Callback invoked when the current device is deselected
+ * @param {function(device)} doDeselectDevice Invoke to start deselect the current device
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
-export const startWatchingDevices = (deviceListing, onDeviceDeselected) => (dispatch, getState) => {
+export const startWatchingDevices = (deviceListing, doDeselectDevice) => (dispatch, getState) => {
     if (!deviceLister) {
         deviceLister = new DeviceLister(deviceListing);
     }
@@ -194,7 +193,7 @@ export const startWatchingDevices = (deviceListing, onDeviceDeselected) => (disp
         const state = getState();
         if (state.device.selectedSerialNumber !== null
                 && !devices.has(state.device.selectedSerialNumber)) {
-            dispatch(deselectDevice(onDeviceDeselected));
+            doDeselectDevice();
         }
 
         dispatch(devicesDetected(Array.from(devices.values())));
@@ -245,20 +244,20 @@ const getDeviceSetupUserInput = dispatch => (message, choices) => new Promise((r
  *
  * @param {Object} device Device object, ref. nrf-device-lister.
  * @param {Object} deviceSetup The object describing how to do the device setup
- * @param {Object} deviceListing The configuration for the DeviceLister
  * @param {function()} releaseCurrentDevice Callback invoked after stopping watching for devices
  *                     and before setting up the new device
- * @param {function()} onDeviceDeselected Callback invoked when the current device is deselected
  * @param {function(device)} onDeviceIsReady Callback invoked with the device when setup is complete
+ * @param {function(device)} doStartWatchingDevices Invoke to start watching for new devices
+ * @param {function(device)} doDeselectDevice Invoke to start deselect the current device
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
 export const setupDevice = (
     device,
     deviceSetup,
-    deviceListing,
     releaseCurrentDevice,
-    onDeviceDeselected,
     onDeviceIsReady,
+    doStartWatchingDevices,
+    doDeselectDevice,
 ) => async dispatch => {
     // During device setup, the device may go in and out of bootloader
     // mode. This will make it appear as detached in the device lister,
@@ -273,9 +272,10 @@ export const setupDevice = (
         allowCustomDevice: false,
         ...deviceSetup,
     };
+
     nrfDeviceSetup.setupDevice(device, deviceSetupConfig)
         .then(preparedDevice => {
-            dispatch(startWatchingDevices(deviceListing, onDeviceDeselected));
+            doStartWatchingDevices();
             dispatch(deviceSetupComplete(preparedDevice));
             onDeviceIsReady(preparedDevice);
         })
@@ -283,9 +283,9 @@ export const setupDevice = (
             dispatch(deviceSetupError(device, error));
             if (!deviceSetupConfig.allowCustomDevice) {
                 logger.error(`Error while setting up device ${device.serialNumber}: ${error.message}`);
-                dispatch(deselectDevice(onDeviceDeselected));
+                doDeselectDevice();
             }
-            dispatch(startWatchingDevices(deviceListing, onDeviceDeselected));
+            doStartWatchingDevices();
         });
 };
 
