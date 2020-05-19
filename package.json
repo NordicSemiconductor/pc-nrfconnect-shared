@@ -51,6 +51,7 @@
     "jest": "25.1.0",
     "jest-bamboo-formatter": "1.0.1",
     "moment": "2.24.0",
+    "mousetrap": "1.6.5",
     "prettysize": "2.0.0",
     "raw-loader": "3.0.0",
     "react-bootstrap": "1.0.1",
