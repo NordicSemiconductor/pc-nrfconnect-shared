@@ -108,7 +108,7 @@ const DeviceSelector = ({
             <SelectorButton
                 deviceListVisible={deviceListVisible}
                 setDeviceListVisible={setDeviceListVisible}
-                doDeselectDevice={onDeviceDeselected}
+                doDeselectDevice={doDeselectDevice}
             />
             { deviceListVisible && <DeviceList devices={devices} doSelectDevice={doSelectDevice} />}
 
