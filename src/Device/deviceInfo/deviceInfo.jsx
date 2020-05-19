@@ -152,7 +152,7 @@ const deviceInfo = pcaNumber => ({
             buyOnlineParams: 'search_token=nRF6936&series_token=nRF52832',
         },
     },
-    pca20035: {
+    PCA20035: {
         name: 'Nordic Thingy:91',
         cores: 1,
         iconFiles: {
@@ -164,7 +164,7 @@ const deviceInfo = pcaNumber => ({
             buyOnlineParams: 'search_token=nRF6943&series_token=nRF9160',
         },
     },
-}[pcaNumber] || { website: {} });
+}[String(pcaNumber).toUpperCase()] || { website: {} });
 
 const defaultIconFiles = null; /* FIXME */
 export const deviceIcons = device => deviceInfo(device.boardVersion).iconFiles || defaultIconFiles;
