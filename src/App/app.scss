@@ -26,6 +26,15 @@
             flex: 1;
             overflow: auto;
         }
+
+        .core19-log-viewer {
+            background-color: $gray-800;
+            color: $gray-100;
+
+            border-top: 1px solid gray;
+            overflow: hidden;
+            width: 100%;
+        }
     }
 
     .core19-side-panel {

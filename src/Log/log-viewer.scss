@@ -1,21 +1,10 @@
-@import "../variables";
+.core19-log {
+    position: relative;
+    overflow: auto;
+    height: 155px;
 
-.core19-log-viewer {
-    background-color: $gray-800;
-    color: $gray-100;
-
-    border-top: 1px solid gray;
-    overflow: hidden;
-    width: 100%;
-
-    .core19-log {
-        position: relative;
-        overflow: auto;
-        height: 155px;
-
-        > div {
-            display: table;
-            min-width: 100%;
-        }
+    > div {
+        display: table;
+        min-width: 100%;
     }
 }

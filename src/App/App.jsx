@@ -55,6 +55,8 @@ import { isSidePanelVisibleSelector, isLogVisibleSelector, mainComponentSelector
 import './shared.scss';
 import './app.scss';
 
+const hiddenUnless = isVisible => (isVisible ? '' : 'd-none');
+
 const ConnectedApp = ({
     deviceSelect, panes, sidePanel,
 }) => {
@@ -73,14 +75,16 @@ const ConnectedApp = ({
                 panes={panes}
             />
             <div className="core19-app-content">
-                {isSidePanelVisible && (
-                    <div className="core19-side-panel">
-                        {sidePanel}
-                    </div>
-                )}
+                <div className={`core19-side-panel ${hiddenUnless(isSidePanelVisible)}`}>
+                    {sidePanel}
+                </div>
                 <div className="core19-main-and-log">
-                    <div className="core19-main-container"><MainComponent /></div>
-                    {isLogVisible && <LogViewer />}
+                    <div className="core19-main-container">
+                        <MainComponent />
+                    </div>
+                    <div className={`core19-log-viewer ${hiddenUnless(isLogVisible)}`}>
+                        <LogViewer />
+                    </div>
                 </div>
             </div>
             <VisibilityBar />
