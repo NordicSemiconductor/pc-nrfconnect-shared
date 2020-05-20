@@ -40,7 +40,7 @@ export { ErrorDialogActions };
 
 export { default as App } from './App/App';
 export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector';
+export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
 export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
 export { default as Spinner } from './Dialog/Spinner';
 export { default as Slider } from './Slider/Slider';

@@ -1,0 +1,22 @@
+@import "../../variables";
+
+.core19-device-selector {
+    .basic-device-info {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        width: 100%;
+
+        .details {
+            flex-grow: 1;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        .serial-number {
+            color: $gray-900;
+        }
+    }
+}

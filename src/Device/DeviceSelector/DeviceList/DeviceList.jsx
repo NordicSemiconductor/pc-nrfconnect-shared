@@ -34,26 +34,51 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import React from 'react';
+import { arrayOf, func } from 'prop-types';
+import { useSelector } from 'react-redux';
+import { selectedSerialNumber as selectedSerialNumberSelector } from '../../deviceReducer';
+import Device from './Device';
+import deviceShape from '../deviceShape';
 
-/**
- * Observe and return the width of an element
- *
- * @returns {[elementWidth, elementRef]} The width of the element and the ref which has to be
- * attached to the target element.
- */
-export default () => {
-    const elementRef = useRef();
-    const [elementWidth, setElementWidth] = useState();
-    const reportWidth = () => setElementWidth(elementRef.current.clientWidth);
+import './device-list.scss';
 
-    useEffect(() => {
-        reportWidth();
+const NoDevicesConnected = () => (
+    <p className="no-devices-connected">
+        Connect a{' '}
+        <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://www.nordicsemi.com/Software-and-tools/Development-Kits"
+        >
+            Nordic development kit
+        </a>
+        {' '}to your computer.
+    </p>
+);
 
-        const widthObserver = new ResizeObserver(reportWidth);
-        widthObserver.observe(elementRef.current);
-        return () => widthObserver.disconnect();
-    }, []);
+const DeviceList = ({ devices, doSelectDevice }) => {
+    const selectedSerialNumber = useSelector(selectedSerialNumberSelector);
 
-    return [elementWidth, elementRef];
+    if (devices.length === 0) return <NoDevicesConnected />;
+
+    return (
+        <ul className="device-list">
+            {devices.map(device => (
+                <li key={device.serialNumber}>
+                    <Device
+                        device={device}
+                        isSelected={selectedSerialNumber === device.serialNumber}
+                        doSelectDevice={doSelectDevice}
+                    />
+                </li>
+            ))}
+        </ul>
+    );
 };
+DeviceList.propTypes = {
+    devices: arrayOf(deviceShape.isRequired).isRequired,
+    doSelectDevice: func.isRequired,
+};
+
+export default DeviceList;

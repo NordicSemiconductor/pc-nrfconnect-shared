@@ -34,26 +34,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { shape, string } from 'prop-types';
 
-/**
- * Observe and return the width of an element
- *
- * @returns {[elementWidth, elementRef]} The width of the element and the ref which has to be
- * attached to the target element.
- */
-export default () => {
-    const elementRef = useRef();
-    const [elementWidth, setElementWidth] = useState();
-    const reportWidth = () => setElementWidth(elementRef.current.clientWidth);
-
-    useEffect(() => {
-        reportWidth();
-
-        const widthObserver = new ResizeObserver(reportWidth);
-        widthObserver.observe(elementRef.current);
-        return () => widthObserver.disconnect();
-    }, []);
-
-    return [elementWidth, elementRef];
-};
+export default shape({
+    serialNumber: string.isRequired,
+    boardVersion: string,
+    usb: shape({
+        product: string,
+    }),
+});

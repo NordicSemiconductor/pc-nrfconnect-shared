@@ -34,26 +34,29 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import React from 'react';
+import { bool } from 'prop-types';
+import { deviceIcons } from '../deviceInfo/deviceInfo';
+import deviceShape from './deviceShape';
 
-/**
- * Observe and return the width of an element
- *
- * @returns {[elementWidth, elementRef]} The width of the element and the ref which has to be
- * attached to the target element.
- */
-export default () => {
-    const elementRef = useRef();
-    const [elementWidth, setElementWidth] = useState();
-    const reportWidth = () => setElementWidth(elementRef.current.clientWidth);
+import './device-icon.scss';
 
-    useEffect(() => {
-        reportWidth();
+const DeviceIcon = ({ device, whiteBackground }) => {
+    if (device == null || deviceIcons(device) == null) {
+        return <div className="icon" />;
+    }
 
-        const widthObserver = new ResizeObserver(reportWidth);
-        widthObserver.observe(elementRef.current);
-        return () => widthObserver.disconnect();
-    }, []);
-
-    return [elementWidth, elementRef];
+    const bgClassname = whiteBackground ? 'on-white' : 'on-blue';
+    return (
+        <div className="icon">
+            <img className={`white ${bgClassname}`} src={deviceIcons(device).white} alt="" />
+            <img className={`blue ${bgClassname}`} src={deviceIcons(device).blue} alt="" />
+        </div>
+    );
 };
+DeviceIcon.propTypes = {
+    device: deviceShape, // eslint-disable-line react/require-default-props
+    whiteBackground: bool.isRequired,
+};
+
+export default DeviceIcon;

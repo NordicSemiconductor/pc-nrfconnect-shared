@@ -34,26 +34,24 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { connect } from 'react-redux';
+import { receiveDeviceSetupInput } from '../deviceActions';
+import DeviceSetupView from './DeviceSetupView';
 
-/**
- * Observe and return the width of an element
- *
- * @returns {[elementWidth, elementRef]} The width of the element and the ref which has to be
- * attached to the target element.
- */
-export default () => {
-    const elementRef = useRef();
-    const [elementWidth, setElementWidth] = useState();
-    const reportWidth = () => setElementWidth(elementRef.current.clientWidth);
+const mapStateToProps = ({
+    device: {
+        isSetupDialogVisible, isSetupWaitingForUserInput, setupDialogText, setupDialogChoices,
+    },
+}) => ({
+    isVisible: isSetupDialogVisible,
+    isInProgress: isSetupDialogVisible && !isSetupWaitingForUserInput,
+    text: setupDialogText,
+    choices: setupDialogChoices,
+});
 
-    useEffect(() => {
-        reportWidth();
+const mapDispatchToProps = dispatch => ({
+    onOk: input => dispatch(receiveDeviceSetupInput(input)),
+    onCancel: () => dispatch(receiveDeviceSetupInput(false)),
+});
 
-        const widthObserver = new ResizeObserver(reportWidth);
-        widthObserver.observe(elementRef.current);
-        return () => widthObserver.disconnect();
-    }, []);
-
-    return [elementWidth, elementRef];
-};
+export default connect(mapStateToProps, mapDispatchToProps)(DeviceSetupView);

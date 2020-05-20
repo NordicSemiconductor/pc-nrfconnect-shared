@@ -1,0 +1,28 @@
+@use "sass:color";
+
+@import "../../../variables";
+
+.core19-device-selector {
+    .no-devices-connected {
+        padding: 20px;
+
+        a {
+            color: color.scale($nordic-blue, $lightness: -30%);
+        }
+    }
+
+    .device-list {
+        list-style: none;
+        padding: 0;
+
+        font-weight: 200;
+
+        > :first-child {
+            border-top: 1px solid $primary-darkened;
+        }
+
+        > * {
+            border-bottom: 1px solid $primary-darkened;
+        }
+    }
+}

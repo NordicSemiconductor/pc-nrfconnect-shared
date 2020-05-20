@@ -43,19 +43,7 @@ import Section from './Section';
 import { selectedDevice, deviceInfo as deviceInfoSelector } from '../Device/deviceReducer';
 import {
     cores, deviceName, productPageUrl, buyOnlineUrl,
-} from '../Device/device';
-
-const name = device => {
-    if (deviceName(device.boardVersion)) {
-        return deviceName(device.boardVersion);
-    }
-
-    if (device.usb && device.usb.product) {
-        return device.usb.product;
-    }
-
-    return null;
-};
+} from '../Device/deviceInfo/deviceInfo';
 
 const memorySize = memoryInBytes => {
     if (memoryInBytes == null) {
@@ -77,7 +65,7 @@ export default () => {
 
     return (
         <Card title="Device">
-            <Section title="Name">{name(device) || 'Unknown'}</Section>
+            <Section title="Name">{deviceName(device) || 'Unknown'}</Section>
             <Section title="ID">{device.serialNumber}</Section>
             <Section title="PCA">{pca || 'Unknown'}</Section>
             <Section title="Cores">{cores(pca) || 'Unknown'}</Section>

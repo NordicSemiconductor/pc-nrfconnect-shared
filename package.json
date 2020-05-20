@@ -50,18 +50,14 @@
     "immutable": "4.0.0-rc.12",
     "jest": "25.1.0",
     "jest-bamboo-formatter": "1.0.1",
-    "jquery": "1.9.1",
     "moment": "2.24.0",
-    "mousetrap": "1.6.3",
+    "mousetrap": "1.6.5",
     "prettysize": "2.0.0",
     "raw-loader": "3.0.0",
-    "react": "16.12.0",
     "react-bootstrap": "1.0.1",
-    "react-dom": "16.12.0",
     "react-ga": "2.7.0",
     "react-markdown": "4.2.2",
-    "react-redux": "7.1.3",
-    "react-test-renderer": "16.12.0",
+    "react-test-renderer": "16.13.1",
     "redux": "4.0.4",
     "redux-devtools-extension": "2.13.8",
     "redux-thunk": "2.3.0",
@@ -75,6 +71,15 @@
     "url-loader": "2.0.1",
     "webpack": "4.43.0",
     "winston": "3.2.1"
+  },
+  "devDependencies": {
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-redux": "7.2.0"
+  },
+  "peerDependencies": {
+    "react": "^16.13",
+    "react-redux": "^7.2"
   },
   "jest": {
     "moduleNameMapper": {

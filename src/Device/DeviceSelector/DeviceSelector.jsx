@@ -34,46 +34,88 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { connect } from 'react-redux';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
     bool, exact, func, object,
 } from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 
-import DeviceSelectorView from './DeviceSelectorView';
+import { devices as devicesSelector } from '../deviceReducer';
 import {
     deselectDevice,
-    selectAndSetupDevice,
+    selectDevice,
+    setupDevice,
     startWatchingDevices,
     stopWatchingDevices,
-} from './deviceActions';
+} from '../deviceActions';
+import DeviceSetup from '../DeviceSetup/DeviceSetup';
 
-const mapState = ({ device: { devices, selectedSerialNumber } }) => ({
-    devices, selectedSerialNumber,
-});
+import DeviceList from './DeviceList/DeviceList';
+import SelectorButton from './SelectorButton';
+
+import './device-selector.scss';
 
 const noop = () => {};
-const mapDispatch = (dispatch, {
+const DeviceSelector = ({
     deviceListing,
     deviceSetup,
+    releaseCurrentDevice = noop,
     onDeviceSelected = noop,
     onDeviceDeselected = noop,
     onDeviceIsReady = noop,
-    releaseCurrentDevice = noop,
-}) => ({
-    onMount: () => dispatch(startWatchingDevices(deviceListing, onDeviceDeselected)),
-    onUnmount: stopWatchingDevices,
-    onSelect: device => dispatch(selectAndSetupDevice(
-        device,
-        deviceListing,
-        deviceSetup,
-        releaseCurrentDevice,
-        onDeviceDeselected,
-        onDeviceSelected,
-        onDeviceIsReady,
-    )),
-    onDeselect: () => { dispatch(deselectDevice(onDeviceDeselected)); },
-});
-const DeviceSelector = connect(mapState, mapDispatch)(DeviceSelectorView);
+}) => {
+    const dispatch = useDispatch();
+    const devices = useSelector(devicesSelector);
+
+    const [deviceListVisible, setDeviceListVisible] = useState(false);
+
+    const doDeselectDevice = useCallback(
+        () => {
+            onDeviceDeselected();
+            dispatch(deselectDevice());
+        },
+        [dispatch, onDeviceDeselected],
+    );
+
+    const doStartWatchingDevices = useCallback(
+        () => dispatch(startWatchingDevices(deviceListing, doDeselectDevice)),
+        [deviceListing, dispatch, doDeselectDevice],
+    );
+
+    const doSelectDevice = device => {
+        setDeviceListVisible(false);
+        dispatch(selectDevice(device));
+        onDeviceSelected(device);
+        if (deviceSetup) {
+            dispatch(setupDevice(
+                device,
+                deviceSetup,
+                releaseCurrentDevice,
+                onDeviceIsReady,
+                doStartWatchingDevices,
+                doDeselectDevice,
+            ));
+        }
+    };
+
+    useEffect(() => {
+        doStartWatchingDevices();
+        return stopWatchingDevices;
+    }, [doStartWatchingDevices]);
+
+    return (
+        <div className={`core19-device-selector ${deviceListVisible ? 'device-list-visible' : ''}`}>
+            <SelectorButton
+                deviceListVisible={deviceListVisible}
+                setDeviceListVisible={setDeviceListVisible}
+                doDeselectDevice={doDeselectDevice}
+            />
+            { deviceListVisible && <DeviceList devices={devices} doSelectDevice={doSelectDevice} />}
+
+            <DeviceSetup />
+        </div>
+    );
+};
 
 DeviceSelector.propTypes = {
     deviceListing: exact({
@@ -89,11 +131,11 @@ DeviceSelector.propTypes = {
         dfu: object,
         needSerialport: bool,
     }).isRequired,
+    /* eslint-disable react/require-default-props */
     releaseCurrentDevice: func, // () => {}
     onDeviceSelected: func, // (device) => {}
     onDeviceDeselected: func, // () => {}
     onDeviceIsReady: func, // (device) => {}
-
 };
 
 export default DeviceSelector;

@@ -34,26 +34,35 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import React from 'react';
+import { bool, node } from 'prop-types';
+import { deviceName } from '../deviceInfo/deviceInfo';
+import deviceShape from './deviceShape';
+import DeviceIcon from './DeviceIcon';
 
-/**
- * Observe and return the width of an element
- *
- * @returns {[elementWidth, elementRef]} The width of the element and the ref which has to be
- * attached to the target element.
- */
-export default () => {
-    const elementRef = useRef();
-    const [elementWidth, setElementWidth] = useState();
-    const reportWidth = () => setElementWidth(elementRef.current.clientWidth);
+import './basic-device-info.scss';
 
-    useEffect(() => {
-        reportWidth();
-
-        const widthObserver = new ResizeObserver(reportWidth);
-        widthObserver.observe(elementRef.current);
-        return () => widthObserver.disconnect();
-    }, []);
-
-    return [elementWidth, elementRef];
+const DeviceDetails = ({ device }) => (
+    <div className="details">
+        <div>{deviceName(device) || device.boardVersion || 'Unknown'}</div>
+        <div className="serial-number">{device.serialNumber}</div>
+    </div>
+);
+DeviceDetails.propTypes = {
+    device: deviceShape.isRequired,
 };
+
+const BasicDeviceInfo = ({ device, whiteBackground, rightElement }) => (
+    <div className="basic-device-info">
+        <DeviceIcon device={device} whiteBackground={whiteBackground} />
+        <DeviceDetails device={device} />
+        {rightElement}
+    </div>
+);
+BasicDeviceInfo.propTypes = {
+    device: deviceShape.isRequired,
+    whiteBackground: bool.isRequired,
+    rightElement: node.isRequired,
+};
+
+export default BasicDeviceInfo;

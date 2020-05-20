@@ -34,26 +34,69 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
+import {
+    arrayOf, bool, func, shape, string,
+} from 'prop-types';
+import { serialports } from '../../deviceInfo/deviceInfo';
+import PseudoButton from '../../../PseudoButton/PseudoButton';
+import deviceShape from '../deviceShape';
+import BasicDeviceInfo from '../BasicDeviceInfo';
 
-/**
- * Observe and return the width of an element
- *
- * @returns {[elementWidth, elementRef]} The width of the element and the ref which has to be
- * attached to the target element.
- */
-export default () => {
-    const elementRef = useRef();
-    const [elementWidth, setElementWidth] = useState();
-    const reportWidth = () => setElementWidth(elementRef.current.clientWidth);
+import './device.scss';
 
-    useEffect(() => {
-        reportWidth();
-
-        const widthObserver = new ResizeObserver(reportWidth);
-        widthObserver.observe(elementRef.current);
-        return () => widthObserver.disconnect();
-    }, []);
-
-    return [elementWidth, elementRef];
+const Serialports = ({ ports }) => (
+    <ul className="ports">
+        {ports.map(port => <li key={port.path}>{port.path}</li>)}
+    </ul>
+);
+Serialports.propTypes = {
+    ports: arrayOf(
+        shape({
+            path: string.isRequired,
+        }).isRequired,
+    ).isRequired,
 };
+
+const MoreDeviceInfo = ({ device }) => (
+    <Serialports ports={serialports(device)} />
+);
+MoreDeviceInfo.propTypes = {
+    device: deviceShape.isRequired,
+};
+
+const additionalClassName = (moreVisible, isSelected) => {
+    if (moreVisible) return 'more-infos-visible';
+    if (isSelected) return 'selected-device';
+    return '';
+};
+
+const Device = ({ device, isSelected, doSelectDevice }) => {
+    const [moreVisible, setMoreVisible] = useState(false);
+
+    const showMoreInfos = (
+        <PseudoButton
+            className={`show-more mdi mdi-chevron-${moreVisible ? 'up' : 'down'}`}
+            onClick={() => setMoreVisible(!moreVisible)}
+        />
+    );
+
+    return (
+        <PseudoButton
+            className={`device ${additionalClassName(moreVisible, isSelected)}`}
+            onClick={() => doSelectDevice(device)}
+        >
+            <BasicDeviceInfo device={device} whiteBackground={false} rightElement={showMoreInfos} />
+            <div className="more-infos">
+                {moreVisible && <MoreDeviceInfo device={device} />}
+            </div>
+        </PseudoButton>
+    );
+};
+Device.propTypes = {
+    device: deviceShape.isRequired,
+    isSelected: bool.isRequired,
+    doSelectDevice: func.isRequired,
+};
+
+export default Device;

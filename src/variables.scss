@@ -34,6 +34,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+@use "sass:color";
+
 $nordic-blue: #00a9ce;
 $blue-slate: #0033a0;
 
@@ -41,6 +43,7 @@ $white: white;
 $black: black;
 
 $primary: $nordic-blue;
+$primary-darkened: color.scale($nordic-blue, $lightness: -10%);
 $secondary: $white;
 $accent: $blue-slate;
 
@@ -73,6 +76,7 @@ $custom-control-indicator-bg: $gray-50;
 $custom-control-indicator-checked-bg: $gray-300;
 
 $side-panel-width: 260px;
+$nav-bar-height: 40px;
 
 //
 // Bootstrap variables below
@@ -89,8 +93,7 @@ $text-color:            $gray-900;
 
 //** Global textual link color.
 $link-color:            $primary;
-//** Link hover color set via `darken()` function.
-$link-hover-color:      darken($link-color, 15%);
+$link-hover-color:      $primary-darkened;
 //** Link hover decoration.
 $link-hover-decoration: underline;
 
