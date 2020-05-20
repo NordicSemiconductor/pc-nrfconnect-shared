@@ -11,7 +11,7 @@
 .core19-app-content {
     display: flex;
     flex-flow: row;
-    height: 100%;
+    height: calc(100% - #{$nav-bar-height + $visibility-bar-height});
 
     .core19-main-and-log {
         flex: 1;
