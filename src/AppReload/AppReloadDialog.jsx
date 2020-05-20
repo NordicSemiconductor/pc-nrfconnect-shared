@@ -34,25 +34,30 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { remote } from 'electron';
 
 import ConfirmationDialog from '../Dialog/ConfirmationDialog';
 import { hideDialog } from './appReloadDialogActions';
+import {
+    isVisible as isVisibleSelector,
+    message as messageSelector,
+} from './appReloadDialogReducer';
 
 const reloadApp = () => setImmediate(() => remote.getCurrentWindow().reload());
 
 const AppReloadDialog = () => {
-    const { isVisible, message } = useSelector(state => state.appReloadDialog);
     const dispatch = useDispatch();
-    const doHideDialog = useCallback(() => dispatch(hideDialog()), [dispatch]);
+
+    const isVisible = useSelector(isVisibleSelector);
+    const message = useSelector(messageSelector);
 
     return (
         <ConfirmationDialog
             isVisible={isVisible}
             onOk={reloadApp}
-            onCancel={doHideDialog}
+            onCancel={() => dispatch(hideDialog())}
             okButtonText="Yes"
             cancelButtonText="No"
             text={message}

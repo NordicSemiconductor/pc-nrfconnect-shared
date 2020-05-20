@@ -72,3 +72,6 @@ export default (state = initialState, action) => {
             return state;
     }
 };
+
+export const autoScroll = state => state.log.autoScroll;
+export const logEntries = state => state.log.logEntries;

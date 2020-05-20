@@ -39,13 +39,15 @@ import { useSelector } from 'react-redux';
 import LogHeader from './LogHeader';
 import LogEntry from './LogEntry';
 import { useLogListener } from './logListener';
+import { autoScroll as autoScrollSelector, logEntries as logEntriesSelector } from './logReducer';
 
 import './log-viewer.scss';
 
 export default () => {
     useLogListener();
 
-    const { autoScroll, logEntries } = useSelector(state => state.log);
+    const autoScroll = useSelector(autoScrollSelector);
+    const logEntries = useSelector(logEntriesSelector);
     const logContainer = useRef(null);
 
     useEffect(() => {
