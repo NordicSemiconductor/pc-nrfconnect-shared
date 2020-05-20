@@ -35,8 +35,7 @@
  */
 
 import React from 'react';
-import { bool, func } from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import logger from '../logging';
 
@@ -45,35 +44,31 @@ import LogHeaderButton from './LogHeaderButton';
 
 import './log-header.scss';
 
-const LogHeader = ({ autoScroll, dispatch }) => (
-    <div className="core19-log-header">
-        <div className="core19-log-header-text">Log</div>
-        <div className="core19-log-header-buttons">
-            <LogHeaderButton
-                title="Open log file"
-                iconCssClass="mdi mdi-file-document-box-outline"
-                onClick={logger.openLogFile}
-            />
-            <LogHeaderButton
-                title="Clear log"
-                iconCssClass="mdi mdi-trash-can-outline"
-                onClick={() => dispatch(clear())}
-            />
-            <LogHeaderButton
-                title="Scroll automatically"
-                iconCssClass="mdi mdi-arrow-down"
-                onClick={() => dispatch(toggleAutoScroll())}
-                isSelected={autoScroll}
-            />
+export default () => {
+    const dispatch = useDispatch();
+    const { autoScroll } = useSelector(state => state.log);
+
+    return (
+        <div className="core19-log-header">
+            <div className="core19-log-header-text">Log</div>
+            <div className="core19-log-header-buttons">
+                <LogHeaderButton
+                    title="Open log file"
+                    iconCssClass="mdi mdi-file-document-box-outline"
+                    onClick={logger.openLogFile}
+                />
+                <LogHeaderButton
+                    title="Clear log"
+                    iconCssClass="mdi mdi-trash-can-outline"
+                    onClick={() => dispatch(clear())}
+                />
+                <LogHeaderButton
+                    title="Scroll automatically"
+                    iconCssClass="mdi mdi-arrow-down"
+                    onClick={() => dispatch(toggleAutoScroll())}
+                    isSelected={autoScroll}
+                />
+            </div>
         </div>
-    </div>
-);
-
-LogHeader.propTypes = {
-    autoScroll: bool.isRequired,
-    dispatch: func.isRequired,
+    );
 };
-
-const mapState = ({ log: { autoScroll } }) => ({ autoScroll });
-
-export default connect(mapState)(LogHeader);

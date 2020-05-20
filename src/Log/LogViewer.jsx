@@ -35,17 +35,17 @@
  */
 
 import React, { useRef, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { arrayOf, bool } from 'prop-types';
+import { useSelector } from 'react-redux';
 import LogHeader from './LogHeader';
-import LogEntry, { entryShape } from './LogEntry';
+import LogEntry from './LogEntry';
 import { useLogListener } from './logListener';
 
 import './log-viewer.scss';
 
-const LogViewer = ({ logEntries, autoScroll }) => {
+export default () => {
     useLogListener();
 
+    const { autoScroll, logEntries } = useSelector(state => state.log);
     const logContainer = useRef(null);
 
     useEffect(() => {
@@ -63,14 +63,3 @@ const LogViewer = ({ logEntries, autoScroll }) => {
         </>
     );
 };
-
-LogViewer.propTypes = {
-    logEntries: arrayOf(entryShape.isRequired).isRequired,
-    autoScroll: bool.isRequired,
-};
-
-const mapState = ({ log: { autoScroll, logEntries } }) => ({
-    autoScroll, logEntries,
-});
-
-export default connect(mapState)(LogViewer);

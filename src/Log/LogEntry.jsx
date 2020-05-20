@@ -90,7 +90,7 @@ const LogEntry = ({ entry }) => {
     );
 };
 
-export const entryShape = shape({
+const entryShape = shape({
     id: number.isRequired,
     timestamp: string.isRequired,
     level: string.isRequired,
