@@ -44,13 +44,18 @@ import {
     DEVICE_SETUP_INPUT_RECEIVED,
 } from './deviceActions';
 
+const noDialogShown = {
+    isSetupDialogVisible: false,
+    setupDialogText: null,
+    setupDialogChoices: [],
+};
+
 const initialState = {
     devices: [],
     selectedSerialNumber: null,
-    isSetupDialogVisible: false,
+    deviceInfo: null,
     isSetupWaitingForUserInput: false,
-    setupDialogText: null,
-    setupDialogChoices: [],
+    ...noDialogShown,
 };
 
 export default (state = initialState, action) => {
@@ -60,14 +65,17 @@ export default (state = initialState, action) => {
         case DEVICE_SELECTED:
             return { ...state, selectedSerialNumber: action.device.serialNumber };
         case DEVICE_DESELECTED:
-            return { ...state, selectedSerialNumber: initialState.selectedSerialNumber };
+            return { ...state, selectedSerialNumber: null, deviceInfo: null };
         case DEVICE_SETUP_COMPLETE:
+            return {
+                ...state,
+                ...noDialogShown,
+                deviceInfo: action.device.deviceInfo,
+            };
         case DEVICE_SETUP_ERROR:
             return {
                 ...state,
-                isSetupDialogVisible: initialState.isSetupDialogVisible,
-                setupDialogText: initialState.setupDialogText,
-                setupDialogChoices: initialState.setupDialogChoices,
+                ...noDialogShown,
             };
         case DEVICE_SETUP_INPUT_REQUIRED:
             return {
@@ -83,3 +91,17 @@ export default (state = initialState, action) => {
             return state;
     }
 };
+
+export const devices = state => state.device.devices;
+
+export const deviceIsSelected = state => (
+    state.device != null
+    && state.device.selectedSerialNumber != null
+);
+
+export const selectedDevice = state => (
+    state.device.devices.find(device => device.serialNumber === state.device.selectedSerialNumber)
+);
+
+export const deviceInfo = state => state.device.deviceInfo;
+export const selectedSerialNumber = state => state.device.selectedSerialNumber;

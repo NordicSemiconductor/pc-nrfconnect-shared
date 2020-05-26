@@ -35,25 +35,21 @@
  */
 
 import { ipcRenderer } from 'electron';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+
 import logger from '../logging';
 import { getAppDataDir } from '../appDirs';
 import { addEntries } from './logActions';
 
-const LOG_UPDATE_INTERVAL = 400;
-let logListener;
+let initialMessageSent = false;
+const sendInitialMessage = () => {
+    if (initialMessageSent) return;
 
-/**
- * Starts listening to new log entries from the application's log buffer.
- * Incoming entries are added to the state, so that they can be displayed
- * in the UI.
- *
- * @param {function} dispatch The redux dispatch function.
- * @returns {function(*)} Function that can be passed to redux dispatch.
- */
-export function startListening(dispatch) {
+    initialMessageSent = true;
     logger.info(`Application data folder: ${getAppDataDir()}`);
 
-    ipcRenderer.once('app-details', (event, details) => {
+    ipcRenderer.once('app-details', (_event, details) => {
         const {
             name,
             currentVersion,
@@ -76,17 +72,36 @@ export function startListening(dispatch) {
         logger.debug(`TmpDir: ${tmpDir}`);
     });
     ipcRenderer.send('get-app-details');
+};
 
-    logListener = setInterval(() => {
-        const entries = logger.getAndClearEntries();
-        if (entries.length > 0) {
-            dispatch(addEntries(entries));
-        }
-    }, LOG_UPDATE_INTERVAL);
-}
 
-export function stopListening() {
-    if (logListener) {
-        clearInterval(logListener);
+const addLogEntriesToStore = dispatch => () => {
+    const entries = logger.getAndClearEntries();
+    if (entries.length > 0) {
+        dispatch(addEntries(entries));
     }
+};
+
+
+/**
+ * Starts listening to new log entries from the application's log buffer.
+ * Incoming entries are added to the state, so that they can be displayed
+ * in the UI.
+ *
+ * @param {function} dispatch The redux dispatch function.
+ * @returns {function(*)} Function that stops the listener.
+ */
+function startListening(dispatch) {
+    sendInitialMessage();
+
+    const LOG_UPDATE_INTERVAL = 400;
+    const logListener = setInterval(addLogEntriesToStore(dispatch), LOG_UPDATE_INTERVAL);
+
+    return () => { clearInterval(logListener); };
 }
+
+// eslint-disable-next-line import/prefer-default-export
+export const useLogListener = () => {
+    const dispatch = useDispatch();
+    useEffect(() => startListening(dispatch), [dispatch]);
+};

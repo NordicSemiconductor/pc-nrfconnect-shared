@@ -1,3 +1,11 @@
+## Version 4.8
+### Changed
+- Create and connect store in App component, so this does not need to be done
+  in each app (unless they want to do it themselves).
+- New design for apps using the new app architecture.
+- Update many dependencies
+- Turned react, react-dom and react-redux into peerDependencies. So when using pc-nrfconnect-shared you might need to add them as dependencies.
+
 ## Version 4.7
 ### Changed
 - Add a few peer dependencies

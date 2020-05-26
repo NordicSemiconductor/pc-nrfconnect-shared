@@ -39,7 +39,7 @@ import { shape, number, string } from 'prop-types';
 import moment from 'moment';
 import { shell } from 'electron';
 
-import '../../resources/css/log-entry.scss';
+import './log-entry.scss';
 
 const regex = /(.*?)(https?:\/\/[^\s]+)/g;
 
@@ -90,7 +90,7 @@ const LogEntry = ({ entry }) => {
     );
 };
 
-export const entryShape = shape({
+const entryShape = shape({
     id: number.isRequired,
     timestamp: string.isRequired,
     level: string.isRequired,

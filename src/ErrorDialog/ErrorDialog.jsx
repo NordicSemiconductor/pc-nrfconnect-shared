@@ -34,28 +34,32 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import ReactMarkdown from 'react-markdown';
 
 import { hideDialog } from './errorDialogActions';
+import {
+    isVisible as isVisibleSelector,
+    messages as messagesSelector,
+    errorResolutions as errorResolutionsSelector,
+} from './errorDialogReducer';
 
-import '../../resources/css/error.scss';
+import './error.scss';
 
 const ErrorDialog = () => {
     const dispatch = useDispatch();
-    const doHideDialog = useCallback(() => dispatch(hideDialog()), [dispatch]);
 
-    const { isVisible, messages } = useSelector(state => state.errorDialog);
+    const isVisible = useSelector(isVisibleSelector);
+    const messages = useSelector(messagesSelector);
 
-    const defaultErrorResolutions = { Close: doHideDialog };
-    const errorResolutions = useSelector(state => state.errorDialog.errorResolutions)
-        || defaultErrorResolutions;
+    const defaultErrorResolutions = { Close: () => dispatch(hideDialog()) };
+    const errorResolutions = useSelector(errorResolutionsSelector) || defaultErrorResolutions;
 
     return (
-        <Modal show={isVisible} onHide={doHideDialog}>
+        <Modal show={isVisible} onHide={() => dispatch(hideDialog())}>
             <Modal.Header closeButton>
                 <Modal.Title>Error</Modal.Title>
             </Modal.Header>

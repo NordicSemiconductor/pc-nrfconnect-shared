@@ -101,11 +101,11 @@ logger.addFileTransport = appLogDir => {
 logger.getAndClearEntries = () => logBuffer.clear();
 
 logger.openLogFile = () => {
-    openFile(logFilePath, err => {
-        if (err) {
-            logger.error(`Unable to open log file: ${err.message}`);
-        }
-    });
+    try {
+        openFile(logFilePath);
+    } catch (error) {
+        logger.error(`Unable to open log file: ${error.message}`);
+    }
 };
 
 export default logger;

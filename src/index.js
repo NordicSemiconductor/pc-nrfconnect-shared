@@ -39,22 +39,22 @@ import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
 export { ErrorDialogActions };
 
 export { default as App } from './App/App';
-export { default as Logo } from './App/Logo';
-export { default as NavBar } from './App/NavBar';
-export { default as DeviceSelector } from './Device/DeviceSelector';
+export { default as Logo } from './Logo/Logo';
+export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
 export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
 export { default as Spinner } from './Dialog/Spinner';
+export { default as Slider } from './Slider/Slider';
+export { default as Main } from './Main/Main';
 
 export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
 
 export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as coreReducers } from './coreReducers';
 export { default as logger } from './logging';
 
 export {
     setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
 } from './appDirs';
 
-export { openFile, openUrl } from './open';
+export { openUrl } from './open';
 export { default as systemReport } from './systemReport';
 export { default as userData } from './userData';

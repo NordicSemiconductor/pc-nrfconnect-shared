@@ -1,0 +1,24 @@
+@import "../variables";
+
+.core19-visibility-bar {
+    display: flex;
+    height: $visibility-bar-height;
+    text-transform: uppercase;
+    font-size: 10px;
+    line-height: 1.9;
+
+    .core19-visibility-bar-show-side-panel {
+        width: $side-panel-width;
+        color: $gray-700;
+        background-color: $gray-100;
+        padding: 5px 10px;
+    }
+
+    .core19-visibility-bar-show-log {
+        flex-grow: 1;
+        color: $gray-100;
+        background-color: $gray-900;
+        padding: 5px 10px;
+        text-align: right;
+    }
+}

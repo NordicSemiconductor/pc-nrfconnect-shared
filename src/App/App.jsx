@@ -34,46 +34,81 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useRef } from 'react';
-import { node } from 'prop-types';
+import React, { useEffect } from 'react';
+import {
+    array, arrayOf, func, node,
+} from 'prop-types';
+import { useSelector } from 'react-redux';
+
+import Mousetrap from 'mousetrap';
+import { ipcRenderer } from 'electron';
 
 import LogViewer from '../Log/LogViewer';
-import { HorizontalSplitter, VerticalSplitter } from './Splitter';
-
-import '../../resources/css/shared.scss';
-import '../../resources/css/app.scss';
 
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
+import NavBar from '../NavBar/NavBar';
+import VisibilityBar from './VisibilityBar';
+import ConnectedToStore from './ConnectedToStore';
+import { isSidePanelVisibleSelector, isLogVisibleSelector, mainComponentSelector } from './appLayout';
 
-const App = ({ children, navBar, sidePanel }) => {
-    const sidePanelRef = useRef();
+import './shared.scss';
+import './app.scss';
+
+const hiddenUnless = isVisible => (isVisible ? '' : 'd-none');
+
+const ConnectedApp = ({
+    deviceSelect, panes, sidePanel,
+}) => {
+    const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
+    const isLogVisible = useSelector(isLogVisibleSelector);
+    const MainComponent = useSelector(mainComponentSelector(panes));
+
+    useEffect(() => {
+        Mousetrap.bind('alt+l', () => ipcRenderer.send('open-app-launcher'));
+    }, []);
+
     return (
-        <>
-            <div className="core19-app">
-                {navBar}
-                <div className="core19-app-content">
-                    <div className="core19-app-left">
-                        <div className="core19-main-view">{children}</div>
-                        <HorizontalSplitter />
+        <div className="core19-app">
+            <NavBar
+                deviceSelect={deviceSelect}
+                panes={panes}
+            />
+            <div className="core19-app-content">
+                <div className={`core19-side-panel ${hiddenUnless(isSidePanelVisible)}`}>
+                    {sidePanel}
+                </div>
+                <div className="core19-main-and-log">
+                    <div className="core19-main-container">
+                        <MainComponent />
+                    </div>
+                    <div className={`core19-log-viewer ${hiddenUnless(isLogVisible)}`}>
                         <LogViewer />
                     </div>
-                    <VerticalSplitter targetRef={sidePanelRef} />
-                    <div ref={sidePanelRef} className="core19-side-panel">
-                        {sidePanel}
-                    </div>
                 </div>
-                <AppReloadDialog />
-                <ErrorDialog />
             </div>
-        </>
+            <VisibilityBar />
+
+            <AppReloadDialog />
+            <ErrorDialog />
+        </div>
     );
 };
 
-App.propTypes = {
-    children: node.isRequired,
-    navBar: node.isRequired,
+ConnectedApp.propTypes = {
+    deviceSelect: node.isRequired,
+    panes: arrayOf(array.isRequired).isRequired,
     sidePanel: node.isRequired,
+};
+
+const App = ({ appReducer, ...props }) => (
+    <ConnectedToStore appReducer={appReducer}>
+        <ConnectedApp {...props} />
+    </ConnectedToStore>
+);
+
+App.propTypes = {
+    appReducer: func.isRequired,
 };
 
 export default App;

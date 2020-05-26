@@ -46,7 +46,7 @@ const appendIfNew = (messages, message) => (messages.includes(message)
     ? messages
     : [...messages, message]);
 
-const reducer = (state = initialState, action) => {
+export default (state = initialState, action) => {
     switch (action.type) {
         case ERROR_DIALOG_SHOW: return {
             ...state,
@@ -59,4 +59,6 @@ const reducer = (state = initialState, action) => {
     }
 };
 
-export default reducer;
+export const isVisible = state => state.errorDialog.isVisible;
+export const messages = state => state.errorDialog.messages;
+export const errorResolutions = state => state.errorDialog.errorResolutions;

@@ -1,0 +1,49 @@
+@import "../variables";
+
+$card-gap: 0.5ex;
+$section-gap: 2ex;
+
+.about {
+    display: flex;
+    background-color: $gray-100;
+
+    margin-left: -$card-gap;
+    margin-top: -$card-gap;
+
+    .about-card {
+        width: 240px;
+        height: min-content;
+
+        margin-left: $card-gap;
+        margin-top: $card-gap;
+
+        padding-left: 2ex;
+        padding-right: 2ex;
+
+        padding-top: 1.2ex;
+        padding-bottom: 1.2ex - $section-gap;
+
+        background-color: $white;
+        border: 1px solid $gray-200;
+
+        font-weight: 200;
+
+        .about-card-title {
+            text-align: right;
+            font-size: 1em;
+        }
+
+        .about-section {
+            margin-bottom: $section-gap;
+
+            .about-card-section-title {
+                font-size: 1em;
+                margin: 0;
+            }
+        }
+    }
+
+    .about-button {
+        margin-bottom: 0.6em;
+    }
+}

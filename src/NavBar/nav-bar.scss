@@ -1,0 +1,20 @@
+@import "../variables";
+
+.core19-nav-bar {
+    width: 100%;
+    height: $nav-bar-height;
+
+    background-color: $white;
+
+    display: flex;
+    flex: none;
+    flex-direction: row;
+    align-items: center;
+
+    z-index: 1;
+
+    .core19-nav-bar-device-selector {
+        width: $side-panel-width;
+        align-self: start;
+    }
+}

@@ -44,9 +44,7 @@ import logger from './logging';
 import { openFile } from './open';
 
 /* eslint-disable object-curly-newline */
-
-async function report() {
-    const timestamp = new Date().toISOString().replace(/:/g, '-');
+const generalInfoReport = async () => {
     const [
         { manufacturer, model },
         { vendor, version },
@@ -59,56 +57,90 @@ async function report() {
         si.system(), si.bios(), si.osInfo(), si.versions(), si.cpu(), si.mem(), si.fsSize(),
     ]);
 
-    return {
-        timestamp,
-        coreReport: [
-            `# nRFConnect System Report - ${timestamp}`,
-            '',
-            `- System:     ${manufacturer} ${model}`,
-            `- BIOS:       ${vendor} ${version}`,
-            `- CPU:        ${processors} x ${cpuManufacturer} ${brand} ${speed} GHz`
+    return [
+        `- System:     ${manufacturer} ${model}`,
+        `- BIOS:       ${vendor} ${version}`,
+        `- CPU:        ${processors} x ${cpuManufacturer} ${brand} ${speed} GHz`
             + ` ${cores} cores (${physicalCores} physical)`,
-            `- Memory:     ${pretty(free)} free of ${pretty(total)} total`,
-            `- Filesystem: ${fsSize[0].fs} (${fsSize[0].type})`
+        `- Memory:     ${pretty(free)} free of ${pretty(total)} total`,
+        `- Filesystem: ${fsSize[0].fs} (${fsSize[0].type})`
             + ` ${pretty(Number(fsSize[0].size) || 0)}`
             + ` ${fsSize[0].use.toFixed(1)}% used`,
-            '',
-            `- OS:         ${distro} (${release}) ${platform} ${arch}`,
-            '',
-            '- Versions',
-            `    - kernel: ${kernel}`,
-            `    - git: ${git}`,
-            `    - node: ${node}`,
-            `    - python: ${python}`,
-            `    - python3: ${python3}`,
-            '\n',
-        ].join('\n'),
-    };
-}
+        '',
+        `- OS:         ${distro} (${release}) ${platform} ${arch}`,
+        '',
+        '- Versions',
+        `    - kernel: ${kernel}`,
+        `    - git: ${git}`,
+        `    - node: ${node}`,
+        `    - python: ${python}`,
+        `    - python3: ${python3}`,
+        '',
+    ];
+};
 
-// The parameter decoratedSystemReport can be removed when support for legacy apps is dropped
-export default function systemReport(decoratedSystemReport = coreReport => coreReport) {
-    return async () => {
-        logger.info('Generating system report...');
+const allDevicesReport = allDevices => [
+    '- Connected devices:',
+    ...allDevices.map(d => `    - ${d.serialport.path}: ${d.serialNumber} ${d.boardVersion || ''}`),
+    '',
+];
 
-        const { timestamp, coreReport } = await report();
-        const decoratedReport = decoratedSystemReport(coreReport);
-        const finalReport = decoratedReport.replace(/\n/g, EOL);
+const hexpad2 = n => (n == null
+    ? 'Unknown'
+    : `0x${n.toString(16).toUpperCase().padStart(2, '0')}`);
 
-        const fileName = `nrfconnect-system-report-${timestamp}.txt`;
-        const filePath = path.resolve(getAppDataDir(), fileName);
+const hexToKiB = n => (n == null
+    ? 'Unknown'
+    : `${n / 1024} KiB`);
 
-        return new Promise((resolve, reject) => {
-            fs.writeFile(filePath, finalReport, err => (err ? reject(err) : resolve()));
-        })
-            .then(() => {
-                logger.info(`System report: ${filePath}`);
-                return new Promise((resolve, reject) => {
-                    openFile(filePath, err => (err ? reject(err) : resolve()));
-                });
-            })
-            .catch(err => {
-                logger.error(`Failed to generate system report: ${err.message}`);
-            });
-    };
-}
+const currentDeviceReport = (serialNumber, device) => {
+    if (device == null) {
+        return [];
+    }
+
+    return [
+        '- Current device:',
+        `    - serialNumber:    ${serialNumber}`,
+        `    - family:          ${device.family}`,
+        `    - type:            ${device.deviceType}`,
+        `    - codeAddress      ${hexpad2(device.codeAddress)}`,
+        `    - codePageSize     ${hexToKiB(device.codePageSize)}`,
+        `    - codeSize         ${hexToKiB(device.codeSize)}`,
+        `    - uicrAddress      ${hexpad2(device.uicrAddress)}`,
+        `    - infoPageSize     ${hexToKiB(device.infoPageSize)}`,
+        `    - codeRamPresent   ${device.codeRamPresent}`,
+        `    - codeRamAddress   ${hexpad2(device.codeRamAddress)}`,
+        `    - dataRamAddress   ${hexpad2(device.dataRamAddress)}`,
+        `    - ramSize          ${hexToKiB(device.ramSize)}`,
+        `    - qspiPresent      ${device.qspiPresent}`,
+        `    - xipAddress       ${hexpad2(device.xipAddress)}`,
+        `    - xipSize          ${hexToKiB(device.xipSize)}`,
+        `    - pinResetPin      ${device.pinResetPin}`,
+        '',
+    ];
+};
+
+export default async (allDevices, currentSerialNumber, currentDevice) => {
+    logger.info('Generating system report...');
+
+    const timestamp = new Date().toISOString().replace(/:/g, '-');
+
+    const report = [
+        `# nRFConnect System Report - ${timestamp}`,
+        '',
+        ...await generalInfoReport(),
+        ...allDevicesReport(allDevices),
+        ...currentDeviceReport(currentSerialNumber, currentDevice),
+    ].join(EOL);
+
+    const fileName = `nrfconnect-system-report-${timestamp}.txt`;
+    const filePath = path.resolve(getAppDataDir(), fileName);
+
+    try {
+        fs.writeFileSync(filePath, report);
+        logger.info(`System report: ${filePath}`);
+        openFile(filePath);
+    } catch (error) {
+        logger.error(`Failed to generate system report: ${error.message}`);
+    }
+};

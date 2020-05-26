@@ -35,15 +35,19 @@
  */
 
 import React, { useRef, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { arrayOf, bool, func } from 'prop-types';
+import { useSelector } from 'react-redux';
 import LogHeader from './LogHeader';
-import LogEntry, { entryShape } from './LogEntry';
-import { startListening } from './logListener';
+import LogEntry from './LogEntry';
+import { useLogListener } from './logListener';
+import { autoScroll as autoScrollSelector, logEntries as logEntriesSelector } from './logReducer';
 
-import '../../resources/css/log-viewer.scss';
+import './log-viewer.scss';
 
-const LogViewer = ({ logEntries, autoScroll, dispatch }) => {
+export default () => {
+    useLogListener();
+
+    const autoScroll = useSelector(autoScrollSelector);
+    const logEntries = useSelector(logEntriesSelector);
     const logContainer = useRef(null);
 
     useEffect(() => {
@@ -51,26 +55,13 @@ const LogViewer = ({ logEntries, autoScroll, dispatch }) => {
             logContainer.current.lastChild.scrollIntoView();
         }
     });
-    useEffect(() => { startListening(dispatch); }, []);
 
     return (
-        <div className="core19-log-viewer">
+        <>
             <LogHeader />
-            <div ref={logContainer} className="core19-infinite-log">
+            <div ref={logContainer} className="core19-log">
                 { logEntries.map(entry => <LogEntry {...{ entry }} key={entry.id} />) }
             </div>
-        </div>
+        </>
     );
 };
-
-LogViewer.propTypes = {
-    dispatch: func.isRequired,
-    logEntries: arrayOf(entryShape.isRequired).isRequired,
-    autoScroll: bool.isRequired,
-};
-
-const mapState = ({ log: { autoScroll, logEntries } }) => ({
-    autoScroll, logEntries,
-});
-
-export default connect(mapState)(LogViewer);
