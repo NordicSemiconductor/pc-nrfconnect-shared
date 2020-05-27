@@ -35,7 +35,7 @@
  */
 
 import React from 'react';
-import { cleanup, fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 
 import render from '../../test/testrenderer';
 
@@ -49,7 +49,7 @@ const defaultProps = {
 };
 
 describe('ConfirmationDialog', () => {
-    describe('visibility', () => {
+    describe('is visible when it', () => {
         it('is rendered when visible', () => {
             const { queryByRole } = render(
                 <ConfirmationDialog {...defaultProps} isVisible />,
@@ -105,16 +105,23 @@ describe('ConfirmationDialog', () => {
 
             expect(onOkMock).toHaveBeenCalled();
         });
-        it('can be disabled', () => {
+        describe('can be disabled, when it', () => {
             const isDisabledFor = props => {
                 const { getByText } = render(<ConfirmationDialog {...defaultProps} {...props} />);
                 expect(getByText('OK')).toBeDisabled();
-                cleanup();
             };
 
-            isDisabledFor({ isInProgress: true });
-            isDisabledFor({ isInProgress: true, isOkButtonEnabled: false });
-            isDisabledFor({ isOkButtonEnabled: false });
+            it('is in progress', () => {
+                isDisabledFor({ isInProgress: true });
+            });
+
+            it('is set to be not enabled', () => {
+                isDisabledFor({ isOkButtonEnabled: false });
+            });
+
+            it('is in progress and set to be not enabled', () => {
+                isDisabledFor({ isInProgress: true, isOkButtonEnabled: false });
+            });
         });
     });
 
