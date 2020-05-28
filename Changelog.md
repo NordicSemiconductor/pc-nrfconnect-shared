@@ -1,3 +1,7 @@
+## Unreleased
+### Changed
+- Updated dependencies
+
 ## Version 4.8
 ### Changed
 - Create and connect store in App component, so this does not need to be done
