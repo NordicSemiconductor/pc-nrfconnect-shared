@@ -90,12 +90,15 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
                 className={`device ${additionalClassName(moreVisible, isSelected)}`}
                 onClick={() => doSelectDevice(device)}
             >
-                <BasicDeviceInfo device={device} whiteBackground={false} rightElement={showMoreInfos} />
+                <BasicDeviceInfo
+                    device={device}
+                    whiteBackground={false}
+                    rightElement={showMoreInfos}
+                />
                 <div className="more-infos">
-                    {moreVisible && <MoreDeviceInfo device={device} /> && <ChangeName/>}
+                    {moreVisible && <MoreDeviceInfo device={device} /> && <ChangeName /> }
                 </div>
             </PseudoButton>
-            
         </div>
     );
 };

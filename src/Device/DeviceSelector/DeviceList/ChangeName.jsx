@@ -1,17 +1,14 @@
-import React  from 'react';
-import './change-name.scss'
+import React from 'react';
+import './change-name.scss';
 
 
-const ChangeName = ({}) => {
-    
-
-    return(
-        <div className={'core20-rename'}>
-            <form>
-                <input type="text" name="name" placeholder= "Rename" />
-            </form>
+const ChangeName = () => {
+    console.log('Hei');
+    return (
+        <div className="core20-rename">
+            <input type="text" name="name" placeholder="Rename" />
         </div>
     );
-}
+};
 
 export default ChangeName;
