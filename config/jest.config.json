@@ -2,10 +2,10 @@
   "rootDir": "../../../",
   "moduleNameMapper": {
     "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/fileMock.js",
-    "\\.(css|less|scss)$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/emptyMock.js",
+    "\\.(css|scss)$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/emptyMock.js",
     "nrfconnect/core": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/coreMock.js",
     "pc-ble-driver-js": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/bleDriverMock.js",
-    "pc-nrfjprog-js|serialport|usb": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/emptyMock.js",
+    "pc-nrfjprog-js|nrf-device-lister|nrf-device-setup|serialport|usb": "./node_modules/pc-nrfconnect-shared/mocks/emptyMock.js",
     "electron": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/electronMock.js"
   },
   "transform": {
