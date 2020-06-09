@@ -52,6 +52,7 @@ import DeviceSetup from '../DeviceSetup/DeviceSetup';
 
 import DeviceList from './DeviceList/DeviceList';
 import SelectorButton from './SelectorButton';
+import DeviceName from './DeviceList/DeviceName'
 
 import './device-selector.scss';
 
@@ -83,7 +84,7 @@ const DeviceSelector = ({
     );
 
     const doSelectDevice = device => {
-        setDeviceListVisible(false);
+        setDeviceListVisible(true);
         dispatch(selectDevice(device));
         onDeviceSelected(device);
         if (deviceSetup) {

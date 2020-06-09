@@ -42,6 +42,8 @@ import { serialports } from '../../deviceInfo/deviceInfo';
 import PseudoButton from '../../../PseudoButton/PseudoButton';
 import deviceShape from '../deviceShape';
 import BasicDeviceInfo from '../BasicDeviceInfo';
+import DeviceName from './DeviceName';
+import ChangeName from './ChangeName';
 
 import './device.scss';
 
@@ -82,15 +84,19 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
     );
 
     return (
-        <PseudoButton
-            className={`device ${additionalClassName(moreVisible, isSelected)}`}
-            onClick={() => doSelectDevice(device)}
-        >
-            <BasicDeviceInfo device={device} whiteBackground={false} rightElement={showMoreInfos} />
-            <div className="more-infos">
-                {moreVisible && <MoreDeviceInfo device={device} />}
-            </div>
-        </PseudoButton>
+        <div>
+            <DeviceName />
+            <PseudoButton
+                className={`device ${additionalClassName(moreVisible, isSelected)}`}
+                onClick={() => doSelectDevice(device)}
+            >
+                <BasicDeviceInfo device={device} whiteBackground={false} rightElement={showMoreInfos} />
+                <div className="more-infos">
+                    {moreVisible && <MoreDeviceInfo device={device} /> && <ChangeName/>}
+                </div>
+            </PseudoButton>
+            
+        </div>
     );
 };
 Device.propTypes = {
