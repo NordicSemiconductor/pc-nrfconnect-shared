@@ -42,24 +42,31 @@ import DeviceIcon from './DeviceIcon';
 
 import './basic-device-info.scss';
 
-const DeviceDetails = ({ device }) => (
+const DeviceDetails = ({ nickname, device }) => (
     <div className="details">
-        <div>{deviceName(device) || device.boardVersion || 'Unknown'}</div>
+        <div>{nickname || deviceName(device) || device.boardVersion || 'Unknown'}</div>
         <div className="serial-number">{device.serialNumber}</div>
     </div>
 );
 DeviceDetails.propTypes = {
     device: deviceShape.isRequired,
+    nickname: node.isRequired,
 };
 
-const BasicDeviceInfo = ({ device, whiteBackground, rightElement }) => (
+const BasicDeviceInfo = ({
+    nickname,
+    device,
+    whiteBackground,
+    rightElement,
+}) => (
     <div className="basic-device-info">
         <DeviceIcon device={device} whiteBackground={whiteBackground} />
-        <DeviceDetails device={device} />
+        <DeviceDetails device={device} nickname={nickname} />
         {rightElement}
     </div>
 );
 BasicDeviceInfo.propTypes = {
+    nickname: node.isRequired,
     device: deviceShape.isRequired,
     whiteBackground: bool.isRequired,
     rightElement: node.isRequired,

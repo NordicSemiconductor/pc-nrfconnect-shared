@@ -1,14 +1,24 @@
 import React from 'react';
 import './change-name.scss';
+import { func } from 'prop-types';
 
-
-const ChangeName = () => {
-    console.log('Hei');
+const ChangeName = props => {
+    const handleChange = event => {
+        props.onchange(event.target.value);
+    };
     return (
-        <div className="core20-rename">
-            <input type="text" name="name" placeholder="Rename" />
+        <div>
+            <input
+                placeholder="name"
+                id="name"
+                onChange={handleChange}
+            />
         </div>
     );
+};
+
+ChangeName.propTypes = {
+    onchange: func.isRequired,
 };
 
 export default ChangeName;

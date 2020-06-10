@@ -52,7 +52,6 @@ import DeviceSetup from '../DeviceSetup/DeviceSetup';
 
 import DeviceList from './DeviceList/DeviceList';
 import SelectorButton from './SelectorButton';
-import DeviceName from './DeviceList/DeviceName';
 
 import './device-selector.scss';
 

@@ -75,6 +75,12 @@ const additionalClassName = (moreVisible, isSelected) => {
 
 const Device = ({ device, isSelected, doSelectDevice }) => {
     const [moreVisible, setMoreVisible] = useState(false);
+    const [devName, setDevName] = useState();
+
+    const onchange = data => {
+        setDevName(data);
+        console.log('Form>', data);
+    };
 
     const showMoreInfos = (
         <PseudoButton
@@ -85,12 +91,14 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
 
     return (
         <div>
+            {devName}
             <DeviceName />
             <PseudoButton
                 className={`device ${additionalClassName(moreVisible, isSelected)}`}
                 onClick={() => doSelectDevice(device)}
             >
                 <BasicDeviceInfo
+                    nickname={devName}
                     device={device}
                     whiteBackground={false}
                     rightElement={showMoreInfos}
@@ -99,6 +107,10 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
                     {moreVisible && <MoreDeviceInfo device={device} /> && <ChangeName /> }
                 </div>
             </PseudoButton>
+            <ChangeName
+                data={devName}
+                onchange={e => { onchange(e); }}
+            />
         </div>
     );
 };

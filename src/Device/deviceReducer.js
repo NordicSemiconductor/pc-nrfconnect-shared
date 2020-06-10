@@ -92,6 +92,7 @@ export default (state = initialState, action) => {
     }
 };
 
+
 export const devices = state => state.device.devices;
 
 export const deviceIsSelected = state => (
