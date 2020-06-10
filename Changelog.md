@@ -1,3 +1,7 @@
+## Version 4.8.2
+### Fixed
+- The mock fix in 4.8.1 broke mocks in another way 🤦‍♂️
+
 ## Version 4.8.1
 ### Fixed
 - Added missing mocks for nrf-device-lister and nrf-device-setup to jest config.
