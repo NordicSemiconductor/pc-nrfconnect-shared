@@ -45,6 +45,7 @@ import BasicDeviceInfo from '../BasicDeviceInfo';
 import ChangeName from './ChangeName';
 
 import './device.scss';
+import { setDeviceNickname, getDeviceNickname } from '../../../persistentStore';
 
 const Serialports = ({ ports }) => (
     <ul className="ports">
@@ -83,10 +84,13 @@ const additionalClassName = (moreVisible, isSelected) => {
 const Device = ({ device, isSelected, doSelectDevice }) => {
     const [moreVisible, setMoreVisible] = useState(false);
     const [name, setName] = useState();
+    const serial = device.serialNumber
 
     const onchange = data => {
         setName(data);
         console.log('Form>', data);
+        setDeviceNickname(String(serial), data)
+        getDeviceNickname(String(serial))
     };
 
     const showMoreInfos = (

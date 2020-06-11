@@ -1,4 +1,4 @@
-/* Copyright (c) 2015 - 2017, Nordic Semiconductor ASA
+/* Copyright (c) 2015 - 2020, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -34,52 +34,17 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react';
-import { arrayOf, func } from 'prop-types';
-import { useSelector } from 'react-redux';
-import { selectedSerialNumber as selectedSerialNumberSelector } from '../../deviceReducer';
-import Device from './Device';
-import deviceShape from '../deviceShape';
 
-import './device-list.scss';
-import { getDeviceNickname } from '../../../persistentStore';
+import Store from 'electron-store';
 
-const NoDevicesConnected = () => (
-    <p className="no-devices-connected">
-        Connect a{' '}
-        <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://www.nordicsemi.com/Software-and-tools/Development-Kits"
-        >
-            Nordic development kit
-        </a>
-        {' '}to your computer.
-    </p>
-);
+export const store = new Store({ name: 'pc-nrfconnect-shared' });
 
-const DeviceList = ({ devices, doSelectDevice }) => {
-    const selectedSerialNumber = useSelector(selectedSerialNumberSelector);
+export const setDeviceNickname = (number, nickname) => 
+    (store.set(String(number), nickname) 
+    && console.log('sets' + number + 'to' + nickname));
 
-    if (devices.length === 0) return <NoDevicesConnected />;
 
-    return (
-        <ul className="device-list">
-            {devices.map(device => (
-                <li key={device.serialNumber}>
-                    <Device
-                        device={device}
-                        isSelected={selectedSerialNumber === device.serialNumber}
-                        doSelectDevice={doSelectDevice}
-                    />
-                </li>
-            ))}
-        </ul>
-    );
-};
-DeviceList.propTypes = {
-    devices: arrayOf(deviceShape.isRequired).isRequired,
-    doSelectDevice: func.isRequired,
-};
+export const getDeviceNickname = (number) => 
+    (store.get(String(number)) || null)
+    && console.log('getDevice:' + store.get(String(number)) || null)
 
-export default DeviceList;

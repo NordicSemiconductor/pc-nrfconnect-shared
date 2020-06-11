@@ -35,7 +35,7 @@
  */
 
 import React from 'react';
-import { bool, node, string } from 'prop-types';
+import { bool, node } from 'prop-types';
 import { deviceName } from '../deviceInfo/deviceInfo';
 import deviceShape from './deviceShape';
 import DeviceIcon from './DeviceIcon';
@@ -48,13 +48,13 @@ const DeviceDetails = ({ nickname, device }) => (
             ? (
                 <div>
                     <div>{deviceName(device) || device.boardVersion || 'Unknown'}</div>
-                    <div className="serial-number">{device.serialNumber}</div>
+                    <div>{device.serialNumber}</div>
                 </div>
             )
             : (
                 <div>
                     <div>{nickname || deviceName(device) || device.boardVersion || 'Unknown'}</div>
-                    <div className="serial-number">{device.serialNumber}</div>
+                    <div>{device.serialNumber}</div>
                     <div>{deviceName(device) || device.boardVersion || 'Unknown'}</div>
                 </div>
             )}
@@ -62,11 +62,12 @@ const DeviceDetails = ({ nickname, device }) => (
 );
 DeviceDetails.propTypes = {
     device: deviceShape.isRequired,
-    nickname: string,
+    nickname: node,
 };
+
 DeviceDetails.defaultProps = {
     nickname: null,
-};
+}
 
 const BasicDeviceInfo = ({
     nickname,
@@ -81,13 +82,14 @@ const BasicDeviceInfo = ({
     </div>
 );
 BasicDeviceInfo.propTypes = {
-    nickname: string,
+    nickname: node,
     device: deviceShape.isRequired,
     whiteBackground: bool.isRequired,
     rightElement: node.isRequired,
 };
+
 BasicDeviceInfo.defaultProps = {
     nickname: null,
-};
+}
 
 export default BasicDeviceInfo;
