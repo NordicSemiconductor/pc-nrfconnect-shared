@@ -39,12 +39,9 @@ import Store from 'electron-store';
 
 export const store = new Store({ name: 'pc-nrfconnect-shared' });
 
-export const setDeviceNickname = (number, nickname) => 
-    (store.set(String(number), nickname) 
-    && console.log('sets' + number + 'to' + nickname));
+export const setDeviceNickname = (number, nickname) => (store.set(String(number), nickname)
+    && console.log(`sets${number}to${nickname}`));
 
 
-export const getDeviceNickname = (number) => 
-    (store.get(String(number)) || null)
-    && console.log('getDevice:' + store.get(String(number)) || null)
-
+export const getDeviceNickname = number => (store.get(String(number)) || null)
+    && console.log(`getDevice:${store.get(String(number))}` || null);

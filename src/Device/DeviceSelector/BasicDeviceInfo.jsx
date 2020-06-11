@@ -67,7 +67,7 @@ DeviceDetails.propTypes = {
 
 DeviceDetails.defaultProps = {
     nickname: null,
-}
+};
 
 const BasicDeviceInfo = ({
     nickname,
@@ -90,6 +90,6 @@ BasicDeviceInfo.propTypes = {
 
 BasicDeviceInfo.defaultProps = {
     nickname: null,
-}
+};
 
 export default BasicDeviceInfo;
