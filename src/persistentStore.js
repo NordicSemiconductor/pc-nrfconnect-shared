@@ -41,5 +41,4 @@ export const store = new Store({ name: 'pc-nrfconnect-shared' });
 
 export const setDeviceNickname = (number, nickname) => (store.set(String(number), nickname));
 
-
 export const getDeviceNickname = number => (store.get(String(number)) || null);

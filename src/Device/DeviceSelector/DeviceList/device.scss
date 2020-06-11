@@ -8,14 +8,19 @@
         padding-top: 20px;
         padding-bottom: 13px;
 
+        .name{
+            font-size : 15; 
+            font-weight: 400;
+        }
+
         &:hover, &.more-infos-visible {
             background: $white;
-            color: $primary;
+            color: $primary-darkened;
             .serial-number { color: $primary; }
         }
 
         &.selected-device:not(:hover) {
-            background: $primary-darkened;
+            background: $primary;
         }
 
         .show-more {
@@ -29,7 +34,7 @@
             .ports {
                 list-style: none;
                 padding: 0;
-
+                text-decoration: underline;
                 margin-top: 1em;
             }
         }

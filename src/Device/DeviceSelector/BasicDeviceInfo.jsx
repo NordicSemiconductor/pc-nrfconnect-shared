@@ -45,7 +45,7 @@ import './basic-device-info.scss';
 
 const DeviceDetails = ({ nickname, device }) => (
     <div className="details">
-        <div>{nickname || getDeviceNickname(device.serialNumber) || deviceName(device) || device.boardVersion || 'Unknown'}</div>
+        <div className="name">{nickname || getDeviceNickname(device.serialNumber) || deviceName(device) || device.boardVersion || 'Unknown'}</div>
         <div className="serial-number">{device.serialNumber}</div>
     </div>
 );

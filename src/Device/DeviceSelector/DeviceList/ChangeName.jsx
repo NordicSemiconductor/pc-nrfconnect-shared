@@ -45,7 +45,7 @@ const ChangeName = props => {
     return (
         <div>
             <input
-                placeholder="name"
+                placeholder="Rename device"
                 id="name"
                 onChange={handleChange}
             />
