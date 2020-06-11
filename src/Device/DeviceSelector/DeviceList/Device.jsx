@@ -45,6 +45,7 @@ import BasicDeviceInfo from '../BasicDeviceInfo';
 import ChangeName from './ChangeName';
 
 import './device.scss';
+import { setDeviceNickname, getDeviceNickname } from '../../../persistentStore';
 
 const Serialports = ({ ports }) => (
     <ul className="ports">
@@ -60,11 +61,10 @@ Serialports.propTypes = {
 };
 
 const MoreDeviceInfo = ({ device, name, onchange }) => (
-    // console.log(BasicDeviceInfo.nickname.value)
-    // hvis den har nickname ikke bare om feltet er tomt, sjekke mot lagring av nickname?
-    (BasicDeviceInfo.nickname != null)
+    // console.log(device.serialNumber),
+    // console.log(getDeviceNickname(String(device.serialNumber)))
+    (getDeviceNickname(String(device.serialNumber)) != null)
         ? (
-            // console.log('ikke tomt'),
             <div>
                 <br />
                 {deviceName(device) || device.boardVersion || 'Unknown'}
@@ -73,7 +73,6 @@ const MoreDeviceInfo = ({ device, name, onchange }) => (
             </div>
         )
         : (
-            // console.log('tomt'),
             <div>
                 <Serialports ports={serialports(device)} />
                 <ChangeName data={name} onchange={e => { onchange(e); }} />
@@ -99,10 +98,13 @@ const additionalClassName = (moreVisible, isSelected) => {
 const Device = ({ device, isSelected, doSelectDevice }) => {
     const [moreVisible, setMoreVisible] = useState(false);
     const [name, setName] = useState();
+    const serial = device.serialNumber;
 
     const onchange = data => {
         setName(data);
-        console.log('Form>', data);
+        // console.log('Form>', data);
+        setDeviceNickname(String(serial), data);
+        getDeviceNickname(String(serial));
     };
 
     const showMoreInfos = (

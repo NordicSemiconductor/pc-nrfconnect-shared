@@ -1,4 +1,4 @@
-/* Copyright (c) 2015 - 2017, Nordic Semiconductor ASA
+/* Copyright (c) 2015 - 2020, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -34,51 +34,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react';
-import { bool, node } from 'prop-types';
-import { deviceName } from '../deviceInfo/deviceInfo';
-import deviceShape from './deviceShape';
-import DeviceIcon from './DeviceIcon';
-import { getDeviceNickname } from '../../persistentStore';
 
-import './basic-device-info.scss';
+import Store from 'electron-store';
 
-const DeviceDetails = ({ nickname, device }) => (
-    <div className="details">
-        <div>{nickname || getDeviceNickname(device.serialNumber) || deviceName(device) || device.boardVersion || 'Unknown'}</div>
-        <div className="serial-number">{device.serialNumber}</div>
-    </div>
-);
-DeviceDetails.propTypes = {
-    device: deviceShape.isRequired,
-    nickname: node,
-};
+export const store = new Store({ name: 'pc-nrfconnect-shared' });
 
-DeviceDetails.defaultProps = {
-    nickname: null,
-};
+export const setDeviceNickname = (number, nickname) => (store.set(String(number), nickname));
 
-const BasicDeviceInfo = ({
-    nickname,
-    device,
-    whiteBackground,
-    rightElement,
-}) => (
-    <div className="basic-device-info">
-        <DeviceIcon device={device} whiteBackground={whiteBackground} />
-        <DeviceDetails device={device} nickname={nickname} />
-        {rightElement}
-    </div>
-);
-BasicDeviceInfo.propTypes = {
-    nickname: node,
-    device: deviceShape.isRequired,
-    whiteBackground: bool.isRequired,
-    rightElement: node.isRequired,
-};
 
-BasicDeviceInfo.defaultProps = {
-    nickname: null,
-};
-
-export default BasicDeviceInfo;
+export const getDeviceNickname = number => (store.get(String(number)) || null);
