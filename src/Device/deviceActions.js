@@ -126,7 +126,6 @@ const devicesDetected = devices => ({
     devices,
 });
 
-
 let deviceLister;
 
 // Defined when user input is required during device setup. When input is
