@@ -61,24 +61,21 @@ Serialports.propTypes = {
 };
 
 const MoreDeviceInfo = ({ device, name, onchange }) => (
-    // console.log(device.serialNumber),
-    // console.log(getDeviceNickname(String(device.serialNumber)))
-    (getDeviceNickname(String(device.serialNumber)) != null)
-        ? (
-            <div>
-                <br />
-                {deviceName(device) || device.boardVersion || 'Unknown'}
-                <Serialports ports={serialports(device)} />
-                <ChangeName data={name} onchange={e => { onchange(e); }} />
-            </div>
-        )
-        : (
-            <div>
-                <Serialports ports={serialports(device)} />
-                <ChangeName data={name} onchange={e => { onchange(e); }} />
-            </div>
-        )
-    // <div><ChangeName data={name} onchange={e => { onchange(e); }} /></div>
+    [
+        (getDeviceNickname(String(device.serialNumber)) != null)
+            ? (
+                <div key="withoutNickname">
+                    {deviceName(device) || device.boardVersion || 'Unknown'}
+                    <Serialports ports={serialports(device)} />
+                </div>
+            )
+            : (
+                <div key="withNickname">
+                    <Serialports ports={serialports(device)} />
+                </div>
+            ),
+        <div key="input"><ChangeName data={name} onchange={e => { onchange(e); }} /></div>,
+    ]
 );
 MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
@@ -102,7 +99,6 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
 
     const onchange = data => {
         setName(data);
-        // console.log('Form>', data);
         setDeviceNickname(String(serial), data);
         getDeviceNickname(String(serial));
     };
@@ -128,10 +124,6 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
                 />
                 <div className="more-infos">
                     {moreVisible
-                        /* && (nickname != null)
-                            ? (
-                                <div>{deviceName(device) || device.boardVersion || 'Unknown'}</div>
-                            ) */
                         && (
                             <MoreDeviceInfo
                                 device={device}
