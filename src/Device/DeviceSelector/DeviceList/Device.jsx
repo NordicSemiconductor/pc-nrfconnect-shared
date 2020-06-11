@@ -42,7 +42,6 @@ import { serialports } from '../../deviceInfo/deviceInfo';
 import PseudoButton from '../../../PseudoButton/PseudoButton';
 import deviceShape from '../deviceShape';
 import BasicDeviceInfo from '../BasicDeviceInfo';
-import DeviceName from './DeviceName';
 import ChangeName from './ChangeName';
 
 import './device.scss';
@@ -60,11 +59,19 @@ Serialports.propTypes = {
     ).isRequired,
 };
 
-const MoreDeviceInfo = ({ device }) => (
-    <Serialports ports={serialports(device)} />
+const MoreDeviceInfo = ({ device, name, onchange }) => (
+    <div>
+        <Serialports ports={serialports(device)} />
+        <ChangeName data={name} onchange={e => { onchange(e); }} />
+    </div>
 );
 MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
+    name: string,
+    onchange: func.isRequired,
+};
+MoreDeviceInfo.defaultProps = {
+    name: null,
 };
 
 const additionalClassName = (moreVisible, isSelected) => {
@@ -75,10 +82,10 @@ const additionalClassName = (moreVisible, isSelected) => {
 
 const Device = ({ device, isSelected, doSelectDevice }) => {
     const [moreVisible, setMoreVisible] = useState(false);
-    const [devName, setDevName] = useState();
+    const [name, setName] = useState();
 
     const onchange = data => {
-        setDevName(data);
+        setName(data);
         console.log('Form>', data);
     };
 
@@ -91,26 +98,26 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
 
     return (
         <div>
-            {devName}
-            <DeviceName />
             <PseudoButton
                 className={`device ${additionalClassName(moreVisible, isSelected)}`}
                 onClick={() => doSelectDevice(device)}
             >
                 <BasicDeviceInfo
-                    nickname={devName}
+                    nickname={name}
                     device={device}
                     whiteBackground={false}
                     rightElement={showMoreInfos}
                 />
                 <div className="more-infos">
-                    {moreVisible && <MoreDeviceInfo device={device} /> && <ChangeName /> }
+                    {moreVisible && (
+                        <MoreDeviceInfo
+                            device={device}
+                            data={name}
+                            onchange={e => { onchange(e); }}
+                        />
+                    )}
                 </div>
             </PseudoButton>
-            <ChangeName
-                data={devName}
-                onchange={e => { onchange(e); }}
-            />
         </div>
     );
 };
