@@ -61,20 +61,21 @@ Serialports.propTypes = {
 };
 
 const MoreDeviceInfo = ({ device, name, onchange }) => (
-    (getDeviceNickname(String(device.serialNumber)) != null)
-        ? (
-            <div>
-                {deviceName(device) || device.boardVersion || 'Unknown'}
-                <Serialports ports={serialports(device)} />
-                <ChangeName data={name} onchange={e => { onchange(e); }} />
-            </div>
-        )
-        : (
-            <div>
-                <Serialports ports={serialports(device)} />
-                <ChangeName data={name} onchange={e => { onchange(e); }} />
-            </div>
-        )
+    [
+        (getDeviceNickname(String(device.serialNumber)) != null)
+            ? (
+                <div key="withoutNickname">
+                    {deviceName(device) || device.boardVersion || 'Unknown'}
+                    <Serialports ports={serialports(device)} />
+                </div>
+            )
+            : (
+                <div key="withNickname">
+                    <Serialports ports={serialports(device)} />
+                </div>
+            ),
+        <div key="input"><ChangeName data={name} onchange={e => { onchange(e); }} /></div>,
+    ]
 );
 MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
