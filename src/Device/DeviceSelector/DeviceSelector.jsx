@@ -52,7 +52,6 @@ import DeviceSetup from '../DeviceSetup/DeviceSetup';
 
 import DeviceList from './DeviceList/DeviceList';
 import SelectorButton from './SelectorButton';
-import { getDeviceNickname } from '../../persistentStore';
 
 import './device-selector.scss';
 

@@ -43,8 +43,9 @@ const ChangeName = props => {
         props.onchange(event.target.value);
     };
     return (
-        <div>
+        <div style={{ textDecoration: 'white' }}>
             <input
+                className="core20-rename"
                 placeholder="Rename device"
                 id="name"
                 onChange={handleChange}

@@ -42,7 +42,6 @@ import Device from './Device';
 import deviceShape from '../deviceShape';
 
 import './device-list.scss';
-import { getDeviceNickname } from '../../../persistentStore';
 
 const NoDevicesConnected = () => (
     <p className="no-devices-connected">
