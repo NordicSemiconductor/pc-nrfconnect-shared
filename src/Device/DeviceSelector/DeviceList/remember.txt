@@ -1,0 +1,14 @@
+{(nickname == null)
+            ? (
+                <div>
+                    <div>{nickname || deviceName(device) || device.boardVersion || 'Unknown'}</div>
+                    <div className="serial-number">{device.serialNumber}</div>
+                </div>
+            )
+            : (
+                <div>
+                    <div>{nickname || deviceName(device) || device.boardVersion || 'Unknown'}</div>
+                    <div className="serial-number">{device.serialNumber} <br></br></div>
+                    <div>{deviceName(device) || device.boardVersion || 'Unknown'}</div>
+                </div>
+            )}

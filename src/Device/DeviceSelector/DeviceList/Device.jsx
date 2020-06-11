@@ -38,7 +38,7 @@ import React, { useState } from 'react';
 import {
     arrayOf, bool, func, shape, string,
 } from 'prop-types';
-import { serialports } from '../../deviceInfo/deviceInfo';
+import { serialports, deviceName } from '../../deviceInfo/deviceInfo';
 import PseudoButton from '../../../PseudoButton/PseudoButton';
 import deviceShape from '../deviceShape';
 import BasicDeviceInfo from '../BasicDeviceInfo';
@@ -60,10 +60,26 @@ Serialports.propTypes = {
 };
 
 const MoreDeviceInfo = ({ device, name, onchange }) => (
-    <div>
-        <Serialports ports={serialports(device)} />
-        <ChangeName data={name} onchange={e => { onchange(e); }} />
-    </div>
+    // console.log(BasicDeviceInfo.nickname.value)
+    // hvis den har nickname ikke bare om feltet er tomt, sjekke mot lagring av nickname?
+    (BasicDeviceInfo.nickname != null)
+        ? (
+            // console.log('ikke tomt'),
+            <div>
+                <br />
+                {deviceName(device) || device.boardVersion || 'Unknown'}
+                <Serialports ports={serialports(device)} />
+                <ChangeName data={name} onchange={e => { onchange(e); }} />
+            </div>
+        )
+        : (
+            // console.log('tomt'),
+            <div>
+                <Serialports ports={serialports(device)} />
+                <ChangeName data={name} onchange={e => { onchange(e); }} />
+            </div>
+        )
+    // <div><ChangeName data={name} onchange={e => { onchange(e); }} /></div>
 );
 MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
@@ -109,13 +125,18 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
                     rightElement={showMoreInfos}
                 />
                 <div className="more-infos">
-                    {moreVisible && (
-                        <MoreDeviceInfo
-                            device={device}
-                            data={name}
-                            onchange={e => { onchange(e); }}
-                        />
-                    )}
+                    {moreVisible
+                        /* && (nickname != null)
+                            ? (
+                                <div>{deviceName(device) || device.boardVersion || 'Unknown'}</div>
+                            ) */
+                        && (
+                            <MoreDeviceInfo
+                                device={device}
+                                data={name}
+                                onchange={e => { onchange(e); }}
+                            />
+                        )}
                 </div>
             </PseudoButton>
         </div>

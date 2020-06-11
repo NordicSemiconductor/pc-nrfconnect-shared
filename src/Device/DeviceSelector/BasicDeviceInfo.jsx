@@ -44,25 +44,13 @@ import './basic-device-info.scss';
 
 const DeviceDetails = ({ nickname, device }) => (
     <div className="details">
-        {(nickname == null)
-            ? (
-                <div>
-                    <div>{deviceName(device) || device.boardVersion || 'Unknown'}</div>
-                    <div className="serial-number">{device.serialNumber}</div>
-                </div>
-            )
-            : (
-                <div>
-                    <div>{nickname || deviceName(device) || device.boardVersion || 'Unknown'}</div>
-                    <div className="serial-number">{device.serialNumber}</div>
-                    <div>{deviceName(device) || device.boardVersion || 'Unknown'}</div>
-                </div>
-            )}
+        <div>{nickname || deviceName(device) || device.boardVersion || 'Unknown'}</div>
+        <div className="serial-number">{device.serialNumber}</div>
     </div>
 );
 DeviceDetails.propTypes = {
     device: deviceShape.isRequired,
-    nickname: string,
+    nickname: node,
 };
 DeviceDetails.defaultProps = {
     nickname: null,
