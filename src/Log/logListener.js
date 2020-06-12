@@ -74,14 +74,12 @@ const sendInitialMessage = () => {
     ipcRenderer.send('get-app-details');
 };
 
-
 const addLogEntriesToStore = dispatch => () => {
     const entries = logger.getAndClearEntries();
     if (entries.length > 0) {
         dispatch(addEntries(entries));
     }
 };
-
 
 /**
  * Starts listening to new log entries from the application's log buffer.
