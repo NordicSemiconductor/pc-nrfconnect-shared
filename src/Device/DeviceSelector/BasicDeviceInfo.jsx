@@ -35,11 +35,13 @@
  */
 
 import React from 'react';
-import { bool, node } from 'prop-types';
+import { bool, node, func } from 'prop-types';
 import { deviceName } from '../deviceInfo/deviceInfo';
 import deviceShape from './deviceShape';
 import DeviceIcon from './DeviceIcon';
-import { getDeviceNickname } from '../../persistentStore';
+import {
+    getDeviceNickname,
+} from '../../persistentStore';
 
 import './basic-device-info.scss';
 
@@ -63,11 +65,39 @@ const BasicDeviceInfo = ({
     device,
     whiteBackground,
     rightElement,
+    isFavorite,
+    setFav,
+    unFav,
 }) => (
     <div className="basic-device-info">
         <DeviceIcon device={device} whiteBackground={whiteBackground} />
         <DeviceDetails device={device} nickname={nickname} />
-        {rightElement}
+        <div className="wrapper">
+            {isFavorite
+                ? (
+                    <span
+                        key="favorite"
+                        role="button"
+                        tabIndex={0}
+                        style={{ color: 'goldenrod' }}
+                        className="mdi mdi-star"
+                        onClick={() => unFav()}
+                        onkeyDown={() => unFav()}
+                    />
+                )
+                : (
+                    <span
+                        key="notFavorite"
+                        role="button"
+                        tabIndex={0}
+                        style={{ color: 'powderblue' }}
+                        className="mdi mdi-star"
+                        onClick={() => setFav()}
+                        onkeyDown={() => setFav()}
+                    />
+                )}
+            {rightElement}
+        </div>
     </div>
 );
 BasicDeviceInfo.propTypes = {
@@ -75,10 +105,16 @@ BasicDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
     whiteBackground: bool.isRequired,
     rightElement: node.isRequired,
+    isFavorite: bool,
+    setFav: func,
+    unFav: func,
 };
 
 BasicDeviceInfo.defaultProps = {
     nickname: null,
+    isFavorite: false,
+    setFav: null,
+    unFav: null,
 };
 
 export default BasicDeviceInfo;

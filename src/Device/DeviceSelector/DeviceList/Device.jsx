@@ -45,7 +45,10 @@ import BasicDeviceInfo from '../BasicDeviceInfo';
 import ChangeName from './ChangeName';
 
 import './device.scss';
-import { setDeviceNickname, getDeviceNickname } from '../../../persistentStore';
+import {
+    setDeviceNickname, getDeviceNickname,
+    getIsFavoriteDevice, unFavoriteDevice, setFavoriteDevice,
+} from '../../../persistentStore';
 
 const Serialports = ({ ports }) => (
     <ul className="ports">
@@ -74,7 +77,10 @@ const MoreDeviceInfo = ({ device, name, onchange }) => (
                     <Serialports ports={serialports(device)} />
                 </div>
             ),
-        <div key="input"><ChangeName data={name} onchange={e => { onchange(e); }} /></div>,
+        <div key="bottom" className="bottom">
+            <div key="unfav">Unfavorite</div>
+            <div key="input"><ChangeName data={name} onchange={e => { onchange(e); }} /></div>,
+        </div>,
     ]
 );
 MoreDeviceInfo.propTypes = {
@@ -121,6 +127,9 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
                     device={device}
                     whiteBackground={false}
                     rightElement={showMoreInfos}
+                    isFavorite={getIsFavoriteDevice(String(serial))}
+                    unFav={() => unFavoriteDevice(String(serial))}
+                    setFav={() => setFavoriteDevice(String(serial))}
                 />
                 <div className="more-infos">
                     {moreVisible
@@ -141,5 +150,6 @@ Device.propTypes = {
     isSelected: bool.isRequired,
     doSelectDevice: func.isRequired,
 };
+
 
 export default Device;
