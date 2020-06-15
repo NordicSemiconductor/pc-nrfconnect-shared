@@ -1,17 +1,16 @@
 @import "../../../variables";
 
 .core20-rename{
-    width: 130px;
     position: relative;
+    width: 130px;
+    height: 35px;
     border: 0px solid white;
     border-top: 1px solid $nordic-blue;
-    text-decoration-line: 2px underline black;
-    font-size: smaller;
+    font-size: small;
     text-align: center;
-    color: $nordic-blue;  
-    height: 35px;
-    z-index: 2;  
+    color: $nordic-blue; 
     visibility: hidden;
+    z-index: 2;  
 }
 
 ::-webkit-input-placeholder { 

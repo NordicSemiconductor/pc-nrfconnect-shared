@@ -62,7 +62,7 @@ Serialports.propTypes = {
     ).isRequired,
 };
 
-const disabled = () => {
+const disabled = () => { // får feilmeldinger på disse
     document.getElementById('name').style.visibility = 'visible';
     document.getElementById('inputBtn').style.visibility = 'hidden';
 };
