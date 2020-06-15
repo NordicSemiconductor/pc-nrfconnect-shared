@@ -61,15 +61,30 @@
         margin-bottom: -13px;
     
         .favBtn{
+            text-align: center;
             float: left;
             background-color: $white;
-            border: 0px solid white;
+            border: 0px solid $white;
             border-top: 1px solid $nordic-blue;
             border-right: 1px solid $nordic-blue;
             color: $nordic-blue;
             font-size: smaller;
             width: 130px;
             height: 100%;
+        }
+        .inputBtn{
+            background-color: $white;
+            width: 136px;
+            position: absolute;
+            border: 0px solid white;
+            border-top: 1px solid $nordic-blue;
+            text-decoration-line: 2px underline black;
+            font-size: smaller;
+            text-align: center;
+            color: $nordic-blue;  
+            height: 35px;
+            margin-left: 124px;  
+            z-index: 1;
         }
     }
 }

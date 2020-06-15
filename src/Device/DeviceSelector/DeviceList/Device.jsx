@@ -62,9 +62,10 @@ Serialports.propTypes = {
     ).isRequired,
 };
 
-/* const disabled = () => {
-    document.getElementById("name").disabled = false;
-} */
+const disabled = () => {
+    document.getElementById('name').style.visibility = 'visible';
+    document.getElementById('inputBtn').style.visibility = 'hidden';
+};
 
 const MoreDeviceInfo = ({ device, name, onchange }) => (
     <>
@@ -103,10 +104,16 @@ const MoreDeviceInfo = ({ device, name, onchange }) => (
                         !getIsFavoriteDevice(device.serialNumber))
                 }
             >
-                {getIsFavoriteDevice(String(device.serialNumber)) ? 'UN-FAVRITE' : 'FAVORITE'}
+                {getIsFavoriteDevice(String(device.serialNumber))
+                    ? (
+                        <div className="mdi mdi-star-off">{ '\xa0\xa0' } UN-FAVRITE</div>
+                    )
+                    : (
+                        <div className="mdi mdi-star">{ '\xa0\xa0' } FAVORITE</div>
+                    )}
             </PseudoButton>
-
-            <div key="input"><ChangeName data={name} onchange={e => { onchange(e); }} /></div>
+            <PseudoButton className="inputBtn" id="inputBtn" onClick={disabled}><div className="mdi mdi-pencil-circle">{ '\xa0' } RENAME DEVICE</div></PseudoButton>
+            <ChangeName data={name} onchange={e => { onchange(e); }} />
         </div>
     </>
 );
