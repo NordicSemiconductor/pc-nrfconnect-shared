@@ -43,7 +43,6 @@ import PseudoButton from '../../../PseudoButton/PseudoButton';
 import deviceShape from '../deviceShape';
 import BasicDeviceInfo from '../BasicDeviceInfo';
 import ChangeName from './ChangeName';
-
 import './device.scss';
 import {
     setDeviceNickname, getDeviceNickname,
@@ -63,9 +62,13 @@ Serialports.propTypes = {
     ).isRequired,
 };
 
+/* const disabled = () => {
+    document.getElementById("name").disabled = false;
+} */
+
 const MoreDeviceInfo = ({ device, name, onchange }) => (
-    [
-        (getDeviceNickname(String(device.serialNumber)) != null)
+    <>
+        {(getDeviceNickname(String(device.serialNumber)) !== '')
             ? (
                 <div key="withoutNickname">
                     {deviceName(device) || device.boardVersion || 'Unknown'}
@@ -76,12 +79,22 @@ const MoreDeviceInfo = ({ device, name, onchange }) => (
                 <div key="withNickname">
                     <Serialports ports={serialports(device)} />
                 </div>
-            ),
-        <div key="bottom" className="bottom">
-            <div key="unfav">Unfavorite</div>
-            <div key="input"><ChangeName data={name} onchange={e => { onchange(e); }} /></div>,
-        </div>,
-    ]
+            )}
+        <div key="btn-group" className="btn-group">
+
+            <button
+                className="favBtn"
+                type="button"
+                onClick={
+                    () => setFavoriteDevice(device.serialNumber,
+                        !getIsFavoriteDevice(device.serialNumber))
+                }
+            >
+                {getIsFavoriteDevice(String(device.serialNumber)) ? 'UN-FAVRITE' : 'FAVORITE'}
+            </button>
+            <div key="input"><ChangeName data={name} onchange={e => { onchange(e); }} /></div>
+        </div>
+    </>
 );
 MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,

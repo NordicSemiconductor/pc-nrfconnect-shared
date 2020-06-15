@@ -43,7 +43,11 @@ export const setDeviceNickname = (number, nickname) => (store.set(`${number}name
 
 export const getDeviceNickname = number => (store.get(`${number}name` || null));
 
-export const setFavoriteDevice = number => (store.set(`${number}fav`, true) + console.log('Device favorited'));
+export const setFavoriteDevice = (number, value) => (store.set(`${number}fav`, value)
++ console.log('Device favorited'));
+
+// export const setFavoriteDevice = number =>
+// (store.set(`${number}fav`, true) + console.log('Device favorited'));
 
 export const getIsFavoriteDevice = number => (store.get(`${number}fav` || null));
 

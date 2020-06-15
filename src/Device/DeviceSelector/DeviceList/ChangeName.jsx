@@ -46,7 +46,7 @@ const ChangeName = props => {
         <div style={{ textDecoration: 'white' }}>
             <input
                 className="core20-rename"
-                placeholder="Rename device"
+                placeholder="RENAME DEVICE"
                 id="name"
                 onChange={handleChange}
             />

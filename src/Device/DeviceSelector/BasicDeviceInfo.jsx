@@ -82,7 +82,7 @@ const BasicDeviceInfo = ({
                         style={{ color: 'goldenrod' }}
                         className="mdi mdi-star"
                         onClick={() => unFav()}
-                        onkeyDown={() => unFav()}
+                        onKeyDown={() => unFav()}
                     />
                 )
                 : (
@@ -93,7 +93,7 @@ const BasicDeviceInfo = ({
                         style={{ color: 'powderblue' }}
                         className="mdi mdi-star"
                         onClick={() => setFav()}
-                        onkeyDown={() => setFav()}
+                        onKeyDown={() => setFav()}
                     />
                 )}
             {rightElement}
