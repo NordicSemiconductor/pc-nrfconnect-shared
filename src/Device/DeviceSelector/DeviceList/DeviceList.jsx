@@ -42,6 +42,7 @@ import Device from './Device';
 import deviceShape from '../deviceShape';
 
 import './device-list.scss';
+import { getIsFavoriteDevice } from '../../../persistentStore';
 // import { getIsFavoriteDevice } from '../../../persistentStore';
 
 const NoDevicesConnected = () => (
@@ -63,10 +64,12 @@ const DeviceList = ({ devices, doSelectDevice }) => {
 
     if (devices.length === 0) return <NoDevicesConnected />;
 
-    /* const myData = [].concat(devices)
-    .sort(function(x, y)
-    {return getIsFavoriteDevice(x) === getIsFavoriteDevice(y)}? 0 : x ? -1 : 1 )
-    */
+    // Trying to sort the devices so that favorited items always are on top,
+    // but this fails in some cases with 3 or more kits attatched
+    // it also wont get past lint due to "Do not nest ternary expressions"
+    /* devices.sort((x, y) => (
+        (getIsFavoriteDevice(String(x.serialNumber)) === getIsFavoriteDevice(String(y.serialNumber))
+        ) ? 0 : x ? -1 : 1)); */
     return (
         <ul className="device-list">
             {devices.map(device => (
