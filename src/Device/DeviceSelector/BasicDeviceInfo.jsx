@@ -67,7 +67,6 @@ const BasicDeviceInfo = ({
     device,
     whiteBackground,
     rightElement,
-    isFavorite,
     setFav,
 }) => {
     const favoriteColor = fav => {
@@ -83,7 +82,9 @@ const BasicDeviceInfo = ({
             <div className="wrapper">
                 <PseudoButton
                     className="mdi mdi-star"
-                    style={{ color: favoriteColor(isFavorite) }}
+                    style={{
+                        color: favoriteColor(getIsFavoriteDevice(String(device.serialNumber))),
+                    }}
                     onClick={() => setFav(String(device.serialNumber),
                         !getIsFavoriteDevice(String(device.serialNumber)))}
                 />
@@ -97,13 +98,11 @@ BasicDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
     whiteBackground: bool.isRequired,
     rightElement: node.isRequired,
-    isFavorite: bool,
     setFav: func,
 };
 
 BasicDeviceInfo.defaultProps = {
     nickname: null,
-    isFavorite: false,
     setFav: null,
 };
 
