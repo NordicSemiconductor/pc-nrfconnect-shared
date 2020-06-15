@@ -21,6 +21,7 @@
 
         &:hover, &.more-infos-visible {
             background: $white;
+            color: $primary-darkened;
             .serial-number { color: $primary; }
         }
         
