@@ -74,7 +74,7 @@ PseudoButton.propTypes = {
     onClick: func.isRequired,
     className: string, // eslint-disable-line react/require-default-props
     children: node, // eslint-disable-line react/require-default-props
-    style: string,
+    style: string, // we want to have .object but lint says it's forbidden
 };
 
 PseudoButton.defaultProps = {

@@ -81,21 +81,36 @@ const MoreDeviceInfo = ({ device, name, onchange }) => (
                 </div>
             )}
         <div key="btn-group" className="btn-group">
-
-            <button
+            {// When having butten-object and not an pseudobutton-object the changing between
+            // favorite and un-favorite happens in real-time.
+            // So the code commented out will work as I want
+            // once changed to pseudo we have to click somewhere
+            // else on the deviceinfo to make it change
+            // I also have problems styling pseudobutton, and no problem styling button in scss
+            /* <button
                 className="favBtn"
-                type="button"
                 onClick={
                     () => setFavoriteDevice(device.serialNumber,
                         !getIsFavoriteDevice(device.serialNumber))
                 }
             >
                 {getIsFavoriteDevice(String(device.serialNumber)) ? 'UN-FAVRITE' : 'FAVORITE'}
-            </button>
+            </button> */}
+            <PseudoButton
+                className="favBtn"
+                onClick={
+                    () => setFavoriteDevice(device.serialNumber,
+                        !getIsFavoriteDevice(device.serialNumber))
+                }
+            >
+                {getIsFavoriteDevice(String(device.serialNumber)) ? 'UN-FAVRITE' : 'FAVORITE'}
+            </PseudoButton>
+
             <div key="input"><ChangeName data={name} onchange={e => { onchange(e); }} /></div>
         </div>
     </>
 );
+
 MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
     name: string,
