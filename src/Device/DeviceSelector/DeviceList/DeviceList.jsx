@@ -42,6 +42,7 @@ import Device from './Device';
 import deviceShape from '../deviceShape';
 
 import './device-list.scss';
+// import { getIsFavoriteDevice } from '../../../persistentStore';
 
 const NoDevicesConnected = () => (
     <p className="no-devices-connected">
@@ -62,6 +63,10 @@ const DeviceList = ({ devices, doSelectDevice }) => {
 
     if (devices.length === 0) return <NoDevicesConnected />;
 
+    /* const myData = [].concat(devices)
+    .sort(function(x, y)
+    {return getIsFavoriteDevice(x) === getIsFavoriteDevice(y)}? 0 : x ? -1 : 1 )
+    */
     return (
         <ul className="device-list">
             {devices.map(device => (

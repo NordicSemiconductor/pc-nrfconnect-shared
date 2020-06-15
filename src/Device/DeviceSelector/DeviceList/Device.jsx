@@ -47,7 +47,7 @@ import ChangeName from './ChangeName';
 import './device.scss';
 import {
     setDeviceNickname, getDeviceNickname,
-    getIsFavoriteDevice, unFavoriteDevice, setFavoriteDevice,
+    getIsFavoriteDevice, setFavoriteDevice,
 } from '../../../persistentStore';
 
 const Serialports = ({ ports }) => (
@@ -65,7 +65,7 @@ Serialports.propTypes = {
 
 const MoreDeviceInfo = ({ device, name, onchange }) => (
     [
-        (getDeviceNickname(String(device.serialNumber)) != null)
+        (getDeviceNickname(String(device.serialNumber)) !== '')
             ? (
                 <div key="withoutNickname">
                     {deviceName(device) || device.boardVersion || 'Unknown'}
@@ -92,6 +92,7 @@ MoreDeviceInfo.defaultProps = {
     name: null,
 };
 
+
 const additionalClassName = (moreVisible, isSelected) => {
     if (moreVisible) return 'more-infos-visible';
     if (isSelected) return 'selected-device';
@@ -101,7 +102,7 @@ const additionalClassName = (moreVisible, isSelected) => {
 const Device = ({ device, isSelected, doSelectDevice }) => {
     const [moreVisible, setMoreVisible] = useState(false);
     const [name, setName] = useState();
-    const serial = device.serialNumber;
+    const serial = String(device.serialNumber);
 
     const onchange = data => {
         setName(data);
@@ -117,32 +118,28 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
     );
 
     return (
-        <div>
-            <PseudoButton
-                className={`device ${additionalClassName(moreVisible, isSelected)}`}
-                onClick={() => doSelectDevice(device)}
-            >
-                <BasicDeviceInfo
-                    nickname={name}
-                    device={device}
-                    whiteBackground={false}
-                    rightElement={showMoreInfos}
-                    isFavorite={getIsFavoriteDevice(String(serial))}
-                    unFav={() => unFavoriteDevice(String(serial))}
-                    setFav={() => setFavoriteDevice(String(serial))}
-                />
-                <div className="more-infos">
-                    {moreVisible
-                        && (
-                            <MoreDeviceInfo
-                                device={device}
-                                data={name}
-                                onchange={e => { onchange(e); }}
-                            />
-                        )}
-                </div>
-            </PseudoButton>
-        </div>
+        <PseudoButton
+            className={`device ${additionalClassName(moreVisible, isSelected)}`}
+            onClick={() => doSelectDevice(device)}
+        >
+            <BasicDeviceInfo
+                nickname={name}
+                device={device}
+                whiteBackground={false}
+                rightElement={showMoreInfos}
+                setFav={() => setFavoriteDevice(serial, !getIsFavoriteDevice(serial))}
+            />
+            <div className="more-infos">
+                {moreVisible
+                            && (
+                                <MoreDeviceInfo
+                                    device={device}
+                                    data={name}
+                                    onchange={e => { onchange(e); }}
+                                />
+                            )}
+            </div>
+        </PseudoButton>
     );
 };
 Device.propTypes = {

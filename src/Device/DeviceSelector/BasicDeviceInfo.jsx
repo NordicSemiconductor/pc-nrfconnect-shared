@@ -40,8 +40,9 @@ import { deviceName } from '../deviceInfo/deviceInfo';
 import deviceShape from './deviceShape';
 import DeviceIcon from './DeviceIcon';
 import {
-    getDeviceNickname,
+    getDeviceNickname, getIsFavoriteDevice,
 } from '../../persistentStore';
+import PseudoButton from '../../PseudoButton/PseudoButton';
 
 import './basic-device-info.scss';
 
@@ -60,6 +61,7 @@ DeviceDetails.defaultProps = {
     nickname: null,
 };
 
+
 const BasicDeviceInfo = ({
     nickname,
     device,
@@ -67,39 +69,29 @@ const BasicDeviceInfo = ({
     rightElement,
     isFavorite,
     setFav,
-    unFav,
-}) => (
-    <div className="basic-device-info">
-        <DeviceIcon device={device} whiteBackground={whiteBackground} />
-        <DeviceDetails device={device} nickname={nickname} />
-        <div className="wrapper">
-            {isFavorite
-                ? (
-                    <span
-                        key="favorite"
-                        role="button"
-                        tabIndex={0}
-                        style={{ color: 'goldenrod' }}
-                        className="mdi mdi-star"
-                        onClick={() => unFav()}
-                        onkeyDown={() => unFav()}
-                    />
-                )
-                : (
-                    <span
-                        key="notFavorite"
-                        role="button"
-                        tabIndex={0}
-                        style={{ color: 'powderblue' }}
-                        className="mdi mdi-star"
-                        onClick={() => setFav()}
-                        onkeyDown={() => setFav()}
-                    />
-                )}
-            {rightElement}
+}) => {
+    const favoriteColor = fav => {
+        if (fav) {
+            return 'goldenrod';
+        }
+        return 'powderblue';
+    };
+    return (
+        <div className="basic-device-info">
+            <DeviceIcon device={device} whiteBackground={whiteBackground} />
+            <DeviceDetails device={device} nickname={nickname} />
+            <div className="wrapper">
+                <PseudoButton
+                    className="mdi mdi-star"
+                    style={{ color: favoriteColor(isFavorite) }}
+                    onClick={() => setFav(String(device.serialNumber),
+                        !getIsFavoriteDevice(String(device.serialNumber)))}
+                />
+                {rightElement}
+            </div>
         </div>
-    </div>
-);
+    );
+};
 BasicDeviceInfo.propTypes = {
     nickname: node,
     device: deviceShape.isRequired,
@@ -107,14 +99,12 @@ BasicDeviceInfo.propTypes = {
     rightElement: node.isRequired,
     isFavorite: bool,
     setFav: func,
-    unFav: func,
 };
 
 BasicDeviceInfo.defaultProps = {
     nickname: null,
     isFavorite: false,
     setFav: null,
-    unFav: null,
 };
 
 export default BasicDeviceInfo;

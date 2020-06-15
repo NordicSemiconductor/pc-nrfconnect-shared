@@ -13,6 +13,12 @@
             font-weight: 400;
         }
 
+        .device-box{
+            display: flex;
+            flex-direction: row;
+            size: 100;
+        }
+
         &:hover, &.more-infos-visible {
             background: $white;
             color: $primary-darkened;
