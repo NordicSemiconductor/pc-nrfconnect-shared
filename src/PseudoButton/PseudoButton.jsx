@@ -36,7 +36,7 @@
 
 import React from 'react';
 import {
-    func, node, string, shape,
+    func, node, string,
 } from 'prop-types';
 
 import './pseudo-button.scss';
@@ -57,7 +57,7 @@ const blurAndInvoke = onClick => event => {
 // Motivation for this class: A normal button in HTML must not contain divs or other buttons,
 // but we do have things that behave like buttons and at the same time should contain such things
 const PseudoButton = ({
-    onClick, className = '', children, style,
+    onClick, className = '', children,
 }) => (
     <div
         role="button"
@@ -65,20 +65,19 @@ const PseudoButton = ({
         tabIndex={0}
         onClick={blurAndInvoke(onClick)}
         onKeyUp={invokeIfSpaceOrEnterPressed(onClick)}
-        style={style}
     >
         {children}
     </div>
 );
 PseudoButton.propTypes = {
     onClick: func.isRequired,
-    className: string, // eslint-disable-line react/require-default-props
-    children: node, // eslint-disable-line react/require-default-props
-    style: shape({}), // we want to have .object but lint says it's forbidden
+    className: string,
+    children: node,
 };
 
 PseudoButton.defaultProps = {
-    style: null,
+    className: null,
+    children: null,
 };
 
 export default PseudoButton;

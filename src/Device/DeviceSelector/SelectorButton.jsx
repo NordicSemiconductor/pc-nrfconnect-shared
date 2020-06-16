@@ -85,7 +85,7 @@ const SelectorButton = ({ deviceListVisible, setDeviceListVisible, doDeselectDev
 
     return (
         <PseudoButton
-            className={`selector-button ${device == null ? '' : 'device-selected'}`}
+            className={`selector-button ${device == null ? 'no-device-selected' : 'device-selected'}`}
             onClick={() => setDeviceListVisible(!deviceListVisible)}
         >
             {device == null
