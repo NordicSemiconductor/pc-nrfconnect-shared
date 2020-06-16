@@ -134,6 +134,19 @@ let deviceLister;
 // (Boolean) or choice (String) that the user provided as input.
 let deviceSetupCallback;
 
+export const DEVICE_FAVORITED = 'DEVICE_FAVORITED';
+export const deviceFavorited = (serialNumber, isFavorite) => ({
+    type: DEVICE_FAVORITED,
+    serialNumber,
+    isFavorite,
+});
+
+/* export const DEVICE_UNFAVORITED = 'DEVICE_UNFAVORITED';
+const deviceUnFavorited = device => ({
+    type: DEVICE_UNFAVORITED,
+    device
+}) */
+
 const NORDIC_VENDOR_ID = 0x1915;
 const NORDIC_BOOTLOADER_PRODUCT_ID = 0x521f;
 

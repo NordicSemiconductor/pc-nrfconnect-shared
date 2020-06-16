@@ -40,7 +40,7 @@ import { deviceName } from '../deviceInfo/deviceInfo';
 import deviceShape from './deviceShape';
 import DeviceIcon from './DeviceIcon';
 import {
-    getDeviceNickname, getIsFavoriteDevice,
+    getDeviceNickname,
 } from '../../persistentStore';
 import PseudoButton from '../../PseudoButton/PseudoButton';
 
@@ -68,20 +68,22 @@ const BasicDeviceInfo = ({
     whiteBackground,
     rightElement,
     setFav,
-}) => (
-    <div className="basic-device-info">
-        <DeviceIcon device={device} whiteBackground={whiteBackground} />
-        <DeviceDetails device={device} nickname={nickname} />
-        <div className="wrapper">
-            <PseudoButton
-                className={`mdi mdi-star ${getIsFavoriteDevice(String(device.serialNumber)) ? 'favorite' : ''}`}
-                onClick={() => setFav(String(device.serialNumber),
-                    !getIsFavoriteDevice(String(device.serialNumber)))}
-            />
-            {rightElement}
+}) => {
+    const { favorite } = device;
+    return (
+        <div className="basic-device-info">
+            <DeviceIcon device={device} whiteBackground={whiteBackground} />
+            <DeviceDetails device={device} nickname={nickname} />
+            <div className="wrapper">
+                <PseudoButton
+                    className={`mdi mdi-star ${favorite ? 'favorite' : ''}`}
+                    onClick={() => setFav && setFav()}
+                />
+                {rightElement}
+            </div>
         </div>
-    </div>
-);
+    );
+};
 BasicDeviceInfo.propTypes = {
     nickname: node,
     device: deviceShape.isRequired,

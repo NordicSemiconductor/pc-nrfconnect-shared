@@ -42,7 +42,6 @@ import Device from './Device';
 import deviceShape from '../deviceShape';
 
 import './device-list.scss';
-import { getIsFavoriteDevice } from '../../../persistentStore';
 
 const NoDevicesConnected = () => (
     <p className="no-devices-connected">
@@ -62,8 +61,7 @@ const DeviceList = ({ devices, doSelectDevice }) => {
     const selectedSerialNumber = useSelector(selectedSerialNumberSelector);
 
     if (devices.length === 0) return <NoDevicesConnected />;
-    const sorted = devices.sort((a, b) => (getIsFavoriteDevice(String(b.serialNumber))
-    - getIsFavoriteDevice(String(a.serialNumber))));
+    const sorted = devices.sort((a, b) => (b.favorite - a.favorite));
 
     return (
         <ul className="device-list">

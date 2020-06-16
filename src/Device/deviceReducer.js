@@ -42,7 +42,10 @@ import {
     DEVICE_SETUP_ERROR,
     DEVICE_SETUP_INPUT_REQUIRED,
     DEVICE_SETUP_INPUT_RECEIVED,
+    DEVICE_FAVORITED,
 } from './deviceActions';
+
+import { getIsFavoriteDevice } from '../persistentStore';
 
 const noDialogShown = {
     isSetupDialogVisible: false,
@@ -60,8 +63,13 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case DEVICES_DETECTED:
-            return { ...state, devices: [...action.devices] };
+        case DEVICES_DETECTED: {
+            const devices = action.devices.map(d => ({
+                ...d,
+                favorite: getIsFavoriteDevice(d.serialNumber),
+            }));
+            return { ...state, devices };
+        }
         case DEVICE_SELECTED:
             return { ...state, selectedSerialNumber: action.device.serialNumber };
         case DEVICE_DESELECTED:
@@ -87,11 +95,19 @@ export default (state = initialState, action) => {
             };
         case DEVICE_SETUP_INPUT_RECEIVED:
             return { ...state, isSetupWaitingForUserInput: false };
+        case DEVICE_FAVORITED: {
+            const { devices } = state;
+            const i = devices.findIndex(({ serialNumber }) => serialNumber === action.serialNumber);
+            devices[i] = {
+                ...devices[i],
+                favorite: action.isFavorite,
+            };
+            return { ...state, devices: [...devices] };
+        }
         default:
             return state;
     }
 };
-
 
 export const devices = state => state.device.devices;
 

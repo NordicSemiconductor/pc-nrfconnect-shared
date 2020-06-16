@@ -70,7 +70,7 @@ const PseudoButton = ({
     </div>
 );
 PseudoButton.propTypes = {
-    onClick: func.isRequired,
+    onClick: func,
     className: string,
     children: node,
 };
@@ -78,6 +78,7 @@ PseudoButton.propTypes = {
 PseudoButton.defaultProps = {
     className: null,
     children: null,
+    onClick: null,
 };
 
 export default PseudoButton;

@@ -41,8 +41,8 @@ export const store = new Store({ name: 'pc-nrfconnect-shared' });
 
 export const setDeviceNickname = (number, nickname) => (store.set(`${number}name`, nickname));
 
-export const getDeviceNickname = number => (store.get(`${number}name` || null));
+export const getDeviceNickname = number => (store.get(`${number}name`, null));
 
 export const setFavoriteDevice = (number, value) => (store.set(`${number}fav`, value));
 
-export const getIsFavoriteDevice = number => (store.get(`${number}fav` || false));
+export const getIsFavoriteDevice = number => (store.get(`${number}fav`, false));
