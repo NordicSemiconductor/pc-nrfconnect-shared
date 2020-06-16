@@ -36,7 +36,7 @@
 
 import React from 'react';
 import {
-    func, node, string,
+    func, node, string, shape,
 } from 'prop-types';
 
 import './pseudo-button.scss';
@@ -74,7 +74,7 @@ PseudoButton.propTypes = {
     onClick: func.isRequired,
     className: string, // eslint-disable-line react/require-default-props
     children: node, // eslint-disable-line react/require-default-props
-    style: string, // we want to have .object but lint says it's forbidden
+    style: shape({}), // we want to have .object but lint says it's forbidden
 };
 
 PseudoButton.defaultProps = {
