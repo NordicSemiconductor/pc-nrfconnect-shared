@@ -88,14 +88,14 @@ const MoreDeviceInfo = ({ device, name, onchange }) => {
                 >
                     {getIsFavoriteDevice(String(device.serialNumber))
                         ? (
-                            <div className="mdi mdi-star-off" style={{ marginTop:9 }}>{ '\xa0\xa0' } UN-FAVRITE</div>
+                            <div className="mdi mdi-star-off" style={{ marginTop: 9 }}>{ '\xa0\xa0' } UN-FAVRITE</div>
                         )
                         : (
-                            <div className="mdi mdi-star" style={{ marginTop:9 }}>{ '\xa0\xa0' } FAVORITE</div>
+                            <div className="mdi mdi-star" style={{ marginTop: 9 }}>{ '\xa0\xa0' } FAVORITE</div>
                         )}
                 </PseudoButton>
                 <PseudoButton className="inputBtn" id="inputBtn" onClick={() => setVisible(!visible)}>
-                    <div className="mdi mdi-pencil-circle" style={{ marginTop:9 }}>{ '\xa0' } RENAME DEVICE</div>
+                    <div className="mdi mdi-pencil-circle" style={{ marginTop: 9 }}>{ '\xa0' } RENAME DEVICE</div>
                 </PseudoButton>
                 <ChangeName data={name} onchange={e => { onchange(e); }} visible={visible} />
             </div>
