@@ -40,9 +40,10 @@ import { func, bool } from 'prop-types';
 
 const ChangeName = ({ onchange, visible }) => {
     const handleChange = event => {
-        onchange(event.target.value);
+        onchange(event.target.value); // her må den til true
+        // DeviceSelector.setDeviceListVisible(true);
     };
-    const str = `core20-rename ${visible ? 'autofocus' : 'invisible'}`;
+    const str = `core20-rename ${visible ? '' : 'invisible'}`;
     return (
         <div style={{ textDecoration: 'white' }}>
             <input

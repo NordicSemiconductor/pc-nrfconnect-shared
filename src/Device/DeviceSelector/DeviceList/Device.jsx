@@ -97,7 +97,10 @@ const MoreDeviceInfo = ({ device, name, onchange }) => {
                 <PseudoButton className="inputBtn" id="inputBtn" onClick={() => setVisible(!visible)}>
                     <div className="mdi mdi-pencil-circle" style={{ marginTop: 9 }}>{ '\xa0' } RENAME DEVICE</div>
                 </PseudoButton>
-                <ChangeName data={name} onchange={e => { onchange(e); }} visible={visible} />
+                <PseudoButton onClick={() => setVisible(visible)}>
+                    <ChangeName data={name} onchange={e => { onchange(e); }} visible={visible} />
+                </PseudoButton>
+
             </div>
         </>
     );

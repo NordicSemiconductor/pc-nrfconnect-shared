@@ -61,27 +61,37 @@ DeviceDetails.defaultProps = {
     nickname: null,
 };
 
-
 const BasicDeviceInfo = ({
     nickname,
     device,
     whiteBackground,
     rightElement,
     setFav,
-}) => (
-    <div className="basic-device-info">
-        <DeviceIcon device={device} whiteBackground={whiteBackground} />
-        <DeviceDetails device={device} nickname={nickname} />
-        <div className="wrapper">
-            <PseudoButton
-                className={`mdi mdi-star ${getIsFavoriteDevice(String(device.serialNumber)) ? 'favorite' : ''}`}
-                onClick={() => setFav(String(device.serialNumber),
-                    !getIsFavoriteDevice(String(device.serialNumber)))}
-            />
-            {rightElement}
+}) => {
+    const favoriteColor = fav => {
+        if (fav) {
+            return 'goldenrod';
+        }
+        return 'powderblue';
+    };
+    return (
+        <div className="basic-device-info">
+            <DeviceIcon device={device} whiteBackground={whiteBackground} />
+            <DeviceDetails device={device} nickname={nickname} />
+            <div className="wrapper">
+                <PseudoButton
+                    className="mdi mdi-star"
+                    style={{
+                        color: favoriteColor(getIsFavoriteDevice(String(device.serialNumber))),
+                    }}
+                    onClick={() => setFav(String(device.serialNumber),
+                        !getIsFavoriteDevice(String(device.serialNumber)))}
+                />
+                {rightElement}
+            </div>
         </div>
-    </div>
-);
+    );
+};
 BasicDeviceInfo.propTypes = {
     nickname: node,
     device: deviceShape.isRequired,
