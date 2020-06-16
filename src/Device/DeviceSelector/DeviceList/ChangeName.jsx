@@ -36,7 +36,7 @@
 
 import React from 'react';
 import './change-name.scss';
-import { func } from 'prop-types';
+import { func, bool } from 'prop-types';
 
 const ChangeName = ({ onchange, visible }) => {
     const handleChange = event => {
@@ -57,7 +57,7 @@ const ChangeName = ({ onchange, visible }) => {
 
 ChangeName.propTypes = {
     onchange: func.isRequired,
-    visible: func.isRequired,
+    visible: bool.isRequired,
 };
 
 export default ChangeName;

@@ -36,7 +36,7 @@
 
 import React from 'react';
 import {
-    func, node, string, shape,
+    func, node, string,
 } from 'prop-types';
 
 import './pseudo-button.scss';
@@ -73,6 +73,11 @@ PseudoButton.propTypes = {
     onClick: func.isRequired,
     className: string,
     children: node,
+};
+
+PseudoButton.defaultProps = {
+    className: null,
+    children: null,
 };
 
 export default PseudoButton;
