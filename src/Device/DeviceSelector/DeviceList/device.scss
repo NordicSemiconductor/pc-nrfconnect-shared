@@ -55,6 +55,7 @@
         margin-left: -68px;
         margin-bottom: -13px;
         text-align: center;
+        font-weight: bolder;
         font-size: smaller;
         color: $nordic-blue;
         background-color: $white;
@@ -73,8 +74,6 @@
             margin-left: 130px;
             border: 0px solid $white;
             border-top: 1px solid $nordic-blue; 
-            z-index: 1;
-            visibility: visible;
         }
     }
 }

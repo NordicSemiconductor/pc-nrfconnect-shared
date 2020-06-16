@@ -36,7 +36,7 @@
 
 import React from 'react';
 import {
-    func, node, string,
+    func, node, string, shape,
 } from 'prop-types';
 
 import './pseudo-button.scss';
@@ -71,8 +71,8 @@ const PseudoButton = ({
 );
 PseudoButton.propTypes = {
     onClick: func.isRequired,
-    className: string, // eslint-disable-line react/require-default-props
-    children: node, // eslint-disable-line react/require-default-props
+    className: string,
+    children: node,
 };
 
 export default PseudoButton;

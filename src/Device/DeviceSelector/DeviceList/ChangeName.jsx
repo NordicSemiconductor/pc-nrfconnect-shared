@@ -38,14 +38,15 @@ import React from 'react';
 import './change-name.scss';
 import { func } from 'prop-types';
 
-const ChangeName = props => {
+const ChangeName = ({ onchange, visible }) => {
     const handleChange = event => {
-        props.onchange(event.target.value);
+        onchange(event.target.value);
     };
+    const str = `core20-rename ${visible ? '' : 'invisible'}`;
     return (
         <div style={{ textDecoration: 'white' }}>
             <input
-                className="core20-rename"
+                className={str}
                 placeholder="RENAME DEVICE"
                 id="name"
                 onChange={handleChange}
@@ -56,6 +57,7 @@ const ChangeName = props => {
 
 ChangeName.propTypes = {
     onchange: func.isRequired,
+    visible: func.isRequired,
 };
 
 export default ChangeName;

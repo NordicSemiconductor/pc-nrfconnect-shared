@@ -62,61 +62,47 @@ Serialports.propTypes = {
     ).isRequired,
 };
 
-const disabled = () => { // får feilmeldinger på disse
-    document.getElementById('name').style.visibility = 'visible';
-    document.getElementById('inputBtn').style.visibility = 'hidden';
+const MoreDeviceInfo = ({ device, name, onchange }) => {
+    const [visible, setVisible] = useState(false);
+    return (
+        <>
+            {(getDeviceNickname(String(device.serialNumber)) !== '')
+                ? (
+                    <div key="withoutNickname">
+                        {deviceName(device) || device.boardVersion || 'Unknown'}
+                        <Serialports ports={serialports(device)} />
+                    </div>
+                )
+                : (
+                    <div key="withNickname">
+                        <Serialports ports={serialports(device)} />
+                    </div>
+                )}
+            <div key="btn-group" className="btn-group">
+                <PseudoButton
+                    className="favBtn"
+                    onClick={
+                        () => setFavoriteDevice(device.serialNumber,
+                            !getIsFavoriteDevice(device.serialNumber))
+                    }
+                >
+                    {getIsFavoriteDevice(String(device.serialNumber))
+                        ? (
+                            <div className="mdi mdi-star-off" style={{ marginTop: 9 }}>{ '\xa0\xa0' } UN-FAVRITE</div>
+                        )
+                        : (
+                            <div className="mdi mdi-star" style={{ marginTop: 9 }}>{ '\xa0\xa0' } FAVORITE</div>
+                        )}
+                </PseudoButton>
+                <PseudoButton className="inputBtn" id="inputBtn" onClick={() => setVisible(!visible)}>
+                    <div className="mdi mdi-pencil-circle" style={{ marginTop: 9 }}>{ '\xa0' } RENAME DEVICE</div>
+                </PseudoButton>
+                <ChangeName data={name} onchange={e => { onchange(e); }} visible={visible} />
+            </div>
+        </>
+    );
 };
 
-const MoreDeviceInfo = ({ device, name, onchange }) => (
-    <>
-        {(getDeviceNickname(String(device.serialNumber)) !== '')
-            ? (
-                <div key="withoutNickname">
-                    {deviceName(device) || device.boardVersion || 'Unknown'}
-                    <Serialports ports={serialports(device)} />
-                </div>
-            )
-            : (
-                <div key="withNickname">
-                    <Serialports ports={serialports(device)} />
-                </div>
-            )}
-        <div key="btn-group" className="btn-group">
-            {// When having butten-object and not an pseudobutton-object the changing between
-            // favorite and un-favorite happens in real-time.
-            // So the code commented out will work as I want
-            // once changed to pseudo we have to click somewhere
-            // else on the deviceinfo to make it change
-            // I also have problems styling pseudobutton, and no problem styling button in scss
-            /* <button
-                className="favBtn"
-                onClick={
-                    () => setFavoriteDevice(device.serialNumber,
-                        !getIsFavoriteDevice(device.serialNumber))
-                }
-            >
-                {getIsFavoriteDevice(String(device.serialNumber)) ? 'UN-FAVRITE' : 'FAVORITE'}
-            </button> */}
-            <PseudoButton
-                className="favBtn"
-                onClick={
-                    () => setFavoriteDevice(device.serialNumber,
-                        !getIsFavoriteDevice(device.serialNumber))
-                }
-            >
-                {getIsFavoriteDevice(String(device.serialNumber))
-                    ? (
-                        <div className="mdi mdi-star-off">{ '\xa0\xa0' } UN-FAVRITE</div>
-                    )
-                    : (
-                        <div className="mdi mdi-star">{ '\xa0\xa0' } FAVORITE</div>
-                    )}
-            </PseudoButton>
-            <PseudoButton className="inputBtn" id="inputBtn" onClick={disabled}><div className="mdi mdi-pencil-circle">{ '\xa0' } RENAME DEVICE</div></PseudoButton>
-            <ChangeName data={name} onchange={e => { onchange(e); }} />
-        </div>
-    </>
-);
 
 MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
