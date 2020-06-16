@@ -20,6 +20,12 @@
         .wrapper {
             display: flex;
             flex-direction: column;
+            margin-right: 20px;
+            margin-left: 10px;
+
+        }
+        .favorite{
+            color: goldenrod !important ;
         }
     }
 }

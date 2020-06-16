@@ -70,9 +70,12 @@ const DeviceList = ({ devices, doSelectDevice }) => {
     /* devices.sort((x, y) => (
         (getIsFavoriteDevice(String(x.serialNumber)) === getIsFavoriteDevice(String(y.serialNumber))
         ) ? 0 : x ? -1 : 1)); */
+    const sorted = devices.sort((a, b) => (getIsFavoriteDevice(String(b.serialNumber))
+    - getIsFavoriteDevice(String(a.serialNumber))));
+
     return (
         <ul className="device-list">
-            {devices.map(device => (
+            {sorted.map(device => (
                 <li key={device.serialNumber}>
                     <Device
                         device={device}
