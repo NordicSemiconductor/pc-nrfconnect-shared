@@ -42,7 +42,7 @@ const ChangeName = ({ onchange, visible }) => {
     const handleChange = event => {
         onchange(event.target.value);
     };
-    const str = `core20-rename ${visible ? '' : 'invisible'}`;
+    const str = `core20-rename ${visible ? 'autofocus' : 'invisible'}`;
     return (
         <div style={{ textDecoration: 'white' }}>
             <input
