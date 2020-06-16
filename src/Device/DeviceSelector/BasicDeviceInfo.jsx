@@ -61,7 +61,6 @@ DeviceDetails.defaultProps = {
     nickname: null,
 };
 
-
 const BasicDeviceInfo = ({
     nickname,
     device,

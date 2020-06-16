@@ -71,7 +71,7 @@ const MoreDeviceInfo = ({
     const { favorite, serialNumber } = device;
     return (
         <>
-            {(getDeviceNickname(serialNumber !== ''))
+            {(getDeviceNickname(serialNumber) !== '')
                 ? (
                     <div key="withoutNickname">
                         {deviceName(device) || device.boardVersion || 'Unknown'}
@@ -99,7 +99,10 @@ const MoreDeviceInfo = ({
                 <PseudoButton className="inputBtn" id="inputBtn" onClick={() => setVisible(!visible)}>
                     <div className="mdi mdi-pencil-circle" style={{ marginTop: 9 }}>{ '\xa0' } RENAME DEVICE</div>
                 </PseudoButton>
-                <ChangeName data={name} onchange={e => { onchange(e); }} visible={visible} />
+                <PseudoButton onClick={() => setVisible(visible)}>
+                    <ChangeName data={name} onchange={e => { onchange(e); }} visible={visible} />
+                </PseudoButton>
+
             </div>
         </>
     );
