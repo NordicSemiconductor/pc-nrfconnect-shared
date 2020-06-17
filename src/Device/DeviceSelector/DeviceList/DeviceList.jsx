@@ -59,7 +59,6 @@ const NoDevicesConnected = () => (
 
 const DeviceList = ({ devices, doSelectDevice }) => {
     const selectedSerialNumber = useSelector(selectedSerialNumberSelector);
-
     if (devices.length === 0) return <NoDevicesConnected />;
     const sorted = devices.sort((a, b) => (b.favorite - a.favorite));
 

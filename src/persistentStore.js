@@ -34,7 +34,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 import Store from 'electron-store';
 
 export const store = new Store({ name: 'pc-nrfconnect-shared' });

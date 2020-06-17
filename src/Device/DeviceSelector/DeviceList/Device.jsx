@@ -46,7 +46,7 @@ import BasicDeviceInfo from '../BasicDeviceInfo';
 import ChangeName from './ChangeName';
 import './device.scss';
 import {
-    setDeviceNickname, getDeviceNickname,
+    setDeviceNickname,
     setFavoriteDevice,
 } from '../../../persistentStore';
 import { deviceFavorited, deviceNickname } from '../../deviceActions';
@@ -68,10 +68,10 @@ const MoreDeviceInfo = ({
     device, name, onchange, setFav,
 }) => {
     const [visible, setVisible] = useState(false);
-    const { favorite, serialNumber } = device;
+    const { favorite, nickname } = device;
     return (
         <>
-            {(getDeviceNickname(serialNumber) !== '')
+            {(nickname !== '' || null)
                 ? (
                     <div key="withoutNickname">
                         {deviceName(device) || device.boardVersion || 'Unknown'}
@@ -107,7 +107,6 @@ const MoreDeviceInfo = ({
     );
 };
 
-
 MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
     name: string,
@@ -118,7 +117,6 @@ MoreDeviceInfo.defaultProps = {
     name: null,
 };
 
-
 const additionalClassName = (moreVisible, isSelected) => {
     if (moreVisible) return 'more-infos-visible';
     if (isSelected) return 'selected-device';
@@ -128,7 +126,6 @@ const additionalClassName = (moreVisible, isSelected) => {
 const Device = ({ device, isSelected, doSelectDevice }) => {
     const dispatch = useDispatch();
     const [moreVisible, setMoreVisible] = useState(false);
-    // const [name, setName] = useState('');
     const { favorite, serialNumber, nickname } = device;
 
     const onchange = data => {
@@ -178,6 +175,5 @@ Device.propTypes = {
     isSelected: bool.isRequired,
     doSelectDevice: func.isRequired,
 };
-
 
 export default Device;
