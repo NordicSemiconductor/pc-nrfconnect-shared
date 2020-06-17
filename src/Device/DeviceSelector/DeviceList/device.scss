@@ -63,6 +63,9 @@
             border: 0px solid $white;
             border-top: 1px solid $nordic-blue;
             border-right: 1px solid $nordic-blue;
+            .star{
+                margin-top: 9px;
+            }
         }
         .inputBtn{
             position: absolute;

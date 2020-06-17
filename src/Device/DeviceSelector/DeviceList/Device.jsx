@@ -90,10 +90,10 @@ const MoreDeviceInfo = ({
                 >
                     {favorite
                         ? (
-                            <div className="mdi mdi-star-off" style={{ marginTop: 9 }}>{ '\xa0\xa0' } UN-FAVRITE</div>
+                            <div className="mdi mdi-star-off star">{ '\xa0\xa0' } UN-FAVORITE</div>
                         )
                         : (
-                            <div className="mdi mdi-star" style={{ marginTop: 9 }}>{ '\xa0\xa0' } FAVORITE</div>
+                            <div className="mdi mdi-star star">{ '\xa0\xa0' } FAVORITE</div>
                         )}
                 </PseudoButton>
                 <PseudoButton className="inputBtn" id="inputBtn" onClick={() => setVisible(!visible)}>
@@ -102,7 +102,6 @@ const MoreDeviceInfo = ({
                 <PseudoButton onClick={() => setVisible(visible)}>
                     <ChangeName data={name} onchange={e => { onchange(e); }} visible={visible} />
                 </PseudoButton>
-
             </div>
         </>
     );
@@ -129,7 +128,7 @@ const additionalClassName = (moreVisible, isSelected) => {
 const Device = ({ device, isSelected, doSelectDevice }) => {
     const dispatch = useDispatch();
     const [moreVisible, setMoreVisible] = useState(false);
-    const [name, setName] = useState();
+    const [name, setName] = useState('');
     const { favorite, serialNumber } = device;
 
     const onchange = data => {
@@ -162,15 +161,14 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
                 setFav={setFav}
             />
             <div className="more-infos">
-                {moreVisible
-                            && (
-                                <MoreDeviceInfo
-                                    device={device}
-                                    data={name}
-                                    onchange={e => { onchange(e); }}
-                                    setFav={setFav}
-                                />
-                            )}
+                {moreVisible && (
+                    <MoreDeviceInfo
+                        device={device}
+                        data={name}
+                        onchange={onchange}
+                        setFav={setFav}
+                    />
+                )}
             </div>
         </PseudoButton>
     );

@@ -45,7 +45,7 @@ import {
     DEVICE_FAVORITED,
 } from './deviceActions';
 
-import { getIsFavoriteDevice } from '../persistentStore';
+import { getIsFavoriteDevice, getDeviceNickname } from '../persistentStore';
 
 const noDialogShown = {
     isSetupDialogVisible: false,
@@ -67,6 +67,7 @@ export default (state = initialState, action) => {
             const devices = action.devices.map(d => ({
                 ...d,
                 favorite: getIsFavoriteDevice(d.serialNumber),
+                nickname: getDeviceNickname(d.serialNumber),
             }));
             return { ...state, devices };
         }

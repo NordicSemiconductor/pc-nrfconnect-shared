@@ -135,17 +135,12 @@ let deviceLister;
 let deviceSetupCallback;
 
 export const DEVICE_FAVORITED = 'DEVICE_FAVORITED';
-export const deviceFavorited = (serialNumber, isFavorite) => ({
+export const deviceFavorited = (serialNumber, isFavorite, nickname) => ({
     type: DEVICE_FAVORITED,
     serialNumber,
     isFavorite,
+    nickname,
 });
-
-/* export const DEVICE_UNFAVORITED = 'DEVICE_UNFAVORITED';
-const deviceUnFavorited = device => ({
-    type: DEVICE_UNFAVORITED,
-    device
-}) */
 
 const NORDIC_VENDOR_ID = 0x1915;
 const NORDIC_BOOTLOADER_PRODUCT_ID = 0x521f;

@@ -57,7 +57,7 @@ const blurAndInvoke = onClick => event => {
 // Motivation for this class: A normal button in HTML must not contain divs or other buttons,
 // but we do have things that behave like buttons and at the same time should contain such things
 const PseudoButton = ({
-    onClick, className = '', children,
+    onClick, className, children,
 }) => (
     <div
         role="button"

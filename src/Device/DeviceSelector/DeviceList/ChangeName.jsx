@@ -40,19 +40,16 @@ import { func, bool } from 'prop-types';
 
 const ChangeName = ({ onchange, visible }) => {
     const handleChange = event => {
-        onchange(event.target.value); // her må den til true
-        // DeviceSelector.setDeviceListVisible(true);
+        onchange(event.target.value);
     };
     const str = `core20-rename ${visible ? '' : 'invisible'}`;
     return (
-        <div style={{ textDecoration: 'white' }}>
-            <input
-                className={str}
-                placeholder="RENAME DEVICE"
-                id="name"
-                onChange={handleChange}
-            />
-        </div>
+        <input
+            className={str}
+            placeholder="RENAME DEVICE"
+            id="name"
+            onChange={handleChange}
+        />
     );
 };
 

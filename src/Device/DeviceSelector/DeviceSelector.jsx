@@ -82,7 +82,6 @@ const DeviceSelector = ({
         [deviceListing, dispatch, doDeselectDevice],
     );
 
-
     const doSelectDevice = device => {
         setDeviceListVisible(false);
         dispatch(selectDevice(device));
