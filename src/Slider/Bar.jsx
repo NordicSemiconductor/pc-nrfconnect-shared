@@ -61,5 +61,4 @@ Bar.propTypes = {
     range: rangeShape.isRequired,
 };
 
-
 export default Bar;
