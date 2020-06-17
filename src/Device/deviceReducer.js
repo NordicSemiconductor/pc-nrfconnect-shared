@@ -43,6 +43,7 @@ import {
     DEVICE_SETUP_INPUT_REQUIRED,
     DEVICE_SETUP_INPUT_RECEIVED,
     DEVICE_FAVORITED,
+    DEVICE_NICKNAME,
 } from './deviceActions';
 
 import { getIsFavoriteDevice, getDeviceNickname } from '../persistentStore';
@@ -102,6 +103,15 @@ export default (state = initialState, action) => {
             devices[i] = {
                 ...devices[i],
                 favorite: action.isFavorite,
+            };
+            return { ...state, devices: [...devices] };
+        }
+        case DEVICE_NICKNAME: {
+            const { devices } = state;
+            const i = devices.findIndex(({ serialNumber }) => serialNumber === action.serialNumber);
+            devices[i] = {
+                ...devices[i],
+                nickname: action.nickname,
             };
             return { ...state, devices: [...devices] };
         }

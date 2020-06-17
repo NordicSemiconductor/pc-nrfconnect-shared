@@ -49,7 +49,7 @@ import {
     setDeviceNickname, getDeviceNickname,
     setFavoriteDevice,
 } from '../../../persistentStore';
-import { deviceFavorited } from '../../deviceActions';
+import { deviceFavorited, deviceNickname } from '../../deviceActions';
 
 const Serialports = ({ ports }) => (
     <ul className="ports">
@@ -128,12 +128,12 @@ const additionalClassName = (moreVisible, isSelected) => {
 const Device = ({ device, isSelected, doSelectDevice }) => {
     const dispatch = useDispatch();
     const [moreVisible, setMoreVisible] = useState(false);
-    const [name, setName] = useState('');
-    const { favorite, serialNumber } = device;
+    // const [name, setName] = useState('');
+    const { favorite, serialNumber, nickname } = device;
 
     const onchange = data => {
-        setName(data);
         setDeviceNickname(serialNumber, data);
+        dispatch(deviceNickname(serialNumber, data));
     };
 
     const showMoreInfos = (
@@ -154,7 +154,7 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
             onClick={() => doSelectDevice(device)}
         >
             <BasicDeviceInfo
-                nickname={name}
+                nickname={nickname}
                 device={device}
                 whiteBackground={false}
                 rightElement={showMoreInfos}
@@ -164,7 +164,7 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
                 {moreVisible && (
                     <MoreDeviceInfo
                         device={device}
-                        data={name}
+                        data={nickname}
                         onchange={onchange}
                         setFav={setFav}
                     />

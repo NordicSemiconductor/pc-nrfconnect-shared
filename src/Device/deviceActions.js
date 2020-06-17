@@ -135,10 +135,16 @@ let deviceLister;
 let deviceSetupCallback;
 
 export const DEVICE_FAVORITED = 'DEVICE_FAVORITED';
-export const deviceFavorited = (serialNumber, isFavorite, nickname) => ({
+export const deviceFavorited = (serialNumber, isFavorite) => ({
     type: DEVICE_FAVORITED,
     serialNumber,
     isFavorite,
+});
+
+export const DEVICE_NICKNAME = 'DEVICE_NICKNAME';
+export const deviceNickname = (serialNumber, nickname) => ({
+    type: DEVICE_NICKNAME,
+    serialNumber,
     nickname,
 });
 
