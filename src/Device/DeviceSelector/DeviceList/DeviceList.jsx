@@ -60,7 +60,13 @@ const NoDevicesConnected = () => (
 const DeviceList = ({ devices, doSelectDevice }) => {
     const selectedSerialNumber = useSelector(selectedSerialNumberSelector);
     if (devices.length === 0) return <NoDevicesConnected />;
-    const sorted = devices.sort((a, b) => (b.favorite - a.favorite));
+    const sorted = devices.sort((a, b) => {
+        if (a.favorite !== b.favorite) {
+            return a.favorite ? -1 : 1;
+        }
+        
+        return a.nickname < b.nickname ? -1 : 1;
+      });
 
     return (
         <ul className="device-list">
