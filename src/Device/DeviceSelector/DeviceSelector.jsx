@@ -126,12 +126,12 @@ DeviceSelector.propTypes = {
         serialport: bool,
         jlink: bool,
     }).isRequired,
+    /* eslint-disable react/require-default-props */
     deviceSetup: exact({
         jprog: object,
         dfu: object,
         needSerialport: bool,
-    }).isRequired,
-    /* eslint-disable react/require-default-props */
+    }),
     releaseCurrentDevice: func, // () => {}
     onDeviceSelected: func, // (device) => {}
     onDeviceDeselected: func, // () => {}

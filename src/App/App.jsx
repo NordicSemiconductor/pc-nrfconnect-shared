@@ -101,14 +101,15 @@ ConnectedApp.propTypes = {
     sidePanel: node.isRequired,
 };
 
-const App = ({ appReducer, ...props }) => (
+const noopReducer = state => state;
+const App = ({ appReducer = noopReducer, ...props }) => (
     <ConnectedToStore appReducer={appReducer}>
         <ConnectedApp {...props} />
     </ConnectedToStore>
 );
 
 App.propTypes = {
-    appReducer: func.isRequired,
+    appReducer: func, // eslint-disable-line react/require-default-props
 };
 
 export default App;
