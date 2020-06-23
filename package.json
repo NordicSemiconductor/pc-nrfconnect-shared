@@ -85,7 +85,8 @@
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$": "<rootDir>/mocks/fileMock.js",
       "\\.(css|scss)$": "<rootDir>/mocks/emptyMock.js",
-      "electron": "<rootDir>/mocks/electronMock.js",
+      "^electron$": "<rootDir>/mocks/electronMock.js",
+      "^electron-store$": "<rootDir>/mocks/electronStoreMock.js",
       "pc-nrfjprog-js|nrf-device-lister|nrf-device-setup": "<rootDir>/mocks/emptyMock.js"
     },
     "transform": {
