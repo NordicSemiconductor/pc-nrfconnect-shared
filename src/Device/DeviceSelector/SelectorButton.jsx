@@ -47,14 +47,14 @@ import BasicDeviceInfo from './BasicDeviceInfo';
 import './selector-button.scss';
 import deviceShape from './deviceShape';
 
-const SelectDevice = ({ rightElement }) => (
+const SelectDevice = ({ toggle }) => (
     <>
         <div className="select-device">Select device</div>
-        {rightElement}
+        {toggle}
     </>
 );
 SelectDevice.propTypes = {
-    rightElement: node.isRequired,
+    toggle: node.isRequired,
 };
 
 const DisconnectDevice = ({ doDeselectDevice }) => (
@@ -67,16 +67,16 @@ DisconnectDevice.propTypes = {
     doDeselectDevice: func.isRequired,
 };
 
-const SelectedDevice = ({ device, doDeselectDevice, rightElement }) => (
+const SelectedDevice = ({ device, doDeselectDevice, toggle }) => (
     <>
-        <BasicDeviceInfo device={device} whiteBackground rightElement={rightElement} />
+        <BasicDeviceInfo device={device} whiteBackground toggle={toggle} />
         <DisconnectDevice doDeselectDevice={doDeselectDevice} />
     </>
 );
 SelectedDevice.propTypes = {
     device: deviceShape.isRequired,
     doDeselectDevice: func.isRequired,
-    rightElement: node.isRequired,
+    toggle: node.isRequired,
 };
 
 const SelectorButton = ({ deviceListVisible, setDeviceListVisible, doDeselectDevice }) => {
@@ -91,12 +91,12 @@ const SelectorButton = ({ deviceListVisible, setDeviceListVisible, doDeselectDev
             {device == null
                 ? (
                     <SelectDevice
-                        rightElement={showListIndicator}
+                        toggle={showListIndicator}
                     />
                 )
                 : (
                     <SelectedDevice
-                        rightElement={showListIndicator}
+                        toggle={showListIndicator}
                         device={device}
                         doDeselectDevice={doDeselectDevice}
                     />

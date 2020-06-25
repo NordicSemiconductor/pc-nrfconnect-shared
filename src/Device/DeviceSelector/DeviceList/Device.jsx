@@ -149,7 +149,7 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
             <BasicDeviceInfo
                 device={device}
                 whiteBackground={false}
-                rightElement={showMoreInfos}
+                toggle={showMoreInfos}
                 setFav={setFav}
             />
             <div className="more-infos">

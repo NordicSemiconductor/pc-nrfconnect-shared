@@ -53,36 +53,37 @@ DeviceDetails.propTypes = {
     device: deviceShape.isRequired,
 };
 
+const FavoriteStar = ({ device, setFav }) => (
+    <PseudoButton
+        className={`mdi mdi-star ${device.favorite ? 'favorite' : ''}`}
+        onClick={() => setFav && setFav()}
+    />
+);
+FavoriteStar.propTypes = {
+    device: deviceShape.isRequired,
+    setFav: func, // eslint-disable-line react/require-default-props
+};
+
 const BasicDeviceInfo = ({
     device,
     whiteBackground,
-    rightElement,
+    toggle,
     setFav,
-}) => {
-    const { favorite } = device;
-    return (
-        <div className="basic-device-info">
-            <DeviceIcon device={device} whiteBackground={whiteBackground} />
-            <DeviceDetails device={device} />
-            <div className="wrapper">
-                <PseudoButton
-                    className={`mdi mdi-star ${favorite ? 'favorite' : ''}`}
-                    onClick={() => setFav && setFav()}
-                />
-                {rightElement}
-            </div>
+}) => (
+    <div className="basic-device-info">
+        <DeviceIcon device={device} whiteBackground={whiteBackground} />
+        <DeviceDetails device={device} />
+        <div className="right-elements">
+            <FavoriteStar device={device} setFav={setFav} />
+            {toggle}
         </div>
-    );
-};
+    </div>
+);
 BasicDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
     whiteBackground: bool.isRequired,
-    rightElement: node.isRequired,
-    setFav: func,
-};
-
-BasicDeviceInfo.defaultProps = {
-    setFav: null,
+    toggle: node.isRequired,
+    setFav: func, // eslint-disable-line react/require-default-props
 };
 
 export default BasicDeviceInfo;
