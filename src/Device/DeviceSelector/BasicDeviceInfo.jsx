@@ -43,23 +43,17 @@ import PseudoButton from '../../PseudoButton/PseudoButton';
 
 import './basic-device-info.scss';
 
-const DeviceDetails = ({ nickname, device }) => (
+const DeviceDetails = ({ device }) => (
     <div className="details">
-        <div className="name">{nickname || deviceName(device) || device.boardVersion || 'Unknown'}</div>
+        <div className="name">{device.nickname || deviceName(device) || device.boardVersion || 'Unknown'}</div>
         <div className="serial-number">{device.serialNumber}</div>
     </div>
 );
 DeviceDetails.propTypes = {
     device: deviceShape.isRequired,
-    nickname: node,
-};
-
-DeviceDetails.defaultProps = {
-    nickname: null,
 };
 
 const BasicDeviceInfo = ({
-    nickname,
     device,
     whiteBackground,
     rightElement,
@@ -69,7 +63,7 @@ const BasicDeviceInfo = ({
     return (
         <div className="basic-device-info">
             <DeviceIcon device={device} whiteBackground={whiteBackground} />
-            <DeviceDetails device={device} nickname={nickname} />
+            <DeviceDetails device={device} />
             <div className="wrapper">
                 <PseudoButton
                     className={`mdi mdi-star ${favorite ? 'favorite' : ''}`}
@@ -81,7 +75,6 @@ const BasicDeviceInfo = ({
     );
 };
 BasicDeviceInfo.propTypes = {
-    nickname: node,
     device: deviceShape.isRequired,
     whiteBackground: bool.isRequired,
     rightElement: node.isRequired,
@@ -89,7 +82,6 @@ BasicDeviceInfo.propTypes = {
 };
 
 BasicDeviceInfo.defaultProps = {
-    nickname: null,
     setFav: null,
 };
 

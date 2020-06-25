@@ -37,6 +37,7 @@
 import { shape, string } from 'prop-types';
 
 export default shape({
+    nickname: string,
     serialNumber: string.isRequired,
     boardVersion: string,
     usb: shape({

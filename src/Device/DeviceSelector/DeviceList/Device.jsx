@@ -123,7 +123,7 @@ const additionalClassName = (moreVisible, isSelected) => {
 const Device = ({ device, isSelected, doSelectDevice }) => {
     const dispatch = useDispatch();
     const [moreVisible, setMoreVisible] = useState(false);
-    const { favorite, serialNumber, nickname } = device;
+    const { favorite, serialNumber } = device;
 
     const onchange = data => {
         dispatch(deviceNickname(serialNumber, data));
@@ -147,7 +147,6 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
             onClick={() => doSelectDevice(device)}
         >
             <BasicDeviceInfo
-                nickname={nickname}
                 device={device}
                 whiteBackground={false}
                 rightElement={showMoreInfos}
@@ -157,7 +156,6 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
                 {moreVisible && (
                     <MoreDeviceInfo
                         device={device}
-                        data={nickname}
                         onchange={onchange}
                         setFav={setFav}
                     />
