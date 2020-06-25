@@ -60,6 +60,14 @@ Serialports.propTypes = {
     ).isRequired,
 };
 
+const deviceNameIfNicknameIsSet = device => {
+    if (device.nickname === '') {
+        return null;
+    }
+
+    return deviceName(device) || device.boardVersion || 'Unknown';
+};
+
 const MoreDeviceInfo = ({ device, name }) => {
     const dispatch = useDispatch();
     const [visible, setVisible] = useState(false);
@@ -72,22 +80,14 @@ const MoreDeviceInfo = ({ device, name }) => {
         dispatch(deviceNickname(device.serialNumber, newNickname));
     };
 
-    const { favorite, nickname } = device;
+    const { favorite } = device;
     return (
         <>
-            {(nickname !== '' || null)
-                ? (
-                    <div key="withoutNickname">
-                        {deviceName(device) || device.boardVersion || 'Unknown'}
-                        <Serialports ports={serialports(device)} />
-                    </div>
-                )
-                : (
-                    <div key="withNickname">
-                        <Serialports ports={serialports(device)} />
-                    </div>
-                )}
-            <div key="btn-group" className="btn-group">
+            <div>
+                {deviceNameIfNicknameIsSet(device)}
+                <Serialports ports={serialports(device)} />
+            </div>
+            <div className="btn-group">
                 <PseudoButton
                     className="favBtn"
                     onClick={setFav}
