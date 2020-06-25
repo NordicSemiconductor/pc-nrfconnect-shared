@@ -38,7 +38,7 @@ import { bool, shape, string } from 'prop-types';
 
 export default shape({
     serialNumber: string.isRequired,
-    nickname: string,
+    nickname: string.isRequired,
     favorite: bool.isRequired,
     boardVersion: string,
     usb: shape({
