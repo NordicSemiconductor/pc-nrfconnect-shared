@@ -45,7 +45,6 @@ import deviceShape from '../deviceShape';
 import BasicDeviceInfo from '../BasicDeviceInfo';
 import ChangeName from './ChangeName';
 import './device.scss';
-import { setFavoriteDevice } from '../../../persistentStore';
 import { deviceFavorited, deviceNickname } from '../../deviceActions';
 
 const Serialports = ({ ports }) => (
@@ -137,7 +136,6 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
     );
 
     const setFav = () => {
-        setFavoriteDevice(serialNumber, !favorite);
         dispatch(deviceFavorited(serialNumber, !favorite));
     };
 

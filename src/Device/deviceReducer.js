@@ -46,7 +46,12 @@ import {
     DEVICE_NICKNAME,
 } from './deviceActions';
 
-import { getIsFavoriteDevice, getDeviceNickname, setDeviceNickname } from '../persistentStore';
+import {
+    getIsFavoriteDevice,
+    setFavoriteDevice,
+    getDeviceNickname,
+    setDeviceNickname,
+} from '../persistentStore';
 
 const noDialogShown = {
     isSetupDialogVisible: false,
@@ -98,6 +103,8 @@ export default (state = initialState, action) => {
         case DEVICE_SETUP_INPUT_RECEIVED:
             return { ...state, isSetupWaitingForUserInput: false };
         case DEVICE_FAVORITED: {
+            setFavoriteDevice(action.serialNumber, action.isFavorite);
+
             const { devices } = state;
             const i = devices.findIndex(({ serialNumber }) => serialNumber === action.serialNumber);
             devices[i] = {
