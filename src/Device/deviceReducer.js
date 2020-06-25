@@ -46,7 +46,7 @@ import {
     DEVICE_NICKNAME,
 } from './deviceActions';
 
-import { getIsFavoriteDevice, getDeviceNickname } from '../persistentStore';
+import { getIsFavoriteDevice, getDeviceNickname, setDeviceNickname } from '../persistentStore';
 
 const noDialogShown = {
     isSetupDialogVisible: false,
@@ -107,6 +107,8 @@ export default (state = initialState, action) => {
             return { ...state, devices: [...devices] };
         }
         case DEVICE_NICKNAME: {
+            setDeviceNickname(action.serialNumber, action.nickname);
+
             const { devices } = state;
             const i = devices.findIndex(({ serialNumber }) => serialNumber === action.serialNumber);
             devices[i] = {

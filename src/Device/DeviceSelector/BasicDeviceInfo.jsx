@@ -39,16 +39,13 @@ import { bool, node, func } from 'prop-types';
 import { deviceName } from '../deviceInfo/deviceInfo';
 import deviceShape from './deviceShape';
 import DeviceIcon from './DeviceIcon';
-import {
-    getDeviceNickname,
-} from '../../persistentStore';
 import PseudoButton from '../../PseudoButton/PseudoButton';
 
 import './basic-device-info.scss';
 
 const DeviceDetails = ({ nickname, device }) => (
     <div className="details">
-        <div className="name">{nickname || getDeviceNickname(device.serialNumber) || deviceName(device) || device.boardVersion || 'Unknown'}</div>
+        <div className="name">{nickname || deviceName(device) || device.boardVersion || 'Unknown'}</div>
         <div className="serial-number">{device.serialNumber}</div>
     </div>
 );
