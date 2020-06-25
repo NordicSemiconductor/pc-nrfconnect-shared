@@ -60,14 +60,16 @@ Serialports.propTypes = {
     ).isRequired,
 };
 
-const MoreDeviceInfo = ({
-    device, name, onchange,
-}) => {
+const MoreDeviceInfo = ({ device, name }) => {
     const dispatch = useDispatch();
     const [visible, setVisible] = useState(false);
 
     const setFav = () => {
         dispatch(deviceFavorited(device.serialNumber, !device.favorite));
+    };
+
+    const setDeviceNickname = newNickname => {
+        dispatch(deviceNickname(device.serialNumber, newNickname));
     };
 
     const { favorite, nickname } = device;
@@ -102,7 +104,7 @@ const MoreDeviceInfo = ({
                     <div className="mdi mdi-pencil-circle" style={{ marginTop: 9 }}>{ '\xa0' } RENAME DEVICE</div>
                 </PseudoButton>
                 <PseudoButton onClick={() => setVisible(visible)}>
-                    <ChangeName data={name} onchange={e => { onchange(e); }} visible={visible} />
+                    <ChangeName data={name} onchange={setDeviceNickname} visible={visible} />
                 </PseudoButton>
             </div>
         </>
@@ -112,7 +114,6 @@ const MoreDeviceInfo = ({
 MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
     name: string,
-    onchange: func.isRequired,
 };
 MoreDeviceInfo.defaultProps = {
     name: null,
@@ -125,13 +126,7 @@ const additionalClassName = (moreVisible, isSelected) => {
 };
 
 const Device = ({ device, isSelected, doSelectDevice }) => {
-    const dispatch = useDispatch();
     const [moreVisible, setMoreVisible] = useState(false);
-    const { serialNumber } = device;
-
-    const onchange = data => {
-        dispatch(deviceNickname(serialNumber, data));
-    };
 
     const showMoreInfos = (
         <PseudoButton
@@ -151,12 +146,7 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
                 toggle={showMoreInfos}
             />
             <div className="more-infos">
-                {moreVisible && (
-                    <MoreDeviceInfo
-                        device={device}
-                        onchange={onchange}
-                    />
-                )}
+                {moreVisible && (<MoreDeviceInfo device={device} />)}
             </div>
         </PseudoButton>
     );
