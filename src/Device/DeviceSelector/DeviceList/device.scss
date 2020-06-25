@@ -8,30 +8,19 @@
         padding-top: 20px;
         padding-bottom: 13px;
 
-        .name{
-            font-size : 15; 
-            font-weight: 400;
-        }
-
-        .device-box{
-            display: flex;
-            flex-direction: row;
-            size: 100;
-        }
-
         &:hover, &.more-infos-visible {
             background: $white;
             color: $primary-darkened;
             .serial-number { color: $primary; }
         }
-        
+
         &.selected-device:not(:hover) {
             background: $primary-darkened;
             &.more-infos-visible{
                 background: lavender;
             }
         }
-        
+
         .more-infos {
             padding-left: 68px;
 
@@ -42,9 +31,8 @@
                 margin-top: 1em;
             }
         }
-        
-        
     }
+
     .btn-group {
         margin-top: 10px;
         position: relative;
@@ -56,7 +44,7 @@
         font-size: smaller;
         color: $nordic-blue;
         background-color: $white;
-    
+
         .favBtn{
             width: 130px;
             height: 100%;
@@ -69,12 +57,11 @@
         }
         .inputBtn{
             position: absolute;
-            width: 130px; 
+            width: 130px;
             height: 35px;
             margin-left: 130px;
             border: 0px solid $white;
-            border-top: 1px solid $nordic-blue; 
+            border-top: 1px solid $nordic-blue;
         }
     }
 }
-

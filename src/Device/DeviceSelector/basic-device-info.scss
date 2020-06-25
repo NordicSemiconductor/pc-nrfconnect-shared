@@ -17,6 +17,10 @@
         .serial-number {
             color: $gray-900;
         }
+        .name {
+            font-size: 15px;
+            font-weight: 400;
+        }
         .wrapper {
             display: flex;
             flex-direction: column;
