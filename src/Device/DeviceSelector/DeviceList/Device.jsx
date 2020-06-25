@@ -61,9 +61,15 @@ Serialports.propTypes = {
 };
 
 const MoreDeviceInfo = ({
-    device, name, onchange, setFav,
+    device, name, onchange,
 }) => {
+    const dispatch = useDispatch();
     const [visible, setVisible] = useState(false);
+
+    const setFav = () => {
+        dispatch(deviceFavorited(device.serialNumber, !device.favorite));
+    };
+
     const { favorite, nickname } = device;
     return (
         <>
@@ -107,7 +113,6 @@ MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
     name: string,
     onchange: func.isRequired,
-    setFav: func.isRequired,
 };
 MoreDeviceInfo.defaultProps = {
     name: null,
@@ -122,7 +127,7 @@ const additionalClassName = (moreVisible, isSelected) => {
 const Device = ({ device, isSelected, doSelectDevice }) => {
     const dispatch = useDispatch();
     const [moreVisible, setMoreVisible] = useState(false);
-    const { favorite, serialNumber } = device;
+    const { serialNumber } = device;
 
     const onchange = data => {
         dispatch(deviceNickname(serialNumber, data));
@@ -135,10 +140,6 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
         />
     );
 
-    const setFav = () => {
-        dispatch(deviceFavorited(serialNumber, !favorite));
-    };
-
     return (
         <PseudoButton
             className={`device ${additionalClassName(moreVisible, isSelected)}`}
@@ -148,14 +149,12 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
                 device={device}
                 whiteBackground={false}
                 toggle={showMoreInfos}
-                setFav={setFav}
             />
             <div className="more-infos">
                 {moreVisible && (
                     <MoreDeviceInfo
                         device={device}
                         onchange={onchange}
-                        setFav={setFav}
                     />
                 )}
             </div>

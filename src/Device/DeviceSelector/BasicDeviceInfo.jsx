@@ -35,11 +35,13 @@
  */
 
 import React from 'react';
-import { bool, node, func } from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { bool, node } from 'prop-types';
+import PseudoButton from '../../PseudoButton/PseudoButton';
+import { deviceFavorited } from '../deviceActions';
 import { deviceName } from '../deviceInfo/deviceInfo';
 import deviceShape from './deviceShape';
 import DeviceIcon from './DeviceIcon';
-import PseudoButton from '../../PseudoButton/PseudoButton';
 
 import './basic-device-info.scss';
 
@@ -53,28 +55,33 @@ DeviceDetails.propTypes = {
     device: deviceShape.isRequired,
 };
 
-const FavoriteStar = ({ device, setFav }) => (
-    <PseudoButton
-        className={`mdi mdi-star ${device.favorite ? 'favorite' : ''}`}
-        onClick={() => setFav && setFav()}
-    />
-);
+const FavoriteStar = ({ device }) => {
+    const dispatch = useDispatch();
+    const toggleFavorite = () => {
+        dispatch(deviceFavorited(device.serialNumber, !device.favorite));
+    };
+
+    return (
+        <PseudoButton
+            className={`mdi mdi-star ${device.favorite ? 'favorite' : ''}`}
+            onClick={toggleFavorite}
+        />
+    );
+};
 FavoriteStar.propTypes = {
     device: deviceShape.isRequired,
-    setFav: func, // eslint-disable-line react/require-default-props
 };
 
 const BasicDeviceInfo = ({
     device,
     whiteBackground,
     toggle,
-    setFav,
 }) => (
     <div className="basic-device-info">
         <DeviceIcon device={device} whiteBackground={whiteBackground} />
         <DeviceDetails device={device} />
         <div className="right-elements">
-            <FavoriteStar device={device} setFav={setFav} />
+            <FavoriteStar device={device} />
             {toggle}
         </div>
     </div>
@@ -83,7 +90,6 @@ BasicDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
     whiteBackground: bool.isRequired,
     toggle: node.isRequired,
-    setFav: func, // eslint-disable-line react/require-default-props
 };
 
 export default BasicDeviceInfo;

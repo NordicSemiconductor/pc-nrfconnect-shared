@@ -34,11 +34,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { shape, string } from 'prop-types';
+import { bool, shape, string } from 'prop-types';
 
 export default shape({
-    nickname: string,
     serialNumber: string.isRequired,
+    nickname: string,
+    favorite: bool.isRequired,
     boardVersion: string,
     usb: shape({
         product: string,
