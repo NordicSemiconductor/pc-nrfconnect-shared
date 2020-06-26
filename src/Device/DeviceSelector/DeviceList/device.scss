@@ -33,9 +33,8 @@
         }
     }
 
-    .btn-group {
+    .favorite-and-rename {
         margin-top: 10px;
-        position: relative;
         height: 35px;
         margin-left: -68px;
         margin-bottom: -13px;
@@ -45,17 +44,17 @@
         color: $nordic-blue;
         background-color: $white;
 
-        .favBtn{
+        .favBtn {
             width: 130px;
             height: 100%;
             border: 0px solid $white;
             border-top: 1px solid $nordic-blue;
             border-right: 1px solid $nordic-blue;
-            .star{
+            .star {
                 margin-top: 9px;
             }
         }
-        .inputBtn{
+        .inputBtn {
             position: absolute;
             width: 130px;
             height: 35px;

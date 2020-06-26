@@ -39,6 +39,7 @@ import { useDispatch } from 'react-redux';
 import {
     arrayOf, bool, func, shape, string,
 } from 'prop-types';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { serialports, deviceName } from '../../deviceInfo/deviceInfo';
 import PseudoButton from '../../../PseudoButton/PseudoButton';
 import deviceShape from '../deviceShape';
@@ -68,55 +69,70 @@ const deviceNameIfNicknameIsSet = device => {
     return deviceName(device) || device.boardVersion || 'Unknown';
 };
 
-const MoreDeviceInfo = ({ device, name }) => {
+const MakeDeviceFavorite = ({ device }) => {
     const dispatch = useDispatch();
-    const [visible, setVisible] = useState(false);
 
     const setFav = () => {
         dispatch(deviceFavorited(device.serialNumber, !device.favorite));
     };
 
+    return (
+        <PseudoButton
+            className="favBtn"
+            onClick={setFav}
+        >
+            {device.favorite
+                ? (
+                    <div className="mdi mdi-star-off star">{ '\xa0\xa0' } UN-FAVORITE</div>
+                )
+                : (
+                    <div className="mdi mdi-star star">{ '\xa0\xa0' } FAVORITE</div>
+                )}
+        </PseudoButton>
+    );
+};
+MakeDeviceFavorite.propTypes = {
+    device: deviceShape.isRequired,
+};
+
+const RenameDevice = ({ device }) => {
+    const dispatch = useDispatch();
+    const [visible, setVisible] = useState(false);
+
     const setDeviceNickname = newNickname => {
         dispatch(deviceNickname(device.serialNumber, newNickname));
     };
 
-    const { favorite } = device;
     return (
         <>
-            <div>
-                {deviceNameIfNicknameIsSet(device)}
-                <Serialports ports={serialports(device)} />
-            </div>
-            <div className="btn-group">
-                <PseudoButton
-                    className="favBtn"
-                    onClick={setFav}
-                >
-                    {favorite
-                        ? (
-                            <div className="mdi mdi-star-off star">{ '\xa0\xa0' } UN-FAVORITE</div>
-                        )
-                        : (
-                            <div className="mdi mdi-star star">{ '\xa0\xa0' } FAVORITE</div>
-                        )}
-                </PseudoButton>
-                <PseudoButton className="inputBtn" id="inputBtn" onClick={() => setVisible(!visible)}>
-                    <div className="mdi mdi-pencil-circle" style={{ marginTop: 9 }}>{ '\xa0' } RENAME DEVICE</div>
-                </PseudoButton>
-                <PseudoButton onClick={() => setVisible(visible)}>
-                    <ChangeName data={name} onchange={setDeviceNickname} visible={visible} />
-                </PseudoButton>
-            </div>
+            <PseudoButton className="inputBtn" id="inputBtn" onClick={() => setVisible(!visible)}>
+                <div className="mdi mdi-pencil-circle" style={{ marginTop: 9 }}>{ '\xa0' } RENAME DEVICE</div>
+            </PseudoButton>
+            <PseudoButton onClick={() => setVisible(visible)}>
+                <ChangeName onchange={setDeviceNickname} visible={visible} />
+            </PseudoButton>
         </>
     );
 };
+RenameDevice.propTypes = {
+    device: deviceShape.isRequired,
+};
+
+const MoreDeviceInfo = ({ device }) => (
+    <>
+        <div>
+            {deviceNameIfNicknameIsSet(device)}
+            <Serialports ports={serialports(device)} />
+        </div>
+        <ButtonGroup className="favorite-and-rename">
+            <MakeDeviceFavorite device={device} />
+            <RenameDevice device={device} />
+        </ButtonGroup>
+    </>
+);
 
 MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
-    name: string,
-};
-MoreDeviceInfo.defaultProps = {
-    name: null,
 };
 
 const additionalClassName = (moreVisible, isSelected) => {
