@@ -45,8 +45,10 @@ import PseudoButton from '../../../PseudoButton/PseudoButton';
 import deviceShape from '../deviceShape';
 import BasicDeviceInfo from '../BasicDeviceInfo';
 import ChangeName from './ChangeName';
+import { deviceNickname } from '../../deviceActions';
+import { MakeDeviceFavorite } from '../Favorite';
+
 import './device.scss';
-import { deviceFavorited, deviceNickname } from '../../deviceActions';
 
 const Serialports = ({ ports }) => (
     <ul className="ports">
@@ -67,32 +69,6 @@ const deviceNameIfNicknameIsSet = device => {
     }
 
     return deviceName(device) || device.boardVersion || 'Unknown';
-};
-
-const MakeDeviceFavorite = ({ device }) => {
-    const dispatch = useDispatch();
-
-    const setFav = () => {
-        dispatch(deviceFavorited(device.serialNumber, !device.favorite));
-    };
-
-    return (
-        <PseudoButton
-            className="favBtn"
-            onClick={setFav}
-        >
-            {device.favorite
-                ? (
-                    <div className="mdi mdi-star-off star">{ '\xa0\xa0' } UN-FAVORITE</div>
-                )
-                : (
-                    <div className="mdi mdi-star star">{ '\xa0\xa0' } FAVORITE</div>
-                )}
-        </PseudoButton>
-    );
-};
-MakeDeviceFavorite.propTypes = {
-    device: deviceShape.isRequired,
 };
 
 const RenameDevice = ({ device }) => {

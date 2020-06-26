@@ -35,42 +35,48 @@
  */
 
 import React from 'react';
-import { bool, node } from 'prop-types';
-import { deviceName } from '../deviceInfo/deviceInfo';
+import { useDispatch } from 'react-redux';
+import PseudoButton from '../../PseudoButton/PseudoButton';
+import { deviceFavorited } from '../deviceActions';
 import deviceShape from './deviceShape';
-import DeviceIcon from './DeviceIcon';
-import { FavoriteIndicator } from './Favorite';
 
-import './basic-device-info.scss';
+import './favorite.scss';
 
-const DeviceDetails = ({ device }) => (
-    <div className="details">
-        <div className="name">{device.nickname || deviceName(device) || device.boardVersion || 'Unknown'}</div>
-        <div className="serial-number">{device.serialNumber}</div>
-    </div>
-);
-DeviceDetails.propTypes = {
+export const MakeDeviceFavorite = ({ device }) => {
+    const dispatch = useDispatch();
+
+    const toggleFavorite = () => {
+        dispatch(deviceFavorited(device.serialNumber, !device.favorite));
+    };
+
+    return (
+        <PseudoButton
+            className="make-favorite"
+            onClick={toggleFavorite}
+        >
+            <span className={`mdi star ${device.favorite ? 'mdi-star-off' : 'mdi-star'}`} />
+            {device.favorite ? 'Un-favorite' : 'Favorite'}
+        </PseudoButton>
+    );
+};
+MakeDeviceFavorite.propTypes = {
     device: deviceShape.isRequired,
 };
 
-const BasicDeviceInfo = ({
-    device,
-    whiteBackground,
-    toggle,
-}) => (
-    <div className="basic-device-info">
-        <DeviceIcon device={device} whiteBackground={whiteBackground} />
-        <DeviceDetails device={device} />
-        <div className="right-elements">
-            <FavoriteIndicator device={device} />
-            {toggle}
-        </div>
-    </div>
-);
-BasicDeviceInfo.propTypes = {
-    device: deviceShape.isRequired,
-    whiteBackground: bool.isRequired,
-    toggle: node.isRequired,
-};
+export const FavoriteIndicator = ({ device }) => {
+    const dispatch = useDispatch();
 
-export default BasicDeviceInfo;
+    const toggleFavorite = () => {
+        dispatch(deviceFavorited(device.serialNumber, !device.favorite));
+    };
+
+    return (
+        <PseudoButton
+            className={`mdi mdi-star ${device.favorite ? 'is-favorite' : ''}`}
+            onClick={toggleFavorite}
+        />
+    );
+};
+FavoriteIndicator.propTypes = {
+    device: deviceShape.isRequired,
+};
