@@ -38,7 +38,7 @@ import reactGA from 'react-ga';
 import si from 'systeminformation';
 import shasum from 'shasum';
 
-const trackId = 'UA-160398011-1';
+const trackId = 'UA-22498474-5';
 /**
  * Initialize instance to send user data
  * @param {*} appName the app's name e.g. Launcher
@@ -64,6 +64,11 @@ const init = async appName => {
 
     reactGA.set({
         checkProtocolTask: null,
+        // According to Nordic Personal Data Processing Protocol for nRF Connect for Desktop
+        // https://projecttools.nordicsemi.no/confluence/display/ISMS/nRF+Connect+for+Desktop
+        // we set ip as anonymized in Google Analytics as described on page
+        // https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#anonymizeIp
+        anonymizeIp: true,
     });
 
     reactGA.pageview(appName);
