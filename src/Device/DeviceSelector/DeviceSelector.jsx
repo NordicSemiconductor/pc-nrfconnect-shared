@@ -107,7 +107,7 @@ const DeviceSelector = ({
         <div className={`core19-device-selector ${deviceListVisible ? 'device-list-visible' : ''}`}>
             <SelectorButton
                 deviceListVisible={deviceListVisible}
-                setDeviceListVisible={setDeviceListVisible}
+                toggleDeviceListVisible={() => setDeviceListVisible(!deviceListVisible)}
                 doDeselectDevice={doDeselectDevice}
             />
             { deviceListVisible && <DeviceList devices={devices} doSelectDevice={doSelectDevice} />}

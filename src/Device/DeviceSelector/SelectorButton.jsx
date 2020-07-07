@@ -79,14 +79,14 @@ SelectedDevice.propTypes = {
     toggle: node.isRequired,
 };
 
-const SelectorButton = ({ deviceListVisible, setDeviceListVisible, doDeselectDevice }) => {
+const SelectorButton = ({ deviceListVisible, toggleDeviceListVisible, doDeselectDevice }) => {
     const device = useSelector(selectedDevice);
     const showListIndicator = <span className={`show-list-indicator mdi mdi-arrow-${deviceListVisible ? 'up' : 'down'}`} />;
 
     return (
         <PseudoButton
             className={`selector-button ${device == null ? 'no-device-selected' : 'device-selected'}`}
-            onClick={() => setDeviceListVisible(!deviceListVisible)}
+            onClick={toggleDeviceListVisible}
         >
             {device == null
                 ? (
@@ -107,7 +107,7 @@ const SelectorButton = ({ deviceListVisible, setDeviceListVisible, doDeselectDev
 };
 SelectorButton.propTypes = {
     deviceListVisible: bool.isRequired,
-    setDeviceListVisible: func.isRequired,
+    toggleDeviceListVisible: func.isRequired,
     doDeselectDevice: func.isRequired,
 };
 
