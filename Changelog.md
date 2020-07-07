@@ -1,3 +1,7 @@
+## Unreleased
+### Added
+- Favorite and nickname in device selector for new design
+
 ## Version 4.8.2
 ### Fixed
 - The mock fix in 4.8.1 broke mocks in another way 🤦‍♂️
