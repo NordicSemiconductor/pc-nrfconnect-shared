@@ -35,18 +35,17 @@
  */
 
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import {
     arrayOf, bool, func, shape, string,
 } from 'prop-types';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+
 import { serialports, deviceName } from '../../deviceInfo/deviceInfo';
 import PseudoButton from '../../../PseudoButton/PseudoButton';
 import deviceShape from '../deviceShape';
 import BasicDeviceInfo from '../BasicDeviceInfo';
-import ChangeName from './ChangeName';
-import { deviceNickname } from '../../deviceActions';
 import { MakeDeviceFavorite } from '../Favorite';
+import RenameDevice from './RenameDevice';
 
 import './device.scss';
 
@@ -69,29 +68,6 @@ const deviceNameIfNicknameIsSet = device => {
     }
 
     return deviceName(device) || device.boardVersion || 'Unknown';
-};
-
-const RenameDevice = ({ device }) => {
-    const dispatch = useDispatch();
-    const [visible, setVisible] = useState(false);
-
-    const setDeviceNickname = newNickname => {
-        dispatch(deviceNickname(device.serialNumber, newNickname));
-    };
-
-    return (
-        <>
-            <PseudoButton className="inputBtn" id="inputBtn" onClick={() => setVisible(!visible)}>
-                <div className="mdi mdi-pencil-circle" style={{ marginTop: 9 }}>{ '\xa0' } RENAME DEVICE</div>
-            </PseudoButton>
-            <PseudoButton onClick={() => setVisible(visible)}>
-                <ChangeName onchange={setDeviceNickname} visible={visible} />
-            </PseudoButton>
-        </>
-    );
-};
-RenameDevice.propTypes = {
-    device: deviceShape.isRequired,
 };
 
 const MoreDeviceInfo = ({ device }) => (

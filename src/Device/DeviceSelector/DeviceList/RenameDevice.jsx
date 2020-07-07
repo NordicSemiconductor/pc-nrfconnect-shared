@@ -34,28 +34,60 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react';
-import './change-name.scss';
+import React, { useState } from 'react';
 import { func, bool } from 'prop-types';
+import { useDispatch } from 'react-redux';
+import PseudoButton from '../../../PseudoButton/PseudoButton';
+import { deviceNickname } from '../../deviceActions';
+import deviceShape from '../deviceShape';
 
-const ChangeName = ({ onchange, visible }) => {
-    const handleChange = event => {
-        onchange(event.target.value);
+import './rename-device.scss';
+
+const RenameDeviceButton = ({ setIsRenaming }) => (
+    <PseudoButton className="rename-button" onClick={() => setIsRenaming(true)}>
+        <span className="mdi mdi-pencil-circle pencil" />
+        Rename device
+    </PseudoButton>
+);
+RenameDeviceButton.propTypes = {
+    setIsRenaming: func.isRequired,
+};
+
+const RenameDeviceInput = ({ device, visible }) => {
+    const dispatch = useDispatch();
+    const setDeviceNickname = event => {
+        dispatch(deviceNickname(device.serialNumber, event.target.value));
     };
-    const str = `core20-rename ${visible ? '' : 'invisible'}`;
+
     return (
-        <input
-            className={str}
-            placeholder="RENAME DEVICE"
-            id="name"
-            onChange={handleChange}
-        />
+        <PseudoButton>
+            <input
+                className={`rename-input ${visible ? '' : 'invisible'}`}
+                placeholder="Rename device"
+                onChange={setDeviceNickname}
+                defaultValue={device.nickname}
+            />
+        </PseudoButton>
     );
 };
 
-ChangeName.propTypes = {
-    onchange: func.isRequired,
+RenameDeviceInput.propTypes = {
+    device: deviceShape.isRequired,
     visible: bool.isRequired,
 };
 
-export default ChangeName;
+const RenameDevice = ({ device }) => {
+    const [isRenaming, setIsRenaming] = useState(false);
+
+    return (
+        <>
+            <RenameDeviceButton setIsRenaming={setIsRenaming} />
+            <RenameDeviceInput device={device} visible={isRenaming} />
+        </>
+    );
+};
+RenameDevice.propTypes = {
+    device: deviceShape.isRequired,
+};
+
+export default RenameDevice;
