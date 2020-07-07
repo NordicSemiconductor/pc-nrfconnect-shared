@@ -111,6 +111,17 @@ MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
 };
 
+const ShowMoreInfo = ({ isVisible, toggleVisible }) => (
+    <PseudoButton
+        className={`show-more mdi mdi-chevron-${isVisible ? 'up' : 'down'}`}
+        onClick={toggleVisible}
+    />
+);
+ShowMoreInfo.propTypes = {
+    isVisible: bool.isRequired,
+    toggleVisible: func.isRequired,
+};
+
 const additionalClassName = (moreVisible, isSelected) => {
     if (moreVisible) return 'more-infos-visible';
     if (isSelected) return 'selected-device';
@@ -119,13 +130,7 @@ const additionalClassName = (moreVisible, isSelected) => {
 
 const Device = ({ device, isSelected, doSelectDevice }) => {
     const [moreVisible, setMoreVisible] = useState(false);
-
-    const showMoreInfos = (
-        <PseudoButton
-            className={`show-more mdi mdi-chevron-${moreVisible ? 'up' : 'down'}`}
-            onClick={() => setMoreVisible(!moreVisible)}
-        />
-    );
+    const toggleMoreVisible = () => setMoreVisible(!moreVisible);
 
     return (
         <PseudoButton
@@ -135,7 +140,7 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
             <BasicDeviceInfo
                 device={device}
                 whiteBackground={false}
-                toggle={showMoreInfos}
+                toggle={<ShowMoreInfo isVisible={moreVisible} toggleVisible={toggleMoreVisible} />}
             />
             <div className="more-infos">
                 {moreVisible && (<MoreDeviceInfo device={device} />)}
