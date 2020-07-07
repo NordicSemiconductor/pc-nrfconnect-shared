@@ -34,57 +34,53 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from 'react';
-import { bool, func } from 'prop-types';
+import React from 'react';
+import { arrayOf, shape, string } from 'prop-types';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
-import PseudoButton from '../../../PseudoButton/PseudoButton';
+import { serialports, deviceName } from '../../deviceInfo/deviceInfo';
 import deviceShape from '../deviceShape';
-import BasicDeviceInfo from '../BasicDeviceInfo';
-import MoreDeviceInfo from './MoreDeviceInfo';
+import { MakeDeviceFavorite } from '../Favorite';
+import RenameDevice from './RenameDevice';
 
-import './device.scss';
+import './more-device-info.scss';
 
-const ShowMoreInfo = ({ isVisible, toggleVisible }) => (
-    <PseudoButton
-        className={`show-more mdi mdi-chevron-${isVisible ? 'up' : 'down'}`}
-        onClick={toggleVisible}
-    />
+const Serialports = ({ ports }) => (
+    <ul className="ports">
+        {ports.map(port => <li key={port.path}>{port.path}</li>)}
+    </ul>
 );
-ShowMoreInfo.propTypes = {
-    isVisible: bool.isRequired,
-    toggleVisible: func.isRequired,
+Serialports.propTypes = {
+    ports: arrayOf(
+        shape({
+            path: string.isRequired,
+        }).isRequired,
+    ).isRequired,
 };
 
-const additionalClassName = (moreVisible, isSelected) => {
-    if (moreVisible) return 'more-infos-visible';
-    if (isSelected) return 'selected-device';
-    return '';
+const deviceNameIfNicknameIsSet = device => {
+    if (device.nickname === '') {
+        return null;
+    }
+
+    return deviceName(device) || device.boardVersion || 'Unknown';
 };
 
-const Device = ({ device, isSelected, doSelectDevice }) => {
-    const [moreVisible, setMoreVisible] = useState(false);
-    const toggleMoreVisible = () => setMoreVisible(!moreVisible);
+const MoreDeviceInfo = ({ device }) => (
+    <>
+        <div>
+            {deviceNameIfNicknameIsSet(device)}
+            <Serialports ports={serialports(device)} />
+        </div>
+        <ButtonGroup className="favorite-and-rename">
+            <MakeDeviceFavorite device={device} />
+            <RenameDevice device={device} />
+        </ButtonGroup>
+    </>
+);
 
-    return (
-        <PseudoButton
-            className={`device ${additionalClassName(moreVisible, isSelected)}`}
-            onClick={() => doSelectDevice(device)}
-        >
-            <BasicDeviceInfo
-                device={device}
-                whiteBackground={false}
-                toggle={<ShowMoreInfo isVisible={moreVisible} toggleVisible={toggleMoreVisible} />}
-            />
-            <div className="more-infos">
-                {moreVisible && (<MoreDeviceInfo device={device} />)}
-            </div>
-        </PseudoButton>
-    );
-};
-Device.propTypes = {
+MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
-    isSelected: bool.isRequired,
-    doSelectDevice: func.isRequired,
 };
 
-export default Device;
+export default MoreDeviceInfo;

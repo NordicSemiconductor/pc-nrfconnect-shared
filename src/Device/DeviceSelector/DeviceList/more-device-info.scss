@@ -1,0 +1,22 @@
+@import "../../../variables";
+
+.core19-device-selector {
+    .ports {
+        list-style: none;
+        padding: 0;
+        text-decoration: underline;
+        margin-top: 1em;
+    }
+
+    .favorite-and-rename {
+        margin-top: 10px;
+        height: 35px;
+        margin-left: -68px;
+        margin-bottom: -13px;
+        text-align: center;
+        font-weight: bolder;
+        font-size: smaller;
+        color: $nordic-blue;
+        background-color: $white;
+    }
+}
