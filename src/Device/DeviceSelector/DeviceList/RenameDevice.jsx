@@ -38,7 +38,7 @@ import React, { useState } from 'react';
 import { func, bool } from 'prop-types';
 import { useDispatch } from 'react-redux';
 import PseudoButton from '../../../PseudoButton/PseudoButton';
-import { deviceNickname } from '../../deviceActions';
+import { setDeviceNickname } from '../../deviceActions';
 import deviceShape from '../deviceShape';
 
 import './rename-device.scss';
@@ -55,16 +55,15 @@ RenameDeviceButton.propTypes = {
 
 const RenameDeviceInput = ({ device, visible }) => {
     const dispatch = useDispatch();
-    const setDeviceNickname = event => {
-        dispatch(deviceNickname(device.serialNumber, event.target.value));
-    };
 
     return (
         <PseudoButton>
             <input
                 className={`rename-input ${visible ? '' : 'invisible'}`}
                 placeholder="Rename device"
-                onChange={setDeviceNickname}
+                onChange={event => (
+                    dispatch(setDeviceNickname(device.serialNumber, event.target.value))
+                )}
                 defaultValue={device.nickname}
             />
         </PseudoButton>

@@ -132,9 +132,9 @@ export const toggleDeviceFavorited = serialNumber => ({
     serialNumber,
 });
 
-export const DEVICE_NICKNAME = 'DEVICE_NICKNAME';
-export const deviceNickname = (serialNumber, nickname) => ({
-    type: DEVICE_NICKNAME,
+export const DEVICE_NICKNAME_SET = 'DEVICE_NICKNAME_SET';
+export const setDeviceNickname = (serialNumber, nickname) => ({
+    type: DEVICE_NICKNAME_SET,
     serialNumber,
     nickname,
 });

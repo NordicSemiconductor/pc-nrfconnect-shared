@@ -43,7 +43,7 @@ import {
     DEVICE_SETUP_INPUT_REQUIRED,
     DEVICE_SETUP_INPUT_RECEIVED,
     DEVICE_FAVORITE_TOGGLED,
-    DEVICE_NICKNAME,
+    DEVICE_NICKNAME_SET,
 } from './deviceActions';
 
 import {
@@ -114,7 +114,7 @@ export default (state = initialState, action) => {
             persistIsFavorite(action.serialNumber, newFavoriteState);
             return { ...state, devices: [...devices] };
         }
-        case DEVICE_NICKNAME: {
+        case DEVICE_NICKNAME_SET: {
             const { devices } = state;
             const i = devices.findIndex(({ serialNumber }) => serialNumber === action.serialNumber);
             devices[i] = {
