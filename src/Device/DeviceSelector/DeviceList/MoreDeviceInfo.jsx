@@ -58,26 +58,23 @@ Serialports.propTypes = {
     ).isRequired,
 };
 
-const deviceNameIfNicknameIsSet = device => {
-    if (device.nickname === '') {
-        return null;
-    }
+const MoreDeviceInfo = ({ device }) => {
+    const hasNickname = device.nickname !== '';
+    const name = deviceName(device) || device.boardVersion || 'Unknown';
 
-    return deviceName(device) || device.boardVersion || 'Unknown';
+    return (
+        <>
+            <div>
+                {hasNickname && name}
+                <Serialports ports={serialports(device)} />
+            </div>
+            <ButtonGroup className="favorite-and-rename">
+                <MakeDeviceFavorite device={device} />
+                <RenameDevice device={device} />
+            </ButtonGroup>
+        </>
+    );
 };
-
-const MoreDeviceInfo = ({ device }) => (
-    <>
-        <div>
-            {deviceNameIfNicknameIsSet(device)}
-            <Serialports ports={serialports(device)} />
-        </div>
-        <ButtonGroup className="favorite-and-rename">
-            <MakeDeviceFavorite device={device} />
-            <RenameDevice device={device} />
-        </ButtonGroup>
-    </>
-);
 
 MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
