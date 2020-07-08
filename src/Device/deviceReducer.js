@@ -35,6 +35,13 @@
  */
 
 import {
+    getPersistedIsFavorite,
+    getPersistedNickname,
+    persistIsFavorite,
+    persistNickname,
+} from '../persistentStore';
+import { displayedDeviceName } from './deviceInfo/deviceInfo';
+import {
     DEVICES_DETECTED,
     DEVICE_SELECTED,
     DEVICE_DESELECTED,
@@ -45,13 +52,6 @@ import {
     DEVICE_FAVORITE_TOGGLED,
     DEVICE_NICKNAME_SET,
 } from './deviceActions';
-
-import {
-    getPersistedIsFavorite,
-    getPersistedNickname,
-    persistIsFavorite,
-    persistNickname,
-} from '../persistentStore';
 
 const noDialogShown = {
     isSetupDialogVisible: false,
@@ -130,7 +130,15 @@ export default (state = initialState, action) => {
     }
 };
 
-export const devices = state => state.device.devices;
+const sorted = devices => [...devices].sort((a, b) => {
+    if (a.favorite !== b.favorite) {
+        return a.favorite ? -1 : 1;
+    }
+
+    return displayedDeviceName(a) < displayedDeviceName(b) ? -1 : 1;
+});
+
+export const sortedDevices = state => sorted(state.device.devices);
 
 export const deviceIsSelected = state => (
     state.device != null

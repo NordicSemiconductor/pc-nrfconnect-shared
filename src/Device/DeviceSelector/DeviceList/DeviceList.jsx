@@ -35,11 +35,12 @@
  */
 
 import React from 'react';
-import { arrayOf, func } from 'prop-types';
+import { func } from 'prop-types';
 import { useSelector } from 'react-redux';
-import { selectedSerialNumber as selectedSerialNumberSelector } from '../../deviceReducer';
-import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
-import deviceShape from '../deviceShape';
+import {
+    selectedSerialNumber as selectedSerialNumberSelector,
+    sortedDevices,
+} from '../../deviceReducer';
 import Device from './Device';
 
 import './device-list.scss';
@@ -58,21 +59,15 @@ const NoDevicesConnected = () => (
     </p>
 );
 
-const sorted = devices => [...devices].sort((a, b) => {
-    if (a.favorite !== b.favorite) {
-        return a.favorite ? -1 : 1;
-    }
-
-    return displayedDeviceName(a) < displayedDeviceName(b) ? -1 : 1;
-});
-
-const DeviceList = ({ devices, doSelectDevice }) => {
+const DeviceList = ({ doSelectDevice }) => {
     const selectedSerialNumber = useSelector(selectedSerialNumberSelector);
+    const devices = useSelector(sortedDevices);
+
     if (devices.length === 0) return <NoDevicesConnected />;
 
     return (
         <ul className="device-list">
-            {sorted(devices).map(device => (
+            {devices.map(device => (
                 <li key={device.serialNumber}>
                     <Device
                         device={device}
@@ -85,7 +80,6 @@ const DeviceList = ({ devices, doSelectDevice }) => {
     );
 };
 DeviceList.propTypes = {
-    devices: arrayOf(deviceShape.isRequired).isRequired,
     doSelectDevice: func.isRequired,
 };
 

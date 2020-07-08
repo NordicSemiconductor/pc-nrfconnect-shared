@@ -38,9 +38,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
     bool, exact, func, object,
 } from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import { devices as devicesSelector } from '../deviceReducer';
 import {
     deselectDevice,
     selectDevice,
@@ -65,8 +64,6 @@ const DeviceSelector = ({
     onDeviceIsReady = noop,
 }) => {
     const dispatch = useDispatch();
-    const devices = useSelector(devicesSelector);
-
     const [deviceListVisible, setDeviceListVisible] = useState(false);
 
     const doDeselectDevice = useCallback(
@@ -110,7 +107,7 @@ const DeviceSelector = ({
                 toggleDeviceListVisible={() => setDeviceListVisible(!deviceListVisible)}
                 doDeselectDevice={doDeselectDevice}
             />
-            { deviceListVisible && <DeviceList devices={devices} doSelectDevice={doSelectDevice} />}
+            { deviceListVisible && <DeviceList doSelectDevice={doSelectDevice} />}
 
             <DeviceSetup />
         </div>

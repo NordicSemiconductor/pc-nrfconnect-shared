@@ -38,7 +38,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import systemReport from '../systemReport';
-import { devices, deviceInfo, selectedSerialNumber } from '../Device/deviceReducer';
+import { sortedDevices, deviceInfo, selectedSerialNumber } from '../Device/deviceReducer';
 import AboutButton from './AboutButton';
 import Card from './Card';
 import Section from './Section';
@@ -46,7 +46,7 @@ import Section from './Section';
 import './about.scss';
 
 export default () => {
-    const allDevices = useSelector(devices);
+    const devices = useSelector(sortedDevices);
     const currentSerialNumber = useSelector(selectedSerialNumber);
     const currentDevice = useSelector(deviceInfo);
 
@@ -65,7 +65,7 @@ export default () => {
                 <Button
                     className="about-button"
                     variant="secondary"
-                    onClick={() => systemReport(allDevices, currentSerialNumber, currentDevice)}
+                    onClick={() => systemReport(devices, currentSerialNumber, currentDevice)}
                 >
                     Create system report
                 </Button>

@@ -43,9 +43,9 @@ import { useSelector } from 'react-redux';
 import PseudoButton from '../../PseudoButton/PseudoButton';
 import { selectedDevice } from '../deviceReducer';
 import BasicDeviceInfo from './BasicDeviceInfo';
+import deviceShape from './deviceShape';
 
 import './selector-button.scss';
-import deviceShape from './deviceShape';
 
 const SelectDevice = ({ toggle }) => (
     <>
