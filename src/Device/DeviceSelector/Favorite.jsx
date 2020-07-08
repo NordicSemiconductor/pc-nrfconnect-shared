@@ -37,7 +37,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import PseudoButton from '../../PseudoButton/PseudoButton';
-import { deviceFavorited } from '../deviceActions';
+import { toggleDeviceFavorited } from '../deviceActions';
 import deviceShape from './deviceShape';
 
 import './favorite.scss';
@@ -46,7 +46,7 @@ export const MakeDeviceFavorite = ({ device }) => {
     const dispatch = useDispatch();
 
     const toggleFavorite = () => {
-        dispatch(deviceFavorited(device.serialNumber, !device.favorite));
+        dispatch(toggleDeviceFavorited(device.serialNumber));
     };
 
     return (
@@ -67,7 +67,7 @@ export const FavoriteIndicator = ({ device }) => {
     const dispatch = useDispatch();
 
     const toggleFavorite = () => {
-        dispatch(deviceFavorited(device.serialNumber, !device.favorite));
+        dispatch(toggleDeviceFavorited(device.serialNumber));
     };
 
     return (

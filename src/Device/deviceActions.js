@@ -126,18 +126,10 @@ const devicesDetected = devices => ({
     devices,
 });
 
-let deviceLister;
-
-// Defined when user input is required during device setup. When input is
-// received from the user, this callback is invoked with the confirmation
-// (Boolean) or choice (String) that the user provided as input.
-let deviceSetupCallback;
-
-export const DEVICE_FAVORITED = 'DEVICE_FAVORITED';
-export const deviceFavorited = (serialNumber, isFavorite) => ({
-    type: DEVICE_FAVORITED,
+export const DEVICE_FAVORITE_TOGGLED = 'DEVICE_FAVORITE_TOGGLED';
+export const toggleDeviceFavorited = serialNumber => ({
+    type: DEVICE_FAVORITE_TOGGLED,
     serialNumber,
-    isFavorite,
 });
 
 export const DEVICE_NICKNAME = 'DEVICE_NICKNAME';
@@ -146,6 +138,13 @@ export const deviceNickname = (serialNumber, nickname) => ({
     serialNumber,
     nickname,
 });
+
+let deviceLister;
+
+// Defined when user input is required during device setup. When input is
+// received from the user, this callback is invoked with the confirmation
+// (Boolean) or choice (String) that the user provided as input.
+let deviceSetupCallback;
 
 const NORDIC_VENDOR_ID = 0x1915;
 const NORDIC_BOOTLOADER_PRODUCT_ID = 0x521f;

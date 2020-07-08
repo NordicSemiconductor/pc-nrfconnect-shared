@@ -42,7 +42,7 @@ import {
     DEVICE_SETUP_ERROR,
     DEVICE_SETUP_INPUT_REQUIRED,
     DEVICE_SETUP_INPUT_RECEIVED,
-    DEVICE_FAVORITED,
+    DEVICE_FAVORITE_TOGGLED,
     DEVICE_NICKNAME,
 } from './deviceActions';
 
@@ -102,15 +102,17 @@ export default (state = initialState, action) => {
             };
         case DEVICE_SETUP_INPUT_RECEIVED:
             return { ...state, isSetupWaitingForUserInput: false };
-        case DEVICE_FAVORITED: {
-            setFavoriteDevice(action.serialNumber, action.isFavorite);
-
+        case DEVICE_FAVORITE_TOGGLED: {
             const { devices } = state;
             const i = devices.findIndex(({ serialNumber }) => serialNumber === action.serialNumber);
+            const newFavoriteState = !devices[i].favorite;
+
             devices[i] = {
                 ...devices[i],
-                favorite: action.isFavorite,
+                favorite: newFavoriteState,
             };
+
+            setFavoriteDevice(action.serialNumber, newFavoriteState);
             return { ...state, devices: [...devices] };
         }
         case DEVICE_NICKNAME: {
