@@ -182,6 +182,10 @@ export const deviceName = device => {
     return null;
 };
 
+export const displayedDeviceName = device => (
+    device.nickname || deviceName(device) || device.boardVersion || 'Unknown'
+);
+
 export const serialports = device => (
     Object.entries(device)
         .filter(([key]) => key.startsWith('serialport'))

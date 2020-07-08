@@ -38,7 +38,7 @@ import React from 'react';
 import { arrayOf, func } from 'prop-types';
 import { useSelector } from 'react-redux';
 import { selectedSerialNumber as selectedSerialNumberSelector } from '../../deviceReducer';
-import { deviceName } from '../../deviceInfo/deviceInfo';
+import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
 import deviceShape from '../deviceShape';
 import Device from './Device';
 
@@ -56,10 +56,6 @@ const NoDevicesConnected = () => (
         </a>
         {' '}to your computer.
     </p>
-);
-
-const displayedDeviceName = device => (
-    device.nickname || deviceName(device) || device.boardVersion || 'Unknown'
 );
 
 const sorted = devices => [...devices].sort((a, b) => {

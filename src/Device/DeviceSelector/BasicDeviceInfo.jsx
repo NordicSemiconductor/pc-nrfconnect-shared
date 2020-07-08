@@ -36,7 +36,7 @@
 
 import React from 'react';
 import { bool, node } from 'prop-types';
-import { deviceName } from '../deviceInfo/deviceInfo';
+import { displayedDeviceName } from '../deviceInfo/deviceInfo';
 import deviceShape from './deviceShape';
 import DeviceIcon from './DeviceIcon';
 import { FavoriteIndicator } from './Favorite';
@@ -45,7 +45,7 @@ import './basic-device-info.scss';
 
 const DeviceDetails = ({ device }) => (
     <div className="details">
-        <div className="name">{device.nickname || deviceName(device) || device.boardVersion || 'Unknown'}</div>
+        <div className="name">{displayedDeviceName(device)}</div>
         <div className="serial-number">{device.serialNumber}</div>
     </div>
 );
