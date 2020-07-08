@@ -16,9 +16,6 @@
 
         &.selected-device:not(:hover) {
             background: $primary-darkened;
-            &.more-infos-visible{
-                background: lavender;
-            }
         }
 
         .more-infos {
