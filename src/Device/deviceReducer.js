@@ -103,7 +103,7 @@ export default (state = initialState, action) => {
         case DEVICE_SETUP_INPUT_RECEIVED:
             return { ...state, isSetupWaitingForUserInput: false };
         case DEVICE_FAVORITE_TOGGLED: {
-            const { devices } = state;
+            const devices = [...state.devices];
             const i = devices.findIndex(({ serialNumber }) => serialNumber === action.serialNumber);
             const newFavoriteState = !devices[i].favorite;
             devices[i] = {
@@ -115,7 +115,7 @@ export default (state = initialState, action) => {
             return { ...state, devices: [...devices] };
         }
         case DEVICE_NICKNAME_SET: {
-            const { devices } = state;
+            const devices = [...state.devices];
             const i = devices.findIndex(({ serialNumber }) => serialNumber === action.serialNumber);
             devices[i] = {
                 ...devices[i],
