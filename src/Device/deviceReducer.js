@@ -47,10 +47,10 @@ import {
 } from './deviceActions';
 
 import {
-    getIsFavoriteDevice,
-    setFavoriteDevice,
-    getDeviceNickname,
-    setDeviceNickname,
+    getPersistedIsFavorite,
+    getPersistedNickname,
+    persistIsFavorite,
+    persistNickname,
 } from '../persistentStore';
 
 const noDialogShown = {
@@ -72,8 +72,8 @@ export default (state = initialState, action) => {
         case DEVICES_DETECTED: {
             const devices = action.devices.map(d => ({
                 ...d,
-                favorite: getIsFavoriteDevice(d.serialNumber),
-                nickname: getDeviceNickname(d.serialNumber),
+                favorite: getPersistedIsFavorite(d.serialNumber),
+                nickname: getPersistedNickname(d.serialNumber),
             }));
             return { ...state, devices };
         }
@@ -106,24 +106,23 @@ export default (state = initialState, action) => {
             const { devices } = state;
             const i = devices.findIndex(({ serialNumber }) => serialNumber === action.serialNumber);
             const newFavoriteState = !devices[i].favorite;
-
             devices[i] = {
                 ...devices[i],
                 favorite: newFavoriteState,
             };
 
-            setFavoriteDevice(action.serialNumber, newFavoriteState);
+            persistIsFavorite(action.serialNumber, newFavoriteState);
             return { ...state, devices: [...devices] };
         }
         case DEVICE_NICKNAME: {
-            setDeviceNickname(action.serialNumber, action.nickname);
-
             const { devices } = state;
             const i = devices.findIndex(({ serialNumber }) => serialNumber === action.serialNumber);
             devices[i] = {
                 ...devices[i],
                 nickname: action.nickname,
             };
+
+            persistNickname(action.serialNumber, action.nickname);
             return { ...state, devices: [...devices] };
         }
         default:

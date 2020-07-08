@@ -38,10 +38,8 @@ import Store from 'electron-store';
 
 export const store = new Store({ name: 'pc-nrfconnect-shared' });
 
-export const setDeviceNickname = (number, nickname) => (store.set(`${number}.name`, nickname));
+export const persistNickname = (serialNumber, nickname) => (store.set(`${serialNumber}.name`, nickname));
+export const getPersistedNickname = serialNumber => (store.get(`${serialNumber}.name`, ''));
 
-export const getDeviceNickname = number => (store.get(`${number}.name`, ''));
-
-export const setFavoriteDevice = (number, value) => (store.set(`${number}.fav`, value));
-
-export const getIsFavoriteDevice = number => (store.get(`${number}.fav`, false));
+export const persistIsFavorite = (serialNumber, value) => (store.set(`${serialNumber}.fav`, value));
+export const getPersistedIsFavorite = serialNumber => (store.get(`${serialNumber}.fav`, false));
