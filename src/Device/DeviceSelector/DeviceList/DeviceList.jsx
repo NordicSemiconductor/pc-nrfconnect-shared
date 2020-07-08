@@ -38,8 +38,9 @@ import React from 'react';
 import { arrayOf, func } from 'prop-types';
 import { useSelector } from 'react-redux';
 import { selectedSerialNumber as selectedSerialNumberSelector } from '../../deviceReducer';
-import Device from './Device';
+import { deviceName } from '../../deviceInfo/deviceInfo';
 import deviceShape from '../deviceShape';
+import Device from './Device';
 
 import './device-list.scss';
 
@@ -57,20 +58,25 @@ const NoDevicesConnected = () => (
     </p>
 );
 
+const displayedDeviceName = device => (
+    device.nickname || deviceName(device) || device.boardVersion || 'Unknown'
+);
+
+const sorted = devices => [...devices].sort((a, b) => {
+    if (a.favorite !== b.favorite) {
+        return a.favorite ? -1 : 1;
+    }
+
+    return displayedDeviceName(a) < displayedDeviceName(b) ? -1 : 1;
+});
+
 const DeviceList = ({ devices, doSelectDevice }) => {
     const selectedSerialNumber = useSelector(selectedSerialNumberSelector);
     if (devices.length === 0) return <NoDevicesConnected />;
-    const sorted = devices.sort((a, b) => {
-        if (a.favorite !== b.favorite) {
-            return a.favorite ? -1 : 1;
-        }
-
-        return a.nickname < b.nickname ? -1 : 1;
-    });
 
     return (
         <ul className="device-list">
-            {sorted.map(device => (
+            {sorted(devices).map(device => (
                 <li key={device.serialNumber}>
                     <Device
                         device={device}
