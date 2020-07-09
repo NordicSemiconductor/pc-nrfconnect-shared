@@ -36,8 +36,10 @@
 
 import React, { useState } from 'react';
 import { bool, func } from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import PseudoButton from '../../../PseudoButton/PseudoButton';
+import { selectedSerialNumber } from '../../deviceReducer';
 import deviceShape from '../deviceShape';
 import BasicDeviceInfo from '../BasicDeviceInfo';
 import MoreDeviceInfo from './MoreDeviceInfo';
@@ -61,11 +63,13 @@ const additionalClassName = (moreVisible, isSelected) => {
     return '';
 };
 
-const Device = ({ device, isSelected, doSelectDevice }) => {
+const Device = ({ device, doSelectDevice }) => {
     const [moreVisible, setMoreVisible] = useState(false);
     const toggleMoreVisible = () => setMoreVisible(!moreVisible);
 
     const showMoreInfo = <ShowMoreInfo isVisible={moreVisible} toggleVisible={toggleMoreVisible} />;
+
+    const isSelected = device.serialNumber === useSelector(selectedSerialNumber);
 
     return (
         <PseudoButton
@@ -85,7 +89,6 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
 };
 Device.propTypes = {
     device: deviceShape.isRequired,
-    isSelected: bool.isRequired,
     doSelectDevice: func.isRequired,
 };
 

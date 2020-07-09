@@ -37,10 +37,7 @@
 import React from 'react';
 import { func } from 'prop-types';
 import { useSelector } from 'react-redux';
-import {
-    selectedSerialNumber as selectedSerialNumberSelector,
-    sortedDevices,
-} from '../../deviceReducer';
+import { sortedDevices } from '../../deviceReducer';
 import Device from './Device';
 
 import './device-list.scss';
@@ -60,7 +57,6 @@ const NoDevicesConnected = () => (
 );
 
 const DeviceList = ({ doSelectDevice }) => {
-    const selectedSerialNumber = useSelector(selectedSerialNumberSelector);
     const devices = useSelector(sortedDevices);
 
     if (devices.length === 0) return <NoDevicesConnected />;
@@ -69,11 +65,7 @@ const DeviceList = ({ doSelectDevice }) => {
         <ul className="device-list">
             {devices.map(device => (
                 <li key={device.serialNumber}>
-                    <Device
-                        device={device}
-                        isSelected={selectedSerialNumber === device.serialNumber}
-                        doSelectDevice={doSelectDevice}
-                    />
+                    <Device device={device} doSelectDevice={doSelectDevice} />
                 </li>
             ))}
         </ul>
