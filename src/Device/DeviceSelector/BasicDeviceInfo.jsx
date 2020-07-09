@@ -56,21 +56,21 @@ DeviceDetails.propTypes = {
 const BasicDeviceInfo = ({
     device,
     whiteBackground,
-    toggle,
+    additionalToggle,
 }) => (
     <div className="basic-device-info">
         <DeviceIcon device={device} whiteBackground={whiteBackground} />
         <DeviceDetails device={device} />
-        <div className="right-elements">
+        <div className="toggles">
             <FavoriteIndicator device={device} />
-            {toggle}
+            {additionalToggle}
         </div>
     </div>
 );
 BasicDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
     whiteBackground: bool.isRequired,
-    toggle: node.isRequired,
+    additionalToggle: node.isRequired,
 };
 
 export default BasicDeviceInfo;

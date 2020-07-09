@@ -67,16 +67,16 @@ DisconnectDevice.propTypes = {
     doDeselectDevice: func.isRequired,
 };
 
-const SelectedDevice = ({ device, doDeselectDevice, toggle }) => (
+const SelectedDevice = ({ device, doDeselectDevice, additionalToggle }) => (
     <>
-        <BasicDeviceInfo device={device} whiteBackground toggle={toggle} />
+        <BasicDeviceInfo device={device} whiteBackground additionalToggle={additionalToggle} />
         <DisconnectDevice doDeselectDevice={doDeselectDevice} />
     </>
 );
 SelectedDevice.propTypes = {
     device: deviceShape.isRequired,
     doDeselectDevice: func.isRequired,
-    toggle: node.isRequired,
+    additionalToggle: node.isRequired,
 };
 
 const SelectorButton = ({ deviceListVisible, toggleDeviceListVisible, doDeselectDevice }) => {
@@ -96,7 +96,7 @@ const SelectorButton = ({ deviceListVisible, toggleDeviceListVisible, doDeselect
                 )
                 : (
                     <SelectedDevice
-                        toggle={showListIndicator}
+                        additionalToggle={showListIndicator}
                         device={device}
                         doDeselectDevice={doDeselectDevice}
                     />

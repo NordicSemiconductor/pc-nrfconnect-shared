@@ -65,6 +65,8 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
     const [moreVisible, setMoreVisible] = useState(false);
     const toggleMoreVisible = () => setMoreVisible(!moreVisible);
 
+    const showMoreInfo = <ShowMoreInfo isVisible={moreVisible} toggleVisible={toggleMoreVisible} />;
+
     return (
         <PseudoButton
             className={`device ${additionalClassName(moreVisible, isSelected)}`}
@@ -73,7 +75,7 @@ const Device = ({ device, isSelected, doSelectDevice }) => {
             <BasicDeviceInfo
                 device={device}
                 whiteBackground={false}
-                toggle={<ShowMoreInfo isVisible={moreVisible} toggleVisible={toggleMoreVisible} />}
+                additionalToggle={showMoreInfo}
             />
             <div className="more-infos">
                 {moreVisible && (<MoreDeviceInfo device={device} />)}
