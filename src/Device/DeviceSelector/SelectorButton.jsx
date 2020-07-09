@@ -35,9 +35,7 @@
  */
 
 import React from 'react';
-import {
-    bool, func, node,
-} from 'prop-types';
+import { bool, func, node } from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
@@ -83,25 +81,21 @@ const SelectorButton = ({ deviceListVisible, toggleDeviceListVisible, doDeselect
     const device = useSelector(selectedDevice);
     const showListIndicator = <span className={`show-list-indicator mdi mdi-arrow-${deviceListVisible ? 'up' : 'down'}`} />;
 
+    const hasSelectedDevice = device != null;
     return (
         <PseudoButton
-            className={`selector-button ${device == null ? 'no-device-selected' : 'device-selected'}`}
+            className={`selector-button ${hasSelectedDevice ? 'device-selected' : 'no-device-selected'}`}
             onClick={toggleDeviceListVisible}
         >
-            {device == null
-                ? (
-                    <SelectDevice
-                        toggle={showListIndicator}
-                    />
-                )
-                : (
-                    <SelectedDevice
-                        additionalToggle={showListIndicator}
-                        device={device}
-                        doDeselectDevice={doDeselectDevice}
-                    />
-                ) }
-
+            {hasSelectedDevice ? (
+                <SelectedDevice
+                    additionalToggle={showListIndicator}
+                    device={device}
+                    doDeselectDevice={doDeselectDevice}
+                />
+            ) : (
+                <SelectDevice toggle={showListIndicator} />
+            )}
         </PseudoButton>
     );
 };
