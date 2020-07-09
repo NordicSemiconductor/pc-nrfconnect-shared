@@ -12,15 +12,17 @@
 
             display: flex;
             flex-direction: column;
+
+            .serial-number {
+                color: $gray-900;
+            }
+
+            .name {
+                font-size: 15px;
+                font-weight: 400;
+            }
         }
 
-        .serial-number {
-            color: $gray-900;
-        }
-        .name {
-            font-size: 15px;
-            font-weight: 400;
-        }
         .toggles {
             display: flex;
             flex-direction: column;

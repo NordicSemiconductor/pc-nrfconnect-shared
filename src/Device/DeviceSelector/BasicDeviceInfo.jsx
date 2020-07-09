@@ -43,24 +43,27 @@ import { FavoriteIndicator } from './Favorite';
 
 import './basic-device-info.scss';
 
-const DeviceDetails = ({ device }) => (
-    <div className="details">
-        <div className="name">{displayedDeviceName(device)}</div>
-        <div className="serial-number">{device.serialNumber}</div>
-    </div>
+const DeviceName = ({ device }) => (
+    <div className="name">{displayedDeviceName(device)}</div>
 );
-DeviceDetails.propTypes = {
+DeviceName.propTypes = {
     device: deviceShape.isRequired,
 };
 
-const BasicDeviceInfo = ({
-    device,
-    whiteBackground,
-    additionalToggle,
-}) => (
+const DeviceSerialNumber = ({ device }) => (
+    <div className="serial-number">{device.serialNumber}</div>
+);
+DeviceSerialNumber.propTypes = {
+    device: deviceShape.isRequired,
+};
+
+const BasicDeviceInfo = ({ device, whiteBackground, additionalToggle }) => (
     <div className="basic-device-info">
         <DeviceIcon device={device} whiteBackground={whiteBackground} />
-        <DeviceDetails device={device} />
+        <div className="details">
+            <DeviceName device={device} />
+            <DeviceSerialNumber device={device} />
+        </div>
         <div className="toggles">
             <FavoriteIndicator device={device} />
             {additionalToggle}
