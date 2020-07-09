@@ -2,6 +2,10 @@
 ### Added
 - Favorite and nickname in device selector for new design
 
+## Version 4.8.3
+### Changed
+- Updated Google Analytics account and set IP as anonymized
+
 ## Version 4.8.2
 ### Fixed
 - The mock fix in 4.8.1 broke mocks in another way 🤦‍♂️
