@@ -6,7 +6,8 @@
     "nrfconnect/core": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/coreMock.js",
     "pc-ble-driver-js": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/bleDriverMock.js",
     "pc-nrfjprog-js|nrf-device-lister|nrf-device-setup|serialport|usb": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/emptyMock.js",
-    "electron": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/electronMock.js"
+    "^electron$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/electronMock.js",
+    "^electron-store$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/electronStoreMock.js"
   },
   "transform": {
     "^.+\\.jsx?$": [

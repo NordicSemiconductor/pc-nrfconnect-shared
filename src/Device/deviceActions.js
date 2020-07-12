@@ -126,6 +126,19 @@ const devicesDetected = devices => ({
     devices,
 });
 
+export const DEVICE_FAVORITE_TOGGLED = 'DEVICE_FAVORITE_TOGGLED';
+export const toggleDeviceFavorited = serialNumber => ({
+    type: DEVICE_FAVORITE_TOGGLED,
+    serialNumber,
+});
+
+export const DEVICE_NICKNAME_SET = 'DEVICE_NICKNAME_SET';
+export const setDeviceNickname = (serialNumber, nickname) => ({
+    type: DEVICE_NICKNAME_SET,
+    serialNumber,
+    nickname,
+});
+
 let deviceLister;
 
 // Defined when user input is required during device setup. When input is

@@ -5,7 +5,6 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-
         width: 100%;
 
         .details {
@@ -13,10 +12,22 @@
 
             display: flex;
             flex-direction: column;
+
+            .serial-number {
+                color: $gray-900;
+            }
+
+            .name {
+                font-size: 15px;
+                font-weight: 400;
+            }
         }
 
-        .serial-number {
-            color: $gray-900;
+        .toggles {
+            display: flex;
+            flex-direction: column;
+            margin-right: 20px;
+            margin-left: 10px;
         }
     }
 }

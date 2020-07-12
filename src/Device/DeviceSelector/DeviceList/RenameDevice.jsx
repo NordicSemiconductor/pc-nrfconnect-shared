@@ -34,46 +34,59 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react';
-import { bool, node } from 'prop-types';
-import { displayedDeviceName } from '../deviceInfo/deviceInfo';
-import deviceShape from './deviceShape';
-import DeviceIcon from './DeviceIcon';
-import { FavoriteIndicator } from './Favorite';
+import React, { useState } from 'react';
+import { func, bool } from 'prop-types';
+import { useDispatch } from 'react-redux';
+import PseudoButton from '../../../PseudoButton/PseudoButton';
+import { setDeviceNickname } from '../../deviceActions';
+import deviceShape from '../deviceShape';
 
-import './basic-device-info.scss';
+import './rename-device.scss';
 
-const DeviceName = ({ device }) => (
-    <div className="name">{displayedDeviceName(device)}</div>
+const RenameDeviceButton = ({ setIsRenaming }) => (
+    <PseudoButton className="rename-button" onClick={() => setIsRenaming(true)}>
+        <span className="mdi mdi-pencil-circle pencil" />
+        Rename device
+    </PseudoButton>
 );
-DeviceName.propTypes = {
+RenameDeviceButton.propTypes = {
+    setIsRenaming: func.isRequired,
+};
+
+const RenameDeviceInput = ({ device, visible }) => {
+    const dispatch = useDispatch();
+
+    return (
+        <PseudoButton>
+            <input
+                className={`rename-input ${visible ? '' : 'invisible'}`}
+                placeholder="Rename device"
+                onChange={event => (
+                    dispatch(setDeviceNickname(device.serialNumber, event.target.value))
+                )}
+                defaultValue={device.nickname}
+            />
+        </PseudoButton>
+    );
+};
+
+RenameDeviceInput.propTypes = {
+    device: deviceShape.isRequired,
+    visible: bool.isRequired,
+};
+
+const RenameDevice = ({ device }) => {
+    const [isRenaming, setIsRenaming] = useState(false);
+
+    return (
+        <>
+            <RenameDeviceButton setIsRenaming={setIsRenaming} />
+            <RenameDeviceInput device={device} visible={isRenaming} />
+        </>
+    );
+};
+RenameDevice.propTypes = {
     device: deviceShape.isRequired,
 };
 
-const DeviceSerialNumber = ({ device }) => (
-    <div className="serial-number">{device.serialNumber}</div>
-);
-DeviceSerialNumber.propTypes = {
-    device: deviceShape.isRequired,
-};
-
-const BasicDeviceInfo = ({ device, whiteBackground, additionalToggle }) => (
-    <div className="basic-device-info">
-        <DeviceIcon device={device} whiteBackground={whiteBackground} />
-        <div className="details">
-            <DeviceName device={device} />
-            <DeviceSerialNumber device={device} />
-        </div>
-        <div className="toggles">
-            <FavoriteIndicator device={device} />
-            {additionalToggle}
-        </div>
-    </div>
-);
-BasicDeviceInfo.propTypes = {
-    device: deviceShape.isRequired,
-    whiteBackground: bool.isRequired,
-    additionalToggle: node.isRequired,
-};
-
-export default BasicDeviceInfo;
+export default RenameDevice;

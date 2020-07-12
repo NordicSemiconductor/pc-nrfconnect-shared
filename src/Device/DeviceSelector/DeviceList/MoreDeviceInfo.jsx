@@ -35,45 +35,49 @@
  */
 
 import React from 'react';
-import { bool, node } from 'prop-types';
-import { displayedDeviceName } from '../deviceInfo/deviceInfo';
-import deviceShape from './deviceShape';
-import DeviceIcon from './DeviceIcon';
-import { FavoriteIndicator } from './Favorite';
+import { arrayOf, shape, string } from 'prop-types';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
-import './basic-device-info.scss';
+import { serialports, deviceName } from '../../deviceInfo/deviceInfo';
+import deviceShape from '../deviceShape';
+import { MakeDeviceFavorite } from '../Favorite';
+import RenameDevice from './RenameDevice';
 
-const DeviceName = ({ device }) => (
-    <div className="name">{displayedDeviceName(device)}</div>
+import './more-device-info.scss';
+
+const Serialports = ({ ports }) => (
+    <ul className="ports">
+        {ports.map(port => <li key={port.path}>{port.path}</li>)}
+    </ul>
 );
-DeviceName.propTypes = {
+Serialports.propTypes = {
+    ports: arrayOf(
+        shape({
+            path: string.isRequired,
+        }).isRequired,
+    ).isRequired,
+};
+
+const MoreDeviceInfo = ({ device }) => {
+    const hasNickname = device.nickname !== '';
+    const name = deviceName(device) || device.boardVersion || 'Unknown';
+
+    return (
+        <>
+            <div>
+                {hasNickname && name}
+                <Serialports ports={serialports(device)} />
+            </div>
+            <ButtonGroup className="favorite-and-rename">
+                <MakeDeviceFavorite device={device} />
+                <RenameDevice device={device} />
+            </ButtonGroup>
+        </>
+    );
+};
+
+MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
 };
 
-const DeviceSerialNumber = ({ device }) => (
-    <div className="serial-number">{device.serialNumber}</div>
-);
-DeviceSerialNumber.propTypes = {
-    device: deviceShape.isRequired,
-};
-
-const BasicDeviceInfo = ({ device, whiteBackground, additionalToggle }) => (
-    <div className="basic-device-info">
-        <DeviceIcon device={device} whiteBackground={whiteBackground} />
-        <div className="details">
-            <DeviceName device={device} />
-            <DeviceSerialNumber device={device} />
-        </div>
-        <div className="toggles">
-            <FavoriteIndicator device={device} />
-            {additionalToggle}
-        </div>
-    </div>
-);
-BasicDeviceInfo.propTypes = {
-    device: deviceShape.isRequired,
-    whiteBackground: bool.isRequired,
-    additionalToggle: node.isRequired,
-};
-
-export default BasicDeviceInfo;
+export default MoreDeviceInfo;

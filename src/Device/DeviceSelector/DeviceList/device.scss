@@ -10,7 +10,7 @@
 
         &:hover, &.more-infos-visible {
             background: $white;
-            color: $primary;
+            color: $primary-darkened;
             .serial-number { color: $primary; }
         }
 
@@ -18,20 +18,8 @@
             background: $primary-darkened;
         }
 
-        .show-more {
-            margin-right: 20px;
-            margin-left: 10px;
-        }
-
         .more-infos {
             padding-left: 68px;
-
-            .ports {
-                list-style: none;
-                padding: 0;
-
-                margin-top: 1em;
-            }
         }
     }
 }

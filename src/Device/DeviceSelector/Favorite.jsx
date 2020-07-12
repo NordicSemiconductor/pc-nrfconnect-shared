@@ -35,45 +35,48 @@
  */
 
 import React from 'react';
-import { bool, node } from 'prop-types';
-import { displayedDeviceName } from '../deviceInfo/deviceInfo';
+import { useDispatch } from 'react-redux';
+import PseudoButton from '../../PseudoButton/PseudoButton';
+import { toggleDeviceFavorited } from '../deviceActions';
 import deviceShape from './deviceShape';
-import DeviceIcon from './DeviceIcon';
-import { FavoriteIndicator } from './Favorite';
 
-import './basic-device-info.scss';
+import './favorite.scss';
 
-const DeviceName = ({ device }) => (
-    <div className="name">{displayedDeviceName(device)}</div>
-);
-DeviceName.propTypes = {
+export const MakeDeviceFavorite = ({ device }) => {
+    const dispatch = useDispatch();
+
+    const toggleFavorite = () => {
+        dispatch(toggleDeviceFavorited(device.serialNumber));
+    };
+
+    return (
+        <PseudoButton
+            className="make-favorite"
+            onClick={toggleFavorite}
+        >
+            <span className={`mdi star ${device.favorite ? 'mdi-star-off' : 'mdi-star'}`} />
+            {device.favorite ? 'Un-favorite' : 'Favorite'}
+        </PseudoButton>
+    );
+};
+MakeDeviceFavorite.propTypes = {
     device: deviceShape.isRequired,
 };
 
-const DeviceSerialNumber = ({ device }) => (
-    <div className="serial-number">{device.serialNumber}</div>
-);
-DeviceSerialNumber.propTypes = {
+export const FavoriteIndicator = ({ device }) => {
+    const dispatch = useDispatch();
+
+    const toggleFavorite = () => {
+        dispatch(toggleDeviceFavorited(device.serialNumber));
+    };
+
+    return (
+        <PseudoButton
+            className={`mdi mdi-star ${device.favorite ? 'is-favorite' : ''}`}
+            onClick={toggleFavorite}
+        />
+    );
+};
+FavoriteIndicator.propTypes = {
     device: deviceShape.isRequired,
 };
-
-const BasicDeviceInfo = ({ device, whiteBackground, additionalToggle }) => (
-    <div className="basic-device-info">
-        <DeviceIcon device={device} whiteBackground={whiteBackground} />
-        <div className="details">
-            <DeviceName device={device} />
-            <DeviceSerialNumber device={device} />
-        </div>
-        <div className="toggles">
-            <FavoriteIndicator device={device} />
-            {additionalToggle}
-        </div>
-    </div>
-);
-BasicDeviceInfo.propTypes = {
-    device: deviceShape.isRequired,
-    whiteBackground: bool.isRequired,
-    additionalToggle: node.isRequired,
-};
-
-export default BasicDeviceInfo;

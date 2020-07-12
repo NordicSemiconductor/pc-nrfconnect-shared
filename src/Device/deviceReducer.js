@@ -35,6 +35,13 @@
  */
 
 import {
+    getPersistedIsFavorite,
+    getPersistedNickname,
+    persistIsFavorite,
+    persistNickname,
+} from '../persistentStore';
+import { displayedDeviceName } from './deviceInfo/deviceInfo';
+import {
     DEVICES_DETECTED,
     DEVICE_SELECTED,
     DEVICE_DESELECTED,
@@ -42,7 +49,35 @@ import {
     DEVICE_SETUP_ERROR,
     DEVICE_SETUP_INPUT_REQUIRED,
     DEVICE_SETUP_INPUT_RECEIVED,
+    DEVICE_FAVORITE_TOGGLED,
+    DEVICE_NICKNAME_SET,
 } from './deviceActions';
+
+const withPersistedData = devices => devices.map(device => ({
+    ...device,
+    favorite: getPersistedIsFavorite(device.serialNumber),
+    nickname: getPersistedNickname(device.serialNumber),
+}));
+
+const bySerialNumber = devices => {
+    const devicesBySerialNumber = {};
+    devices.forEach(device => {
+        devicesBySerialNumber[device.serialNumber] = device;
+    });
+
+    return devicesBySerialNumber;
+};
+
+const withUpdatedDevice = (state, serialNumber, updateToMergeIn) => ({
+    ...state,
+    devices: {
+        ...state.devices,
+        [serialNumber]: {
+            ...state.devices[serialNumber],
+            ...updateToMergeIn,
+        },
+    },
+});
 
 const noDialogShown = {
     isSetupDialogVisible: false,
@@ -60,8 +95,9 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case DEVICES_DETECTED:
-            return { ...state, devices: [...action.devices] };
+        case DEVICES_DETECTED: {
+            return { ...state, devices: bySerialNumber(withPersistedData(action.devices)) };
+        }
         case DEVICE_SELECTED:
             return { ...state, selectedSerialNumber: action.device.serialNumber };
         case DEVICE_DESELECTED:
@@ -87,12 +123,30 @@ export default (state = initialState, action) => {
             };
         case DEVICE_SETUP_INPUT_RECEIVED:
             return { ...state, isSetupWaitingForUserInput: false };
+        case DEVICE_FAVORITE_TOGGLED: {
+            const newFavoriteState = !state.devices[action.serialNumber].favorite;
+
+            persistIsFavorite(action.serialNumber, newFavoriteState);
+            return withUpdatedDevice(state, action.serialNumber, { favorite: newFavoriteState });
+        }
+        case DEVICE_NICKNAME_SET: {
+            persistNickname(action.serialNumber, action.nickname);
+            return withUpdatedDevice(state, action.serialNumber, { nickname: action.nickname });
+        }
         default:
             return state;
     }
 };
 
-export const devices = state => state.device.devices;
+const sorted = devices => [...devices].sort((a, b) => {
+    if (a.favorite !== b.favorite) {
+        return a.favorite ? -1 : 1;
+    }
+
+    return displayedDeviceName(a) < displayedDeviceName(b) ? -1 : 1;
+});
+
+export const sortedDevices = state => sorted(Object.values(state.device.devices));
 
 export const deviceIsSelected = state => (
     state.device != null
@@ -100,7 +154,7 @@ export const deviceIsSelected = state => (
 );
 
 export const selectedDevice = state => (
-    state.device.devices.find(device => device.serialNumber === state.device.selectedSerialNumber)
+    state.device.devices[state.device.selectedSerialNumber]
 );
 
 export const deviceInfo = state => state.device.deviceInfo;

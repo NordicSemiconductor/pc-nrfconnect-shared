@@ -35,26 +35,24 @@
  */
 
 import React from 'react';
-import {
-    bool, func, node,
-} from 'prop-types';
+import { bool, func, node } from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
 import { selectedDevice } from '../deviceReducer';
 import BasicDeviceInfo from './BasicDeviceInfo';
-
-import './selector-button.scss';
 import deviceShape from './deviceShape';
 
-const SelectDevice = ({ rightElement }) => (
+import './selector-button.scss';
+
+const SelectDevice = ({ toggle }) => (
     <>
         <div className="select-device">Select device</div>
-        {rightElement}
+        {toggle}
     </>
 );
 SelectDevice.propTypes = {
-    rightElement: node.isRequired,
+    toggle: node.isRequired,
 };
 
 const DisconnectDevice = ({ doDeselectDevice }) => (
@@ -67,47 +65,43 @@ DisconnectDevice.propTypes = {
     doDeselectDevice: func.isRequired,
 };
 
-const SelectedDevice = ({ device, doDeselectDevice, rightElement }) => (
+const SelectedDevice = ({ device, doDeselectDevice, additionalToggle }) => (
     <>
-        <BasicDeviceInfo device={device} whiteBackground rightElement={rightElement} />
+        <BasicDeviceInfo device={device} whiteBackground additionalToggle={additionalToggle} />
         <DisconnectDevice doDeselectDevice={doDeselectDevice} />
     </>
 );
 SelectedDevice.propTypes = {
     device: deviceShape.isRequired,
     doDeselectDevice: func.isRequired,
-    rightElement: node.isRequired,
+    additionalToggle: node.isRequired,
 };
 
-const SelectorButton = ({ deviceListVisible, setDeviceListVisible, doDeselectDevice }) => {
+const SelectorButton = ({ deviceListVisible, toggleDeviceListVisible, doDeselectDevice }) => {
     const device = useSelector(selectedDevice);
     const showListIndicator = <span className={`show-list-indicator mdi mdi-arrow-${deviceListVisible ? 'up' : 'down'}`} />;
 
+    const hasSelectedDevice = device != null;
     return (
         <PseudoButton
-            className={`selector-button ${device == null ? '' : 'device-selected'}`}
-            onClick={() => setDeviceListVisible(!deviceListVisible)}
+            className={`selector-button ${hasSelectedDevice ? 'device-selected' : 'no-device-selected'}`}
+            onClick={toggleDeviceListVisible}
         >
-            {device == null
-                ? (
-                    <SelectDevice
-                        rightElement={showListIndicator}
-                    />
-                )
-                : (
-                    <SelectedDevice
-                        rightElement={showListIndicator}
-                        device={device}
-                        doDeselectDevice={doDeselectDevice}
-                    />
-                ) }
-
+            {hasSelectedDevice ? (
+                <SelectedDevice
+                    additionalToggle={showListIndicator}
+                    device={device}
+                    doDeselectDevice={doDeselectDevice}
+                />
+            ) : (
+                <SelectDevice toggle={showListIndicator} />
+            )}
         </PseudoButton>
     );
 };
 SelectorButton.propTypes = {
     deviceListVisible: bool.isRequired,
-    setDeviceListVisible: func.isRequired,
+    toggleDeviceListVisible: func.isRequired,
     doDeselectDevice: func.isRequired,
 };
 

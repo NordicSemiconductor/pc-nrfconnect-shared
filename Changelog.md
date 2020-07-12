@@ -1,3 +1,7 @@
+## Unreleased
+### Added
+- Favorite and nickname in device selector for new design
+
 ## Version 4.8.3
 ### Changed
 - Updated Google Analytics account and set IP as anonymized

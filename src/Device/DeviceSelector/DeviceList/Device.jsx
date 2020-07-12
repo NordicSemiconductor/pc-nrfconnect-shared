@@ -35,34 +35,26 @@
  */
 
 import React, { useState } from 'react';
-import {
-    arrayOf, bool, func, shape, string,
-} from 'prop-types';
-import { serialports } from '../../deviceInfo/deviceInfo';
+import { bool, func } from 'prop-types';
+import { useSelector } from 'react-redux';
+
 import PseudoButton from '../../../PseudoButton/PseudoButton';
+import { selectedSerialNumber } from '../../deviceReducer';
 import deviceShape from '../deviceShape';
 import BasicDeviceInfo from '../BasicDeviceInfo';
+import MoreDeviceInfo from './MoreDeviceInfo';
 
 import './device.scss';
 
-const Serialports = ({ ports }) => (
-    <ul className="ports">
-        {ports.map(port => <li key={port.path}>{port.path}</li>)}
-    </ul>
+const ShowMoreInfo = ({ isVisible, toggleVisible }) => (
+    <PseudoButton
+        className={`show-more mdi mdi-chevron-${isVisible ? 'up' : 'down'}`}
+        onClick={toggleVisible}
+    />
 );
-Serialports.propTypes = {
-    ports: arrayOf(
-        shape({
-            path: string.isRequired,
-        }).isRequired,
-    ).isRequired,
-};
-
-const MoreDeviceInfo = ({ device }) => (
-    <Serialports ports={serialports(device)} />
-);
-MoreDeviceInfo.propTypes = {
-    device: deviceShape.isRequired,
+ShowMoreInfo.propTypes = {
+    isVisible: bool.isRequired,
+    toggleVisible: func.isRequired,
 };
 
 const additionalClassName = (moreVisible, isSelected) => {
@@ -71,31 +63,32 @@ const additionalClassName = (moreVisible, isSelected) => {
     return '';
 };
 
-const Device = ({ device, isSelected, doSelectDevice }) => {
+const Device = ({ device, doSelectDevice }) => {
     const [moreVisible, setMoreVisible] = useState(false);
+    const toggleMoreVisible = () => setMoreVisible(!moreVisible);
 
-    const showMoreInfos = (
-        <PseudoButton
-            className={`show-more mdi mdi-chevron-${moreVisible ? 'up' : 'down'}`}
-            onClick={() => setMoreVisible(!moreVisible)}
-        />
-    );
+    const showMoreInfo = <ShowMoreInfo isVisible={moreVisible} toggleVisible={toggleMoreVisible} />;
+
+    const isSelected = device.serialNumber === useSelector(selectedSerialNumber);
 
     return (
         <PseudoButton
             className={`device ${additionalClassName(moreVisible, isSelected)}`}
             onClick={() => doSelectDevice(device)}
         >
-            <BasicDeviceInfo device={device} whiteBackground={false} rightElement={showMoreInfos} />
+            <BasicDeviceInfo
+                device={device}
+                whiteBackground={false}
+                additionalToggle={showMoreInfo}
+            />
             <div className="more-infos">
-                {moreVisible && <MoreDeviceInfo device={device} />}
+                {moreVisible && (<MoreDeviceInfo device={device} />)}
             </div>
         </PseudoButton>
     );
 };
 Device.propTypes = {
     device: deviceShape.isRequired,
-    isSelected: bool.isRequired,
     doSelectDevice: func.isRequired,
 };
 
