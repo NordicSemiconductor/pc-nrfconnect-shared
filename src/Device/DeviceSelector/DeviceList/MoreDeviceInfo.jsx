@@ -35,10 +35,12 @@
  */
 
 import React from 'react';
-import { arrayOf, shape, string } from 'prop-types';
+import {
+    arrayOf, func, shape, string,
+} from 'prop-types';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
-import { serialports, deviceName } from '../../deviceInfo/deviceInfo';
+import { serialports, displayedDeviceName } from '../../deviceInfo/deviceInfo';
 import deviceShape from '../deviceShape';
 import { MakeDeviceFavorite } from '../Favorite';
 import RenameDevice from './RenameDevice';
@@ -58,7 +60,7 @@ Serialports.propTypes = {
     ).isRequired,
 };
 
-const MoreDeviceInfo = ({ device }) => {
+const MoreDeviceInfo = ({ device, startEditingDeviceName }) => {
     const hasNickname = device.nickname !== '';
     const name = displayedDeviceName(device, { respectNickname: false });
 
@@ -70,7 +72,7 @@ const MoreDeviceInfo = ({ device }) => {
             </div>
             <ButtonGroup className="favorite-and-rename">
                 <MakeDeviceFavorite device={device} />
-                <RenameDevice device={device} />
+                <RenameDevice startEditingDeviceName={startEditingDeviceName} />
             </ButtonGroup>
         </>
     );
@@ -78,6 +80,7 @@ const MoreDeviceInfo = ({ device }) => {
 
 MoreDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
+    startEditingDeviceName: func.isRequired,
 };
 
 export default MoreDeviceInfo;

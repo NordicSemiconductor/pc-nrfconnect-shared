@@ -35,19 +35,46 @@
  */
 
 import React from 'react';
-import { bool, node } from 'prop-types';
+import {
+    bool, func, node, shape,
+} from 'prop-types';
+import { useDispatch } from 'react-redux';
+import InlineInput from '../../InlineInput/InlineInput';
 import { displayedDeviceName } from '../deviceInfo/deviceInfo';
+import { resetDeviceNickname, setDeviceNickname } from '../deviceActions';
 import deviceShape from './deviceShape';
 import DeviceIcon from './DeviceIcon';
 import { FavoriteIndicator } from './Favorite';
 
 import './basic-device-info.scss';
 
-const DeviceName = ({ device }) => (
-    <div className="name">{displayedDeviceName(device)}</div>
-);
+const DeviceName = ({ device, inputRef }) => {
+    const dispatch = useDispatch();
+    const setOrResetNickname = name => {
+        const newNameIsEqualToDefaultName = (
+            name === displayedDeviceName(device, { respectNickname: false }));
+
+        if (newNameIsEqualToDefaultName) {
+            dispatch(resetDeviceNickname(device.serialNumber));
+        } else {
+            dispatch(setDeviceNickname(device.serialNumber, name));
+        }
+    };
+
+    return (
+        <InlineInput
+            ref={inputRef}
+            className="name"
+            value={displayedDeviceName(device)}
+            isValid={name => name !== ''}
+            onChange={setOrResetNickname}
+        />
+    );
+};
 DeviceName.propTypes = {
     device: deviceShape.isRequired,
+    // eslint-disable-next-line react/require-default-props
+    inputRef: shape({ current: shape({ focus: func.isRequired }) }),
 };
 
 const DeviceSerialNumber = ({ device }) => (
@@ -57,11 +84,13 @@ DeviceSerialNumber.propTypes = {
     device: deviceShape.isRequired,
 };
 
-const BasicDeviceInfo = ({ device, whiteBackground, additionalToggle }) => (
+const BasicDeviceInfo = ({
+    device, deviceNameInputRef, whiteBackground, additionalToggle,
+}) => (
     <div className="basic-device-info">
         <DeviceIcon device={device} whiteBackground={whiteBackground} />
         <div className="details">
-            <DeviceName device={device} />
+            <DeviceName device={device} inputRef={deviceNameInputRef} />
             <DeviceSerialNumber device={device} />
         </div>
         <div className="toggles">
@@ -72,6 +101,8 @@ const BasicDeviceInfo = ({ device, whiteBackground, additionalToggle }) => (
 );
 BasicDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
+    // eslint-disable-next-line react/require-default-props
+    deviceNameInputRef: shape({ current: shape({ focus: func.isRequired }) }),
     whiteBackground: bool.isRequired,
     additionalToggle: node.isRequired,
 };

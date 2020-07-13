@@ -34,7 +34,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { bool, func } from 'prop-types';
 import { useSelector } from 'react-redux';
 
@@ -71,18 +71,29 @@ const Device = ({ device, doSelectDevice }) => {
 
     const isSelected = device.serialNumber === useSelector(selectedSerialNumber);
 
+    const deviceNameInputRef = useRef();
+    const startEditingDeviceName = () => {
+        deviceNameInputRef.current.focus();
+    };
+
     return (
         <PseudoButton
             className={`device ${additionalClassName(moreVisible, isSelected)}`}
             onClick={() => doSelectDevice(device)}
         >
             <BasicDeviceInfo
+                deviceNameInputRef={deviceNameInputRef}
                 device={device}
                 whiteBackground={false}
                 additionalToggle={showMoreInfo}
             />
             <div className="more-infos">
-                {moreVisible && (<MoreDeviceInfo device={device} />)}
+                {moreVisible && (
+                    <MoreDeviceInfo
+                        device={device}
+                        startEditingDeviceName={startEditingDeviceName}
+                    />
+                )}
             </div>
         </PseudoButton>
     );
