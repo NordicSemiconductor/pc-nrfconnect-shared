@@ -60,7 +60,7 @@ Serialports.propTypes = {
 
 const MoreDeviceInfo = ({ device }) => {
     const hasNickname = device.nickname !== '';
-    const name = deviceName(device) || device.boardVersion || 'Unknown';
+    const name = displayedDeviceName(device, { respectNickname: false });
 
     return (
         <>
