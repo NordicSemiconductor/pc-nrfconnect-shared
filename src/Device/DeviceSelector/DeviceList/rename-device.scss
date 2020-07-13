@@ -1,18 +1,7 @@
 @import "../../../variables";
 
 .core19-device-selector {
-    .rename-button {
-        position: absolute;
-        width: 130px;
-        height: 35px;
-        margin-left: 130px;
-        padding-top: 9px;
-        border: 0px solid $white;
-        border-top: 1px solid $nordic-blue;
-        text-transform: uppercase;
-
-        .pencil {
-            margin-right: 1ex;
-        }
+    .rename-button .pencil {
+        margin-right: 1ex;
     }
 }

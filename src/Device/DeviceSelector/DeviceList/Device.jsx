@@ -43,6 +43,7 @@ import { selectedSerialNumber } from '../../deviceReducer';
 import deviceShape from '../deviceShape';
 import BasicDeviceInfo from '../BasicDeviceInfo';
 import MoreDeviceInfo from './MoreDeviceInfo';
+import EditDeviceButtons from './EditDeviceButtons';
 
 import './device.scss';
 
@@ -87,14 +88,15 @@ const Device = ({ device, doSelectDevice }) => {
                 whiteBackground={false}
                 additionalToggle={showMoreInfo}
             />
-            <div className="more-infos">
-                {moreVisible && (
-                    <MoreDeviceInfo
+            {moreVisible && (
+                <>
+                    <MoreDeviceInfo device={device} />
+                    <EditDeviceButtons
                         device={device}
                         startEditingDeviceName={startEditingDeviceName}
                     />
-                )}
-            </div>
+                </>
+            )}
         </PseudoButton>
     );
 };

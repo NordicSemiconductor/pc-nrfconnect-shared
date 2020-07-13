@@ -35,43 +35,25 @@
  */
 
 import React from 'react';
-import { arrayOf, shape, string } from 'prop-types';
+import { func } from 'prop-types';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
-import { serialports, displayedDeviceName } from '../../deviceInfo/deviceInfo';
 import deviceShape from '../deviceShape';
+import { MakeDeviceFavorite } from '../Favorite';
+import RenameDevice from './RenameDevice';
 
-import './more-device-info.scss';
+import './edit-device-buttons.scss';
 
-const MaybeDeviceName = ({ device }) => {
-    const hasNickname = device.nickname !== '';
-    if (hasNickname) {
-        return displayedDeviceName(device, { respectNickname: false });
-    }
-    return null;
-};
-
-const Serialports = ({ ports }) => (
-    <ul className="ports">
-        {ports.map(port => <li key={port.path}>{port.path}</li>)}
-    </ul>
-);
-Serialports.propTypes = {
-    ports: arrayOf(
-        shape({
-            path: string.isRequired,
-        }).isRequired,
-    ).isRequired,
-};
-
-const MoreDeviceInfo = ({ device }) => (
-    <div className="more-infos">
-        <MaybeDeviceName device={device} />
-        <Serialports ports={serialports(device)} />
-    </div>
+const EditDeviceButtons = ({ device, startEditingDeviceName }) => (
+    <ButtonGroup className="edit-device-buttons">
+        <MakeDeviceFavorite device={device} />
+        <RenameDevice startEditingDeviceName={startEditingDeviceName} />
+    </ButtonGroup>
 );
 
-MoreDeviceInfo.propTypes = {
+EditDeviceButtons.propTypes = {
     device: deviceShape.isRequired,
+    startEditingDeviceName: func.isRequired,
 };
 
-export default MoreDeviceInfo;
+export default EditDeviceButtons;

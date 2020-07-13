@@ -1,18 +1,8 @@
 @import "../../variables";
 
 .core19-device-selector {
-    .make-favorite {
-        width: 130px;
-        height: 100%;
-        border: 0px solid $white;
-        border-top: 1px solid $nordic-blue;
-        border-right: 1px solid $nordic-blue;
-        text-transform: uppercase;
-        padding-top: 9px;
-
-        .star {
-            margin-right: 1ex;
-        }
+    .make-favorite .star {
+        margin-right: 1ex;
     }
 
     .is-favorite {
