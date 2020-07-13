@@ -34,29 +34,34 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+import React from 'react';
+import { func, number, shape } from 'prop-types';
 
-export { ErrorDialogActions };
+import InlineInput from './InlineInput';
 
-export { default as App } from './App/App';
-export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
-export { default as Slider } from './Slider/Slider';
-export { default as Main } from './Main/Main';
+import './number-inline-input.scss';
 
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
-export { default as InlineInput } from './InlineInput/InlineInput';
-export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
+const charCount = value => String(value).length;
+const isInRange = (value, { min, max }) => value >= min && value <= max;
 
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as logger } from './logging';
+const NumberInlineInput = ({ value, range, onChange }) => (
+    <InlineInput
+        className="number-inline-input"
+        style={{ width: `${1 + charCount(range.max)}ex` }}
 
-export {
-    setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
-} from './appDirs';
+        value={String(value)}
+        isValid={newValue => isInRange(Number(newValue), range)}
+        onChange={newValue => onChange(Number(newValue))}
+    />
+);
 
-export { openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as userData } from './userData';
+NumberInlineInput.propTypes = {
+    value: number.isRequired,
+    range: shape({
+        min: number.isRequired,
+        max: number.isRequired,
+    }).isRequired,
+    onChange: func.isRequired,
+};
+
+export default NumberInlineInput;
