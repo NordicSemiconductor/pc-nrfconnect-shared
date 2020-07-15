@@ -52,7 +52,7 @@ const AboutButton = ({ url, label }) => (
     </Button>
 );
 AboutButton.propTypes = {
-    url: string, // eslint-disable-line react/require-default-props
+    url: string,
     label: string.isRequired,
 };
 

@@ -1,6 +1,9 @@
 ## Unreleased
 ### Added
 - Favorite and nickname in device selector for new design
+### Changed
+- Disabled the ESLint rule react/require-default-props, you should remove your
+  local disables when upgrading to this version.
 
 ## Version 4.8.3
 ### Changed

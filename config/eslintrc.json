@@ -22,6 +22,7 @@
         ],
         "react/jsx-one-expression-per-line": "off",
         "react/jsx-props-no-spreading": "off",
+        "react/require-default-props": "off",
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "error",
         "jsx-a11y/control-has-associated-label": "off",
