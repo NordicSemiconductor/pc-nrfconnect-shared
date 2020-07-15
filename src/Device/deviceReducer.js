@@ -51,6 +51,7 @@ import {
     DEVICE_SETUP_INPUT_RECEIVED,
     DEVICE_FAVORITE_TOGGLED,
     DEVICE_NICKNAME_SET,
+    DEVICE_NICKNAME_RESET,
 } from './deviceActions';
 
 const withPersistedData = devices => devices.map(device => ({
@@ -132,6 +133,10 @@ export default (state = initialState, action) => {
         case DEVICE_NICKNAME_SET: {
             persistNickname(action.serialNumber, action.nickname);
             return withUpdatedDevice(state, action.serialNumber, { nickname: action.nickname });
+        }
+        case DEVICE_NICKNAME_RESET: {
+            persistNickname(action.serialNumber, '');
+            return withUpdatedDevice(state, action.serialNumber, { nickname: '' });
         }
         default:
             return state;

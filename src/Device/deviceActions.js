@@ -139,6 +139,12 @@ export const setDeviceNickname = (serialNumber, nickname) => ({
     nickname,
 });
 
+export const DEVICE_NICKNAME_RESET = 'DEVICE_NICKNAME_RESET';
+export const resetDeviceNickname = serialNumber => ({
+    type: DEVICE_NICKNAME_RESET,
+    serialNumber,
+});
+
 let deviceLister;
 
 // Defined when user input is required during device setup. When input is

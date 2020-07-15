@@ -34,59 +34,20 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from 'react';
-import { func, bool } from 'prop-types';
-import { useDispatch } from 'react-redux';
+import React from 'react';
+import { func } from 'prop-types';
 import PseudoButton from '../../../PseudoButton/PseudoButton';
-import { setDeviceNickname } from '../../deviceActions';
-import deviceShape from '../deviceShape';
 
 import './rename-device.scss';
 
-const RenameDeviceButton = ({ setIsRenaming }) => (
-    <PseudoButton className="rename-button" onClick={() => setIsRenaming(true)}>
+const RenameDevice = ({ startEditingDeviceName }) => (
+    <PseudoButton className="rename-button" onClick={startEditingDeviceName}>
         <span className="mdi mdi-pencil-circle pencil" />
         Rename device
     </PseudoButton>
 );
-RenameDeviceButton.propTypes = {
-    setIsRenaming: func.isRequired,
-};
-
-const RenameDeviceInput = ({ device, visible }) => {
-    const dispatch = useDispatch();
-
-    return (
-        <PseudoButton>
-            <input
-                className={`rename-input ${visible ? '' : 'invisible'}`}
-                placeholder="Rename device"
-                onChange={event => (
-                    dispatch(setDeviceNickname(device.serialNumber, event.target.value))
-                )}
-                defaultValue={device.nickname}
-            />
-        </PseudoButton>
-    );
-};
-
-RenameDeviceInput.propTypes = {
-    device: deviceShape.isRequired,
-    visible: bool.isRequired,
-};
-
-const RenameDevice = ({ device }) => {
-    const [isRenaming, setIsRenaming] = useState(false);
-
-    return (
-        <>
-            <RenameDeviceButton setIsRenaming={setIsRenaming} />
-            <RenameDeviceInput device={device} visible={isRenaming} />
-        </>
-    );
-};
 RenameDevice.propTypes = {
-    device: deviceShape.isRequired,
+    startEditingDeviceName: func.isRequired,
 };
 
 export default RenameDevice;

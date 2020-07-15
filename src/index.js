@@ -47,6 +47,8 @@ export { default as Slider } from './Slider/Slider';
 export { default as Main } from './Main/Main';
 
 export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
+export { default as InlineInput } from './InlineInput/InlineInput';
+export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
 
 export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
 export { default as logger } from './logging';

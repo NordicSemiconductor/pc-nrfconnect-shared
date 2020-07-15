@@ -35,43 +35,33 @@
  */
 
 import React from 'react';
-import { arrayOf, shape, string } from 'prop-types';
+import { func, number, shape } from 'prop-types';
 
-import { serialports, displayedDeviceName } from '../../deviceInfo/deviceInfo';
-import deviceShape from '../deviceShape';
+import InlineInput from './InlineInput';
 
-import './more-device-info.scss';
+import './number-inline-input.scss';
 
-const MaybeDeviceName = ({ device }) => {
-    const hasNickname = device.nickname !== '';
-    if (hasNickname) {
-        return displayedDeviceName(device, { respectNickname: false });
-    }
-    return null;
-};
+const charCount = value => String(value).length;
+const isInRange = (value, { min, max }) => value >= min && value <= max;
 
-const Serialports = ({ ports }) => (
-    <ul className="ports">
-        {ports.map(port => <li key={port.path}>{port.path}</li>)}
-    </ul>
-);
-Serialports.propTypes = {
-    ports: arrayOf(
-        shape({
-            path: string.isRequired,
-        }).isRequired,
-    ).isRequired,
-};
+const NumberInlineInput = ({ value, range, onChange }) => (
+    <InlineInput
+        className="number-inline-input"
+        style={{ width: `${1 + charCount(range.max)}ex` }}
 
-const MoreDeviceInfo = ({ device }) => (
-    <div className="more-infos">
-        <MaybeDeviceName device={device} />
-        <Serialports ports={serialports(device)} />
-    </div>
+        value={String(value)}
+        isValid={newValue => isInRange(Number(newValue), range)}
+        onChange={newValue => onChange(Number(newValue))}
+    />
 );
 
-MoreDeviceInfo.propTypes = {
-    device: deviceShape.isRequired,
+NumberInlineInput.propTypes = {
+    value: number.isRequired,
+    range: shape({
+        min: number.isRequired,
+        max: number.isRequired,
+    }).isRequired,
+    onChange: func.isRequired,
 };
 
-export default MoreDeviceInfo;
+export default NumberInlineInput;

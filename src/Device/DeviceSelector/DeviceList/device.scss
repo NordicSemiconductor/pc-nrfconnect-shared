@@ -18,8 +18,8 @@
             background: $primary-darkened;
         }
 
-        .more-infos {
-            padding-left: 68px;
+        &.more-infos-visible {
+            padding-bottom: 0;
         }
     }
 }
