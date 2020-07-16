@@ -12,6 +12,10 @@
         color: $gray-700;
         background-color: $gray-100;
         padding: 5px 10px;
+
+        &.panel-hidden {
+            background-color: $gray-50;
+        }
     }
 
     .core19-visibility-bar-show-log {
