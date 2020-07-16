@@ -16,6 +16,7 @@
             background: $white;
 
             .serial-number {
+                color: inherit;
                 font-weight: $font-weight-light;
                 font-size: 11px;
             }
