@@ -42,6 +42,10 @@ import nrf53logoWhite from './nRF53-Series-logo_white.svg';
 import nrf53logoBlue from './nRF53-Series-logo_blue.svg';
 import nrf91logoWhite from './nRF91-Series-logo_white.svg';
 import nrf91logoBlue from './nRF91-Series-logo_blue.svg';
+import unknownLogoWhite from './unknown-logo_white.svg';
+import unknownLogoBlue from './unknown-logo_blue.svg';
+import unknownNordicLogoWhite from './unknown-nordic-logo_white.svg';
+import unknownNordicLogoBlue from './unknown-nordic-logo_blue.svg';
 
 const deviceInfo = pcaNumber => ({
     PCA10028: {
@@ -166,8 +170,20 @@ const deviceInfo = pcaNumber => ({
     },
 }[String(pcaNumber).toUpperCase()] || { website: {} });
 
-const defaultIconFiles = null; /* FIXME */
-export const deviceIcons = device => deviceInfo(device.boardVersion).iconFiles || defaultIconFiles;
+const NORDIC_VENDOR_ID = '1915';
+const isNordicDevice = device => (
+    device.serialport && device.serialport.vendorId === NORDIC_VENDOR_ID
+);
+
+const unknownIconFiles = device => ({
+    white: isNordicDevice(device) ? unknownNordicLogoWhite : unknownLogoWhite,
+    blue: isNordicDevice(device) ? unknownNordicLogoBlue : unknownLogoBlue,
+});
+
+export const deviceIcons = device => (
+    deviceInfo(device.boardVersion).iconFiles
+    || unknownIconFiles(device)
+);
 
 export const deviceName = device => {
     const pca = device.boardVersion;
