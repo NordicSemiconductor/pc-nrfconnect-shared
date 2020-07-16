@@ -45,7 +45,6 @@ $handle-radius-selected: 8px;
 
 .slider .slider-handle:hover,
 .slider-handle.dragged {
-    border-color: $gray-400;
     border-width: $handle-radius-selected;
     top: 0;
     margin-left: -$handle-radius-selected;
