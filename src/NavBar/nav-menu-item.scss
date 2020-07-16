@@ -21,5 +21,6 @@
 
     &:focus, &:hover {
         text-decoration: none;
+        color: $gray-500;
     }
 }
