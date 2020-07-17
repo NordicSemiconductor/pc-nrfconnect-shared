@@ -73,7 +73,6 @@ const DeviceName = ({ device, inputRef }) => {
 };
 DeviceName.propTypes = {
     device: deviceShape.isRequired,
-    // eslint-disable-next-line react/require-default-props
     inputRef: shape({ current: shape({ focus: func.isRequired }) }),
 };
 
@@ -101,7 +100,6 @@ const BasicDeviceInfo = ({
 );
 BasicDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
-    // eslint-disable-next-line react/require-default-props
     deviceNameInputRef: shape({ current: shape({ focus: func.isRequired }) }),
     whiteBackground: bool.isRequired,
     additionalToggle: node.isRequired,
