@@ -37,11 +37,14 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+    isSidePanelVisibleSelector,
+    isLogVisibleSelector,
+    toggleSidePanelVisible,
+    toggleLogVisible,
+} from './appLayout';
 
 import './visibility-bar.scss';
-import {
-    isSidePanelVisibleSelector, isLogVisibleSelector, toggleSidePanelVisible, toggleLogVisible,
-} from './appLayout';
 
 export default () => {
     const dispatch = useDispatch();
@@ -49,7 +52,7 @@ export default () => {
     const isLogVisible = useSelector(isLogVisibleSelector);
     return (
         <div className="core19-visibility-bar">
-            <div className="core19-visibility-bar-show-side-panel">
+            <div className={`core19-visibility-bar-show-side-panel ${isSidePanelVisible ? '' : 'panel-hidden'}`}>
                 <Form.Switch
                     id="visibility-bar-show-side-panel"
                     label="Show side panel"

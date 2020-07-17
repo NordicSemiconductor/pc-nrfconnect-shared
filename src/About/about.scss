@@ -26,7 +26,7 @@ $section-gap: 2ex;
         background-color: $white;
         border: 1px solid $gray-200;
 
-        font-weight: 200;
+        font-weight: $font-weight-light;
 
         .about-card-title {
             text-align: right;
