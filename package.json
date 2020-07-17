@@ -55,6 +55,7 @@
     "prettysize": "2.0.0",
     "raw-loader": "4.0.1",
     "react-bootstrap": "1.0.1",
+    "react-flip-toolkit": "7.0.12",
     "react-ga": "2.7.0",
     "react-markdown": "4.3.1",
     "react-test-renderer": "16.13.1",
