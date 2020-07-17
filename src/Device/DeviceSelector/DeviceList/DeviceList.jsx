@@ -37,8 +37,10 @@
 import React from 'react';
 import { func } from 'prop-types';
 import { useSelector } from 'react-redux';
+
 import { sortedDevices } from '../../deviceReducer';
 import Device from './Device';
+import { AnimatedList, AnimatedItem } from './AnimatedList';
 
 import './device-list.scss';
 
@@ -62,13 +64,13 @@ const DeviceList = ({ doSelectDevice }) => {
     if (devices.length === 0) return <NoDevicesConnected />;
 
     return (
-        <ul className="device-list">
+        <AnimatedList devices={devices} className="device-list">
             {devices.map(device => (
-                <li key={device.serialNumber}>
+                <AnimatedItem key={device.serialNumber} itemKey={device.serialNumber}>
                     <Device device={device} doSelectDevice={doSelectDevice} />
-                </li>
+                </AnimatedItem>
             ))}
-        </ul>
+        </AnimatedList>
     );
 };
 DeviceList.propTypes = {

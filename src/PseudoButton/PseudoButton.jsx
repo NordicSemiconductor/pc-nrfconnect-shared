@@ -70,7 +70,6 @@ const PseudoButton = ({
     </div>
 );
 PseudoButton.propTypes = {
-    /* eslint-disable react/require-default-props */
     onClick: func,
     className: string,
     children: node,
