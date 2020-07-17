@@ -46,8 +46,8 @@ const Section = ({ children, title }) => (
     </div>
 );
 Section.propTypes = {
-    title: string, // eslint-disable-line react/require-default-props
-    children: node, // eslint-disable-line react/require-default-props
+    title: string,
+    children: node,
 };
 
 export default Section;

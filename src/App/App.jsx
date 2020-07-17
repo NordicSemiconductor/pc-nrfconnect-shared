@@ -109,7 +109,7 @@ const App = ({ appReducer = noopReducer, ...props }) => (
 );
 
 App.propTypes = {
-    appReducer: func, // eslint-disable-line react/require-default-props
+    appReducer: func,
 };
 
 export default App;

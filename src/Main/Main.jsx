@@ -41,6 +41,6 @@ import './main.scss';
 
 const Main = ({ children }) => <div className="core19-main-view">{children}</div>;
 
-Main.propTypes = { children: node }; // eslint-disable-line react/require-default-props
+Main.propTypes = { children: node };
 
 export default Main;

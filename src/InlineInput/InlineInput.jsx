@@ -113,10 +113,10 @@ const InlineInput = React.forwardRef(({
 
 InlineInput.propTypes = {
     value: string.isRequired,
-    isValid: func, // eslint-disable-line react/require-default-props
+    isValid: func,
     onChange: func.isRequired,
-    className: string, // eslint-disable-line react/require-default-props
-    style: object, // eslint-disable-line react/require-default-props, react/forbid-prop-types
+    className: string,
+    style: object, // eslint-disable-line react/forbid-prop-types
 };
 
 export default InlineInput;

@@ -55,7 +55,7 @@ const DeviceIcon = ({ device, whiteBackground }) => {
     );
 };
 DeviceIcon.propTypes = {
-    device: deviceShape, // eslint-disable-line react/require-default-props
+    device: deviceShape,
     whiteBackground: bool.isRequired,
 };
 
