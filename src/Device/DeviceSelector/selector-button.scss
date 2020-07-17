@@ -16,7 +16,8 @@
             background: $white;
 
             .serial-number {
-                font-weight: 200;
+                color: inherit;
+                font-weight: $font-weight-light;
                 font-size: 11px;
             }
 
@@ -29,7 +30,7 @@
         &.no-device-selected {
             .show-list-indicator {
                 margin-right: 20px;
-            }                
+            }
         }
 
         .select-device {
@@ -45,7 +46,7 @@
             display: none;
 
             background: $gray-800;
-            font-weight: 200;
+            font-weight: $font-weight-light;
             font-size: 11px;
             text-transform: uppercase;
 
