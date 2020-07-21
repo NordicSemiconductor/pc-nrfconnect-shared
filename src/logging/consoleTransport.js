@@ -35,7 +35,6 @@
  */
 
 import Transport from 'winston-transport';
-import console from 'console';
 
 /* eslint-disable class-methods-use-this */
 
