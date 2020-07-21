@@ -48,8 +48,8 @@ import Spinner from './Spinner';
  * and button actions can be customized.
  *
  * @param {boolean} isVisible Show the dialog or not.
- * @param {boolean} [isInProgress] Shows a spinner if true.
- * @param {string} [title] The dialog title.
+ * @param {boolean} [isInProgress] Shows a spinner if true. Default: false.
+ * @param {string} [title] The dialog title. Default: "Confirm".
  * @param {Array|*} [children] Array or React element to render in the dialog.
  * @param {string} [text] Text to render in the dialog. Alternative to `children`.
  * @param {function} onOk Invoked when the user clicks OK.
@@ -58,20 +58,19 @@ import Spinner from './Spinner';
  * @param {string} [okButtonText] Label text for the OK button. Default: "OK".
  * @param {string} [cancelButtonText] Label text for the cancel button. Default: "Cancel".
  * @param {boolean} [isOkButtonEnabled] Enable the OK button or not. Default: true.
- * @param {string} [buttonCssClass] CSS class name for the buttons. Default: "core-btn".
  * @returns {*} React element to be rendered.
  */
 const ConfirmationDialog = ({
     isVisible,
-    isInProgress,
-    title,
+    isInProgress = false,
+    title = 'Confirm',
     children,
     text,
     onOk,
     onCancel,
-    okButtonText,
-    cancelButtonText,
-    isOkButtonEnabled,
+    okButtonText = 'OK',
+    cancelButtonText = 'Cancel',
+    isOkButtonEnabled = true,
 }) => (
     <Modal show={isVisible} onHide={onCancel} backdrop={isInProgress ? 'static' : false}>
         <Modal.Header closeButton={!isInProgress}>
@@ -115,16 +114,6 @@ ConfirmationDialog.propTypes = {
     cancelButtonText: string,
     isInProgress: bool,
     isOkButtonEnabled: bool,
-};
-
-ConfirmationDialog.defaultProps = {
-    title: 'Confirm',
-    text: null,
-    children: null,
-    isInProgress: false,
-    isOkButtonEnabled: true,
-    okButtonText: 'OK',
-    cancelButtonText: 'Cancel',
 };
 
 export default ConfirmationDialog;

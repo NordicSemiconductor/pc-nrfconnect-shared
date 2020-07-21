@@ -38,7 +38,7 @@ import React from 'react';
 import { bool, func, string } from 'prop-types';
 
 const LogHeaderButton = ({
-    title, iconCssClass, isSelected, onClick,
+    title, iconCssClass, isSelected = false, onClick,
 }) => (
     <button
         title={title}
@@ -55,10 +55,6 @@ LogHeaderButton.propTypes = {
     onClick: func.isRequired,
     iconCssClass: string.isRequired,
     isSelected: bool,
-};
-
-LogHeaderButton.defaultProps = {
-    isSelected: false,
 };
 
 export default LogHeaderButton;
