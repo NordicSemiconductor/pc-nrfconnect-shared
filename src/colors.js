@@ -34,31 +34,41 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+// This file must be kept in sync with 'variables.scss' in the same folder
 
-export { ErrorDialogActions };
+const nordicBlue = '#00a9ce';
+const blueSlate = '#0033a0';
 
-export { default as App } from './App/App';
-export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
-export { default as Slider } from './Slider/Slider';
-export { default as Main } from './Main/Main';
+export default {
+    nordicBlue,
+    blueSlate,
 
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
-export { default as InlineInput } from './InlineInput/InlineInput';
-export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
+    primary: nordicBlue,
+    primaryDarkened: '#0098b9', // result of using color.scale($nordic-blue, $lightness: -10%) in sass
+    secondary: 'white',
+    accent: blueSlate,
 
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as logger } from './logging';
-export * from './bleChannels';
-export { default as colors } from './colors';
+    gray50: '#eceff1',
+    gray100: '#cfd8dc',
+    gray200: '#b0bec5',
+    gray300: '#90a4ae',
+    gray400: '#78909c',
+    gray500: '#607d8b',
+    gray600: '#546e7a',
+    gray700: '#455a64',
+    gray800: '#37474f',
+    gray900: '#263238',
 
-export {
-    setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
-} from './appDirs';
+    red: '#f44336',
+    indigo: '#3f51b5',
+    amber: '#ffc107',
+    purple: '#9c27b0',
+    green: '#4caf50',
+    deepPurple: '#673ab7',
+    orange: '#ff9800',
+    lime: '#cddc39',
+    pink: '#e91e63',
 
-export { openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as userData } from './userData';
+    blueSlateLighter: '#7c98d3', // result of using color.scale($blue-slate, $lightness: 50%, $saturation: -50%) in sass
+    greenLighter: '#b1cbb3', // result of using color.scale($green, $lightness: 50%, $saturation: -50%) in sass
+};
