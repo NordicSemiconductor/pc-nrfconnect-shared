@@ -3,8 +3,12 @@
     overflow: auto;
     height: 155px;
 
+    scroll-snap-type: y mandatory;
+
     > div {
         display: table;
         min-width: 100%;
+
+        scroll-snap-align: start;
     }
 }
