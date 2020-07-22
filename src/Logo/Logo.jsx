@@ -56,7 +56,7 @@ const chooseLogo = (changeWithDeviceState, deviceIsSelected) => {
     return deviceIsSelected ? logoConnected : logoDisconnected;
 };
 
-const Logo = ({ changeWithDeviceState }) => {
+const Logo = ({ changeWithDeviceState = false }) => {
     const deviceIsSelected = useSelector(deviceIsSelectedSelector);
     const logo = chooseLogo(changeWithDeviceState, deviceIsSelected);
     return (
@@ -75,6 +75,5 @@ const Logo = ({ changeWithDeviceState }) => {
 };
 
 Logo.propTypes = { changeWithDeviceState: bool };
-Logo.defaultProps = { changeWithDeviceState: false };
 
 export default Logo;

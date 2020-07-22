@@ -57,8 +57,4 @@ NavBar.propTypes = {
     panes: arrayOf(array.isRequired).isRequired,
 };
 
-NavBar.defaultProps = ({
-    deviceSelect: null,
-});
-
 export default NavBar;

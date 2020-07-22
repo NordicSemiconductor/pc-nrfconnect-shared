@@ -79,9 +79,5 @@ Slider.propTypes = {
     onChange: arrayOf(func.isRequired).isRequired,
     onChangeComplete: func,
 };
-Slider.defaultProps = {
-    id: null,
-    onChangeComplete: () => {},
-};
 
 export default Slider;
