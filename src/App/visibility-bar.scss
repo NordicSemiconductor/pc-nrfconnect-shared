@@ -22,7 +22,33 @@
         flex-grow: 1;
         color: $gray-100;
         background-color: $gray-800;
-        padding: 5px 10px;
+        padding: 5px 15px;
         text-align: right;
+
+        display: flex;
+        flex-direction: row;
+
+        .log-button {
+            margin-right: 1em;
+            border: 0;
+            background-color: $gray-700;
+            color: $gray-200;
+            text-transform: inherit;
+        }
+
+        .log-switch { margin-left: 3em; }
+
+        .custom-control-label::before {
+            border: 0;
+            background-color: $gray-900;
+        }
+
+        .custom-control-input:checked ~ .custom-control-label::before {
+            background-color: $gray-600;
+        }
+
+        .custom-switch .custom-control-input ~ .custom-control-label::after {
+            background-color: $gray-300;
+        }
     }
 }

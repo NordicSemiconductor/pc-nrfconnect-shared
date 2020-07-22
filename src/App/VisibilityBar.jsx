@@ -37,6 +37,9 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
+import { autoScroll as autoScrollSelector } from '../Log/logReducer';
+import { clear, toggleAutoScroll } from '../Log/logActions';
+import logger from '../logging';
 import {
     isSidePanelVisibleSelector,
     isLogVisibleSelector,
@@ -50,6 +53,8 @@ export default () => {
     const dispatch = useDispatch();
     const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);
+    const autoScroll = useSelector(autoScrollSelector);
+
     return (
         <div className="core19-visibility-bar">
             <div className={`core19-visibility-bar-show-side-panel ${isSidePanelVisible ? '' : 'panel-hidden'}`}>
@@ -61,7 +66,30 @@ export default () => {
                 />
             </div>
             <div className="core19-visibility-bar-show-log">
+                <button
+                    type="button"
+                    className="log-button"
+                    onClick={() => dispatch(clear())}
+                >
+                    Clear log
+                </button>
+                <button
+                    type="button"
+                    className="log-button"
+                    onClick={logger.openLogFile}
+                >
+                    Open log file
+                </button>
+                <div className="flex-grow-1" />
                 <Form.Switch
+                    className="log-switch"
+                    id="autoscroll-log"
+                    label="Autoscroll log"
+                    checked={autoScroll}
+                    onChange={() => dispatch(toggleAutoScroll())}
+                />
+                <Form.Switch
+                    className="log-switch"
                     id="visibility-bar-show-log"
                     label="Show log"
                     checked={isLogVisible}
