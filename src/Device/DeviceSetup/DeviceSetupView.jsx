@@ -124,7 +124,3 @@ DeviceSetupDialog.propTypes = {
     onOk: func.isRequired,
     onCancel: func.isRequired,
 };
-
-DeviceSetupDialog.defaultProps = {
-    text: '',
-};

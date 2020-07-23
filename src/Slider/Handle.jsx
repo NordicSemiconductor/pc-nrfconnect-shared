@@ -45,8 +45,9 @@ const useAutoupdatingRef = value => {
     return ref;
 };
 
+const noop = () => {};
 const Handle = ({
-    value, range, onChange, onChangeComplete, sliderWidth,
+    value, range, onChange, onChangeComplete = noop, sliderWidth,
 }) => {
     const [currentlyDragged, setCurrentlyDragged] = useState(false);
     const percentage = toPercentage(value, range);
@@ -107,10 +108,6 @@ Handle.propTypes = {
     onChange: func.isRequired,
     onChangeComplete: func,
     sliderWidth: number,
-};
-Handle.defaultProps = {
-    onChangeComplete: () => {},
-    sliderWidth: null,
 };
 
 export default Handle;
