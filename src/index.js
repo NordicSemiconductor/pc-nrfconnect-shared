@@ -52,6 +52,8 @@ export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
 
 export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
 export { default as logger } from './logging';
+export * from './bleChannels';
+export { default as colors } from './colors';
 
 export {
     setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
