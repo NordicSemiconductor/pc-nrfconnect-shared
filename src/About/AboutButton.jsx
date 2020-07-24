@@ -35,23 +35,24 @@
  */
 
 import React from 'react';
-import { string } from 'prop-types';
+import { func, string } from 'prop-types';
 import Button from 'react-bootstrap/Button';
 
 import './about.scss';
 import { openUrl } from '../open';
 
-const AboutButton = ({ url, label }) => (
+const AboutButton = ({ url, label, onClick }) => (
     <Button
         className="about-button"
         variant="secondary"
-        disabled={!url}
-        onClick={() => openUrl(url)}
+        disabled={!url && !onClick}
+        onClick={onClick || (() => openUrl(url))}
     >
         {label}
     </Button>
 );
 AboutButton.propTypes = {
+    onClick: func,
     url: string,
     label: string.isRequired,
 };

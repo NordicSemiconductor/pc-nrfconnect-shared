@@ -36,14 +36,11 @@
 
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Button from 'react-bootstrap/Button';
 import systemReport from '../systemReport';
 import { sortedDevices, deviceInfo, selectedSerialNumber } from '../Device/deviceReducer';
 import AboutButton from './AboutButton';
 import Card from './Card';
 import Section from './Section';
-
-import './about.scss';
 
 export default () => {
     const devices = useSelector(sortedDevices);
@@ -62,13 +59,10 @@ export default () => {
                     about your operating system and related software. Create a system report and add
                     to your suport request.
                 </p>
-                <Button
-                    className="about-button"
-                    variant="secondary"
+                <AboutButton
                     onClick={() => systemReport(devices, currentSerialNumber, currentDevice)}
-                >
-                    Create system report
-                </Button>
+                    label="Create system report"
+                />
             </Section>
         </Card>
     );
