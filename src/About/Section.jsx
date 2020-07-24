@@ -37,11 +37,11 @@
 import React from 'react';
 import { node, string } from 'prop-types';
 
-import './about.scss';
+import './section.scss';
 
 const Section = ({ children, title }) => (
     <div className="about-section">
-        {title != null && <h3 className="about-card-section-title">{title}</h3>}
+        {title != null && <h3 className="about-section-title">{title}</h3>}
         {children}
     </div>
 );

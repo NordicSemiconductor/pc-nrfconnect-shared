@@ -1,0 +1,9 @@
+.about {
+    .about-section:first-child { margin-top: 0 }
+    .about-section { margin-top: 1em }
+
+    .about-section-title {
+        font-size: inherit;
+        margin-bottom: 0;
+    }
+}

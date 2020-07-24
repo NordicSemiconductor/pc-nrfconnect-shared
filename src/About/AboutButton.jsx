@@ -37,9 +37,9 @@
 import React from 'react';
 import { func, string } from 'prop-types';
 import Button from 'react-bootstrap/Button';
-
-import './about.scss';
 import { openUrl } from '../open';
+
+import './about-button.scss';
 
 const AboutButton = ({ url, label, onClick }) => (
     <Button

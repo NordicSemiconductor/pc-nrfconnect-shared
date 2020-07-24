@@ -3,38 +3,4 @@
 .about {
     display: flex;
     background-color: $gray-100;
-
-    .about-card:first-child { margin-left: 0; }
-    .about-card { margin-left: 0.25em; }
-
-    .about-card {
-        width: 17em;
-        flex-shrink: 0;
-
-        padding: 0.6em 1em;
-
-        background-color: $white;
-        border: 1px solid $gray-200;
-
-        font-weight: $font-weight-light;
-        color: $gray-500;
-
-        .about-card-title {
-            font-size: inherit;
-            text-align: right;
-        }
-
-        .about-section:first-child { margin-top: 0 }
-        .about-section { margin-top: 1em }
-
-        .about-card-section-title {
-            font-size: inherit;
-            margin-bottom: 0;
-        }
-    }
-
-    .about-button {
-        margin-bottom: 0.6em;
-        color: inherit;
-    }
 }

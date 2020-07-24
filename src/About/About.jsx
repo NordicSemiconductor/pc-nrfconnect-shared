@@ -39,6 +39,8 @@ import ApplicationCard from './ApplicationCard';
 import DeviceCard from './DeviceCard';
 import SupportCard from './SupportCard';
 
+import './about.scss';
+
 export default () => (
     <div className="about">
         <ApplicationCard />
