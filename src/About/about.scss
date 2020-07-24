@@ -1,27 +1,17 @@
 @import "../variables";
 
-$card-gap: 0.5ex;
-$section-gap: 2ex;
-
 .about {
     display: flex;
     background-color: $gray-100;
 
-    margin-left: -$card-gap;
-    margin-top: -$card-gap;
+    .about-card:first-child { margin-left: 0; }
+    .about-card { margin-left: 0.25em; }
 
     .about-card {
-        width: 240px;
+        width: 17em;
         flex-shrink: 0;
 
-        margin-left: $card-gap;
-        margin-top: $card-gap;
-
-        padding-left: 2ex;
-        padding-right: 2ex;
-
-        padding-top: 1.2ex;
-        padding-bottom: 1.2ex - $section-gap;
+        padding: 0.6em 1em;
 
         background-color: $white;
         border: 1px solid $gray-200;
@@ -30,17 +20,16 @@ $section-gap: 2ex;
         color: $gray-500;
 
         .about-card-title {
+            font-size: inherit;
             text-align: right;
-            font-size: 1em;
         }
 
-        .about-section {
-            margin-bottom: $section-gap;
+        .about-section:first-child { margin-top: 0 }
+        .about-section { margin-top: 1em }
 
-            .about-card-section-title {
-                font-size: 1em;
-                margin: 0;
-            }
+        .about-card-section-title {
+            font-size: inherit;
+            margin-bottom: 0;
         }
     }
 
