@@ -12,7 +12,7 @@ $section-gap: 2ex;
 
     .about-card {
         width: 240px;
-        height: min-content;
+        flex-shrink: 0;
 
         margin-left: $card-gap;
         margin-top: $card-gap;
@@ -27,6 +27,7 @@ $section-gap: 2ex;
         border: 1px solid $gray-200;
 
         font-weight: $font-weight-light;
+        color: $gray-500;
 
         .about-card-title {
             text-align: right;
@@ -45,5 +46,6 @@ $section-gap: 2ex;
 
     .about-button {
         margin-bottom: 0.6em;
+        color: inherit;
     }
 }
