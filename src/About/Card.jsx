@@ -37,7 +37,7 @@
 import React from 'react';
 import { node, string } from 'prop-types';
 
-import './about.scss';
+import './card.scss';
 
 const Card = ({ children, title }) => (
     <div className="about-card">
