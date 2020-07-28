@@ -1,9 +1,13 @@
-## Unreleased
+## Version 4.8.4
 ### Added
 - Favorite and nickname in device selector for new design
+- Exported array bleChannels to provide a list of all BLE channels and some
+  convenience properties on it
 ### Changed
 - Disabled the ESLint rule react/require-default-props, you should remove your
-  local disables when upgrading to this version.
+  local overrides when upgrading to this version and might also reconsider
+  using defaultProps when not really needed
+- Updated the new design in many details
 
 ## Version 4.8.3
 ### Changed
