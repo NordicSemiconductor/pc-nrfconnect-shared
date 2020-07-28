@@ -36,7 +36,6 @@
 
 import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import LogHeader from './LogHeader';
 import LogEntry from './LogEntry';
 import { useLogListener } from './logListener';
 import { autoScroll as autoScrollSelector, logEntries as logEntriesSelector } from './logReducer';
@@ -57,11 +56,8 @@ export default () => {
     });
 
     return (
-        <>
-            <LogHeader />
-            <div ref={logContainer} className="core19-log">
-                { logEntries.map(entry => <LogEntry {...{ entry }} key={entry.id} />) }
-            </div>
-        </>
+        <div ref={logContainer} className="core19-log">
+            { logEntries.map(entry => <LogEntry {...{ entry }} key={entry.id} />) }
+        </div>
     );
 };
