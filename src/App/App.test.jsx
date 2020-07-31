@@ -36,28 +36,27 @@
 
 import React from 'react';
 import render from '../../test/testrenderer';
-import NavMenu from './NavMenu';
+import App from './App';
+
+const renderApp = panes => {
+    const dummyReducer = (s = null) => s;
+    const dummyNode = <div />;
+
+    return render(<App
+        appReducer={dummyReducer}
+        deviceSelect={dummyNode}
+        sidePanel={dummyNode}
+        panes={panes}
+    />);
+};
 
 const aPane = ['an menu item', () => <div>A pane</div>];
 const anotherPane = ['another menu item', () => <div>Another pane</div>];
 
-expect.extend({
-    toBeHighlighted(element) {
-        const pass = element.classList.contains('selected');
-        const not = pass ? 'not ' : '';
-        const message = () => (
-            `Expected the element to ${not}contain a class 'selected' to signify that `
-            + `it is ${not}highlighted. It actually contained: ${element.className}`
-        );
-        return { pass, message };
-    },
-});
+describe('App', () => {
+    it('automatically gets an About pane attached', () => {
+        const { getByText } = renderApp([aPane, anotherPane]);
 
-describe('NavMenu', () => {
-    it('displays multiple items', () => {
-        const { getByText } = render(<NavMenu panes={[aPane, anotherPane]} />);
-
-        expect(getByText('an menu item')).toBeInTheDocument();
-        expect(getByText('another menu item')).toBeInTheDocument();
+        expect(getByText('About')).toBeInTheDocument();
     });
 });
