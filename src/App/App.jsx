@@ -44,7 +44,7 @@ import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
 
 import LogViewer from '../Log/LogViewer';
-
+import About from '../About/About';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
 import NavBar from '../NavBar/NavBar';
@@ -60,9 +60,10 @@ const hiddenUnless = isVisible => (isVisible ? '' : 'd-none');
 const ConnectedApp = ({
     deviceSelect, panes, sidePanel,
 }) => {
+    const allPanes = [...panes, ['About', About]];
     const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);
-    const MainComponent = useSelector(mainComponentSelector(panes));
+    const MainComponent = useSelector(mainComponentSelector(allPanes));
 
     useEffect(() => {
         Mousetrap.bind('alt+l', () => ipcRenderer.send('open-app-launcher'));
@@ -72,7 +73,7 @@ const ConnectedApp = ({
         <div className="core19-app">
             <NavBar
                 deviceSelect={deviceSelect}
-                panes={panes}
+                panes={allPanes}
             />
             <div className="core19-app-content">
                 <div className={`core19-side-panel ${hiddenUnless(isSidePanelVisible)}`}>
