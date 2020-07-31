@@ -1,3 +1,7 @@
+## Unreleased
+### Changed
+- Render all panes of the App, but only the current is visible
+
 ## Version 4.8.4
 ### Added
 - Favorite and nickname in device selector for new design
