@@ -38,20 +38,20 @@ import React from 'react';
 import { array, arrayOf } from 'prop-types';
 import { useSelector } from 'react-redux';
 
-import { mainComponentSelector } from '../App/appLayout';
+import { currentPaneSelector } from '../App/appLayout';
 import NavMenuItem from './NavMenuItem';
 
 const NavMenu = ({ panes }) => {
-    const currentMainComponent = useSelector(mainComponentSelector(panes));
+    const currentPane = useSelector(currentPaneSelector);
 
     return (
         <div data-testid="nav-menu">
-            {panes.map(([name, component], index) => (
+            {panes.map(([name], index) => (
                 <NavMenuItem
                     key={name}
-                    component={component}
+                    index={index}
                     isFirst={index === 0}
-                    isSelected={currentMainComponent === component}
+                    isSelected={currentPane === index}
                     label={name}
                 />
             ))}

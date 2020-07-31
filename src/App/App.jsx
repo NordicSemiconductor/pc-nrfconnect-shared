@@ -50,7 +50,7 @@ import AppReloadDialog from '../AppReload/AppReloadDialog';
 import NavBar from '../NavBar/NavBar';
 import VisibilityBar from './VisibilityBar';
 import ConnectedToStore from './ConnectedToStore';
-import { isSidePanelVisibleSelector, isLogVisibleSelector, mainComponentSelector } from './appLayout';
+import { isSidePanelVisibleSelector, isLogVisibleSelector, currentPaneSelector } from './appLayout';
 
 import './shared.scss';
 import './app.scss';
@@ -63,7 +63,7 @@ const ConnectedApp = ({
     const allPanes = [...panes, ['About', About]];
     const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);
-    const MainComponent = useSelector(mainComponentSelector(allPanes));
+    const currentPane = useSelector(currentPaneSelector);
 
     useEffect(() => {
         Mousetrap.bind('alt+l', () => ipcRenderer.send('open-app-launcher'));
@@ -80,9 +80,11 @@ const ConnectedApp = ({
                     {sidePanel}
                 </div>
                 <div className="core19-main-and-log">
-                    <div className="core19-main-container">
-                        <MainComponent />
-                    </div>
+                    {allPanes.map(([name, MainComponent], index) => (
+                        <div key={name} className={`core19-main-container ${index === currentPane ? '' : 'd-none'}`}>
+                            <MainComponent />
+                        </div>
+                    ))}
                     <div className={`core19-log-viewer ${hiddenUnless(isLogVisible)}`}>
                         <LogViewer />
                     </div>
