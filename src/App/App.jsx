@@ -44,13 +44,13 @@ import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
 
 import LogViewer from '../Log/LogViewer';
-
+import About from '../About/About';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
 import NavBar from '../NavBar/NavBar';
 import VisibilityBar from './VisibilityBar';
 import ConnectedToStore from './ConnectedToStore';
-import { isSidePanelVisibleSelector, isLogVisibleSelector, mainComponentSelector } from './appLayout';
+import { isSidePanelVisibleSelector, isLogVisibleSelector, currentPaneSelector } from './appLayout';
 
 import './shared.scss';
 import './app.scss';
@@ -60,9 +60,10 @@ const hiddenUnless = isVisible => (isVisible ? '' : 'd-none');
 const ConnectedApp = ({
     deviceSelect, panes, sidePanel,
 }) => {
+    const allPanes = [...panes, ['About', About]];
     const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);
-    const MainComponent = useSelector(mainComponentSelector(panes));
+    const currentPane = useSelector(currentPaneSelector);
 
     useEffect(() => {
         Mousetrap.bind('alt+l', () => ipcRenderer.send('open-app-launcher'));
@@ -72,16 +73,18 @@ const ConnectedApp = ({
         <div className="core19-app">
             <NavBar
                 deviceSelect={deviceSelect}
-                panes={panes}
+                panes={allPanes}
             />
             <div className="core19-app-content">
                 <div className={`core19-side-panel ${hiddenUnless(isSidePanelVisible)}`}>
                     {sidePanel}
                 </div>
                 <div className="core19-main-and-log">
-                    <div className="core19-main-container">
-                        <MainComponent />
-                    </div>
+                    {allPanes.map(([name, MainComponent], index) => (
+                        <div key={name} className={`core19-main-container ${index === currentPane ? '' : 'd-none'}`}>
+                            <MainComponent />
+                        </div>
+                    ))}
                     <div className={`core19-log-viewer ${hiddenUnless(isLogVisible)}`}>
                         <LogViewer />
                     </div>

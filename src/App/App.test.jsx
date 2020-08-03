@@ -35,32 +35,28 @@
  */
 
 import React from 'react';
-import { array, arrayOf } from 'prop-types';
-import { useSelector } from 'react-redux';
+import render from '../../test/testrenderer';
+import App from './App';
 
-import { currentPaneSelector } from '../App/appLayout';
-import NavMenuItem from './NavMenuItem';
+const renderApp = panes => {
+    const dummyReducer = (s = null) => s;
+    const dummyNode = <div />;
 
-const NavMenu = ({ panes }) => {
-    const currentPane = useSelector(currentPaneSelector);
-
-    return (
-        <div data-testid="nav-menu">
-            {panes.map(([name], index) => (
-                <NavMenuItem
-                    key={name}
-                    index={index}
-                    isFirst={index === 0}
-                    isSelected={currentPane === index}
-                    label={name}
-                />
-            ))}
-        </div>
-    );
+    return render(<App
+        appReducer={dummyReducer}
+        deviceSelect={dummyNode}
+        sidePanel={dummyNode}
+        panes={panes}
+    />);
 };
 
-NavMenu.propTypes = {
-    panes: arrayOf(array.isRequired).isRequired,
-};
+const aPane = ['an menu item', () => <div>A pane</div>];
+const anotherPane = ['another menu item', () => <div>Another pane</div>];
 
-export default NavMenu;
+describe('App', () => {
+    it('automatically gets an About pane attached', () => {
+        const { getByText } = renderApp([aPane, anotherPane]);
+
+        expect(getByText('About')).toBeInTheDocument();
+    });
+});

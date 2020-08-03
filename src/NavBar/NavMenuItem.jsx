@@ -35,16 +35,16 @@
  */
 
 import React from 'react';
-import { bool, elementType, string } from 'prop-types';
+import { bool, number, string } from 'prop-types';
 import { useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 
-import { setMainComponent } from '../App/appLayout';
+import { setCurrentPane } from '../App/appLayout';
 
 import './nav-menu-item.scss';
 
 const NavMenuItem = ({
-    component, isFirst, isSelected, label,
+    index, isFirst, isSelected, label,
 }) => {
     const dispatch = useDispatch();
 
@@ -53,7 +53,7 @@ const NavMenuItem = ({
             variant="link"
             active={false}
             className={`core19-nav-menu-item ${isSelected ? 'selected' : ''} ${isFirst ? 'first' : ''}`}
-            onClick={() => dispatch(setMainComponent(component))}
+            onClick={() => dispatch(setCurrentPane(index))}
             type="button"
         >
             {label}
@@ -62,7 +62,7 @@ const NavMenuItem = ({
 };
 
 NavMenuItem.propTypes = {
-    component: elementType.isRequired,
+    index: number.isRequired,
     isFirst: bool.isRequired,
     isSelected: bool.isRequired,
     label: string.isRequired,

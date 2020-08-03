@@ -35,27 +35,11 @@
  */
 
 import React from 'react';
-import { fireEvent } from '@testing-library/react';
-
 import render from '../../test/testrenderer';
-
-import App from '../App/App';
 import NavMenu from './NavMenu';
 
 const aPane = ['an menu item', () => <div>A pane</div>];
 const anotherPane = ['another menu item', () => <div>Another pane</div>];
-
-const renderApp = panes => {
-    const dummyReducer = (s = null) => s;
-    const dummyNode = <div />;
-
-    return render(<App
-        appReducer={dummyReducer}
-        deviceSelect={dummyNode}
-        sidePanel={dummyNode}
-        panes={panes}
-    />);
-};
 
 expect.extend({
     toBeHighlighted(element) {
@@ -75,26 +59,5 @@ describe('NavMenu', () => {
 
         expect(getByText('an menu item')).toBeInTheDocument();
         expect(getByText('another menu item')).toBeInTheDocument();
-    });
-
-    it('has items that can be selected', () => {
-        const { getByText, queryByText } = renderApp([aPane, anotherPane]);
-        const menuItem = getByText('another menu item');
-
-        expect(menuItem).not.toBeHighlighted();
-        expect(getByText('A pane')).toBeInTheDocument();
-        expect(queryByText('Another pane')).not.toBeInTheDocument();
-
-        fireEvent.click(menuItem);
-
-        expect(menuItem).toBeHighlighted();
-        expect(queryByText('A pane')).not.toBeInTheDocument();
-        expect(getByText('Another pane')).toBeInTheDocument();
-    });
-
-    it('automatically gets an About pane attached', () => {
-        const { getByText } = render(<NavMenu panes={[aPane, anotherPane]} />);
-
-        expect(getByText('About')).toBeInTheDocument();
     });
 });
