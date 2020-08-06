@@ -33,4 +33,8 @@ body {
 // used when tabbing and space
 :focus {
     outline-color: $accent !important;
+    outline-width: 3px;
+}
+:focus:active {
+    outline-style: none;
 }

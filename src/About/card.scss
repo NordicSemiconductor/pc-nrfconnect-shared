@@ -5,7 +5,8 @@
     .about-card { margin-left: 0.25em; }
 
     .about-card {
-        width: 17em;
+        flex: 1;
+        max-width: 17em;
         flex-shrink: 0;
 
         padding: 0.6em 1em;

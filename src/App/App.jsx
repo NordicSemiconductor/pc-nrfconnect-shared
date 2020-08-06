@@ -40,6 +40,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
+import Carousel from 'react-bootstrap/Carousel';
 
 import LogViewer from '../Log/LogViewer';
 import About from '../About/About';
@@ -92,16 +93,22 @@ const ConnectedApp = ({
                     {sidePanel}
                 </div>
                 <div className="core19-main-and-log">
-                    {allPanes.map(([name, MainComponent], index) => (
-                        <div
-                            key={name}
-                            className={`core19-main-container ${
-                                index === currentPane ? '' : 'd-none'
-                            }`}
-                        >
-                            <MainComponent />
-                        </div>
-                    ))}
+                    <Carousel
+                        className="core19-main-container"
+                        activeIndex={currentPane}
+                        controls={false}
+                        indicators={false}
+                        keyboard={false}
+                        interval={null}
+                        slide={true}
+                        fade={true}
+                    >
+                        {allPanes.map(([name, MainComponent]) => (
+                            <Carousel.Item key={name}>
+                                <MainComponent />
+                            </Carousel.Item>
+                        ))}
+                    </Carousel>
                     <div
                         className={`core19-log-viewer ${hiddenUnless(
                             isLogVisible
