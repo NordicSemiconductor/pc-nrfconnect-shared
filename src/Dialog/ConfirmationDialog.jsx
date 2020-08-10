@@ -106,6 +106,7 @@ const ConfirmationDialog = ({
             <Button
                 onClick={onCancel}
                 disabled={isInProgress}
+                variant="outline-primary"
             >
                 {cancelButtonText}
             </Button>
