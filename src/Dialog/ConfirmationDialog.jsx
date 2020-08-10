@@ -34,13 +34,20 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react';
-import {
-    arrayOf, bool, func, node, oneOfType, string,
-} from 'prop-types';
+import './confirmation-dialog.scss';
 
-import Modal from 'react-bootstrap/Modal';
+import {
+    arrayOf,
+    bool,
+    func,
+    node,
+    oneOfType,
+    string,
+} from 'prop-types';
+import React from 'react';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
 import Spinner from './Spinner';
 
 /**
@@ -72,7 +79,13 @@ const ConfirmationDialog = ({
     cancelButtonText = 'Cancel',
     isOkButtonEnabled = true,
 }) => (
-    <Modal show={isVisible} onHide={onCancel} backdrop={isInProgress ? 'static' : false}>
+    <Modal
+        show={isVisible}
+        onHide={onCancel}
+        backdrop={isInProgress ? 'static' : false}
+        className="modal"
+        size="lg"
+    >
         <Modal.Header closeButton={!isInProgress}>
             <Modal.Title data-testid="title">{title}</Modal.Title>
         </Modal.Header>
