@@ -1,3 +1,7 @@
+## Version 4.8.6
+### Updated
+- Updated confirmation dialog style
+
 ## Version 4.8.5
 ### Fixed
 - The remote property on the electron mock was noch mocked correctly
