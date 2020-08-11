@@ -1,7 +1,10 @@
-## Unreleased
+## Version 4.8.6
+### Updated
+- Updated confirmation dialog style
+
+## Version 4.8.5
 ### Changed
 - Render all panes of the App, but only the current is visible
-- Updated confirmation dialog style
 
 ## Version 4.8.4
 ### Added
