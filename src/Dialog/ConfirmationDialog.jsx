@@ -82,7 +82,7 @@ const ConfirmationDialog = ({
     <Modal
         show={isVisible}
         onHide={onCancel}
-        backdrop={isInProgress ? 'static' : false}
+        backdrop={isInProgress ? 'static' : true}
         size="lg"
     >
         <Modal.Header closeButton={!isInProgress}>
