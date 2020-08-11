@@ -83,11 +83,12 @@ const ConfirmationDialog = ({
         show={isVisible}
         onHide={onCancel}
         backdrop={isInProgress ? 'static' : false}
-        className="modal"
         size="lg"
     >
         <Modal.Header closeButton={!isInProgress}>
-            <Modal.Title data-testid="title">{title}</Modal.Title>
+            <Modal.Title data-testid="title">
+                <h3>{title}</h3>
+            </Modal.Title>
         </Modal.Header>
         <Modal.Body>
             { children || <p data-testid="body">{ text }</p> }
