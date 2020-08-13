@@ -35,6 +35,7 @@
  */
 
 import React from 'react';
+import { bool } from 'prop-types';
 import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 import { autoScroll as autoScrollSelector } from '../Log/logReducer';
@@ -49,7 +50,7 @@ import {
 
 import './visibility-bar.scss';
 
-export default () => {
+const VisibilityBar = ({ isSidePanelEnabled }) => {
     const dispatch = useDispatch();
     const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);
@@ -57,14 +58,16 @@ export default () => {
 
     return (
         <div className="core19-visibility-bar">
-            <div className={`core19-visibility-bar-show-side-panel ${isSidePanelVisible ? '' : 'panel-hidden'}`}>
-                <Form.Switch
-                    id="visibility-bar-show-side-panel"
-                    label="Show side panel"
-                    checked={isSidePanelVisible}
-                    onChange={() => dispatch(toggleSidePanelVisible())}
-                />
-            </div>
+            {isSidePanelEnabled && (
+                <div className={`core19-visibility-bar-show-side-panel ${isSidePanelVisible ? '' : 'panel-hidden'}`}>
+                    <Form.Switch
+                        id="visibility-bar-show-side-panel"
+                        label="Show side panel"
+                        checked={isSidePanelVisible}
+                        onChange={() => dispatch(toggleSidePanelVisible())}
+                    />
+                </div>
+            )}
             <div className="core19-visibility-bar-show-log">
                 <button
                     type="button"
@@ -99,3 +102,9 @@ export default () => {
         </div>
     );
 };
+
+VisibilityBar.propTypes = {
+    isSidePanelEnabled: bool.isRequired,
+};
+
+export default VisibilityBar;

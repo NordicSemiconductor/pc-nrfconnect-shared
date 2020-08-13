@@ -44,9 +44,11 @@ import './nav-bar.scss';
 
 const NavBar = ({ deviceSelect, panes }) => (
     <div className="core19-nav-bar">
-        <div className="core19-nav-bar-device-selector">
-            {deviceSelect != null && deviceSelect}
-        </div>
+        {deviceSelect && (
+            <div className="core19-nav-bar-device-selector">
+                {deviceSelect}
+            </div>
+        )}
         <NavMenu panes={panes} />
         <Logo changeWithDeviceState />
     </div>
