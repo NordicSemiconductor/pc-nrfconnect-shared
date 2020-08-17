@@ -14,6 +14,8 @@
         background-color: $gray-100;
         padding: 5px 10px;
 
+        transition: background-color $normal-transition;
+
         &.panel-hidden {
             background-color: $gray-50;
         }
