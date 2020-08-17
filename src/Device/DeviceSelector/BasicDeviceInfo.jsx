@@ -44,7 +44,6 @@ import { displayedDeviceName } from '../deviceInfo/deviceInfo';
 import { resetDeviceNickname, setDeviceNickname } from '../deviceActions';
 import deviceShape from './deviceShape';
 import DeviceIcon from './DeviceIcon';
-import { FavoriteIndicator } from './Favorite';
 
 import './basic-device-info.scss';
 
@@ -84,7 +83,7 @@ DeviceSerialNumber.propTypes = {
 };
 
 const BasicDeviceInfo = ({
-    device, deviceNameInputRef, whiteBackground, additionalToggle,
+    device, deviceNameInputRef, whiteBackground, toggles,
 }) => (
     <div className="basic-device-info">
         <DeviceIcon device={device} whiteBackground={whiteBackground} />
@@ -93,8 +92,7 @@ const BasicDeviceInfo = ({
             <DeviceSerialNumber device={device} />
         </div>
         <div className="toggles">
-            <FavoriteIndicator device={device} />
-            {additionalToggle}
+            {toggles}
         </div>
     </div>
 );
@@ -102,7 +100,7 @@ BasicDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
     deviceNameInputRef: shape({ current: shape({ focus: func.isRequired }) }),
     whiteBackground: bool.isRequired,
-    additionalToggle: node.isRequired,
+    toggles: node.isRequired,
 };
 
 export default BasicDeviceInfo;
