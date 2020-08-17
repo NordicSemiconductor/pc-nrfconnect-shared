@@ -36,9 +36,9 @@
 
 import React, { useEffect } from 'react';
 import {
-    array, arrayOf, func, node,
+    array, arrayOf, func, node, bool,
 } from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
@@ -51,7 +51,12 @@ import AppReloadDialog from '../AppReload/AppReloadDialog';
 import NavBar from '../NavBar/NavBar';
 import VisibilityBar from './VisibilityBar';
 import ConnectedToStore from './ConnectedToStore';
-import { isSidePanelVisibleSelector, isLogVisibleSelector, currentPaneSelector } from './appLayout';
+import {
+    isSidePanelVisibleSelector,
+    isLogVisibleSelector,
+    currentPaneSelector,
+    toggleLogVisible,
+} from './appLayout';
 
 import './shared.scss';
 import './app.scss';
@@ -59,16 +64,21 @@ import './app.scss';
 const hiddenUnless = isVisible => (isVisible ? '' : 'd-none');
 
 const ConnectedApp = ({
-    deviceSelect, panes, sidePanel,
+    deviceSelect, panes, sidePanel, showLogByDefault = true,
 }) => {
     const allPanes = [...panes, ['About', About]];
     const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         Mousetrap.bind('alt+l', () => ipcRenderer.send('open-app-launcher'));
-    }, []);
+
+        if (!showLogByDefault) {
+            dispatch(toggleLogVisible());
+        }
+    }, [dispatch, showLogByDefault]);
 
     return (
         <div className="core19-app">
@@ -77,7 +87,7 @@ const ConnectedApp = ({
                 panes={allPanes}
             />
             <div className="core19-app-content">
-                <div className={`core19-side-panel ${hiddenUnless(isSidePanelVisible)}`}>
+                <div className={`core19-side-panel ${hiddenUnless(sidePanel && isSidePanelVisible)}`}>
                     {sidePanel}
                 </div>
                 <div className="core19-main-and-log">
@@ -102,7 +112,7 @@ const ConnectedApp = ({
                     </div>
                 </div>
             </div>
-            <VisibilityBar />
+            <VisibilityBar isSidePanelEnabled={sidePanel !== null} />
 
             <AppReloadDialog />
             <ErrorDialog />
@@ -111,9 +121,10 @@ const ConnectedApp = ({
 };
 
 ConnectedApp.propTypes = {
-    deviceSelect: node.isRequired,
+    deviceSelect: node,
     panes: arrayOf(array.isRequired).isRequired,
-    sidePanel: node.isRequired,
+    sidePanel: node,
+    showLogByDefault: bool,
 };
 
 const noopReducer = state => state;

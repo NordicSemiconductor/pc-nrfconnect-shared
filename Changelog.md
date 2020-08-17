@@ -1,4 +1,14 @@
-## Unreleased
+## Version 4.8.7
+### Updated
+- Made the device picker, sidepanel, and log UI elements optional
+
+## Version 4.8.6
+### Updated
+- Updated confirmation dialog style
+
+## Version 4.8.5
+### Fixed
+- The remote property on the electron mock was noch mocked correctly
 ### Changed
 - Render all panes of the App, but only the current is visible
 
