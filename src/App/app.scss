@@ -30,7 +30,7 @@
                 height: 100%;
                 .carousel-item {
                     height: 100%;
-                    transition: opacity 0.2s ease-in-out;
+                    transition: opacity $normal-transition;
                 }
             }
         }
@@ -44,7 +44,7 @@
             width: 100%;
 
             margin-bottom: 0;
-            transition: margin-bottom 0.2s ease-in-out;
+            transition: margin-bottom $normal-transition;
 
             ::-webkit-scrollbar, ::-webkit-scrollbar-corner {
                 background-color: $gray-900;
@@ -76,7 +76,7 @@
         overflow: auto;
         height: 100%;
         margin-left: 0;
-        transition: margin-left 0.2s ease-in-out;
+        transition: margin-left $normal-transition;
     }
 
     .core19-side-panel.d-none {
