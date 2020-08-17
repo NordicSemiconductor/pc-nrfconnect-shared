@@ -98,8 +98,8 @@ const ConnectedApp = ({
                         indicators={false}
                         keyboard={false}
                         interval={null}
-                        slide={true}
-                        fade={true}
+                        slide
+                        fade
                     >
                         {allPanes.map(([name, MainComponent]) => (
                             <Carousel.Item key={name}>
