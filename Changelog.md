@@ -1,3 +1,7 @@
+## Version 4.8.7
+### Updated
+- Made the device picker, sidepanel, and log UI elements optional
+
 ## Version 4.8.6
 ### Updated
 - Updated confirmation dialog style
