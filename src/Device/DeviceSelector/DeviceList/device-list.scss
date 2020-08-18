@@ -31,5 +31,7 @@
         .details .name:not(:focus) {
             pointer-events: none;
         }
+
+        @include scrollbars($primary);
     }
 }
