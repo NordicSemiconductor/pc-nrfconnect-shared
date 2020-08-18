@@ -1,3 +1,5 @@
+@import "../variables";
+
 .core19-log {
     position: relative;
     overflow: auto;
@@ -10,5 +12,14 @@
         min-width: 100%;
 
         scroll-snap-align: start;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-color: $gray-900;
+        background: $gray-400;
+    }
+
+    &::-webkit-scrollbar-thumb:hover  {
+        background: $gray-200;
     }
 }

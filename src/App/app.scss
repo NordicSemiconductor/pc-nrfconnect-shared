@@ -45,22 +45,6 @@
 
             margin-bottom: 0;
             transition: margin-bottom $normal-transition;
-
-            ::-webkit-scrollbar, ::-webkit-scrollbar-corner {
-                width: 1em;
-                height: 1em;
-            }
-
-            ::-webkit-scrollbar-thumb {
-                background: $gray-400;
-
-                border-radius: 1em;
-                border: 0.39em solid $gray-900;
-            }
-
-            ::-webkit-scrollbar-thumb:hover  {
-                background: $gray-200;
-            }
         }
 
         .core19-log-viewer.d-none {
@@ -77,6 +61,15 @@
         height: 100%;
         margin-left: 0;
         transition: margin-left $normal-transition;
+
+        &::-webkit-scrollbar-thumb {
+            border-color: $gray-50;
+            background: $gray-200;
+        }
+
+        &::-webkit-scrollbar-thumb:hover  {
+            background: $gray-400;
+        }
     }
 
     .core19-side-panel.d-none {
