@@ -18,6 +18,8 @@ $roboto-font-path: "~roboto-fontface/fonts" !default;
 
 html, body, #webapp {
     height: 100%;
+
+    @include scrollbars($white);
 }
 
 body {
