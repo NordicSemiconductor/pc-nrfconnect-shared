@@ -47,8 +47,8 @@
             transition: margin-bottom $normal-transition;
 
             ::-webkit-scrollbar, ::-webkit-scrollbar-corner {
-                background-color: $gray-900;
                 width: 1em;
+                height: 1em;
             }
 
             ::-webkit-scrollbar-thumb {
