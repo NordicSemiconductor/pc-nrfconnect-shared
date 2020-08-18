@@ -62,14 +62,7 @@
         margin-left: 0;
         transition: margin-left $normal-transition;
 
-        &::-webkit-scrollbar-thumb {
-            border-color: $gray-50;
-            background: $gray-200;
-        }
-
-        &::-webkit-scrollbar-thumb:hover  {
-            background: $gray-400;
-        }
+        @include scrollbars($gray-50);
     }
 
     .core19-side-panel.d-none {
