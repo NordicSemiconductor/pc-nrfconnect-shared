@@ -45,11 +45,8 @@
 
             margin-bottom: 0;
             transition: margin-bottom $normal-transition;
-        }
 
-        .core19-log-viewer.d-none {
-            display: block !important;
-            margin-bottom: -156px;
+            &.hidden { margin-bottom: -156px; }
         }
     }
 
@@ -62,11 +59,8 @@
         margin-left: 0;
         transition: margin-left $normal-transition;
 
-        @include scrollbars($gray-50);
-    }
+        &.hidden { margin-left: -260px; }
 
-    .core19-side-panel.d-none {
-        margin-left: -260px;
-        display: block !important;
+        @include scrollbars($gray-50);
     }
 }

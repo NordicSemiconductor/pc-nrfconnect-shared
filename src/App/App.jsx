@@ -61,7 +61,7 @@ import {
 import './shared.scss';
 import './app.scss';
 
-const hiddenUnless = isVisible => (isVisible ? '' : 'd-none');
+const hiddenUnless = isVisible => (isVisible ? '' : 'hidden');
 
 const ConnectedApp = ({
     deviceSelect, panes, sidePanel, showLogByDefault = true,
