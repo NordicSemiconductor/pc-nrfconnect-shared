@@ -1,3 +1,7 @@
+## Version 4.8.8
+### Updated
+- Updated several design elements for the release of the new RSSI app
+
 ## Version 4.8.7
 ### Updated
 - Made the device picker, sidepanel, and log UI elements optional
