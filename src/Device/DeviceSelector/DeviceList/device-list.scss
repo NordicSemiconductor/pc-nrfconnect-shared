@@ -28,10 +28,6 @@
             border-bottom: 1px solid $primary-darkened;
         }
 
-        .details .name:not(:focus) {
-            pointer-events: none;
-        }
-
         @include scrollbars($primary);
     }
 }
