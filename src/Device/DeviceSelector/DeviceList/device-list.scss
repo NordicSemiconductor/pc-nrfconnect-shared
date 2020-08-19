@@ -14,7 +14,7 @@
     .device-list {
         list-style: none;
         padding: 0;
-        overflow-y: scroll;
+        overflow-y: overlay;
         height: calc(100vh - 40px);
         margin-bottom: 0;
 
