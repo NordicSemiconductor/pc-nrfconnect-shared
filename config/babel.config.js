@@ -1,7 +1,10 @@
 module.exports = api => {
   api.cache(true);
   return {
-    presets: ['@babel/preset-react'],
+    presets: [
+      '@babel/preset-react',
+      '@babel/preset-typescript'
+    ],
     plugins: [
       'add-module-exports',
       '@babel/plugin-proposal-class-properties',

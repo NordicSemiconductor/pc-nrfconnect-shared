@@ -26,6 +26,7 @@
     "@babel/plugin-transform-parameters": "7.9.5",
     "@babel/plugin-transform-spread": "7.10.0",
     "@babel/preset-react": "7.10.0",
+    "@babel/preset-typescript": "^7.10.4",
     "@testing-library/jest-dom": "5.8.0",
     "@testing-library/react": "10.0.4",
     "babel-eslint": "10.1.0",
@@ -69,6 +70,7 @@
     "shasum": "1.0.2",
     "style-loader": "1.2.1",
     "systeminformation": "4.26.4",
+    "typescript": "^3.9.7",
     "url-loader": "4.1.0",
     "webpack": "4.43.0",
     "winston": "3.2.1"
