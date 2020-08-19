@@ -72,7 +72,7 @@ export const FavoriteIndicator = ({ device }) => {
 
     return (
         <PseudoButton
-            className={`mdi mdi-star ${device.favorite ? 'is-favorite' : ''}`}
+            className={`mdi ${device.favorite ? 'mdi-star' : 'mdi-star-outline'}`}
             onClick={toggleFavorite}
         />
     );
