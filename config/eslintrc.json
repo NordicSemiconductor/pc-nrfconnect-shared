@@ -23,6 +23,7 @@
         "react/jsx-one-expression-per-line": "off",
         "react/jsx-props-no-spreading": "off",
         "react/require-default-props": "off",
+        "react/jsx-filename-extension": [1, {"extensions": [".jsx", ".tsx"]}],
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "error",
         "jsx-a11y/control-has-associated-label": "off",
@@ -76,5 +77,12 @@
         "node": true,
         "jasmine": true,
         "jest": true
+    },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [".jsx", ".tsx", ".js", ".ts"]
+            }
+        }
     }
 }

@@ -103,5 +103,6 @@
     "setupFilesAfterEnv": [
       "<rootDir>/test/setupTests.js"
     ]
-  }
+  },
+  "typings": "./index.d.ts"
 }

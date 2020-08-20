@@ -46,7 +46,7 @@ try {
 }
 
 function findEntryPoint() {
-    const files = ['./src/index.jsx', './lib/index.jsx', './index.jsx'];
+    const files = ['./src/index.jsx', './lib/index.jsx', './index.jsx', './src/index.tsx'];
     while (files.length) {
         const file = files.shift();
         if (fs.existsSync(file)) {
@@ -67,7 +67,7 @@ module.exports = {
     },
     module: {
         rules: [{
-            test: /\.(js|jsx)$/,
+            test: /\.(js|jsx|tsx?)$/,
             use: [{
                 loader: require.resolve('babel-loader'),
                 options: {
@@ -99,7 +99,7 @@ module.exports = {
         }],
     },
     resolve: {
-        extensions: ['.js', '.jsx'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
     },
     plugins: [
         new webpack.DefinePlugin({
