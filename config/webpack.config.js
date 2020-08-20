@@ -1,7 +1,12 @@
 const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
-const dependencies = require('../../../package.json').dependencies;
+const dependencies = require(path.join(
+    process.cwd(),
+    'node_modules',
+    'pc-nrfconnect-shared',
+    'package.json',
+)).dependencies;
 
 const appDirectory = fs.realpathSync(process.cwd());
 const nodeEnv = process.env.NODE_ENV || 'development';
