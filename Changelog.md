@@ -1,3 +1,7 @@
+## Version 4.8.8
+### Fixed
+- Fixed installation failure in local apps
+
 ## Version 4.8.7
 ### Updated
 - Made the device picker, sidepanel, and log UI elements optional
