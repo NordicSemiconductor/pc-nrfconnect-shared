@@ -3,7 +3,6 @@
 .toggle {
   display: inline-block;
   height: 24px;
-  padding: 0.3em;
   white-space: nowrap;
 }
 
@@ -18,24 +17,24 @@
 }
 
 .toggle-disabled .toggle-bar {
-  background: #e5e5e5;
+  background: $input-bg-disabled;
 }
 
 .toggle-disabled .toggle-handle {
   cursor: not-allowed;
-  background: #bdbdbd;
+  background: $input-bg-disabled;
 }
 
 .toggle-bar {
   position: relative;
   font-family: sans-serif;
   text-align: center;
-  background: #ccc;
+  background: $input-color;
   display: flex;
   flex-direction: row;
   width: 40px;
-  border-radius: 1em;
-  height: 22px;
+  border-radius: 10px;
+  height: 24px;
 }
 
 .toggle-bar-green {
@@ -73,10 +72,11 @@
 .toggle-handle {
   position: absolute;
   transform: translate3d(1px, 0, 0);
-  top: 1px;
-  height: 20px;
-  width: 20px;
-  background: #f6f6f6;
+  top: 3px;
+  left: 3px;
+  height: 16px;
+  width: 16px;
+  background: $custom-control-indicator-checked-bg;
   transition: all 0.2s ease;
   border-radius: 50%;
   cursor: pointer;
@@ -85,7 +85,7 @@
   box-shadow: 0 2px 4px 0 rgba(0, 35, 11, 0.2);
 }
 
-.toggle-handle-.toggled {
+.toggle-handle .toggled {
   transform: translate3d(19px, 0, 0);
   transition: all 0.2s ease;
   transition-property: transform;
