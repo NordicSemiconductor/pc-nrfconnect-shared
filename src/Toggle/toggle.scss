@@ -1,10 +1,9 @@
 @import "../variables";
 
 .toggle {
-  display: inline-block;
+  display: flex;
   height: 24px;
   white-space: nowrap;
-  margin: 100px;
 }
 
 .toggle-focused .toggle-bar {
@@ -90,6 +89,7 @@
   flex: 1;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 }
 
 .toggle-label {

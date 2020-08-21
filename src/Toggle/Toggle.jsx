@@ -34,16 +34,20 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { bool, func, node, string, oneOf } from 'prop-types';
+import {
+    bool, func, node, number, oneOf, string,
+} from 'prop-types';
 import React, { useState } from 'react';
 
 import './toggle.scss';
 
 const Toggle = ({
+    id,
     isToggled,
     onToggle,
     label,
-    variant = 'secondary',
+    labelRight = false,
+    variant = 'primary',
     barColor,
     barColorToggled,
     handleColor,
@@ -87,15 +91,20 @@ const Toggle = ({
         backgroundColor: toggled ? handleColorToggled : handleColor,
     };
 
+    const labelElement = (
+        <span className="toggle-label">{children || label}</span>
+    );
+
     return (
-        <div className="toggle">
-            <label htmlFor="toggle">
+        <div className="toggle" style={{ width }}>
+            <label htmlFor={id}>
+                {!labelRight && labelElement}
                 <div
                     className={toggleBarClassName.join(' ')}
                     style={toggleBarStyle}
                 >
                     <input
-                        id="toggle"
+                        id={id}
                         type="checkbox"
                         checked={toggled}
                         onChange={disabled ? null : handleToggle}
@@ -107,13 +116,14 @@ const Toggle = ({
                         style={toggleHandleStyle}
                     />
                 </div>
-                <span className="toggle-label">{children || label}</span>
+                {labelRight && labelElement}
             </label>
         </div>
     );
 };
 
 Toggle.propTypes = {
+    id: string,
     isToggled: bool,
     onToggle: func,
     variant: oneOf(['primary', 'secondary']),
@@ -122,6 +132,8 @@ Toggle.propTypes = {
     handleColor: string,
     handleColorToggled: string,
     label: string,
+    labelRight: bool,
+    width: string,
     disabled: bool,
     children: node,
 };
