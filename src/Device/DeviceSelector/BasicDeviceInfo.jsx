@@ -100,7 +100,7 @@ BasicDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
     deviceNameInputRef: shape({ current: shape({ focus: func.isRequired }) }),
     whiteBackground: bool.isRequired,
-    toggles: node.isRequired,
+    toggles: node,
 };
 
 export default BasicDeviceInfo;
