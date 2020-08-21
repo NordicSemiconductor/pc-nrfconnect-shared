@@ -2,3 +2,4 @@ node_modules
 package-lock.json
 jest.json
 pc-nrfconnect-shared-*.tgz
+.eslintrc
