@@ -74,6 +74,11 @@ declare module 'pc-nrfconnect-shared' {
      */
     export class App extends React.Component<AppProps> {}
 
+    /**
+     * Wraps the contents of your pane.
+     */
+    export class Main extends React.Component {}
+
     // DeviceSelector.jsx
 
     interface DeviceListing {
@@ -90,6 +95,8 @@ declare module 'pc-nrfconnect-shared' {
         dfu?: Record<string, unknown>;
         needSerialPort?: boolean;
     }
+
+    type Device = any;
 
     /**
      * Props for the `DeviceSelector` component.
@@ -118,14 +125,14 @@ declare module 'pc-nrfconnect-shared' {
          * the user. The callback receives the selected device as
          * a parameter.
          */
-        onDeviceSelected?: (device: any) => any;
+        onDeviceSelected?: (device: Device) => any;
         /**
          * This callback is invoked when programming a device is
          * finished. The callback receives the programmed device
          * as a parameter. If no `deviceSetup` is provided, this
          * callback will not be invoked.
          */
-        onDeviceIsReady?: (device: any) => any;
+        onDeviceIsReady?: (device: Device) => any;
         /**
          * This callback is invoked when a selected device is again
          * deselected. This may be caused by the user deselecting

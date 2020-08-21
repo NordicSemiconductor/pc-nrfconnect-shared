@@ -1,0 +1,6 @@
+{
+    "prettier.configPath": "./config/.prettierrc.json",
+    "eslint.options": {
+        "configFile": "./config/eslintrc.json"
+    }
+}

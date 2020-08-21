@@ -15,44 +15,32 @@
                 "SwitchCase": 1
             }
         ],
-        "react/jsx-indent": [
-            "error",
-            4
-        ],
-        "react/jsx-indent-props": [
-            "error",
-            4
-        ],
+        "react/jsx-indent": ["error", 4],
+        "react/jsx-indent-props": ["error", 4],
         "react/jsx-one-expression-per-line": "off",
         "react/jsx-props-no-spreading": "off",
         "react/require-default-props": "off",
-        "react/jsx-filename-extension": [1, {"extensions": [".jsx", ".tsx"]}],
+        "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }],
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "error",
         "jsx-a11y/control-has-associated-label": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-empty-function": "off",
         "camelcase": "off",
-        "quotes": [
-            "error",
-            "single"
-        ],
+        "quotes": ["error", "single"],
         "linebreak-style": "off",
-        "arrow-parens": [
-            "error",
-            "as-needed"
-        ],
-        "arrow-body-style": [
-            "error",
-            "as-needed"
-        ],
+        "arrow-parens": ["error", "as-needed"],
+        "arrow-body-style": ["error", "as-needed"],
         "strict": "off",
         "no-console": "off",
-        "valid-jsdoc": [2, {
-            "prefer": {
-                "return": "returns"
+        "valid-jsdoc": [
+            2,
+            {
+                "prefer": {
+                    "return": "returns"
+                }
             }
-        }],
+        ],
         "import/no-extraneous-dependencies": 0,
         "import/no-unresolved": [
             "error",
@@ -80,13 +68,17 @@
                 "react/prefer-stateless-function": "off",
                 "@typescript-eslint/no-explicit-any": "off"
             }
+        },
+        {
+            "files": ["*.ts", "*.tsx"],
+            "rules": {
+                "default-case": "off",
+                "consistent-return": "off",
+                "react/prop-types": "off"
+            }
         }
     ],
-    "plugins": [
-        "react",
-        "import",
-        "react-hooks"
-    ],
+    "plugins": ["react", "import", "react-hooks"],
     "env": {
         "es6": true,
         "browser": true,
