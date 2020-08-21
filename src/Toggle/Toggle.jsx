@@ -34,7 +34,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { node } from 'prop-types';
+import { bool, func, node, string } from 'prop-types';
 import React, { useEffect, useState } from 'react';
 
 import './toggle.scss';
@@ -48,7 +48,7 @@ const Toggle = ({
     disabled,
     children,
 }) => {
-    const [toggled, setToggled] = useState(isToggled | false);
+    const [toggled, setToggled] = useState(isToggled || false);
     const handleToggle = () => {
         console.log(toggled);
         if (onToggle) {
@@ -56,7 +56,11 @@ const Toggle = ({
         }
         setToggled(!toggled);
     };
-    const handleClassName = [
+    const toggleBarClassName = [
+        'toggle-bar',
+        toggled ? 'toggle-handle-toggled' : '',
+    ];
+    const toggleHandleClassName = [
         'toggle-handle',
         toggled ? 'toggle-handle-toggled' : '',
     ];
@@ -71,7 +75,7 @@ const Toggle = ({
                         aria-checked={toggled}
                         disabled={disabled}
                     />
-                    <span className={handleClassName.join(' ')} />
+                    <span className={toggleHandleClassName.join(' ')} />
                 </div>
                 <span className="toggle-label">{children || label}</span>
             </label>
@@ -79,6 +83,11 @@ const Toggle = ({
     );
 };
 
-Toggle.propTypes = { children: node };
+Toggle.propTypes = {
+    isToggled: bool,
+    onToggle: func,
+    label: string,
+    children: node,
+};
 
 export default Toggle;
