@@ -70,8 +70,18 @@
         ],
         "import/extensions": ["off"],
         "no-undef": 1,
-        "no-unused-vars": 1
+        "no-unused-vars": "off"
     },
+    "overrides": [
+        {
+            "files": ["*.d.ts"],
+            "rules": {
+                "max-classes-per-file": "off",
+                "react/prefer-stateless-function": "off",
+                "@typescript-eslint/no-explicit-any": "off"
+            }
+        }
+    ],
     "plugins": [
         "react",
         "import",
