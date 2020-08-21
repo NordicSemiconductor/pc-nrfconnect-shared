@@ -1,3 +1,7 @@
+## Version 4.8.9
+### Updated
+- Updated several design elements for the release of the new RSSI app
+
 ## Version 4.8.8
 ### Fixed
 - Fixed installation failure in local apps

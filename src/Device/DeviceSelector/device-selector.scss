@@ -6,6 +6,8 @@
 
     color: $white;
     background: $primary;
+    height: 40px;
+    transition: height $normal-transition;
 
     &.device-list-visible {
         height: 100vh;

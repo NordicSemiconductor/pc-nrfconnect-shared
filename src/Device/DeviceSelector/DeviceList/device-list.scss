@@ -14,6 +14,9 @@
     .device-list {
         list-style: none;
         padding: 0;
+        overflow-y: overlay;
+        height: calc(100vh - 40px);
+        margin-bottom: 0;
 
         font-weight: $font-weight-light;
 
@@ -24,5 +27,7 @@
         > * {
             border-bottom: 1px solid $primary-darkened;
         }
+
+        @include scrollbars($primary);
     }
 }
