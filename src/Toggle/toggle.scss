@@ -1,0 +1,114 @@
+@import "../variables";
+
+.toggle {
+  display: inline-block;
+  height: 24px;
+  padding: 0.3em;
+  white-space: nowrap;
+}
+
+.toggle-focused .toggle-bar {
+  border: 1px solid #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.1rem rgba(0, 98, 204, 0.28);
+}
+
+.toggle-disabled {
+  cursor: not-allowed;
+}
+
+.toggle-disabled .toggle-bar {
+  background: #e5e5e5;
+}
+
+.toggle-disabled .toggle-handle {
+  cursor: not-allowed;
+  background: #bdbdbd;
+}
+
+.toggle-bar {
+  position: relative;
+  font-family: sans-serif;
+  text-align: center;
+  background: #ccc;
+  display: flex;
+  flex-direction: row;
+  width: 40px;
+  border-radius: 1em;
+  height: 22px;
+}
+
+.toggle-bar-green {
+  background: #6cc644;
+}
+
+.toggle-bar-blue {
+  background: #157efb;
+}
+
+.toggle-bar-yellow {
+  background: #fdca5c;
+}
+
+.toggle-bar-gold {
+  background: #fda95c;
+}
+
+.toggle-bar-orange {
+  background: #fd8157;
+}
+
+.toggle-bar-pink {
+  background: #fc4d70;
+}
+
+.toggle-bar-violet {
+  background: #dc19a4;
+}
+
+.toggle-bar-red {
+  background: #db3340;
+}
+
+.toggle-handle {
+  position: absolute;
+  transform: translate3d(1px, 0, 0);
+  top: 1px;
+  height: 20px;
+  width: 20px;
+  background: #f6f6f6;
+  transition: all 0.2s ease;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1;
+  /* box-shadow: 0 1px 1px 0px #626262; */
+  box-shadow: 0 2px 4px 0 rgba(0, 35, 11, 0.2);
+}
+
+.toggle-handle-.toggled {
+  transform: translate3d(19px, 0, 0);
+  transition: all 0.2s ease;
+  transition-property: transform;
+}
+
+.toggle label {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+}
+
+.toggle-label {
+  margin-left: 0.5em;
+  font-size: 0.9rem;
+}
+
+.toggle input {
+  margin: -1px;
+  padding: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  position: absolute;
+}
