@@ -22,7 +22,7 @@
  * 4. Any software provided in binary form under this license must not be reverse
  *    engineered, decompiled, modified and/or disassembled.
  *
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS OR
+ * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA 'AS IS' AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE LIABLE
@@ -34,8 +34,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { bool, func, node, string } from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import { bool, func, node, string, oneOf } from 'prop-types';
+import React, { useState } from 'react';
 
 import './toggle.scss';
 
@@ -43,12 +43,19 @@ const Toggle = ({
     isToggled,
     onToggle,
     label,
-    color,
+    variant = 'secondary',
+    barColor,
+    barColorToggled,
+    handleColor,
+    handleColorToggled,
     width,
-    disabled,
+    disabled = false,
     children,
 }) => {
     const [toggled, setToggled] = useState(isToggled || false);
+    const isPrimary = variant === 'primary';
+    const isSecondary = variant === 'secondary';
+
     const handleToggle = () => {
         console.log(toggled);
         if (onToggle) {
@@ -56,26 +63,49 @@ const Toggle = ({
         }
         setToggled(!toggled);
     };
+
     const toggleBarClassName = [
         'toggle-bar',
-        toggled ? 'toggle-handle-toggled' : '',
+        isPrimary ? 'toggle-bar-primary' : '',
+        isSecondary ? 'toggle-bar-secondary' : '',
     ];
+
+    const toggleBarStyle = {
+        backgroundColor: toggled ? barColorToggled : barColor,
+    };
+
     const toggleHandleClassName = [
         'toggle-handle',
+        isPrimary ? 'toggle-handle-primary' : '',
+        isSecondary ? 'toggle-handle-secondary' : '',
         toggled ? 'toggle-handle-toggled' : '',
+        toggled && isPrimary ? 'toggle-handle-primary-toggled' : '',
+        toggled && isSecondary ? 'toggle-handle-secondary-toggled' : '',
     ];
+
+    const toggleHandleStyle = {
+        backgroundColor: toggled ? handleColorToggled : handleColor,
+    };
+
     return (
         <div className="toggle">
-            <label>
-                <div className="toggle-bar toggle-bar--pink">
+            <label htmlFor="toggle">
+                <div
+                    className={toggleBarClassName.join(' ')}
+                    style={toggleBarStyle}
+                >
                     <input
+                        id="toggle"
                         type="checkbox"
                         checked={toggled}
                         onChange={disabled ? null : handleToggle}
                         aria-checked={toggled}
                         disabled={disabled}
                     />
-                    <span className={toggleHandleClassName.join(' ')} />
+                    <span
+                        className={toggleHandleClassName.join(' ')}
+                        style={toggleHandleStyle}
+                    />
                 </div>
                 <span className="toggle-label">{children || label}</span>
             </label>
@@ -86,7 +116,13 @@ const Toggle = ({
 Toggle.propTypes = {
     isToggled: bool,
     onToggle: func,
+    variant: oneOf(['primary', 'secondary']),
+    barColor: string,
+    barColorToggled: string,
+    handleColor: string,
+    handleColorToggled: string,
     label: string,
+    disabled: bool,
     children: node,
 };
 
