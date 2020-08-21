@@ -55,25 +55,28 @@ const Toggle = ({
             onToggle();
         }
         setToggled(!toggled);
-
     };
-   return (
-      <div className="toggle">
-          <label>
-              <div className="toggle-bar toggle-bar--pink">
-                  <input
-                    type="checkbox"
-                    checked={toggled}
-                    onChange={disabled ? null : handleToggle}
-                    aria-checked={toggled}
-                    disabled={disabled}
-                  />
-                  <span className="toggle-handle" />
-              </div>
-              <span className="toggle-label">{children || label}</span>
-          </label>
-      </div>
-  );
+    const handleClassName = [
+        'toggle-handle',
+        toggled ? 'toggle-handle-toggled' : '',
+    ];
+    return (
+        <div className="toggle">
+            <label>
+                <div className="toggle-bar toggle-bar--pink">
+                    <input
+                        type="checkbox"
+                        checked={toggled}
+                        onChange={disabled ? null : handleToggle}
+                        aria-checked={toggled}
+                        disabled={disabled}
+                    />
+                    <span className={handleClassName.join(' ')} />
+                </div>
+                <span className="toggle-label">{children || label}</span>
+            </label>
+        </div>
+    );
 };
 
 Toggle.propTypes = { children: node };
