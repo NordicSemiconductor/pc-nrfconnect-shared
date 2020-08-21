@@ -30,7 +30,7 @@
   position: relative;
   font-family: sans-serif;
   text-align: center;
-  background: $input-color;
+  background: $primary;
   display: flex;
   flex-direction: row;
   width: 40px;
@@ -38,36 +38,12 @@
   height: 24px;
 }
 
-.toggle-bar-green {
-  background: #6cc644;
+.toggle-bar-primary {
+  background: $primary;
 }
 
-.toggle-bar-blue {
-  background: #157efb;
-}
-
-.toggle-bar-yellow {
-  background: #fdca5c;
-}
-
-.toggle-bar-gold {
-  background: #fda95c;
-}
-
-.toggle-bar-orange {
-  background: #fd8157;
-}
-
-.toggle-bar-pink {
-  background: #fc4d70;
-}
-
-.toggle-bar-violet {
-  background: #dc19a4;
-}
-
-.toggle-bar-red {
-  background: #db3340;
+.toggle-bar-secondary {
+  background: $input-color;
 }
 
 .toggle-handle {
@@ -82,7 +58,7 @@
   border-radius: 50%;
   cursor: pointer;
   z-index: 1;
-  /* box-shadow: 0 1px 1px 0px #626262; */
+  // /* box-shadow: 0 1px 1px 0px #626262; */
   box-shadow: 0 2px 4px 0 rgba(0, 35, 11, 0.2);
 }
 
@@ -91,6 +67,22 @@
   background: $custom-control-indicator-bg;
   transition: all 0.1s ease;
   transition-property: transform;
+}
+
+.toggle-handle-primary {
+  background: $gray-700;
+}
+
+.toggle-handle-primary-toggled {
+  background: $custom-control-indicator-bg;
+}
+
+.toggle-handle-secondary {
+  background: $gray-300;
+}
+
+.toggle-handle-secondary-toggled {
+  background: $custom-control-indicator-bg;
 }
 
 .toggle label {
