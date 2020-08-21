@@ -58,9 +58,9 @@ const Toggle = ({
 
     };
    return (
-      <div className="SlideToggle">
+      <div className="toggle">
           <label>
-              <div className="SlideToggle-bar SlideToggle-bar--pink">
+              <div className="toggle-bar toggle-bar--pink">
                   <input
                     type="checkbox"
                     checked={toggled}
@@ -68,9 +68,9 @@ const Toggle = ({
                     aria-checked={toggled}
                     disabled={disabled}
                   />
-                  <span className="SlideToggle-handle" />
+                  <span className="toggle-handle" />
               </div>
-              <span className="SlideToggle-label">{children || label}</span>
+              <span className="toggle-label">{children || label}</span>
           </label>
       </div>
   );
