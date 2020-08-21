@@ -1,8 +1,11 @@
 {
-    "parser": "babel-eslint",
+    "parser": "@typescript-eslint/parser",
     "extends": [
         "eslint:recommended",
-        "airbnb"
+        "airbnb",
+        "plugin:@typescript-eslint/recommended",
+        "prettier",
+        "prettier/@typescript-eslint"
     ],
     "rules": {
         "indent": [
@@ -27,6 +30,9 @@
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "error",
         "jsx-a11y/control-has-associated-label": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "camelcase": "off",
         "quotes": [
             "error",
             "single"
