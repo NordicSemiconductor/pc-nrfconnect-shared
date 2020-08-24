@@ -59,7 +59,6 @@ const Toggle = ({
     const [toggled, setToggled] = useState(isToggled || false);
     const isPrimary = variant === 'primary';
     const isSecondary = variant === 'secondary';
-    const elementId = id || `Toggle-${Math.random().toString(36)}`;
 
     const handleToggle = () => {
         if (onToggle) {
@@ -102,14 +101,14 @@ const Toggle = ({
 
     return (
         <div className={toggleClassName.join(' ')} style={{ width }}>
-            <label htmlFor={elementId}>
+            <label htmlFor={id}>
                 {!labelRight && (label || children) && labelElement}
                 <div
                     className={toggleBarClassName.join(' ')}
                     style={toggleBarStyle}
                 >
                     <input
-                        id={elementId}
+                        id={id}
                         type="checkbox"
                         checked={toggled}
                         onChange={disabled ? null : handleToggle}
@@ -128,7 +127,7 @@ const Toggle = ({
 };
 
 Toggle.propTypes = {
-    id: string,
+    id: string.isRequired,
     isToggled: bool,
     onToggle: func,
     variant: oneOf(['primary', 'secondary']),
