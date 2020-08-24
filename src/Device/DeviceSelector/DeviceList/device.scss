@@ -7,8 +7,11 @@
 
         padding: 12px 0;
 
+        .show-more { visibility: hidden; }
+
         &:hover, &.more-infos-visible {
             background: $white;
+            .show-more { visibility: visible; }
         }
 
         &.more-infos-visible {
