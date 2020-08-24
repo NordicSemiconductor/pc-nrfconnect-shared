@@ -35,7 +35,7 @@
  */
 
 import {
-    bool, func, node, number, oneOf, string,
+    bool, func, node, oneOf, string,
 } from 'prop-types';
 import React, { useState } from 'react';
 
@@ -59,9 +59,9 @@ const Toggle = ({
     const [toggled, setToggled] = useState(isToggled || false);
     const isPrimary = variant === 'primary';
     const isSecondary = variant === 'secondary';
+    const elementId = id || `Toggle-${Math.random().toString(36)}`;
 
     const handleToggle = () => {
-        console.log(toggled);
         if (onToggle) {
             onToggle();
         }
@@ -97,14 +97,14 @@ const Toggle = ({
 
     return (
         <div className="toggle" style={{ width }}>
-            <label htmlFor={id}>
-                {!labelRight && labelElement}
+            <label htmlFor={elementId}>
+                {(label || children) && !labelRight && labelElement}
                 <div
                     className={toggleBarClassName.join(' ')}
                     style={toggleBarStyle}
                 >
                     <input
-                        id={id}
+                        id={elementId}
                         type="checkbox"
                         checked={toggled}
                         onChange={disabled ? null : handleToggle}
@@ -116,7 +116,7 @@ const Toggle = ({
                         style={toggleHandleStyle}
                     />
                 </div>
-                {labelRight && labelElement}
+                {(label || children) && labelRight && labelElement}
             </label>
         </div>
     );
