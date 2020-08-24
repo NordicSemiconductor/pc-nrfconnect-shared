@@ -4,4 +4,8 @@
     .make-favorite .star {
         margin-right: 1ex;
     }
+
+    .mdi-star-outline { visibility: hidden; }
+
+    .device:hover .mdi-star-outline { visibility: visible; }
 }
