@@ -3,10 +3,9 @@
 .core19-device-selector {
     .icon {
         width: 68px;
-        display: flex;
-        align-items: center;
-
+        flex-shrink: 0;
         padding-left: 27px;
+
         fill: $gray-500;
     }
 

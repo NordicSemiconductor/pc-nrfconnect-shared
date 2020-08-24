@@ -28,8 +28,10 @@
         .toggles {
             display: flex;
             flex-direction: column;
-            margin-right: 20px;
-            margin-left: 10px;
+            align-items: center;
+
+            width: 44px;
+            margin-right: 10px;
         }
     }
 }

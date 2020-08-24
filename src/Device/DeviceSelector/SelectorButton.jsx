@@ -35,7 +35,7 @@
  */
 
 import React from 'react';
-import { bool, func, node } from 'prop-types';
+import { bool, func } from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
@@ -48,20 +48,21 @@ import './selector-button.scss';
 const SelectDevice = () => <div className="select-device">Select device</div>;
 
 const DisconnectDevice = ({ doDeselectDevice }) => (
-    <PseudoButton className="disconnect" onClick={doDeselectDevice}>
-        <span className="mdi mdi-close" />
-        Disconnect Device
-    </PseudoButton>
+    <PseudoButton
+        className="mdi mdi-24px mdi-eject disconnect"
+        onClick={doDeselectDevice}
+        title="Disconnect device"
+    />
 );
 DisconnectDevice.propTypes = {
     doDeselectDevice: func.isRequired,
 };
 
 const SelectedDevice = ({ device, doDeselectDevice }) => (
-    <>
-        <BasicDeviceInfo device={device} />
-        <DisconnectDevice doDeselectDevice={doDeselectDevice} />
-    </>
+    <BasicDeviceInfo
+        device={device}
+        toggles={<DisconnectDevice doDeselectDevice={doDeselectDevice} />}
+    />
 );
 SelectedDevice.propTypes = {
     device: deviceShape.isRequired,
