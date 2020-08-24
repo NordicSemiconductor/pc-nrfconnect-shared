@@ -5,24 +5,5 @@
         align-items: center;
 
         padding-left: 27px;
-
-        .blue.on-blue { display: none; }
-        .white.on-white { display: none; }
-
-        .white.on-blue { display: inline; }
-        .blue.on-white { display: inline; }
-    }
-
-    // It is hacky to depend on some foreign stuff here (Hover over the parent component or that
-    // that has the class more-infos-visible which is just meaningless here) but for now this
-    // seemed the best way I could think of.
-    .selector-button:hover, .device:hover, .device.more-infos-visible {
-        .icon {
-            .blue.on-blue { display: inline; }
-            .white.on-white { display: inline; }
-
-            .white.on-blue { display: none; }
-            .blue.on-white { display: none; }
-        }
     }
 }

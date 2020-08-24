@@ -35,9 +35,7 @@
  */
 
 import React from 'react';
-import {
-    bool, func, node, shape,
-} from 'prop-types';
+import { func, node, shape } from 'prop-types';
 import { useDispatch } from 'react-redux';
 import InlineInput from '../../InlineInput/InlineInput';
 import { displayedDeviceName } from '../deviceInfo/deviceInfo';
@@ -82,11 +80,9 @@ DeviceSerialNumber.propTypes = {
     device: deviceShape.isRequired,
 };
 
-const BasicDeviceInfo = ({
-    device, deviceNameInputRef, whiteBackground, toggles,
-}) => (
+const BasicDeviceInfo = ({ device, deviceNameInputRef, toggles }) => (
     <div className="basic-device-info">
-        <DeviceIcon device={device} whiteBackground={whiteBackground} />
+        <DeviceIcon device={device} />
         <div className="details">
             <DeviceName device={device} inputRef={deviceNameInputRef} />
             <DeviceSerialNumber device={device} />
@@ -99,7 +95,6 @@ const BasicDeviceInfo = ({
 BasicDeviceInfo.propTypes = {
     device: deviceShape.isRequired,
     deviceNameInputRef: shape({ current: shape({ focus: func.isRequired }) }),
-    whiteBackground: bool.isRequired,
     toggles: node,
 };
 

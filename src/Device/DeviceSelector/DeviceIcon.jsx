@@ -35,28 +35,18 @@
  */
 
 import React from 'react';
-import { bool } from 'prop-types';
-import { deviceIcons } from '../deviceInfo/deviceInfo';
+import { deviceIcon } from '../deviceInfo/deviceInfo';
 import deviceShape from './deviceShape';
 
 import './device-icon.scss';
 
-const DeviceIcon = ({ device, whiteBackground }) => {
-    if (device == null || deviceIcons(device) == null) {
-        return <div className="icon" />;
-    }
-
-    const bgClassname = whiteBackground ? 'on-white' : 'on-blue';
-    return (
-        <div className="icon">
-            <img className={`white ${bgClassname}`} src={deviceIcons(device).white} alt="" />
-            <img className={`blue ${bgClassname}`} src={deviceIcons(device).blue} alt="" />
-        </div>
-    );
-};
+const DeviceIcon = ({ device }) => (
+    <div className="icon">
+        <img src={deviceIcon(device)} alt="" />
+    </div>
+);
 DeviceIcon.propTypes = {
     device: deviceShape,
-    whiteBackground: bool.isRequired,
 };
 
 export default DeviceIcon;
