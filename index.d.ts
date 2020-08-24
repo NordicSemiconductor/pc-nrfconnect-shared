@@ -96,7 +96,25 @@ declare module 'pc-nrfconnect-shared' {
         needSerialPort?: boolean;
     }
 
-    type Device = any;
+    interface Device {
+        boardVersion: string,
+        serialNumber: string,
+        traits: string[],
+        serialport: {
+            path: string,
+            manufacturer: string,
+            productId: string,
+            serialNumber: string,
+            vendorId: string,
+            pnpId?: string,
+            /**
+             * @deprecated Using the property `comName` has been
+             * deprecated. You should now use `path`. The property
+             * will be removed in the next major release.
+             */
+            comName: string
+        }
+    }
 
     /**
      * Props for the `DeviceSelector` component.
