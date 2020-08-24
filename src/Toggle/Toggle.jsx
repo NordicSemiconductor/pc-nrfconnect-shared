@@ -103,7 +103,7 @@ const Toggle = ({
     return (
         <div className={toggleClassName.join(' ')} style={{ width }}>
             <label htmlFor={elementId}>
-                {(label || children) && !labelRight && labelElement}
+                {!labelRight && (label || children) && labelElement}
                 <div
                     className={toggleBarClassName.join(' ')}
                     style={toggleBarStyle}
@@ -121,7 +121,7 @@ const Toggle = ({
                         style={toggleHandleStyle}
                     />
                 </div>
-                {(label || children) && labelRight && labelElement}
+                {labelRight && (label || children) && labelElement}
             </label>
         </div>
     );

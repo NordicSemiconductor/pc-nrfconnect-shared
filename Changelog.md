@@ -1,6 +1,6 @@
 ## Version 4.8.10
-### Features
-- Added toggle componnet
+### Added
+- Added toggle component
 
 ## Version 4.8.9
 ### Updated
