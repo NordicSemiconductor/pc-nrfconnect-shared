@@ -44,6 +44,7 @@ export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelecto
 export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
 export { default as Spinner } from './Dialog/Spinner';
 export { default as Slider } from './Slider/Slider';
+export { default as Toggle } from './Toggle/Toggle';
 export { default as Main } from './Main/Main';
 
 export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';

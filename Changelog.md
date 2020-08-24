@@ -1,3 +1,7 @@
+## Version 4.8.10
+### Added
+- Added toggle component
+
 ## Version 4.8.9
 ### Updated
 - Updated several design elements for the release of the new RSSI app

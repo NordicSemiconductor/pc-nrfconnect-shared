@@ -1,0 +1,105 @@
+@import "../variables";
+
+.toggle {
+  display: flex;
+  height: 24px;
+  white-space: nowrap;
+}
+
+.toggle-focused .toggle-bar {
+  border: 1px solid $primary;
+  outline: 0;
+  box-shadow: 0 0 0 0.1rem rgba(0, 0, 0, 0.2);
+}
+
+.toggle-disabled {
+  cursor: not-allowed;
+}
+
+.toggle-disabled .toggle-bar {
+  background: $input-bg-disabled;
+}
+
+.toggle-disabled .toggle-handle {
+  cursor: not-allowed;
+  background: $input-bg-disabled;
+}
+
+.toggle-bar {
+  position: relative;
+  font-family: sans-serif;
+  text-align: center;
+  background: $primary;
+  display: flex;
+  flex-direction: row;
+  width: 40px;
+  border-radius: 10px;
+  height: 24px;
+}
+
+.toggle-bar-primary {
+  background: $primary;
+}
+
+.toggle-bar-secondary {
+  background: $input-color;
+}
+
+.toggle-handle {
+  position: absolute;
+  transform: translate3d(0px, 0, 0);
+  top: 4px;
+  left: 4px;
+  height: 15px;
+  width: 15px;
+  background: $custom-control-indicator-checked-bg;
+  transition: all 0.2s ease;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.toggle-handle-toggled {
+  transform: translate3d(16px, 0, 0);
+  background: $custom-control-indicator-bg;
+  transition: all 0.1s ease;
+  transition-property: transform;
+}
+
+.toggle-handle-primary {
+  background: $gray-700;
+}
+
+.toggle-handle-primary-toggled {
+  background: $custom-control-indicator-bg;
+}
+
+.toggle-handle-secondary {
+  background: $gray-300;
+}
+
+.toggle-handle-secondary-toggled {
+  background: $custom-control-indicator-bg;
+}
+
+.toggle label {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toggle-label {
+  margin-left: 0.5em;
+  font-size: 0.9rem;
+}
+
+.toggle input {
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  position: absolute;
+}

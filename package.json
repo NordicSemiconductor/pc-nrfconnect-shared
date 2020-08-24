@@ -1,6 +1,6 @@
 {
   "name": "pc-nrfconnect-shared",
-  "version": "4.8.9",
+  "version": "4.8.10",
   "description": "Shared commodities for developing pc-nrfconnect-* packages",
   "repository": {
     "type": "git",
@@ -14,6 +14,7 @@
   "main": "src",
   "scripts": {
     "lint": "node ./bin/nrfconnect-scripts.js lint src",
+    "lint-init": "cp ./config/eslintrc.json .eslintrc",
     "test": "jest --testResultsProcessor jest-bamboo-formatter src",
     "test-watch": "jest --watch src"
   },
