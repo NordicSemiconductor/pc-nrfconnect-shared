@@ -127,7 +127,7 @@ const Toggle = ({
 };
 
 Toggle.propTypes = {
-    id: string.isRequired,
+    id: string,
     isToggled: bool,
     onToggle: func,
     variant: oneOf(['primary', 'secondary']),
