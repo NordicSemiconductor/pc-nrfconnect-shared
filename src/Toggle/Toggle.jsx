@@ -68,6 +68,11 @@ const Toggle = ({
         setToggled(!toggled);
     };
 
+    const toggleClassName = [
+        'toggle',
+        disabled ? 'toggle-disabled' : '',
+    ];
+
     const toggleBarClassName = [
         'toggle-bar',
         isPrimary ? 'toggle-bar-primary' : '',
@@ -96,7 +101,7 @@ const Toggle = ({
     );
 
     return (
-        <div className="toggle" style={{ width }}>
+        <div className={toggleClassName.join(' ')} style={{ width }}>
             <label htmlFor={elementId}>
                 {(label || children) && !labelRight && labelElement}
                 <div
