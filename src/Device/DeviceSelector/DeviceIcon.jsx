@@ -40,11 +40,14 @@ import deviceShape from './deviceShape';
 
 import './device-icon.scss';
 
-const DeviceIcon = ({ device }) => (
-    <div className="icon">
-        <img src={deviceIcon(device)} alt="" />
-    </div>
-);
+const DeviceIcon = ({ device }) => {
+    const Icon = deviceIcon(device);
+    return (
+        <div className="icon">
+            <Icon />
+        </div>
+    );
+};
 DeviceIcon.propTypes = {
     device: deviceShape,
 };
