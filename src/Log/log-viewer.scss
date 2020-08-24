@@ -1,3 +1,5 @@
+@import "../variables";
+
 .core19-log {
     position: relative;
     overflow: auto;
@@ -11,4 +13,6 @@
 
         scroll-snap-align: start;
     }
+
+    @include scrollbars($gray-900);
 }

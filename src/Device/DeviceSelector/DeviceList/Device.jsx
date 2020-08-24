@@ -42,6 +42,7 @@ import PseudoButton from '../../../PseudoButton/PseudoButton';
 import { selectedSerialNumber } from '../../deviceReducer';
 import deviceShape from '../deviceShape';
 import BasicDeviceInfo from '../BasicDeviceInfo';
+import { FavoriteIndicator } from '../Favorite';
 import MoreDeviceInfo from './MoreDeviceInfo';
 import EditDeviceButtons from './EditDeviceButtons';
 
@@ -68,8 +69,6 @@ const Device = ({ device, doSelectDevice }) => {
     const [moreVisible, setMoreVisible] = useState(false);
     const toggleMoreVisible = () => setMoreVisible(!moreVisible);
 
-    const showMoreInfo = <ShowMoreInfo isVisible={moreVisible} toggleVisible={toggleMoreVisible} />;
-
     const isSelected = device.serialNumber === useSelector(selectedSerialNumber);
 
     const deviceNameInputRef = useRef();
@@ -86,7 +85,12 @@ const Device = ({ device, doSelectDevice }) => {
                 deviceNameInputRef={deviceNameInputRef}
                 device={device}
                 whiteBackground={false}
-                additionalToggle={showMoreInfo}
+                toggles={(
+                    <>
+                        <FavoriteIndicator device={device} />
+                        <ShowMoreInfo isVisible={moreVisible} toggleVisible={toggleMoreVisible} />
+                    </>
+                )}
             />
             {moreVisible && (
                 <>

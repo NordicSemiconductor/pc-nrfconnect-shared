@@ -20,6 +20,10 @@
             .name {
                 font-size: 15px;
                 font-weight: $font-weight-normal;
+
+                &:not(:focus) {
+                    pointer-events: none;
+                }
             }
         }
 

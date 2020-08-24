@@ -25,6 +25,14 @@
             margin: 1em;
             flex: 1;
             overflow: auto;
+
+            .carousel-inner {
+                height: 100%;
+                .carousel-item {
+                    height: 100%;
+                    transition: opacity $normal-transition;
+                }
+            }
         }
 
         .core19-log-viewer {
@@ -35,21 +43,10 @@
             overflow: hidden;
             width: 100%;
 
-            ::-webkit-scrollbar, ::-webkit-scrollbar-corner {
-                background-color: $gray-900;
-                width: 1em;
-            }
+            margin-bottom: 0;
+            transition: margin-bottom $normal-transition;
 
-            ::-webkit-scrollbar-thumb {
-                background: $gray-400;
-
-                border-radius: 1em;
-                border: 0.39em solid $gray-900;
-            }
-
-            ::-webkit-scrollbar-thumb:hover  {
-                background: $gray-200;
-            }
+            &.hidden { margin-bottom: -156px; }
         }
     }
 
@@ -59,5 +56,11 @@
         background-color: $gray-50;
         overflow: auto;
         height: 100%;
+        margin-left: 0;
+        transition: margin-left $normal-transition;
+
+        &.hidden { margin-left: -260px; }
+
+        @include scrollbars($gray-50);
     }
 }
