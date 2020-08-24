@@ -44,10 +44,18 @@ import './more-device-info.scss';
 
 const MaybeDeviceName = ({ device }) => {
     const hasNickname = device.nickname !== '';
-    if (hasNickname) {
-        return displayedDeviceName(device, { respectNickname: false });
+    if (!hasNickname) {
+        return null;
     }
-    return null;
+
+    return (
+        <div className="name">
+            {displayedDeviceName(device, { respectNickname: false })}
+        </div>
+    );
+};
+MaybeDeviceName.propTypes = {
+    device: deviceShape.isRequired,
 };
 
 const Serialports = ({ ports }) => (
