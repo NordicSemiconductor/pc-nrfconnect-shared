@@ -45,7 +45,7 @@ import { AnimatedList, AnimatedItem } from './AnimatedList';
 import './device-list.scss';
 
 const NoDevicesConnected = () => (
-    <p className="no-devices-connected">
+    <div className="no-devices-connected">
         Connect a{' '}
         <a
             target="_blank"
@@ -55,7 +55,7 @@ const NoDevicesConnected = () => (
             Nordic development kit
         </a>
         {' '}to your computer.
-    </p>
+    </div>
 );
 
 const DeviceList = ({ doSelectDevice }) => {

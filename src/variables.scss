@@ -99,12 +99,11 @@ $normal-transition: 0.2s ease-in-out;
 }
 
 @mixin scrollbars($background-color) {
-    @if $background-color == $gray-50 or $background-color == $white {
+    @if $background-color == $gray-100 or
+        $background-color == $white {
         @include scrollbars-helper($background-color, $gray-200, $gray-400);
     } @else if $background-color == $gray-900 {
         @include scrollbars-helper($background-color, $gray-400, $gray-200);
-    } @else if $background-color == $primary {
-        @include scrollbars-helper($background-color, $gray-200, $gray-50);
     } @else {
         @error "Unable to configure scrollbars for background color #{$background-color}. You must add a configuration for it.";
     }

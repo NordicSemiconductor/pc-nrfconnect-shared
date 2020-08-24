@@ -68,13 +68,13 @@ SelectedDevice.propTypes = {
     doDeselectDevice: func.isRequired,
 };
 
-const SelectorButton = ({ toggleDeviceListVisible, doDeselectDevice }) => {
+const SelectorButton = ({ deviceListVisible, doDeselectDevice, toggleDeviceListVisible }) => {
     const device = useSelector(selectedDevice);
 
     const hasSelectedDevice = device != null;
     return (
         <PseudoButton
-            className={`selector-button ${hasSelectedDevice ? 'device-selected' : ''}`}
+            className={`selector-button${hasSelectedDevice ? ' device-selected' : ''}${deviceListVisible ? ' device-list-visible' : ''}`}
             onClick={toggleDeviceListVisible}
         >
             {hasSelectedDevice ? (
@@ -86,8 +86,9 @@ const SelectorButton = ({ toggleDeviceListVisible, doDeselectDevice }) => {
     );
 };
 SelectorButton.propTypes = {
-    toggleDeviceListVisible: func.isRequired,
+    deviceListVisible: bool.isRequired,
     doDeselectDevice: func.isRequired,
+    toggleDeviceListVisible: func.isRequired,
 };
 
 export default SelectorButton;
