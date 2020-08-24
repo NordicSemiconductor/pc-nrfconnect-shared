@@ -59,7 +59,7 @@ const VisibilityBar = ({ isSidePanelEnabled }) => {
     return (
         <div className="core19-visibility-bar">
             {isSidePanelEnabled && (
-                <div className={`core19-visibility-bar-show-side-panel ${isSidePanelVisible ? '' : 'panel-hidden'}`}>
+                <div className="core19-visibility-bar-show-side-panel">
                     <Form.Switch
                         id="visibility-bar-show-side-panel"
                         label="Show side panel"

@@ -3,6 +3,7 @@
 .core19-device-selector {
     .selector-button {
         font-size: 16px;
+        background: $primary;
 
         width: 100%;
         height: $nav-bar-height;
@@ -11,13 +12,13 @@
         flex-direction: row;
         align-items: center;
 
-        &:hover { background: $primary-darkened; }
+        &:hover,&.device-list-visible {
+            background: $primary-darkened;
+        }
 
         &.device-selected {
-            color: $primary;
+            color: $gray-500;
             background: $white;
-
-            line-height: 1;
 
             .serial-number {
                 color: inherit;
@@ -26,8 +27,7 @@
             }
 
             &:hover {
-                color: $white;
-                background: $primary;
+                color: $primary;
             }
         }
 
@@ -35,6 +35,8 @@
             padding-left: 68px;
             flex-grow: 1;
             text-transform: uppercase;
+
+            color: $white;
         }
 
         &:hover {

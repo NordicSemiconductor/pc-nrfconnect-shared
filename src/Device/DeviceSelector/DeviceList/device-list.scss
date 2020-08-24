@@ -4,6 +4,7 @@
 
 .core19-device-selector {
     .no-devices-connected {
+        height: calc(100vh - 40px);
         padding: 20px;
 
         a {
@@ -20,14 +21,10 @@
 
         font-weight: $font-weight-light;
 
-        > :first-child {
-            border-top: 1px solid $primary-darkened;
-        }
-
         > * {
-            border-bottom: 1px solid $primary-darkened;
+            border-bottom: 1px solid $gray-200;
         }
 
-        @include scrollbars($primary);
+        @include scrollbars($gray-100);
     }
 }
