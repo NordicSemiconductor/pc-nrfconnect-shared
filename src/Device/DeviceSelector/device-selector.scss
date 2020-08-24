@@ -6,7 +6,7 @@
 
     color: $gray-500;
     background: $gray-100;
-    height: 40px;
+    height: $nav-bar-height;
     transition: height $normal-transition;
 
     &.device-list-visible {
