@@ -74,7 +74,6 @@ const Device = ({ device, doSelectDevice }) => {
             <BasicDeviceInfo
                 deviceNameInputRef={deviceNameInputRef}
                 device={device}
-                whiteBackground={false}
                 toggles={(
                     <>
                         <FavoriteIndicator device={device} />

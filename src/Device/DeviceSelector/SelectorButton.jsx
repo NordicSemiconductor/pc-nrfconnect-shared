@@ -59,7 +59,7 @@ DisconnectDevice.propTypes = {
 
 const SelectedDevice = ({ device, doDeselectDevice }) => (
     <>
-        <BasicDeviceInfo device={device} whiteBackground />
+        <BasicDeviceInfo device={device} />
         <DisconnectDevice doDeselectDevice={doDeselectDevice} />
     </>
 );
