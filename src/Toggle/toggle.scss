@@ -2,7 +2,7 @@
 
 .toggle {
   display: flex;
-  height: 24px;
+  flex-direction: column;
   white-space: nowrap;
 }
 
@@ -32,9 +32,9 @@
   background: $primary;
   display: flex;
   flex-direction: row;
-  width: 40px;
-  border-radius: 10px;
-  height: 24px;
+  min-width: 36px;
+  border-radius: 9px;
+  height: 20px;
 }
 
 .toggle-bar-primary {
@@ -50,8 +50,8 @@
   transform: translate3d(0px, 0, 0);
   top: 4px;
   left: 4px;
-  height: 15px;
-  width: 15px;
+  height: 12px;
+  width: 12px;
   background: $custom-control-indicator-checked-bg;
   transition: all 0.2s ease;
   border-radius: 50%;
@@ -89,11 +89,15 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  margin: 1px 0;
 }
 
 .toggle-label {
-  margin-left: 0.5em;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+}
+
+.toggle-label-rest {
+  text-align: end;
 }
 
 .toggle input {

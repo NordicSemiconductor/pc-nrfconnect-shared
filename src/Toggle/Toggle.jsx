@@ -95,9 +95,12 @@ const Toggle = ({
         backgroundColor: toggled ? handleColorToggled : handleColor,
     };
 
-    const labelElement = (
-        <span className="toggle-label">{children || label}</span>
-    );
+    let labelElement;
+    labelElement = <span className="toggle-label">{children || label}</span>;
+    labelElement = Array.isArray(children) ? (
+        <span className="toggle-label">{children[0]}</span>
+    ) : labelElement;
+    const [, ...restLabelElement] = Array.isArray(children) ? children : [];
 
     return (
         <div className={toggleClassName.join(' ')} style={{ width }}>
@@ -122,6 +125,9 @@ const Toggle = ({
                 </div>
                 {labelRight && (label || children) && labelElement}
             </label>
+            {restLabelElement.length > 0 && (
+                <div className="toggle-label toggle-label-rest">{restLabelElement}</div>
+            )}
         </div>
     );
 };
