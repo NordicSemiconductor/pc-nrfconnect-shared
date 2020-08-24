@@ -3,7 +3,7 @@
 .core19-log {
     position: relative;
     overflow: auto;
-    height: 155px;
+    height: $log-viewer-height;
 
     scroll-snap-type: y mandatory;
 
