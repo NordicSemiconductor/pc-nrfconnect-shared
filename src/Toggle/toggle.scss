@@ -3,7 +3,6 @@
 .toggle {
   display: flex;
   flex-direction: column;
-  white-space: nowrap;
 }
 
 .toggle-focused .toggle-bar {
@@ -32,9 +31,9 @@
   background: $primary;
   display: flex;
   flex-direction: row;
-  min-width: 36px;
-  border-radius: 9px;
-  height: 20px;
+  min-width: 28px;
+  border-radius: 7px;
+  height: 16px;
 }
 
 .toggle-bar-primary {
@@ -48,10 +47,10 @@
 .toggle-handle {
   position: absolute;
   transform: translate3d(0px, 0, 0);
-  top: 4px;
-  left: 4px;
-  height: 12px;
-  width: 12px;
+  top: 3px;
+  left: 3px;
+  height: 10px;
+  width: 10px;
   background: $custom-control-indicator-checked-bg;
   transition: all 0.2s ease;
   border-radius: 50%;
@@ -61,7 +60,7 @@
 }
 
 .toggle-handle-toggled {
-  transform: translate3d(16px, 0, 0);
+  transform: translate3d(12px, 0, 0);
   background: $custom-control-indicator-bg;
   transition: all 0.1s ease;
   transition-property: transform;
@@ -90,10 +89,13 @@
   align-items: center;
   justify-content: space-between;
   margin: 1px 0;
+  align-items: end;
+  line-height: 20px;
 }
 
 .toggle-label {
   font-size: 0.8rem;
+  white-space: pre-wrap;
 }
 
 .toggle-label-rest {
