@@ -1,3 +1,7 @@
+## Version 4.8.11
+### Fixed
+- Fixed the fix of installation failure in local apps
+
 ## Version 4.8.10
 ### Added
 - Added toggle component
