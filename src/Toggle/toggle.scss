@@ -90,6 +90,11 @@
   justify-content: space-between;
   line-height: 1rem;
   margin-bottom: 0.5rem;
+  margin-right: -0.5rem;
+}
+
+.toggle label > * {
+  margin-right: 0.5rem;
 }
 
 .toggle-label {
