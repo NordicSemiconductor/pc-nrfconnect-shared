@@ -2,8 +2,7 @@
 
 .toggle {
   display: flex;
-  height: 24px;
-  white-space: nowrap;
+  flex-direction: column;
 }
 
 .toggle-focused .toggle-bar {
@@ -32,9 +31,9 @@
   background: $primary;
   display: flex;
   flex-direction: row;
-  width: 40px;
-  border-radius: 10px;
-  height: 24px;
+  min-width: 28px;
+  border-radius: 8px;
+  height: 16px;
 }
 
 .toggle-bar-primary {
@@ -48,10 +47,10 @@
 .toggle-handle {
   position: absolute;
   transform: translate3d(0px, 0, 0);
-  top: 4px;
-  left: 4px;
-  height: 15px;
-  width: 15px;
+  top: 2px;
+  left: 2px;
+  height: 12px;
+  width: 12px;
   background: $custom-control-indicator-checked-bg;
   transition: all 0.2s ease;
   border-radius: 50%;
@@ -61,7 +60,7 @@
 }
 
 .toggle-handle-toggled {
-  transform: translate3d(16px, 0, 0);
+  transform: translate3d(12px, 0, 0);
   background: $custom-control-indicator-bg;
   transition: all 0.1s ease;
   transition-property: transform;
@@ -87,13 +86,24 @@
   display: flex;
   flex: 1;
   flex-direction: row;
-  align-items: center;
+  align-items: end;
   justify-content: space-between;
+  line-height: 1rem;
+  margin-bottom: 0.5rem;
+  margin-right: -0.5rem;
+}
+
+.toggle label > * {
+  margin-right: 0.5rem;
 }
 
 .toggle-label {
-  margin-left: 0.5em;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+}
+
+.toggle-label-rest {
+  text-align: end;
 }
 
 .toggle input {
