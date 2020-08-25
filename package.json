@@ -1,6 +1,6 @@
 {
   "name": "pc-nrfconnect-shared",
-  "version": "4.8.10",
+  "version": "4.8.11",
   "description": "Shared commodities for developing pc-nrfconnect-* packages",
   "repository": {
     "type": "git",
