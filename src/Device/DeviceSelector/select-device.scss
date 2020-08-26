@@ -1,0 +1,23 @@
+@import "../../variables";
+
+.core19-device-selector {
+    .select-device {
+        font-size: 16px;
+        background: $primary;
+
+        padding-left: 68px;
+        text-transform: uppercase;
+
+        color: $white;
+
+        height: $nav-bar-height;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        &:hover,&.device-list-visible {
+            background: $primary-darkened;
+        }
+    }
+}

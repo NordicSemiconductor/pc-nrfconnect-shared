@@ -35,17 +35,14 @@
  */
 
 import React from 'react';
-import { bool, func } from 'prop-types';
+import { func } from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
 import { selectedDevice } from '../deviceReducer';
 import BasicDeviceInfo from './BasicDeviceInfo';
-import deviceShape from './deviceShape';
 
-import './selector-button.scss';
-
-const SelectDevice = () => <div className="select-device">Select device</div>;
+import './selected-device.scss';
 
 const DisconnectDevice = ({ doDeselectDevice }) => (
     <PseudoButton
@@ -58,38 +55,25 @@ DisconnectDevice.propTypes = {
     doDeselectDevice: func.isRequired,
 };
 
-const SelectedDevice = ({ device, doDeselectDevice }) => (
-    <BasicDeviceInfo
-        device={device}
-        toggles={<DisconnectDevice doDeselectDevice={doDeselectDevice} />}
-    />
-);
-SelectedDevice.propTypes = {
-    device: deviceShape.isRequired,
-    doDeselectDevice: func.isRequired,
-};
-
-const SelectorButton = ({ deviceListVisible, doDeselectDevice, toggleDeviceListVisible }) => {
+const SelectedDevice = ({ doDeselectDevice, toggleDeviceListVisible }) => {
     const device = useSelector(selectedDevice);
 
-    const hasSelectedDevice = device != null;
     return (
         <PseudoButton
-            className={`selector-button${hasSelectedDevice ? ' device-selected' : ''}${deviceListVisible ? ' device-list-visible' : ''}`}
+            className="selected-device"
             onClick={toggleDeviceListVisible}
         >
-            {hasSelectedDevice ? (
-                <SelectedDevice device={device} doDeselectDevice={doDeselectDevice} />
-            ) : (
-                <SelectDevice />
-            )}
+
+            <BasicDeviceInfo
+                device={device}
+                toggles={<DisconnectDevice doDeselectDevice={doDeselectDevice} />}
+            />
         </PseudoButton>
     );
 };
-SelectorButton.propTypes = {
-    deviceListVisible: bool.isRequired,
+SelectedDevice.propTypes = {
     doDeselectDevice: func.isRequired,
     toggleDeviceListVisible: func.isRequired,
 };
 
-export default SelectorButton;
+export default SelectedDevice;
