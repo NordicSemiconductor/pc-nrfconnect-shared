@@ -3,28 +3,34 @@
 @import "../../../variables";
 
 .core19-device-selector {
-    .no-devices-connected {
-        height: calc(100vh - $nav-bar-height);
-        padding: 20px;
-
-        a {
-            color: color.scale($nordic-blue, $lightness: -30%);
-        }
-    }
-
     .device-list {
-        list-style: none;
-        padding: 0;
+        @include scrollbars($gray-100);
+        background: $gray-100;
+
+        position: fixed;
+        width: $side-panel-width;
+        height: calc(100vh - #{$nav-bar-height});
+        z-index: -1;
+
         overflow-y: overlay;
-        height: calc(100vh - $nav-bar-height);
-        margin-bottom: 0;
 
-        font-weight: $font-weight-light;
+        transition: transform $normal-transition;
 
-        > * {
-            border-bottom: 1px solid $gray-200;
+        &.hidden {
+            transform: translateY(-100%);
         }
 
-        @include scrollbars($gray-100);
+        .no-devices-connected {
+            padding: 20px;
+        }
+
+        ul {
+            padding: 0;
+            margin-bottom: 0;
+
+            > li {
+                border-bottom: 1px solid $gray-200;
+            }
+        }
     }
 }
