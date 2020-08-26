@@ -12,7 +12,7 @@
 
     font-size: 14px;
     font-weight: $font-weight-light;
-    color: $gray-500;
+    color: $gray-700;
     text-transform: uppercase;
 
     &.selected {
@@ -21,6 +21,6 @@
 
     &:focus, &:hover {
         text-decoration: none;
-        color: $gray-500;
+        color: inherit;
     }
 }
