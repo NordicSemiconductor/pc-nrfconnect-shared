@@ -5,7 +5,7 @@
         height: $nav-bar-height;
 
         font-size: 16px;
-        color: $gray-500;
+        color: $gray-700;
         background: $white;
 
         display: flex;
@@ -17,15 +17,12 @@
             font-size: 11px;
         }
 
-        &:hover {
-            color: $primary;
+        .disconnect {
+            color: $gray-700;
         }
 
-        .disconnect {
-            color: $gray-500;
-            &:hover {
-                color: $primary;
-            }
+        &:hover, *:hover {
+            color: $primary;
         }
     }
 }
