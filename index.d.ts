@@ -1,6 +1,69 @@
 declare module 'pc-nrfconnect-shared' {
     import { Reducer, AnyAction } from 'redux';
     import React from 'react';
+    import winston from 'winston';
+
+    // State
+
+    interface NrfConnectState<AppState> {
+        app: AppState;
+        appLayout: {
+            isSidePanelVisible: boolean;
+            isLogVisible: boolean;
+        };
+        appReloadDialog: {
+            isVisible: boolean;
+            message: string;
+        };
+        device: {
+            devices: Device[];
+            deviceInfo: any;
+            isSetupDialogVisible: boolean;
+            isSetupWaitingForUserInput: boolean;
+            selectedSerialNumber: string;
+            setupDialogChoices: string[];
+            setupDialogText: string | null;
+        };
+        errorDialog: {
+            errorResolutions: any;
+            isVisible: boolean;
+            messages: string[];
+        };
+        log: {
+            autoScroll: boolean;
+            logEntries: string[];
+        };
+    }
+
+    // Actions
+
+    enum NrfConnectActionType {
+        LOG_ADD_ENTRIES = 'LOG_ADD_ENTRIES',
+        LOG_CLEAR_ENTRIES = 'LOG_CLEAR_ENTRIES',
+        LOG_TOGGLE_AUTOSCROLL = 'LOG_TOGGLE_AUTOSCROLL',
+    }
+
+    interface LogAddEntries {
+        type: NrfConnectActionType.LOG_ADD_ENTRIES;
+        entries: any[];
+    }
+
+    interface LogClearEntries {
+        type: NrfConnectActionType.LOG_CLEAR_ENTRIES;
+    }
+
+    interface LogToggleAutoscroll {
+        type: NrfConnectActionType.LOG_TOGGLE_AUTOSCROLL;
+    }
+
+    export type NrfConnectAction =
+        | LogAddEntries
+        | LogClearEntries
+        | LogToggleAutoscroll;
+
+    // Logging
+
+    export const logger: winston.Logger;
 
     // App.jsx
 
@@ -97,23 +160,23 @@ declare module 'pc-nrfconnect-shared' {
     }
 
     interface Device {
-        boardVersion: string,
-        serialNumber: string,
-        traits: string[],
+        boardVersion: string;
+        serialNumber: string;
+        traits: string[];
         serialport: {
-            path: string,
-            manufacturer: string,
-            productId: string,
-            serialNumber: string,
-            vendorId: string,
-            pnpId?: string,
+            path: string;
+            manufacturer: string;
+            productId: string;
+            serialNumber: string;
+            vendorId: string;
+            pnpId?: string;
             /**
              * @deprecated Using the property `comName` has been
              * deprecated. You should now use `path`. The property
              * will be removed in the next major release.
              */
-            comName: string
-        }
+            comName: string;
+        };
     }
 
     /**

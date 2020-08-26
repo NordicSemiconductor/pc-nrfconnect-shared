@@ -34,6 +34,9 @@
         "strict": "off",
         "no-console": "off",
         "no-use-before-define": "off",
+        "no-param-reassign": "off",
+        "no-unused-expressions": "off",
+        "lines-between-class-members": "off",
         "valid-jsdoc": [
             2,
             {
