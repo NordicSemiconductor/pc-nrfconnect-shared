@@ -1,0 +1,31 @@
+@import "../../variables";
+
+.core19-device-selector {
+    .selected-device {
+        height: $nav-bar-height;
+
+        font-size: 16px;
+        color: $gray-500;
+        background: $white;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .serial-number {
+            font-weight: $font-weight-light;
+            font-size: 11px;
+        }
+
+        &:hover {
+            color: $primary;
+        }
+
+        .disconnect {
+            color: $gray-500;
+            &:hover {
+                color: $primary;
+            }
+        }
+    }
+}
