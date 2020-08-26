@@ -101,13 +101,13 @@ const DeviceSelector = ({
     }, [doStartWatchingDevices]);
 
     return (
-        <div className={`core19-device-selector ${deviceListVisible ? 'device-list-visible' : ''}`}>
+        <div className="core19-device-selector">
             <SelectorButton
                 deviceListVisible={deviceListVisible}
                 toggleDeviceListVisible={() => setDeviceListVisible(!deviceListVisible)}
                 doDeselectDevice={doDeselectDevice}
             />
-            { deviceListVisible && <DeviceList doSelectDevice={doSelectDevice} />}
+            <DeviceList isVisible={deviceListVisible} doSelectDevice={doSelectDevice} />
 
             <DeviceSetup />
         </div>

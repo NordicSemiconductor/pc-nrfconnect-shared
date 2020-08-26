@@ -35,7 +35,7 @@
  */
 
 import React from 'react';
-import { func } from 'prop-types';
+import { bool, func } from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import { sortedDevices } from '../../deviceReducer';
@@ -58,23 +58,28 @@ const NoDevicesConnected = () => (
     </div>
 );
 
-const DeviceList = ({ doSelectDevice }) => {
+const DeviceList = ({ isVisible, doSelectDevice }) => {
     const devices = useSelector(sortedDevices);
 
-    if (devices.length === 0) return <NoDevicesConnected />;
-
     return (
-        <AnimatedList devices={devices} className="device-list">
-            {devices.map(device => (
-                <AnimatedItem key={device.serialNumber} itemKey={device.serialNumber}>
-                    <Device device={device} doSelectDevice={doSelectDevice} />
-                </AnimatedItem>
-            ))}
-        </AnimatedList>
+        <div className={`device-list ${isVisible ? '' : 'hidden'}`}>
+            { devices.length === 0
+                ? <NoDevicesConnected />
+                : (
+                    <AnimatedList devices={devices}>
+                        {devices.map(device => (
+                            <AnimatedItem key={device.serialNumber} itemKey={device.serialNumber}>
+                                <Device device={device} doSelectDevice={doSelectDevice} />
+                            </AnimatedItem>
+                        ))}
+                    </AnimatedList>
+                )}
+        </div>
     );
 };
 DeviceList.propTypes = {
     doSelectDevice: func.isRequired,
+    isVisible: bool.isRequired,
 };
 
 export default DeviceList;

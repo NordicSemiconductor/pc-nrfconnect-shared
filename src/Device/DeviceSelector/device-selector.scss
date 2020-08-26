@@ -2,15 +2,5 @@
 
 .core19-device-selector {
     width: $side-panel-width;
-    z-index: 1;
-
     color: $gray-500;
-    background: $gray-100;
-    height: $nav-bar-height;
-    transition: height $normal-transition;
-
-    &.device-list-visible {
-        height: 100vh;
-        position: relative;
-    }
 }
