@@ -56,15 +56,19 @@ const Toggle = ({
     disabled = false,
     children,
 }) => {
-    const [toggled, setToggled] = useState(isToggled || false);
+    const isControlled = isToggled !== undefined;
+    const [internalToggled, setInternalToggled] = useState(!!isToggled);
+    const toggled = isControlled ? isToggled : internalToggled;
     const isPrimary = variant === 'primary';
     const isSecondary = variant === 'secondary';
 
     const handleToggle = () => {
         if (onToggle) {
-            onToggle();
+            onToggle(!toggled);
         }
-        setToggled(!toggled);
+        if (!isControlled) {
+            setInternalToggled(!internalToggled);
+        }
     };
 
     const toggleClassName = [

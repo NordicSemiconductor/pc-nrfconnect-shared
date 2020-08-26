@@ -1,3 +1,7 @@
+## Version 4.8.12
+### Fixed
+- Fixed the Toggle components state in case it's controlled from outside
+
 ## Version 4.8.11
 ### Fixed
 - Fixed the fix of installation failure in local apps
