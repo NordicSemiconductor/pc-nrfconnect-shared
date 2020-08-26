@@ -1,3 +1,8 @@
+## Version 4.8.13
+### Fixed
+- Restyle device selector
+- Fix scrollbars for old apps
+
 ## Version 4.8.12
 ### Fixed
 - Fixed the Toggle components state in case it's controlled from outside
