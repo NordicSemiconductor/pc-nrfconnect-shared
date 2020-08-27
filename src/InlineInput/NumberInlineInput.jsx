@@ -41,13 +41,15 @@ import InlineInput from './InlineInput';
 
 import './number-inline-input.scss';
 
-const charCount = value => String(value).length;
+const charCount = value => String(value).length + 1;
 const isInRange = (value, { min, max }) => value >= min && value <= max;
 
-const NumberInlineInput = ({ value, range, onChange }) => (
+const NumberInlineInput = ({
+    value, range, onChange, chars = charCount(range.max),
+}) => (
     <InlineInput
         className="number-inline-input"
-        style={{ width: `${1 + charCount(range.max)}ex` }}
+        style={{ width: `${chars}ex` }}
 
         value={String(value)}
         isValid={newValue => isInRange(Number(newValue), range)}
@@ -62,6 +64,7 @@ NumberInlineInput.propTypes = {
         max: number.isRequired,
     }).isRequired,
     onChange: func.isRequired,
+    chars: number,
 };
 
 export default NumberInlineInput;
