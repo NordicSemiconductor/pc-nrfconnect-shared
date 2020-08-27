@@ -46,6 +46,8 @@
             transition: margin-bottom $normal-transition;
 
             &.hidden { margin-bottom: -$log-viewer-height; }
+
+            &:hover { color: $gray-100; }
         }
     }
 
