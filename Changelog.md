@@ -2,6 +2,9 @@
 ### Fixed
 - Restyle device selector
 - Fix scrollbars for old apps
+### Added
+- Added optional chars prop to define number of characters of NumberInput
+- Added optional decimals prop to range of Slider
 
 ## Version 4.8.12
 ### Fixed

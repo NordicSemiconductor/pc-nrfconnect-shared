@@ -39,4 +39,5 @@ import { number, shape } from 'prop-types';
 export default shape({
     min: number.isRequired,
     max: number.isRequired,
+    decimals: number,
 });
