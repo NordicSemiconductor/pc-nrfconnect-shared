@@ -34,7 +34,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { bool, number, shape } from 'prop-types';
+import { number, shape } from 'prop-types';
 
 export default shape({
     min: number.isRequired,

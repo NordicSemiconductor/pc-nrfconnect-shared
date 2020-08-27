@@ -44,7 +44,9 @@ import './number-inline-input.scss';
 const charCount = value => String(value).length + 1;
 const isInRange = (value, { min, max }) => value >= min && value <= max;
 
-const NumberInlineInput = ({ value, range, onChange, chars = charCount(range.max)}) => (
+const NumberInlineInput = ({
+    value, range, onChange, chars = charCount(range.max),
+}) => (
     <InlineInput
         className="number-inline-input"
         style={{ width: `${chars}ex` }}
