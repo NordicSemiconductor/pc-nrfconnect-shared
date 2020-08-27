@@ -19,7 +19,9 @@ $roboto-font-path: "~roboto-fontface/fonts" !default;
 html, body, #webapp {
     height: 100%;
 
-    @include scrollbars($white);
+    .core19-app {
+        @include scrollbars($white);
+    }
 }
 
 body {
@@ -39,16 +41,4 @@ body {
 }
 :focus:active {
     outline-style: none;
-}
-
-.core19-app {
-    ::-webkit-scrollbar, ::-webkit-scrollbar-corner {
-        width: 1em;
-        height: 1em;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        border-radius: 1em;
-        border: 0.39em solid;
-    }
 }

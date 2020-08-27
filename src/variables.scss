@@ -89,9 +89,15 @@ $font-weight-bold: 700;
 $normal-transition: 0.2s ease-in-out;
 
 @mixin scrollbars-helper($background-color, $scrollbar-color, $scrollbar-hover-color) {
+    &::-webkit-scrollbar, &::-webkit-scrollbar-corner {
+        width: 14px;
+        height: 14px;
+    }
+
     &::-webkit-scrollbar-thumb {
-        border-color: $background-color;
         background: $scrollbar-color;
+        border-radius: 14px;
+        border: 5px solid $background-color;
     }
 
     &::-webkit-scrollbar-thumb:hover  {
