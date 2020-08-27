@@ -1,3 +1,8 @@
+## Version 4.8.13
+### Added
+- Added optional chars prop to define number of characters of NumberInput
+- Added optional decimals prop to range of Slider
+
 ## Version 4.8.12
 ### Fixed
 - Fixed the Toggle components state in case it's controlled from outside
