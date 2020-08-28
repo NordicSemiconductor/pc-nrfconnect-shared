@@ -57,7 +57,7 @@ ShowMoreInfo.propTypes = {
     toggleVisible: func.isRequired,
 };
 
-const Device = ({ device, doSelectDevice }) => {
+const Device = ({ device, doSelectDevice, allowMoreInfoVisible }) => {
     const [moreVisible, setMoreVisible] = useState(false);
     const toggleMoreVisible = () => setMoreVisible(!moreVisible);
 
@@ -65,6 +65,10 @@ const Device = ({ device, doSelectDevice }) => {
     const startEditingDeviceName = () => {
         deviceNameInputRef.current.focus();
     };
+
+    if (moreVisible && !allowMoreInfoVisible) {
+        setMoreVisible(false);
+    }
 
     return (
         <PseudoButton
@@ -96,6 +100,7 @@ const Device = ({ device, doSelectDevice }) => {
 Device.propTypes = {
     device: deviceShape.isRequired,
     doSelectDevice: func.isRequired,
+    allowMoreInfoVisible: bool.isRequired,
 };
 
 export default Device;
