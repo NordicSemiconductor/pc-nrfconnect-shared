@@ -106,7 +106,7 @@ $normal-transition: 0.2s ease-in-out;
 }
 
 @mixin scrollbars($background-color) {
-    @if $background-color == $gray-100 or
+    @if $background-color == $gray-50 or
         $background-color == $white {
         @include scrollbars-helper($background-color, $gray-200, $gray-400);
     } @else if $background-color == $gray-900 {

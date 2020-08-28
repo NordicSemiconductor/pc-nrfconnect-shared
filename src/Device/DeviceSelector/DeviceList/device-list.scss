@@ -4,8 +4,8 @@
 
 .core19-device-selector {
     .device-list {
-        @include scrollbars($gray-100);
-        background: $gray-100;
+        @include scrollbars($gray-50);
+        background: $gray-50;
         color: $gray-700;
 
         position: fixed;
