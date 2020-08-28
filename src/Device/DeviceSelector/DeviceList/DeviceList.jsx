@@ -69,7 +69,11 @@ const DeviceList = ({ isVisible, doSelectDevice }) => {
                     <AnimatedList devices={devices}>
                         {devices.map(device => (
                             <AnimatedItem key={device.serialNumber} itemKey={device.serialNumber}>
-                                <Device device={device} doSelectDevice={doSelectDevice} />
+                                <Device
+                                    device={device}
+                                    doSelectDevice={doSelectDevice}
+                                    allowMoreInfoVisible={isVisible}
+                                />
                             </AnimatedItem>
                         ))}
                     </AnimatedList>
