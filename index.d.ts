@@ -240,4 +240,140 @@ declare module 'pc-nrfconnect-shared' {
     }
 
     export const bleChannels: BleChannels;
+
+    // Logo.jsx
+
+    export interface LogoProps {
+        changeWithDeviceState: boolean;
+    }
+
+    export class Logo extends React.Component<LogoProps> {}
+
+    // ConfirmationDialog.jsx
+
+    export interface ConfirmationDialogProps {
+        isVisible: boolean;
+        title?: string;
+        text?: string;
+        onOk: () => any;
+        onCancel: () => any;
+        okButtonText?: string;
+        cancelButtonText?: string;
+        isInProgress?: boolean;
+        isOkButtonEnabled?: boolean;
+    }
+
+    export class ConfirmationDialog extends React.Component<
+        ConfirmationDialogProps
+    > {}
+
+    // Spinner.jsx
+
+    export class Spinner extends React.Component {}
+
+    // Slider.jsx
+
+    export class SliderProps {
+        id: string;
+        values: number[];
+        range: {
+            min: number;
+            max: number;
+        };
+        onChange: ((value: number) => any)[];
+        onChangeComplete: () => any;
+    }
+
+    export class Slider extends React.Component<SliderProps> {}
+
+    // ErrorDialog.jsx
+
+    export interface ErrorDialogState {
+        messages: string[];
+        isVisible: boolean;
+        errorResolutions: any;
+    }
+
+    interface ErrorDialogShow {
+        type: 'ERROR_DIALOG_SHOW';
+        message: string;
+        errorResolutions: any;
+    }
+
+    interface ErrorDialogHide {
+        type: 'ERROR_DIALOG_HIDE';
+    }
+
+    type ErrorDialogAction = ErrorDialogShow | ErrorDialogHide;
+
+    export function errorLineReducer(
+        state: ErrorDialogState | undefined,
+        action: ErrorDialogAction
+    ): ErrorDialogState;
+
+    export class ErrorDialog extends React.Component {}
+
+    // InlineInput.jsx
+
+    interface InlineInputProps {
+        value: string;
+        isValid?: (value: string) => boolean;
+        onChange: (value: string) => any;
+        className?: string;
+        style?: React.CSSProperties;
+    }
+
+    export class InlineInput extends React.Component<InlineInputProps> {}
+
+    // NumberInlineInput.jsx
+
+    interface NumberInlineInputProps {
+        value: number;
+        range: {
+            min: number;
+            max: number;
+        };
+        onChange: (value: number) => any;
+    }
+
+    // colors.js
+
+    export const colors: Record<string, unknown>;
+
+    // appDirs.js
+
+    export function setAppDirs(
+        newAppDir: string,
+        newAppDataDir: string,
+        newAppLogDir: string
+    ): void;
+
+    export function getAppDir(): string;
+
+    export const getUserDataDir: () => any;
+
+    export function getAppFile(filename: string): string | undefined;
+
+    export function getAppDataDir(): string;
+
+    export function getAppLogDir(): string;
+
+    // open.js
+
+    export function openUrl(url: string): void;
+
+    // systemReport.js
+
+    export function systemReport(
+        allDevices: any,
+        currentSerialNumber: string[],
+        currentDevice: any
+    ): any;
+
+    // userData.js
+
+    export const userData: {
+        init: (appName: string) => void;
+        sendEvent: (category: string, action: string, label: string) => void;
+    };
 }
