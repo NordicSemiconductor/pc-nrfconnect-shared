@@ -1,3 +1,8 @@
+## Version 4.8.14
+### Fixed
+- Restyle device selector
+- Fix scrollbars for old apps
+
 ## Version 4.8.13
 ### Added
 - Added optional chars prop to define number of characters of NumberInput

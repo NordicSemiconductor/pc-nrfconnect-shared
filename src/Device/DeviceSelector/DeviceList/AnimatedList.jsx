@@ -43,10 +43,9 @@ const changesOnReorder = devices => devices
     .map(device => device.serialNumber)
     .join('\n');
 
-export const AnimatedList = ({ children, className, devices }) => (
+export const AnimatedList = ({ children, devices }) => (
     <Flipper
         element="ul"
-        className={className}
         flipKey={changesOnReorder(devices)}
     >
         {children}
@@ -54,7 +53,6 @@ export const AnimatedList = ({ children, className, devices }) => (
 );
 AnimatedList.propTypes = {
     children: node.isRequired,
-    className: string.isRequired,
     devices: arrayOf(deviceShape.isRequired).isRequired,
 };
 

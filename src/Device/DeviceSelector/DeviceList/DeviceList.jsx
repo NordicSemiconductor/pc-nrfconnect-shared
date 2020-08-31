@@ -35,7 +35,7 @@
  */
 
 import React from 'react';
-import { func } from 'prop-types';
+import { bool, func } from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import { sortedDevices } from '../../deviceReducer';
@@ -45,7 +45,7 @@ import { AnimatedList, AnimatedItem } from './AnimatedList';
 import './device-list.scss';
 
 const NoDevicesConnected = () => (
-    <p className="no-devices-connected">
+    <div className="no-devices-connected">
         Connect a{' '}
         <a
             target="_blank"
@@ -55,26 +55,35 @@ const NoDevicesConnected = () => (
             Nordic development kit
         </a>
         {' '}to your computer.
-    </p>
+    </div>
 );
 
-const DeviceList = ({ doSelectDevice }) => {
+const DeviceList = ({ isVisible, doSelectDevice }) => {
     const devices = useSelector(sortedDevices);
 
-    if (devices.length === 0) return <NoDevicesConnected />;
-
     return (
-        <AnimatedList devices={devices} className="device-list">
-            {devices.map(device => (
-                <AnimatedItem key={device.serialNumber} itemKey={device.serialNumber}>
-                    <Device device={device} doSelectDevice={doSelectDevice} />
-                </AnimatedItem>
-            ))}
-        </AnimatedList>
+        <div className={`device-list ${isVisible ? '' : 'hidden'}`}>
+            { devices.length === 0
+                ? <NoDevicesConnected />
+                : (
+                    <AnimatedList devices={devices}>
+                        {devices.map(device => (
+                            <AnimatedItem key={device.serialNumber} itemKey={device.serialNumber}>
+                                <Device
+                                    device={device}
+                                    doSelectDevice={doSelectDevice}
+                                    allowMoreInfoVisible={isVisible}
+                                />
+                            </AnimatedItem>
+                        ))}
+                    </AnimatedList>
+                )}
+        </div>
     );
 };
 DeviceList.propTypes = {
     doSelectDevice: func.isRequired,
+    isVisible: bool.isRequired,
 };
 
 export default DeviceList;

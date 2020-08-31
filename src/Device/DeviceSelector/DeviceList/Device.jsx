@@ -36,10 +36,8 @@
 
 import React, { useState, useRef } from 'react';
 import { bool, func } from 'prop-types';
-import { useSelector } from 'react-redux';
 
 import PseudoButton from '../../../PseudoButton/PseudoButton';
-import { selectedSerialNumber } from '../../deviceReducer';
 import deviceShape from '../deviceShape';
 import BasicDeviceInfo from '../BasicDeviceInfo';
 import { FavoriteIndicator } from '../Favorite';
@@ -59,32 +57,27 @@ ShowMoreInfo.propTypes = {
     toggleVisible: func.isRequired,
 };
 
-const additionalClassName = (moreVisible, isSelected) => {
-    if (moreVisible) return 'more-infos-visible';
-    if (isSelected) return 'selected-device';
-    return '';
-};
-
-const Device = ({ device, doSelectDevice }) => {
+const Device = ({ device, doSelectDevice, allowMoreInfoVisible }) => {
     const [moreVisible, setMoreVisible] = useState(false);
     const toggleMoreVisible = () => setMoreVisible(!moreVisible);
-
-    const isSelected = device.serialNumber === useSelector(selectedSerialNumber);
 
     const deviceNameInputRef = useRef();
     const startEditingDeviceName = () => {
         deviceNameInputRef.current.focus();
     };
 
+    if (moreVisible && !allowMoreInfoVisible) {
+        setMoreVisible(false);
+    }
+
     return (
         <PseudoButton
-            className={`device ${additionalClassName(moreVisible, isSelected)}`}
+            className={`device${moreVisible ? ' more-infos-visible' : ''}`}
             onClick={() => doSelectDevice(device)}
         >
             <BasicDeviceInfo
                 deviceNameInputRef={deviceNameInputRef}
                 device={device}
-                whiteBackground={false}
                 toggles={(
                     <>
                         <FavoriteIndicator device={device} />
@@ -107,6 +100,7 @@ const Device = ({ device, doSelectDevice }) => {
 Device.propTypes = {
     device: deviceShape.isRequired,
     doSelectDevice: func.isRequired,
+    allowMoreInfoVisible: bool.isRequired,
 };
 
 export default Device;

@@ -39,14 +39,15 @@
             background-color: $gray-900;
             color: $gray-400;
 
-            border-top: 1px solid gray;
             overflow: hidden;
             width: 100%;
 
             margin-bottom: 0;
             transition: margin-bottom $normal-transition;
 
-            &.hidden { margin-bottom: -156px; }
+            &.hidden { margin-bottom: -$log-viewer-height; }
+
+            &:hover { color: $gray-100; }
         }
     }
 
@@ -59,7 +60,7 @@
         margin-left: 0;
         transition: margin-left $normal-transition;
 
-        &.hidden { margin-left: -260px; }
+        &.hidden { margin-left: -$side-panel-width; }
 
         @include scrollbars($gray-50);
     }

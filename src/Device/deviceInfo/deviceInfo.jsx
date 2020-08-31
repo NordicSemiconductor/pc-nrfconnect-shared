@@ -34,27 +34,41 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import nrf51logoWhite from './nRF51-Series-logo_white.svg';
-import nrf51logoBlue from './nRF51-Series-logo_blue.svg';
-import nrf52logoWhite from './nRF52-Series-logo_white.svg';
-import nrf52logoBlue from './nRF52-Series-logo_blue.svg';
-import nrf53logoWhite from './nRF53-Series-logo_white.svg';
-import nrf53logoBlue from './nRF53-Series-logo_blue.svg';
-import nrf91logoWhite from './nRF91-Series-logo_white.svg';
-import nrf91logoBlue from './nRF91-Series-logo_blue.svg';
-import unknownLogoWhite from './unknown-logo_white.svg';
-import unknownLogoBlue from './unknown-logo_blue.svg';
-import unknownNordicLogoWhite from './unknown-nordic-logo_white.svg';
-import unknownNordicLogoBlue from './unknown-nordic-logo_blue.svg';
+/*
+   eslint-disable import/no-webpack-loader-syntax,import/no-unresolved --
+
+   It would be nice to add @svgr/webpack to the webpack configuration, which would make the two
+   disables above unnecessary, but that would be a breaking change for all apps that rely
+   on the current configuration, which uses url-loader to load SVGs.
+
+   The difference between url-loader and @svgr/webpack:
+
+   - With url-loader an URL is returned which then can be used (e.g. in an img tag) like this:
+
+       import chipIconUrl from './chipIconUrl.svg';
+       const Icon = () => <img src={chipIconUrl} />
+
+   - With @svgr/webpack a react component is returned, which then can be rendered like this:
+
+       import ChipIcon from '!!@svgr/webpack!./chipIconUrl.svg';
+       const Icon = () => <ChipIcon />
+
+   One of the advantages of @svgr/webpack is, that it includes the SVG inline, so it can be styled
+   through CSS, e.g. to change the colours.
+*/
+
+import nrf51logo from '!!@svgr/webpack!./nRF51-Series-logo.svg';
+import nrf52logo from '!!@svgr/webpack!./nRF52-Series-logo.svg';
+import nrf53logo from '!!@svgr/webpack!./nRF53-Series-logo.svg';
+import nrf91logo from '!!@svgr/webpack!./nRF91-Series-logo.svg';
+import unknownLogo from '!!@svgr/webpack!./unknown-logo.svg';
+import unknownNordicLogo from '!!@svgr/webpack!./unknown-nordic-logo.svg';
 
 const deviceInfo = pcaNumber => ({
     PCA10028: {
         name: 'nRF51 DK',
         cores: 1,
-        iconFiles: {
-            white: nrf51logoWhite,
-            blue: nrf51logoBlue,
-        },
+        icon: nrf51logo,
         website: {
             productPagePath: 'Development-Kits/nRF51-DK',
             buyOnlineParams: 'search_token=nrf51-DK&series_token=nRF51822',
@@ -63,10 +77,7 @@ const deviceInfo = pcaNumber => ({
     PCA10031: {
         name: 'nRF51 Dongle',
         cores: 1,
-        iconFiles: {
-            white: nrf51logoWhite,
-            blue: nrf51logoBlue,
-        },
+        icon: nrf51logo,
         website: {
             productPagePath: 'Development-Kits/nRF51-Dongle',
             buyOnlineParams: 'search_token=nRF51-Dongle&series_token=nRF51822',
@@ -75,10 +86,7 @@ const deviceInfo = pcaNumber => ({
     PCA10040: {
         name: 'nRF52 DK',
         cores: 1,
-        iconFiles: {
-            white: nrf52logoWhite,
-            blue: nrf52logoBlue,
-        },
+        icon: nrf52logo,
         website: {
             productPagePath: 'Development-Kits/nRF52-DK',
             buyOnlineParams: 'search_token=nRF52-DK&series_token=nRF52832',
@@ -87,10 +95,7 @@ const deviceInfo = pcaNumber => ({
     PCA10056: {
         name: 'nRF52840 DK',
         cores: 1,
-        iconFiles: {
-            white: nrf52logoWhite,
-            blue: nrf52logoBlue,
-        },
+        icon: nrf52logo,
         website: {
             productPagePath: 'Development-Kits/nRF52840-DK',
             buyOnlineParams: 'search_token=nrf52840-DK&series_token=nRF52840',
@@ -99,10 +104,7 @@ const deviceInfo = pcaNumber => ({
     PCA10059: {
         name: 'nRF52840 Dongle',
         cores: 1,
-        iconFiles: {
-            white: nrf52logoWhite,
-            blue: nrf52logoBlue,
-        },
+        icon: nrf52logo,
         website: {
             productPagePath: 'Development-Kits/nRF52840-Dongle',
             buyOnlineParams: 'search_token=nRF52840DONGLE&series_token=nRF52840',
@@ -111,10 +113,7 @@ const deviceInfo = pcaNumber => ({
     PCA10090: {
         name: 'nRF9160 DK',
         cores: 1,
-        iconFiles: {
-            white: nrf91logoWhite,
-            blue: nrf91logoBlue,
-        },
+        icon: nrf91logo,
         website: {
             productPagePath: 'Development-Kits/nRF9160-DK',
             buyOnlineParams: 'search_token=nrf9160-DK&series_token=nRF9160',
@@ -123,10 +122,7 @@ const deviceInfo = pcaNumber => ({
     PCA10100: {
         name: 'nRF52833 DK',
         cores: 1,
-        iconFiles: {
-            white: nrf52logoWhite,
-            blue: nrf52logoBlue,
-        },
+        icon: nrf52logo,
         website: {
             productPagePath: 'Development-Kits/nRF52833-DK',
             buyOnlineParams: 'search_token=nRF52833-DK&series_token=nRF52833',
@@ -135,10 +131,7 @@ const deviceInfo = pcaNumber => ({
     PCA10095: {
         name: 'nRF5340 DK',
         cores: 2,
-        iconFiles: {
-            white: nrf53logoWhite,
-            blue: nrf53logoBlue,
-        },
+        icon: nrf53logo,
         website: {
             productPagePath: 'Development-Kits/nRF5340-PDK',
             buyOnlineParams: 'search_token=nRF5340-PDK&series_token=nRF5340',
@@ -147,10 +140,7 @@ const deviceInfo = pcaNumber => ({
     PCA20020: {
         name: 'Nordic Thingy:52',
         cores: 1,
-        iconFiles: {
-            white: nrf52logoWhite,
-            blue: nrf52logoBlue,
-        },
+        icon: nrf52logo,
         website: {
             productPagePath: 'Prototyping-platforms/Nordic-Thingy-52',
             buyOnlineParams: 'search_token=nRF6936&series_token=nRF52832',
@@ -159,10 +149,7 @@ const deviceInfo = pcaNumber => ({
     PCA20035: {
         name: 'Nordic Thingy:91',
         cores: 1,
-        iconFiles: {
-            white: nrf91logoWhite,
-            blue: nrf91logoBlue,
-        },
+        icon: nrf91logo,
         website: {
             productPagePath: 'Prototyping-platforms/Nordic-Thingy-91',
             buyOnlineParams: 'search_token=nRF6943&series_token=nRF9160',
@@ -175,14 +162,10 @@ const isNordicDevice = device => (
     device.serialport && device.serialport.vendorId === NORDIC_VENDOR_ID
 );
 
-const unknownIconFiles = device => ({
-    white: isNordicDevice(device) ? unknownNordicLogoWhite : unknownLogoWhite,
-    blue: isNordicDevice(device) ? unknownNordicLogoBlue : unknownLogoBlue,
-});
+const iconForUnknown = device => (isNordicDevice(device) ? unknownNordicLogo : unknownLogo);
 
-export const deviceIcons = device => (
-    deviceInfo(device.boardVersion).iconFiles
-    || unknownIconFiles(device)
+export const deviceIcon = device => (
+    deviceInfo(device.boardVersion).icon || iconForUnknown(device)
 );
 
 export const deviceName = device => {

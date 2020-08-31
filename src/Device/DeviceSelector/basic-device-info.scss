@@ -13,13 +13,11 @@
             display: flex;
             flex-direction: column;
 
-            .serial-number {
-                color: $gray-900;
-            }
+            line-height: 1;
 
             .name {
-                font-size: 15px;
-                font-weight: $font-weight-normal;
+                font-size: 14px;
+                font-weight: $font-weight-bold;
 
                 &:not(:focus) {
                     pointer-events: none;
@@ -30,8 +28,10 @@
         .toggles {
             display: flex;
             flex-direction: column;
-            margin-right: 20px;
-            margin-left: 10px;
+            align-items: center;
+
+            width: 44px;
+            margin-right: 10px;
         }
     }
 }

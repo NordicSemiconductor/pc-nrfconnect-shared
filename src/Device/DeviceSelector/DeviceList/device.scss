@@ -5,17 +5,14 @@
         display: flex;
         flex-direction: column;
 
-        padding-top: 20px;
-        padding-bottom: 13px;
+        padding: 12px 0;
+        font-weight: $font-weight-light;
+
+        .show-more { visibility: hidden; }
 
         &:hover, &.more-infos-visible {
             background: $white;
-            color: $primary-darkened;
-            .serial-number { color: $primary; }
-        }
-
-        &.selected-device:not(:hover) {
-            background: $primary-darkened;
+            .show-more { visibility: visible; }
         }
 
         &.more-infos-visible {

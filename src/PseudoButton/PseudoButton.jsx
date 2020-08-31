@@ -57,7 +57,7 @@ const blurAndInvoke = onClick => event => {
 // Motivation for this class: A normal button in HTML must not contain divs or other buttons,
 // but we do have things that behave like buttons and at the same time should contain such things
 const PseudoButton = ({
-    onClick = () => {}, className = '', children,
+    onClick = () => {}, className = '', children, title,
 }) => (
     <div
         role="button"
@@ -65,6 +65,7 @@ const PseudoButton = ({
         tabIndex={0}
         onClick={blurAndInvoke(onClick)}
         onKeyUp={invokeIfSpaceOrEnterPressed(onClick)}
+        title={title}
     >
         {children}
     </div>
@@ -73,6 +74,7 @@ PseudoButton.propTypes = {
     onClick: func,
     className: string,
     children: node,
+    title: string,
 };
 
 export default PseudoButton;

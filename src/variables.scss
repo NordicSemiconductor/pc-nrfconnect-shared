@@ -79,6 +79,7 @@ $custom-control-indicator-checked-bg: $gray-300;
 
 $side-panel-width: 260px;
 $nav-bar-height: 40px;
+$log-viewer-height: 155px;
 $visibility-bar-height: 32px;
 
 $font-weight-light: 300;
@@ -88,9 +89,15 @@ $font-weight-bold: 700;
 $normal-transition: 0.2s ease-in-out;
 
 @mixin scrollbars-helper($background-color, $scrollbar-color, $scrollbar-hover-color) {
+    &::-webkit-scrollbar, &::-webkit-scrollbar-corner {
+        width: 14px;
+        height: 14px;
+    }
+
     &::-webkit-scrollbar-thumb {
-        border-color: $background-color;
         background: $scrollbar-color;
+        border-radius: 14px;
+        border: 5px solid $background-color;
     }
 
     &::-webkit-scrollbar-thumb:hover  {
@@ -99,12 +106,11 @@ $normal-transition: 0.2s ease-in-out;
 }
 
 @mixin scrollbars($background-color) {
-    @if $background-color == $gray-50 or $background-color == $white {
+    @if $background-color == $gray-50 or
+        $background-color == $white {
         @include scrollbars-helper($background-color, $gray-200, $gray-400);
     } @else if $background-color == $gray-900 {
         @include scrollbars-helper($background-color, $gray-400, $gray-200);
-    } @else if $background-color == $primary {
-        @include scrollbars-helper($background-color, $gray-200, $gray-50);
     } @else {
         @error "Unable to configure scrollbars for background color #{$background-color}. You must add a configuration for it.";
     }

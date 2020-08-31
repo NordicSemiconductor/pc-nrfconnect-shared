@@ -38,7 +38,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
     bool, exact, func, object,
 } from 'prop-types';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
     deselectDevice,
@@ -47,12 +47,12 @@ import {
     startWatchingDevices,
     stopWatchingDevices,
 } from '../deviceActions';
+import { deviceIsSelected as deviceIsSelectedSelector } from '../deviceReducer';
 import DeviceSetup from '../DeviceSetup/DeviceSetup';
 
 import DeviceList from './DeviceList/DeviceList';
-import SelectorButton from './SelectorButton';
-
-import './device-selector.scss';
+import SelectDevice from './SelectDevice';
+import SelectedDevice from './SelectedDevice';
 
 const noop = () => {};
 const DeviceSelector = ({
@@ -65,6 +65,8 @@ const DeviceSelector = ({
 }) => {
     const dispatch = useDispatch();
     const [deviceListVisible, setDeviceListVisible] = useState(false);
+
+    const deviceIsSelected = useSelector(deviceIsSelectedSelector);
 
     const doDeselectDevice = useCallback(
         () => {
@@ -95,19 +97,28 @@ const DeviceSelector = ({
         }
     };
 
+    const toggleDeviceListVisible = () => setDeviceListVisible(!deviceListVisible);
+
     useEffect(() => {
         doStartWatchingDevices();
         return stopWatchingDevices;
     }, [doStartWatchingDevices]);
 
     return (
-        <div className={`core19-device-selector ${deviceListVisible ? 'device-list-visible' : ''}`}>
-            <SelectorButton
-                deviceListVisible={deviceListVisible}
-                toggleDeviceListVisible={() => setDeviceListVisible(!deviceListVisible)}
-                doDeselectDevice={doDeselectDevice}
-            />
-            { deviceListVisible && <DeviceList doSelectDevice={doSelectDevice} />}
+        <div className="core19-device-selector">
+            {deviceIsSelected ? (
+                <SelectedDevice
+                    doDeselectDevice={doDeselectDevice}
+                    toggleDeviceListVisible={toggleDeviceListVisible}
+                />
+            ) : (
+                <SelectDevice
+                    deviceListVisible={deviceListVisible}
+                    toggleDeviceListVisible={toggleDeviceListVisible}
+                />
+
+            )}
+            <DeviceList isVisible={deviceListVisible} doSelectDevice={doSelectDevice} />
 
             <DeviceSetup />
         </div>
