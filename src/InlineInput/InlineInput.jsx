@@ -78,6 +78,7 @@ const InlineInput = React.forwardRef(({
     value: externalValue,
     isValid = () => true,
     onChange,
+    onChangeComplete = () => {},
     className = '',
     style = {},
 }, ref) => {
@@ -92,7 +93,22 @@ const InlineInput = React.forwardRef(({
         }
     };
 
-    const resetToExternalValue = () => setInternalValue(externalValue);
+    const resetToExternalValueOrOnChangeCompleteIfValid = () => {
+        if (isValid(internalValue)) {
+            onChangeComplete(internalValue);
+        } else {
+            setInternalValue(externalValue);
+        }
+    };
+
+    const onChangeCompleteIfValid = event => {
+        event.stopPropagation();
+
+        if (event.key === 'Enter' && isValid(internalValue)) {
+            onChangeComplete(internalValue);
+        }
+    };
+
     const stopPropagation = event => event.stopPropagation();
 
     return (
@@ -103,9 +119,9 @@ const InlineInput = React.forwardRef(({
             style={style}
             value={internalValue}
             onChange={onChangeIfValid}
-            onBlur={resetToExternalValue}
+            onBlur={resetToExternalValueOrOnChangeCompleteIfValid}
 
-            onKeyUp={stopPropagation}
+            onKeyUp={onChangeCompleteIfValid}
             onClick={stopPropagation}
         />
     );
@@ -115,6 +131,7 @@ InlineInput.propTypes = {
     value: string.isRequired,
     isValid: func,
     onChange: func.isRequired,
+    onChangeComplete: func,
     className: string,
     style: object, // eslint-disable-line react/forbid-prop-types
 };
