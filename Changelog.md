@@ -1,4 +1,8 @@
-## Version 4.8.13
+## Version 4.8.15
+### Added
+- Added onChangeComplete to InlineInput and NumberInlineInput
+
+## Version 4.8.14
 ### Fixed
 - Restyle device selector
 - Fix scrollbars for old apps

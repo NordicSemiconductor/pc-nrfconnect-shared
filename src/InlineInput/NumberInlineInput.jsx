@@ -45,7 +45,7 @@ const charCount = value => String(value).length + 1;
 const isInRange = (value, { min, max }) => value >= min && value <= max;
 
 const NumberInlineInput = ({
-    value, range, onChange, chars = charCount(range.max),
+    value, range, onChange, chars = charCount(range.max), ...props
 }) => (
     <InlineInput
         className="number-inline-input"
@@ -54,6 +54,7 @@ const NumberInlineInput = ({
         value={String(value)}
         isValid={newValue => isInRange(Number(newValue), range)}
         onChange={newValue => onChange(Number(newValue))}
+        {...props}
     />
 );
 
