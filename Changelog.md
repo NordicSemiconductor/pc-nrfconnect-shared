@@ -1,3 +1,7 @@
+## Version 4.8.15
+### Added
+- Added onChangeComplete to InputLine and NumberInputLine
+
 ## Version 4.8.14
 ### Fixed
 - Restyle device selector
