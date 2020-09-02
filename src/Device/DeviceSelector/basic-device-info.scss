@@ -8,7 +8,7 @@
         width: 100%;
 
         .details {
-            flex-grow: 1;
+            width: inherit;
 
             display: flex;
             flex-direction: column;
