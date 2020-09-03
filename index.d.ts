@@ -347,7 +347,7 @@ declare module 'pc-nrfconnect-shared' {
         barToggledColor?: string;
         handleColor?: string;
         handleColorToggled?: string;
-        label: string | number | boolean;
+        label: string;
         labelRight?: boolean;
         width?: string;
         disabled?: boolean;
