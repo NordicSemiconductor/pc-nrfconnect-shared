@@ -1,3 +1,8 @@
+## Version 4.8.16
+## Added
+- Added support for files written in TypeScript
+- Added Prettier formatting
+
 ## Version 4.8.15
 ### Added
 - Added onChangeComplete to InlineInput and NumberInlineInput
@@ -31,6 +36,8 @@
 ## Version 4.8.8
 ### Fixed
 - Fixed installation failure in local apps
+### Updated
+- Updated several design elements for the release of the new RSSI app
 
 ## Version 4.8.7
 ### Updated
