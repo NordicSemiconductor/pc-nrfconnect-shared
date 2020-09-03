@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
-const ESLintPlugin = require('eslint-webpack-plugin');
 
 const { dependencies } = require(path.join(
     process.cwd(),
