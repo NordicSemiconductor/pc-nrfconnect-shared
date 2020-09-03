@@ -336,6 +336,25 @@ declare module 'pc-nrfconnect-shared' {
         onChange: (value: number) => any;
     }
 
+    // Toggle.jsx
+
+    interface ToggleProps {
+        id?: string;
+        isToggled?: boolean;
+        onToggle: (isToggled: boolean) => void;
+        variant?: 'primary' | 'secondary';
+        barColor?: string;
+        barToggledColor?: string;
+        handleColor?: string;
+        handleColorToggled?: string;
+        label: string | number | boolean;
+        labelRight?: boolean;
+        width?: string;
+        disabled?: boolean;
+    }
+
+    export class Toggle extends React.Component<ToggleProps> {}
+
     // colors.js
 
     export const colors: Record<string, unknown>;
