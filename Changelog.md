@@ -1,3 +1,8 @@
+## Version 4.8.16
+## Added
+- Added support for files written in TypeScript
+- Added Prettier formatting
+
 ## Version 4.8.15
 ### Added
 - Added onChangeComplete to InlineInput and NumberInlineInput
