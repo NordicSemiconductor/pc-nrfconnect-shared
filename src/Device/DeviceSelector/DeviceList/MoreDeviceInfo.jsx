@@ -42,6 +42,17 @@ import deviceShape from '../deviceShape';
 
 import './more-device-info.scss';
 
+const PcaNumber = ({ device }) => {
+    if (device.boardVersion == null) {
+        return null;
+    }
+
+    return <div>{device.boardVersion}</div>;
+};
+PcaNumber.propTypes = {
+    device: deviceShape.isRequired,
+};
+
 const MaybeDeviceName = ({ device }) => {
     const hasNickname = device.nickname !== '';
     if (!hasNickname) {
@@ -75,6 +86,7 @@ Serialports.propTypes = {
 
 const MoreDeviceInfo = ({ device }) => (
     <div className="more-infos">
+        <PcaNumber device={device} />
         <MaybeDeviceName device={device} />
         <Serialports ports={serialports(device)} />
     </div>
