@@ -34,14 +34,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-    arrayOf,
-    bool,
-    func,
-    node,
-    oneOfType,
-    string,
-} from 'prop-types';
+import { arrayOf, bool, func, node, oneOfType, string } from 'prop-types';
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -88,12 +81,9 @@ const ConfirmationDialog = ({
                 <h3>{title}</h3>
             </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-            { children || <p data-testid="body">{ text }</p> }
-        </Modal.Body>
+        <Modal.Body>{children || <p data-testid="body">{text}</p>}</Modal.Body>
         <Modal.Footer>
-            { isInProgress ? <Spinner /> : null }
-
+            {isInProgress ? <Spinner /> : null}
             &nbsp;
             <Button
                 variant="primary"
@@ -117,10 +107,7 @@ ConfirmationDialog.propTypes = {
     isVisible: bool.isRequired,
     title: string,
     text: string,
-    children: oneOfType([
-        arrayOf(node),
-        node,
-    ]),
+    children: oneOfType([arrayOf(node), node]),
     onOk: func.isRequired,
     onCancel: func.isRequired,
     okButtonText: string,

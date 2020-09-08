@@ -52,14 +52,14 @@ describe('ConfirmationDialog', () => {
     describe('is visible when it', () => {
         it('is rendered when visible', () => {
             const { queryByRole } = render(
-                <ConfirmationDialog {...defaultProps} isVisible />,
+                <ConfirmationDialog {...defaultProps} isVisible />
             );
             expect(queryByRole('dialog')).toBeInTheDocument();
         });
 
         it('is not rendered when invisible', () => {
             const { queryByRole } = render(
-                <ConfirmationDialog {...defaultProps} isVisible={false} />,
+                <ConfirmationDialog {...defaultProps} isVisible={false} />
             );
             expect(queryByRole('dialog')).not.toBeInTheDocument();
         });
@@ -68,7 +68,9 @@ describe('ConfirmationDialog', () => {
     describe('shows the expected content', () => {
         it('in the title', () => {
             const title = 'a title';
-            const { getByTestId } = render(<ConfirmationDialog {...defaultProps} title={title} />);
+            const { getByTestId } = render(
+                <ConfirmationDialog {...defaultProps} title={title} />
+            );
 
             expect(getByTestId('title').textContent).toBe(title);
         });
@@ -78,7 +80,7 @@ describe('ConfirmationDialog', () => {
             const { getByText } = render(
                 <ConfirmationDialog {...defaultProps}>
                     {children}
-                </ConfirmationDialog>,
+                </ConfirmationDialog>
             );
 
             // react-bootstrap/Modal does not allow setting a data-testid on Modal.Body,
@@ -89,7 +91,9 @@ describe('ConfirmationDialog', () => {
 
         it('with text', () => {
             const text = 'a text';
-            const { getByTestId } = render(<ConfirmationDialog {...defaultProps} text={text} />);
+            const { getByTestId } = render(
+                <ConfirmationDialog {...defaultProps} text={text} />
+            );
 
             expect(getByTestId('body').textContent).toBe(text);
         });
@@ -98,7 +102,9 @@ describe('ConfirmationDialog', () => {
     describe('can be confirmed through the Ok button', () => {
         it('invokes the expected action', () => {
             const onOkMock = jest.fn();
-            const { getByText } = render(<ConfirmationDialog {...defaultProps} onOk={onOkMock} />);
+            const { getByText } = render(
+                <ConfirmationDialog {...defaultProps} onOk={onOkMock} />
+            );
 
             const okButton = getByText('OK');
             fireEvent.click(okButton);
@@ -107,7 +113,9 @@ describe('ConfirmationDialog', () => {
         });
         describe('can be disabled, when it', () => {
             const isDisabledFor = props => {
-                const { getByText } = render(<ConfirmationDialog {...defaultProps} {...props} />);
+                const { getByText } = render(
+                    <ConfirmationDialog {...defaultProps} {...props} />
+                );
                 expect(getByText('OK')).toBeDisabled();
             };
 
@@ -130,7 +138,10 @@ describe('ConfirmationDialog', () => {
             it('the close button in the header', () => {
                 const onCancelMock = jest.fn();
                 const { getByText } = render(
-                    <ConfirmationDialog {...defaultProps} onCancel={onCancelMock} />,
+                    <ConfirmationDialog
+                        {...defaultProps}
+                        onCancel={onCancelMock}
+                    />
                 );
 
                 const closeButton = getByText('Close');
@@ -142,7 +153,10 @@ describe('ConfirmationDialog', () => {
             it('the cancel button', () => {
                 const onCancelMock = jest.fn();
                 const { getByText } = render(
-                    <ConfirmationDialog {...defaultProps} onCancel={onCancelMock} />,
+                    <ConfirmationDialog
+                        {...defaultProps}
+                        onCancel={onCancelMock}
+                    />
                 );
 
                 const cancelButton = getByText('Cancel');
@@ -155,10 +169,14 @@ describe('ConfirmationDialog', () => {
         it('is disabled when in progess', async () => {
             const onCancelMock = jest.fn();
             const { rerender, queryByText, getByText } = render(
-                <ConfirmationDialog {...defaultProps} onCancel={onCancelMock} />,
+                <ConfirmationDialog {...defaultProps} onCancel={onCancelMock} />
             );
             rerender(
-                <ConfirmationDialog {...defaultProps} onCancel={onCancelMock} isInProgress />,
+                <ConfirmationDialog
+                    {...defaultProps}
+                    onCancel={onCancelMock}
+                    isInProgress
+                />
             );
 
             expect(queryByText('Close')).not.toBeInTheDocument();

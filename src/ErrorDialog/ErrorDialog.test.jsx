@@ -49,20 +49,19 @@ describe('ErrorDialog', () => {
     });
 
     it('should render visible dialog with one message', () => {
-        const { getByRole, queryByText } = render(
-            <ErrorDialog />,
-            [showDialog('An error occured')],
-        );
+        const { getByRole, queryByText } = render(<ErrorDialog />, [
+            showDialog('An error occured'),
+        ]);
 
         expect(getByRole('dialog')).toBeInTheDocument();
         expect(queryByText('An error occured')).toBeInTheDocument();
     });
 
     it('should render visible dialog with two messages', () => {
-        const { getByRole, queryByText } = render(
-            <ErrorDialog />,
-            [showDialog('An error occured'), showDialog('Another error occured')],
-        );
+        const { getByRole, queryByText } = render(<ErrorDialog />, [
+            showDialog('An error occured'),
+            showDialog('Another error occured'),
+        ]);
 
         expect(getByRole('dialog')).toBeInTheDocument();
         expect(queryByText('An error occured')).toBeInTheDocument();
@@ -71,10 +70,9 @@ describe('ErrorDialog', () => {
 
     describe('has 2 close buttons', () => {
         it('with the text "Close"', () => {
-            const { getAllByRole } = render(
-                <ErrorDialog />,
-                [showDialog('An error occured')],
-            );
+            const { getAllByRole } = render(<ErrorDialog />, [
+                showDialog('An error occured'),
+            ]);
 
             const buttons = getAllByRole('button');
             expect(buttons.length).toBe(2);
@@ -83,10 +81,9 @@ describe('ErrorDialog', () => {
         });
 
         const dialogAfterClickingButton = buttonNumber => {
-            const { getAllByRole, getByRole } = render(
-                <ErrorDialog />,
-                [showDialog('An error occured')],
-            );
+            const { getAllByRole, getByRole } = render(<ErrorDialog />, [
+                showDialog('An error occured'),
+            ]);
 
             const buttons = getAllByRole('button');
             fireEvent.click(buttons[buttonNumber]);
@@ -108,10 +105,11 @@ describe('ErrorDialog', () => {
     it('can have a custom error resolutions', () => {
         const specialHandling = jest.fn();
 
-        const { getByText } = render(
-            <ErrorDialog />,
-            [showDialog('An error occured', { 'Special Handling': specialHandling })],
-        );
+        const { getByText } = render(<ErrorDialog />, [
+            showDialog('An error occured', {
+                'Special Handling': specialHandling,
+            }),
+        ]);
 
         fireEvent.click(getByText('Special Handling'));
 

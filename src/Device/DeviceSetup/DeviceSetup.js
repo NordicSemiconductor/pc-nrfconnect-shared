@@ -40,7 +40,10 @@ import DeviceSetupView from './DeviceSetupView';
 
 const mapStateToProps = ({
     device: {
-        isSetupDialogVisible, isSetupWaitingForUserInput, setupDialogText, setupDialogChoices,
+        isSetupDialogVisible,
+        isSetupWaitingForUserInput,
+        setupDialogText,
+        setupDialogChoices,
     },
 }) => ({
     isVisible: isSetupDialogVisible,

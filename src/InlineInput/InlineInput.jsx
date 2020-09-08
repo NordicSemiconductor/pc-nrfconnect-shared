@@ -63,7 +63,10 @@ useSynchronisationIfChangedFromOutside does take care of this by remembering the
 external value and comparing with it to determine whether it has changed.
 */
 
-const useSynchronisationIfChangedFromOutside = (externalValue, setInternalValue) => {
+const useSynchronisationIfChangedFromOutside = (
+    externalValue,
+    setInternalValue
+) => {
     const previousExternalValue = useRef(externalValue);
     useEffect(() => {
         if (previousExternalValue.current !== externalValue) {
@@ -74,58 +77,64 @@ const useSynchronisationIfChangedFromOutside = (externalValue, setInternalValue)
     return previousExternalValue.current;
 };
 
-const InlineInput = React.forwardRef(({
-    value: externalValue,
-    isValid = () => true,
-    onChange,
-    onChangeComplete = () => {},
-    className = '',
-    style = {},
-}, ref) => {
-    const [internalValue, setInternalValue] = useState(externalValue);
-    useSynchronisationIfChangedFromOutside(externalValue, setInternalValue);
+const InlineInput = React.forwardRef(
+    (
+        {
+            value: externalValue,
+            isValid = () => true,
+            onChange,
+            onChangeComplete = () => {},
+            className = '',
+            style = {},
+        },
+        ref
+    ) => {
+        const [internalValue, setInternalValue] = useState(externalValue);
+        useSynchronisationIfChangedFromOutside(externalValue, setInternalValue);
 
-    const onChangeIfValid = event => {
-        const newValue = event.target.value;
-        setInternalValue(newValue);
-        if (isValid(newValue)) {
-            onChange(newValue);
-        }
-    };
+        const onChangeIfValid = event => {
+            const newValue = event.target.value;
+            setInternalValue(newValue);
+            if (isValid(newValue)) {
+                onChange(newValue);
+            }
+        };
 
-    const resetToExternalValueOrOnChangeCompleteIfValid = () => {
-        if (isValid(internalValue)) {
-            onChangeComplete(internalValue);
-        } else {
-            setInternalValue(externalValue);
-        }
-    };
+        const resetToExternalValueOrOnChangeCompleteIfValid = () => {
+            if (isValid(internalValue)) {
+                onChangeComplete(internalValue);
+            } else {
+                setInternalValue(externalValue);
+            }
+        };
 
-    const onChangeCompleteIfValid = event => {
-        event.stopPropagation();
+        const onChangeCompleteIfValid = event => {
+            event.stopPropagation();
 
-        if (event.key === 'Enter' && isValid(internalValue)) {
-            onChangeComplete(internalValue);
-        }
-    };
+            if (event.key === 'Enter' && isValid(internalValue)) {
+                onChangeComplete(internalValue);
+            }
+        };
 
-    const stopPropagation = event => event.stopPropagation();
+        const stopPropagation = event => event.stopPropagation();
 
-    return (
-        <input
-            ref={ref}
-            type="text"
-            className={`inline-input ${isValid(internalValue) ? '' : 'invalid'} ${className}`}
-            style={style}
-            value={internalValue}
-            onChange={onChangeIfValid}
-            onBlur={resetToExternalValueOrOnChangeCompleteIfValid}
-
-            onKeyUp={onChangeCompleteIfValid}
-            onClick={stopPropagation}
-        />
-    );
-});
+        return (
+            <input
+                ref={ref}
+                type="text"
+                className={`inline-input ${
+                    isValid(internalValue) ? '' : 'invalid'
+                } ${className}`}
+                style={style}
+                value={internalValue}
+                onChange={onChangeIfValid}
+                onBlur={resetToExternalValueOrOnChangeCompleteIfValid}
+                onKeyUp={onChangeCompleteIfValid}
+                onClick={stopPropagation}
+            />
+        );
+    }
+);
 
 InlineInput.propTypes = {
     value: string.isRequired,

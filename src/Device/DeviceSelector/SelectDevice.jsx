@@ -43,7 +43,9 @@ import './select-device.scss';
 
 const SelectDevice = ({ deviceListVisible, toggleDeviceListVisible }) => (
     <PseudoButton
-        className={`select-device ${deviceListVisible ? 'device-list-visible' : ''}`}
+        className={`select-device ${
+            deviceListVisible ? 'device-list-visible' : ''
+        }`}
         onClick={toggleDeviceListVisible}
     >
         <div>Select device</div>

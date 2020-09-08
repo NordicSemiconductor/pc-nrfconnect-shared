@@ -42,20 +42,22 @@ const initialState = {
     errorResolutions: undefined,
 };
 
-const appendIfNew = (messages, message) => (messages.includes(message)
-    ? messages
-    : [...messages, message]);
+const appendIfNew = (messages, message) =>
+    messages.includes(message) ? messages : [...messages, message];
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case ERROR_DIALOG_SHOW: return {
-            ...state,
-            isVisible: true,
-            messages: appendIfNew(state.messages, action.message),
-            errorResolutions: action.errorResolutions,
-        };
-        case ERROR_DIALOG_HIDE: return initialState;
-        default: return state;
+        case ERROR_DIALOG_SHOW:
+            return {
+                ...state,
+                isVisible: true,
+                messages: appendIfNew(state.messages, action.message),
+                errorResolutions: action.errorResolutions,
+            };
+        case ERROR_DIALOG_HIDE:
+            return initialState;
+        default:
+            return state;
     }
 };
 

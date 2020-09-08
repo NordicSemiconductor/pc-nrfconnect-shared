@@ -53,9 +53,11 @@ describe('AppTransport', () => {
         const { message } = info;
         appTransport.log(info, () => {});
 
-        expect(onLogEntry).toHaveBeenCalledWith(expect.objectContaining({
-            message,
-        }));
+        expect(onLogEntry).toHaveBeenCalledWith(
+            expect.objectContaining({
+                message,
+            })
+        );
     });
 
     it('should include level in log entry', () => {
@@ -65,9 +67,11 @@ describe('AppTransport', () => {
 
         appTransport.log(info, () => {});
 
-        expect(onLogEntry).toHaveBeenCalledWith(expect.objectContaining({
-            level,
-        }));
+        expect(onLogEntry).toHaveBeenCalledWith(
+            expect.objectContaining({
+                level,
+            })
+        );
     });
 
     it('should include timestamp in log entry', () => {

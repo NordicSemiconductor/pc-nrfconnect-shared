@@ -54,11 +54,12 @@ import {
     DEVICE_NICKNAME_RESET,
 } from './deviceActions';
 
-const withPersistedData = devices => devices.map(device => ({
-    ...device,
-    favorite: getPersistedIsFavorite(device.serialNumber),
-    nickname: getPersistedNickname(device.serialNumber),
-}));
+const withPersistedData = devices =>
+    devices.map(device => ({
+        ...device,
+        favorite: getPersistedIsFavorite(device.serialNumber),
+        nickname: getPersistedNickname(device.serialNumber),
+    }));
 
 const bySerialNumber = devices => {
     const devicesBySerialNumber = {};
@@ -97,10 +98,16 @@ const initialState = {
 export default (state = initialState, action) => {
     switch (action.type) {
         case DEVICES_DETECTED: {
-            return { ...state, devices: bySerialNumber(withPersistedData(action.devices)) };
+            return {
+                ...state,
+                devices: bySerialNumber(withPersistedData(action.devices)),
+            };
         }
         case DEVICE_SELECTED:
-            return { ...state, selectedSerialNumber: action.device.serialNumber };
+            return {
+                ...state,
+                selectedSerialNumber: action.device.serialNumber,
+            };
         case DEVICE_DESELECTED:
             return { ...state, selectedSerialNumber: null, deviceInfo: null };
         case DEVICE_SETUP_COMPLETE:
@@ -120,47 +127,54 @@ export default (state = initialState, action) => {
                 isSetupDialogVisible: true,
                 isSetupWaitingForUserInput: true,
                 setupDialogText: action.message,
-                setupDialogChoices: action.choices == null ? [] : [...action.choices],
+                setupDialogChoices:
+                    action.choices == null ? [] : [...action.choices],
             };
         case DEVICE_SETUP_INPUT_RECEIVED:
             return { ...state, isSetupWaitingForUserInput: false };
         case DEVICE_FAVORITE_TOGGLED: {
-            const newFavoriteState = !state.devices[action.serialNumber].favorite;
+            const newFavoriteState = !state.devices[action.serialNumber]
+                .favorite;
 
             persistIsFavorite(action.serialNumber, newFavoriteState);
-            return withUpdatedDevice(state, action.serialNumber, { favorite: newFavoriteState });
+            return withUpdatedDevice(state, action.serialNumber, {
+                favorite: newFavoriteState,
+            });
         }
         case DEVICE_NICKNAME_SET: {
             persistNickname(action.serialNumber, action.nickname);
-            return withUpdatedDevice(state, action.serialNumber, { nickname: action.nickname });
+            return withUpdatedDevice(state, action.serialNumber, {
+                nickname: action.nickname,
+            });
         }
         case DEVICE_NICKNAME_RESET: {
             persistNickname(action.serialNumber, '');
-            return withUpdatedDevice(state, action.serialNumber, { nickname: '' });
+            return withUpdatedDevice(state, action.serialNumber, {
+                nickname: '',
+            });
         }
         default:
             return state;
     }
 };
 
-const sorted = devices => [...devices].sort((a, b) => {
-    if (a.favorite !== b.favorite) {
-        return a.favorite ? -1 : 1;
-    }
+const sorted = devices =>
+    [...devices].sort((a, b) => {
+        if (a.favorite !== b.favorite) {
+            return a.favorite ? -1 : 1;
+        }
 
-    return displayedDeviceName(a) < displayedDeviceName(b) ? -1 : 1;
-});
+        return displayedDeviceName(a) < displayedDeviceName(b) ? -1 : 1;
+    });
 
-export const sortedDevices = state => sorted(Object.values(state.device.devices));
+export const sortedDevices = state =>
+    sorted(Object.values(state.device.devices));
 
-export const deviceIsSelected = state => (
-    state.device != null
-    && state.device.selectedSerialNumber != null
-);
+export const deviceIsSelected = state =>
+    state.device != null && state.device.selectedSerialNumber != null;
 
-export const selectedDevice = state => (
-    state.device.devices[state.device.selectedSerialNumber]
-);
+export const selectedDevice = state =>
+    state.device.devices[state.device.selectedSerialNumber];
 
 export const deviceInfo = state => state.device.deviceInfo;
 export const selectedSerialNumber = state => state.device.selectedSerialNumber;

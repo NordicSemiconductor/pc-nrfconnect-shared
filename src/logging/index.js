@@ -66,24 +66,36 @@ const logTransports = [
 ];
 
 if (isDevelopment && isConsoleAvailable) {
-    logTransports.push(new ConsoleTransport({
-        name: 'console',
-        level: 'silly',
-        debugStdout: false,
-        stderrLevels: ['silly', 'debug', 'verbose', 'info', 'warn', 'error'],
-    }));
+    logTransports.push(
+        new ConsoleTransport({
+            name: 'console',
+            level: 'silly',
+            debugStdout: false,
+            stderrLevels: [
+                'silly',
+                'debug',
+                'verbose',
+                'info',
+                'warn',
+                'error',
+            ],
+        })
+    );
 }
 
 const logger = createLogger({
     format: format.combine(
         format(info => ({
             ...info,
-            message: info[SPLAT] ? `${info.message} ${info[SPLAT].join(' ')}` : info.message,
+            message: info[SPLAT]
+                ? `${info.message} ${info[SPLAT].join(' ')}`
+                : info.message,
         }))(),
         format.timestamp(),
-        format.printf(({ timestamp, level, message }) => (
-            `${timestamp} ${level.toUpperCase()} ${message || ''}`
-        )),
+        format.printf(
+            ({ timestamp, level, message }) =>
+                `${timestamp} ${level.toUpperCase()} ${message || ''}`
+        )
     ),
     transports: logTransports,
 });

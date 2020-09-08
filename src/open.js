@@ -73,7 +73,4 @@ function openUrl(url) {
     shell.openExternal(url);
 }
 
-export {
-    openFile,
-    openUrl,
-};
+export { openFile, openUrl };

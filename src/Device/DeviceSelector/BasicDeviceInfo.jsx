@@ -48,8 +48,8 @@ import './basic-device-info.scss';
 const DeviceName = ({ device, inputRef }) => {
     const dispatch = useDispatch();
     const setOrResetNickname = name => {
-        const newNameIsEqualToDefaultName = (
-            name === displayedDeviceName(device, { respectNickname: false }));
+        const newNameIsEqualToDefaultName =
+            name === displayedDeviceName(device, { respectNickname: false });
 
         if (newNameIsEqualToDefaultName) {
             dispatch(resetDeviceNickname(device.serialNumber));
@@ -87,9 +87,7 @@ const BasicDeviceInfo = ({ device, deviceNameInputRef, toggles }) => (
             <DeviceName device={device} inputRef={deviceNameInputRef} />
             <DeviceSerialNumber device={device} />
         </div>
-        <div className="toggles">
-            {toggles}
-        </div>
+        <div className="toggles">{toggles}</div>
     </div>
 );
 BasicDeviceInfo.propTypes = {

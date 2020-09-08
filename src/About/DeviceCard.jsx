@@ -40,9 +40,15 @@ import AboutButton from './AboutButton';
 import Card from './Card';
 import Section from './Section';
 
-import { selectedDevice, deviceInfo as deviceInfoSelector } from '../Device/deviceReducer';
 import {
-    cores, deviceName, productPageUrl, buyOnlineUrl,
+    selectedDevice,
+    deviceInfo as deviceInfoSelector,
+} from '../Device/deviceReducer';
+import {
+    cores,
+    deviceName,
+    productPageUrl,
+    buyOnlineUrl,
 } from '../Device/deviceInfo/deviceInfo';
 
 const memorySize = memoryInBytes => {
@@ -58,7 +64,11 @@ export default () => {
     const deviceInfo = useSelector(deviceInfoSelector) || {};
 
     if (device == null) {
-        return <Card title="Device"><Section title="No device selected" /></Card>;
+        return (
+            <Card title="Device">
+                <Section title="No device selected" />
+            </Card>
+        );
     }
 
     const pca = device.boardVersion;
@@ -71,8 +81,15 @@ export default () => {
             <Section title="Cores">{cores(pca) || 'Unknown'}</Section>
             <Section title="RAM">{memorySize(deviceInfo.ramSize)}</Section>
             <Section title="Flash">{memorySize(deviceInfo.codeSize)}</Section>
-            <Section><AboutButton url={buyOnlineUrl(pca)} label="Find distributor" /></Section>
-            <Section><AboutButton url={productPageUrl(pca)} label="Go to product page" /></Section>
+            <Section>
+                <AboutButton url={buyOnlineUrl(pca)} label="Find distributor" />
+            </Section>
+            <Section>
+                <AboutButton
+                    url={productPageUrl(pca)}
+                    label="Go to product page"
+                />
+            </Section>
         </Card>
     );
 };

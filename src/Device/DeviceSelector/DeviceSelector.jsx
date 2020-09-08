@@ -35,9 +35,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-    bool, exact, func, object,
-} from 'prop-types';
+import { bool, exact, func, object } from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -68,17 +66,14 @@ const DeviceSelector = ({
 
     const deviceIsSelected = useSelector(deviceIsSelectedSelector);
 
-    const doDeselectDevice = useCallback(
-        () => {
-            onDeviceDeselected();
-            dispatch(deselectDevice());
-        },
-        [dispatch, onDeviceDeselected],
-    );
+    const doDeselectDevice = useCallback(() => {
+        onDeviceDeselected();
+        dispatch(deselectDevice());
+    }, [dispatch, onDeviceDeselected]);
 
     const doStartWatchingDevices = useCallback(
         () => dispatch(startWatchingDevices(deviceListing, doDeselectDevice)),
-        [deviceListing, dispatch, doDeselectDevice],
+        [deviceListing, dispatch, doDeselectDevice]
     );
 
     const doSelectDevice = device => {
@@ -86,18 +81,21 @@ const DeviceSelector = ({
         dispatch(selectDevice(device));
         onDeviceSelected(device);
         if (deviceSetup) {
-            dispatch(setupDevice(
-                device,
-                deviceSetup,
-                releaseCurrentDevice,
-                onDeviceIsReady,
-                doStartWatchingDevices,
-                doDeselectDevice,
-            ));
+            dispatch(
+                setupDevice(
+                    device,
+                    deviceSetup,
+                    releaseCurrentDevice,
+                    onDeviceIsReady,
+                    doStartWatchingDevices,
+                    doDeselectDevice
+                )
+            );
         }
     };
 
-    const toggleDeviceListVisible = () => setDeviceListVisible(!deviceListVisible);
+    const toggleDeviceListVisible = () =>
+        setDeviceListVisible(!deviceListVisible);
 
     useEffect(() => {
         doStartWatchingDevices();
@@ -116,9 +114,11 @@ const DeviceSelector = ({
                     deviceListVisible={deviceListVisible}
                     toggleDeviceListVisible={toggleDeviceListVisible}
                 />
-
             )}
-            <DeviceList isVisible={deviceListVisible} doSelectDevice={doSelectDevice} />
+            <DeviceList
+                isVisible={deviceListVisible}
+                doSelectDevice={doSelectDevice}
+            />
 
             <DeviceSetup />
         </div>

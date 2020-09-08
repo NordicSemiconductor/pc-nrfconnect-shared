@@ -36,9 +36,7 @@
 
 import React from 'react';
 
-import {
-    arrayOf, bool, func, string,
-} from 'prop-types';
+import { arrayOf, bool, func, string } from 'prop-types';
 import Form from 'react-bootstrap/Form';
 import ConfirmationDialog from '../../Dialog/ConfirmationDialog';
 
@@ -86,18 +84,16 @@ export default class DeviceSetupDialog extends React.Component {
                 >
                     <p>{text}</p>
                     <Form.Group>
-                        {
-                            choices.map(choice => (
-                                <Form.Check
-                                    key={choice}
-                                    name="radioGroup"
-                                    type="radio"
-                                    disabled={isInProgress}
-                                    onClick={() => this.onSelectChoice(choice)}
-                                    label={choice}
-                                />
-                            ))
-                        }
+                        {choices.map(choice => (
+                            <Form.Check
+                                key={choice}
+                                name="radioGroup"
+                                type="radio"
+                                disabled={isInProgress}
+                                onClick={() => this.onSelectChoice(choice)}
+                                label={choice}
+                            />
+                        ))}
                     </Form.Group>
                 </ConfirmationDialog>
             );

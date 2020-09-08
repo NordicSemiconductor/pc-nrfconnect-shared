@@ -34,7 +34,10 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { APP_RELOAD_DIALOG_SHOW, APP_RELOAD_DIALOG_HIDE } from './appReloadDialogActions';
+import {
+    APP_RELOAD_DIALOG_SHOW,
+    APP_RELOAD_DIALOG_HIDE,
+} from './appReloadDialogActions';
 
 const initialState = {
     isVisible: false,
@@ -43,9 +46,12 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case APP_RELOAD_DIALOG_SHOW: return { ...state, isVisible: true, message: action.message };
-        case APP_RELOAD_DIALOG_HIDE: return { ...state, isVisible: false };
-        default: return state;
+        case APP_RELOAD_DIALOG_SHOW:
+            return { ...state, isVisible: true, message: action.message };
+        case APP_RELOAD_DIALOG_HIDE:
+            return { ...state, isVisible: false };
+        default:
+            return state;
     }
 };
 

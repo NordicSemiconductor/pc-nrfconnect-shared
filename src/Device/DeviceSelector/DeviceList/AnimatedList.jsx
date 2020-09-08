@@ -39,15 +39,11 @@ import { arrayOf, node, string } from 'prop-types';
 import { Flipper, Flipped, spring } from 'react-flip-toolkit';
 import deviceShape from '../deviceShape';
 
-const changesOnReorder = devices => devices
-    .map(device => device.serialNumber)
-    .join('\n');
+const changesOnReorder = devices =>
+    devices.map(device => device.serialNumber).join('\n');
 
 export const AnimatedList = ({ children, devices }) => (
-    <Flipper
-        element="ul"
-        flipKey={changesOnReorder(devices)}
-    >
+    <Flipper element="ul" flipKey={changesOnReorder(devices)}>
         {children}
     </Flipper>
 );
@@ -58,7 +54,7 @@ AnimatedList.propTypes = {
 
 const fadeInOrOut = fadeOut => (element, _, removeElement) => {
     const range = fadeOut ? [1, 0] : [0, 1];
-    return (spring({
+    return spring({
         values: {
             opacity: range,
             scale: range,
@@ -72,8 +68,7 @@ const fadeInOrOut = fadeOut => (element, _, removeElement) => {
                 removeElement();
             }
         },
-    })
-    );
+    });
 };
 
 export const AnimatedItem = ({ children, itemKey }) => (
@@ -82,9 +77,7 @@ export const AnimatedItem = ({ children, itemKey }) => (
         onAppear={fadeInOrOut(false)}
         onExit={fadeInOrOut(true)}
     >
-        <li>
-            {children}
-        </li>
+        <li>{children}</li>
     </Flipped>
 );
 AnimatedItem.propTypes = {

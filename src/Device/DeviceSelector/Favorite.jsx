@@ -50,11 +50,12 @@ export const MakeDeviceFavorite = ({ device }) => {
     };
 
     return (
-        <PseudoButton
-            className="make-favorite"
-            onClick={toggleFavorite}
-        >
-            <span className={`mdi star ${device.favorite ? 'mdi-star-off' : 'mdi-star'}`} />
+        <PseudoButton className="make-favorite" onClick={toggleFavorite}>
+            <span
+                className={`mdi star ${
+                    device.favorite ? 'mdi-star-off' : 'mdi-star'
+                }`}
+            />
             {device.favorite ? 'Un-favorite' : 'Favorite'}
         </PseudoButton>
     );
@@ -72,7 +73,9 @@ export const FavoriteIndicator = ({ device }) => {
 
     return (
         <PseudoButton
-            className={`mdi ${device.favorite ? 'mdi-star' : 'mdi-star-outline'}`}
+            className={`mdi ${
+                device.favorite ? 'mdi-star' : 'mdi-star-outline'
+            }`}
             onClick={toggleFavorite}
         />
     );

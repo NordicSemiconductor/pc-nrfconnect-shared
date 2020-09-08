@@ -52,6 +52,7 @@ const ShowMoreInfo = ({ isVisible, toggleVisible }) => (
         onClick={toggleVisible}
     />
 );
+
 ShowMoreInfo.propTypes = {
     isVisible: bool.isRequired,
     toggleVisible: func.isRequired,
@@ -78,12 +79,15 @@ const Device = ({ device, doSelectDevice, allowMoreInfoVisible }) => {
             <BasicDeviceInfo
                 deviceNameInputRef={deviceNameInputRef}
                 device={device}
-                toggles={(
+                toggles={
                     <>
                         <FavoriteIndicator device={device} />
-                        <ShowMoreInfo isVisible={moreVisible} toggleVisible={toggleMoreVisible} />
+                        <ShowMoreInfo
+                            isVisible={moreVisible}
+                            toggleVisible={toggleMoreVisible}
+                        />
                     </>
-                )}
+                }
             />
             {moreVisible && (
                 <>
@@ -97,6 +101,7 @@ const Device = ({ device, doSelectDevice, allowMoreInfoVisible }) => {
         </PseudoButton>
     );
 };
+
 Device.propTypes = {
     device: deviceShape.isRequired,
     doSelectDevice: func.isRequired,

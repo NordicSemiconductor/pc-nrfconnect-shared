@@ -42,7 +42,8 @@ import thunk from 'redux-thunk';
 
 import coreReducers from '../coreReducers';
 
-const rootReducer = appReducer => combineReducers({ app: appReducer, ...coreReducers });
+const rootReducer = appReducer =>
+    combineReducers({ app: appReducer, ...coreReducers });
 const middleware = composeWithDevTools(applyMiddleware(thunk));
 
 const ConnectedToStore = ({ appReducer, children }) => (

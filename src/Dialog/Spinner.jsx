@@ -38,10 +38,5 @@ import React from 'react';
 import spinnerImg from './ajax-loader.gif';
 
 export default () => (
-    <img
-        src={spinnerImg}
-        height="16"
-        width="16"
-        alt="Loading..."
-    />
+    <img src={spinnerImg} height="16" width="16" alt="Loading..." />
 );

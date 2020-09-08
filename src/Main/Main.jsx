@@ -39,7 +39,9 @@ import { node } from 'prop-types';
 
 import './main.scss';
 
-const Main = ({ children }) => <div className="core19-main-view">{children}</div>;
+const Main = ({ children }) => (
+    <div className="core19-main-view">{children}</div>
+);
 
 Main.propTypes = { children: node };
 

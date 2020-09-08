@@ -40,7 +40,8 @@ import rangeShape from './rangeShape';
 import { toPercentage } from './percentage';
 
 const Bar = ({ values, range }) => {
-    const start = values.length === 1 ? 0 : toPercentage(Math.min(...values), range);
+    const start =
+        values.length === 1 ? 0 : toPercentage(Math.min(...values), range);
     const end = toPercentage(Math.max(...values), range);
 
     return (

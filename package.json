@@ -113,5 +113,6 @@
             "<rootDir>/test/setupTests.js"
         ]
     },
-    "typings": "./index.d.ts"
+    "typings": "./index.d.ts",
+    "prettier": "./config/prettier.config.js"
 }

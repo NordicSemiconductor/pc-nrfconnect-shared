@@ -45,12 +45,15 @@ const charCount = value => String(value).length + 1;
 const isInRange = (value, { min, max }) => value >= min && value <= max;
 
 const NumberInlineInput = ({
-    value, range, onChange, chars = charCount(range.max), ...props
+    value,
+    range,
+    onChange,
+    chars = charCount(range.max),
+    ...props
 }) => (
     <InlineInput
         className="number-inline-input"
         style={{ width: `${chars}ex` }}
-
         value={String(value)}
         isValid={newValue => isInRange(Number(newValue), range)}
         onChange={newValue => onChange(Number(newValue))}

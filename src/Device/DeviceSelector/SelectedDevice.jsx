@@ -63,10 +63,11 @@ const SelectedDevice = ({ doDeselectDevice, toggleDeviceListVisible }) => {
             className="selected-device"
             onClick={toggleDeviceListVisible}
         >
-
             <BasicDeviceInfo
                 device={device}
-                toggles={<DisconnectDevice doDeselectDevice={doDeselectDevice} />}
+                toggles={
+                    <DisconnectDevice doDeselectDevice={doDeselectDevice} />
+                }
             />
         </PseudoButton>
     );

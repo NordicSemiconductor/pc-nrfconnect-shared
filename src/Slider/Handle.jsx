@@ -37,7 +37,11 @@
 import React, { useRef, useState } from 'react';
 import { func, number } from 'prop-types';
 import rangeShape from './rangeShape';
-import { constrainedToPercentage, fromPercentage, toPercentage } from './percentage';
+import {
+    constrainedToPercentage,
+    fromPercentage,
+    toPercentage,
+} from './percentage';
 
 const useAutoupdatingRef = value => {
     const ref = useRef(value);
@@ -47,7 +51,11 @@ const useAutoupdatingRef = value => {
 
 const noop = () => {};
 const Handle = ({
-    value, range, onChange, onChangeComplete = noop, sliderWidth,
+    value,
+    range,
+    onChange,
+    onChangeComplete = noop,
+    sliderWidth,
 }) => {
     const [currentlyDragged, setCurrentlyDragged] = useState(false);
     const percentage = toPercentage(value, range);
@@ -73,10 +81,13 @@ const Handle = ({
     const dragHandle = event => {
         const oldMousePosition = onMouseDragStart.current.mousePosition;
         const newMousePosition = event.clientX;
-        const percentageChange = ((oldMousePosition - newMousePosition) * 100) / sliderWidth;
+        const percentageChange =
+            ((oldMousePosition - newMousePosition) * 100) / sliderWidth;
 
         const oldPercentage = onMouseDragStart.current.percentage;
-        const newPercentage = constrainedToPercentage(oldPercentage - percentageChange);
+        const newPercentage = constrainedToPercentage(
+            oldPercentage - percentageChange
+        );
 
         onChangeRef.current(fromPercentage(newPercentage, range));
     };
@@ -93,7 +104,6 @@ const Handle = ({
             className={`slider-handle ${currentlyDragged ? 'dragged' : ''}`}
             style={{ left: `${percentage}%` }}
             onMouseDown={grabHandle}
-
             role="slider"
             tabIndex={0}
             aria-valuemin={0}

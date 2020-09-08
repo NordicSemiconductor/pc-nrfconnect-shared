@@ -35,9 +35,7 @@
  */
 
 import React from 'react';
-import {
-    arrayOf, func, number, string,
-} from 'prop-types';
+import { arrayOf, func, number, string } from 'prop-types';
 
 import Bar from './Bar';
 import Handle from './Handle';
@@ -46,12 +44,19 @@ import rangeShape from './rangeShape';
 
 import './slider.scss';
 
-const Slider = ({
-    id, values, range, onChange, onChangeComplete,
-}) => {
-    if (values.length === 0) console.error('"values" must contain at least on element');
-    if (values.length !== onChange.length) console.error(`Props 'values' and 'onChange' must have the same size but were ${values} and ${onChange}`);
-    if (range.min > range.max) console.error(`range.min must not be higher than range.max: ${JSON.stringify(range)}`);
+const Slider = ({ id, values, range, onChange, onChangeComplete }) => {
+    if (values.length === 0)
+        console.error('"values" must contain at least on element');
+    if (values.length !== onChange.length)
+        console.error(
+            `Props 'values' and 'onChange' must have the same size but were ${values} and ${onChange}`
+        );
+    if (range.min > range.max)
+        console.error(
+            `range.min must not be higher than range.max: ${JSON.stringify(
+                range
+            )}`
+        );
 
     const [sliderWidth, sliderRef] = useWidthObserver();
 
