@@ -8,13 +8,6 @@
         "prettier/@typescript-eslint"
     ],
     "rules": {
-        "indent": [
-            "error",
-            4,
-            {
-                "SwitchCase": 1
-            }
-        ],
         "react/jsx-indent": ["error", 4],
         "react/jsx-indent-props": ["error", 4],
         "react/jsx-one-expression-per-line": "off",
@@ -63,7 +56,8 @@
         ],
         "import/extensions": ["off"],
         "no-undef": 1,
-        "no-unused-vars": "off"
+        "no-unused-vars": "off",
+        "prettier/prettier": "error"
     },
     "overrides": [
         {
@@ -83,7 +77,7 @@
             }
         }
     ],
-    "plugins": ["react", "import", "react-hooks"],
+    "plugins": ["react", "import", "react-hooks", "prettier"],
     "env": {
         "es6": true,
         "browser": true,
