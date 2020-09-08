@@ -3,6 +3,16 @@
 - Added support for files written in TypeScript
 - Added Prettier formatting
 
+Note that apps using this version should add the following entry to their `package.json` file:
+
+`{ "prettier": "./node_modules/pc-nrfconnect-shared/config/prettier.config.js" }`
+
+If this isn't added, the Prettier defaults will be used, which differ from our style choices
+in a number of ways.
+
+On first run, the linting is likely to fail due to the prevalence of formatting errors.
+The majority of these can be fixed automatically, by running `npm run lint -- --fix`.
+
 ## Version 4.8.15
 ### Added
 - Added onChangeComplete to InlineInput and NumberInlineInput
