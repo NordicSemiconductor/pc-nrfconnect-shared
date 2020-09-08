@@ -1,3 +1,8 @@
+## Version 4.8.17
+### Updated
+- New design, device selector: Add PCA number, better alignment for port names,
+  removed wrong line below port names
+
 ## Version 4.8.16
 ## Added
 - Added support for files written in TypeScript
