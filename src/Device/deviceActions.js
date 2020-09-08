@@ -161,10 +161,16 @@ const logDeviceListerError = error => dispatch => {
         // to a libusb-compatible-driver will fail to enumerate and trigger a
         // LIBUSB_* error. This is the case of a nRF52840 in DFU mode.
         // We don't want to show an error to the user in this particular case.
-        if (error.errorCode === DeviceLister.ErrorCodes.LIBUSB_ERROR_NOT_FOUND
-                && error.usb.deviceDescriptor) {
+        if (
+            error.errorCode ===
+                DeviceLister.ErrorCodes.LIBUSB_ERROR_NOT_FOUND &&
+            error.usb.deviceDescriptor
+        ) {
             const { idProduct, idVendor } = error.usb.deviceDescriptor;
-            if (idVendor === NORDIC_VENDOR_ID && idProduct === NORDIC_BOOTLOADER_PRODUCT_ID) {
+            if (
+                idVendor === NORDIC_VENDOR_ID &&
+                idProduct === NORDIC_BOOTLOADER_PRODUCT_ID
+            ) {
                 return;
             }
         }
@@ -173,18 +179,24 @@ const logDeviceListerError = error => dispatch => {
 
         let message = `Error while probing usb device at bus.address ${usbAddr}: ${error.message}. `;
         if (process.platform === 'linux') {
-            message += 'Please check your udev rules concerning permissions for USB devices, see '
-                    + 'https://github.com/NordicSemiconductor/nrf-udev';
+            message +=
+                'Please check your udev rules concerning permissions for USB devices, see ' +
+                'https://github.com/NordicSemiconductor/nrf-udev';
         } else if (process.platform === 'win32') {
-            message += 'Please check that a libusb-compatible kernel driver is bound to this device, see https://github.com/NordicSemiconductor/pc-nrfconnect-launcher/blob/master/doc/win32-usb-troubleshoot.md';
+            message +=
+                'Please check that a libusb-compatible kernel driver is bound to this device, see https://github.com/NordicSemiconductor/pc-nrfconnect-launcher/blob/master/doc/win32-usb-troubleshoot.md';
         }
 
-        dispatch(showAppReloadDialog(
-            'LIBUSB error is detected. Reloading app could resolve the issue. Would you like to reload now?',
-        ));
+        dispatch(
+            showAppReloadDialog(
+                'LIBUSB error is detected. Reloading app could resolve the issue. Would you like to reload now?'
+            )
+        );
         logger.error(message);
-    } else if (error.serialport
-            && error.errorCode === DeviceLister.ErrorCodes.COULD_NOT_FETCH_SNO_FOR_PORT) {
+    } else if (
+        error.serialport &&
+        error.errorCode === DeviceLister.ErrorCodes.COULD_NOT_FETCH_SNO_FOR_PORT
+    ) {
         // Explicitly hide errors about serial ports without serial numbers
         logger.verbose(error.message);
     } else {
@@ -201,7 +213,10 @@ const logDeviceListerError = error => dispatch => {
  * @param {function(device)} doDeselectDevice Invoke to start deselect the current device
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
-export const startWatchingDevices = (deviceListing, doDeselectDevice) => (dispatch, getState) => {
+export const startWatchingDevices = (deviceListing, doDeselectDevice) => (
+    dispatch,
+    getState
+) => {
     if (!deviceLister) {
         deviceLister = new DeviceLister(deviceListing);
     }
@@ -209,8 +224,10 @@ export const startWatchingDevices = (deviceListing, doDeselectDevice) => (dispat
     deviceLister.removeAllListeners('error');
     deviceLister.on('conflated', devices => {
         const state = getState();
-        if (state.device.selectedSerialNumber !== null
-                && !devices.has(state.device.selectedSerialNumber)) {
+        if (
+            state.device.selectedSerialNumber !== null &&
+            !devices.has(state.device.selectedSerialNumber)
+        ) {
             doDeselectDevice();
         }
 
@@ -242,19 +259,20 @@ export const stopWatchingDevices = () => {
  * @param {Array<String>} [choices] The choices to display to the user (optional).
  * @returns {Promise<String>} Promise that resolves with the user input.
  */
-const getDeviceSetupUserInput = dispatch => (message, choices) => new Promise((resolve, reject) => {
-    deviceSetupCallback = choice => {
-        if (!choices) {
-            // for confirmation resolve with boolean
-            resolve(!!choice);
-        } else if (choice) {
-            resolve(choice);
-        } else {
-            reject(new Error('Cancelled by user.'));
-        }
-    };
-    dispatch(deviceSetupInputRequired(message, choices));
-});
+const getDeviceSetupUserInput = dispatch => (message, choices) =>
+    new Promise((resolve, reject) => {
+        deviceSetupCallback = choice => {
+            if (!choices) {
+                // for confirmation resolve with boolean
+                resolve(!!choice);
+            } else if (choice) {
+                resolve(choice);
+            } else {
+                reject(new Error('Cancelled by user.'));
+            }
+        };
+        dispatch(deviceSetupInputRequired(message, choices));
+    });
 
 /**
  * Selects a device and sets it up for use according to the `config.deviceSetup`
@@ -275,7 +293,7 @@ export const setupDevice = (
     releaseCurrentDevice,
     onDeviceIsReady,
     doStartWatchingDevices,
-    doDeselectDevice,
+    doDeselectDevice
 ) => async dispatch => {
     // During device setup, the device may go in and out of bootloader
     // mode. This will make it appear as detached in the device lister,
@@ -291,7 +309,8 @@ export const setupDevice = (
         ...deviceSetup,
     };
 
-    nrfDeviceSetup.setupDevice(device, deviceSetupConfig)
+    nrfDeviceSetup
+        .setupDevice(device, deviceSetupConfig)
         .then(preparedDevice => {
             doStartWatchingDevices();
             dispatch(deviceSetupComplete(preparedDevice));
@@ -300,7 +319,9 @@ export const setupDevice = (
         .catch(error => {
             dispatch(deviceSetupError(device, error));
             if (!deviceSetupConfig.allowCustomDevice) {
-                logger.error(`Error while setting up device ${device.serialNumber}: ${error.message}`);
+                logger.error(
+                    `Error while setting up device ${device.serialNumber}: ${error.message}`
+                );
                 doDeselectDevice();
             }
             doStartWatchingDevices();

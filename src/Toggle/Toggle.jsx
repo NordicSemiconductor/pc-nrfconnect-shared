@@ -34,9 +34,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-    bool, func, node, oneOf, string,
-} from 'prop-types';
+import { bool, func, node, oneOf, string } from 'prop-types';
 import React, { useState } from 'react';
 
 import './toggle.scss';
@@ -71,10 +69,7 @@ const Toggle = ({
         }
     };
 
-    const toggleClassName = [
-        'toggle',
-        disabled ? 'toggle-disabled' : '',
-    ];
+    const toggleClassName = ['toggle', disabled ? 'toggle-disabled' : ''];
 
     const toggleBarClassName = [
         'toggle-bar',
@@ -103,7 +98,9 @@ const Toggle = ({
     labelElement = <span className="toggle-label">{children || label}</span>;
     labelElement = Array.isArray(children) ? (
         <span className="toggle-label">{children[0]}</span>
-    ) : labelElement;
+    ) : (
+        labelElement
+    );
     const [, ...restLabelElement] = Array.isArray(children) ? children : [];
 
     return (
@@ -130,7 +127,9 @@ const Toggle = ({
                 {labelRight && (label || children) && labelElement}
             </label>
             {restLabelElement.length > 0 && (
-                <div className="toggle-label toggle-label-rest">{restLabelElement}</div>
+                <div className="toggle-label toggle-label-rest">
+                    {restLabelElement}
+                </div>
             )}
         </div>
     );

@@ -58,9 +58,18 @@ export default () => {
             <Section title="Purpose">{appInfo.description}</Section>
             <Section title="Version">{appInfo.currentVersion}</Section>
             <Section title="Source">{appInfo.source || 'local'}</Section>
-            <Section title="Supported engines">nRF Connect {appInfo.engineVersion}</Section>
-            <Section title="Current engine">nRF Connect {appInfo.coreVersion}</Section>
-            <Section><AboutButton url={appInfo.repositoryUrl} label="Get source code" /></Section>
+            <Section title="Supported engines">
+                nRF Connect {appInfo.engineVersion}
+            </Section>
+            <Section title="Current engine">
+                nRF Connect {appInfo.coreVersion}
+            </Section>
+            <Section>
+                <AboutButton
+                    url={appInfo.repositoryUrl}
+                    label="Get source code"
+                />
+            </Section>
         </Card>
     );
 };

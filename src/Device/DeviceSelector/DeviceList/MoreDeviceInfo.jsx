@@ -60,14 +60,16 @@ MaybeDeviceName.propTypes = {
 
 const Serialports = ({ ports }) => (
     <ul className="ports">
-        {ports.map(port => <li key={port.path}>{port.path}</li>)}
+        {ports.map(port => (
+            <li key={port.path}>{port.path}</li>
+        ))}
     </ul>
 );
 Serialports.propTypes = {
     ports: arrayOf(
         shape({
             path: string.isRequired,
-        }).isRequired,
+        }).isRequired
     ).isRequired,
 };
 

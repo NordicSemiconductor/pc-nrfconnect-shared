@@ -50,22 +50,35 @@ const generalInfoReport = async () => {
         { vendor, version },
         { platform, distro, release, arch },
         { kernel, git, node, python, python3 },
-        { manufacturer: cpuManufacturer, brand, speed, cores, physicalCores, processors },
+        {
+            manufacturer: cpuManufacturer,
+            brand,
+            speed,
+            cores,
+            physicalCores,
+            processors,
+        },
         { total, free },
         fsSize,
     ] = await Promise.all([
-        si.system(), si.bios(), si.osInfo(), si.versions(), si.cpu(), si.mem(), si.fsSize(),
+        si.system(),
+        si.bios(),
+        si.osInfo(),
+        si.versions(),
+        si.cpu(),
+        si.mem(),
+        si.fsSize(),
     ]);
 
     return [
         `- System:     ${manufacturer} ${model}`,
         `- BIOS:       ${vendor} ${version}`,
-        `- CPU:        ${processors} x ${cpuManufacturer} ${brand} ${speed} GHz`
-            + ` ${cores} cores (${physicalCores} physical)`,
+        `- CPU:        ${processors} x ${cpuManufacturer} ${brand} ${speed} GHz` +
+            ` ${cores} cores (${physicalCores} physical)`,
         `- Memory:     ${pretty(free)} free of ${pretty(total)} total`,
-        `- Filesystem: ${fsSize[0].fs} (${fsSize[0].type})`
-            + ` ${pretty(Number(fsSize[0].size) || 0)}`
-            + ` ${fsSize[0].use.toFixed(1)}% used`,
+        `- Filesystem: ${fsSize[0].fs} (${fsSize[0].type})` +
+            ` ${pretty(Number(fsSize[0].size) || 0)}` +
+            ` ${fsSize[0].use.toFixed(1)}% used`,
         '',
         `- OS:         ${distro} (${release}) ${platform} ${arch}`,
         '',
@@ -81,17 +94,21 @@ const generalInfoReport = async () => {
 
 const allDevicesReport = allDevices => [
     '- Connected devices:',
-    ...allDevices.map(d => `    - ${d.serialport.path}: ${d.serialNumber} ${d.boardVersion || ''}`),
+    ...allDevices.map(
+        d =>
+            `    - ${d.serialport.path}: ${d.serialNumber} ${
+                d.boardVersion || ''
+            }`
+    ),
     '',
 ];
 
-const hexpad2 = n => (n == null
-    ? 'Unknown'
-    : `0x${n.toString(16).toUpperCase().padStart(2, '0')}`);
+const hexpad2 = n =>
+    n == null
+        ? 'Unknown'
+        : `0x${n.toString(16).toUpperCase().padStart(2, '0')}`;
 
-const hexToKiB = n => (n == null
-    ? 'Unknown'
-    : `${n / 1024} KiB`);
+const hexToKiB = n => (n == null ? 'Unknown' : `${n / 1024} KiB`);
 
 const currentDeviceReport = (serialNumber, device) => {
     if (device == null) {
@@ -128,7 +145,7 @@ export default async (allDevices, currentSerialNumber, currentDevice) => {
     const report = [
         `# nRFConnect System Report - ${timestamp}`,
         '',
-        ...await generalInfoReport(),
+        ...(await generalInfoReport()),
         ...allDevicesReport(allDevices),
         ...currentDeviceReport(currentSerialNumber, currentDevice),
     ].join(EOL);

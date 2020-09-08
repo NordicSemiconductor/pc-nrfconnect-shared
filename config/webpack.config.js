@@ -1,10 +1,13 @@
 const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
-const dependencies = require(path.join(
+
+const { dependencies } = require(path.join(
     process.cwd(),
-    'package.json',
-)).dependencies;
+    'node_modules',
+    'pc-nrfconnect-shared',
+    'package.json'
+));
 
 const appDirectory = fs.realpathSync(process.cwd());
 const nodeEnv = process.env.NODE_ENV || 'development';
@@ -31,9 +34,9 @@ function createExternals() {
     // Libs provided by the app at runtime
     const appLibs = Object.keys(dependencies);
 
-    return coreLibs.concat(appLibs).reduce((prev, lib) => (
-        Object.assign(prev, { [lib]: lib })
-    ), {});
+    return coreLibs
+        .concat(appLibs)
+        .reduce((prev, lib) => Object.assign(prev, { [lib]: lib }), {});
 }
 
 let eslintConfig;
@@ -44,13 +47,19 @@ try {
 }
 
 function findEntryPoint() {
-    const files = ['./src/index.jsx', './lib/index.jsx', './index.jsx'];
+    const files = [
+        './src/index.jsx',
+        './lib/index.jsx',
+        './index.jsx',
+        './src/index.tsx',
+    ];
     while (files.length) {
         const file = files.shift();
         if (fs.existsSync(file)) {
             return file;
         }
     }
+    return undefined;
 }
 
 module.exports = {
@@ -64,40 +73,49 @@ module.exports = {
         libraryTarget: 'umd',
     },
     module: {
-        rules: [{
-            test: /\.(js|jsx)$/,
-            use: [{
-                loader: require.resolve('babel-loader'),
-                options: {
-                    cacheDirectory: true,
-                    configFile: './node_modules/pc-nrfconnect-shared/config/babel.config.js',
-                }
-            }, {
-                loader: require.resolve('eslint-loader'),
-                options: {
-                    configFile: eslintConfig,
-                }
-            }],
-            exclude: /node_modules\/(?!pc-nrfconnect-shared\/)/,
-        }, {
-            test: /\.scss|\.css$/,
-            use: [
-                'style-loader',
-                'css-loader',
-                {
-                    loader: 'sass-loader',
-                    options: {
-                        implementation: require('sass')
+        rules: [
+            {
+                test: /\.(js|jsx|tsx?)$/,
+                use: [
+                    {
+                        loader: require.resolve('babel-loader'),
+                        options: {
+                            cacheDirectory: true,
+                            configFile:
+                                './node_modules/pc-nrfconnect-shared/config/babel.config.js',
+                        },
                     },
-                }
-            ],
-        }, {
-            test: /\.(png|gif|ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-            loader: require.resolve('url-loader'),
-        }],
+                    {
+                        loader: require.resolve('eslint-loader'),
+                        options: {
+                            configFile: eslintConfig,
+                        },
+                    },
+                ],
+                exclude: /node_modules\/(?!pc-nrfconnect-shared\/)/,
+            },
+            {
+                test: /\.scss|\.css$/,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            // eslint-disable-next-line global-require
+                            implementation: require('sass'),
+                        },
+                    },
+                ],
+            },
+            {
+                test: /\.(png|gif|ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+                loader: require.resolve('url-loader'),
+            },
+        ],
     },
     resolve: {
-        extensions: ['.js', '.jsx'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
     },
     plugins: [
         new webpack.DefinePlugin({
@@ -105,6 +123,7 @@ module.exports = {
                 NODE_ENV: JSON.stringify(nodeEnv),
             },
         }),
+        // new ESLintPlugin()
     ],
     target: 'electron-renderer',
     externals: createExternals(),

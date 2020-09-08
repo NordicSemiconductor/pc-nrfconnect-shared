@@ -63,10 +63,14 @@ const sendInitialMessage = () => {
             tmpDir,
         } = details;
         const official = isOfficial ? 'official' : 'local';
-        const supported = isSupportedEngine ? 'is supported' : 'is not supported';
+        const supported = isSupportedEngine
+            ? 'is supported'
+            : 'is not supported';
         logger.debug(`App ${name} v${currentVersion} ${official}`);
         logger.debug(`App path: ${path}`);
-        logger.debug(`nRFConnect ${coreVersion} ${supported} by the app (${engineVersion})`);
+        logger.debug(
+            `nRFConnect ${coreVersion} ${supported} by the app (${engineVersion})`
+        );
         logger.debug(`nRFConnect path: ${corePath}`);
         logger.debug(`HomeDir: ${homeDir}`);
         logger.debug(`TmpDir: ${tmpDir}`);
@@ -93,9 +97,14 @@ function startListening(dispatch) {
     sendInitialMessage();
 
     const LOG_UPDATE_INTERVAL = 400;
-    const logListener = setInterval(addLogEntriesToStore(dispatch), LOG_UPDATE_INTERVAL);
+    const logListener = setInterval(
+        addLogEntriesToStore(dispatch),
+        LOG_UPDATE_INTERVAL
+    );
 
-    return () => { clearInterval(logListener); };
+    return () => {
+        clearInterval(logListener);
+    };
 }
 
 // eslint-disable-next-line import/prefer-default-export

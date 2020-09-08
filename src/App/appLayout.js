@@ -39,8 +39,13 @@ const TOGGLE_SIDE_PANEL_VISIBLE = 'TOGGLE_SIDE_PANEL_VISIBLE';
 const SET_CURRENT_PANE = 'SET_CURRENT_PANE';
 
 export const toggleLogVisible = () => ({ type: TOGGLE_LOG_VISIBLE });
-export const toggleSidePanelVisible = () => ({ type: TOGGLE_SIDE_PANEL_VISIBLE });
-export const setCurrentPane = currentPane => ({ type: SET_CURRENT_PANE, currentPane });
+export const toggleSidePanelVisible = () => ({
+    type: TOGGLE_SIDE_PANEL_VISIBLE,
+});
+export const setCurrentPane = currentPane => ({
+    type: SET_CURRENT_PANE,
+    currentPane,
+});
 
 const initialState = {
     isSidePanelVisible: true,
@@ -61,6 +66,7 @@ export const reducer = (state = initialState, { type, currentPane }) => {
     }
 };
 
-export const isSidePanelVisibleSelector = state => state.appLayout.isSidePanelVisible;
+export const isSidePanelVisibleSelector = state =>
+    state.appLayout.isSidePanelVisible;
 export const isLogVisibleSelector = state => state.appLayout.isLogVisible;
 export const currentPaneSelector = state => state.appLayout.currentPane;

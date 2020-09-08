@@ -42,12 +42,14 @@ const renderApp = panes => {
     const dummyReducer = (s = null) => s;
     const dummyNode = <div />;
 
-    return render(<App
-        appReducer={dummyReducer}
-        deviceSelect={dummyNode}
-        sidePanel={dummyNode}
-        panes={panes}
-    />);
+    return render(
+        <App
+            appReducer={dummyReducer}
+            deviceSelect={dummyNode}
+            sidePanel={dummyNode}
+            panes={panes}
+        />
+    );
 };
 
 const aPane = ['an menu item', () => <div>A pane</div>];

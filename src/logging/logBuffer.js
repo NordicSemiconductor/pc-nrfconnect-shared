@@ -45,6 +45,4 @@ const createLogBuffer = () => {
     return logBuffer;
 };
 
-export {
-    createLogBuffer as default,
-};
+export { createLogBuffer as default };

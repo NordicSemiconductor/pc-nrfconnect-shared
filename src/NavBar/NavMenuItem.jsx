@@ -43,16 +43,16 @@ import { setCurrentPane } from '../App/appLayout';
 
 import './nav-menu-item.scss';
 
-const NavMenuItem = ({
-    index, isFirst, isSelected, label,
-}) => {
+const NavMenuItem = ({ index, isFirst, isSelected, label }) => {
     const dispatch = useDispatch();
 
     return (
         <Button
             variant="link"
             active={false}
-            className={`core19-nav-menu-item ${isSelected ? 'selected' : ''} ${isFirst ? 'first' : ''}`}
+            className={`core19-nav-menu-item ${isSelected ? 'selected' : ''} ${
+                isFirst ? 'first' : ''
+            }`}
             onClick={() => dispatch(setCurrentPane(index))}
             type="button"
         >

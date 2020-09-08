@@ -47,21 +47,24 @@ const infoEntry = () => ({
     id: -1,
     level: 'info',
     timestamp: new Date().toISOString(),
-    message: 'The log in this view has been shortened. Open the log file to see the full content.',
+    message:
+        'The log in this view has been shortened. Open the log file to see the full content.',
 });
 
-const limitedToMaxSize = entries => (
+const limitedToMaxSize = entries =>
     entries.length <= MAX_ENTRIES
         ? entries
-        : [infoEntry(), ...entries.slice(-MAX_ENTRIES)]
-);
+        : [infoEntry(), ...entries.slice(-MAX_ENTRIES)];
 
 export default (state = initialState, action) => {
     switch (action.type) {
         case ADD_ENTRIES: {
             return {
                 ...state,
-                logEntries: limitedToMaxSize([...state.logEntries, ...action.entries]),
+                logEntries: limitedToMaxSize([
+                    ...state.logEntries,
+                    ...action.entries,
+                ]),
             };
         }
         case CLEAR_ENTRIES:

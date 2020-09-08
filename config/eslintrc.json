@@ -1,51 +1,45 @@
 {
-    "parser": "babel-eslint",
+    "parser": "@typescript-eslint/parser",
     "extends": [
         "eslint:recommended",
-        "airbnb"
+        "airbnb",
+        "plugin:@typescript-eslint/recommended",
+        "prettier",
+        "prettier/react",
+        "prettier/@typescript-eslint"
     ],
     "rules": {
-        "indent": [
-            "error",
-            4,
-            {
-                "SwitchCase": 1
-            }
-        ],
-        "react/jsx-indent": [
-            "error",
-            4
-        ],
-        "react/jsx-indent-props": [
-            "error",
-            4
-        ],
+        "react/jsx-indent": ["error", 4],
+        "react/jsx-indent-props": ["error", 4],
         "react/jsx-one-expression-per-line": "off",
         "react/jsx-props-no-spreading": "off",
         "react/require-default-props": "off",
+        "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }],
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "error",
         "jsx-a11y/control-has-associated-label": "off",
-        "quotes": [
-            "error",
-            "single"
-        ],
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-var-requires": "off",
+        "camelcase": "off",
+        "quotes": ["error", "single"],
         "linebreak-style": "off",
-        "arrow-parens": [
-            "error",
-            "as-needed"
-        ],
-        "arrow-body-style": [
-            "error",
-            "as-needed"
-        ],
+        "arrow-parens": ["error", "as-needed"],
         "strict": "off",
         "no-console": "off",
-        "valid-jsdoc": [2, {
-            "prefer": {
-                "return": "returns"
+        "no-use-before-define": "off",
+        "no-param-reassign": "off",
+        "no-unused-expressions": "off",
+        "lines-between-class-members": "off",
+        "import/no-dynamic-require": "off",
+        "valid-jsdoc": [
+            2,
+            {
+                "prefer": {
+                    "return": "returns"
+                }
             }
-        }],
+        ],
         "import/no-extraneous-dependencies": 0,
         "import/no-unresolved": [
             "error",
@@ -63,18 +57,40 @@
         ],
         "import/extensions": ["off"],
         "no-undef": 1,
-        "no-unused-vars": 1
+        "no-unused-vars": "off",
+        "prettier/prettier": "error"
     },
-    "plugins": [
-        "react",
-        "import",
-        "react-hooks"
+    "overrides": [
+        {
+            "files": ["*.d.ts"],
+            "rules": {
+                "max-classes-per-file": "off",
+                "react/prefer-stateless-function": "off",
+                "@typescript-eslint/no-explicit-any": "off"
+            }
+        },
+        {
+            "files": ["*.ts", "*.tsx"],
+            "rules": {
+                "default-case": "off",
+                "consistent-return": "off",
+                "react/prop-types": "off"
+            }
+        }
     ],
+    "plugins": ["react", "import", "react-hooks", "prettier"],
     "env": {
         "es6": true,
         "browser": true,
         "node": true,
         "jasmine": true,
         "jest": true
+    },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [".jsx", ".tsx", ".js", ".ts"]
+            }
+        }
     }
 }

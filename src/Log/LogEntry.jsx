@@ -70,7 +70,7 @@ function hrefReplacer(str) {
                 onKeyPress={() => {}}
             >
                 {href}
-            </a>,
+            </a>
         );
         return '';
     });

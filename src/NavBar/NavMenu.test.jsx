@@ -45,10 +45,9 @@ expect.extend({
     toBeHighlighted(element) {
         const pass = element.classList.contains('selected');
         const not = pass ? 'not ' : '';
-        const message = () => (
-            `Expected the element to ${not}contain a class 'selected' to signify that `
-            + `it is ${not}highlighted. It actually contained: ${element.className}`
-        );
+        const message = () =>
+            `Expected the element to ${not}contain a class 'selected' to signify that ` +
+            `it is ${not}highlighted. It actually contained: ${element.className}`;
         return { pass, message };
     },
 });

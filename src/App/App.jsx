@@ -35,9 +35,7 @@
  */
 
 import React, { useEffect } from 'react';
-import {
-    array, arrayOf, func, node, bool,
-} from 'prop-types';
+import { array, arrayOf, func, node, bool } from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Mousetrap from 'mousetrap';
@@ -64,7 +62,10 @@ import './app.scss';
 const hiddenUnless = isVisible => (isVisible ? '' : 'hidden');
 
 const ConnectedApp = ({
-    deviceSelect, panes, sidePanel, showLogByDefault = true,
+    deviceSelect,
+    panes,
+    sidePanel,
+    showLogByDefault = true,
 }) => {
     const allPanes = [...panes, ['About', About]];
     const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
@@ -82,12 +83,13 @@ const ConnectedApp = ({
 
     return (
         <div className="core19-app">
-            <NavBar
-                deviceSelect={deviceSelect}
-                panes={allPanes}
-            />
+            <NavBar deviceSelect={deviceSelect} panes={allPanes} />
             <div className="core19-app-content">
-                <div className={`core19-side-panel ${hiddenUnless(sidePanel && isSidePanelVisible)}`}>
+                <div
+                    className={`core19-side-panel ${hiddenUnless(
+                        sidePanel && isSidePanelVisible
+                    )}`}
+                >
                     {sidePanel}
                 </div>
                 <div className="core19-main-and-log">
@@ -107,7 +109,11 @@ const ConnectedApp = ({
                             </Carousel.Item>
                         ))}
                     </Carousel>
-                    <div className={`core19-log-viewer ${hiddenUnless(isLogVisible)}`}>
+                    <div
+                        className={`core19-log-viewer ${hiddenUnless(
+                            isLogVisible
+                        )}`}
+                    >
                         <LogViewer />
                     </div>
                 </div>

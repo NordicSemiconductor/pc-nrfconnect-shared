@@ -40,7 +40,7 @@ export const constrainedToPercentage = percentage => {
     return percentage;
 };
 
-export const toPercentage = (v, { min, max }) => ((v - min) * 100) / (max - min);
-export const fromPercentage = (v, { min, max, decimals = 0 }) => Number(
-    ((v * (max - min)) / 100 + min).toFixed(decimals),
-);
+export const toPercentage = (v, { min, max }) =>
+    ((v - min) * 100) / (max - min);
+export const fromPercentage = (v, { min, max, decimals = 0 }) =>
+    Number(((v * (max - min)) / 100 + min).toFixed(decimals));

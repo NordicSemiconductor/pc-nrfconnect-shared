@@ -46,7 +46,8 @@ import logoDisconnected from './nordic-logo-gray-icon-only.png';
 import logoConnected from './nordic-logo-blue-icon-only.png';
 import './logo.scss';
 
-const goToNRFConnectWebsite = () => openUrl('http://www.nordicsemi.com/nRFConnect');
+const goToNRFConnectWebsite = () =>
+    openUrl('http://www.nordicsemi.com/nRFConnect');
 
 const chooseLogo = (changeWithDeviceState, deviceIsSelected) => {
     if (!changeWithDeviceState) {
@@ -64,7 +65,6 @@ const Logo = ({ changeWithDeviceState = false }) => {
             className="core19-logo"
             src={logo}
             alt="Nordic Semiconductor logo"
-
             // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
             role="link"
             onClick={goToNRFConnectWebsite}

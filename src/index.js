@@ -57,7 +57,12 @@ export { default as bleChannels } from './bleChannels';
 export { default as colors } from './colors.scss';
 
 export {
-    setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir,
+    setAppDirs,
+    getAppDir,
+    getAppFile,
+    getAppDataDir,
+    getAppLogDir,
+    getUserDataDir,
 } from './appDirs';
 
 export { openUrl } from './open';

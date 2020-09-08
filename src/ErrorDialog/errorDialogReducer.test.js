@@ -55,7 +55,10 @@ describe('errorDialogReducer', () => {
 
     it('should be visible and have all messages after multiple show actions have been dispatched', () => {
         const withAnError = reducer(initialState, showDialog(anErrorMessage));
-        const withBothErrors = reducer(withAnError, showDialog(anotherErrorMessage));
+        const withBothErrors = reducer(
+            withAnError,
+            showDialog(anotherErrorMessage)
+        );
         expect(withBothErrors.isVisible).toEqual(true);
         expect(withBothErrors.messages).toContain(anErrorMessage);
         expect(withBothErrors.messages).toContain(anotherErrorMessage);
@@ -63,7 +66,10 @@ describe('errorDialogReducer', () => {
 
     it('should not add message if it already exists in list', () => {
         const withAnError = reducer(initialState, showDialog(anErrorMessage));
-        const stillOnlyWithOneError = reducer(withAnError, showDialog(anErrorMessage));
+        const stillOnlyWithOneError = reducer(
+            withAnError,
+            showDialog(anErrorMessage)
+        );
 
         expect(stillOnlyWithOneError.messages).toEqual([anErrorMessage]);
     });

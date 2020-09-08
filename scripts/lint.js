@@ -36,9 +36,8 @@
 
 'use strict';
 
-const fs = require('fs');
 const path = require('path');
-const spawn = require('child_process').spawn;
+const { spawn } = require('child_process');
 
 const eslint = path.join('node_modules', '.bin', 'eslint');
 
@@ -51,15 +50,15 @@ try {
 }
 
 const argv = process.argv.slice(2);
-argv.unshift('--ext', 'js,jsx');
+argv.unshift('--ext', 'js,jsx,ts,tsx');
 argv.unshift('--config', configFile);
 
 const options = {
     env: process.env,
     shell: true,
-    stdio: 'inherit'
+    stdio: 'inherit',
 };
 
-spawn(eslint, argv, options).on('exit', function (code) {
+spawn(eslint, argv, options).on('exit', code => {
     process.exit(code);
 });

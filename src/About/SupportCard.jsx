@@ -37,7 +37,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import systemReport from '../systemReport';
-import { sortedDevices, deviceInfo, selectedSerialNumber } from '../Device/deviceReducer';
+import {
+    sortedDevices,
+    deviceInfo,
+    selectedSerialNumber,
+} from '../Device/deviceReducer';
 import AboutButton from './AboutButton';
 import Card from './Card';
 import Section from './Section';
@@ -50,17 +54,30 @@ export default () => {
     return (
         <Card title="Support">
             <Section title="DevZone">
-                <p>All support requests must be sent through our developer portal DevZone.</p>
-                <AboutButton url="https://devzone.nordicsemi.com" label="Go to DevZone" />
+                <p>
+                    All support requests must be sent through our developer
+                    portal DevZone.
+                </p>
+                <AboutButton
+                    url="https://devzone.nordicsemi.com"
+                    label="Go to DevZone"
+                />
             </Section>
             <Section title="System report">
                 <p>
-                    In order to get the best support it is helpful for our employees to know details
-                    about your operating system and related software. Create a system report and add
-                    to your suport request.
+                    In order to get the best support it is helpful for our
+                    employees to know details about your operating system and
+                    related software. Create a system report and add to your
+                    suport request.
                 </p>
                 <AboutButton
-                    onClick={() => systemReport(devices, currentSerialNumber, currentDevice)}
+                    onClick={() =>
+                        systemReport(
+                            devices,
+                            currentSerialNumber,
+                            currentDevice
+                        )
+                    }
                     label="Create system report"
                 />
             </Section>

@@ -40,7 +40,10 @@
  * help user reloading the app in order to fix the issues.
  */
 export const APP_RELOAD_DIALOG_SHOW = 'APP_RELOAD_DIALOG_SHOW';
-export const showDialog = message => ({ type: APP_RELOAD_DIALOG_SHOW, message });
+export const showDialog = message => ({
+    type: APP_RELOAD_DIALOG_SHOW,
+    message,
+});
 
 /**
  * Indicates that the AppReloadDialog should be hidden. Apps will typically

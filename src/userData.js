@@ -47,10 +47,14 @@ const trackId = 'UA-22498474-5';
  */
 const init = async appName => {
     const networkInterfaces = await si.networkInterfaces();
-    const networkInterface = networkInterfaces.find(i => (
-        (!i.virtual && i.mac) || i.iface === 'eth0'));
+    const networkInterface = networkInterfaces.find(
+        i => (!i.virtual && i.mac) || i.iface === 'eth0'
+    );
     const clientId = networkInterface
-        ? shasum(networkInterface.ip4 || networkInterface.ip6 + networkInterface.mac)
+        ? shasum(
+              networkInterface.ip4 ||
+                  networkInterface.ip6 + networkInterface.mac
+          )
         : 'unknown';
     reactGA.initialize(trackId, {
         debug: false,
@@ -82,11 +86,12 @@ const init = async appName => {
  *
  * @returns {void}
  */
-const sendEvent = (category, action, label) => reactGA.event({
-    category,
-    action,
-    label,
-});
+const sendEvent = (category, action, label) =>
+    reactGA.event({
+        category,
+        action,
+        label,
+    });
 
 export default {
     init,
