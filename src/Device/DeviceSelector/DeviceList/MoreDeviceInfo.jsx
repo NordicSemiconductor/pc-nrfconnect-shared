@@ -35,12 +35,33 @@
  */
 
 import React from 'react';
-import { arrayOf, shape, string } from 'prop-types';
+import { arrayOf, node, shape, string } from 'prop-types';
 
 import { serialports, displayedDeviceName } from '../../deviceInfo/deviceInfo';
 import deviceShape from '../deviceShape';
 
 import './more-device-info.scss';
+
+const Row = ({ children }) => (
+    <div className="info-row">
+        <div className="flex-space" />
+        {children}
+    </div>
+);
+Row.propTypes = {
+    children: node.isRequired,
+};
+
+const PcaNumber = ({ device }) => {
+    if (device.boardVersion == null) {
+        return null;
+    }
+
+    return <div>{device.boardVersion}</div>;
+};
+PcaNumber.propTypes = {
+    device: deviceShape.isRequired,
+};
 
 const MaybeDeviceName = ({ device }) => {
     const hasNickname = device.nickname !== '';
@@ -75,8 +96,15 @@ Serialports.propTypes = {
 
 const MoreDeviceInfo = ({ device }) => (
     <div className="more-infos">
-        <MaybeDeviceName device={device} />
-        <Serialports ports={serialports(device)} />
+        <Row>
+            <PcaNumber device={device} />
+        </Row>
+        <Row>
+            <MaybeDeviceName device={device} />
+        </Row>
+        <Row>
+            <Serialports ports={serialports(device)} />
+        </Row>
     </div>
 );
 
