@@ -12,15 +12,16 @@
 - Added support for files written in TypeScript
 - Added Prettier formatting
 
-Note that apps using this version should add the following entry to their `package.json` file:
+### Steps to upgrade when using this package
+- Note that apps using this version should add the following entry to their `package.json` file:
 
-`{ "prettier": "./node_modules/pc-nrfconnect-shared/config/prettier.config.js" }`
+  `{ "prettier": "./node_modules/pc-nrfconnect-shared/config/prettier.config.js" }`
 
-If this isn't added, the Prettier defaults will be used, which differ from our style choices
-in a number of ways.
+  If this isn't added, the Prettier defaults will be used, which differ from our style choices
+  in a number of ways.
 
-On first run, the linting is likely to fail due to the prevalence of formatting errors.
-The majority of these can be fixed automatically, by running `npm run lint -- --fix`.
+  On first run, the linting is likely to fail due to the prevalence of formatting errors.
+  The majority of these can be fixed automatically, by running `npm run lint -- --fix`.
 
 ## Version 4.8.15
 ### Added
@@ -51,6 +52,13 @@ The majority of these can be fixed automatically, by running `npm run lint -- --
 ## Version 4.8.9
 ### Updated
 - Updated several design elements for the release of the new RSSI app
+### Steps to upgrade when using this package
+- Apps using the new design need to be adapted in areas were a scrollbar might
+  be shown. Add a `@include scrollbars(BACKGROUND-COLOUR);` with an
+  appropriate replacement for `BACKGROUND-COLOUR` to the fitting selector in
+  the SCSS files. When searching for `@include scrollbars` you can find [an
+  example for this in the source code of
+  `pc-nrfconnect-shared`](https://github.com/NordicSemiconductor/pc-nrfconnect-shared/blob/cef186fcc4631d6c737ce4c5d299fef53a0ffcc2/src/Device/DeviceSelector/DeviceList/device-list.scss#L7).
 
 ## Version 4.8.8
 ### Fixed
@@ -76,10 +84,11 @@ The majority of these can be fixed automatically, by running `npm run lint -- --
 - Exported array bleChannels to provide a list of all BLE channels and some
   convenience properties on it
 ### Changed
-- Disabled the ESLint rule react/require-default-props, you should remove your
-  local overrides when upgrading to this version and might also reconsider
-  using defaultProps when not really needed
+- Disabled the ESLint rule `react/require-default-props`
 - Updated the new design in many details
+### Steps to upgrade when using this package
+- Remove local overrides for the ESLint rule `react/require-default-props` and
+  also reconsider using defaultProps when not really needed
 
 ## Version 4.8.3
 ### Changed
@@ -103,7 +112,18 @@ The majority of these can be fixed automatically, by running `npm run lint -- --
   in each app (unless they want to do it themselves).
 - New design for apps using the new app architecture.
 - Update many dependencies
-- Turned react, react-dom and react-redux into peerDependencies. So when using pc-nrfconnect-shared you might need to add them as dependencies.
+- Turned `react`, `react-dom` and `react-redux` into peerDependencies
+### Steps to upgrade when using this package
+- Add `react`, `react-dom` and `react-redux` to your dev dependencies (you can
+  omit any you do not strictly need, but most projects need all of them). Usually
+  the easiest way to do this is by running `npm install --save-dev --save-exact
+  react react-redux react-dom`.
+- The linting rules were slightly strengthened so often some new errors pop up
+  there. Many can be auto fixed, so run `npm run lint -- --fix` first and then
+  review the changes made as well as the remaining issues.
+- Also run the tests and check whether something needs to be corrected (e.g.
+  because jest was updated). E.g. in the BLE app, references to
+  `require.requireActual` needed to be corrected to `jest.requireActual`.
 
 ## Version 4.7
 ### Changed
@@ -122,7 +142,10 @@ The majority of these can be fixed automatically, by running `npm run lint -- --
 
 ## Version 4.3
 ### Added
-- Ease configuration of git hooks #40. If you want to automatically run the `lint` and `test` scripts before pushing changes, add a file `.huskyrc.json` to your project with this content:
+- Ease configuration of git hooks #40.
+### Steps to upgrade when using this package
+- If you want to automatically run the `lint` and `test` scripts before pushing
+  changes, add a file `.huskyrc.json` to your project with this content:
 ```json
 {
     "hooks": {
@@ -130,6 +153,7 @@ The majority of these can be fixed automatically, by running `npm run lint -- --
     }
 }
 ```
+  Remember that in a case of emergency you can do `git push --no-verify` if you need to push even though tests might fail.
 
 ## Version 4.2
 ### Changed
