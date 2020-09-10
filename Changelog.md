@@ -1,3 +1,7 @@
+## Version 4.8.19
+### Fixed
+- Version number for 4.8.18 release was wrong in `package.json`.
+
 ## Version 4.8.18
 ### Updated
 - Added `prettier.config.js` to existing script `npm run lint-init`
