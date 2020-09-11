@@ -1,3 +1,7 @@
+## Version 4.9.0
+### Fixed
+- Type error in bleChannels
+
 ## Version 4.8.19
 ### Fixed
 - Version number for 4.8.18 release was wrong in `package.json`.

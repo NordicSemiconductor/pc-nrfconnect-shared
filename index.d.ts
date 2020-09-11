@@ -236,7 +236,7 @@ declare module 'pc-nrfconnect-shared' {
     interface BleChannels extends Array<number> {
         min: number;
         max: number;
-        isAdvertisment: (channel: number) => boolean;
+        isAdvertisement: (channel: number) => boolean;
     }
 
     export const bleChannels: BleChannels;
