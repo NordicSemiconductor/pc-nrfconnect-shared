@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "target": "ES2019",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "jsx": "react",
+
+        "strict": true,
+        "isolatedModules": true,
+        "forceConsistentCasingInFileNames": true,
+    }
+}
