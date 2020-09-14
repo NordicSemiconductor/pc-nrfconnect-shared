@@ -99,6 +99,13 @@ const checkForTsconfigJson = () =>
         }
     });
 
+const checkTypeScriptTypes = () => {
+    if (existsSync('tsconfig.json')) {
+        spawnInPromise('tsc', ['--noEmit']);
+    }
+};
+
 runESLint()
     .then(checkForTsconfigJson)
+    .then(checkTypeScriptTypes)
     .catch(error => process.exit(error));
