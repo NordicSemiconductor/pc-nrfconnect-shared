@@ -39,26 +39,41 @@
 const path = require('path');
 const { spawn } = require('child_process');
 
-const eslint = path.join('node_modules', '.bin', 'eslint');
+const spawnInPromise = (command, argv) => {
+    const options = {
+        env: process.env,
+        shell: true,
+        stdio: 'inherit',
+    };
 
-let configFile;
-try {
-    // Using custom .eslintrc if it exists in project
-    configFile = require.resolve('../../../.eslintrc');
-} catch (err) {
-    configFile = require.resolve('../config/eslintrc.json');
-}
-
-const argv = process.argv.slice(2);
-argv.unshift('--ext', 'js,jsx,ts,tsx');
-argv.unshift('--config', configFile);
-
-const options = {
-    env: process.env,
-    shell: true,
-    stdio: 'inherit',
+    return new Promise((resolve, reject) => {
+        spawn(command, argv, options).on('exit', code => {
+            if (code !== 0) {
+                reject(code);
+            } else {
+                resolve();
+            }
+        });
+    });
 };
 
-spawn(eslint, argv, options).on('exit', code => {
-    process.exit(code);
-});
+const runESLint = () => {
+    const eslint = path.join('node_modules', '.bin', 'eslint');
+
+    let configFile;
+    try {
+        // Using custom .eslintrc if it exists in project
+        configFile = require.resolve('../../../.eslintrc');
+    } catch (err) {
+        configFile = require.resolve('../config/eslintrc.json');
+    }
+
+    const argv = process.argv.slice(2);
+    argv.unshift('--ext', 'js,jsx,ts,tsx');
+    argv.unshift('--config', configFile);
+
+    return spawnInPromise(eslint, argv);
+};
+
+runESLint()
+    .catch(error => process.exit(error));
