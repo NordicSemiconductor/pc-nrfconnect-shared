@@ -1,6 +1,7 @@
 ## Version 4.9.0
 ### Added
 - Default `tsconfig.json` for other projects to use
+- During linting check for the existence of a `tsconfig.json` if the project uses TypeScript (if there are any files with the endings `.ts` or `.tsx`)
 ### Fixed
 - Type error in bleChannels
 ### Steps to upgrade when using this package
