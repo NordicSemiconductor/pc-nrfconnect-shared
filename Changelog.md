@@ -1,3 +1,34 @@
+## Version 4.9.0
+### Added
+- Default `tsconfig.json` for other projects to use
+- Additional checks during linting:
+  - Check for a `tsconfig.json` if the project uses TypeScript (if there are
+    any files with the endings `.ts` or `.tsx`)
+  - Run `tsc --noEmit` if there is a `tsconfig.json` to check the TypeScript
+    types
+### Fixed
+- Type error in bleChannels
+### Steps to upgrade when using this package
+- If you want to use the settings from `config/tsconfig.json` in a
+  TypeScript project, then put this into a `tsconfig.json` in the
+  root of your project:
+  ```
+  {
+    "extends": "./node_modules/pc-nrfconnect-shared/config/tsconfig.json",
+  }
+  ```
+  Please note that `tsconfig.json` is _not_ used for the compilation of your
+  project. We use the TypeScript transform plugin of babel for compilation and
+  [that does not use the settings from
+  `tsconfig.json`](https://babeljs.io/docs/en/next/babel-plugin-transform-typescript.html#caveats).
+  But the settings in `tsconfig.json` are useful nonetheless, because they
+  respected by many IDEs and editors as well as when you run `tsc`.
+
+  If you want to override any settings from the default `tsconfig.json` you
+  are free to do so. We put `strict` on `true` in there because that is what
+  we aim for but you may want to relax that a bit when transitioning existing
+  projects.
+
 ## Version 4.8.19
 ### Fixed
 - Version number for 4.8.18 release was wrong in `package.json`.

@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "4.8.19",
+    "version": "4.9.0",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -60,6 +60,7 @@
         "immutable": "4.0.0-rc.12",
         "jest": "26.0.1",
         "jest-bamboo-formatter": "1.0.1",
+        "klaw": "3.0.0",
         "moment": "2.26.0",
         "mousetrap": "1.6.5",
         "prettier": "^2.1.1",
