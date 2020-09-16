@@ -1,6 +1,10 @@
+## Version 4.9.2
+### Fixed
+- Some types
+
 ## Version 4.9.1
 ### Fixed
-- Relax ESLint rule regardint @ts-ignore comments
+- Relax ESLint rule regarding @ts-ignore comments
 
 ## Version 4.9.0
 ### Added
