@@ -1,3 +1,7 @@
+## Version 4.9.1
+### Fixed
+- Relax ESLint rule regardint @ts-ignore comments
+
 ## Version 4.9.0
 ### Added
 - Default `tsconfig.json` for other projects to use
