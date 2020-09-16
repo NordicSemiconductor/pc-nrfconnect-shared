@@ -42,6 +42,8 @@ import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
 import Carousel from 'react-bootstrap/Carousel';
 
+import 'focus-visible';
+
 import LogViewer from '../Log/LogViewer';
 import About from '../About/About';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';

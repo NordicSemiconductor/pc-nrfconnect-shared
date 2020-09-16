@@ -39,6 +39,8 @@ body {
     outline-color: $accent !important;
     outline-width: 3px;
 }
-:focus:active {
-    outline-style: none;
+// focus-visible js polyfill, see: https://github.com/WICG/focus-visible
+.js-focus-visible :focus:not(.focus-visible) {
+    outline: none !important;
+    box-shadow: none !important;
 }
