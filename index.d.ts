@@ -274,14 +274,14 @@ declare module 'pc-nrfconnect-shared' {
     // Slider.jsx
 
     export class SliderProps {
-        id: string;
+        id?: string;
         values: number[];
         range: {
             min: number;
             max: number;
         };
         onChange: ((value: number) => any)[];
-        onChangeComplete: () => any;
+        onChangeComplete?: () => any;
     }
 
     export class Slider extends React.Component<SliderProps> {}
@@ -336,6 +336,8 @@ declare module 'pc-nrfconnect-shared' {
         onChange: (value: number) => any;
     }
 
+    export class NumberInlineInput extends React.Component<NumberInlineInputProps> {}
+
     // Toggle.jsx
 
     interface ToggleProps {
@@ -357,7 +359,7 @@ declare module 'pc-nrfconnect-shared' {
 
     // colors.js
 
-    export const colors: Record<string, unknown>;
+    export const colors: Record<string, string>;
 
     // appDirs.js
 

@@ -1,10 +1,14 @@
-## Unreleased
+## 4.9.3
 ### Added
 - Added focus-visible dependency and disabled focus styles when clicked
 
+## Version 4.9.2
+### Fixed
+- Some types
+
 ## Version 4.9.1
 ### Fixed
-- Relax ESLint rule regardint @ts-ignore comments
+- Relax ESLint rule regarding @ts-ignore comments
 
 ## Version 4.9.0
 ### Added
