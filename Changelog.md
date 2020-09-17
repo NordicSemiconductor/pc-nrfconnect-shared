@@ -1,3 +1,7 @@
+## 4.9.3
+### Added
+- Added focus-visible dependency and disabled focus styles when clicked
+
 ## Version 4.9.2
 ### Fixed
 - Some types
