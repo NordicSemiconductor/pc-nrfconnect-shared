@@ -1,3 +1,10 @@
+## 4.9.5
+### Fixed
+- More type enhancements:
+  - Correct `systemReport` signature
+  - Limit array types to readonly where possible
+  - Do not use void as a callback return value
+
 ## 4.9.4
 ### Fixes
 - Fix app's dependencies in webpack config
