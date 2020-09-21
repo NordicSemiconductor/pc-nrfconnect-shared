@@ -386,8 +386,8 @@ declare module 'pc-nrfconnect-shared' {
     // systemReport.js
 
     export function systemReport(
-        allDevices: any,
-        currentSerialNumber: string[],
+        allDevices: Device[],
+        currentSerialNumber: string,
         currentDevice: any
     ): any;
 
