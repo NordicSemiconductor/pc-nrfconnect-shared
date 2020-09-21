@@ -197,30 +197,31 @@ declare module 'pc-nrfconnect-shared' {
         deviceSetup?: DeviceSetup;
         /**
          * This callback is invoked before a device is about to be
-         * rogrammed. If no `deviceSetup `is provided, this callback
-         * will not be invoked.
+         * programmed. If no `deviceSetup `is provided, this callback
+         * will not be invoked. If this returns a promise, programming
+         * is only done after the promise is fulfilled.
          */
-        releaseCurrentDevice?: () => any;
+        releaseCurrentDevice?: () => Promise<void> | void;
         /**
          * This callback is invoked when a device is selected by
          * the user. The callback receives the selected device as
          * a parameter.
          */
-        onDeviceSelected?: (device: Device) => any;
+        onDeviceSelected?: (device: Device) => void;
         /**
          * This callback is invoked when programming a device is
          * finished. The callback receives the programmed device
          * as a parameter. If no `deviceSetup` is provided, this
          * callback will not be invoked.
          */
-        onDeviceIsReady?: (device: Device) => any;
+        onDeviceIsReady?: (device: Device) => void;
         /**
          * This callback is invoked when a selected device is again
          * deselected. This may be caused by the user deselecting
          * the device but also automatically if programming a device
          * failed.
          */
-        onDeviceDeselected?: () => any;
+        onDeviceDeselected?: () => void;
     }
 
     /**
@@ -255,8 +256,8 @@ declare module 'pc-nrfconnect-shared' {
         isVisible: boolean;
         title?: string;
         text?: string;
-        onOk: () => any;
-        onCancel: () => any;
+        onOk: () => void;
+        onCancel: () => void;
         okButtonText?: string;
         cancelButtonText?: string;
         isInProgress?: boolean;
@@ -280,8 +281,8 @@ declare module 'pc-nrfconnect-shared' {
             min: number;
             max: number;
         };
-        onChange: readonly ((value: number) => any)[];
-        onChangeComplete?: () => any;
+        onChange: readonly ((value: number) => void)[];
+        onChangeComplete?: () => void;
     }
 
     export class Slider extends React.Component<SliderProps> {}
@@ -318,7 +319,7 @@ declare module 'pc-nrfconnect-shared' {
     interface InlineInputProps {
         value: string;
         isValid?: (value: string) => boolean;
-        onChange: (value: string) => any;
+        onChange: (value: string) => void;
         className?: string;
         style?: React.CSSProperties;
     }
@@ -333,7 +334,7 @@ declare module 'pc-nrfconnect-shared' {
             min: number;
             max: number;
         };
-        onChange: (value: number) => any;
+        onChange: (value: number) => void;
     }
 
     export class NumberInlineInput extends React.Component<
@@ -391,7 +392,7 @@ declare module 'pc-nrfconnect-shared' {
         allDevices: readonly Device[],
         currentSerialNumber: string,
         currentDevice: any
-    ): any;
+    ): Promise<void>;
 
     // userData.js
 
