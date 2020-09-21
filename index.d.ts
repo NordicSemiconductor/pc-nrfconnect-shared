@@ -16,22 +16,22 @@ declare module 'pc-nrfconnect-shared' {
             message: string;
         };
         device: {
-            devices: Device[];
+            devices: readonly Device[];
             deviceInfo: any;
             isSetupDialogVisible: boolean;
             isSetupWaitingForUserInput: boolean;
             selectedSerialNumber: string;
-            setupDialogChoices: string[];
+            setupDialogChoices: readonly string[];
             setupDialogText: string | null;
         };
         errorDialog: {
             errorResolutions: any;
             isVisible: boolean;
-            messages: string[];
+            messages: readonly string[];
         };
         log: {
             autoScroll: boolean;
-            logEntries: string[];
+            logEntries: readonly string[];
         };
     }
 
@@ -45,7 +45,7 @@ declare module 'pc-nrfconnect-shared' {
 
     interface LogAddEntries {
         type: NrfConnectActionType.LOG_ADD_ENTRIES;
-        entries: any[];
+        entries: readonly any[];
     }
 
     interface LogClearEntries {
@@ -105,7 +105,7 @@ declare module 'pc-nrfconnect-shared' {
          *
          * `[['Connection Map', ConnectionMap], ['Server Setup', ServerSetup]]`
          */
-        panes: [string, React.FC][];
+        panes: readonly (readonly [string, React.FC])[];
         /**
          * Describes whether the log will show automatically when the
          * application starts. Defaults to `true`.
@@ -162,7 +162,7 @@ declare module 'pc-nrfconnect-shared' {
     interface Device {
         boardVersion: string;
         serialNumber: string;
-        traits: string[];
+        traits: readonly string[];
         serialport: {
             path: string;
             manufacturer: string;
@@ -275,12 +275,12 @@ declare module 'pc-nrfconnect-shared' {
 
     export class SliderProps {
         id?: string;
-        values: number[];
+        values: readonly number[];
         range: {
             min: number;
             max: number;
         };
-        onChange: ((value: number) => any)[];
+        onChange: readonly ((value: number) => any)[];
         onChangeComplete?: () => any;
     }
 
@@ -289,7 +289,7 @@ declare module 'pc-nrfconnect-shared' {
     // ErrorDialog.jsx
 
     export interface ErrorDialogState {
-        messages: string[];
+        messages: readonly string[];
         isVisible: boolean;
         errorResolutions: any;
     }
@@ -336,7 +336,9 @@ declare module 'pc-nrfconnect-shared' {
         onChange: (value: number) => any;
     }
 
-    export class NumberInlineInput extends React.Component<NumberInlineInputProps> {}
+    export class NumberInlineInput extends React.Component<
+        NumberInlineInputProps
+    > {}
 
     // Toggle.jsx
 
@@ -386,7 +388,7 @@ declare module 'pc-nrfconnect-shared' {
     // systemReport.js
 
     export function systemReport(
-        allDevices: Device[],
+        allDevices: readonly Device[],
         currentSerialNumber: string,
         currentDevice: any
     ): any;
