@@ -101,7 +101,7 @@ const checkForTsconfigJson = () =>
 
 const checkTypeScriptTypes = () => {
     if (existsSync('tsconfig.json')) {
-        spawnInPromise('tsc', ['--noEmit']);
+        return spawnInPromise('tsc', ['--noEmit']);
     }
 };
 

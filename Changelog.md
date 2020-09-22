@@ -4,6 +4,7 @@
   - Correct `systemReport` signature
   - Limit array types to readonly where possible
   - Do not use void as a callback return value
+- Make linting fail if the type check fails
 
 ## 4.9.4
 ### Fixes
