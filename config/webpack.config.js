@@ -4,8 +4,6 @@ const fs = require('fs');
 
 const { dependencies } = require(path.join(
     process.cwd(),
-    'node_modules',
-    'pc-nrfconnect-shared',
     'package.json'
 ));
 

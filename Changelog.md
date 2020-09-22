@@ -1,3 +1,7 @@
+## 4.9.4
+### Fixes
+- Fix app's dependencies in webpack config
+
 ## 4.9.3
 ### Added
 - Added focus-visible dependency and disabled focus styles when clicked
