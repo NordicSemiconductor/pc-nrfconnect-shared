@@ -36,7 +36,6 @@
 
 'use strict';
 
-const fs = require('fs');
 const jest = require('jest');
 
 let configFile;

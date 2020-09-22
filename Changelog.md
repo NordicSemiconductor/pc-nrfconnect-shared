@@ -6,6 +6,7 @@
   - Do not use void as a callback return value
 - Make linting fail if the type check fails
 - Remove conflicting ESLint rule 'quotes'
+- Lint all JavaScript files in this project, not just the ones in src/
 
 ## 4.9.4
 ### Fixes

@@ -2,10 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
 
-const { dependencies } = require(path.join(
-    process.cwd(),
-    'package.json'
-));
+const { dependencies } = require(path.join(process.cwd(), 'package.json'));
 
 const appDirectory = fs.realpathSync(process.cwd());
 const nodeEnv = process.env.NODE_ENV || 'development';

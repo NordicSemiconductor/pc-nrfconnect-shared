@@ -34,9 +34,10 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* eslint-disable global-require -- to enable conditional loading of the webpack config */
+
 'use strict';
 
-const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -67,13 +68,15 @@ function handleOutput(err, stats) {
     }
 
     if (stats.hasWarnings()) {
-        console.warn(info.warnings)
+        console.warn(info.warnings);
     }
 
-    console.log(stats.toString({
-        chunks: false,  // Makes the build much quieter
-        colors: true    // Shows colors in the console
-    }));
+    console.log(
+        stats.toString({
+            chunks: false, // Makes the build much quieter
+            colors: true, //  Shows colors in the console
+        })
+    );
 }
 
 const args = process.argv.slice(2);

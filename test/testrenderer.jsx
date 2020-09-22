@@ -47,10 +47,9 @@ const createPreparedStore = actions => {
     return store;
 };
 
-const PreparedProvider = actions => ({ children }) => ( // eslint-disable-line react/prop-types
-    <Provider store={createPreparedStore(actions)}>
-        {children}
-    </Provider>
+const PreparedProvider = actions => props => (
+    <Provider store={createPreparedStore(actions)} {...props} />
 );
 
-export default (element, actions = []) => render(element, { wrapper: PreparedProvider(actions) });
+export default (element, actions = []) =>
+    render(element, { wrapper: PreparedProvider(actions) });

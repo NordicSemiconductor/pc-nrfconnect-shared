@@ -13,7 +13,7 @@
     },
     "main": "src",
     "scripts": {
-        "lint": "node ./bin/nrfconnect-scripts.js lint src",
+        "lint": "node ./bin/nrfconnect-scripts.js lint .",
         "lint-init": "cp ./config/eslintrc.json .eslintrc",
         "test": "jest --testResultsProcessor jest-bamboo-formatter src",
         "test-watch": "jest --watch src"
