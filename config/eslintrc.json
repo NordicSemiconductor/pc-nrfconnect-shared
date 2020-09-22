@@ -25,7 +25,6 @@
             "ts-ignore": "allow-with-description"
         }],
         "camelcase": "off",
-        "quotes": ["error", "single"],
         "linebreak-style": "off",
         "arrow-parens": ["error", "as-needed"],
         "strict": "off",

@@ -36,20 +36,22 @@
 
 'use strict';
 
-const { version } = require('../package.json');
-const execSync = require('child_process').execSync;
+const { execSync } = require('child_process');
 const fs = require('fs');
 const semver = require('semver');
 const shasum = require('shasum');
 const FtpClient = require('ftp');
 const args = require('commander');
-let nonOffcialSource;
 
-args
-    .version(version)
-    .description('Publish to nordic repository')
-    .requiredOption('-s, --source [source]', 'Specify the source to publish (e.g. official).')
-    .option('-n, --no-pack', 'Publish existing .tgz file at the root directory without npm pack.')
+args.description('Publish to nordic repository')
+    .requiredOption(
+        '-s, --source [source]',
+        'Specify the source to publish (e.g. official).'
+    )
+    .option(
+        '-n, --no-pack',
+        'Publish existing .tgz file at the root directory without npm pack.'
+    )
     .parse(process.argv);
 
 /*
@@ -59,7 +61,7 @@ if (!args.source) {
     console.error('Source to publish to is not specified.');
     process.exit(1);
 }
-nonOffcialSource = args.source !== 'official' ? args.source : undefined;
+const nonOffcialSource = args.source !== 'official' ? args.source : undefined;
 
 /*
  * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
@@ -72,28 +74,37 @@ const config = {
 };
 
 const repoDirOfficial = '.pc-tools/nrfconnect-apps';
-const repoDirNonOfficial = nonOffcialSource? `${repoDirOfficial}/${nonOffcialSource}` : undefined;
-const repoDir = `/${process.env.REPO_DIR || repoDirNonOfficial || repoDirOfficial}`;
+const repoDirNonOfficial = nonOffcialSource
+    ? `${repoDirOfficial}/${nonOffcialSource}`
+    : undefined;
+const repoDir = `/${
+    process.env.REPO_DIR || repoDirNonOfficial || repoDirOfficial
+}`;
 
-const repoUrlOfficial = 'https://developer.nordicsemi.com/.pc-tools/nrfconnect-apps';
-const repoUrlNonOfficial = nonOffcialSource? `${repoUrlOfficial}/${nonOffcialSource}` : undefined;
+const repoUrlOfficial =
+    'https://developer.nordicsemi.com/.pc-tools/nrfconnect-apps';
+const repoUrlNonOfficial = nonOffcialSource
+    ? `${repoUrlOfficial}/${nonOffcialSource}`
+    : undefined;
 const repoUrl = process.env.REPO_URL || repoUrlNonOfficial || repoUrlOfficial;
 
 const client = new FtpClient();
 
 /**
- * Parse npm package name and verion from filename
+ * Parse npm package name and version from filename
  *
- * @param {string} filename
+ * @param {string} filename of package
  * @returns {object} parsed package info: { name, version, filename }
  */
 function parsePackageName(filename) {
     const rx = /(.*?)-(\d+\.\d+.*?)(.tgz)/;
     const match = rx.exec(filename);
     if (!match) {
-        throw new Error(`Couldn't parse filename ${filename}, expected [package-name]-[x.y...].tgz`);
+        throw new Error(
+            `Couldn't parse filename ${filename}, expected [package-name]-[x.y...].tgz`
+        );
     }
-    const [, name, version, ] = match;
+    const [, name, version] = match;
     return { name, version, filename };
 }
 
@@ -104,7 +115,9 @@ function parsePackageName(filename) {
  */
 function connect() {
     return new Promise((resolve, reject) => {
-        console.log(`Connecting to ftp://${config.user}@${config.host}:${config.port}`);
+        console.log(
+            `Connecting to ftp://${config.user}@${config.host}:${config.port}`
+        );
         client.once('error', err => {
             client.removeAllListeners('ready');
             reject(err);
@@ -120,19 +133,20 @@ function connect() {
 /**
  * Change working directory on ftp server
  *
+ * @param {string} dir the directory to change to
  * @returns {Promise<undefined>} resolves upon success
  */
 function changeWorkingDirectory(dir) {
     return new Promise((resolve, reject) => {
         console.log(`Changing to directory ${dir}`);
-        client.cwd(dir, err => err ? reject(err) : resolve());
+        client.cwd(dir, err => (err ? reject(err) : resolve()));
     });
 }
 
 /**
  * Download file _filename_ from ftp server current working directory
  *
- * @param {string} filename
+ * @param {string} filename the file to download
  * @returns {Promise<string>} resolves with content of file
  */
 function getFile(filename) {
@@ -142,7 +156,10 @@ function getFile(filename) {
         client.get(filename, (err, stream) => {
             if (err) return reject(err);
             stream.once('close', () => resolve(data));
-            stream.on('data', chunk => data += chunk);
+            stream.on('data', chunk => {
+                data += chunk;
+            });
+            return undefined;
         });
     });
 }
@@ -158,20 +175,24 @@ function putFile(local, remote) {
     return new Promise((resolve, reject) => {
         console.log(`Uploading file ${remote}`);
         client.put(local, remote, err => (err ? reject(err) : resolve()));
-    })
+    });
 }
 
 /**
  * Calculate SHASUM checksum of file
  *
- * @param {string} filePath
+ * @param {string} filePath of package
  * @returns {Promise<string>} resolves with SHASUM
  */
 function getShasum(filePath) {
     return new Promise((resolve, reject) => {
         fs.readFile(filePath, (err, buffer) => {
             if (err) {
-                reject(new Error(`Unable to read file when verifying shasum: ${filePath}`));
+                reject(
+                    new Error(
+                        `Unable to read file when verifying shasum: ${filePath}`
+                    )
+                );
             } else {
                 resolve(shasum(buffer));
             }
@@ -180,12 +201,15 @@ function getShasum(filePath) {
 }
 
 function uploadChangelog(packageName) {
-  const changelogFilename = 'Changelog.md';
-  if (fs.existsSync(changelogFilename)) {
-    return putFile(changelogFilename, `${packageName}-${changelogFilename}`);
-  } else {
-    console.warn(`There should be a changelog called "${changelogFilename}". Please provide it!`);
-  }
+    const changelogFilename = 'Changelog.md';
+    if (!fs.existsSync(changelogFilename)) {
+        console.warn(
+            `There should be a changelog called "${changelogFilename}". Please provide it!`
+        );
+        return;
+    }
+
+    putFile(changelogFilename, `${packageName}-${changelogFilename}`);
 }
 
 let thisPackage;
@@ -206,16 +230,22 @@ Promise.resolve()
         }
 
         thisPackage = parsePackageName(filename);
-        console.log(`Package name: ${thisPackage.name} version: ${thisPackage.version}`);
+        console.log(
+            `Package name: ${thisPackage.name} version: ${thisPackage.version}`
+        );
     })
     .then(() => getShasum(thisPackage.filename))
-    .then(shasum => { thisPackage.shasum = shasum; })
+    .then(checksum => {
+        thisPackage.shasum = checksum;
+    })
     .then(() => connect())
     .then(() => changeWorkingDirectory(repoDir))
     .then(() => getFile(thisPackage.name))
     .catch(err => {
-        console.log(`Meta file will be created from scratch due to: ${err.message}`);
-        return "{}";
+        console.log(
+            `Meta file will be created from scratch due to: ${err.message}`
+        );
+        return '{}';
     })
     .then(content => JSON.parse(content))
     .then(meta => {
@@ -226,7 +256,9 @@ Promise.resolve()
             console.log(`Latest published version ${latest}`);
 
             if (semver.lte(thisPackage.version, latest) && !nonOffcialSource) {
-                throw new Error('Current package version cannot be published, bump it higher');
+                throw new Error(
+                    'Current package version cannot be published, bump it higher'
+                );
             }
         }
 
@@ -241,7 +273,7 @@ Promise.resolve()
 
         return meta;
     })
-    .then(meta => putFile(new Buffer(JSON.stringify(meta)), thisPackage.name))
+    .then(meta => putFile(Buffer.from(JSON.stringify(meta)), thisPackage.name))
     .then(() => putFile(thisPackage.filename, thisPackage.filename))
     .then(() => uploadChangelog(thisPackage.name))
     .then(() => console.log('Done'))

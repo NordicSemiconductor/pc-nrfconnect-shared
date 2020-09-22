@@ -43,7 +43,7 @@ let configFileSource = path.join(
     'node_modules',
     'pc-nrfconnect-shared',
     'config',
-    'eslintrc.json',
+    'eslintrc.json'
 );
 let configFileDestination = path.join('.eslintrc');
 
@@ -59,7 +59,7 @@ configFileSource = path.join(
     'node_modules',
     'pc-nrfconnect-shared',
     'config',
-    'prettier.config.js',
+    'prettier.config.js'
 );
 configFileDestination = path.join('prettier.config.js');
 
@@ -68,5 +68,7 @@ fs.copyFile(configFileSource, configFileDestination, err => {
         console.error(err);
         process.exit(1);
     }
-    console.log('prettier.config.js is updated according to pc-nrfconnect-shared');
+    console.log(
+        'prettier.config.js is updated according to pc-nrfconnect-shared'
+    );
 });

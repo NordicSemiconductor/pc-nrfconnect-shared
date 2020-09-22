@@ -36,7 +36,7 @@
 
 'use strict';
 
-const path = require('path');
+const { join } = require('path');
 const { spawn } = require('child_process');
 const { existsSync } = require('fs');
 const klaw = require('klaw');
@@ -60,7 +60,7 @@ const spawnInPromise = (command, argv) => {
 };
 
 const runESLint = () => {
-    const eslint = path.join('node_modules', '.bin', 'eslint');
+    const eslint = join('node_modules', '.bin', 'eslint');
 
     let configFile;
     try {
@@ -79,7 +79,8 @@ const runESLint = () => {
 
 const errorForMissingTsconfigJson = 2;
 const messageForMissingTsconfigJson =
-    "Your project contains TypeScript files (with the file ending .ts or .tsx), so it also must contain a file 'tsconfig.json'.\n";
+    'Your project contains TypeScript files (with the file ending .ts ' +
+    "or .tsx), so it also must contain a file 'tsconfig.json'.\n";
 const checkForTsconfigJson = () =>
     new Promise((resolve, reject) => {
         if (existsSync('tsconfig.json')) {
@@ -101,8 +102,9 @@ const checkForTsconfigJson = () =>
 
 const checkTypeScriptTypes = () => {
     if (existsSync('tsconfig.json')) {
-        spawnInPromise('tsc', ['--noEmit']);
+        return spawnInPromise('tsc', ['--noEmit']);
     }
+    return undefined;
 };
 
 runESLint()
