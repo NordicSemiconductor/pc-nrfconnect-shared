@@ -41,6 +41,17 @@ declare module 'pc-nrfconnect-shared' {
         LOG_ADD_ENTRIES = 'LOG_ADD_ENTRIES',
         LOG_CLEAR_ENTRIES = 'LOG_CLEAR_ENTRIES',
         LOG_TOGGLE_AUTOSCROLL = 'LOG_TOGGLE_AUTOSCROLL',
+
+        DEVICE_SELECTED = 'DEVICE_SELECTED',
+        DEVICE_DESELECTED = 'DEVICE_DESELECTED',
+        DEVICE_SETUP_COMPLETE = 'DEVICE_SETUP_COMPLETE',
+        DEVICE_SETUP_ERROR = 'DEVICE_SETUP_ERROR',
+        DEVICE_SETUP_INPUT_REQUIRED = 'DEVICE_SETUP_INPUT_REQUIRED',
+        DEVICE_SETUP_INPUT_RECEIVED = 'DEVICE_SETUP_INPUT_RECEIVED',
+        DEVICES_DETECTED = 'DEVICES_DETECTED',
+        DEVICE_FAVORITE_TOGGLED = 'DEVICE_FAVORITE_TOGGLED',
+        DEVICE_NICKNAME_SET = 'DEVICE_NICKNAME_SET',
+        DEVICE_NICKNAME_RESET = 'DEVICE_NICKNAME_RESET',
     }
 
     interface LogAddEntries {
@@ -56,10 +67,73 @@ declare module 'pc-nrfconnect-shared' {
         type: NrfConnectActionType.LOG_TOGGLE_AUTOSCROLL;
     }
 
+    interface SelectDevice {
+        type: NrfConnectActionType.DEVICE_SELECTED;
+        device: Device;
+    }
+
+    interface DeviceDeselected {
+        type: NrfConnectActionType.DEVICE_DESELECTED;
+    }
+
+    interface DeviceSetupComplete {
+        type: NrfConnectActionType.DEVICE_SETUP_COMPLETE;
+        device: Device;
+    }
+
+    interface DeviceSetupError {
+        type: NrfConnectActionType.DEVICE_SETUP_ERROR;
+        device: Device;
+        error: Error;
+    }
+
+    interface DeviceSetupInputRequired {
+        type: NrfConnectActionType.DEVICE_SETUP_INPUT_REQUIRED;
+        message: string;
+        choices: string[];
+    }
+
+    interface DeviceSetupInputReceived {
+        type: NrfConnectActionType.DEVICE_SETUP_INPUT_RECEIVED;
+        input: string | boolean;
+    }
+
+    interface DevicesDetected {
+        type: NrfConnectActionType.DEVICES_DETECTED;
+        devices: Device[];
+    }
+
+    interface DeviceFavoriteToggled {
+        type: NrfConnectActionType.DEVICE_FAVORITE_TOGGLED;
+        serialNumber: string;
+    }
+
+    interface DeviceNicknameSet {
+        type: NrfConnectActionType.DEVICE_NICKNAME_SET;
+        serialNumber: string;
+        nickname: string;
+    }
+
+    interface DeviceNicknameReset {
+        type: NrfConnectActionType.DEVICE_NICKNAME_RESET;
+        serialNumber: string;
+    }
+
     export type NrfConnectAction =
         | LogAddEntries
         | LogClearEntries
-        | LogToggleAutoscroll;
+        | LogToggleAutoscroll
+        | SelectDevice
+        | DeviceDeselected
+        | DeviceSetupComplete
+        | DeviceSetupError
+        | DeviceSetupInputRequired
+        | DeviceSetupInputReceived
+        | DevicesDetected
+        | DeviceFavoriteToggled
+        | DeviceNicknameSet
+        | DeviceNicknameReset
+        | ErrorDialogAction;
 
     // Logging
 
@@ -336,7 +410,9 @@ declare module 'pc-nrfconnect-shared' {
         onChange: (value: number) => any;
     }
 
-    export class NumberInlineInput extends React.Component<NumberInlineInputProps> {}
+    export class NumberInlineInput extends React.Component<
+        NumberInlineInputProps
+    > {}
 
     // Toggle.jsx
 
