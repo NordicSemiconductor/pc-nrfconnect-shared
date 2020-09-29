@@ -1,3 +1,8 @@
+## 4.9.6
+### Added
+- Added optional range.decimals to be validated for NumberInlineInput
+- Updated index.d.ts with rangeShape
+
 ## 4.9.5
 ### Fixed
 - More type enhancements:

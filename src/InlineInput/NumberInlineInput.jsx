@@ -35,14 +35,17 @@
  */
 
 import React from 'react';
-import { func, number, shape } from 'prop-types';
+import { func, number } from 'prop-types';
 
 import InlineInput from './InlineInput';
+import rangeShape from '../Slider/rangeShape';
 
 import './number-inline-input.scss';
 
 const charCount = value => String(value).length + 1;
-const isInRange = (value, { min, max }) => value >= min && value <= max;
+const isInRange = (value, { min, max, decimals = 0 }) => (
+    (value >= min && value <= max) && (value === Number(value.toFixed(decimals)))
+);
 
 const NumberInlineInput = ({
     value,
@@ -63,10 +66,7 @@ const NumberInlineInput = ({
 
 NumberInlineInput.propTypes = {
     value: number.isRequired,
-    range: shape({
-        min: number.isRequired,
-        max: number.isRequired,
-    }).isRequired,
+    range: rangeShape.isRequired,
     onChange: func.isRequired,
     chars: number,
 };
