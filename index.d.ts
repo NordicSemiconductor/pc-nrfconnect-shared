@@ -274,13 +274,16 @@ declare module 'pc-nrfconnect-shared' {
 
     // Slider.jsx
 
+    interface rangeShape {
+        min: number;
+        max: number;
+        decimals?: number;
+    }
+
     export class SliderProps {
         id?: string;
         values: readonly number[];
-        range: {
-            min: number;
-            max: number;
-        };
+        range: rangeShape;
         onChange: readonly ((value: number) => void)[];
         onChangeComplete?: () => void;
     }
@@ -330,10 +333,7 @@ declare module 'pc-nrfconnect-shared' {
 
     interface NumberInlineInputProps {
         value: number;
-        range: {
-            min: number;
-            max: number;
-        };
+        range: rangeShape;
         onChange: (value: number) => void;
     }
 
