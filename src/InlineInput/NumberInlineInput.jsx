@@ -43,9 +43,8 @@ import rangeShape from '../Slider/rangeShape';
 import './number-inline-input.scss';
 
 const charCount = value => String(value).length + 1;
-const isInRange = (value, { min, max, decimals = 0 }) => (
-    (value >= min && value <= max) && (value === Number(value.toFixed(decimals)))
-);
+const isInRange = (value, { min, max, decimals = 0 }) =>
+    value >= min && value <= max && value === Number(value.toFixed(decimals));
 
 const NumberInlineInput = ({
     value,
