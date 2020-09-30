@@ -57,6 +57,8 @@
    through CSS, e.g. to change the colours.
 */
 
+import { Device, Serialport } from 'pc-nrfconnect-shared';
+
 import nrf51logo from '!!@svgr/webpack!./nRF51-Series-logo.svg';
 import nrf52logo from '!!@svgr/webpack!./nRF52-Series-logo.svg';
 import nrf53logo from '!!@svgr/webpack!./nRF53-Series-logo.svg';
@@ -64,116 +66,123 @@ import nrf91logo from '!!@svgr/webpack!./nRF91-Series-logo.svg';
 import unknownLogo from '!!@svgr/webpack!./unknown-logo.svg';
 import unknownNordicLogo from '!!@svgr/webpack!./unknown-nordic-logo.svg';
 
-const deviceInfo = pcaNumber =>
-    ({
-        PCA10028: {
-            name: 'nRF51 DK',
-            cores: 1,
-            icon: nrf51logo,
-            website: {
-                productPagePath: 'Development-Kits/nRF51-DK',
-                buyOnlineParams: 'search_token=nrf51-DK&series_token=nRF51822',
-            },
+interface DeviceInfo {
+    name?: string;
+    cores?: number;
+    icon: React.Component;
+    website: {
+        productPagePath?: string;
+        buyOnlineParams?: string;
+    };
+}
+
+const devicesByPca: { [index: string]: DeviceInfo } = {
+    PCA10028: {
+        name: 'nRF51 DK',
+        cores: 1,
+        icon: nrf51logo,
+        website: {
+            productPagePath: 'Development-Kits/nRF51-DK',
+            buyOnlineParams: 'search_token=nrf51-DK&series_token=nRF51822',
         },
-        PCA10031: {
-            name: 'nRF51 Dongle',
-            cores: 1,
-            icon: nrf51logo,
-            website: {
-                productPagePath: 'Development-Kits/nRF51-Dongle',
-                buyOnlineParams:
-                    'search_token=nRF51-Dongle&series_token=nRF51822',
-            },
+    },
+    PCA10031: {
+        name: 'nRF51 Dongle',
+        cores: 1,
+        icon: nrf51logo,
+        website: {
+            productPagePath: 'Development-Kits/nRF51-Dongle',
+            buyOnlineParams: 'search_token=nRF51-Dongle&series_token=nRF51822',
         },
-        PCA10040: {
-            name: 'nRF52 DK',
-            cores: 1,
-            icon: nrf52logo,
-            website: {
-                productPagePath: 'Development-Kits/nRF52-DK',
-                buyOnlineParams: 'search_token=nRF52-DK&series_token=nRF52832',
-            },
+    },
+    PCA10040: {
+        name: 'nRF52 DK',
+        cores: 1,
+        icon: nrf52logo,
+        website: {
+            productPagePath: 'Development-Kits/nRF52-DK',
+            buyOnlineParams: 'search_token=nRF52-DK&series_token=nRF52832',
         },
-        PCA10056: {
-            name: 'nRF52840 DK',
-            cores: 1,
-            icon: nrf52logo,
-            website: {
-                productPagePath: 'Development-Kits/nRF52840-DK',
-                buyOnlineParams:
-                    'search_token=nrf52840-DK&series_token=nRF52840',
-            },
+    },
+    PCA10056: {
+        name: 'nRF52840 DK',
+        cores: 1,
+        icon: nrf52logo,
+        website: {
+            productPagePath: 'Development-Kits/nRF52840-DK',
+            buyOnlineParams: 'search_token=nrf52840-DK&series_token=nRF52840',
         },
-        PCA10059: {
-            name: 'nRF52840 Dongle',
-            cores: 1,
-            icon: nrf52logo,
-            website: {
-                productPagePath: 'Development-Kits/nRF52840-Dongle',
-                buyOnlineParams:
-                    'search_token=nRF52840DONGLE&series_token=nRF52840',
-            },
+    },
+    PCA10059: {
+        name: 'nRF52840 Dongle',
+        cores: 1,
+        icon: nrf52logo,
+        website: {
+            productPagePath: 'Development-Kits/nRF52840-Dongle',
+            buyOnlineParams:
+                'search_token=nRF52840DONGLE&series_token=nRF52840',
         },
-        PCA10090: {
-            name: 'nRF9160 DK',
-            cores: 1,
-            icon: nrf91logo,
-            website: {
-                productPagePath: 'Development-Kits/nRF9160-DK',
-                buyOnlineParams: 'search_token=nrf9160-DK&series_token=nRF9160',
-            },
+    },
+    PCA10090: {
+        name: 'nRF9160 DK',
+        cores: 1,
+        icon: nrf91logo,
+        website: {
+            productPagePath: 'Development-Kits/nRF9160-DK',
+            buyOnlineParams: 'search_token=nrf9160-DK&series_token=nRF9160',
         },
-        PCA10100: {
-            name: 'nRF52833 DK',
-            cores: 1,
-            icon: nrf52logo,
-            website: {
-                productPagePath: 'Development-Kits/nRF52833-DK',
-                buyOnlineParams:
-                    'search_token=nRF52833-DK&series_token=nRF52833',
-            },
+    },
+    PCA10100: {
+        name: 'nRF52833 DK',
+        cores: 1,
+        icon: nrf52logo,
+        website: {
+            productPagePath: 'Development-Kits/nRF52833-DK',
+            buyOnlineParams: 'search_token=nRF52833-DK&series_token=nRF52833',
         },
-        PCA10095: {
-            name: 'nRF5340 DK',
-            cores: 2,
-            icon: nrf53logo,
-            website: {
-                productPagePath: 'Development-Kits/nRF5340-PDK',
-                buyOnlineParams:
-                    'search_token=nRF5340-PDK&series_token=nRF5340',
-            },
+    },
+    PCA10095: {
+        name: 'nRF5340 DK',
+        cores: 2,
+        icon: nrf53logo,
+        website: {
+            productPagePath: 'Development-Kits/nRF5340-PDK',
+            buyOnlineParams: 'search_token=nRF5340-PDK&series_token=nRF5340',
         },
-        PCA20020: {
-            name: 'Nordic Thingy:52',
-            cores: 1,
-            icon: nrf52logo,
-            website: {
-                productPagePath: 'Prototyping-platforms/Nordic-Thingy-52',
-                buyOnlineParams: 'search_token=nRF6936&series_token=nRF52832',
-            },
+    },
+    PCA20020: {
+        name: 'Nordic Thingy:52',
+        cores: 1,
+        icon: nrf52logo,
+        website: {
+            productPagePath: 'Prototyping-platforms/Nordic-Thingy-52',
+            buyOnlineParams: 'search_token=nRF6936&series_token=nRF52832',
         },
-        PCA20035: {
-            name: 'Nordic Thingy:91',
-            cores: 1,
-            icon: nrf91logo,
-            website: {
-                productPagePath: 'Prototyping-platforms/Nordic-Thingy-91',
-                buyOnlineParams: 'search_token=nRF6943&series_token=nRF9160',
-            },
+    },
+    PCA20035: {
+        name: 'Nordic Thingy:91',
+        cores: 1,
+        icon: nrf91logo,
+        website: {
+            productPagePath: 'Prototyping-platforms/Nordic-Thingy-91',
+            buyOnlineParams: 'search_token=nRF6943&series_token=nRF9160',
         },
-    }[String(pcaNumber).toUpperCase()] || { website: {} });
+    },
+};
+const deviceInfo = (pcaNumber: string): DeviceInfo =>
+    devicesByPca[String(pcaNumber).toUpperCase()] || { website: {} };
 
 const NORDIC_VENDOR_ID = '1915';
-const isNordicDevice = device =>
+const isNordicDevice = (device: Device) =>
     device.serialport && device.serialport.vendorId === NORDIC_VENDOR_ID;
 
-const iconForUnknown = device =>
+const iconForUnknown = (device: Device) =>
     isNordicDevice(device) ? unknownNordicLogo : unknownLogo;
 
-export const deviceIcon = device =>
+export const deviceIcon = (device: Device) =>
     deviceInfo(device.boardVersion).icon || iconForUnknown(device);
 
-export const deviceName = device => {
+export const deviceName = (device: Device) => {
     const pca = device.boardVersion;
     if (deviceInfo(pca).name) {
         return deviceInfo(pca).name;
@@ -187,7 +196,7 @@ export const deviceName = device => {
 };
 
 export const displayedDeviceName = (
-    device,
+    device: Device,
     { respectNickname = true } = {}
 ) => {
     if (respectNickname && device.nickname) {
@@ -197,20 +206,20 @@ export const displayedDeviceName = (
     return deviceName(device) || device.boardVersion || 'Unknown';
 };
 
-export const serialports = device =>
+export const serialports = (device: Device) =>
     Object.entries(device)
         .filter(([key]) => key.startsWith('serialport'))
-        .map(([, value]) => value);
+        .map(([, value]: [string, Serialport]) => value);
 
-export const cores = pca => deviceInfo(pca).cores;
+export const cores = (pca: string) => deviceInfo(pca).cores;
 
-export const productPageUrl = pca =>
+export const productPageUrl = (pca: string) =>
     deviceInfo(pca).website.productPagePath &&
     `https://www.nordicsemi.com/Software-and-tools/${
         deviceInfo(pca).website.productPagePath
     }`;
 
-export const buyOnlineUrl = pca =>
+export const buyOnlineUrl = (pca: string) =>
     deviceInfo(pca).website.buyOnlineParams &&
     `https://www.nordicsemi.com/About-us/BuyOnline?${
         deviceInfo(pca).website.buyOnlineParams

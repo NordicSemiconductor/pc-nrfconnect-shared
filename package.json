@@ -104,7 +104,7 @@
             "pc-nrfjprog-js|nrf-device-lister|nrf-device-setup": "<rootDir>/mocks/emptyMock.js"
         },
         "transform": {
-            "^.+\\.jsx?$": [
+            "^.+\\.[jt]sx?$": [
                 "babel-jest",
                 {
                     "configFile": "./config/babel.config.js"
