@@ -169,31 +169,22 @@ const devicesByPca: { [index: string]: DeviceInfo } = {
         },
     },
 };
-const deviceInfo = (pcaNumber: string): DeviceInfo =>
-    devicesByPca[String(pcaNumber).toUpperCase()] || { website: {} };
+
+const deviceByPca = (device: Device) =>
+    devicesByPca[String(device.boardVersion).toUpperCase()];
 
 const NORDIC_VENDOR_ID = '1915';
 const isNordicDevice = (device: Device) =>
-    device.serialport && device.serialport.vendorId === NORDIC_VENDOR_ID;
+    device.serialport?.vendorId === NORDIC_VENDOR_ID;
 
-const iconForUnknown = (device: Device) =>
-    isNordicDevice(device) ? unknownNordicLogo : unknownLogo;
+const unknownDevice = (device: Device): DeviceInfo => ({
+    name: device.usb?.product,
+    icon: isNordicDevice(device) ? unknownNordicLogo : unknownLogo,
+    website: {},
+});
 
-export const deviceIcon = (device: Device) =>
-    deviceInfo(device.boardVersion).icon || iconForUnknown(device);
-
-export const deviceName = (device: Device) => {
-    const pca = device.boardVersion;
-    if (deviceInfo(pca).name) {
-        return deviceInfo(pca).name;
-    }
-
-    if (device.usb && device.usb.product) {
-        return device.usb.product;
-    }
-
-    return null;
-};
+export const deviceInfo = (device: Device): DeviceInfo =>
+    deviceByPca(device) || unknownDevice(device);
 
 export const displayedDeviceName = (
     device: Device,
@@ -203,7 +194,7 @@ export const displayedDeviceName = (
         return device.nickname;
     }
 
-    return deviceName(device) || device.boardVersion || 'Unknown';
+    return deviceInfo(device).name || device.boardVersion || 'Unknown';
 };
 
 export const serialports = (device: Device) =>
@@ -211,16 +202,14 @@ export const serialports = (device: Device) =>
         .filter(([key]) => key.startsWith('serialport'))
         .map(([, value]: [string, Serialport]) => value);
 
-export const cores = (pca: string) => deviceInfo(pca).cores;
-
-export const productPageUrl = (pca: string) =>
-    deviceInfo(pca).website.productPagePath &&
+export const productPageUrl = (device: Device) =>
+    deviceInfo(device).website.productPagePath &&
     `https://www.nordicsemi.com/Software-and-tools/${
-        deviceInfo(pca).website.productPagePath
+        deviceInfo(device).website.productPagePath
     }`;
 
-export const buyOnlineUrl = (pca: string) =>
-    deviceInfo(pca).website.buyOnlineParams &&
+export const buyOnlineUrl = (device: Device) =>
+    deviceInfo(device).website.buyOnlineParams &&
     `https://www.nordicsemi.com/About-us/BuyOnline?${
-        deviceInfo(pca).website.buyOnlineParams
+        deviceInfo(device).website.buyOnlineParams
     }`;
