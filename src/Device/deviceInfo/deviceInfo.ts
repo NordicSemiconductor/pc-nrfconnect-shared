@@ -82,7 +82,7 @@ const devicesByPca: { [index: string]: DeviceInfo } = {
         cores: 1,
         icon: nrf51logo,
         website: {
-            productPagePath: 'Development-Kits/nRF51-DK',
+            productPagePath: 'Software-and-tools/Development-Kits/nRF51-DK',
             buyOnlineParams: 'search_token=nrf51-DK&series_token=nRF51822',
         },
     },
@@ -91,7 +91,7 @@ const devicesByPca: { [index: string]: DeviceInfo } = {
         cores: 1,
         icon: nrf51logo,
         website: {
-            productPagePath: 'Development-Kits/nRF51-Dongle',
+            productPagePath: 'Software-and-tools/Development-Kits/nRF51-Dongle',
             buyOnlineParams: 'search_token=nRF51-Dongle&series_token=nRF51822',
         },
     },
@@ -100,7 +100,7 @@ const devicesByPca: { [index: string]: DeviceInfo } = {
         cores: 1,
         icon: nrf52logo,
         website: {
-            productPagePath: 'Development-Kits/nRF52-DK',
+            productPagePath: 'Software-and-tools/Development-Kits/nRF52-DK',
             buyOnlineParams: 'search_token=nRF52-DK&series_token=nRF52832',
         },
     },
@@ -109,7 +109,7 @@ const devicesByPca: { [index: string]: DeviceInfo } = {
         cores: 1,
         icon: nrf52logo,
         website: {
-            productPagePath: 'Development-Kits/nRF52840-DK',
+            productPagePath: 'Software-and-tools/Development-Kits/nRF52840-DK',
             buyOnlineParams: 'search_token=nrf52840-DK&series_token=nRF52840',
         },
     },
@@ -118,7 +118,8 @@ const devicesByPca: { [index: string]: DeviceInfo } = {
         cores: 1,
         icon: nrf52logo,
         website: {
-            productPagePath: 'Development-Kits/nRF52840-Dongle',
+            productPagePath:
+                'Software-and-tools/Development-Kits/nRF52840-Dongle',
             buyOnlineParams:
                 'search_token=nRF52840DONGLE&series_token=nRF52840',
         },
@@ -128,7 +129,7 @@ const devicesByPca: { [index: string]: DeviceInfo } = {
         cores: 1,
         icon: nrf91logo,
         website: {
-            productPagePath: 'Development-Kits/nRF9160-DK',
+            productPagePath: 'Software-and-tools/Development-Kits/nRF9160-DK',
             buyOnlineParams: 'search_token=nrf9160-DK&series_token=nRF9160',
         },
     },
@@ -137,7 +138,7 @@ const devicesByPca: { [index: string]: DeviceInfo } = {
         cores: 1,
         icon: nrf52logo,
         website: {
-            productPagePath: 'Development-Kits/nRF52833-DK',
+            productPagePath: 'Software-and-tools/Development-Kits/nRF52833-DK',
             buyOnlineParams: 'search_token=nRF52833-DK&series_token=nRF52833',
         },
     },
@@ -146,7 +147,7 @@ const devicesByPca: { [index: string]: DeviceInfo } = {
         cores: 2,
         icon: nrf53logo,
         website: {
-            productPagePath: 'Development-Kits/nRF5340-PDK',
+            productPagePath: 'Software-and-tools/Development-Kits/nRF5340-PDK',
             buyOnlineParams: 'search_token=nRF5340-PDK&series_token=nRF5340',
         },
     },
@@ -155,7 +156,8 @@ const devicesByPca: { [index: string]: DeviceInfo } = {
         cores: 1,
         icon: nrf52logo,
         website: {
-            productPagePath: 'Prototyping-platforms/Nordic-Thingy-52',
+            productPagePath:
+                'Software-and-tools/Prototyping-platforms/Nordic-Thingy-52',
             buyOnlineParams: 'search_token=nRF6936&series_token=nRF52832',
         },
     },
@@ -164,7 +166,8 @@ const devicesByPca: { [index: string]: DeviceInfo } = {
         cores: 1,
         icon: nrf91logo,
         website: {
-            productPagePath: 'Prototyping-platforms/Nordic-Thingy-91',
+            productPagePath:
+                'Software-and-tools/Prototyping-platforms/Nordic-Thingy-91',
             buyOnlineParams: 'search_token=nRF6943&series_token=nRF9160',
         },
     },
@@ -177,6 +180,20 @@ const NORDIC_VENDOR_ID = '1915';
 const isNordicDevice = (device: Device) =>
     device.serialport?.vendorId === NORDIC_VENDOR_ID;
 
+const usbDeviceInfo = (device: Device): DeviceInfo => ({
+    name: device.usb?.product,
+    icon: unknownNordicLogo, // FIXME Replace this with a correct icon when we have one
+    website: {
+        productPagePath: undefined, // FIXME Replace this when we have corrent link
+        buyOnlineParams: undefined, // FIXME Replace this when we have corrent link
+    },
+});
+
+const deviceByUsb = (device: Device) =>
+    isNordicDevice(device) && device.usb?.product?.startsWith('KNOWN_USB_NAME')
+        ? usbDeviceInfo(device)
+        : null;
+
 const unknownDevice = (device: Device): DeviceInfo => ({
     name: device.usb?.product,
     icon: isNordicDevice(device) ? unknownNordicLogo : unknownLogo,
@@ -184,7 +201,7 @@ const unknownDevice = (device: Device): DeviceInfo => ({
 });
 
 export const deviceInfo = (device: Device): DeviceInfo =>
-    deviceByPca(device) || unknownDevice(device);
+    deviceByPca(device) || deviceByUsb(device) || unknownDevice(device);
 
 export const displayedDeviceName = (
     device: Device,
@@ -204,9 +221,7 @@ export const serialports = (device: Device) =>
 
 export const productPageUrl = (device: Device) =>
     deviceInfo(device).website.productPagePath &&
-    `https://www.nordicsemi.com/Software-and-tools/${
-        deviceInfo(device).website.productPagePath
-    }`;
+    `https://www.nordicsemi.com/${deviceInfo(device).website.productPagePath}`;
 
 export const buyOnlineUrl = (device: Device) =>
     deviceInfo(device).website.buyOnlineParams &&
