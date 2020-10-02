@@ -1,3 +1,7 @@
+## 4.9.7
+### Updated
+- Updated how client is generated for usage statistics
+
 ## 4.9.6
 ### Added
 - Added optional range.decimals to be validated for NumberInlineInput
