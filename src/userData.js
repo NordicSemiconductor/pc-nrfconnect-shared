@@ -47,12 +47,11 @@ const trackId = 'UA-22498474-5';
  */
 const init = async appName => {
     const networkInterfaces = await si.networkInterfaces();
-    const networkInterface = networkInterfaces.find(
-        i =>
-            i.iface === 'Ethernet' ||
-            i.iface === 'eth0' ||
-            (i.mac && !i.virtual)
-    );
+    let networkInterface = networkInterfaces.find(i => i.iface === 'eth0');
+    networkInterface =
+        networkInterface || networkInterfaces.find(i => i.iface === 'Ethernet');
+    networkInterface =
+        networkInterface || networkInterfaces.find(i => i.mac && !i.virtual);
     const clientId = networkInterface
         ? shasum(
               networkInterface.ip4 ||
