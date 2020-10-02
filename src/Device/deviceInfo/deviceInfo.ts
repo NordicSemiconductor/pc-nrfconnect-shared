@@ -76,7 +76,19 @@ interface DeviceInfo {
     };
 }
 
-const devicesByPca: { [index: string]: DeviceInfo } = {
+type DevicePCA =
+    | 'PCA10028'
+    | 'PCA10031'
+    | 'PCA10040'
+    | 'PCA10056'
+    | 'PCA10059'
+    | 'PCA10090'
+    | 'PCA10100'
+    | 'PCA10095'
+    | 'PCA20020'
+    | 'PCA20035';
+
+const devicesByPca: { [P in DevicePCA]: DeviceInfo } = {
     PCA10028: {
         name: 'nRF51 DK',
         cores: 1,
@@ -174,7 +186,7 @@ const devicesByPca: { [index: string]: DeviceInfo } = {
 };
 
 const deviceByPca = (device: Device) =>
-    devicesByPca[String(device.boardVersion).toUpperCase()];
+    devicesByPca[String(device.boardVersion).toUpperCase() as DevicePCA];
 
 const NORDIC_VENDOR_ID = '1915';
 const isNordicDevice = (device: Device) =>
