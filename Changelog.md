@@ -1,3 +1,19 @@
+## 4.10.0
+### Added
+- Enable showing an own icon and links on the About pane for USB connected
+  devices.
+### Steps to upgrade when using this package
+- This version does introduce a first file in `shared` that is converted from
+  JavaScript to TypeScript: `deviceInfo`. While most is already prepared for
+  that, the `webpack.config.js` in the launcher still needs two adjustments to
+  work with this: The lines
+  [39](https://github.com/NordicSemiconductor/pc-nrfconnect-launcher/blob/497c1fde51246e1a4fcbc9efbb595d6764a7e056/webpack.config.js#L39)
+  and
+  [69](https://github.com/NordicSemiconductor/pc-nrfconnect-launcher/blob/497c1fde51246e1a4fcbc9efbb595d6764a7e056/webpack.config.js#L69)
+  needs to be changed, so that webpack does not only pick up files with the
+  ending `.jsx?` but also `.tsx?`. Apps, on the other hand, do not need to be
+  changed for this.
+
 ## 4.9.7
 ### Updated
 - Updated how client is generated for usage statistics
