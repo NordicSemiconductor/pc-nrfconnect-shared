@@ -45,8 +45,7 @@ import {
     deviceInfo as deviceInfoSelector,
 } from '../Device/deviceReducer';
 import {
-    cores,
-    deviceName,
+    deviceInfo,
     productPageUrl,
     buyOnlineUrl,
 } from '../Device/deviceInfo/deviceInfo';
@@ -61,7 +60,7 @@ const memorySize = memoryInBytes => {
 
 export default () => {
     const device = useSelector(selectedDevice);
-    const deviceInfo = useSelector(deviceInfoSelector) || {};
+    const extendedDeviceInfo = useSelector(deviceInfoSelector) || {};
 
     if (device == null) {
         return (
@@ -72,21 +71,29 @@ export default () => {
     }
 
     const pca = device.boardVersion;
+    const { name, cores } = deviceInfo(device);
 
     return (
         <Card title="Device">
-            <Section title="Name">{deviceName(device) || 'Unknown'}</Section>
+            <Section title="Name">{name || 'Unknown'}</Section>
             <Section title="ID">{device.serialNumber}</Section>
             <Section title="PCA">{pca || 'Unknown'}</Section>
-            <Section title="Cores">{cores(pca) || 'Unknown'}</Section>
-            <Section title="RAM">{memorySize(deviceInfo.ramSize)}</Section>
-            <Section title="Flash">{memorySize(deviceInfo.codeSize)}</Section>
-            <Section>
-                <AboutButton url={buyOnlineUrl(pca)} label="Find distributor" />
+            <Section title="Cores">{cores || 'Unknown'}</Section>
+            <Section title="RAM">
+                {memorySize(extendedDeviceInfo.ramSize)}
+            </Section>
+            <Section title="Flash">
+                {memorySize(extendedDeviceInfo.codeSize)}
             </Section>
             <Section>
                 <AboutButton
-                    url={productPageUrl(pca)}
+                    url={buyOnlineUrl(device)}
+                    label="Find distributor"
+                />
+            </Section>
+            <Section>
+                <AboutButton
+                    url={productPageUrl(device)}
                     label="Go to product page"
                 />
             </Section>

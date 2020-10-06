@@ -159,23 +159,29 @@ declare module 'pc-nrfconnect-shared' {
         needSerialPort?: boolean;
     }
 
+    interface Serialport {
+        path: string;
+        manufacturer: string;
+        productId: string;
+        serialNumber: string;
+        vendorId: string;
+        pnpId?: string;
+        /**
+         * @deprecated Using the property `comName` has been
+         * deprecated. You should now use `path`. The property
+         * will be removed in the next major release.
+         */
+        comName: string;
+    }
+
     interface Device {
         boardVersion: string;
         serialNumber: string;
         traits: readonly string[];
-        serialport: {
-            path: string;
-            manufacturer: string;
-            productId: string;
-            serialNumber: string;
-            vendorId: string;
-            pnpId?: string;
-            /**
-             * @deprecated Using the property `comName` has been
-             * deprecated. You should now use `path`. The property
-             * will be removed in the next major release.
-             */
-            comName: string;
+        nickname?: string;
+        serialport?: Serialport;
+        usb?: {
+            product?: string;
         };
     }
 

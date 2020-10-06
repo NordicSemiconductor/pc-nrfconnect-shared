@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "4.9.8",
+    "version": "4.10.1",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -104,7 +104,7 @@
             "pc-nrfjprog-js|nrf-device-lister|nrf-device-setup": "<rootDir>/mocks/emptyMock.js"
         },
         "transform": {
-            "^.+\\.jsx?$": [
+            "^.+\\.[jt]sx?$": [
                 "babel-jest",
                 {
                     "configFile": "./config/babel.config.js"

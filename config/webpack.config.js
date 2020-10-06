@@ -70,7 +70,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(js|jsx|tsx?)$/,
+                test: /\.(jsx?|tsx?)$/,
                 use: [
                     {
                         loader: require.resolve('babel-loader'),

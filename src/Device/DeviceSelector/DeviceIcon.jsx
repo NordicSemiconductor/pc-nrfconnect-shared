@@ -35,13 +35,13 @@
  */
 
 import React from 'react';
-import { deviceIcon } from '../deviceInfo/deviceInfo';
+import { deviceInfo } from '../deviceInfo/deviceInfo';
 import deviceShape from './deviceShape';
 
 import './device-icon.scss';
 
 const DeviceIcon = ({ device }) => {
-    const Icon = deviceIcon(device);
+    const Icon = deviceInfo(device).icon;
     return (
         <div className="icon">
             <Icon />
