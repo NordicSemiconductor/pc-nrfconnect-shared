@@ -51,7 +51,7 @@ const init = async appName => {
     networkInterface =
         networkInterface || networkInterfaces.find(i => i.iface === 'Ethernet');
     networkInterface =
-        networkInterface || networkInterfaces.find(i => i.mac && !i.virtual);
+        networkInterface || networkInterfaces.find(i => i.mac && !i.internal);
     const clientId = networkInterface
         ? shasum(
               networkInterface.ip4 ||

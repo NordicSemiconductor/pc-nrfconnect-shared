@@ -1,3 +1,7 @@
+## 4.9.8
+### Updated
+- Updated logic to decide which network interface to use to
+
 ## 4.9.7
 ### Updated
 - Updated how client is generated for usage statistics
