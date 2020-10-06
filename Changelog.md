@@ -1,6 +1,6 @@
 ## 4.10.1
 ### Updated
-- Updated from v4.9.8 due to breaking changes in 4.10.1
+- Updated from v4.9.8 due to breaking changes in 4.10.0
 
 ## 4.10.0
 ### Added
