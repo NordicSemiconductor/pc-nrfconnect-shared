@@ -1,6 +1,6 @@
 ## 4.9.8
 ### Updated
-- Updated logic to decide which network interface to use to
+- Updated logic to decide which network interface to use to generate client id
 
 ## 4.9.7
 ### Updated
