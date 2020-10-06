@@ -1,3 +1,7 @@
+## 4.10.1
+### Updated
+- Updated from v4.9.8 due to breaking changes in 4.10.1
+
 ## 4.10.0
 ### Added
 - Enable showing an own icon and links on the About pane for USB connected
@@ -13,6 +17,10 @@
   needs to be changed, so that webpack does not only pick up files with the
   ending `.jsx?` but also `.tsx?`. Apps, on the other hand, do not need to be
   changed for this.
+
+## 4.9.8
+### Updated
+- Updated logic to decide which network interface to use to generate client id
 
 ## 4.9.7
 ### Updated
