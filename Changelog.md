@@ -1,6 +1,6 @@
 ## 4.10.3
 ### Updated
-- Added `iface en0` for looking IP address on macOS
+- Added `iface en0` for looking IP up address on macOS
 
 ## 4.10.2
 ### Updated
