@@ -55,11 +55,13 @@ const trackId = 'UA-22498474-5';
  */
 const init = async appName => {
     const networkInterfaces = await si.networkInterfaces();
-    let networkInterface = networkInterfaces.find(i => i.iface === 'eth0');
+    let networkInterface = networkInterfaces.find(i => i.iface === 'eth0'); // for most Debian
     networkInterface =
-        networkInterface || networkInterfaces.find(i => i.iface === 'Ethernet');
+        networkInterface || networkInterfaces.find(i => i.iface === 'en0'); // for most macOS
     networkInterface =
-        networkInterface || networkInterfaces.find(i => i.mac && !i.internal);
+        networkInterface || networkInterfaces.find(i => i.iface === 'Ethernet'); // for most Windows
+    networkInterface =
+        networkInterface || networkInterfaces.find(i => i.mac && !i.internal); // for good luck
     debug(`iface: ${networkInterface.iface}`);
     debug(`IP4: ${networkInterface.ip4}`);
     debug(`IP6: ${networkInterface.ip6}`);

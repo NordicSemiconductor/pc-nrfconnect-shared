@@ -1,3 +1,7 @@
+## 4.10.3
+### Updated
+- Added `iface en0` for looking IP up address on macOS
+
 ## 4.10.2
 ### Updated
 - Added persistent store for usage data settings in `shared` instead of in `launcher`
