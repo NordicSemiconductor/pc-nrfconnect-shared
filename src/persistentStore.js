@@ -47,3 +47,10 @@ export const persistIsFavorite = (serialNumber, value) =>
     store.set(`${serialNumber}.fav`, value);
 export const getPersistedIsFavorite = serialNumber =>
     store.get(`${serialNumber}.fav`, false);
+
+export const persistIsSendingUsageData = value =>
+    store.set('isSendingUsageData', value);
+export const getIsSendingUsageData = () =>
+    store.get('isSendingUsageData', undefined);
+export const deleteIsSendingUsageData = () =>
+    store.delete('isSendingUsageData');

@@ -67,4 +67,4 @@ export {
 
 export { openUrl } from './open';
 export { default as systemReport } from './systemReport';
-export { default as userData } from './userData';
+export { default as usageData } from './usageData';
