@@ -35,8 +35,16 @@
  */
 
 import reactGA from 'react-ga';
-import si from 'systeminformation';
 import shasum from 'shasum';
+import si from 'systeminformation';
+
+import {
+    deleteIsSendingUsageData,
+    getIsSendingUsageData,
+    persistIsSendingUsageData,
+} from './persistentStore';
+
+const debug = require('debug')('nrf-usage-data');
 
 const trackId = 'UA-22498474-5';
 /**
@@ -52,12 +60,17 @@ const init = async appName => {
         networkInterface || networkInterfaces.find(i => i.iface === 'Ethernet');
     networkInterface =
         networkInterface || networkInterfaces.find(i => i.mac && !i.internal);
+    debug(`iface: ${networkInterface.iface}`);
+    debug(`IP4: ${networkInterface.ip4}`);
+    debug(`IP6: ${networkInterface.ip6}`);
+    debug(`MAC: ${networkInterface.mac}`);
     const clientId = networkInterface
         ? shasum(
               networkInterface.ip4 ||
                   networkInterface.ip6 + networkInterface.mac
           )
         : 'unknown';
+    debug(`Client Id: ${clientId}`);
     reactGA.initialize(trackId, {
         debug: false,
         titleCase: false,
@@ -81,6 +94,48 @@ const init = async appName => {
 };
 
 /**
+ * Check the status of usage data
+ *
+ * @returns {Boolean | undefined} returns whether the setting is on, off or undefined
+ */
+const isEnabled = () => {
+    const isSendingUsageData = getIsSendingUsageData();
+    debug(`Usage data is ${isSendingUsageData}`);
+    return isSendingUsageData;
+};
+
+/**
+ * Enable sending usage data
+ *
+ * @returns {void}
+ */
+const enable = () => {
+    persistIsSendingUsageData(true);
+    debug('Usage data has enabled');
+};
+
+/**
+ * Disable sending usage data
+ *
+ * @returns {void}
+ */
+const disable = () => {
+    persistIsSendingUsageData(false);
+    debug('Usage data has disabled');
+};
+
+/**
+ * Reset settings so that launcher is able to
+ * ask the user to enable or disable sending usage data
+ *
+ * @returns {void}
+ */
+const reset = () => {
+    deleteIsSendingUsageData();
+    debug('Usage data has reset');
+};
+
+/**
  * Send event
  * @param {string} category launcher or apps
  * @param {string} action action to collect
@@ -88,14 +143,31 @@ const init = async appName => {
  *
  * @returns {void}
  */
-const sendEvent = (category, action, label) =>
-    reactGA.event({
-        category,
-        action,
-        label,
-    });
+const sendEvent = (category, action, label) => {
+    const isSendingUsageData = getIsSendingUsageData();
+    debug('Sending usage data...');
+    debug(`Category: ${category}`);
+    debug(`Action: ${action}`);
+    debug(`Label: ${label}`);
+    if (isSendingUsageData === true) {
+        reactGA.event({
+            category,
+            action,
+            label,
+        });
+        debug(`Usage data has been sent`);
+        return;
+    }
+    debug(
+        `Usage data has not been sent. isSendingUsageData is set to ${isSendingUsageData}.`
+    );
+};
 
 export default {
     init,
+    isEnabled,
+    enable,
+    disable,
+    reset,
     sendEvent,
 };

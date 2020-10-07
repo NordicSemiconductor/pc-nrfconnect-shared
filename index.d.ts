@@ -400,10 +400,13 @@ declare module 'pc-nrfconnect-shared' {
         currentDevice: any
     ): Promise<void>;
 
-    // userData.js
+    // usageData.js
 
-    export const userData: {
+    export const usageData: {
         init: (appName: string) => void;
+        enable: () => void;
+        disable: () => void;
+        reset: () => void;
         sendEvent: (category: string, action: string, label: string) => void;
     };
 }

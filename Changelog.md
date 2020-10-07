@@ -1,3 +1,7 @@
+## 4.10.2
+### Updated
+- Added persistent store for usage data settings in `shared` instead of in `launcher`
+
 ## 4.10.1
 ### Updated
 - Updated from v4.9.8 due to breaking changes in 4.10.0
