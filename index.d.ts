@@ -10,6 +10,7 @@ declare module 'pc-nrfconnect-shared' {
         appLayout: {
             isSidePanelVisible: boolean;
             isLogVisible: boolean;
+            currentPane: number;
         };
         appReloadDialog: {
             isVisible: boolean;
