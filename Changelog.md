@@ -1,3 +1,7 @@
+## 4.10.4
+### Updated
+- Added `currentPane` field to `appLayout` type
+
 ## 4.10.3
 ### Updated
 - Added `iface en0` for looking up IP address on macOS
