@@ -1,3 +1,7 @@
+## 4.11.0
+### Added
+- Added icon for a PPK
+
 ## 4.10.4
 ### Updated
 - Added `currentPane` field to `appLayout` type
