@@ -63,6 +63,7 @@ import nrf51logo from '!!@svgr/webpack!./nRF51-Series-logo.svg';
 import nrf52logo from '!!@svgr/webpack!./nRF52-Series-logo.svg';
 import nrf53logo from '!!@svgr/webpack!./nRF53-Series-logo.svg';
 import nrf91logo from '!!@svgr/webpack!./nRF91-Series-logo.svg';
+import ppkLogo from '!!@svgr/webpack!./ppk-logo.svg';
 import unknownLogo from '!!@svgr/webpack!./unknown-logo.svg';
 import unknownNordicLogo from '!!@svgr/webpack!./unknown-nordic-logo.svg';
 
@@ -192,18 +193,18 @@ const NORDIC_VENDOR_ID = '1915';
 const isNordicDevice = (device: Device) =>
     device.serialport?.vendorId === NORDIC_VENDOR_ID;
 
-const usbDeviceInfo = (device: Device): DeviceInfo => ({
+const ppkDeviceInfo = (device: Device): DeviceInfo => ({
     name: device.usb?.product,
-    icon: unknownNordicLogo, // FIXME Replace this with a correct icon when we have one
+    icon: ppkLogo,
     website: {
-        productPagePath: undefined, // FIXME Replace this when we have corrent link
-        buyOnlineParams: undefined, // FIXME Replace this when we have corrent link
+        productPagePath: undefined, // FIXME when we have a permalink for the PPK info page
+        buyOnlineParams: undefined, // FIXME when we have a permalink for how to buy the PPK
     },
 });
 
 const deviceByUsb = (device: Device) =>
-    isNordicDevice(device) && device.usb?.product?.startsWith('KNOWN_USB_NAME')
-        ? usbDeviceInfo(device)
+    isNordicDevice(device) && device.usb?.product?.startsWith('PPK')
+        ? ppkDeviceInfo(device)
         : null;
 
 const unknownDevice = (device: Device): DeviceInfo => ({
