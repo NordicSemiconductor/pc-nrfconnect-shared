@@ -1,3 +1,7 @@
+## Unreleased
+### Updated
+- Enhance lint configuration by specifying it in `package.json`.
+
 ## 4.11.0
 ### Added
 - Added icon for a PPK
