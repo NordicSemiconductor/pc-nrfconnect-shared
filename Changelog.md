@@ -1,3 +1,7 @@
+## 4.11.1
+### Updated
+- Replaced moment.js with date-fns library
+
 ## 4.11.0
 ### Added
 - Added icon for a PPK
