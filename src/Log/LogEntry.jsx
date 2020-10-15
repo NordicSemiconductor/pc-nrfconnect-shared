@@ -36,8 +36,8 @@
 
 import React from 'react';
 import { shape, number, string } from 'prop-types';
-import moment from 'moment';
 import { shell } from 'electron';
+import formatDate from 'date-fns/format';
 
 import './log-entry.scss';
 
@@ -80,7 +80,7 @@ function hrefReplacer(str) {
 
 const LogEntry = ({ entry }) => {
     const className = `core19-log-entry core19-log-level-${entry.level}`;
-    const time = moment(entry.timestamp).format('HH:mm:ss.SSS');
+    const time = formatDate(new Date(entry.timestamp), 'HH:mm:ss.SSS');
 
     return (
         <div className={className}>
