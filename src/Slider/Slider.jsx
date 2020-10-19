@@ -44,7 +44,7 @@ import rangeShape from './rangeShape';
 
 import './slider.scss';
 
-const Slider = ({ id, values, range, onChange, onChangeComplete }) => {
+const Slider = ({ id, title, values, range, onChange, onChangeComplete }) => {
     if (values.length === 0)
         console.error('"values" must contain at least on element');
     if (values.length !== onChange.length)
@@ -61,7 +61,7 @@ const Slider = ({ id, values, range, onChange, onChangeComplete }) => {
     const [sliderWidth, sliderRef] = useWidthObserver();
 
     return (
-        <div className="slider" id={id} ref={sliderRef}>
+        <div className="slider" id={id} title={title} ref={sliderRef}>
             <Bar values={values} range={range} />
             {values.map((value, index) => (
                 <Handle
@@ -79,6 +79,7 @@ const Slider = ({ id, values, range, onChange, onChangeComplete }) => {
 
 Slider.propTypes = {
     id: string,
+    title: string,
     values: arrayOf(number.isRequired).isRequired,
     range: rangeShape.isRequired,
     onChange: arrayOf(func.isRequired).isRequired,

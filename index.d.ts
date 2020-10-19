@@ -289,6 +289,7 @@ declare module 'pc-nrfconnect-shared' {
 
     export class SliderProps {
         id?: string;
+        title?: string;
         values: readonly number[];
         range: rangeShape;
         onChange: readonly ((value: number) => void)[];
@@ -352,6 +353,7 @@ declare module 'pc-nrfconnect-shared' {
 
     interface ToggleProps {
         id?: string;
+        title?: string;
         isToggled?: boolean;
         onToggle: (isToggled: boolean) => void;
         variant?: 'primary' | 'secondary';
