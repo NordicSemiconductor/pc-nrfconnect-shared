@@ -1,3 +1,9 @@
+## 4.12.0
+### Added
+- Support title property in Slider and Toggle
+### Updated
+- Enhance lint configuration by specifying it in `package.json`
+
 ## 4.11.0
 ### Added
 - Added icon for a PPK
