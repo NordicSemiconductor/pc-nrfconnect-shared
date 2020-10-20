@@ -41,6 +41,7 @@ import './toggle.scss';
 
 const Toggle = ({
     id,
+    title,
     isToggled,
     onToggle,
     label,
@@ -104,7 +105,11 @@ const Toggle = ({
     const [, ...restLabelElement] = Array.isArray(children) ? children : [];
 
     return (
-        <div className={toggleClassName.join(' ')} style={{ width }}>
+        <div
+            title={title}
+            className={toggleClassName.join(' ')}
+            style={{ width }}
+        >
             <label htmlFor={id}>
                 {!labelRight && (label || children) && labelElement}
                 <div
@@ -137,6 +142,7 @@ const Toggle = ({
 
 Toggle.propTypes = {
     id: string,
+    title: string,
     isToggled: bool,
     onToggle: func,
     variant: oneOf(['primary', 'secondary']),
