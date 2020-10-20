@@ -1,3 +1,7 @@
+## 4.13.0
+### Updated
+- Replaced moment.js with date-fns library
+
 ## 4.12.0
 ### Added
 - Support title property in Slider and Toggle
