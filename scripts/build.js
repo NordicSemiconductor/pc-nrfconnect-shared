@@ -40,6 +40,7 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const WebpackDevServer = require('webpack-dev-server');
 
 function getConfig() {
     let config;
@@ -79,9 +80,23 @@ function handleOutput(err, stats) {
     );
 }
 
+function launchDevServer() {
+    const config = getConfig();
+    const compiler = webpack(config);
+    const server = new WebpackDevServer(compiler, config.devServer);
+
+    server.listen('8080', 'localhost', e => {
+        console.info('Starting local hot-reloading server');
+        if (e) {
+            console.error(e);
+        }
+    });
+}
+
 const args = process.argv.slice(2);
 if (args[0] === '--watch') {
-    webpack(getConfig()).watch({}, handleOutput);
+    launchDevServer();
+    // webpack(getConfig()).watch({}, handleOutput);
 } else if (args[0] === '--dev') {
     process.env.NODE_ENV = 'development';
     webpack(getConfig()).run(handleOutput);
