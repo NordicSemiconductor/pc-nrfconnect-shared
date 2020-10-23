@@ -80,23 +80,27 @@ function handleOutput(err, stats) {
     );
 }
 
-function launchDevServer() {
-    const config = getConfig();
-    const compiler = webpack(config);
-    const server = new WebpackDevServer(compiler, config.devServer);
+async function launchDevServer() {
+    try {
+        const port = 8080;
+        const config = getConfig();
+        const compiler = webpack(config);
+        const server = new WebpackDevServer(compiler, config.devServer);
 
-    server.listen('8080', 'localhost', e => {
-        console.info('Starting local hot-reloading server');
-        if (e) {
-            console.error(e);
-        }
-    });
+        server.listen(port, 'localhost', e => {
+            console.info(`Starting local hot-reloading server on port ${port}`);
+            if (e) {
+                console.error(e);
+            }
+        });
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 const args = process.argv.slice(2);
 if (args[0] === '--watch') {
     launchDevServer();
-    // webpack(getConfig()).watch({}, handleOutput);
 } else if (args[0] === '--dev') {
     process.env.NODE_ENV = 'development';
     webpack(getConfig()).run(handleOutput);
