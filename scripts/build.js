@@ -82,7 +82,7 @@ function handleOutput(err, stats) {
 
 async function launchDevServer() {
     try {
-        const port = 8080;
+        const port = 5004;
         const config = getConfig();
         const compiler = webpack(config);
         const server = new WebpackDevServer(compiler, config.devServer);
