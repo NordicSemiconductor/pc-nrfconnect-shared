@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const { dependencies } = require(path.join(process.cwd(), 'package.json'));
 
@@ -113,6 +114,7 @@ module.exports = {
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
     },
     plugins: [
+        new ReactRefreshWebpackPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify(nodeEnv),

@@ -71,7 +71,7 @@
         "react-flip-toolkit": "7.0.12",
         "react-ga": "2.7.0",
         "react-markdown": "4.3.1",
-        "react-refresh": "^0.8.3",
+        "react-refresh": "^0.9.0",
         "react-test-renderer": "16.13.1",
         "redux": "4.0.5",
         "redux-devtools-extension": "2.13.8",
