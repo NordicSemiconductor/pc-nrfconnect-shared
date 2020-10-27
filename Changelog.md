@@ -1,3 +1,16 @@
+## 4.14.0
+### Added
+- Enable automatically selecting a specified device when it is detected in an
+  app. To use this, set the environment variable `AUTOSELECT_DEVICE`, e.g. by
+  running the launcher with
+
+       AUTOSELECT_DEVICE=000680407810 npm run app
+
+  the device with the serial number 000680407810 is automatically selected
+  when apps using the new architecture see it for the first time. When one
+  deselects the device it is not automatically selected again. After
+  restarting the app, the device is automatically selected again.
+
 ## 4.13.0
 ### Updated
 - Replaced moment.js with date-fns library

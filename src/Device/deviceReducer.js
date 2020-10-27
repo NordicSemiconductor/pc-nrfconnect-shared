@@ -88,7 +88,7 @@ const noDialogShown = {
 };
 
 const initialState = {
-    devices: [],
+    devices: {},
     selectedSerialNumber: null,
     deviceInfo: null,
     isSetupWaitingForUserInput: false,
@@ -167,11 +167,14 @@ const sorted = devices =>
         return displayedDeviceName(a) < displayedDeviceName(b) ? -1 : 1;
     });
 
+export const getDevice = serialNumber => state =>
+    state.device?.devices[serialNumber];
+
 export const sortedDevices = state =>
     sorted(Object.values(state.device.devices));
 
 export const deviceIsSelected = state =>
-    state.device != null && state.device.selectedSerialNumber != null;
+    state.device?.selectedSerialNumber != null;
 
 export const selectedDevice = state =>
     state.device.devices[state.device.selectedSerialNumber];

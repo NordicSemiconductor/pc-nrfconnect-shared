@@ -51,6 +51,7 @@ import DeviceSetup from '../DeviceSetup/DeviceSetup';
 import DeviceList from './DeviceList/DeviceList';
 import SelectDevice from './SelectDevice';
 import SelectedDevice from './SelectedDevice';
+import useAutoselectDevice from './useAutoselectDevice';
 
 const noop = () => {};
 const DeviceSelector = ({
@@ -101,6 +102,8 @@ const DeviceSelector = ({
         doStartWatchingDevices();
         return stopWatchingDevices;
     }, [doStartWatchingDevices]);
+
+    useAutoselectDevice(doSelectDevice);
 
     return (
         <div className="core19-device-selector">
