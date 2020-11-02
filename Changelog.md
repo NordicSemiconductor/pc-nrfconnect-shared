@@ -1,3 +1,7 @@
+## 4.14.1
+### Fixed
+- Fixed fail to upload Changelog.md to server
+
 ## 4.14.0
 ### Added
 - Enable automatically selecting a specified device when it is detected in an
@@ -81,7 +85,7 @@
 - Lint all JavaScript files in this project, not just the ones in src/
 
 ## 4.9.4
-### Fixes
+### Fixed
 - Fix app's dependencies in webpack config
 
 ## 4.9.3
