@@ -209,7 +209,7 @@ function uploadChangelog(packageName) {
         return;
     }
 
-    putFile(changelogFilename, `${packageName}-${changelogFilename}`);
+    return putFile(changelogFilename, `${packageName}-${changelogFilename}`);
 }
 
 let thisPackage;
