@@ -203,8 +203,7 @@ function getShasum(filePath) {
 function uploadChangelog(packageName) {
     const changelogFilename = 'Changelog.md';
     if (!fs.existsSync(changelogFilename)) {
-        const errorMsg =
-            `There should be a changelog called "${changelogFilename}". Please provide it!`
+        const errorMsg = `There should be a changelog called "${changelogFilename}". Please provide it!`;
         console.error(errorMsg);
         return Promise.reject(new Error(errorMsg));
     }
