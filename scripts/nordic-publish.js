@@ -206,7 +206,7 @@ function uploadChangelog(packageName) {
         console.warn(
             `There should be a changelog called "${changelogFilename}". Please provide it!`
         );
-        return;
+        return Promise.resolve();
     }
 
     return putFile(changelogFilename, `${packageName}-${changelogFilename}`);
