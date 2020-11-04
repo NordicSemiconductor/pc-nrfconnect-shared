@@ -1,4 +1,4 @@
-/* Copyright (c) 2015 - 2017, Nordic Semiconductor ASA
+/* Copyright (c) 2015 - 2020, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -34,42 +34,16 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+import { useEffect } from 'react';
+import Mousetrap from 'mousetrap';
 
-export { ErrorDialogActions };
+export default (key, onKeypress) => {
+    useEffect(() => {
+        Mousetrap.bind(key, onKeypress);
 
-export { default as App } from './App/App';
-export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
-export { default as Slider } from './Slider/Slider';
-export { default as Toggle } from './Toggle/Toggle';
-export { default as Main } from './Main/Main';
-
-export { default as SidePanel } from './SidePanel/SidePanel';
-export { default as Group } from './SidePanel/Group';
-
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
-export { default as InlineInput } from './InlineInput/InlineInput';
-export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
-
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as logger } from './logging';
-export { default as bleChannels } from './bleChannels';
-export { default as colors } from './colors.scss';
-
-export {
-    setAppDirs,
-    getAppDir,
-    getAppFile,
-    getAppDataDir,
-    getAppLogDir,
-    getUserDataDir,
-} from './appDirs';
-
-export { openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as usageData } from './usageData';
-
-export { default as useHotKey } from './useHotKey';
+        return () => {
+            Mousetrap.unbind(key);
+        };
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps -- Only run this on
+    // mount/unmount, currently we do not want to support changing keybindings inbetween
+};

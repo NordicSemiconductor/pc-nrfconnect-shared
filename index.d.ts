@@ -431,4 +431,11 @@ declare module 'pc-nrfconnect-shared' {
         reset: () => void;
         sendEvent: (category: string, action: string, label: string) => void;
     };
+
+    // useHotKey.js
+
+    export function useHotKey(
+        key: string | string[],
+        onKeypress: () => void
+    ): void;
 }

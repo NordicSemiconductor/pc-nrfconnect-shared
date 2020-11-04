@@ -2,6 +2,8 @@
 ### Added
 - New components `SidePanel` and `Group` one can use in an apps implementation
   of a side panel.
+- New hook `useHotKey` to register a hotkey for an action. It is automatically
+  removed when the component is unmounted.
 ### Changed
 - The default margin at the top and bottom of the side panel is removed.
 ### Steps to upgrade when using this package

@@ -38,7 +38,6 @@ import React, { useEffect } from 'react';
 import { array, arrayOf, func, node, bool } from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 
-import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
 import Carousel from 'react-bootstrap/Carousel';
 
@@ -49,6 +48,8 @@ import About from '../About/About';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
 import NavBar from '../NavBar/NavBar';
+import useHotKey from '../useHotKey';
+
 import VisibilityBar from './VisibilityBar';
 import ConnectedToStore from './ConnectedToStore';
 import {
@@ -75,9 +76,9 @@ const ConnectedApp = ({
     const currentPane = useSelector(currentPaneSelector);
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        Mousetrap.bind('alt+l', () => ipcRenderer.send('open-app-launcher'));
+    useHotKey('alt+l', () => ipcRenderer.send('open-app-launcher'));
 
+    useEffect(() => {
         if (!showLogByDefault) {
             dispatch(toggleLogVisible());
         }
