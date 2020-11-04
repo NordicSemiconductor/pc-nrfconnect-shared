@@ -88,7 +88,7 @@ const ConnectedApp = ({
             <NavBar deviceSelect={deviceSelect} panes={allPanes} />
             <div className="core19-app-content">
                 <div
-                    className={`core19-side-panel ${hiddenUnless(
+                    className={`core19-side-panel-container ${hiddenUnless(
                         sidePanel && isSidePanelVisible
                     )}`}
                 >

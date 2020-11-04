@@ -51,17 +51,17 @@
         }
     }
 
-    .core19-side-panel {
+    .core19-side-panel-container {
         width: $side-panel-width;
-        padding: 24px 23px;
+        padding: 0 23px;
         background-color: $gray-50;
-        overflow: auto;
         height: 100%;
         margin-left: 0;
         transition: margin-left $normal-transition;
 
         &.hidden { margin-left: -$side-panel-width; }
 
+        overflow-y: overlay;
         @include scrollbars($gray-50);
     }
 }

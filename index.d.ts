@@ -143,6 +143,25 @@ declare module 'pc-nrfconnect-shared' {
      */
     export class Main extends React.Component {}
 
+    // SidePanel.jsx
+
+    export class SidePanel extends React.Component<{
+        className?: string;
+    }> {}
+
+    // Group.jsx
+
+    export class Group extends React.Component<{
+        className?: string;
+        heading?: string;
+        title?: string;
+        collapse?: {
+            collapsible?: boolean;
+            defaultCollapsed?: boolean;
+            onToggled?: (isNowExpanded: boolean) => void;
+        };
+    }> {}
+
     // DeviceSelector.jsx
 
     interface DeviceListing {

@@ -1,3 +1,16 @@
+## 4.15.0
+### Added
+- New components `SidePanel` and `Group` one can use in an apps implementation
+  of a side panel.
+### Changed
+- The default margin at the top and bottom of the side panel is removed.
+### Steps to upgrade when using this package
+- When upgrading to this version it is recommended that apps start using the
+  new components `SidePanel` and `Group` to implement their side panel, which
+  will automatically take care of the removed top and bottom margins. If you
+  prefer to implement a side panel without them, then you should check whether
+  you add appropriate margins yourself.
+
 ## 4.14.4
 ### Updated
 - Revert change from 4.14.2: Enable `import/no-cycle` ESLint rule again
