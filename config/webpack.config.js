@@ -80,6 +80,13 @@ module.exports = {
                                 './node_modules/pc-nrfconnect-shared/config/babel.config.js',
                         },
                     },
+                ],
+                exclude: /node_modules\/(?!pc-nrfconnect-shared\/)/,
+            },
+            {
+                enforce: 'pre',
+                test: /\.(jsx?|tsx?)$/,
+                use: [
                     {
                         loader: require.resolve('eslint-loader'),
                         options: {
@@ -87,7 +94,7 @@ module.exports = {
                         },
                     },
                 ],
-                exclude: /node_modules\/(?!pc-nrfconnect-shared\/)/,
+                exclude: /node_modules/,
             },
             {
                 test: /\.scss|\.css$/,
