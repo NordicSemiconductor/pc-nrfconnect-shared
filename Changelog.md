@@ -1,3 +1,7 @@
+## 4.14.2
+### Updated
+- Disabled `import/no-cycle` ESLint rule
+
 ## 4.14.1
 ### Fixed
 - Fixed fail to upload Changelog.md to server
