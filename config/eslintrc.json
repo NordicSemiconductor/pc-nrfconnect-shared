@@ -60,7 +60,8 @@
         "import/extensions": ["off"],
         "no-undef": 1,
         "no-unused-vars": "off",
-        "prettier/prettier": "error"
+        "prettier/prettier": "error",
+        "import/no-cycle": "off"
     },
     "overrides": [
         {
