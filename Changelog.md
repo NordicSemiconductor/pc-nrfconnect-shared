@@ -1,3 +1,7 @@
+## 4.14.1
+### Updated
+- Disabled `import/no-cycle` ESLint rule
+
 ## 4.14.0
 ### Added
 - Enable automatically selecting a specified device when it is detected in an
