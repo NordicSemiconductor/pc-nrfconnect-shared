@@ -35,17 +35,18 @@
  */
 
 import React from 'react';
-import { any, string } from 'prop-types';
+import { string } from 'prop-types';
 
 import './sidepanel.scss';
 
-const SidePanel = ({ children, className = '' }) => (
+const SidePanel: React.FC<{
+    className?: string;
+}> = ({ children, className = '' }) => (
     <div className={`core19-side-panel ${className}`}>{children}</div>
 );
 
 SidePanel.propTypes = {
     className: string,
-    children: any, // eslint-disable-line react/forbid-prop-types -- Pass through anything, including booleans, which are strangely forbidden as node even though they can be rendered
 };
 
 export default SidePanel;

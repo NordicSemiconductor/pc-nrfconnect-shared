@@ -1,4 +1,4 @@
-/* Copyright (c) 2015 - 2017, Nordic Semiconductor ASA
+/* Copyright (c) 2015 - 2020, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -34,48 +34,16 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react';
-import { func, node, string } from 'prop-types';
+import { useEffect } from 'react';
+import Mousetrap from 'mousetrap';
 
-import './pseudo-button.scss';
+export default (key: string | string[], onKeypress: () => void) => {
+    useEffect(() => {
+        Mousetrap.bind(key, onKeypress);
 
-const invokeIfSpaceOrEnterPressed = onClick => event => {
-    event.stopPropagation();
-    if (event.key === ' ' || event.key === 'Enter') {
-        onClick();
-    }
+        return () => {
+            Mousetrap.unbind(key);
+        };
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps -- Only run this on
+    // mount/unmount, currently we do not want to support changing keybindings inbetween
 };
-
-const blurAndInvoke = onClick => event => {
-    event.stopPropagation();
-    event.currentTarget.blur();
-    onClick();
-};
-
-// Motivation for this class: A normal button in HTML must not contain divs or other buttons,
-// but we do have things that behave like buttons and at the same time should contain such things
-const PseudoButton = ({
-    onClick = () => {},
-    className = '',
-    children,
-    title,
-}) => (
-    <div
-        role="button"
-        className={`core19-pseudo-button ${className}`}
-        tabIndex={0}
-        onClick={blurAndInvoke(onClick)}
-        onKeyUp={invokeIfSpaceOrEnterPressed(onClick)}
-        title={title}
-    >
-        {children}
-    </div>
-);
-PseudoButton.propTypes = {
-    onClick: func,
-    className: string,
-    children: node,
-    title: string,
-};
-
-export default PseudoButton;
