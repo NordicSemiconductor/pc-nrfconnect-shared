@@ -151,15 +151,18 @@ declare module 'pc-nrfconnect-shared' {
 
     // Group.jsx
 
+    export class CollapsibleGroup extends React.Component<{
+        className?: string;
+        heading: string;
+        title?: string;
+        defaultCollapsed?: boolean | null;
+        onToggled?: ((isNowExpanded: boolean) => void) | null;
+    }> {}
+
     export class Group extends React.Component<{
         className?: string;
         heading?: string;
         title?: string;
-        collapse?: {
-            collapsible?: boolean;
-            defaultCollapsed?: boolean;
-            onToggled?: (isNowExpanded: boolean) => void;
-        };
     }> {}
 
     // DeviceSelector.jsx

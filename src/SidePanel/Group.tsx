@@ -35,7 +35,7 @@
  */
 
 import React, { useContext, useRef } from 'react';
-import { bool, exact, func, string } from 'prop-types';
+import { bool, func, string } from 'prop-types';
 
 import Accordion from 'react-bootstrap/Accordion';
 // @ts-expect-error: React-Bootstrap misses a type definition in the version we currently use
@@ -89,12 +89,14 @@ ContextAwareToggle.propTypes = {
     onToggled: func,
 };
 
-const CollapsibleGroup: React.FC<{
+export const CollapsibleGroup: React.FC<{
+    className?: string;
     heading: string;
     title?: string;
     defaultCollapsed?: boolean | null;
     onToggled?: ((isNowExpanded: boolean) => void) | null;
 }> = ({
+    className = '',
     heading,
     title,
     children = null,
@@ -104,72 +106,46 @@ const CollapsibleGroup: React.FC<{
     const eventKey = useRef(Math.random().toString());
 
     return (
-        <Accordion defaultActiveKey={defaultCollapsed ? '' : eventKey.current}>
-            <div className="collapse-container">
-                <ContextAwareToggle
-                    heading={heading}
-                    title={title}
-                    eventKey={eventKey.current}
-                    onToggled={onToggled}
-                />
-                <Accordion.Collapse eventKey={eventKey.current}>
-                    <>{children}</>
-                </Accordion.Collapse>
-            </div>
-        </Accordion>
+        <div className={`sidepanel-group ${className}`}>
+            <Accordion
+                defaultActiveKey={defaultCollapsed ? '' : eventKey.current}
+            >
+                <div className="collapse-container">
+                    <ContextAwareToggle
+                        heading={heading}
+                        title={title}
+                        eventKey={eventKey.current}
+                        onToggled={onToggled}
+                    />
+                    <Accordion.Collapse eventKey={eventKey.current}>
+                        <div className="body">{children}</div>
+                    </Accordion.Collapse>
+                </div>
+            </Accordion>
+        </div>
     );
 };
 
 CollapsibleGroup.propTypes = {
+    className: string,
     heading: string.isRequired,
     title: string,
     defaultCollapsed: bool,
     onToggled: func,
 };
 
-const Group: React.FC<{
+export const Group: React.FC<{
     className?: string;
     heading?: string;
     title?: string;
-    collapse?: {
-        collapsible: boolean;
-        defaultCollapsed?: boolean | null;
-        onToggled?: ((isNowExpanded: boolean) => void) | null;
-    };
-}> = ({
-    className = '',
-    heading,
-    title,
-    collapse = { collapsible: false },
-    children,
-}) =>
-    collapse.collapsible ? (
-        <div className={`sidepanel-group ${className}`}>
-            <CollapsibleGroup
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Seems easiest to just assume here, that nobody writes a collapsible group without specifying a heading
-                heading={heading!}
-                title={title}
-                defaultCollapsed={collapse.defaultCollapsed}
-                onToggled={collapse.onToggled}
-            >
-                <div className="body">{children}</div>
-            </CollapsibleGroup>
-        </div>
-    ) : (
-        <div className={`sidepanel-group ${className}`}>
-            <Heading label={heading} title={title} />
-            <div className="body">{children}</div>
-        </div>
-    );
+}> = ({ className = '', heading, title, children }) => (
+    <div className={`sidepanel-group ${className}`}>
+        <Heading label={heading} title={title} />
+        <div className="body">{children}</div>
+    </div>
+);
 Group.propTypes = {
     className: string,
     heading: string,
     title: string,
-    collapse: exact({
-        collapsible: bool.isRequired,
-        defaultCollapsed: bool,
-        onToggled: func,
-    }),
 };
-
-export default Group;

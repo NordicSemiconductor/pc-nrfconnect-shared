@@ -48,7 +48,7 @@ export { default as Toggle } from './Toggle/Toggle';
 export { default as Main } from './Main/Main';
 
 export { default as SidePanel } from './SidePanel/SidePanel';
-export { default as Group } from './SidePanel/Group';
+export { Group, CollapsibleGroup } from './SidePanel/Group';
 
 export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
 export { default as InlineInput } from './InlineInput/InlineInput';
