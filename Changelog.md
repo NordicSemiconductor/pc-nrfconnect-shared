@@ -1,3 +1,7 @@
+## 4.14.4
+### Updated
+- Revert change from 4.14.2: Enable `import/no-cycle` ESLint rule again
+
 ## 4.14.3
 ### Updated
 - Pin `eslint-plugin-import` version
