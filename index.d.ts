@@ -143,6 +143,28 @@ declare module 'pc-nrfconnect-shared' {
      */
     export class Main extends React.Component {}
 
+    // SidePanel.jsx
+
+    export class SidePanel extends React.Component<{
+        className?: string;
+    }> {}
+
+    // Group.jsx
+
+    export class CollapsibleGroup extends React.Component<{
+        className?: string;
+        heading: string;
+        title?: string;
+        defaultCollapsed?: boolean | null;
+        onToggled?: ((isNowExpanded: boolean) => void) | null;
+    }> {}
+
+    export class Group extends React.Component<{
+        className?: string;
+        heading?: string;
+        title?: string;
+    }> {}
+
     // DeviceSelector.jsx
 
     interface DeviceListing {
@@ -412,4 +434,11 @@ declare module 'pc-nrfconnect-shared' {
         reset: () => void;
         sendEvent: (category: string, action: string, label: string) => void;
     };
+
+    // useHotKey.js
+
+    export function useHotKey(
+        key: string | string[],
+        onKeypress: () => void
+    ): void;
 }

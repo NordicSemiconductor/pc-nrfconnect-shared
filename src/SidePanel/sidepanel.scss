@@ -1,0 +1,10 @@
+@import "../variables";
+
+.core19-side-panel {
+    font-size: 12px;
+    color: $gray-700;
+
+    > * {
+        margin-top: 32px;
+    }
+}

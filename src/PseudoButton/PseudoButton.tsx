@@ -34,42 +34,50 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+import React from 'react';
+import { func, string } from 'prop-types';
 
-export { ErrorDialogActions };
+import './pseudo-button.scss';
 
-export { default as App } from './App/App';
-export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
-export { default as Slider } from './Slider/Slider';
-export { default as Toggle } from './Toggle/Toggle';
-export { default as Main } from './Main/Main';
+const invokeIfSpaceOrEnterPressed = (onClick: () => void) => (
+    event: React.KeyboardEvent
+) => {
+    event.stopPropagation();
+    if (event.key === ' ' || event.key === 'Enter') {
+        onClick();
+    }
+};
 
-export { default as SidePanel } from './SidePanel/SidePanel';
-export { Group, CollapsibleGroup } from './SidePanel/Group';
+const blurAndInvoke = (onClick: () => void) => (
+    event: React.MouseEvent<HTMLElement>
+) => {
+    event.stopPropagation();
+    event.currentTarget.blur();
+    onClick();
+};
 
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
-export { default as InlineInput } from './InlineInput/InlineInput';
-export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
+// Motivation for this class: A normal button in HTML must not contain divs or other buttons,
+// but we do have things that behave like buttons and at the same time should contain such things
+const PseudoButton: React.FC<{
+    className?: string;
+    title?: string;
+    onClick?: () => void;
+}> = ({ onClick = () => {}, className = '', children, title }) => (
+    <div
+        role="button"
+        className={`core19-pseudo-button ${className}`}
+        tabIndex={0}
+        onClick={blurAndInvoke(onClick)}
+        onKeyUp={invokeIfSpaceOrEnterPressed(onClick)}
+        title={title}
+    >
+        {children}
+    </div>
+);
+PseudoButton.propTypes = {
+    onClick: func,
+    className: string,
+    title: string,
+};
 
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as logger } from './logging';
-export { default as bleChannels } from './bleChannels';
-export { default as colors } from './colors.scss';
-
-export {
-    setAppDirs,
-    getAppDir,
-    getAppFile,
-    getAppDataDir,
-    getAppLogDir,
-    getUserDataDir,
-} from './appDirs';
-
-export { openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as usageData } from './usageData';
-
-export { default as useHotKey } from './useHotKey';
+export default PseudoButton;

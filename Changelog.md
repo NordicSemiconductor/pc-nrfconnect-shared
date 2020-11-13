@@ -1,3 +1,22 @@
+## 4.15.0
+### Added
+- New components `SidePanel`, `Group` and `CollapsibleGroup`
+  which one can use in an app's implementation of a side panel.
+- New hook `useHotKey` to register a hotkey for an action. It is automatically
+  removed when the component is unmounted.
+### Changed
+- The default margin at the top and bottom of the side panel is removed.
+### Steps to upgrade when using this package
+- When upgrading to this version it is recommended that apps start using the
+  new components `SidePanel`, `Group` and `CollapsibleGroup` to implement
+  their side panel, which will automatically take care of the removed top and
+  bottom margins. If you prefer to implement a side panel without them, then
+  you should check whether you add appropriate margins yourself.
+
+## 4.14.4
+### Updated
+- Revert change from 4.14.2: Enable `import/no-cycle` ESLint rule again
+
 ## 4.14.3
 ### Updated
 - Pin `eslint-plugin-import` version
