@@ -172,7 +172,7 @@ declare module 'pc-nrfconnect-shared' {
         nordicUsb?: boolean;
         seggerUsb?: boolean;
         nordicDfu?: boolean;
-        serialPort?: boolean;
+        serialport?: boolean;
         jlink?: boolean;
     }
 
@@ -182,7 +182,7 @@ declare module 'pc-nrfconnect-shared' {
         needSerialPort?: boolean;
     }
 
-    interface Serialport {
+    export interface Serialport {
         path: string;
         manufacturer: string;
         productId: string;
