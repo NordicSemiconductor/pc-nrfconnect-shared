@@ -35,7 +35,7 @@ body {
 }
 
 .disabled, :disabled {
-    opacity: 0.38;
+    opacity: $disabled-opacity;
 }
 
 // used when tabbing and space

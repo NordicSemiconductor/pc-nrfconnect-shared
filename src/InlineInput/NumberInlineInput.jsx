@@ -35,7 +35,7 @@
  */
 
 import React from 'react';
-import { func, number } from 'prop-types';
+import { bool, func, number } from 'prop-types';
 
 import InlineInput from './InlineInput';
 import rangeShape from '../Slider/rangeShape';
@@ -47,6 +47,7 @@ const isInRange = (value, { min, max, decimals = 0 }) =>
     value >= min && value <= max && value === Number(value.toFixed(decimals));
 
 const NumberInlineInput = ({
+    disabled,
     value,
     range,
     onChange,
@@ -55,6 +56,7 @@ const NumberInlineInput = ({
 }) => (
     <InlineInput
         className="number-inline-input"
+        disabled={disabled}
         style={{ width: `${chars}ex` }}
         value={String(value)}
         isValid={newValue => isInRange(Number(newValue), range)}
@@ -64,6 +66,7 @@ const NumberInlineInput = ({
 );
 
 NumberInlineInput.propTypes = {
+    disabled: bool,
     value: number.isRequired,
     range: rangeShape.isRequired,
     onChange: func.isRequired,

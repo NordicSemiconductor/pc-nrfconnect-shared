@@ -351,6 +351,7 @@ declare module 'pc-nrfconnect-shared' {
     // InlineInput.jsx
 
     interface InlineInputProps {
+        disabled?: boolean;
         value: string;
         isValid?: (value: string) => boolean;
         onChange: (value: string) => void;
@@ -363,6 +364,7 @@ declare module 'pc-nrfconnect-shared' {
     // NumberInlineInput.jsx
 
     interface NumberInlineInputProps {
+        disabled?: boolean;
         value: number;
         range: rangeShape;
         onChange: (value: number) => void;

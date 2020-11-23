@@ -1,6 +1,7 @@
 ## 4.16.0
 ### Added
-- The component `Slider` now takes a property `disabled`.
+- The components `Slider`, `InlineInput` and `NumberInlineInput` now take a
+  property `disabled`.
 - All other elements can also be rendered to have a disabled (opaque) look by
   adding the class name `disabled` to them. This does only change the look, not
   their behaviour.

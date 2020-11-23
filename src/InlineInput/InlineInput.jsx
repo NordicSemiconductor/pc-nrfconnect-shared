@@ -35,7 +35,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { func, object, string } from 'prop-types';
+import { bool, func, object, string } from 'prop-types';
 
 import './inline-input.scss';
 
@@ -80,6 +80,7 @@ const useSynchronisationIfChangedFromOutside = (
 const InlineInput = React.forwardRef(
     (
         {
+            disabled = false,
             value: externalValue,
             isValid = () => true,
             onChange,
@@ -93,6 +94,10 @@ const InlineInput = React.forwardRef(
         useSynchronisationIfChangedFromOutside(externalValue, setInternalValue);
 
         const onChangeIfValid = event => {
+            if (disabled) {
+                return;
+            }
+
             const newValue = event.target.value;
             setInternalValue(newValue);
             if (isValid(newValue)) {
@@ -101,6 +106,10 @@ const InlineInput = React.forwardRef(
         };
 
         const resetToExternalValueOrOnChangeCompleteIfValid = () => {
+            if (disabled) {
+                return;
+            }
+
             if (isValid(internalValue)) {
                 onChangeComplete(internalValue);
             } else {
@@ -109,6 +118,10 @@ const InlineInput = React.forwardRef(
         };
 
         const onChangeCompleteIfValid = event => {
+            if (disabled) {
+                return;
+            }
+
             event.stopPropagation();
 
             if (event.key === 'Enter' && isValid(internalValue)) {
@@ -124,8 +137,9 @@ const InlineInput = React.forwardRef(
                 type="text"
                 className={`inline-input ${
                     isValid(internalValue) ? '' : 'invalid'
-                } ${className}`}
+                } ${disabled ? 'disabled' : ''} ${className}`}
                 style={style}
+                disabled={disabled}
                 value={internalValue}
                 onChange={onChangeIfValid}
                 onBlur={resetToExternalValueOrOnChangeCompleteIfValid}
@@ -137,6 +151,7 @@ const InlineInput = React.forwardRef(
 );
 
 InlineInput.propTypes = {
+    disabled: bool,
     value: string.isRequired,
     isValid: func,
     onChange: func.isRequired,

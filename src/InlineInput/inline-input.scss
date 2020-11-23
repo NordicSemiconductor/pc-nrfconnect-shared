@@ -14,4 +14,10 @@
     &.invalid {
         border-bottom-color: $brand-danger;
     }
+
+    &.disabled {
+        // No clue why, but setting the opacity for disabled elements in shared.scss
+        // is not effective for the inline input, but it works if we set it here
+        opacity: $disabled-opacity;
+    }
 }
