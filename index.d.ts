@@ -444,4 +444,20 @@ declare module 'pc-nrfconnect-shared' {
         key: string | string[],
         onKeypress: () => void
     ): void;
+
+    // classNames.js
+
+    /**
+     * Combine a list of class names into a space separated strings.
+     * Filters out all values that are not strings. The idea of this function is
+     * to use it with conditionals and potentially unset values like this:
+     *
+     *     classNames(
+     *          'fixed-class-name',
+     *          isVisible && 'visible',
+     *          isEnabled ? 'enabled' : 'disabled',
+     *          potentiallyUndefined,
+     *     )
+     */
+    export function classNames(...className: unknown[]): string;
 }

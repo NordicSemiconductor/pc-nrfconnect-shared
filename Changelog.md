@@ -5,6 +5,18 @@
 - All other elements can also be rendered to have a disabled (opaque) look by
   adding the class name `disabled` to them. This does only change the look, not
   their behaviour.
+- A convenience function `classNames` can be used to construct compound class
+  names. It filters out all values that are not strings. The idea of this
+  function is to use it with conditionals and potentially unset values like
+  this:
+
+       classNames(
+            'fixed-class-name',
+            isVisible && 'visible',
+            isEnabled ? 'enabled' : 'disabled',
+            potentiallyUndefined,
+       )
+
 
 ## 4.15.0
 ### Added

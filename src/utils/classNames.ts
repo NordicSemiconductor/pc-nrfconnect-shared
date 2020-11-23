@@ -34,43 +34,22 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+const isString = (o: unknown) => typeof o === 'string';
 
-export { ErrorDialogActions };
-
-export { default as App } from './App/App';
-export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
-export { default as Slider } from './Slider/Slider';
-export { default as Toggle } from './Toggle/Toggle';
-export { default as Main } from './Main/Main';
-
-export { default as SidePanel } from './SidePanel/SidePanel';
-export { Group, CollapsibleGroup } from './SidePanel/Group';
-
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
-export { default as InlineInput } from './InlineInput/InlineInput';
-export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
-
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as logger } from './logging';
-export { default as bleChannels } from './utils/bleChannels';
-export { default as colors } from './utils/colors.scss';
-
-export {
-    setAppDirs,
-    getAppDir,
-    getAppFile,
-    getAppDataDir,
-    getAppLogDir,
-    getUserDataDir,
-} from './utils/appDirs';
-
-export { openUrl } from './utils/open';
-export { default as systemReport } from './utils/systemReport';
-export { default as usageData } from './utils/usageData';
-export { default as classNames } from './utils/classNames';
-
-export { default as useHotKey } from './utils/useHotKey';
+/**
+ * Combine a list of class names into a space separated strings.
+ * Filters out all values that are not strings. The idea of this function is
+ * to use it with conditionals and potentially unset values like this:
+ *
+ *     classNames(
+ *          'fixed-class-name',
+ *          isVisible && 'visible',
+ *          isEnabled ? 'enabled' : 'disabled',
+ *          potentiallyUndefined,
+ *     )
+ *
+ * @param {...unknown} className - An arbitrary list of class names or other objects
+ * @returns {string} the combined class name
+ */
+export default (...className: unknown[]) =>
+    className.filter(isString).join(' ');
