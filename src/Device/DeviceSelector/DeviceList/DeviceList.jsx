@@ -38,6 +38,7 @@ import React from 'react';
 import { bool, func } from 'prop-types';
 import { useSelector } from 'react-redux';
 
+import classNames from '../../../utils/classNames';
 import { sortedDevices } from '../../deviceReducer';
 import Device from './Device';
 import { AnimatedList, AnimatedItem } from './AnimatedList';
@@ -62,7 +63,7 @@ const DeviceList = ({ isVisible, doSelectDevice }) => {
     const devices = useSelector(sortedDevices);
 
     return (
-        <div className={`device-list ${isVisible ? '' : 'hidden'}`}>
+        <div className={classNames('device-list', isVisible || 'hidden')}>
             {devices.length === 0 ? (
                 <NoDevicesConnected />
             ) : (

@@ -36,6 +36,7 @@
 
 import React from 'react';
 import { arrayOf, bool, func, number, string } from 'prop-types';
+import classNames from '../utils/classNames';
 
 import Bar from './Bar';
 import Handle from './Handle';
@@ -70,7 +71,7 @@ const Slider = ({
 
     return (
         <div
-            className={`slider ${disabled ? 'disabled' : ''}`}
+            className={classNames('slider', disabled && 'disabled')}
             id={id}
             title={title}
             ref={sliderRef}

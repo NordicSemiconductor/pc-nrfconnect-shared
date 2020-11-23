@@ -36,6 +36,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { bool, func, object, string } from 'prop-types';
+import classNames from '../utils/classNames';
 
 import './inline-input.scss';
 
@@ -135,9 +136,12 @@ const InlineInput = React.forwardRef(
             <input
                 ref={ref}
                 type="text"
-                className={`inline-input ${
-                    isValid(internalValue) ? '' : 'invalid'
-                } ${disabled ? 'disabled' : ''} ${className}`}
+                className={classNames(
+                    'inline-input',
+                    isValid(internalValue) || 'invalid',
+                    disabled && 'disabled',
+                    className
+                )}
                 style={style}
                 disabled={disabled}
                 value={internalValue}

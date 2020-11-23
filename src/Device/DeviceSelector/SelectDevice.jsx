@@ -38,14 +38,16 @@ import React from 'react';
 import { bool, func } from 'prop-types';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
+import classNames from '../../utils/classNames';
 
 import './select-device.scss';
 
 const SelectDevice = ({ deviceListVisible, toggleDeviceListVisible }) => (
     <PseudoButton
-        className={`select-device ${
-            deviceListVisible ? 'device-list-visible' : ''
-        }`}
+        className={classNames(
+            'select-device',
+            deviceListVisible && 'device-list-visible'
+        )}
         onClick={toggleDeviceListVisible}
     >
         <div>Select device</div>

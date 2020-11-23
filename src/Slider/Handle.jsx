@@ -36,6 +36,8 @@
 
 import React, { useRef, useState } from 'react';
 import { bool, func, number } from 'prop-types';
+import classNames from '../utils/classNames';
+
 import rangeShape from './rangeShape';
 import {
     constrainedToPercentage,
@@ -102,7 +104,10 @@ const Handle = ({
 
     return (
         <div
-            className={`slider-handle ${currentlyDragged ? 'dragged' : ''}`}
+            className={classNames(
+                'slider-handle',
+                currentlyDragged && 'dragged'
+            )}
             style={{ left: `${percentage}%` }}
             onMouseDown={disabled ? noop : grabHandle}
             role="slider"
