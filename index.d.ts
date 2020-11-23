@@ -312,6 +312,7 @@ declare module 'pc-nrfconnect-shared' {
     export class SliderProps {
         id?: string;
         title?: string;
+        disabled?: boolean;
         values: readonly number[];
         range: rangeShape;
         onChange: readonly ((value: number) => void)[];

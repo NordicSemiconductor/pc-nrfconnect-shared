@@ -43,11 +43,12 @@ $handle-radius-selected: 8px;
     transition-duration: 100ms;
 }
 
-.slider .slider-handle:hover,
-.slider-handle.dragged {
-    border-width: $handle-radius-selected;
-    top: 0;
-    margin-left: -$handle-radius-selected;
+.slider:not(.disabled) {
+    .slider-handle:hover, .slider-handle.dragged {
+        border-width: $handle-radius-selected;
+        top: 0;
+        margin-left: -$handle-radius-selected;
 
-    z-index: 1;
+        z-index: 1;
+    }
 }

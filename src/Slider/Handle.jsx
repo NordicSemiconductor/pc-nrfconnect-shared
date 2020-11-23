@@ -35,7 +35,7 @@
  */
 
 import React, { useRef, useState } from 'react';
-import { func, number } from 'prop-types';
+import { bool, func, number } from 'prop-types';
 import rangeShape from './rangeShape';
 import {
     constrainedToPercentage,
@@ -52,6 +52,7 @@ const useAutoupdatingRef = value => {
 const noop = () => {};
 const Handle = ({
     value,
+    disabled,
     range,
     onChange,
     onChangeComplete = noop,
@@ -103,9 +104,9 @@ const Handle = ({
         <div
             className={`slider-handle ${currentlyDragged ? 'dragged' : ''}`}
             style={{ left: `${percentage}%` }}
-            onMouseDown={grabHandle}
+            onMouseDown={disabled ? noop : grabHandle}
             role="slider"
-            tabIndex={0}
+            tabIndex={disabled ? -1 : 0}
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={value}
@@ -114,6 +115,7 @@ const Handle = ({
 };
 Handle.propTypes = {
     value: number.isRequired,
+    disabled: bool.isRequired,
     range: rangeShape.isRequired,
     onChange: func.isRequired,
     onChangeComplete: func,
