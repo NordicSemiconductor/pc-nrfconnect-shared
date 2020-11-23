@@ -36,7 +36,7 @@
 
 import React from 'react';
 import { useSelector } from 'react-redux';
-import systemReport from '../systemReport';
+import systemReport from '../utils/systemReport';
 import {
     sortedDevices,
     deviceInfo,

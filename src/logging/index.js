@@ -37,7 +37,7 @@
 import { createLogger, format, transports } from 'winston';
 import { SPLAT } from 'triple-beam';
 import path from 'path';
-import { openFile } from '../open';
+import { openFile } from '../utils/open';
 import AppTransport from './appTransport';
 import ConsoleTransport from './consoleTransport';
 import createLogBuffer from './logBuffer';
