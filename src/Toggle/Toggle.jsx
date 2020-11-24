@@ -82,7 +82,7 @@ const Toggle = ({
     return (
         <div
             title={title}
-            className={classNames('toggle', disabled && 'toggle-disabled')}
+            className={classNames('toggle', disabled && 'disabled')}
             style={{ width }}
         >
             <label htmlFor={id}>

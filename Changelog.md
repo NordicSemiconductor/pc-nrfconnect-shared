@@ -16,7 +16,9 @@
             isEnabled ? 'enabled' : 'disabled',
             potentiallyUndefined,
        )
-
+### Changed
+- Adapt the styling of disabled `Sliders` and alike also for the `Toggle`
+  component.
 
 ## 4.15.0
 ### Added
