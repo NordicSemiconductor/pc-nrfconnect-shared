@@ -367,6 +367,7 @@ declare module 'pc-nrfconnect-shared' {
         value: number;
         range: rangeShape;
         onChange: (value: number) => void;
+        onChangeComplete?: (value: number) => void;
     }
 
     export class NumberInlineInput extends React.Component<

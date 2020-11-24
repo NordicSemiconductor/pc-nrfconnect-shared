@@ -45,14 +45,20 @@ import './number-inline-input.scss';
 const isInRange = (value, { min, max, decimals = 0 }) =>
     value >= min && value <= max && value === Number(value.toFixed(decimals));
 
-const NumberInlineInput = ({ disabled, value, range, onChange, ...props }) => (
+const NumberInlineInput = ({
+    disabled,
+    value,
+    range,
+    onChange,
+    onChangeComplete = () => {},
+}) => (
     <InlineInput
         className="number-inline-input"
         disabled={disabled}
         value={String(value)}
         isValid={newValue => isInRange(Number(newValue), range)}
         onChange={newValue => onChange(Number(newValue))}
-        {...props}
+        onChangeComplete={newValue => onChangeComplete(Number(newValue))}
     />
 );
 
@@ -61,6 +67,7 @@ NumberInlineInput.propTypes = {
     value: number.isRequired,
     range: rangeShape.isRequired,
     onChange: func.isRequired,
+    onChangeComplete: func,
 };
 
 export default NumberInlineInput;

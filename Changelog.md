@@ -21,6 +21,9 @@
   component.
 - Components `InlineInput` and `NumberInlineInput` grow and shrink depending
   on their current content.
+### Fixed
+- Call the `onChangeComplete` on the component `NumberInlineInput` with the
+  current value as a number, not as a string as it was before.
 
 ## 4.15.0
 ### Added
