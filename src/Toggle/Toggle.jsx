@@ -71,14 +71,13 @@ const Toggle = ({
         }
     };
 
-    let labelElement;
-    labelElement = <span className="toggle-label">{children || label}</span>;
-    labelElement = Array.isArray(children) ? (
-        <span className="toggle-label">{children[0]}</span>
-    ) : (
-        labelElement
+    const [labelText, ...remainingChildren] = Array.isArray(children)
+        ? children
+        : [children || label];
+
+    const labelElement = labelText && (
+        <span className="toggle-label">{labelText}</span>
     );
-    const [, ...restLabelElement] = Array.isArray(children) ? children : [];
 
     return (
         <div
@@ -87,7 +86,7 @@ const Toggle = ({
             style={{ width }}
         >
             <label htmlFor={id}>
-                {!labelRight && (label || children) && labelElement}
+                {!labelRight && labelElement}
                 <div
                     className={classNames(
                         'toggle-bar',
@@ -126,11 +125,11 @@ const Toggle = ({
                         }}
                     />
                 </div>
-                {labelRight && (label || children) && labelElement}
+                {labelRight && labelElement}
             </label>
-            {restLabelElement.length > 0 && (
+            {remainingChildren.length > 0 && (
                 <div className="toggle-label toggle-label-rest">
-                    {restLabelElement}
+                    {remainingChildren}
                 </div>
             )}
         </div>
