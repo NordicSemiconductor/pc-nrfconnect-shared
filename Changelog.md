@@ -19,6 +19,8 @@
 ### Changed
 - Adapt the styling of disabled `Sliders` and alike also for the `Toggle`
   component.
+- Components `InlineInput` and `NumberInlineInput` grow and shrink depending
+  on their current content.
 
 ## 4.15.0
 ### Added

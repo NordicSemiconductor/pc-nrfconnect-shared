@@ -7,6 +7,8 @@
     border-bottom-width: 1px;
     border-bottom-color: transparent;
 
+    overflow-x: hidden;
+
     &:focus {
         border-bottom-color: $gray-200;
     }

@@ -42,22 +42,13 @@ import rangeShape from '../Slider/rangeShape';
 
 import './number-inline-input.scss';
 
-const charCount = value => String(value).length + 1;
 const isInRange = (value, { min, max, decimals = 0 }) =>
     value >= min && value <= max && value === Number(value.toFixed(decimals));
 
-const NumberInlineInput = ({
-    disabled,
-    value,
-    range,
-    onChange,
-    chars = charCount(range.max),
-    ...props
-}) => (
+const NumberInlineInput = ({ disabled, value, range, onChange, ...props }) => (
     <InlineInput
         className="number-inline-input"
         disabled={disabled}
-        style={{ width: `${chars}ex` }}
         value={String(value)}
         isValid={newValue => isInRange(Number(newValue), range)}
         onChange={newValue => onChange(Number(newValue))}
@@ -70,7 +61,6 @@ NumberInlineInput.propTypes = {
     value: number.isRequired,
     range: rangeShape.isRequired,
     onChange: func.isRequired,
-    chars: number,
 };
 
 export default NumberInlineInput;

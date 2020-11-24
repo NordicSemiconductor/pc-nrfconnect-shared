@@ -35,7 +35,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { bool, func, object, string } from 'prop-types';
+import { bool, func, string } from 'prop-types';
 import classNames from '../utils/classNames';
 
 import './inline-input.scss';
@@ -87,7 +87,6 @@ const InlineInput = React.forwardRef(
             onChange,
             onChangeComplete = () => {},
             className = '',
-            style = {},
         },
         ref
     ) => {
@@ -142,7 +141,7 @@ const InlineInput = React.forwardRef(
                     disabled && 'disabled',
                     className
                 )}
-                style={style}
+                size={internalValue.length + 2}
                 disabled={disabled}
                 value={internalValue}
                 onChange={onChangeIfValid}
@@ -161,7 +160,6 @@ InlineInput.propTypes = {
     onChange: func.isRequired,
     onChangeComplete: func,
     className: string,
-    style: object, // eslint-disable-line react/forbid-prop-types
 };
 
 export default InlineInput;

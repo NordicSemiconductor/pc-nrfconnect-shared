@@ -356,7 +356,6 @@ declare module 'pc-nrfconnect-shared' {
         isValid?: (value: string) => boolean;
         onChange: (value: string) => void;
         className?: string;
-        style?: React.CSSProperties;
     }
 
     export class InlineInput extends React.Component<InlineInputProps> {}
