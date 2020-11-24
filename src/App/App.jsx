@@ -106,9 +106,9 @@ const ConnectedApp = ({
                         slide
                         fade
                     >
-                        {allPanes.map(([name, MainComponent]) => (
+                        {allPanes.map(([name, Component], paneIndex) => (
                             <Carousel.Item key={name}>
-                                <MainComponent />
+                                <Component active={paneIndex === currentPane} />
                             </Carousel.Item>
                         ))}
                     </Carousel>

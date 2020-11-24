@@ -16,6 +16,19 @@
             isEnabled ? 'enabled' : 'disabled',
             potentiallyUndefined,
        )
+- Set a property `active` on all rendered panes that is only for the currently
+  active `true` and `false` for all others. This can be used to disable
+  rendering of expensive components on inactive panes or to trigger effects
+  when a pane gets activated or deactivated like this:
+
+       useEffect(() => {
+         if (active) {
+            // do stuff on activation
+            return () => {
+               // do stuff on deactivation
+            }
+         }
+       }, [active])
 ### Changed
 - Adapt the styling of disabled `Sliders` and alike also for the `Toggle`
   component.
