@@ -4,6 +4,11 @@ $bar-height: 2px;
 $handle-radius: 6px;
 $handle-radius-selected: 8px;
 
+$tick-radius: 3px;
+
+$color-selected: $gray-700;
+$color-unselected: $gray-200;
+
 .slider {
     height: 2*$handle-radius-selected;
 
@@ -21,11 +26,11 @@ $handle-radius-selected: 8px;
 .slider .slider-bar.background {
     left: 0;
     right: 0;
-    background-color: $gray-200;
+    background-color: $color-unselected;
 }
 
 .slider .slider-bar.foreground {
-    background-color: $gray-700;
+    background-color: $color-selected;
 }
 
 .slider .slider-handle {
@@ -34,7 +39,7 @@ $handle-radius-selected: 8px;
     border-radius: 50%;
     outline: 0;
 
-    border-color: $gray-700;
+    border-color: $color-selected;
     border-width: $handle-radius;
     top: $handle-radius-selected - $handle-radius;
     margin-left: -$handle-radius;
@@ -50,5 +55,26 @@ $handle-radius-selected: 8px;
         margin-left: -$handle-radius-selected;
 
         z-index: 1;
+    }
+}
+
+.slider .ticks {
+    display: flex;
+    justify-content: space-between;
+    margin-right: -$handle-radius;
+
+    .tick {
+        border-style: solid;
+        border-radius: 50%;
+        outline: 0;
+
+        border-color: $color-unselected;
+        border-width: $tick-radius;
+        margin-top: $handle-radius-selected - $tick-radius;
+        margin-left: -$handle-radius;
+
+        &.selected {
+            border-color: $color-selected;
+        }
     }
 }

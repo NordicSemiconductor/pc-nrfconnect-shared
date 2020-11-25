@@ -63,6 +63,7 @@
         "jest": "26.0.1",
         "jest-bamboo-formatter": "1.0.1",
         "klaw": "3.0.0",
+        "lodash.range": "3.2.0",
         "mousetrap": "1.6.5",
         "prettier": "^2.1.1",
         "prettysize": "2.0.0",

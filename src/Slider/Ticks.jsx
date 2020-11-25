@@ -35,84 +35,35 @@
  */
 
 import React from 'react';
-import { arrayOf, bool, func, number, string } from 'prop-types';
+import { number } from 'prop-types';
+import lodashRange from 'lodash.range';
 import classNames from '../utils/classNames';
 
-import Bar from './Bar';
-import Handle from './Handle';
-import useWidthObserver from './useWidthObserver';
 import rangeShape from './rangeShape';
-import { toPercentage } from './percentage';
-import Ticks from './Ticks';
 
-import './slider.scss';
+const Ticks = ({ valueRange, range: { min, max, decimals = 0 } }) => {
+    const step = 0.1 ** decimals;
 
-const Slider = ({
-    id,
-    title,
-    disabled = false,
-    values,
-    range,
-    ticks,
-    onChange,
-    onChangeComplete,
-}) => {
-    if (values.length === 0)
-        console.error('"values" must contain at least on element');
-    if (values.length !== onChange.length)
-        console.error(
-            `Props 'values' and 'onChange' must have the same size but were ${values} and ${onChange}`
-        );
-    if (range.min > range.max)
-        console.error(
-            `range.min must not be higher than range.max: ${JSON.stringify(
-                range
-            )}`
-        );
-
-    const [sliderWidth, sliderRef] = useWidthObserver();
-
-    const valueRange = {
-        min: values.length === 1 ? range.min : Math.min(...values),
-        max: Math.max(...values),
-    };
+    const isSelected = value =>
+        value >= valueRange.min && value <= valueRange.max;
 
     return (
-        <div
-            className={classNames('slider', disabled && 'disabled')}
-            id={id}
-            title={title}
-            ref={sliderRef}
-        >
-            <Bar
-                start={toPercentage(valueRange.min, range)}
-                end={toPercentage(valueRange.max, range)}
-            />
-            {ticks && <Ticks valueRange={valueRange} range={range} />}
-            {values.map((value, index) => (
-                <Handle
-                    key={index} // eslint-disable-line react/no-array-index-key
-                    value={value}
-                    range={range}
-                    disabled={disabled}
-                    onChange={onChange[index]}
-                    onChangeComplete={onChangeComplete}
-                    sliderWidth={sliderWidth}
+        <div className="ticks">
+            {lodashRange(min, max + step, step).map(value => (
+                <div
+                    key={String(value)}
+                    className={classNames(
+                        'tick',
+                        isSelected(value) && 'selected'
+                    )}
                 />
             ))}
         </div>
     );
 };
-
-Slider.propTypes = {
-    id: string,
-    title: string,
-    disabled: bool,
-    values: arrayOf(number.isRequired).isRequired,
+Ticks.propTypes = {
     range: rangeShape.isRequired,
-    ticks: bool,
-    onChange: arrayOf(func.isRequired).isRequired,
-    onChangeComplete: func,
+    valueRange: { min: number.isRequired, max: number.isRequired }.isRequired,
 };
 
-export default Slider;
+export default Ticks;

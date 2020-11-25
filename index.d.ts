@@ -315,6 +315,7 @@ declare module 'pc-nrfconnect-shared' {
         disabled?: boolean;
         values: readonly number[];
         range: rangeShape;
+        ticks?: boolean;
         onChange: readonly ((value: number) => void)[];
         onChangeComplete?: () => void;
     }

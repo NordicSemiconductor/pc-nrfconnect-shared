@@ -29,6 +29,9 @@
             }
          }
        }, [active])
+- The component `Slider` now takes a property `ticks` to display ticks at all
+  possible values. This only looks reasonable if there are just a few possible
+  values.
 ### Changed
 - Adapt the styling of disabled `Sliders` and alike also for the `Toggle`
   component.

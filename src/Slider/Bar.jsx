@@ -35,31 +35,23 @@
  */
 
 import React from 'react';
-import { arrayOf, number } from 'prop-types';
-import rangeShape from './rangeShape';
-import { toPercentage } from './percentage';
+import { number } from 'prop-types';
 
-const Bar = ({ values, range }) => {
-    const start =
-        values.length === 1 ? 0 : toPercentage(Math.min(...values), range);
-    const end = toPercentage(Math.max(...values), range);
-
-    return (
-        <>
-            <div className="slider-bar background" />
-            <div
-                className="slider-bar foreground"
-                style={{
-                    left: `${start}%`,
-                    width: `${end - start}%`,
-                }}
-            />
-        </>
-    );
-};
+const Bar = ({ start, end }) => (
+    <>
+        <div className="slider-bar background" />
+        <div
+            className="slider-bar foreground"
+            style={{
+                left: `${start}%`,
+                width: `${end - start}%`,
+            }}
+        />
+    </>
+);
 Bar.propTypes = {
-    values: arrayOf(number.isRequired).isRequired,
-    range: rangeShape.isRequired,
+    start: number.isRequired,
+    end: number.isRequired,
 };
 
 export default Bar;
