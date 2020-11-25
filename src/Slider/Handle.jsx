@@ -45,6 +45,8 @@ import {
     toPercentage,
 } from './percentage';
 
+import './handle.scss';
+
 const useAutoupdatingRef = value => {
     const ref = useRef(value);
     if (ref.current !== value) ref.current = value;
@@ -104,10 +106,7 @@ const Handle = ({
 
     return (
         <div
-            className={classNames(
-                'slider-handle',
-                currentlyDragged && 'dragged'
-            )}
+            className={classNames('handle', currentlyDragged && 'dragged')}
             style={{ left: `${percentage}%` }}
             onMouseDown={disabled ? noop : grabHandle}
             role="slider"

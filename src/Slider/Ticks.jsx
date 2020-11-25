@@ -41,6 +41,8 @@ import classNames from '../utils/classNames';
 
 import rangeShape from './rangeShape';
 
+import './ticks.scss';
+
 const Ticks = ({ valueRange, range: { min, max, decimals = 0 } }) => {
     const step = 0.1 ** decimals;
 

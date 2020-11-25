@@ -37,11 +37,13 @@
 import React from 'react';
 import { number } from 'prop-types';
 
+import './bar.scss';
+
 const Bar = ({ start, end }) => (
     <>
-        <div className="slider-bar background" />
+        <div className="bar background" />
         <div
-            className="slider-bar foreground"
+            className="bar foreground"
             style={{
                 left: `${start}%`,
                 width: `${end - start}%`,
