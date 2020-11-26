@@ -39,7 +39,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import logger from '../logging';
-import { getAppDataDir } from '../appDirs';
+import { getAppDataDir } from '../utils/appDirs';
 import { addEntries } from './logActions';
 
 let initialMessageSent = false;

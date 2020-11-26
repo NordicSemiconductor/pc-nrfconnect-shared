@@ -1,3 +1,46 @@
+## 4.16.0
+### Added
+- The components `Slider`, `InlineInput` and `NumberInlineInput` now take a
+  property `disabled`.
+- All other elements can also be rendered to have a disabled (opaque) look by
+  adding the class name `disabled` to them. This does only change the look, not
+  their behaviour.
+- A convenience function `classNames` can be used to construct compound class
+  names. It filters out all values that are not strings. The idea of this
+  function is to use it with conditionals and potentially unset values like
+  this:
+
+       classNames(
+            'fixed-class-name',
+            isVisible && 'visible',
+            isEnabled ? 'enabled' : 'disabled',
+            potentiallyUndefined,
+       )
+- Set a property `active` on all rendered panes that is only for the currently
+  active `true` and `false` for all others. This can be used to disable
+  rendering of expensive components on inactive panes or to trigger effects
+  when a pane gets activated or deactivated like this:
+
+       useEffect(() => {
+         if (active) {
+            // do stuff on activation
+            return () => {
+               // do stuff on deactivation
+            }
+         }
+       }, [active])
+- The component `Slider` now takes a property `ticks` to display ticks at all
+  possible values. This only looks reasonable if there are just a few possible
+  values.
+### Changed
+- Adapt the styling of disabled `Sliders` and alike also for the `Toggle`
+  component.
+- Components `InlineInput` and `NumberInlineInput` grow and shrink depending
+  on their current content.
+### Fixed
+- Call the `onChangeComplete` on the component `NumberInlineInput` with the
+  current value as a number, not as a string as it was before.
+
 ## 4.15.0
 ### Added
 - New components `SidePanel`, `Group` and `CollapsibleGroup`

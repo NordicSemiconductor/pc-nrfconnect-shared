@@ -35,39 +35,39 @@
  */
 
 import React from 'react';
-import { func, number } from 'prop-types';
+import { bool, func, number } from 'prop-types';
 
 import InlineInput from './InlineInput';
 import rangeShape from '../Slider/rangeShape';
 
 import './number-inline-input.scss';
 
-const charCount = value => String(value).length + 1;
 const isInRange = (value, { min, max, decimals = 0 }) =>
     value >= min && value <= max && value === Number(value.toFixed(decimals));
 
 const NumberInlineInput = ({
+    disabled,
     value,
     range,
     onChange,
-    chars = charCount(range.max),
-    ...props
+    onChangeComplete = () => {},
 }) => (
     <InlineInput
         className="number-inline-input"
-        style={{ width: `${chars}ex` }}
+        disabled={disabled}
         value={String(value)}
         isValid={newValue => isInRange(Number(newValue), range)}
         onChange={newValue => onChange(Number(newValue))}
-        {...props}
+        onChangeComplete={newValue => onChangeComplete(Number(newValue))}
     />
 );
 
 NumberInlineInput.propTypes = {
+    disabled: bool,
     value: number.isRequired,
     range: rangeShape.isRequired,
     onChange: func.isRequired,
-    chars: number,
+    onChangeComplete: func,
 };
 
 export default NumberInlineInput;

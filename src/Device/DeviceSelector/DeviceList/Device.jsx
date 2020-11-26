@@ -38,6 +38,7 @@ import React, { useState, useRef } from 'react';
 import { bool, func } from 'prop-types';
 
 import PseudoButton from '../../../PseudoButton/PseudoButton';
+import classNames from '../../../utils/classNames';
 import deviceShape from '../deviceShape';
 import BasicDeviceInfo from '../BasicDeviceInfo';
 import { FavoriteIndicator } from '../Favorite';
@@ -73,7 +74,10 @@ const Device = ({ device, doSelectDevice, allowMoreInfoVisible }) => {
 
     return (
         <PseudoButton
-            className={`device${moreVisible ? ' more-infos-visible' : ''}`}
+            className={classNames(
+                'device',
+                moreVisible && 'more-infos-visible'
+            )}
             onClick={() => doSelectDevice(device)}
         >
             <BasicDeviceInfo

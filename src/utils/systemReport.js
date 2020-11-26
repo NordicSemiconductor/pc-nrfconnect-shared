@@ -39,8 +39,8 @@ import path from 'path';
 import fs from 'fs';
 import { EOL } from 'os';
 import pretty from 'prettysize';
+import logger from '../logging';
 import { getAppDataDir } from './appDirs';
-import logger from './logging';
 import { openFile } from './open';
 
 /* eslint-disable object-curly-newline */

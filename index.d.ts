@@ -293,9 +293,7 @@ declare module 'pc-nrfconnect-shared' {
         isOkButtonEnabled?: boolean;
     }
 
-    export class ConfirmationDialog extends React.Component<
-        ConfirmationDialogProps
-    > {}
+    export class ConfirmationDialog extends React.Component<ConfirmationDialogProps> {}
 
     // Spinner.jsx
 
@@ -312,8 +310,10 @@ declare module 'pc-nrfconnect-shared' {
     export class SliderProps {
         id?: string;
         title?: string;
+        disabled?: boolean;
         values: readonly number[];
         range: rangeShape;
+        ticks?: boolean;
         onChange: readonly ((value: number) => void)[];
         onChangeComplete?: () => void;
     }
@@ -350,11 +350,11 @@ declare module 'pc-nrfconnect-shared' {
     // InlineInput.jsx
 
     interface InlineInputProps {
+        disabled?: boolean;
         value: string;
         isValid?: (value: string) => boolean;
         onChange: (value: string) => void;
         className?: string;
-        style?: React.CSSProperties;
     }
 
     export class InlineInput extends React.Component<InlineInputProps> {}
@@ -362,14 +362,14 @@ declare module 'pc-nrfconnect-shared' {
     // NumberInlineInput.jsx
 
     interface NumberInlineInputProps {
+        disabled?: boolean;
         value: number;
         range: rangeShape;
         onChange: (value: number) => void;
+        onChangeComplete?: (value: number) => void;
     }
 
-    export class NumberInlineInput extends React.Component<
-        NumberInlineInputProps
-    > {}
+    export class NumberInlineInput extends React.Component<NumberInlineInputProps> {}
 
     // Toggle.jsx
 
@@ -441,4 +441,20 @@ declare module 'pc-nrfconnect-shared' {
         key: string | string[],
         onKeypress: () => void
     ): void;
+
+    // classNames.js
+
+    /**
+     * Combine a list of class names into a space separated strings.
+     * Filters out all values that are not strings. The idea of this function is
+     * to use it with conditionals and potentially unset values like this:
+     *
+     *     classNames(
+     *          'fixed-class-name',
+     *          isVisible && 'visible',
+     *          isEnabled ? 'enabled' : 'disabled',
+     *          potentiallyUndefined,
+     *     )
+     */
+    export function classNames(...className: unknown[]): string;
 }

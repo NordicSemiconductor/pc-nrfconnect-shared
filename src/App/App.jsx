@@ -48,7 +48,7 @@ import About from '../About/About';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
 import NavBar from '../NavBar/NavBar';
-import useHotKey from '../useHotKey';
+import useHotKey from '../utils/useHotKey';
 
 import VisibilityBar from './VisibilityBar';
 import ConnectedToStore from './ConnectedToStore';
@@ -106,9 +106,9 @@ const ConnectedApp = ({
                         slide
                         fade
                     >
-                        {allPanes.map(([name, MainComponent]) => (
+                        {allPanes.map(([name, Component], paneIndex) => (
                             <Carousel.Item key={name}>
-                                <MainComponent />
+                                <Component active={paneIndex === currentPane} />
                             </Carousel.Item>
                         ))}
                     </Carousel>

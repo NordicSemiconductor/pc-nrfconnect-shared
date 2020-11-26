@@ -45,6 +45,7 @@ import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
 import PseudoButton from '../PseudoButton/PseudoButton';
 
 import './group.scss';
+import classNames from '../utils/classNames';
 
 const Heading: React.FC<{
     label?: string;
@@ -76,7 +77,7 @@ const ContextAwareToggle: React.FC<{
     return (
         <PseudoButton
             onClick={decoratedOnClick}
-            className={`group-toggle ${isCurrentEventKey ? 'show' : ''}`}
+            className={classNames('group-toggle', isCurrentEventKey && 'show')}
         >
             <Heading label={heading} title={title} />
         </PseudoButton>

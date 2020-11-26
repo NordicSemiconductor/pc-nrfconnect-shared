@@ -35,16 +35,28 @@
  */
 
 import React from 'react';
-import { arrayOf, func, number, string } from 'prop-types';
+import { arrayOf, bool, func, number, string } from 'prop-types';
+import classNames from '../utils/classNames';
 
 import Bar from './Bar';
 import Handle from './Handle';
 import useWidthObserver from './useWidthObserver';
 import rangeShape from './rangeShape';
+import { toPercentage } from './percentage';
+import Ticks from './Ticks';
 
 import './slider.scss';
 
-const Slider = ({ id, title, values, range, onChange, onChangeComplete }) => {
+const Slider = ({
+    id,
+    title,
+    disabled = false,
+    values,
+    range,
+    ticks,
+    onChange,
+    onChangeComplete,
+}) => {
     if (values.length === 0)
         console.error('"values" must contain at least on element');
     if (values.length !== onChange.length)
@@ -60,14 +72,29 @@ const Slider = ({ id, title, values, range, onChange, onChangeComplete }) => {
 
     const [sliderWidth, sliderRef] = useWidthObserver();
 
+    const valueRange = {
+        min: values.length === 1 ? range.min : Math.min(...values),
+        max: Math.max(...values),
+    };
+
     return (
-        <div className="slider" id={id} title={title} ref={sliderRef}>
-            <Bar values={values} range={range} />
+        <div
+            className={classNames('slider', disabled && 'disabled')}
+            id={id}
+            title={title}
+            ref={sliderRef}
+        >
+            <Bar
+                start={toPercentage(valueRange.min, range)}
+                end={toPercentage(valueRange.max, range)}
+            />
+            {ticks && <Ticks valueRange={valueRange} range={range} />}
             {values.map((value, index) => (
                 <Handle
                     key={index} // eslint-disable-line react/no-array-index-key
                     value={value}
                     range={range}
+                    disabled={disabled}
                     onChange={onChange[index]}
                     onChangeComplete={onChangeComplete}
                     sliderWidth={sliderWidth}
@@ -80,8 +107,10 @@ const Slider = ({ id, title, values, range, onChange, onChangeComplete }) => {
 Slider.propTypes = {
     id: string,
     title: string,
+    disabled: bool,
     values: arrayOf(number.isRequired).isRequired,
     range: rangeShape.isRequired,
+    ticks: bool,
     onChange: arrayOf(func.isRequired).isRequired,
     onChangeComplete: func,
 };

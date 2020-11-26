@@ -39,7 +39,7 @@ import {
     getPersistedNickname,
     persistIsFavorite,
     persistNickname,
-} from '../persistentStore';
+} from '../utils/persistentStore';
 import { displayedDeviceName } from './deviceInfo/deviceInfo';
 import {
     DEVICES_DETECTED,

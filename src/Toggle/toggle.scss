@@ -5,23 +5,8 @@
   flex-direction: column;
 }
 
-.toggle-focused .toggle-bar {
-  border: 1px solid $primary;
-  outline: 0;
-  box-shadow: 0 0 0 0.1rem rgba(0, 0, 0, 0.2);
-}
-
-.toggle-disabled {
-  cursor: not-allowed;
-}
-
-.toggle-disabled .toggle-bar {
-  background: $input-bg-disabled;
-}
-
-.toggle-disabled .toggle-handle {
-  cursor: not-allowed;
-  background: $input-bg-disabled;
+.toggle.disabled .toggle-handle {
+    cursor: default;
 }
 
 .toggle-bar {
@@ -89,7 +74,7 @@
   align-items: end;
   justify-content: space-between;
   line-height: 1rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
   margin-right: -0.5rem;
 }
 

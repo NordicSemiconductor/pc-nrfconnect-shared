@@ -38,7 +38,7 @@ import React from 'react';
 import { bool } from 'prop-types';
 import { useSelector } from 'react-redux';
 
-import { openUrl } from '../open';
+import { openUrl } from '../utils/open';
 import { deviceIsSelected as deviceIsSelectedSelector } from '../Device/deviceReducer';
 
 import logoUniform from './nordic-logo-white-icon-only.png';

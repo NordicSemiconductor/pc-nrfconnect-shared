@@ -36,6 +36,7 @@
 
 import { bool, func, node, oneOf, string } from 'prop-types';
 import React, { useState } from 'react';
+import classNames from '../utils/classNames';
 
 import './toggle.scss';
 
@@ -70,51 +71,31 @@ const Toggle = ({
         }
     };
 
-    const toggleClassName = ['toggle', disabled ? 'toggle-disabled' : ''];
+    const [labelText, ...remainingChildren] = Array.isArray(children)
+        ? children
+        : [children || label];
 
-    const toggleBarClassName = [
-        'toggle-bar',
-        isPrimary ? 'toggle-bar-primary' : '',
-        isSecondary ? 'toggle-bar-secondary' : '',
-    ];
-
-    const toggleBarStyle = {
-        backgroundColor: toggled ? barColorToggled : barColor,
-    };
-
-    const toggleHandleClassName = [
-        'toggle-handle',
-        isPrimary ? 'toggle-handle-primary' : '',
-        isSecondary ? 'toggle-handle-secondary' : '',
-        toggled ? 'toggle-handle-toggled' : '',
-        toggled && isPrimary ? 'toggle-handle-primary-toggled' : '',
-        toggled && isSecondary ? 'toggle-handle-secondary-toggled' : '',
-    ];
-
-    const toggleHandleStyle = {
-        backgroundColor: toggled ? handleColorToggled : handleColor,
-    };
-
-    let labelElement;
-    labelElement = <span className="toggle-label">{children || label}</span>;
-    labelElement = Array.isArray(children) ? (
-        <span className="toggle-label">{children[0]}</span>
-    ) : (
-        labelElement
+    const labelElement = labelText && (
+        <span className="toggle-label">{labelText}</span>
     );
-    const [, ...restLabelElement] = Array.isArray(children) ? children : [];
 
     return (
         <div
             title={title}
-            className={toggleClassName.join(' ')}
+            className={classNames('toggle', disabled && 'disabled')}
             style={{ width }}
         >
             <label htmlFor={id}>
-                {!labelRight && (label || children) && labelElement}
+                {!labelRight && labelElement}
                 <div
-                    className={toggleBarClassName.join(' ')}
-                    style={toggleBarStyle}
+                    className={classNames(
+                        'toggle-bar',
+                        isPrimary && 'toggle-bar-primary',
+                        isSecondary && 'toggle-bar-secondary'
+                    )}
+                    style={{
+                        backgroundColor: toggled ? barColorToggled : barColor,
+                    }}
                 >
                     <input
                         id={id}
@@ -125,15 +106,30 @@ const Toggle = ({
                         disabled={disabled}
                     />
                     <span
-                        className={toggleHandleClassName.join(' ')}
-                        style={toggleHandleStyle}
+                        className={classNames(
+                            'toggle-handle',
+                            isPrimary && 'toggle-handle-primary',
+                            isSecondary && 'toggle-handle-secondary',
+                            toggled && 'toggle-handle-toggled',
+                            toggled &&
+                                isPrimary &&
+                                'toggle-handle-primary-toggled',
+                            toggled &&
+                                isSecondary &&
+                                'toggle-handle-secondary-toggled'
+                        )}
+                        style={{
+                            backgroundColor: toggled
+                                ? handleColorToggled
+                                : handleColor,
+                        }}
                     />
                 </div>
-                {labelRight && (label || children) && labelElement}
+                {labelRight && labelElement}
             </label>
-            {restLabelElement.length > 0 && (
+            {remainingChildren.length > 0 && (
                 <div className="toggle-label toggle-label-rest">
-                    {restLabelElement}
+                    {remainingChildren}
                 </div>
             )}
         </div>

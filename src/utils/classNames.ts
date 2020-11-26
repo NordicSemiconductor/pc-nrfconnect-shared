@@ -34,28 +34,22 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react';
-import { bool, func } from 'prop-types';
+const isString = (o: unknown) => typeof o === 'string';
 
-import PseudoButton from '../../PseudoButton/PseudoButton';
-import classNames from '../../utils/classNames';
-
-import './select-device.scss';
-
-const SelectDevice = ({ deviceListVisible, toggleDeviceListVisible }) => (
-    <PseudoButton
-        className={classNames(
-            'select-device',
-            deviceListVisible && 'device-list-visible'
-        )}
-        onClick={toggleDeviceListVisible}
-    >
-        <div>Select device</div>
-    </PseudoButton>
-);
-SelectDevice.propTypes = {
-    deviceListVisible: bool.isRequired,
-    toggleDeviceListVisible: func.isRequired,
-};
-
-export default SelectDevice;
+/**
+ * Combine a list of class names into a space separated strings.
+ * Filters out all values that are not strings. The idea of this function is
+ * to use it with conditionals and potentially unset values like this:
+ *
+ *     classNames(
+ *          'fixed-class-name',
+ *          isVisible && 'visible',
+ *          isEnabled ? 'enabled' : 'disabled',
+ *          potentiallyUndefined,
+ *     )
+ *
+ * @param {...unknown} className - An arbitrary list of class names or other objects
+ * @returns {string} the combined class name
+ */
+export default (...className: unknown[]) =>
+    className.filter(isString).join(' ');

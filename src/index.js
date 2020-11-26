@@ -56,8 +56,8 @@ export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
 
 export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
 export { default as logger } from './logging';
-export { default as bleChannels } from './bleChannels';
-export { default as colors } from './colors.scss';
+export { default as bleChannels } from './utils/bleChannels';
+export { default as colors } from './utils/colors.scss';
 
 export {
     setAppDirs,
@@ -66,10 +66,11 @@ export {
     getAppDataDir,
     getAppLogDir,
     getUserDataDir,
-} from './appDirs';
+} from './utils/appDirs';
 
-export { openUrl } from './open';
-export { default as systemReport } from './systemReport';
-export { default as usageData } from './usageData';
+export { openUrl } from './utils/open';
+export { default as systemReport } from './utils/systemReport';
+export { default as usageData } from './utils/usageData';
+export { default as classNames } from './utils/classNames';
 
-export { default as useHotKey } from './useHotKey';
+export { default as useHotKey } from './utils/useHotKey';

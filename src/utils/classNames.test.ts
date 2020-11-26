@@ -34,28 +34,26 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react';
-import { bool, func } from 'prop-types';
+import classNames from './classNames';
 
-import PseudoButton from '../../PseudoButton/PseudoButton';
-import classNames from '../../utils/classNames';
+describe('classNames', () => {
+    it('combines multiple class names with a space', () => {
+        expect(classNames('button', 'important')).toBe('button important');
+    });
 
-import './select-device.scss';
-
-const SelectDevice = ({ deviceListVisible, toggleDeviceListVisible }) => (
-    <PseudoButton
-        className={classNames(
-            'select-device',
-            deviceListVisible && 'device-list-visible'
-        )}
-        onClick={toggleDeviceListVisible}
-    >
-        <div>Select device</div>
-    </PseudoButton>
-);
-SelectDevice.propTypes = {
-    deviceListVisible: bool.isRequired,
-    toggleDeviceListVisible: func.isRequired,
-};
-
-export default SelectDevice;
+    it('filters out non strings', () => {
+        expect(
+            classNames(
+                'button',
+                true,
+                false,
+                null,
+                undefined,
+                [],
+                {},
+                () => {},
+                'important'
+            )
+        ).toBe('button important');
+    });
+});

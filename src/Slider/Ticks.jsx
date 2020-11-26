@@ -35,27 +35,37 @@
  */
 
 import React from 'react';
-import { bool, func } from 'prop-types';
+import { number } from 'prop-types';
+import lodashRange from 'lodash.range';
+import classNames from '../utils/classNames';
 
-import PseudoButton from '../../PseudoButton/PseudoButton';
-import classNames from '../../utils/classNames';
+import rangeShape from './rangeShape';
 
-import './select-device.scss';
+import './ticks.scss';
 
-const SelectDevice = ({ deviceListVisible, toggleDeviceListVisible }) => (
-    <PseudoButton
-        className={classNames(
-            'select-device',
-            deviceListVisible && 'device-list-visible'
-        )}
-        onClick={toggleDeviceListVisible}
-    >
-        <div>Select device</div>
-    </PseudoButton>
-);
-SelectDevice.propTypes = {
-    deviceListVisible: bool.isRequired,
-    toggleDeviceListVisible: func.isRequired,
+const Ticks = ({ valueRange, range: { min, max, decimals = 0 } }) => {
+    const step = 0.1 ** decimals;
+
+    const isSelected = value =>
+        value >= valueRange.min && value <= valueRange.max;
+
+    return (
+        <div className="ticks">
+            {lodashRange(min, max + step, step).map(value => (
+                <div
+                    key={String(value)}
+                    className={classNames(
+                        'tick',
+                        isSelected(value) && 'selected'
+                    )}
+                />
+            ))}
+        </div>
+    );
+};
+Ticks.propTypes = {
+    range: rangeShape.isRequired,
+    valueRange: { min: number.isRequired, max: number.isRequired }.isRequired,
 };
 
-export default SelectDevice;
+export default Ticks;

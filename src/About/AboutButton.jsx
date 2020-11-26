@@ -37,7 +37,7 @@
 import React from 'react';
 import { func, string } from 'prop-types';
 import Button from 'react-bootstrap/Button';
-import { openUrl } from '../open';
+import { openUrl } from '../utils/open';
 
 import './about-button.scss';
 

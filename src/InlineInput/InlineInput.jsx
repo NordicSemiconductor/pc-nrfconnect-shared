@@ -35,7 +35,8 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { func, object, string } from 'prop-types';
+import { bool, func, string } from 'prop-types';
+import classNames from '../utils/classNames';
 
 import './inline-input.scss';
 
@@ -80,12 +81,12 @@ const useSynchronisationIfChangedFromOutside = (
 const InlineInput = React.forwardRef(
     (
         {
+            disabled = false,
             value: externalValue,
             isValid = () => true,
             onChange,
             onChangeComplete = () => {},
             className = '',
-            style = {},
         },
         ref
     ) => {
@@ -93,6 +94,10 @@ const InlineInput = React.forwardRef(
         useSynchronisationIfChangedFromOutside(externalValue, setInternalValue);
 
         const onChangeIfValid = event => {
+            if (disabled) {
+                return;
+            }
+
             const newValue = event.target.value;
             setInternalValue(newValue);
             if (isValid(newValue)) {
@@ -101,6 +106,10 @@ const InlineInput = React.forwardRef(
         };
 
         const resetToExternalValueOrOnChangeCompleteIfValid = () => {
+            if (disabled) {
+                return;
+            }
+
             if (isValid(internalValue)) {
                 onChangeComplete(internalValue);
             } else {
@@ -109,6 +118,10 @@ const InlineInput = React.forwardRef(
         };
 
         const onChangeCompleteIfValid = event => {
+            if (disabled) {
+                return;
+            }
+
             event.stopPropagation();
 
             if (event.key === 'Enter' && isValid(internalValue)) {
@@ -122,10 +135,14 @@ const InlineInput = React.forwardRef(
             <input
                 ref={ref}
                 type="text"
-                className={`inline-input ${
-                    isValid(internalValue) ? '' : 'invalid'
-                } ${className}`}
-                style={style}
+                className={classNames(
+                    'inline-input',
+                    isValid(internalValue) || 'invalid',
+                    disabled && 'disabled',
+                    className
+                )}
+                size={internalValue.length + 2}
+                disabled={disabled}
                 value={internalValue}
                 onChange={onChangeIfValid}
                 onBlur={resetToExternalValueOrOnChangeCompleteIfValid}
@@ -137,12 +154,12 @@ const InlineInput = React.forwardRef(
 );
 
 InlineInput.propTypes = {
+    disabled: bool,
     value: string.isRequired,
     isValid: func,
     onChange: func.isRequired,
     onChangeComplete: func,
     className: string,
-    style: object, // eslint-disable-line react/forbid-prop-types
 };
 
 export default InlineInput;
