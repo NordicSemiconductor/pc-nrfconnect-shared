@@ -36,6 +36,11 @@ body {
 
 .disabled, :disabled {
     opacity: $disabled-opacity;
+
+    // To prevent opacity from stacking up
+    .disabled, :disabled {
+        opacity: 1;
+    }
 }
 
 // used when tabbing and space

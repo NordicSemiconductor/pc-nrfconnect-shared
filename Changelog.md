@@ -1,3 +1,10 @@
+## 4.16.1
+### Fix
+- The opacity of disabled elements stacked up when they were nested. E.g.
+  in the following code the input had the opacity applied twice (making the
+  opacity squared), so it looked lighter than than supposed:
+
+       <div className="disabled">This <InlineInput disabled value="doubled"/></div>
 ## 4.16.0
 ### Added
 - The components `Slider`, `InlineInput` and `NumberInlineInput` now take a
