@@ -38,6 +38,7 @@ import DeviceLister from 'nrf-device-lister'; // eslint-disable-line import/no-u
 import nrfDeviceSetup from 'nrf-device-setup';
 import logger from '../logging';
 import { showDialog as showAppReloadDialog } from '../AppReload/appReloadDialogActions';
+import nrfdl from 'nrf-device-lib-js';
 
 /**
  * Indicates that a device has been selected.
@@ -118,12 +119,24 @@ const deviceSetupInputReceived = input => ({
  * startup, and whenever a device is attached/detached. The app can configure
  * which devices to look for by providing a `config.selectorTraits` property.
  *
- * @param {Array} devices Array of all attached devices, ref. nrf-device-lister.
+ * @param {Array} devices Array of all attached devices, ref. nrf-device-lib-js.
  */
 export const DEVICES_DETECTED = 'DEVICES_DETECTED';
 const devicesDetected = devices => ({
     type: DEVICES_DETECTED,
     devices,
+});
+
+export const DEVICE_ARRIVED = 'DEVICE_ARRIVED';
+const deviceArrived = device => ({
+    type: DEVICE_ARRIVED,
+    device,
+});
+
+export const DEVICE_LEFT = 'DEVICE_LEFT';
+const deviceLeft = device => ({
+    type: DEVICE_LEFT,
+    device,
 });
 
 export const DEVICE_FAVORITE_TOGGLED = 'DEVICE_FAVORITE_TOGGLED';
@@ -151,6 +164,9 @@ let deviceLister;
 // received from the user, this callback is invoked with the confirmation
 // (Boolean) or choice (String) that the user provided as input.
 let deviceSetupCallback;
+
+const nrfdlContext = nrfdl.createContext();
+let hotplugTaskId;
 
 const NORDIC_VENDOR_ID = 0x1915;
 const NORDIC_BOOTLOADER_PRODUCT_ID = 0x521f;
@@ -213,13 +229,34 @@ const logDeviceListerError = error => dispatch => {
  * @param {function(device)} doDeselectDevice Invoke to start deselect the current device
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
-export const startWatchingDevices = (deviceListing, doDeselectDevice) => (
+export const startWatchingDevices = (deviceListing, doDeselectDevice) => async (
     dispatch,
     getState
 ) => {
     if (!deviceLister) {
         deviceLister = new DeviceLister(deviceListing);
     }
+
+    // Intial enumeration to get the devices plugged in on application start.
+    const devices = await nrfdl.enumerate(nrfdlContext);
+    dispatch(devicesDetected(devices));
+
+    hotplugTaskId = nrfdl.startHotplugEvents(
+        nrfdlContext,
+        () => logger.info('Stopped listening for devices.'),
+        ({ event_type, device }) => {
+            switch (event_type) {
+                case nrfdl.NRFDL_DEVICE_EVENT_ARRIVED:
+                    dispatch(deviceArrived(device));
+                    break;
+
+                case nrfdl.NRFDL_DEVICE_EVENT_LEFT:
+                    dispatch(deviceLeft(device));
+                    break;
+            }
+        }
+    );
+
     deviceLister.removeAllListeners('conflated');
     deviceLister.removeAllListeners('error');
     deviceLister.on('conflated', devices => {
@@ -243,9 +280,7 @@ export const startWatchingDevices = (deviceListing, doDeselectDevice) => (
  * @returns {undefined}
  */
 export const stopWatchingDevices = () => {
-    deviceLister.removeAllListeners('conflated');
-    deviceLister.removeAllListeners('error');
-    deviceLister.stop();
+    nrfdl.stopHotplugEvents(hotplugTaskId);
 };
 
 /**
