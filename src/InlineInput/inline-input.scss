@@ -23,3 +23,10 @@
         opacity: $disabled-opacity;
     }
 }
+
+// To prevent opacity from stacking up
+.disabled, :disabled {
+    .inline-input.disabled {
+        opacity: 1;
+    }
+}

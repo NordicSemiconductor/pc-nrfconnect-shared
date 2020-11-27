@@ -35,7 +35,7 @@
  */
 
 import React from 'react';
-import { number } from 'prop-types';
+import { exact, number } from 'prop-types';
 import lodashRange from 'lodash.range';
 import classNames from '../utils/classNames';
 
@@ -65,7 +65,8 @@ const Ticks = ({ valueRange, range: { min, max, decimals = 0 } }) => {
 };
 Ticks.propTypes = {
     range: rangeShape.isRequired,
-    valueRange: { min: number.isRequired, max: number.isRequired }.isRequired,
+    valueRange: exact({ min: number.isRequired, max: number.isRequired })
+        .isRequired,
 };
 
 export default Ticks;
