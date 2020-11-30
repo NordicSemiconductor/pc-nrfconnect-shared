@@ -34,39 +34,13 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import DeviceLister from 'nrf-device-lister'; // eslint-disable-line import/no-unresolved
+/* eslint valid-jsdoc: 0 */
+
 import nrfDeviceSetup from 'nrf-device-setup';
+import nrfdl from 'nrf-device-lib-js'; // eslint-disable-line import/no-unresolved
 import logger from '../logging';
-import { showDialog as showAppReloadDialog } from '../AppReload/appReloadDialogActions';
-import nrfdl from 'nrf-device-lib-js';
 
 const nrfdlContext = nrfdl.createContext();
-
-nrfdl.startLogEvents(
-    nrfdlContext,
-    () => null,
-    ({ level, message }) => {
-        switch (level) {
-            case nrfdl.NRFDL_LOG_INFO:
-            case nrfdl.NRFDL_LOG_TRACE:
-                logger.info(message);
-                break;
-
-            case nrfdl.NRFDL_LOG_DEBUG:
-                logger.debug(message);
-                break;
-
-            case nrfdl.NRFDL_LOG_WARNING:
-                logger.warning(message);
-                break;
-
-            case nrfdl.NRFDL_LOG_CRITICAL:
-            case nrfdl.NRFDL_LOG_ERROR:
-                logger.error(message);
-                break;
-        }
-    }
-);
 
 /**
  * Indicates that a device has been selected.
@@ -186,8 +160,6 @@ export const resetDeviceNickname = serialNumber => ({
     serialNumber,
 });
 
-let deviceLister;
-
 // Defined when user input is required during device setup. When input is
 // received from the user, this callback is invoked with the confirmation
 // (Boolean) or choice (String) that the user provided as input.
@@ -195,57 +167,30 @@ let deviceSetupCallback;
 
 let hotplugTaskId;
 
-const NORDIC_VENDOR_ID = 0x1915;
-const NORDIC_BOOTLOADER_PRODUCT_ID = 0x521f;
+nrfdl.startLogEvents(
+    nrfdlContext,
+    () => null,
+    ({ level, message }) => {
+        switch (level) {
+            case nrfdl.NRFDL_LOG_DEBUG:
+                logger.debug(message);
+                break;
 
-const logDeviceListerError = error => dispatch => {
-    if (error.usb) {
-        // On win32 platforms, a USB device with no interfaces bound
-        // to a libusb-compatible-driver will fail to enumerate and trigger a
-        // LIBUSB_* error. This is the case of a nRF52840 in DFU mode.
-        // We don't want to show an error to the user in this particular case.
-        if (
-            error.errorCode ===
-                DeviceLister.ErrorCodes.LIBUSB_ERROR_NOT_FOUND &&
-            error.usb.deviceDescriptor
-        ) {
-            const { idProduct, idVendor } = error.usb.deviceDescriptor;
-            if (
-                idVendor === NORDIC_VENDOR_ID &&
-                idProduct === NORDIC_BOOTLOADER_PRODUCT_ID
-            ) {
-                return;
-            }
+            case nrfdl.NRFDL_LOG_WARNING:
+                logger.warning(message);
+                break;
+
+            case nrfdl.NRFDL_LOG_CRITICAL:
+            case nrfdl.NRFDL_LOG_ERROR:
+                logger.error(message);
+                break;
+
+            default:
+                logger.info(message);
+                break;
         }
-
-        const usbAddr = `${error.usb.busNumber}.${error.usb.deviceAddress}`;
-
-        let message = `Error while probing usb device at bus.address ${usbAddr}: ${error.message}. `;
-        if (process.platform === 'linux') {
-            message +=
-                'Please check your udev rules concerning permissions for USB devices, see ' +
-                'https://github.com/NordicSemiconductor/nrf-udev';
-        } else if (process.platform === 'win32') {
-            message +=
-                'Please check that a libusb-compatible kernel driver is bound to this device, see https://github.com/NordicSemiconductor/pc-nrfconnect-launcher/blob/master/doc/win32-usb-troubleshoot.md';
-        }
-
-        dispatch(
-            showAppReloadDialog(
-                'LIBUSB error is detected. Reloading app could resolve the issue. Would you like to reload now?'
-            )
-        );
-        logger.error(message);
-    } else if (
-        error.serialport &&
-        error.errorCode === DeviceLister.ErrorCodes.COULD_NOT_FETCH_SNO_FOR_PORT
-    ) {
-        // Explicitly hide errors about serial ports without serial numbers
-        logger.verbose(error.message);
-    } else {
-        logger.error(`Error while probing devices: ${error.message}`);
     }
-};
+);
 
 /**
  * Given a `device` from `nrf-device-lib-js`, converts it to the
@@ -254,6 +199,7 @@ const logDeviceListerError = error => dispatch => {
  * between the new structure and all the existing code.
  *
  * @param {Object} nrfdlDevice The new `nrfdl` device object to convert.
+ * @returns {Object} The device in the old format.
  */
 function convertToLegacyDevice(nrfdlDevice) {
     const serialPort = nrfdlDevice.serialports[0];
@@ -262,8 +208,9 @@ function convertToLegacyDevice(nrfdlDevice) {
         deviceId: nrfdlDevice.id,
         serialNumber: nrfdlDevice.serialnumber,
         traits: Object.entries(nrfdlDevice.traits)
+            // eslint-disable-next-line
             .filter(([_, hasTrait]) => hasTrait)
-            .map(([name, _]) => name),
+            .map(([name]) => name),
         serialPort: {
             comName: serialPort.com_name,
             path: serialPort.com_name,
@@ -288,8 +235,9 @@ function isSerialPortAttached(device) {
  * @param {{[trait: string]: boolean}} traits The list of traits that the device should have.
  */
 function deviceHasTraits(device, traits) {
-    for (const [trait, shouldHave] of Object.entries(traits)) {
-        if (shouldHave && device.traits[trait]) {
+    // eslint-disable-next-line
+    for (const [trait, shouldHaveTrait] of Object.entries(traits)) {
+        if (shouldHaveTrait && device.traits[trait]) {
             return true;
         }
     }
@@ -348,6 +296,8 @@ export const startWatchingDevices = (traits, doDeselectDevice) => async (
 
                     break;
                 }
+
+                default:
             }
         }
     );
@@ -384,7 +334,6 @@ const getDeviceSetupUserInput = dispatch => (message, choices) =>
             } else {
                 reject(new Error('Cancelled by user.'));
             }
-            then;
         };
         dispatch(deviceSetupInputRequired(message, choices));
     });
