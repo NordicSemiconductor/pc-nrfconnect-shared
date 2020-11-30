@@ -24,6 +24,7 @@ function createExternals() {
         'nrf-device-setup',
         'nrfconnect/core',
         'pc-nrfconnect-shared',
+        'nrf-device-lib-js',
     ];
 
     // Libs provided by the app at runtime

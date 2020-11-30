@@ -221,6 +221,36 @@ const logDeviceListerError = error => dispatch => {
 };
 
 /**
+ * Given a `device` from `nrf-device-lib-js`, converts it to the
+ * structure used by devices returned from `nrf-device-lister`.
+ * This should be a temporary fix to avoid compatability problems
+ * between the new structure and all the existing code.
+ *
+ * @param {Object} nrfdlDevice The new `nrfdl` device object to convert.
+ */
+function convertToLegacyDevice(nrfdlDevice) {
+    const serialPort = nrfdlDevice.serialports[0];
+
+    return {
+        serialNumber: nrfdlDevice.serialnumber,
+        traits: Object.entries(nrfdlDevice.traits)
+            .filter(([_, hasTrait]) => hasTrait)
+            .map(([name, _]) => name),
+        serialPort: {
+            comName: serialPort.com_name,
+            path: serialPort.com_name,
+            manufacturer: serialPort.manufacturer,
+            serialNumber: nrfdlDevice.serialNumber,
+            pnpId: serialPort.pnp_id,
+            locationId: serialPort.location_id,
+            vendorId: serialPort.vendor_id,
+            productId: serialPort.product_id,
+        },
+        boardVersion: serialPort.boardversion,
+    };
+}
+
+/**
  * Starts watching for devices with the given traits. See the nrf-device-lister
  * library for available traits. Whenever devices are attached/detached, this
  * will dispatch DEVICES_DETECTED with a complete list of attached devices.
@@ -239,39 +269,41 @@ export const startWatchingDevices = (deviceListing, doDeselectDevice) => async (
 
     // Intial enumeration to get the devices plugged in on application start.
     const devices = await nrfdl.enumerate(nrfdlContext);
-    dispatch(devicesDetected(devices));
+    dispatch(devicesDetected(devices.map(convertToLegacyDevice)));
 
     hotplugTaskId = nrfdl.startHotplugEvents(
         nrfdlContext,
         () => logger.info('Stopped listening for devices.'),
-        ({ event_type, device }) => {
+        (event) => {
+            const { event_type, device } = event;
             switch (event_type) {
                 case nrfdl.NRFDL_DEVICE_EVENT_ARRIVED:
-                    dispatch(deviceArrived(device));
+                    dispatch(deviceArrived(convertToLegacyDevice(device)));
                     break;
 
                 case nrfdl.NRFDL_DEVICE_EVENT_LEFT:
-                    dispatch(deviceLeft(device));
-                    break;
+                    console.log(convertToLegacyDevice(device));
+                    // dispatch(deviceLeft(convertToLegacyDevice(device)));
+                    // break;
             }
         }
     );
 
-    deviceLister.removeAllListeners('conflated');
-    deviceLister.removeAllListeners('error');
-    deviceLister.on('conflated', devices => {
-        const state = getState();
-        if (
-            state.device.selectedSerialNumber !== null &&
-            !devices.has(state.device.selectedSerialNumber)
-        ) {
-            doDeselectDevice();
-        }
+    // deviceLister.removeAllListeners('conflated');
+    // deviceLister.removeAllListeners('error');
+    // deviceLister.on('conflated', devices => {
+    //     const state = getState();
+    //     if (
+    //         state.device.selectedSerialNumber !== null &&
+    //         !devices.has(state.device.selectedSerialNumber)
+    //     ) {
+    //         doDeselectDevice();
+    //     }
 
-        dispatch(devicesDetected(Array.from(devices.values())));
-    });
-    deviceLister.on('error', error => dispatch(logDeviceListerError(error)));
-    deviceLister.start();
+    //     dispatch(devicesDetected(Array.from(devices.values())));
+    // });
+    // deviceLister.on('error', error => dispatch(logDeviceListerError(error)));
+    // deviceLister.start();
 };
 
 /**
@@ -305,6 +337,7 @@ const getDeviceSetupUserInput = dispatch => (message, choices) =>
             } else {
                 reject(new Error('Cancelled by user.'));
             }
+            then;
         };
         dispatch(deviceSetupInputRequired(message, choices));
     });
@@ -343,6 +376,8 @@ export const setupDevice = (
         allowCustomDevice: false,
         ...deviceSetup,
     };
+
+    console.log(device);
 
     nrfDeviceSetup
         .setupDevice(device, deviceSetupConfig)
