@@ -52,6 +52,8 @@ import {
     DEVICE_FAVORITE_TOGGLED,
     DEVICE_NICKNAME_SET,
     DEVICE_NICKNAME_RESET,
+    DEVICE_ARRIVED,
+    DEVICE_LEFT,
 } from './deviceActions';
 
 const withPersistedData = devices =>
@@ -81,6 +83,13 @@ const withUpdatedDevice = (state, serialNumber, updateToMergeIn) => ({
     },
 });
 
+const removeDevice = (devices, deviceId) => {
+    const filteredDevices = Object.values(devices).filter(
+        d => d.deviceId !== deviceId
+    );
+    return bySerialNumber(withPersistedData(filteredDevices));
+};
+
 const noDialogShown = {
     isSetupDialogVisible: false,
     setupDialogText: null,
@@ -101,6 +110,23 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 devices: bySerialNumber(withPersistedData(action.devices)),
+            };
+        }
+        case DEVICE_ARRIVED: {
+            return {
+                ...state,
+                devices: bySerialNumber(
+                    withPersistedData([
+                        ...Object.values(state.devices),
+                        action.device,
+                    ])
+                ),
+            };
+        }
+        case DEVICE_LEFT: {
+            return {
+                ...state,
+                devices: removeDevice(state.devices, action.deviceId),
             };
         }
         case DEVICE_SELECTED:
