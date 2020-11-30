@@ -40,6 +40,34 @@ import logger from '../logging';
 import { showDialog as showAppReloadDialog } from '../AppReload/appReloadDialogActions';
 import nrfdl from 'nrf-device-lib-js';
 
+const nrfdlContext = nrfdl.createContext();
+
+nrfdl.startLogEvents(
+    nrfdlContext,
+    () => null,
+    ({ level, message }) => {
+        switch (level) {
+            case nrfdl.NRFDL_LOG_INFO:
+            case nrfdl.NRFDL_LOG_TRACE:
+                logger.info(message);
+                break;
+
+            case nrfdl.NRFDL_LOG_DEBUG:
+                logger.debug(message);
+                break;
+
+            case nrfdl.NRFDL_LOG_WARNING:
+                logger.warning(message);
+                break;
+
+            case nrfdl.NRFDL_LOG_CRITICAL:
+            case nrfdl.NRFDL_LOG_ERROR:
+                logger.error(message);
+                break;
+        }
+    }
+);
+
 /**
  * Indicates that a device has been selected.
  *
@@ -134,9 +162,9 @@ const deviceArrived = device => ({
 });
 
 export const DEVICE_LEFT = 'DEVICE_LEFT';
-const deviceLeft = device => ({
+const deviceLeft = deviceId => ({
     type: DEVICE_LEFT,
-    device,
+    deviceId,
 });
 
 export const DEVICE_FAVORITE_TOGGLED = 'DEVICE_FAVORITE_TOGGLED';
@@ -165,7 +193,6 @@ let deviceLister;
 // (Boolean) or choice (String) that the user provided as input.
 let deviceSetupCallback;
 
-const nrfdlContext = nrfdl.createContext();
 let hotplugTaskId;
 
 const NORDIC_VENDOR_ID = 0x1915;
@@ -232,6 +259,7 @@ function convertToLegacyDevice(nrfdlDevice) {
     const serialPort = nrfdlDevice.serialports[0];
 
     return {
+        deviceId: nrfdlDevice.id,
         serialNumber: nrfdlDevice.serialnumber,
         traits: Object.entries(nrfdlDevice.traits)
             .filter(([_, hasTrait]) => hasTrait)
@@ -250,60 +278,79 @@ function convertToLegacyDevice(nrfdlDevice) {
     };
 }
 
+function isSerialPortAttached(device) {
+    return device.serialports.length > 0;
+}
+
+/**
+ * Returns true if the device has at least one of the given `traits`.
+ * @param {Object} device The device to check for traits.
+ * @param {{[trait: string]: boolean}} traits The list of traits that the device should have.
+ */
+function deviceHasTraits(device, traits) {
+    for (const [trait, shouldHave] of Object.entries(traits)) {
+        if (shouldHave && device.traits[trait]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 /**
  * Starts watching for devices with the given traits. See the nrf-device-lister
  * library for available traits. Whenever devices are attached/detached, this
  * will dispatch DEVICES_DETECTED with a complete list of attached devices.
  *
- * @param {Object} deviceListing The configuration for the DeviceLister
+ * @param {{[trait: string]: boolean}} traits The traits to watch for.
  * @param {function(device)} doDeselectDevice Invoke to start deselect the current device
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
-export const startWatchingDevices = (deviceListing, doDeselectDevice) => async (
+export const startWatchingDevices = (traits, doDeselectDevice) => async (
     dispatch,
     getState
 ) => {
-    if (!deviceLister) {
-        deviceLister = new DeviceLister(deviceListing);
-    }
-
     // Intial enumeration to get the devices plugged in on application start.
-    const devices = await nrfdl.enumerate(nrfdlContext);
-    dispatch(devicesDetected(devices.map(convertToLegacyDevice)));
+    const initialDevices = await nrfdl.enumerate(nrfdlContext);
+    const withTraits = initialDevices.filter(d => deviceHasTraits(d, traits));
+    dispatch(devicesDetected(withTraits.map(convertToLegacyDevice)));
 
     hotplugTaskId = nrfdl.startHotplugEvents(
         nrfdlContext,
         () => logger.info('Stopped listening for devices.'),
-        (event) => {
-            const { event_type, device } = event;
+        event => {
+            const { event_type, device, device_id } = event;
             switch (event_type) {
                 case nrfdl.NRFDL_DEVICE_EVENT_ARRIVED:
-                    dispatch(deviceArrived(convertToLegacyDevice(device)));
+                    // We need the serial port to be able to do anything with
+                    // the device, but nrfdl occasionally sends it in a separate
+                    // arrival event. In which case we should ignore this event.
+                    if (
+                        isSerialPortAttached(device) &&
+                        deviceHasTraits(device, traits)
+                    ) {
+                        dispatch(deviceArrived(convertToLegacyDevice(device)));
+                    }
+
                     break;
 
-                case nrfdl.NRFDL_DEVICE_EVENT_LEFT:
-                    console.log(convertToLegacyDevice(device));
-                    // dispatch(deviceLeft(convertToLegacyDevice(device)));
-                    // break;
+                case nrfdl.NRFDL_DEVICE_EVENT_LEFT: {
+                    // If the selected device left, unselect it.
+                    const { devices, selectedSerialNumber } = getState().device;
+                    const selectedDevice = devices[selectedSerialNumber];
+                    if (
+                        selectedDevice &&
+                        selectedDevice.deviceId === device_id
+                    ) {
+                        doDeselectDevice();
+                    }
+
+                    dispatch(deviceLeft(device_id));
+
+                    break;
+                }
             }
         }
     );
-
-    // deviceLister.removeAllListeners('conflated');
-    // deviceLister.removeAllListeners('error');
-    // deviceLister.on('conflated', devices => {
-    //     const state = getState();
-    //     if (
-    //         state.device.selectedSerialNumber !== null &&
-    //         !devices.has(state.device.selectedSerialNumber)
-    //     ) {
-    //         doDeselectDevice();
-    //     }
-
-    //     dispatch(devicesDetected(Array.from(devices.values())));
-    // });
-    // deviceLister.on('error', error => dispatch(logDeviceListerError(error)));
-    // deviceLister.start();
 };
 
 /**
