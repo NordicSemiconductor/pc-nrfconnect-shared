@@ -197,8 +197,9 @@ const ppkDeviceInfo = (device: Device): DeviceInfo => ({
     name: device.usb?.product,
     icon: ppkLogo,
     website: {
-        productPagePath: undefined, // FIXME when we have a permalink for the PPK info page
-        buyOnlineParams: undefined, // FIXME when we have a permalink for how to buy the PPK
+        productPagePath:
+            'Software-and-tools/Development-Tools/Power-Profiler-Kit-2',
+        buyOnlineParams: 'search_token=nRF-PPK2',
     },
 });
 
