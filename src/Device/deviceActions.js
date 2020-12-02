@@ -42,6 +42,8 @@ import logger from '../logging';
 
 const nrfdlContext = nrfdl.createContext();
 
+nrfdl.setLogLevel(nrfdlContext, nrfdl.NRFDL_LOG_DEBUG);
+
 /**
  * Indicates that a device has been selected.
  *
@@ -269,9 +271,6 @@ export const startWatchingDevices = (traits, doDeselectDevice) => async (
             const { event_type, device, device_id } = event;
             switch (event_type) {
                 case nrfdl.NRFDL_DEVICE_EVENT_ARRIVED:
-                    // We need the serial port to be able to do anything with
-                    // the device, but nrfdl occasionally sends it in a separate
-                    // arrival event. In which case we should ignore this event.
                     if (
                         isSerialPortAttached(device) &&
                         deviceHasTraits(device, traits)
@@ -282,7 +281,6 @@ export const startWatchingDevices = (traits, doDeselectDevice) => async (
                     break;
 
                 case nrfdl.NRFDL_DEVICE_EVENT_LEFT: {
-                    // If the selected device left, unselect it.
                     const { devices, selectedSerialNumber } = getState().device;
                     const selectedDevice = devices[selectedSerialNumber];
                     if (
