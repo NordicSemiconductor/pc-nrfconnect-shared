@@ -1,3 +1,7 @@
+## Unreleased
+### Changed
+- Add links to product page and distributors for the PPK2.
+
 ## 4.16.1
 ### Fix
 - The opacity of disabled elements stacked up when they were nested. E.g.
