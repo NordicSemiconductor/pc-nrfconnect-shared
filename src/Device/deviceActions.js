@@ -37,12 +37,40 @@
 /* eslint valid-jsdoc: 0 */
 
 import nrfDeviceSetup from 'nrf-device-setup';
-import nrfdl from 'nrf-device-lib-js'; // eslint-disable-line import/no-unresolved
+//import nrfdl from 'nrf-device-lib-js'; // eslint-disable-line import/no-unresolved
 import logger from '../logging';
 
-const nrfdlContext = nrfdl.createContext();
+import nrfdl from 'nrf-device-lib-js';
+import nrfdlBridge from 'nrfdl_bridge';
+
+var nrfdlContext = nrfdl.createContext();
 
 nrfdl.setLogLevel(nrfdlContext, nrfdl.NRFDL_LOG_DEBUG);
+
+nrfdl.startLogEvents(
+    nrfdlContext,
+    () => null,
+    ({ level, message }) => {
+        switch (level) {
+            case nrfdl.NRFDL_LOG_DEBUG:
+                logger.debug(message);
+                break;
+
+            case nrfdl.NRFDL_LOG_WARNING:
+                logger.warning(message);
+                break;
+
+            case nrfdl.NRFDL_LOG_CRITICAL:
+            case nrfdl.NRFDL_LOG_ERROR:
+                logger.error(message);
+                break;
+
+            default:
+                logger.info(message);
+                break;
+        }
+    }
+);
 
 /**
  * Indicates that a device has been selected.
@@ -169,31 +197,6 @@ let deviceSetupCallback;
 
 let hotplugTaskId;
 
-nrfdl.startLogEvents(
-    nrfdlContext,
-    () => null,
-    ({ level, message }) => {
-        switch (level) {
-            case nrfdl.NRFDL_LOG_DEBUG:
-                logger.debug(message);
-                break;
-
-            case nrfdl.NRFDL_LOG_WARNING:
-                logger.warning(message);
-                break;
-
-            case nrfdl.NRFDL_LOG_CRITICAL:
-            case nrfdl.NRFDL_LOG_ERROR:
-                logger.error(message);
-                break;
-
-            default:
-                logger.info(message);
-                break;
-        }
-    }
-);
-
 /**
  * Given a `device` from `nrf-device-lib-js`, converts it to the
  * structure used by devices returned from `nrf-device-lister`.
@@ -204,6 +207,7 @@ nrfdl.startLogEvents(
  * @returns {Object} The device in the old format.
  */
 function convertToLegacyDevice(nrfdlDevice) {
+    // @ts-type
     const serialPort = nrfdlDevice.serialports[0];
 
     return {
@@ -213,22 +217,28 @@ function convertToLegacyDevice(nrfdlDevice) {
             // eslint-disable-next-line
             .filter(([_, hasTrait]) => hasTrait)
             .map(([name]) => name),
-        serialPort: {
-            comName: serialPort.com_name,
-            path: serialPort.com_name,
-            manufacturer: serialPort.manufacturer,
-            serialNumber: nrfdlDevice.serialNumber,
-            pnpId: serialPort.pnp_id,
-            locationId: serialPort.location_id,
-            vendorId: serialPort.vendor_id,
-            productId: serialPort.product_id,
-        },
-        boardVersion: serialPort.boardversion,
+        serialPort:
+            (serialPort && {
+                comName: serialPort.com_name,
+                path: serialPort.com_name,
+                manufacturer: serialPort.manufacturer,
+                serialNumber: nrfdlDevice.serialNumber,
+                pnpId: serialPort.pnp_id,
+                locationId: serialPort.location_id,
+                vendorId: serialPort.vendor_id,
+                productId: serialPort.product_id,
+            }) ||
+            {},
+        boardVersion: (serialPort && serialPort.boardversion) || null,
     };
 }
 
 function isSerialPortAttached(device) {
-    return device.serialports.length > 0;
+    if (deviceHasTraits(device, { serialPort: true })) {
+        return device.serialports.length > 0;
+    }
+    // If serialports aren't expected, we can just return true.
+    return true;
 }
 
 /**
@@ -246,59 +256,99 @@ function deviceHasTraits(device, traits) {
     return false;
 }
 
+function onDeviceArrived(device, expectedTraits) {
+    return dispatch => {
+        // If serialport is listed as a trait, then we need to wait for a second
+        // arrival message containing it.
+        let waitForSerialPort = device.traits.serialport;
+
+        console.log(device);
+
+        const dispatchIfTraitsMet = () => {
+            if (deviceHasTraits(device, expectedTraits)) {
+                dispatch(deviceArrived(convertToLegacyDevice(device)));
+            }
+        };
+
+        if (waitForSerialPort) {
+            if (isSerialPortAttached(device)) {
+                dispatchIfTraitsMet();
+            }
+        } else {
+            dispatchIfTraitsMet();
+        }
+    };
+}
+
+function onDeviceLeft(deviceId, doDeselectDevice) {
+    return (dispatch, getState) => {
+        const { devices, selectedSerialNumber } = getState().device;
+        const selectedDevice = devices[selectedSerialNumber];
+
+        if (selectedDevice && selectedDevice.deviceId === deviceId) {
+            doDeselectDevice();
+        }
+
+        dispatch(deviceLeft(deviceId));
+    };
+}
+
 /**
  * Starts watching for devices with the given traits. See the nrf-device-lister
  * library for available traits. Whenever devices are attached/detached, this
  * will dispatch DEVICES_DETECTED with a complete list of attached devices.
  *
- * @param {{[trait: string]: boolean}} traits The traits to watch for.
+ * @param {{[trait: string]: boolean}} traits The traits to watch for; if a device has one of these, it will be displayed.
  * @param {function(device)} doDeselectDevice Invoke to start deselect the current device
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
-export const startWatchingDevices = (traits, doDeselectDevice) => async (
-    dispatch,
-    getState
-) => {
-    // Intial enumeration to get the devices plugged in on application start.
-    const initialDevices = await nrfdl.enumerate(nrfdlContext);
-    const withTraits = initialDevices.filter(d => deviceHasTraits(d, traits));
+export const startWatchingDevices = (
+    traits,
+    doDeselectDevice
+) => async dispatch => {
+    console.log(nrfdlContext);
+    const devices = await nrfdl.enumerate(nrfdlContext);
+    const withTraits = devices.filter(d => deviceHasTraits(d, traits));
     dispatch(devicesDetected(withTraits.map(convertToLegacyDevice)));
 
-    hotplugTaskId = nrfdl.startHotplugEvents(
+    nrfdl.startHotplugEvents(
         nrfdlContext,
-        () => logger.info('Stopped listening for devices.'),
-        event => {
-            const { event_type, device, device_id } = event;
+        () => logger.info('Stopped listening for devices'),
+        ({ event_type, device, device_id }) => {
+            console.log(event_type);
             switch (event_type) {
                 case nrfdl.NRFDL_DEVICE_EVENT_ARRIVED:
-                    if (
-                        isSerialPortAttached(device) &&
-                        deviceHasTraits(device, traits)
-                    ) {
-                        dispatch(deviceArrived(convertToLegacyDevice(device)));
-                    }
-
+                    dispatch(onDeviceArrived(device, traits));
                     break;
 
-                case nrfdl.NRFDL_DEVICE_EVENT_LEFT: {
-                    const { devices, selectedSerialNumber } = getState().device;
-                    const selectedDevice = devices[selectedSerialNumber];
-                    if (
-                        selectedDevice &&
-                        selectedDevice.deviceId === device_id
-                    ) {
-                        doDeselectDevice();
-                    }
-
-                    dispatch(deviceLeft(device_id));
-
+                case nrfdl.NRFDL_DEVICE_EVENT_LEFT:
+                    dispatch(onDeviceLeft(device_id, doDeselectDevice));
                     break;
-                }
-
-                default:
             }
         }
     );
+
+    // Initial enumeration to get the devices plugged in on application start.
+    // nrfdlBridge.enumerate(devices => {
+    //     const withTraits = devices.filter(d => deviceHasTraits(d, traits));
+    //     dispatch(devicesDetected(withTraits.map(convertToLegacyDevice)));
+    // });
+
+    // nrfdlBridge.startHotplugEvents(
+    //     () => logger.info('Stopped listening for devices'),
+    //     ({ event_type, device, device_id }) => {
+    //         console.log(event_type);
+    //         switch (event_type) {
+    //             case nrfdl.NRFDL_DEVICE_EVENT_ARRIVED:
+    //                 dispatch(onDeviceArrived(device, traits));
+    //                 break;
+
+    //             case nrfdl.NRFDL_DEVICE_EVENT_LEFT:
+    //                 dispatch(onDeviceLeft(device_id, doDeselectDevice));
+    //                 break;
+    //         }
+    //     }
+    // );
 };
 
 /**
@@ -307,7 +357,8 @@ export const startWatchingDevices = (traits, doDeselectDevice) => async (
  * @returns {undefined}
  */
 export const stopWatchingDevices = () => {
-    nrfdl.stopHotplugEvents(hotplugTaskId);
+    nrfdl.stopHotplugEvents(nrfdlContext);
+    // nrfdlBridge.stopHotplugEvents();
 };
 
 /**
