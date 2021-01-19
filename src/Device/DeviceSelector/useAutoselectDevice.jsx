@@ -36,6 +36,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
+
 import { getDevice } from '../deviceReducer';
 
 export default doSelectDevice => {

@@ -35,9 +35,9 @@
  */
 
 import React from 'react';
-import { shape, number, string } from 'prop-types';
-import { shell } from 'electron';
 import formatDate from 'date-fns/format';
+import { shell } from 'electron';
+import { number, shape, string } from 'prop-types';
 
 import './log-entry.scss';
 

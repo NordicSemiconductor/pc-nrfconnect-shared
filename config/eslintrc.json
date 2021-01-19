@@ -61,7 +61,34 @@
         "import/extensions": ["off"],
         "no-undef": 1,
         "no-unused-vars": "off",
-        "prettier/prettier": "error"
+        "prettier/prettier": "error",
+        "import/order": "off",
+        "simple-import-sort/imports": [
+            "error",
+            {
+                /* This configures the order of the imports.
+                   The obscure format using regexps is described at
+                   https://github.com/lydell/eslint-plugin-simple-import-sort#custom-grouping
+                   and there are examples at
+                   https://github.com/lydell/eslint-plugin-simple-import-sort/blob/main/examples/.eslintrc.js
+                */
+                "groups": [
+                    // First all side effect imports. That strange token is
+                    // described in the eslint-plugin-simple-import-sort docs
+                    ["^\\u0000"],
+
+                    // All package imports (starting with a letter, optionally
+                    // prepended by an '@'), with React packages coming first.
+                    ["^react", "^@?\\w"],
+
+                    // All relative imports (starting with a '.')
+                    ["^\\."],
+
+                    // All styles imports (ending with '.css' or '.scss')
+                    ["^.+\\.s?css$"]
+                ]
+            }
+        ]
     },
     "overrides": [
         {
@@ -81,7 +108,13 @@
             }
         }
     ],
-    "plugins": ["react", "import", "react-hooks", "prettier"],
+    "plugins": [
+        "react",
+        "import",
+        "react-hooks",
+        "prettier",
+        "simple-import-sort"
+    ],
     "env": {
         "es6": true,
         "browser": true,

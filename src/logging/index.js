@@ -34,9 +34,10 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createLogger, format, transports } from 'winston';
-import { SPLAT } from 'triple-beam';
 import path from 'path';
+import { SPLAT } from 'triple-beam';
+import { createLogger, format, transports } from 'winston';
+
 import { openFile } from '../utils/open';
 import AppTransport from './appTransport';
 import ConsoleTransport from './consoleTransport';

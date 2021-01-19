@@ -34,8 +34,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import reducer from './errorDialogReducer';
 import { hideDialog, showDialog } from './errorDialogActions';
+import reducer from './errorDialogReducer';
 
 const initialState = reducer(undefined, {});
 

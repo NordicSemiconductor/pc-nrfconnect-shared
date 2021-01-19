@@ -34,10 +34,10 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { arrayOf, bool, func, node, oneOfType, string } from 'prop-types';
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { arrayOf, bool, func, node, oneOfType, string } from 'prop-types';
 
 import Spinner from './Spinner';
 

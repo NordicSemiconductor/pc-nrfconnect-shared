@@ -35,8 +35,9 @@
  */
 
 import React from 'react';
+import { Flipped, Flipper, spring } from 'react-flip-toolkit';
 import { arrayOf, node, string } from 'prop-types';
-import { Flipper, Flipped, spring } from 'react-flip-toolkit';
+
 import deviceShape from '../deviceShape';
 
 const changesOnReorder = devices =>

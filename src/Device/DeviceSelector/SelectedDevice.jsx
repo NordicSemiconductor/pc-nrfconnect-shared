@@ -35,8 +35,8 @@
  */
 
 import React from 'react';
-import { func } from 'prop-types';
 import { useSelector } from 'react-redux';
+import { func } from 'prop-types';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
 import { selectedDevice } from '../deviceReducer';

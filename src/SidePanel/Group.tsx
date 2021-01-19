@@ -35,17 +35,16 @@
  */
 
 import React, { useContext, useRef } from 'react';
-import { bool, func, string } from 'prop-types';
-
 import Accordion from 'react-bootstrap/Accordion';
 // @ts-expect-error: React-Bootstrap misses a type definition in the version we currently use
 import AccordionContext from 'react-bootstrap/AccordionContext';
 import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
+import { bool, func, string } from 'prop-types';
 
 import PseudoButton from '../PseudoButton/PseudoButton';
+import classNames from '../utils/classNames';
 
 import './group.scss';
-import classNames from '../utils/classNames';
 
 const Heading: React.FC<{
     label?: string;

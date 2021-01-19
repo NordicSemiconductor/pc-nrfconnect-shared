@@ -35,13 +35,14 @@
  */
 
 import React from 'react';
-import { func, node, shape } from 'prop-types';
 import { useDispatch } from 'react-redux';
+import { func, node, shape } from 'prop-types';
+
 import InlineInput from '../../InlineInput/InlineInput';
-import { displayedDeviceName } from '../deviceInfo/deviceInfo';
 import { resetDeviceNickname, setDeviceNickname } from '../deviceActions';
-import deviceShape from './deviceShape';
+import { displayedDeviceName } from '../deviceInfo/deviceInfo';
 import DeviceIcon from './DeviceIcon';
+import deviceShape from './deviceShape';
 
 import './basic-device-info.scss';
 

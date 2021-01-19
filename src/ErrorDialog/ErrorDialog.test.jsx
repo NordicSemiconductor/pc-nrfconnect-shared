@@ -38,7 +38,6 @@ import React from 'react';
 import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 
 import render from '../../test/testrenderer';
-
 import ErrorDialog from './ErrorDialog';
 import { showDialog } from './errorDialogActions';
 

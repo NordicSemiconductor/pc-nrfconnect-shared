@@ -34,10 +34,10 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import childProcess from 'child_process';
+import { shell } from 'electron';
 import fs from 'fs';
 import os from 'os';
-import { shell } from 'electron';
-import childProcess from 'child_process';
 
 /**
  * Open a file in the default text application, depending on the user's OS.

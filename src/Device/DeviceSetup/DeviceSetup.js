@@ -35,6 +35,7 @@
  */
 
 import { connect } from 'react-redux';
+
 import { receiveDeviceSetupInput } from '../deviceActions';
 import DeviceSetupView from './DeviceSetupView';
 

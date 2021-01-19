@@ -40,19 +40,19 @@ import {
     persistIsFavorite,
     persistNickname,
 } from '../utils/persistentStore';
-import { displayedDeviceName } from './deviceInfo/deviceInfo';
 import {
-    DEVICES_DETECTED,
-    DEVICE_SELECTED,
     DEVICE_DESELECTED,
+    DEVICE_FAVORITE_TOGGLED,
+    DEVICE_NICKNAME_RESET,
+    DEVICE_NICKNAME_SET,
+    DEVICE_SELECTED,
     DEVICE_SETUP_COMPLETE,
     DEVICE_SETUP_ERROR,
-    DEVICE_SETUP_INPUT_REQUIRED,
     DEVICE_SETUP_INPUT_RECEIVED,
-    DEVICE_FAVORITE_TOGGLED,
-    DEVICE_NICKNAME_SET,
-    DEVICE_NICKNAME_RESET,
+    DEVICE_SETUP_INPUT_REQUIRED,
+    DEVICES_DETECTED,
 } from './deviceActions';
+import { displayedDeviceName } from './deviceInfo/deviceInfo';
 
 const withPersistedData = devices =>
     devices.map(device => ({

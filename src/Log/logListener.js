@@ -34,9 +34,9 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ipcRenderer } from 'electron';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { ipcRenderer } from 'electron';
 
 import logger from '../logging';
 import { getAppDataDir } from '../utils/appDirs';

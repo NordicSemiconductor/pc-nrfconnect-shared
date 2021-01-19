@@ -35,16 +35,16 @@
  */
 
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import ReactMarkdown from 'react-markdown';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { hideDialog } from './errorDialogActions';
 import {
+    errorResolutions as errorResolutionsSelector,
     isVisible as isVisibleSelector,
     messages as messagesSelector,
-    errorResolutions as errorResolutionsSelector,
 } from './errorDialogReducer';
 
 import './error.scss';

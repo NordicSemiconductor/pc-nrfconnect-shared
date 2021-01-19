@@ -35,17 +35,18 @@
  */
 
 import React from 'react';
-import { bool } from 'prop-types';
 import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
-import { autoScroll as autoScrollSelector } from '../Log/logReducer';
+import { bool } from 'prop-types';
+
 import { clear, toggleAutoScroll } from '../Log/logActions';
+import { autoScroll as autoScrollSelector } from '../Log/logReducer';
 import logger from '../logging';
 import {
-    isSidePanelVisibleSelector,
     isLogVisibleSelector,
-    toggleSidePanelVisible,
+    isSidePanelVisibleSelector,
     toggleLogVisible,
+    toggleSidePanelVisible,
 } from './appLayout';
 
 import './visibility-bar.scss';

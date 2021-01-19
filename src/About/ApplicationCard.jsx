@@ -36,6 +36,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { ipcRenderer } from 'electron';
+
 import AboutButton from './AboutButton';
 import Card from './Card';
 import Section from './Section';

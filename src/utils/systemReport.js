@@ -34,11 +34,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import si from 'systeminformation';
-import path from 'path';
 import fs from 'fs';
 import { EOL } from 'os';
+import path from 'path';
 import pretty from 'prettysize';
+import si from 'systeminformation';
+
 import logger from '../logging';
 import { getAppDataDir } from './appDirs';
 import { openFile } from './open';

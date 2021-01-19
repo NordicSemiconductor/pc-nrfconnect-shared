@@ -34,30 +34,28 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect } from 'react';
-import { array, arrayOf, func, node, bool } from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { ipcRenderer } from 'electron';
-import Carousel from 'react-bootstrap/Carousel';
-
 import 'focus-visible';
 
-import LogViewer from '../Log/LogViewer';
+import React, { useEffect } from 'react';
+import Carousel from 'react-bootstrap/Carousel';
+import { useDispatch, useSelector } from 'react-redux';
+import { ipcRenderer } from 'electron';
+import { array, arrayOf, bool, func, node } from 'prop-types';
+
 import About from '../About/About';
-import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
+import ErrorDialog from '../ErrorDialog/ErrorDialog';
+import LogViewer from '../Log/LogViewer';
 import NavBar from '../NavBar/NavBar';
 import useHotKey from '../utils/useHotKey';
-
-import VisibilityBar from './VisibilityBar';
-import ConnectedToStore from './ConnectedToStore';
 import {
-    isSidePanelVisibleSelector,
-    isLogVisibleSelector,
     currentPaneSelector,
+    isLogVisibleSelector,
+    isSidePanelVisibleSelector,
     toggleLogVisible,
 } from './appLayout';
+import ConnectedToStore from './ConnectedToStore';
+import VisibilityBar from './VisibilityBar';
 
 import './shared.scss';
 import './app.scss';

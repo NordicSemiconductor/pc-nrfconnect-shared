@@ -35,8 +35,8 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { bool, exact, func, object } from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
+import { bool, exact, func, object } from 'prop-types';
 
 import {
     deselectDevice,
@@ -47,7 +47,6 @@ import {
 } from '../deviceActions';
 import { deviceIsSelected as deviceIsSelectedSelector } from '../deviceReducer';
 import DeviceSetup from '../DeviceSetup/DeviceSetup';
-
 import DeviceList from './DeviceList/DeviceList';
 import SelectDevice from './SelectDevice';
 import SelectedDevice from './SelectedDevice';

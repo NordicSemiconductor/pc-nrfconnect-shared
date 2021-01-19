@@ -35,13 +35,13 @@
  */
 
 import React from 'react';
-import { bool, func } from 'prop-types';
 import { useSelector } from 'react-redux';
+import { bool, func } from 'prop-types';
 
 import classNames from '../../../utils/classNames';
 import { sortedDevices } from '../../deviceReducer';
+import { AnimatedItem, AnimatedList } from './AnimatedList';
 import Device from './Device';
-import { AnimatedList, AnimatedItem } from './AnimatedList';
 
 import './device-list.scss';
 

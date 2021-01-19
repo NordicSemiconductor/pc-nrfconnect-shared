@@ -35,6 +35,7 @@
  */
 
 import React from 'react';
+
 import { deviceInfo } from '../deviceInfo/deviceInfo';
 import deviceShape from './deviceShape';
 

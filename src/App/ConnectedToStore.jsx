@@ -34,9 +34,9 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import React from 'react';
+import { Provider } from 'react-redux';
 import { func, node } from 'prop-types';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { Provider } from 'react-redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 

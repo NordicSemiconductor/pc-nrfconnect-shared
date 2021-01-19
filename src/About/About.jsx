@@ -35,6 +35,7 @@
  */
 
 import React from 'react';
+
 import ApplicationCard from './ApplicationCard';
 import DeviceCard from './DeviceCard';
 import SupportCard from './SupportCard';

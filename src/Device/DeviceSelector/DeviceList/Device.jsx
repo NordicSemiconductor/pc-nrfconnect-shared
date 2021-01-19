@@ -34,16 +34,16 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { bool, func } from 'prop-types';
 
 import PseudoButton from '../../../PseudoButton/PseudoButton';
 import classNames from '../../../utils/classNames';
-import deviceShape from '../deviceShape';
 import BasicDeviceInfo from '../BasicDeviceInfo';
+import deviceShape from '../deviceShape';
 import { FavoriteIndicator } from '../Favorite';
-import MoreDeviceInfo from './MoreDeviceInfo';
 import EditDeviceButtons from './EditDeviceButtons';
+import MoreDeviceInfo from './MoreDeviceInfo';
 
 import './device.scss';
 

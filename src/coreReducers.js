@@ -34,11 +34,11 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { reducer as appLayout } from './App/appLayout';
 import appReloadDialog from './AppReload/appReloadDialogReducer';
 import device from './Device/deviceReducer';
 import errorDialog from './ErrorDialog/errorDialogReducer';
 import log from './Log/logReducer';
-import { reducer as appLayout } from './App/appLayout';
 
 export default {
     appLayout,
