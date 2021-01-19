@@ -35,8 +35,8 @@
  */
 
 import {
-    APP_RELOAD_DIALOG_SHOW,
     APP_RELOAD_DIALOG_HIDE,
+    APP_RELOAD_DIALOG_SHOW,
 } from './appReloadDialogActions';
 
 const initialState = {

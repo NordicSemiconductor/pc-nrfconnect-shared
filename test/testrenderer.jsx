@@ -35,9 +35,10 @@
  */
 
 import React from 'react';
-import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
+import { combineReducers, createStore } from 'redux';
+
 import coreReducers from '../src/coreReducers';
 
 const createPreparedStore = actions => {

@@ -35,15 +35,15 @@
  */
 
 import React from 'react';
-import { bool } from 'prop-types';
 import { useSelector } from 'react-redux';
+import { bool } from 'prop-types';
 
-import { openUrl } from '../utils/open';
 import { deviceIsSelected as deviceIsSelectedSelector } from '../Device/deviceReducer';
-
-import logoUniform from './nordic-logo-white-icon-only.png';
-import logoDisconnected from './nordic-logo-gray-icon-only.png';
+import { openUrl } from '../utils/open';
 import logoConnected from './nordic-logo-blue-icon-only.png';
+import logoDisconnected from './nordic-logo-gray-icon-only.png';
+import logoUniform from './nordic-logo-white-icon-only.png';
+
 import './logo.scss';
 
 const goToNRFConnectWebsite = () =>

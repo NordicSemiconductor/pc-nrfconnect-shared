@@ -38,7 +38,6 @@ import React from 'react';
 import { fireEvent } from '@testing-library/react';
 
 import render from '../../test/testrenderer';
-
 import ConfirmationDialog from './ConfirmationDialog';
 
 const noop = () => {};

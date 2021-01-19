@@ -36,6 +36,7 @@
 
 import React from 'react';
 import { useDispatch } from 'react-redux';
+
 import PseudoButton from '../../PseudoButton/PseudoButton';
 import { toggleDeviceFavorited } from '../deviceActions';
 import deviceShape from './deviceShape';

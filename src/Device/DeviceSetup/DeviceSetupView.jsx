@@ -35,9 +35,9 @@
  */
 
 import React from 'react';
-
-import { arrayOf, bool, func, string } from 'prop-types';
 import Form from 'react-bootstrap/Form';
+import { arrayOf, bool, func, string } from 'prop-types';
+
 import ConfirmationDialog from '../../Dialog/ConfirmationDialog';
 
 /**

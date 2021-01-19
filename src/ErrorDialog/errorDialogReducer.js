@@ -34,7 +34,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ERROR_DIALOG_SHOW, ERROR_DIALOG_HIDE } from './errorDialogActions';
+import { ERROR_DIALOG_HIDE, ERROR_DIALOG_SHOW } from './errorDialogActions';
 
 const initialState = {
     messages: [],

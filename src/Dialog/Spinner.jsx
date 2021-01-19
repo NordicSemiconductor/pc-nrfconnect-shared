@@ -35,6 +35,7 @@
  */
 
 import React from 'react';
+
 import spinnerImg from './ajax-loader.gif';
 
 export default () => (

@@ -1,3 +1,7 @@
+/* eslint-disable simple-import-sort/imports --
+   sorting the import order must be disabled for this file because enzyme
+   and testing-library are sensitive to the order in which they are run
+*/
 import enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 

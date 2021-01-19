@@ -35,12 +35,12 @@
  */
 
 import React from 'react';
-import { bool, number, string } from 'prop-types';
-import { useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
+import { useDispatch } from 'react-redux';
+import { bool, number, string } from 'prop-types';
 
-import classNames from '../utils/classNames';
 import { setCurrentPane } from '../App/appLayout';
+import classNames from '../utils/classNames';
 
 import './nav-menu-item.scss';
 

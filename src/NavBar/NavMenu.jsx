@@ -35,8 +35,8 @@
  */
 
 import React from 'react';
-import { array, arrayOf } from 'prop-types';
 import { useSelector } from 'react-redux';
+import { array, arrayOf } from 'prop-types';
 
 import { currentPaneSelector } from '../App/appLayout';
 import NavMenuItem from './NavMenuItem';

@@ -36,8 +36,9 @@
 
 import DeviceLister from 'nrf-device-lister'; // eslint-disable-line import/no-unresolved
 import nrfDeviceSetup from 'nrf-device-setup';
-import logger from '../logging';
+
 import { showDialog as showAppReloadDialog } from '../AppReload/appReloadDialogActions';
+import logger from '../logging';
 
 /**
  * Indicates that a device has been selected.

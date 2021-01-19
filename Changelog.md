@@ -1,6 +1,14 @@
 ## Unreleased
 ### Changed
 - Add links to product page and distributors for the PPK2.
+- Check stricter order of the imports during linting.
+### Steps to upgrade when using this package
+- The stricter check for order of the imports while linting will probably
+  make your linting fail after upgrading. So it is recommended to run
+  `npm run lint -- --fix` once after updating, checking all the changes (most
+  will be ok but there are very seldom cases where order is important like in
+  `test/setupTests.js` in this project) and then commit all these small order
+  changes.
 
 ## 4.16.1
 ### Fix

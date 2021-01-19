@@ -36,19 +36,19 @@
 
 import React from 'react';
 import { useSelector } from 'react-redux';
+
+import {
+    buyOnlineUrl,
+    deviceInfo,
+    productPageUrl,
+} from '../Device/deviceInfo/deviceInfo';
+import {
+    deviceInfo as deviceInfoSelector,
+    selectedDevice,
+} from '../Device/deviceReducer';
 import AboutButton from './AboutButton';
 import Card from './Card';
 import Section from './Section';
-
-import {
-    selectedDevice,
-    deviceInfo as deviceInfoSelector,
-} from '../Device/deviceReducer';
-import {
-    deviceInfo,
-    productPageUrl,
-    buyOnlineUrl,
-} from '../Device/deviceInfo/deviceInfo';
 
 const memorySize = memoryInBytes => {
     if (memoryInBytes == null) {

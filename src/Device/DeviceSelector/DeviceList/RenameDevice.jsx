@@ -36,6 +36,7 @@
 
 import React from 'react';
 import { func } from 'prop-types';
+
 import PseudoButton from '../../../PseudoButton/PseudoButton';
 
 import './rename-device.scss';

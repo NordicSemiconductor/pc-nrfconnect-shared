@@ -35,8 +35,8 @@
  */
 
 import React from 'react';
-import { func } from 'prop-types';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import { func } from 'prop-types';
 
 import deviceShape from '../deviceShape';
 import { MakeDeviceFavorite } from '../Favorite';

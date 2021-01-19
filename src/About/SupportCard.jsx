@@ -36,12 +36,13 @@
 
 import React from 'react';
 import { useSelector } from 'react-redux';
-import systemReport from '../utils/systemReport';
+
 import {
-    sortedDevices,
     deviceInfo,
     selectedSerialNumber,
+    sortedDevices,
 } from '../Device/deviceReducer';
+import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
 import Card from './Card';
 import Section from './Section';
