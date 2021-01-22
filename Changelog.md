@@ -1,4 +1,4 @@
-## Unreleased
+## 4.17.0
 ### Added
 - Currently active pane: Selector `currentPane` to query it and action creator
   `setCurrentPane` to change it.
