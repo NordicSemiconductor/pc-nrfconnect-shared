@@ -43,8 +43,8 @@ import { clear, toggleAutoScroll } from '../Log/logActions';
 import { autoScroll as autoScrollSelector } from '../Log/logReducer';
 import logger from '../logging';
 import {
-    isLogVisibleSelector,
-    isSidePanelVisibleSelector,
+    isLogVisible as isLogVisibleSelector,
+    isSidePanelVisible as isSidePanelVisibleSelector,
     toggleLogVisible,
     toggleSidePanelVisible,
 } from './appLayout';
