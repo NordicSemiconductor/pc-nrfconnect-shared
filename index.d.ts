@@ -457,4 +457,18 @@ declare module 'pc-nrfconnect-shared' {
      *     )
      */
     export function classNames(...className: unknown[]): string;
+
+    // appLayout.js
+
+    /**
+     * Create a Redux action to set the currently active pane.
+     */
+    export function setCurrentPane(currentPane: number): AnyAction;
+
+    /**
+     * A selector to determine the number of the currently active pane.
+     */
+    export function currentPane<AppState>(
+        state: NrfConnectState<AppState>
+    ): number;
 }

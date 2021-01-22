@@ -1,4 +1,7 @@
 ## Unreleased
+### Added
+- Currently active pane: Selector `currentPane` to query it and action creator
+  `setCurrentPane` to change it.
 ### Fix
 - When clicking on URLs in log entries the web site was not opened on macOS.
 ### Changed
