@@ -49,9 +49,9 @@ import LogViewer from '../Log/LogViewer';
 import NavBar from '../NavBar/NavBar';
 import useHotKey from '../utils/useHotKey';
 import {
-    currentPaneSelector,
-    isLogVisibleSelector,
-    isSidePanelVisibleSelector,
+    currentPane as currentPaneSelector,
+    isLogVisible as isLogVisibleSelector,
+    isSidePanelVisible as isSidePanelVisibleSelector,
     toggleLogVisible,
 } from './appLayout';
 import ConnectedToStore from './ConnectedToStore';

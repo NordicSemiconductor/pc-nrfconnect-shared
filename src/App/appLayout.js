@@ -66,7 +66,6 @@ export const reducer = (state = initialState, { type, currentPane }) => {
     }
 };
 
-export const isSidePanelVisibleSelector = state =>
-    state.appLayout.isSidePanelVisible;
-export const isLogVisibleSelector = state => state.appLayout.isLogVisible;
-export const currentPaneSelector = state => state.appLayout.currentPane;
+export const isSidePanelVisible = state => state.appLayout.isSidePanelVisible;
+export const isLogVisible = state => state.appLayout.isLogVisible;
+export const currentPane = state => state.appLayout.currentPane;

@@ -36,8 +36,9 @@
 
 import React from 'react';
 import formatDate from 'date-fns/format';
-import { shell } from 'electron';
 import { number, shape, string } from 'prop-types';
+
+import { openUrl } from '../utils/open';
 
 import './log-entry.scss';
 
@@ -66,7 +67,7 @@ function hrefReplacer(str) {
                 href={href}
                 key={index}
                 tabIndex={index}
-                onClick={() => shell.openItem(href)}
+                onClick={() => openUrl(href)}
                 onKeyPress={() => {}}
             >
                 {href}

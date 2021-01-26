@@ -1,4 +1,9 @@
-## Unreleased
+## 4.17.0
+### Added
+- Currently active pane: Selector `currentPane` to query it and action creator
+  `setCurrentPane` to change it.
+### Fix
+- When clicking on URLs in log entries the web site was not opened on macOS.
 ### Changed
 - Add links to product page and distributors for the PPK2.
 - Check stricter order of the imports during linting.

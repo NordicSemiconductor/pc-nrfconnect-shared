@@ -38,7 +38,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { array, arrayOf } from 'prop-types';
 
-import { currentPaneSelector } from '../App/appLayout';
+import { currentPane as currentPaneSelector } from '../App/appLayout';
 import NavMenuItem from './NavMenuItem';
 
 const NavMenu = ({ panes }) => {

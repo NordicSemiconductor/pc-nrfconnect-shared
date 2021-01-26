@@ -74,3 +74,5 @@ export { default as usageData } from './utils/usageData';
 export { default as classNames } from './utils/classNames';
 
 export { default as useHotKey } from './utils/useHotKey';
+
+export { currentPane, setCurrentPane } from './App/appLayout';
