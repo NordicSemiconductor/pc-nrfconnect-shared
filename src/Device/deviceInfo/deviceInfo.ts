@@ -160,8 +160,8 @@ const devicesByPca: { [P in DevicePCA]: DeviceInfo } = {
         cores: 2,
         icon: nrf53logo,
         website: {
-            productPagePath: 'Software-and-tools/Development-Kits/nRF5340-PDK',
-            buyOnlineParams: 'search_token=nRF5340-PDK&series_token=nRF5340',
+            productPagePath: 'Software-and-tools/Development-Kits/nRF5340-DK',
+            buyOnlineParams: 'search_token=nRF5340-DK&series_token=nRF5340',
         },
     },
     PCA20020: {
