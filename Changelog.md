@@ -1,3 +1,7 @@
+## 4.17.1
+### Changed
+- Updated nRF5340 links from PDK to DK.
+
 ## 4.17.0
 ### Added
 - Currently active pane: Selector `currentPane` to query it and action creator
