@@ -67,6 +67,9 @@ declare module 'pc-nrfconnect-shared' {
     export const logger: winston.Logger;
 
     // App.jsx
+    export interface PaneProps {
+        active: boolean;
+    }
 
     /**
      * Props for the `App` component.
@@ -106,7 +109,7 @@ declare module 'pc-nrfconnect-shared' {
          *
          * `[['Connection Map', ConnectionMap], ['Server Setup', ServerSetup]]`
          */
-        panes: readonly (readonly [string, React.FC])[];
+        panes: readonly (readonly [string, React.FC<PaneProps>])[];
         /**
          * Describes whether the log will show automatically when the
          * application starts. Defaults to `true`.
