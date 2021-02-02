@@ -134,7 +134,7 @@ ConnectedApp.propTypes = {
     showLogByDefault: bool,
 };
 
-const noopReducer = state => state;
+const noopReducer = (state = null) => state;
 const App = ({ appReducer = noopReducer, ...props }) => (
     <ConnectedToStore appReducer={appReducer}>
         <ConnectedApp {...props} />

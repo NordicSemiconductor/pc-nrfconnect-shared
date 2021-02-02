@@ -1,3 +1,7 @@
+## 4.17.2
+### Fix
+- Not defining an app reducer led to an error.
+
 ## 4.17.1
 ### Changed
 - Updated nRF5340 links from PDK to DK.

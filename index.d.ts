@@ -79,7 +79,7 @@ declare module 'pc-nrfconnect-shared' {
          * this is the root reducer to handle that. It will handle the
          * slice of state under the name `app`.
          */
-        appReducer: Reducer<any, AnyAction>;
+        appReducer?: Reducer<any, AnyAction>;
         /**
          * The React element that appears in the upper left corner of the app.
          * Apps usually utilise the component `DeviceSelector` for this.
