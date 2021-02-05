@@ -1,3 +1,8 @@
+## 4.17.3
+### Fix
+- Property `active` was missing in the TypeScript definition of the pane
+  components.
+
 ## 4.17.2
 ### Fix
 - Not defining an app reducer led to an error.
