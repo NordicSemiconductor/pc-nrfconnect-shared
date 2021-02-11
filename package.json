@@ -72,6 +72,7 @@
         "react-flip-toolkit": "7.0.12",
         "react-ga": "2.7.0",
         "react-markdown": "4.3.1",
+        "react-resize-detector": "6.5.0",
         "react-test-renderer": "16.13.1",
         "redux": "4.0.5",
         "redux-devtools-extension": "2.13.8",
