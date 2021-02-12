@@ -1,3 +1,7 @@
+## 4.17.4
+### Added
+- Added `resolveJsonModule: true` to tsconfig.json to enable importing json file
+
 ## 4.17.3
 ### Fix
 - Property `active` was missing in the TypeScript definition of the pane
