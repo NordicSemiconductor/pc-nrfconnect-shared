@@ -1,3 +1,21 @@
+## Unreleased
+### Added
+- Shared styles can now be imported in SCSS from
+  `~pc-nrfconnect-shared/styles`.
+### Steps to upgrade when using this package
+- If you had an import like
+```scss
+@import '~pc-nrfconnect-shared/src/variables';
+```
+  in your SCSS code before, you should replace it with
+```scss
+@import "~pc-nrfconnect-shared/styles";
+```
+  because even though for now the code with
+  `~pc-nrfconnect-shared/src/variables` will keep on working, it is
+  not part of the public API that we try to preserve. Contrary to
+  `~pc-nrfconnect-shared/styles`, which is part of the supported API.
+
 ## 4.18.0
 ### Changed
 - Updated functions in the `usageData` object for sending usage data to
