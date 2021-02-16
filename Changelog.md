@@ -2,6 +2,8 @@
 ### Added
 - Shared styles can now be imported in SCSS from
   `~pc-nrfconnect-shared/styles`.
+### Changed
+- Types for the exported colors got more specific.
 ### Steps to upgrade when using this package
 - If you had an import like
 ```scss
