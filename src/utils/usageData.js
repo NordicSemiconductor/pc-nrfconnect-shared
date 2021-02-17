@@ -51,7 +51,7 @@ const trackId = 'UA-22498474-5';
  * Initialize instance to send user data
  * @param {*} appName the app's name e.g. Launcher
  *
- * @returns {void}
+ * @returns {Promise<void>}
  */
 const init = async appName => {
     const networkInterfaces = await si.networkInterfaces();

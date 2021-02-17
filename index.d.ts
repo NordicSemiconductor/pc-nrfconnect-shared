@@ -431,7 +431,7 @@ declare module 'pc-nrfconnect-shared' {
     // usageData.js
 
     export const usageData: {
-        init: (appName: string) => void;
+        init: (appName: string) => Promise<void>;
         enable: () => void;
         disable: () => void;
         reset: () => void;
