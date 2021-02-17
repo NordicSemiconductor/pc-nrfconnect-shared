@@ -39,8 +39,14 @@ import React from 'react';
 import render from '../../test/testrenderer';
 import NavMenu from './NavMenu';
 
-const aPane = ['an menu item', () => <div>A pane</div>];
-const anotherPane = ['another menu item', () => <div>Another pane</div>];
+const aPane = {
+    name: 'an menu item',
+    Main: () => <div>A pane</div>,
+};
+const anotherPane = {
+    name: 'another menu item',
+    Main: () => <div>Another pane</div>,
+};
 
 expect.extend({
     toBeHighlighted(element) {

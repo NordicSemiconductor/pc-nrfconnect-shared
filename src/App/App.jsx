@@ -40,7 +40,7 @@ import React, { useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import { useDispatch, useSelector } from 'react-redux';
 import { ipcRenderer } from 'electron';
-import { array, arrayOf, bool, func, node } from 'prop-types';
+import { array, arrayOf, bool, func, node, oneOfType } from 'prop-types';
 
 import About from '../About/About';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
@@ -55,6 +55,7 @@ import {
     toggleLogVisible,
 } from './appLayout';
 import ConnectedToStore from './ConnectedToStore';
+import PanePropType from './PanePropType';
 import VisibilityBar from './VisibilityBar';
 
 import './shared.scss';
@@ -62,13 +63,35 @@ import './app.scss';
 
 const hiddenUnless = isVisible => (isVisible ? '' : 'hidden');
 
+let warnedAboutLegacyPanes = false;
+const convertLegacy = pane => {
+    const isLegacyPane = Array.isArray(pane);
+    if (!isLegacyPane) {
+        return pane;
+    }
+
+    if (!warnedAboutLegacyPanes) {
+        console.warn(
+            `Passed legacy definition for pane '${pane[0]}' which will be deprecated and removed in the future.`
+        );
+        warnedAboutLegacyPanes = true;
+    }
+
+    return {
+        name: pane[0],
+        Main: pane[1],
+    };
+};
+
 const ConnectedApp = ({
     deviceSelect,
     panes,
     sidePanel,
     showLogByDefault = true,
 }) => {
-    const allPanes = [...panes, ['About', About]];
+    const allPanes = [...panes, { name: 'About', Main: About }].map(
+        convertLegacy
+    );
     const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
@@ -104,9 +127,9 @@ const ConnectedApp = ({
                         slide
                         fade
                     >
-                        {allPanes.map(([name, Component], paneIndex) => (
+                        {allPanes.map(({ name, Main }, paneIndex) => (
                             <Carousel.Item key={name}>
-                                <Component active={paneIndex === currentPane} />
+                                <Main active={paneIndex === currentPane} />
                             </Carousel.Item>
                         ))}
                     </Carousel>
@@ -129,7 +152,7 @@ const ConnectedApp = ({
 
 ConnectedApp.propTypes = {
     deviceSelect: node,
-    panes: arrayOf(array.isRequired).isRequired,
+    panes: arrayOf(oneOfType([array, PanePropType]).isRequired).isRequired,
     sidePanel: node,
     showLogByDefault: bool,
 };

@@ -35,8 +35,9 @@
  */
 
 import React from 'react';
-import { array, arrayOf, node } from 'prop-types';
+import { arrayOf, node } from 'prop-types';
 
+import PanePropType from '../App/PanePropType';
 import Logo from '../Logo/Logo';
 import NavMenu from './NavMenu';
 
@@ -54,7 +55,7 @@ const NavBar = ({ deviceSelect, panes }) => (
 
 NavBar.propTypes = {
     deviceSelect: node,
-    panes: arrayOf(array.isRequired).isRequired,
+    panes: arrayOf(PanePropType.isRequired).isRequired,
 };
 
 export default NavBar;

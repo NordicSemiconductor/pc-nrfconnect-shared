@@ -4,6 +4,8 @@
   `~pc-nrfconnect-shared/styles`.
 ### Changed
 - Types for the exported colors got more specific.
+- The format for specifying the panes of the app as a property to the
+  `App` component has changed. See below for details.
 ### Steps to upgrade when using this package
 - If you had an import like
 ```scss
@@ -17,6 +19,23 @@
   `~pc-nrfconnect-shared/src/variables` will keep on working, it is
   not part of the public API that we try to preserve. Contrary to
   `~pc-nrfconnect-shared/styles`, which is part of the supported API.
+- Previously panes were defined as a pair of pane name and component,
+  like this:
+  ```js
+  panes={[
+    ['Dashboard', Dashboard],
+    ['Terminal', Terminal],
+  ]}
+  ```
+  This was changed to an array of objects, like this:
+  ```js
+  panes={[
+    { name: 'Dashboard', Main: Dashboard, },
+    { name: 'Terminal', Main: Terminal, },
+  ]}
+  ```
+  The old format still is supported but will issue a warning and will
+  be removed in the future.
 
 ## 4.18.0
 ### Changed

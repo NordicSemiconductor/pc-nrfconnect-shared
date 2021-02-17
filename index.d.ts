@@ -71,6 +71,13 @@ declare module 'pc-nrfconnect-shared' {
         active: boolean;
     }
 
+    type LegacyPane = readonly [string, React.FC<PaneProps>];
+
+    interface Pane {
+        name: string;
+        Main: React.FC<PaneProps>;
+    }
+
     /**
      * Props for the `App` component.
      */
@@ -109,7 +116,7 @@ declare module 'pc-nrfconnect-shared' {
          *
          * `[['Connection Map', ConnectionMap], ['Server Setup', ServerSetup]]`
          */
-        panes: readonly (readonly [string, React.FC<PaneProps>])[];
+        panes: readonly (LegacyPane | Pane)[];
         /**
          * Describes whether the log will show automatically when the
          * application starts. Defaults to `true`.

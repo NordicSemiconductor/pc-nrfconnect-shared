@@ -36,9 +36,10 @@
 
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { array, arrayOf } from 'prop-types';
+import { arrayOf } from 'prop-types';
 
 import { currentPane as currentPaneSelector } from '../App/appLayout';
+import PanePropType from '../App/PanePropType';
 import NavMenuItem from './NavMenuItem';
 
 const NavMenu = ({ panes }) => {
@@ -46,7 +47,7 @@ const NavMenu = ({ panes }) => {
 
     return (
         <div data-testid="nav-menu">
-            {panes.map(([name], index) => (
+            {panes.map(({ name }, index) => (
                 <NavMenuItem
                     key={name}
                     index={index}
@@ -60,7 +61,7 @@ const NavMenu = ({ panes }) => {
 };
 
 NavMenu.propTypes = {
-    panes: arrayOf(array.isRequired).isRequired,
+    panes: arrayOf(PanePropType.isRequired).isRequired,
 };
 
 export default NavMenu;
