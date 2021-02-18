@@ -59,9 +59,9 @@ const eventQueue: EventAction<unknown>[] = [];
  * Initialize instance to send user data
  * @param {*} packageJson the app's package json
  *
- * @returns {Promise<boolean>} whether it is initialized successfully
+ * @returns {Promise<void>} void
  */
-const init = async (packageJson: PackageJson): Promise<boolean> => {
+const init = async (packageJson: PackageJson): Promise<void> => {
     appJson = packageJson;
 
     const networkInterfaces = await si.networkInterfaces();
@@ -106,7 +106,6 @@ const init = async (packageJson: PackageJson): Promise<boolean> => {
 
     isInitialized = true;
     debug(`Google Analytics for category ${appJson.name} has initialized`);
-    return true;
 };
 
 /**
