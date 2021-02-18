@@ -1,3 +1,7 @@
+## 4.17.4
+### Updates
+- Updated common functions for sending usage data to Google Analytics
+
 ## 4.17.3
 ### Fix
 - Property `active` was missing in the TypeScript definition of the pane
