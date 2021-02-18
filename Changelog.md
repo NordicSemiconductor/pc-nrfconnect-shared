@@ -8,13 +8,13 @@
   `App` component has changed. See below for details.
 ### Steps to upgrade when using this package
 - If you had an import like
-```scss
-@import '~pc-nrfconnect-shared/src/variables';
-```
+  ```scss
+  @import '~pc-nrfconnect-shared/src/variables';
+  ```
   in your SCSS code before, you should replace it with
-```scss
-@import "~pc-nrfconnect-shared/styles";
-```
+  ```scss
+  @import "~pc-nrfconnect-shared/styles";
+  ```
   because even though for now the code with
   `~pc-nrfconnect-shared/src/variables` will keep on working, it is
   not part of the public API that we try to preserve. Contrary to
@@ -81,8 +81,12 @@
 - The opacity of disabled elements stacked up when they were nested. E.g.
   in the following code the input had the opacity applied twice (making the
   opacity squared), so it looked lighter than than supposed:
-
-       <div className="disabled">This <InlineInput disabled value="doubled"/></div>
+  ```html
+    <div className="disabled">
+      This
+      <InlineInput disabled value="doubled">
+    </div>
+  ```
 ## 4.16.0
 ### Added
 - The components `Slider`, `InlineInput` and `NumberInlineInput` now take a
@@ -94,26 +98,28 @@
   names. It filters out all values that are not strings. The idea of this
   function is to use it with conditionals and potentially unset values like
   this:
-
-       classNames(
-            'fixed-class-name',
-            isVisible && 'visible',
-            isEnabled ? 'enabled' : 'disabled',
-            potentiallyUndefined,
-       )
+  ```js
+  classNames(
+    'fixed-class-name',
+    isVisible && 'visible',
+    isEnabled ? 'enabled' : 'disabled',
+    potentiallyUndefined,
+  )
+  ```
 - Set a property `active` on all rendered panes that is only for the currently
   active `true` and `false` for all others. This can be used to disable
   rendering of expensive components on inactive panes or to trigger effects
   when a pane gets activated or deactivated like this:
-
-       useEffect(() => {
-         if (active) {
-            // do stuff on activation
-            return () => {
-               // do stuff on deactivation
-            }
-         }
-       }, [active])
+  ```js
+  useEffect(() => {
+    if (active) {
+      // do stuff on activation
+      return () => {
+        // do stuff on deactivation
+      }
+    }
+  }, [active])
+  ```
 - The component `Slider` now takes a property `ticks` to display ticks at all
   possible values. This only looks reasonable if there are just a few possible
   values.
@@ -162,9 +168,9 @@
 - Enable automatically selecting a specified device when it is detected in an
   app. To use this, set the environment variable `AUTOSELECT_DEVICE`, e.g. by
   running the launcher with
-
-       AUTOSELECT_DEVICE=000680407810 npm run app
-
+  ```
+  AUTOSELECT_DEVICE=000680407810 npm run app
+  ```
   the device with the serial number 000680407810 is automatically selected
   when apps using the new architecture see it for the first time. When one
   deselects the device it is not automatically selected again. After
@@ -269,7 +275,7 @@
 - If you want to use the settings from `config/tsconfig.json` in a
   TypeScript project, then put this into a `tsconfig.json` in the
   root of your project:
-  ```
+  ```json
   {
     "extends": "./node_modules/pc-nrfconnect-shared/config/tsconfig.json",
   }
@@ -306,9 +312,9 @@
 
 ### Steps to upgrade when using this package
 - Note that apps using this version should add the following entry to their `package.json` file:
-
-  `{ "prettier": "./node_modules/pc-nrfconnect-shared/config/prettier.config.js" }`
-
+  ```json
+  { "prettier": "./node_modules/pc-nrfconnect-shared/config/prettier.config.js" }
+  ```
   If this isn't added, the Prettier defaults will be used, which differ from our style choices
   in a number of ways.
 
@@ -438,13 +444,13 @@
 ### Steps to upgrade when using this package
 - If you want to automatically run the `lint` and `test` scripts before pushing
   changes, add a file `.huskyrc.json` to your project with this content:
-```json
-{
+  ```json
+  {
     "hooks": {
-        "pre-push": "bash node_modules/pc-nrfconnect-shared/scripts/pre-push.sh"
+      "pre-push": "bash node_modules/pc-nrfconnect-shared/scripts/pre-push.sh"
     }
-}
-```
+  }
+  ```
   Remember that in a case of emergency you can do `git push --no-verify` if you need to push even though tests might fail.
 
 ## Version 4.2
