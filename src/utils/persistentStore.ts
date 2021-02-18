@@ -38,17 +38,17 @@ import Store from 'electron-store';
 
 export const store = new Store({ name: 'pc-nrfconnect-shared' });
 
-export const persistNickname = (serialNumber, nickname) =>
+export const persistNickname = (serialNumber: string, nickname: string) =>
     store.set(`${serialNumber}.name`, nickname);
-export const getPersistedNickname = serialNumber =>
+export const getPersistedNickname = (serialNumber: string) =>
     store.get(`${serialNumber}.name`, '');
 
-export const persistIsFavorite = (serialNumber, value) =>
+export const persistIsFavorite = (serialNumber: string, value: string) =>
     store.set(`${serialNumber}.fav`, value);
-export const getPersistedIsFavorite = serialNumber =>
+export const getPersistedIsFavorite = (serialNumber: string) =>
     store.get(`${serialNumber}.fav`, false);
 
-export const persistIsSendingUsageData = value =>
+export const persistIsSendingUsageData = (value: unknown) =>
     store.set('isSendingUsageData', value);
 export const getIsSendingUsageData = () =>
     store.get('isSendingUsageData', undefined);

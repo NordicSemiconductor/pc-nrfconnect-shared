@@ -296,7 +296,9 @@ declare module 'pc-nrfconnect-shared' {
         isOkButtonEnabled?: boolean;
     }
 
-    export class ConfirmationDialog extends React.Component<ConfirmationDialogProps> {}
+    export class ConfirmationDialog extends React.Component<
+        ConfirmationDialogProps
+    > {}
 
     // Spinner.jsx
 
@@ -372,7 +374,9 @@ declare module 'pc-nrfconnect-shared' {
         onChangeComplete?: (value: number) => void;
     }
 
-    export class NumberInlineInput extends React.Component<NumberInlineInputProps> {}
+    export class NumberInlineInput extends React.Component<
+        NumberInlineInputProps
+    > {}
 
     // Toggle.jsx
 
@@ -431,12 +435,22 @@ declare module 'pc-nrfconnect-shared' {
     // usageData.js
 
     export const usageData: {
-        init: (appName: string) => Promise<void>;
+        init: (packageJson: PackageJson) => Promise<void>;
         enable: () => void;
         disable: () => void;
         reset: () => void;
         sendEvent: (category: string, action: string, label: string) => void;
     };
+
+    export interface EventAction<T> {
+        action: T;
+        label: string;
+    }
+
+    export interface PackageJson {
+        name: string;
+        version: string;
+    }
 
     // useHotKey.js
 
