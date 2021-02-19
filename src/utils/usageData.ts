@@ -53,7 +53,7 @@ const trackId = 'UA-22498474-5';
 
 interface EventAction {
     action: string;
-    label: string;
+    label: string | undefined;
 }
 
 let isInitialized = false;
@@ -163,7 +163,11 @@ const reset = () => {
  *
  * @returns {void}
  */
-const sendEvent = (category: string, action: string, label: string) => {
+const sendEvent = (
+    category: string,
+    action: string,
+    label: string | undefined
+) => {
     const isSendingUsageData = getIsSendingUsageData();
     debug('Sending usage data...');
     debug(`Category: ${category}`);
@@ -185,13 +189,16 @@ const sendEvent = (category: string, action: string, label: string) => {
  * @param {string} label The event label
  * @returns {void}
  */
-const sendUsageData = <T extends string>(action: T, label: string) => {
+const sendUsageData = <T extends string>(
+    action: T,
+    label: string | undefined
+) => {
     eventQueue.push({ action, label });
     if (!isInitialized) {
         return;
     }
     eventQueue.forEach(event =>
-        sendEvent(appJson.name, event.action, event.label || '')
+        sendEvent(appJson.name, event.action, event.label)
     );
     eventQueue = [];
 };
