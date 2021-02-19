@@ -66,7 +66,7 @@ const eventQueue: EventAction[] = [];
  *
  * @returns {Promise<void>} void
  */
-const init = async (packageJson: PackageJson): Promise<void> => {
+const init = async (packageJson: PackageJson) => {
     appJson = packageJson;
 
     const networkInterfaces = await si.networkInterfaces();
@@ -118,7 +118,7 @@ const init = async (packageJson: PackageJson): Promise<void> => {
  *
  * @returns {Boolean | undefined} returns whether the setting is on, off or undefined
  */
-const isEnabled = (): boolean | undefined => {
+const isEnabled = () => {
     const isSendingUsageData = getIsSendingUsageData() as boolean | undefined;
     debug(`Usage data is ${isSendingUsageData}`);
     return isSendingUsageData;
@@ -129,7 +129,7 @@ const isEnabled = (): boolean | undefined => {
  *
  * @returns {void}
  */
-const enable = (): void => {
+const enable = () => {
     persistIsSendingUsageData(true);
     debug('Usage data has enabled');
 };
@@ -139,7 +139,7 @@ const enable = (): void => {
  *
  * @returns {void}
  */
-const disable = (): void => {
+const disable = () => {
     persistIsSendingUsageData(false);
     debug('Usage data has disabled');
 };
@@ -150,7 +150,7 @@ const disable = (): void => {
  *
  * @returns {void}
  */
-const reset = (): void => {
+const reset = () => {
     deleteIsSendingUsageData();
     debug('Usage data has reset');
 };
@@ -163,7 +163,7 @@ const reset = (): void => {
  *
  * @returns {void}
  */
-const sendEvent = <T>(category: string, action: T, label: string): void => {
+const sendEvent = <T>(category: string, action: T, label: string) => {
     const isSendingUsageData = getIsSendingUsageData();
     debug('Sending usage data...');
     debug(`Category: ${category}`);
@@ -189,7 +189,7 @@ const sendEvent = <T>(category: string, action: T, label: string): void => {
  * @param {string} label The event label
  * @returns {void}
  */
-const sendUsageData = <T extends string>(action: T, label: string): void => {
+const sendUsageData = <T extends string>(action: T, label: string) => {
     if (!isInitialized) {
         eventQueue.push({ action, label });
         return;
@@ -210,7 +210,7 @@ const sendUsageData = <T extends string>(action: T, label: string): void => {
  * @param {string} error The event action
  * @returns {void}
  */
-const sendErrorReport = (error: string): void => {
+const sendErrorReport = (error: string) => {
     logger.error(error);
     sendUsageData(
         'Report error',
