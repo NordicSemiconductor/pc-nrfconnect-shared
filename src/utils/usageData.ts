@@ -58,7 +58,7 @@ interface EventAction {
 
 let isInitialized = false;
 let appJson: PackageJson;
-const eventQueue: EventAction[] = [];
+let eventQueue: EventAction[] = [];
 
 /**
  * Initialize instance to send user data
@@ -190,19 +190,14 @@ const sendEvent = (category: string, action: string, label: string) => {
  * @returns {void}
  */
 const sendUsageData = <T extends string>(action: T, label: string) => {
+    eventQueue.push({ action, label });
     if (!isInitialized) {
-        eventQueue.push({ action, label });
         return;
     }
-    while (eventQueue.length) {
-        const event = eventQueue.shift() as EventAction;
-        sendEvent(
-            appJson.name,
-            (event.action as unknown) as string,
-            event.label || ''
-        );
-    }
-    sendEvent(appJson.name, action, label || '');
+    eventQueue.forEach(event =>
+        sendEvent(appJson.name, event.action, event.label || '')
+    );
+    eventQueue = [];
 };
 
 /**
