@@ -180,7 +180,7 @@ const sendEvent = <T>(category: string, action: T, label: string): void => {
 
 /**
  * Send usage data event to Google Analytics
- * @param {EventAction} action The event action
+ * @param {T} action The event action
  * @param {string} label The event label
  * @returns {void}
  */
