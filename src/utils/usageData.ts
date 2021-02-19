@@ -158,12 +158,12 @@ const reset = () => {
 /**
  * Send event
  * @param {string} category launcher or apps
- * @param {T} action action to collect
+ * @param {string} action action to collect
  * @param {string} label details for an action
  *
  * @returns {void}
  */
-const sendEvent = <T>(category: string, action: T, label: string) => {
+const sendEvent = (category: string, action: string, label: string) => {
     const isSendingUsageData = getIsSendingUsageData();
     debug('Sending usage data...');
     debug(`Category: ${category}`);
