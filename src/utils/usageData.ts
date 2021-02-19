@@ -168,14 +168,15 @@ const sendEvent = ({ action, label }: EventAction) => {
     debug(`Category: ${category}`);
     debug(`Action: ${action}`);
     debug(`Label: ${label}`);
-    if (isSendingUsageData === true) {
-        reactGA.event({ category, action, label });
-        debug(`Usage data has been sent`);
+    if (!isSendingUsageData) {
+        debug(
+            `Usage data has not been sent. isSendingUsageData is set to ${isSendingUsageData}.`
+        );
         return;
     }
-    debug(
-        `Usage data has not been sent. isSendingUsageData is set to ${isSendingUsageData}.`
-    );
+
+    reactGA.event({ category, action, label });
+    debug(`Usage data has been sent`);
 };
 
 /**
