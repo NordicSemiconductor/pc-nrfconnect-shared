@@ -40,6 +40,7 @@ import { PackageJson } from 'pc-nrfconnect-shared';
 import shasum from 'shasum';
 import si from 'systeminformation';
 
+import logger from '../logging';
 import {
     deleteIsSendingUsageData,
     getIsSendingUsageData,
@@ -47,7 +48,6 @@ import {
 } from './persistentStore';
 
 const debug = require('debug')('nrf-usage-data');
-const logger = require('../logging');
 
 const trackId = 'UA-22498474-5';
 
