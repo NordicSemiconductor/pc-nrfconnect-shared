@@ -36,7 +36,7 @@
 
 import reactGA from 'react-ga';
 /* eslint-disable import/no-unresolved */
-import { EventAction, PackageJson } from 'pc-nrfconnect-shared';
+import { PackageJson } from 'pc-nrfconnect-shared';
 import shasum from 'shasum';
 import si from 'systeminformation';
 
@@ -51,9 +51,14 @@ const logger = require('../logging');
 
 const trackId = 'UA-22498474-5';
 
+interface EventAction {
+    action: string;
+    label: string;
+}
+
 let isInitialized = false;
 let appJson: PackageJson;
-const eventQueue: EventAction<unknown>[] = [];
+const eventQueue: EventAction[] = [];
 
 /**
  * Initialize instance to send user data
@@ -190,7 +195,7 @@ const sendUsageData = <T extends string>(action: T, label: string): void => {
         return;
     }
     while (eventQueue.length) {
-        const event = eventQueue.shift() as EventAction<T>;
+        const event = eventQueue.shift() as EventAction;
         sendEvent(
             appJson.name,
             (event.action as unknown) as string,

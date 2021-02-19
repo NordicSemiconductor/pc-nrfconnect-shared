@@ -441,11 +441,6 @@ declare module 'pc-nrfconnect-shared' {
         sendErrorReport: (error: string) => void;
     };
 
-    interface EventAction<T> {
-        action: T;
-        label: string;
-    }
-
     export interface PackageJson {
         name: string;
         version: string;
