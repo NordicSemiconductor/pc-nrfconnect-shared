@@ -157,12 +157,11 @@ const reset = () => {
 
 /**
  * Send event
- * @param {string} action action to collect
- * @param {string} label details for an action
+ * @param {EventAction} event the event to send
  *
  * @returns {void}
  */
-const sendEvent = (action: string, label: string | undefined) => {
+const sendEvent = ({ action, label }: EventAction) => {
     const isSendingUsageData = getIsSendingUsageData();
     const category = appJson.name;
     debug('Sending usage data...');
@@ -193,7 +192,7 @@ const sendUsageData = <T extends string>(
     if (!isInitialized) {
         return;
     }
-    eventQueue.forEach(event => sendEvent(event.action, event.label));
+    eventQueue.forEach(sendEvent);
     eventQueue = [];
 };
 
