@@ -1,6 +1,8 @@
-## 4.17.4
+## 4.18.0
 ### Updates
 - Updated common functions for sending usage data to Google Analytics
+  Disabled `sendEvent()` and introduced `sendUsageData()` constrained the configuring of
+  event category and event actions.
 
 ## 4.17.3
 ### Fix
