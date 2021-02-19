@@ -432,13 +432,16 @@ declare module 'pc-nrfconnect-shared' {
 
     export const usageData: {
         init: (packageJson: PackageJson) => Promise<void>;
+        isInitialized: boolean;
         enable: () => void;
         disable: () => void;
+        isEnabled: () => void;
         reset: () => void;
-        sendEvent: (category: string, action: string, label: string) => void;
+        sendUsageData: <T>(action: T, label: string) => void;
+        sendErrorReport: (error: string) => void;
     };
 
-    export interface EventAction<T> {
+    interface EventAction<T> {
         action: T;
         label: string;
     }
