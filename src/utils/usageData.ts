@@ -170,11 +170,7 @@ const sendEvent = (category: string, action: string, label: string) => {
     debug(`Action: ${action}`);
     debug(`Label: ${label}`);
     if (isSendingUsageData === true) {
-        reactGA.event({
-            category,
-            action: (action as unknown) as string,
-            label,
-        });
+        reactGA.event({ category, action, label });
         debug(`Usage data has been sent`);
         return;
     }
