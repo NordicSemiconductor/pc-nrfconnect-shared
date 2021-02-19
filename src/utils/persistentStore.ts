@@ -41,16 +41,16 @@ export const store = new Store({ name: 'pc-nrfconnect-shared' });
 export const persistNickname = (serialNumber: string, nickname: string) =>
     store.set(`${serialNumber}.name`, nickname);
 export const getPersistedNickname = (serialNumber: string) =>
-    store.get(`${serialNumber}.name`, '');
+    store.get(`${serialNumber}.name`, '') as string;
 
-export const persistIsFavorite = (serialNumber: string, value: string) =>
+export const persistIsFavorite = (serialNumber: string, value: boolean) =>
     store.set(`${serialNumber}.fav`, value);
 export const getPersistedIsFavorite = (serialNumber: string) =>
-    store.get(`${serialNumber}.fav`, false);
+    store.get(`${serialNumber}.fav`, false) as boolean;
 
-export const persistIsSendingUsageData = (value: unknown) =>
+export const persistIsSendingUsageData = (value: boolean) =>
     store.set('isSendingUsageData', value);
 export const getIsSendingUsageData = () =>
-    store.get('isSendingUsageData', undefined);
+    store.get('isSendingUsageData', undefined) as boolean | undefined;
 export const deleteIsSendingUsageData = () =>
     store.delete('isSendingUsageData');
