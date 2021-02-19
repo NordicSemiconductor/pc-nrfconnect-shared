@@ -180,11 +180,11 @@ const sendEvent = <T>(category: string, action: T, label: string): void => {
 
 /**
  * Send usage data event to Google Analytics
- * @param {T} action The event action
+ * @param {string} action The event action
  * @param {string} label The event label
  * @returns {void}
  */
-const sendUsageData = <T>(action: T, label: string): void => {
+const sendUsageData = <T extends string>(action: T, label: string): void => {
     if (!isInitialized) {
         eventQueue.push({ action, label });
         return;
@@ -202,7 +202,7 @@ const sendUsageData = <T>(action: T, label: string): void => {
 
 /**
  * Send error usage data event to Google Analytics and also show it in the logger view
- * @param {EventAction} error The event action
+ * @param {string} error The event action
  * @returns {void}
  */
 const sendErrorReport = (error: string): void => {
