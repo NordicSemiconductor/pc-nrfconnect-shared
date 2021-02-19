@@ -157,18 +157,14 @@ const reset = () => {
 
 /**
  * Send event
- * @param {string} category launcher or apps
  * @param {string} action action to collect
  * @param {string} label details for an action
  *
  * @returns {void}
  */
-const sendEvent = (
-    category: string,
-    action: string,
-    label: string | undefined
-) => {
+const sendEvent = (action: string, label: string | undefined) => {
     const isSendingUsageData = getIsSendingUsageData();
+    const category = appJson.name;
     debug('Sending usage data...');
     debug(`Category: ${category}`);
     debug(`Action: ${action}`);
@@ -197,9 +193,7 @@ const sendUsageData = <T extends string>(
     if (!isInitialized) {
         return;
     }
-    eventQueue.forEach(event =>
-        sendEvent(appJson.name, event.action, event.label)
-    );
+    eventQueue.forEach(event => sendEvent(event.action, event.label));
     eventQueue = [];
 };
 
