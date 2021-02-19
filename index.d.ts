@@ -437,14 +437,12 @@ declare module 'pc-nrfconnect-shared' {
         disable: () => void;
         isEnabled: () => void;
         reset: () => void;
-        sendUsageData: <T>(action: T, label: string) => void;
+        sendUsageData: <T extends string>(
+            action: T,
+            label: string | undefined
+        ) => void;
         sendErrorReport: (error: string) => void;
     };
-
-    interface EventAction<T> {
-        action: T;
-        label: string;
-    }
 
     export interface PackageJson {
         name: string;

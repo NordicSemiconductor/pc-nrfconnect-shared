@@ -36,10 +36,11 @@
 
 import reactGA from 'react-ga';
 /* eslint-disable import/no-unresolved */
-import { EventAction, PackageJson } from 'pc-nrfconnect-shared';
+import { PackageJson } from 'pc-nrfconnect-shared';
 import shasum from 'shasum';
 import si from 'systeminformation';
 
+import logger from '../logging';
 import {
     deleteIsSendingUsageData,
     getIsSendingUsageData,
@@ -47,13 +48,17 @@ import {
 } from './persistentStore';
 
 const debug = require('debug')('nrf-usage-data');
-const logger = require('../logging');
 
 const trackId = 'UA-22498474-5';
 
+interface EventAction {
+    action: string;
+    label: string | undefined;
+}
+
 let isInitialized = false;
 let appJson: PackageJson;
-const eventQueue: EventAction<unknown>[] = [];
+let eventQueue: EventAction[] = [];
 
 /**
  * Initialize instance to send user data
@@ -61,7 +66,7 @@ const eventQueue: EventAction<unknown>[] = [];
  *
  * @returns {Promise<void>} void
  */
-const init = async (packageJson: PackageJson): Promise<void> => {
+const init = async (packageJson: PackageJson) => {
     appJson = packageJson;
 
     const networkInterfaces = await si.networkInterfaces();
@@ -113,7 +118,7 @@ const init = async (packageJson: PackageJson): Promise<void> => {
  *
  * @returns {Boolean | undefined} returns whether the setting is on, off or undefined
  */
-const isEnabled = (): boolean | undefined => {
+const isEnabled = () => {
     const isSendingUsageData = getIsSendingUsageData() as boolean | undefined;
     debug(`Usage data is ${isSendingUsageData}`);
     return isSendingUsageData;
@@ -124,7 +129,7 @@ const isEnabled = (): boolean | undefined => {
  *
  * @returns {void}
  */
-const enable = (): void => {
+const enable = () => {
     persistIsSendingUsageData(true);
     debug('Usage data has enabled');
 };
@@ -134,7 +139,7 @@ const enable = (): void => {
  *
  * @returns {void}
  */
-const disable = (): void => {
+const disable = () => {
     persistIsSendingUsageData(false);
     debug('Usage data has disabled');
 };
@@ -145,67 +150,59 @@ const disable = (): void => {
  *
  * @returns {void}
  */
-const reset = (): void => {
+const reset = () => {
     deleteIsSendingUsageData();
     debug('Usage data has reset');
 };
 
 /**
  * Send event
- * @param {string} category launcher or apps
- * @param {T} action action to collect
- * @param {string} label details for an action
+ * @param {EventAction} event the event to send
  *
  * @returns {void}
  */
-const sendEvent = <T>(category: string, action: T, label: string): void => {
+const sendEvent = ({ action, label }: EventAction) => {
     const isSendingUsageData = getIsSendingUsageData();
+    const category = appJson.name;
     debug('Sending usage data...');
     debug(`Category: ${category}`);
     debug(`Action: ${action}`);
     debug(`Label: ${label}`);
-    if (isSendingUsageData === true) {
-        reactGA.event({
-            category,
-            action: (action as unknown) as string,
-            label,
-        });
-        debug(`Usage data has been sent`);
+    if (!isSendingUsageData) {
+        debug(
+            `Usage data has not been sent. isSendingUsageData is set to ${isSendingUsageData}.`
+        );
         return;
     }
-    debug(
-        `Usage data has not been sent. isSendingUsageData is set to ${isSendingUsageData}.`
-    );
+
+    reactGA.event({ category, action, label });
+    debug(`Usage data has been sent`);
 };
 
 /**
  * Send usage data event to Google Analytics
- * @param {T} action The event action
+ * @param {string} action The event action
  * @param {string} label The event label
  * @returns {void}
  */
-const sendUsageData = <T>(action: T, label: string): void => {
+const sendUsageData = <T extends string>(
+    action: T,
+    label: string | undefined
+) => {
+    eventQueue.push({ action, label });
     if (!isInitialized) {
-        eventQueue.push({ action, label });
         return;
     }
-    while (eventQueue.length) {
-        const event = eventQueue.shift() as EventAction<T>;
-        sendEvent(
-            appJson.name,
-            (event.action as unknown) as string,
-            event.label || ''
-        );
-    }
-    sendEvent(appJson.name, action, label || '');
+    eventQueue.forEach(sendEvent);
+    eventQueue = [];
 };
 
 /**
  * Send error usage data event to Google Analytics and also show it in the logger view
- * @param {EventAction} error The event action
+ * @param {string} error The event action
  * @returns {void}
  */
-const sendErrorReport = (error: string): void => {
+const sendErrorReport = (error: string) => {
     logger.error(error);
     sendUsageData(
         'Report error',
