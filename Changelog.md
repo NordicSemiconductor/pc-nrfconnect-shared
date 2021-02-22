@@ -1,3 +1,12 @@
+## 4.18.0
+### Changed
+- Updated functions in the `usageData` object for sending usage data to
+  Google Analytics.
+### Steps to upgrade when using this package
+- When you are using `usageData`:
+  - Change the parameter when calling `init`
+  - Replace calls to `sendEvent` with `sendUsageData`
+
 ## 4.17.3
 ### Fix
 - Property `active` was missing in the TypeScript definition of the pane

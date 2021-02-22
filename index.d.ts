@@ -431,12 +431,23 @@ declare module 'pc-nrfconnect-shared' {
     // usageData.js
 
     export const usageData: {
-        init: (appName: string) => void;
+        init: (packageJson: PackageJson) => Promise<void>;
+        isInitialized: boolean;
         enable: () => void;
         disable: () => void;
+        isEnabled: () => void;
         reset: () => void;
-        sendEvent: (category: string, action: string, label: string) => void;
+        sendUsageData: <T extends string>(
+            action: T,
+            label: string | undefined
+        ) => void;
+        sendErrorReport: (error: string) => void;
     };
+
+    export interface PackageJson {
+        name: string;
+        version: string;
+    }
 
     // useHotKey.js
 

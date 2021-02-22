@@ -35,25 +35,38 @@
  */
 
 import reactGA from 'react-ga';
+/* eslint-disable import/no-unresolved */
+import { PackageJson } from 'pc-nrfconnect-shared';
 import shasum from 'shasum';
 import si from 'systeminformation';
 
+import logger from '../logging';
 import {
     deleteIsSendingUsageData,
     getIsSendingUsageData,
     persistIsSendingUsageData,
 } from './persistentStore';
 
-const debug = require('debug')('nrf-usage-data');
-
 const trackId = 'UA-22498474-5';
+
+interface EventAction {
+    action: string;
+    label: string | undefined;
+}
+
+let isInitialized = false;
+let appJson: PackageJson;
+let eventQueue: EventAction[] = [];
+
 /**
  * Initialize instance to send user data
- * @param {*} appName the app's name e.g. Launcher
+ * @param {*} packageJson the app's package json
  *
- * @returns {void}
+ * @returns {Promise<void>} void
  */
-const init = async appName => {
+const init = async (packageJson: PackageJson) => {
+    appJson = packageJson;
+
     const networkInterfaces = await si.networkInterfaces();
     let networkInterface = networkInterfaces.find(i => i.iface === 'eth0'); // for most Debian
     networkInterface =
@@ -62,17 +75,17 @@ const init = async appName => {
         networkInterface || networkInterfaces.find(i => i.iface === 'Ethernet'); // for most Windows
     networkInterface =
         networkInterface || networkInterfaces.find(i => i.mac && !i.internal); // for good luck
-    debug(`iface: ${networkInterface.iface}`);
-    debug(`IP4: ${networkInterface.ip4}`);
-    debug(`IP6: ${networkInterface.ip6}`);
-    debug(`MAC: ${networkInterface.mac}`);
+    logger.debug(`iface: ${networkInterface?.iface}`);
+    logger.debug(`IP4: ${networkInterface?.ip4}`);
+    logger.debug(`IP6: ${networkInterface?.ip6}`);
+    logger.debug(`MAC: ${networkInterface?.mac}`);
     const clientId = networkInterface
         ? shasum(
               networkInterface.ip4 ||
                   networkInterface.ip6 + networkInterface.mac
           )
         : 'unknown';
-    debug(`Client Id: ${clientId}`);
+    logger.debug(`Client Id: ${clientId}`);
     reactGA.initialize(trackId, {
         debug: false,
         titleCase: false,
@@ -92,7 +105,12 @@ const init = async appName => {
         anonymizeIp: true,
     });
 
-    reactGA.pageview(appName);
+    reactGA.pageview(appJson.name);
+
+    isInitialized = true;
+    logger.debug(
+        `Google Analytics for category ${appJson.name} has initialized`
+    );
 };
 
 /**
@@ -101,8 +119,8 @@ const init = async appName => {
  * @returns {Boolean | undefined} returns whether the setting is on, off or undefined
  */
 const isEnabled = () => {
-    const isSendingUsageData = getIsSendingUsageData();
-    debug(`Usage data is ${isSendingUsageData}`);
+    const isSendingUsageData = getIsSendingUsageData() as boolean | undefined;
+    logger.debug(`Usage data is ${isSendingUsageData}`);
     return isSendingUsageData;
 };
 
@@ -113,7 +131,7 @@ const isEnabled = () => {
  */
 const enable = () => {
     persistIsSendingUsageData(true);
-    debug('Usage data has enabled');
+    logger.debug('Usage data has enabled');
 };
 
 /**
@@ -123,7 +141,7 @@ const enable = () => {
  */
 const disable = () => {
     persistIsSendingUsageData(false);
-    debug('Usage data has disabled');
+    logger.debug('Usage data has disabled');
 };
 
 /**
@@ -134,42 +152,71 @@ const disable = () => {
  */
 const reset = () => {
     deleteIsSendingUsageData();
-    debug('Usage data has reset');
+    logger.debug('Usage data has reset');
 };
 
 /**
  * Send event
- * @param {string} category launcher or apps
- * @param {string} action action to collect
- * @param {string} label details for an action
+ * @param {EventAction} event the event to send
  *
  * @returns {void}
  */
-const sendEvent = (category, action, label) => {
+const sendEvent = ({ action, label }: EventAction) => {
     const isSendingUsageData = getIsSendingUsageData();
-    debug('Sending usage data...');
-    debug(`Category: ${category}`);
-    debug(`Action: ${action}`);
-    debug(`Label: ${label}`);
-    if (isSendingUsageData === true) {
-        reactGA.event({
-            category,
-            action,
-            label,
-        });
-        debug(`Usage data has been sent`);
+    const category = appJson.name;
+    logger.debug('Sending usage data...');
+    logger.debug(`Category: ${category}`);
+    logger.debug(`Action: ${action}`);
+    logger.debug(`Label: ${label}`);
+    if (!isSendingUsageData) {
+        logger.debug(
+            `Usage data has not been sent. isSendingUsageData is set to ${isSendingUsageData}.`
+        );
         return;
     }
-    debug(
-        `Usage data has not been sent. isSendingUsageData is set to ${isSendingUsageData}.`
+
+    reactGA.event({ category, action, label });
+    logger.debug(`Usage data has been sent`);
+};
+
+/**
+ * Send usage data event to Google Analytics
+ * @param {string} action The event action
+ * @param {string} label The event label
+ * @returns {void}
+ */
+const sendUsageData = <T extends string>(
+    action: T,
+    label: string | undefined
+) => {
+    eventQueue.push({ action, label });
+    if (!isInitialized) {
+        return;
+    }
+    eventQueue.forEach(sendEvent);
+    eventQueue = [];
+};
+
+/**
+ * Send error usage data event to Google Analytics and also show it in the logger view
+ * @param {string} error The event action
+ * @returns {void}
+ */
+const sendErrorReport = (error: string) => {
+    logger.error(error);
+    sendUsageData(
+        'Report error',
+        `${process.platform}; ${process.arch}; v${appJson.version}; ${error}`
     );
 };
 
 export default {
     init,
-    isEnabled,
+    isInitialized,
     enable,
     disable,
+    isEnabled,
     reset,
-    sendEvent,
+    sendUsageData,
+    sendErrorReport,
 };
