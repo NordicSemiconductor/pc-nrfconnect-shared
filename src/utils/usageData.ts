@@ -47,8 +47,6 @@ import {
     persistIsSendingUsageData,
 } from './persistentStore';
 
-const debug = require('debug')('nrf-usage-data');
-
 const trackId = 'UA-22498474-5';
 
 interface EventAction {
@@ -77,17 +75,17 @@ const init = async (packageJson: PackageJson) => {
         networkInterface || networkInterfaces.find(i => i.iface === 'Ethernet'); // for most Windows
     networkInterface =
         networkInterface || networkInterfaces.find(i => i.mac && !i.internal); // for good luck
-    debug(`iface: ${networkInterface?.iface}`);
-    debug(`IP4: ${networkInterface?.ip4}`);
-    debug(`IP6: ${networkInterface?.ip6}`);
-    debug(`MAC: ${networkInterface?.mac}`);
+    logger.debug(`iface: ${networkInterface?.iface}`);
+    logger.debug(`IP4: ${networkInterface?.ip4}`);
+    logger.debug(`IP6: ${networkInterface?.ip6}`);
+    logger.debug(`MAC: ${networkInterface?.mac}`);
     const clientId = networkInterface
         ? shasum(
               networkInterface.ip4 ||
                   networkInterface.ip6 + networkInterface.mac
           )
         : 'unknown';
-    debug(`Client Id: ${clientId}`);
+    logger.debug(`Client Id: ${clientId}`);
     reactGA.initialize(trackId, {
         debug: false,
         titleCase: false,
@@ -110,7 +108,9 @@ const init = async (packageJson: PackageJson) => {
     reactGA.pageview(appJson.name);
 
     isInitialized = true;
-    debug(`Google Analytics for category ${appJson.name} has initialized`);
+    logger.debug(
+        `Google Analytics for category ${appJson.name} has initialized`
+    );
 };
 
 /**
@@ -120,7 +120,7 @@ const init = async (packageJson: PackageJson) => {
  */
 const isEnabled = () => {
     const isSendingUsageData = getIsSendingUsageData() as boolean | undefined;
-    debug(`Usage data is ${isSendingUsageData}`);
+    logger.debug(`Usage data is ${isSendingUsageData}`);
     return isSendingUsageData;
 };
 
@@ -131,7 +131,7 @@ const isEnabled = () => {
  */
 const enable = () => {
     persistIsSendingUsageData(true);
-    debug('Usage data has enabled');
+    logger.debug('Usage data has enabled');
 };
 
 /**
@@ -141,7 +141,7 @@ const enable = () => {
  */
 const disable = () => {
     persistIsSendingUsageData(false);
-    debug('Usage data has disabled');
+    logger.debug('Usage data has disabled');
 };
 
 /**
@@ -152,7 +152,7 @@ const disable = () => {
  */
 const reset = () => {
     deleteIsSendingUsageData();
-    debug('Usage data has reset');
+    logger.debug('Usage data has reset');
 };
 
 /**
@@ -164,19 +164,19 @@ const reset = () => {
 const sendEvent = ({ action, label }: EventAction) => {
     const isSendingUsageData = getIsSendingUsageData();
     const category = appJson.name;
-    debug('Sending usage data...');
-    debug(`Category: ${category}`);
-    debug(`Action: ${action}`);
-    debug(`Label: ${label}`);
+    logger.debug('Sending usage data...');
+    logger.debug(`Category: ${category}`);
+    logger.debug(`Action: ${action}`);
+    logger.debug(`Label: ${label}`);
     if (!isSendingUsageData) {
-        debug(
+        logger.debug(
             `Usage data has not been sent. isSendingUsageData is set to ${isSendingUsageData}.`
         );
         return;
     }
 
     reactGA.event({ category, action, label });
-    debug(`Usage data has been sent`);
+    logger.debug(`Usage data has been sent`);
 };
 
 /**
