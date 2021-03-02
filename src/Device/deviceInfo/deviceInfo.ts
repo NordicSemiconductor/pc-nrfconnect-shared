@@ -70,7 +70,7 @@ import unknownNordicLogo from '!!@svgr/webpack!./unknown-nordic-logo.svg';
 interface DeviceInfo {
     name?: string;
     cores?: number;
-    icon: React.Component;
+    icon: React.ElementType;
     website: {
         productPagePath?: string;
         buyOnlineParams?: string;

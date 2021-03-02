@@ -1,5 +1,5 @@
 declare module '!!@svgr/webpack!*.svg' {
-    const svg: React.Component;
+    const svg: React.ElementType;
     export default svg;
 }
 
