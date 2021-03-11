@@ -32,7 +32,9 @@
         "@svgr/webpack": "5.4.0",
         "@testing-library/jest-dom": "5.8.0",
         "@testing-library/react": "10.0.4",
+        "@types/electron-store": "3.2.0",
         "@types/mousetrap": "1.6.4",
+        "@types/shasum": "1.0.0",
         "@typescript-eslint/eslint-plugin": "^3.9.1",
         "@typescript-eslint/parser": "^3.9.1",
         "babel-eslint": "10.1.0",
@@ -90,13 +92,13 @@
         "winston": "3.2.1"
     },
     "devDependencies": {
-        "@types/electron-store": "3.2.0",
-        "@types/shasum": "1.0.0",
+        "electron-store": "5.1.1",
         "react": "16.13.1",
         "react-dom": "16.13.1",
         "react-redux": "7.2.0"
     },
     "peerDependencies": {
+        "electron-store": "^5.1.1",
         "react": "^16.13",
         "react-redux": "^7.2"
     },
