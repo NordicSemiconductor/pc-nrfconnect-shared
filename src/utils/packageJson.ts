@@ -34,67 +34,29 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { remote } from 'electron';
-import path from 'path';
+import { readFileSync } from 'fs';
+import { PackageJson } from 'pc-nrfconnect-shared'; // eslint-disable-line import/no-unresolved -- This is only importing a type and TypeScript can handle this
 
-import { loadPackageJson } from './packageJson';
+let packageJson: PackageJson | undefined;
 
-const getUserDataDir = () => remote.getGlobal('userDataDir');
+export const loadPackageJson = (packageJsonPath: string) => {
+    try {
+        packageJson = JSON.parse(
+            readFileSync(packageJsonPath, 'utf8')
+        ) as PackageJson;
+    } catch (e) {
+        console.error(
+            'Failed to read "package.json" of the app. Please tell the app developer to package it correctly.'
+        );
+    }
+};
 
-let appDir;
-let appDataDir;
-let appLogDir;
+export default () => {
+    if (packageJson == null) {
+        throw new Error(`package.json was not read. This can be caused by one of two things:
+- Either a programming error in the app that tries to use the content of package.json very early before it was loaded.
+- Or if the app was packaged without a package.json, but in that case the launcher should not even launch this app.`);
+    }
 
-function setAppDirs(newAppDir, newAppDataDir, newAppLogDir) {
-    appDir = newAppDir;
-    appDataDir = newAppDataDir;
-    appLogDir = newAppLogDir;
-
-    loadPackageJson(getAppFile('package.json'));
-}
-
-/**
- * Get the filesystem path of the currently loaded app.
- *
- * @returns {string|undefined} Absolute path of current app.
- */
-function getAppDir() {
-    return appDir;
-}
-
-/**
- * Get the filesystem path of a file for the currently loaded app.
- *
- * @param {string} filename relative name of file in the app directory
- * @returns {string|undefined} Absolute path of file.
- */
-function getAppFile(filename) {
-    return path.resolve(getAppDir(), filename);
-}
-
-/**
- * Get the filesystem path of the data directory of currently loaded app.
- *
- * @returns {string|undefined} Absolute path of data directory of the current app.
- */
-function getAppDataDir() {
-    return appDataDir;
-}
-
-/**
- * Get the filesystem path of the log directory of currently loaded app.
- *
- * @returns {string|undefined} Absolute path of data directory of the current app.
- */
-function getAppLogDir() {
-    return appLogDir;
-}
-
-export {
-    setAppDirs,
-    getAppDir,
-    getAppFile,
-    getAppDataDir,
-    getAppLogDir,
-    getUserDataDir,
+    return packageJson;
 };
