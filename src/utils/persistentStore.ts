@@ -36,6 +36,8 @@
 
 import Store from 'electron-store';
 
+import packageJson from './packageJson';
+
 export const store = new Store({ name: 'pc-nrfconnect-shared' });
 
 export const persistNickname = (serialNumber: string, nickname: string) =>
@@ -54,3 +56,8 @@ export const getIsSendingUsageData = () =>
     store.get('isSendingUsageData', undefined) as boolean | undefined;
 export const deleteIsSendingUsageData = () =>
     store.delete('isSendingUsageData');
+
+export const persistCurrentPane = (currentPane: number) =>
+    store.set(`app.${packageJson().name}.currentPane`, currentPane);
+export const getPersistedCurrentPane = () =>
+    store.get(`app.${packageJson().name}.currentPane`) as number | undefined;

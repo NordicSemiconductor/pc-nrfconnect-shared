@@ -34,6 +34,11 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import {
+    getPersistedCurrentPane,
+    persistCurrentPane,
+} from '../utils/persistentStore';
+
 const TOGGLE_LOG_VISIBLE = 'TOGGLE_LOG_VISIBLE';
 const TOGGLE_SIDE_PANEL_VISIBLE = 'TOGGLE_SIDE_PANEL_VISIBLE';
 const SET_CURRENT_PANE = 'SET_CURRENT_PANE';
@@ -47,19 +52,25 @@ export const setCurrentPane = currentPane => ({
     currentPane,
 });
 
-const initialState = {
+/* This must be a function because of getPersistedCurrentPane:
+  getPersistedCurrentPane can only be called when package.json was
+  already read in packageJson.ts. So the initial state must not be
+  determined as early as loading the module but only later when invoking
+  the reducer with an undefined state */
+const initialState = () => ({
     isSidePanelVisible: true,
     isLogVisible: true,
-    currentPane: 0,
-};
+    currentPane: getPersistedCurrentPane() ?? 0,
+});
 
-export const reducer = (state = initialState, { type, currentPane }) => {
+export const reducer = (state = initialState(), { type, currentPane }) => {
     switch (type) {
         case TOGGLE_SIDE_PANEL_VISIBLE:
             return { ...state, isSidePanelVisible: !state.isSidePanelVisible };
         case TOGGLE_LOG_VISIBLE:
             return { ...state, isLogVisible: !state.isLogVisible };
         case SET_CURRENT_PANE:
+            persistCurrentPane(currentPane);
             return { ...state, currentPane };
         default:
             return state;
