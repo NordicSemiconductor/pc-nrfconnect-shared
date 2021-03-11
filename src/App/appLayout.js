@@ -69,6 +69,8 @@ const initialState = () => ({
     panes: [],
 });
 
+const isAboutPane = (pane, allPanes) => pane === allPanes.length - 1;
+
 export const reducer = (
     state = initialState(),
     { type, currentPane, panes }
@@ -79,7 +81,9 @@ export const reducer = (
         case TOGGLE_LOG_VISIBLE:
             return { ...state, isLogVisible: !state.isLogVisible };
         case SET_CURRENT_PANE:
-            persistCurrentPane(currentPane);
+            if (!isAboutPane(currentPane, state.panes)) {
+                persistCurrentPane(currentPane);
+            }
             return { ...state, currentPane };
         case SET_PANES:
             return { ...state, panes };
