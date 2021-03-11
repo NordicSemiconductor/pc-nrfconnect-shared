@@ -2,6 +2,10 @@
 ### Added
 - Shared styles can now be imported in SCSS from
   `~pc-nrfconnect-shared/styles`.
+- When users start an app, the pane is opened again, that was open
+  when they left the app the last time. Only the about pane is ignored,
+  because we assume people are not interested in returning to the about
+  pane.
 ### Changed
 - Types for the exported colors got more specific.
 - The format for specifying the panes of the app as a property to the
