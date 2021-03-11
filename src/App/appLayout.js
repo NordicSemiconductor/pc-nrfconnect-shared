@@ -42,6 +42,7 @@ import {
 const TOGGLE_LOG_VISIBLE = 'TOGGLE_LOG_VISIBLE';
 const TOGGLE_SIDE_PANEL_VISIBLE = 'TOGGLE_SIDE_PANEL_VISIBLE';
 const SET_CURRENT_PANE = 'SET_CURRENT_PANE';
+const SET_PANES = 'SET_PANES';
 
 export const toggleLogVisible = () => ({ type: TOGGLE_LOG_VISIBLE });
 export const toggleSidePanelVisible = () => ({
@@ -50,6 +51,10 @@ export const toggleSidePanelVisible = () => ({
 export const setCurrentPane = currentPane => ({
     type: SET_CURRENT_PANE,
     currentPane,
+});
+export const setPanes = panes => ({
+    type: SET_PANES,
+    panes,
 });
 
 /* This must be a function because of getPersistedCurrentPane:
@@ -61,9 +66,13 @@ const initialState = () => ({
     isSidePanelVisible: true,
     isLogVisible: true,
     currentPane: getPersistedCurrentPane() ?? 0,
+    panes: [],
 });
 
-export const reducer = (state = initialState(), { type, currentPane }) => {
+export const reducer = (
+    state = initialState(),
+    { type, currentPane, panes }
+) => {
     switch (type) {
         case TOGGLE_SIDE_PANEL_VISIBLE:
             return { ...state, isSidePanelVisible: !state.isSidePanelVisible };
@@ -72,6 +81,8 @@ export const reducer = (state = initialState(), { type, currentPane }) => {
         case SET_CURRENT_PANE:
             persistCurrentPane(currentPane);
             return { ...state, currentPane };
+        case SET_PANES:
+            return { ...state, panes };
         default:
             return state;
     }

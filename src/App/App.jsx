@@ -36,7 +36,7 @@
 
 import 'focus-visible';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import { useDispatch, useSelector } from 'react-redux';
 import { ipcRenderer } from 'electron';
@@ -52,6 +52,7 @@ import {
     currentPane as currentPaneSelector,
     isLogVisible as isLogVisibleSelector,
     isSidePanelVisible as isSidePanelVisibleSelector,
+    setPanes,
     toggleLogVisible,
 } from './appLayout';
 import ConnectedToStore from './ConnectedToStore';
@@ -89,8 +90,9 @@ const ConnectedApp = ({
     sidePanel,
     showLogByDefault = true,
 }) => {
-    const allPanes = [...panes, { name: 'About', Main: About }].map(
-        convertLegacy
+    const allPanes = useMemo(
+        () => [...panes, { name: 'About', Main: About }].map(convertLegacy),
+        [panes]
     );
     const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);
@@ -104,6 +106,10 @@ const ConnectedApp = ({
             dispatch(toggleLogVisible());
         }
     }, [dispatch, showLogByDefault]);
+
+    useEffect(() => {
+        dispatch(setPanes(allPanes));
+    }, [dispatch, allPanes]);
 
     return (
         <div className="core19-app">
