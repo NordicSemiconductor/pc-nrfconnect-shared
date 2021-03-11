@@ -91,3 +91,4 @@ export const reducer = (
 export const isSidePanelVisible = state => state.appLayout.isSidePanelVisible;
 export const isLogVisible = state => state.appLayout.isLogVisible;
 export const currentPane = state => state.appLayout.currentPane;
+export const panes = state => state.appLayout.panes;

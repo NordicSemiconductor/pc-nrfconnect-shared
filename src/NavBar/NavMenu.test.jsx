@@ -37,6 +37,7 @@
 import React from 'react';
 
 import render from '../../test/testrenderer';
+import { setPanes } from '../App/appLayout';
 import NavMenu from './NavMenu';
 
 const aPane = {
@@ -61,7 +62,9 @@ expect.extend({
 
 describe('NavMenu', () => {
     it('displays multiple items', () => {
-        const { getByText } = render(<NavMenu panes={[aPane, anotherPane]} />);
+        const { getByText } = render(<NavMenu />, [
+            setPanes([aPane, anotherPane]),
+        ]);
 
         expect(getByText('an menu item')).toBeInTheDocument();
         expect(getByText('another menu item')).toBeInTheDocument();

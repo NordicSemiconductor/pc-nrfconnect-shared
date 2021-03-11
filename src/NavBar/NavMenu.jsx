@@ -36,14 +36,16 @@
 
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { arrayOf } from 'prop-types';
 
-import { currentPane as currentPaneSelector } from '../App/appLayout';
-import PanePropType from '../App/PanePropType';
+import {
+    currentPane as currentPaneSelector,
+    panes as panesSelector,
+} from '../App/appLayout';
 import NavMenuItem from './NavMenuItem';
 
-const NavMenu = ({ panes }) => {
+const NavMenu = () => {
     const currentPane = useSelector(currentPaneSelector);
+    const panes = useSelector(panesSelector);
 
     return (
         <div data-testid="nav-menu">
@@ -58,10 +60,6 @@ const NavMenu = ({ panes }) => {
             ))}
         </div>
     );
-};
-
-NavMenu.propTypes = {
-    panes: arrayOf(PanePropType.isRequired).isRequired,
 };
 
 export default NavMenu;

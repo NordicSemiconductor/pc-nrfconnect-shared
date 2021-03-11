@@ -40,7 +40,17 @@ import React, { useEffect, useMemo } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import { useDispatch, useSelector } from 'react-redux';
 import { ipcRenderer } from 'electron';
-import { array, arrayOf, bool, func, node, oneOfType } from 'prop-types';
+import {
+    array,
+    arrayOf,
+    bool,
+    elementType,
+    exact,
+    func,
+    node,
+    oneOfType,
+    string,
+} from 'prop-types';
 
 import About from '../About/About';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
@@ -56,7 +66,6 @@ import {
     toggleLogVisible,
 } from './appLayout';
 import ConnectedToStore from './ConnectedToStore';
-import PanePropType from './PanePropType';
 import VisibilityBar from './VisibilityBar';
 
 import './shared.scss';
@@ -113,7 +122,7 @@ const ConnectedApp = ({
 
     return (
         <div className="core19-app">
-            <NavBar deviceSelect={deviceSelect} panes={allPanes} />
+            <NavBar deviceSelect={deviceSelect} />
             <div className="core19-app-content">
                 <div
                     className={`core19-side-panel-container ${hiddenUnless(
@@ -156,9 +165,17 @@ const ConnectedApp = ({
     );
 };
 
+const LegacyPanePropType = array;
+
+const PanePropType = exact({
+    name: string.isRequired,
+    Main: elementType.isRequired,
+});
+
 ConnectedApp.propTypes = {
     deviceSelect: node,
-    panes: arrayOf(oneOfType([array, PanePropType]).isRequired).isRequired,
+    panes: arrayOf(oneOfType([LegacyPanePropType, PanePropType]).isRequired)
+        .isRequired,
     sidePanel: node,
     showLogByDefault: bool,
 };
