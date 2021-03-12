@@ -1,0 +1,18 @@
+@import "~pc-nrfconnect-shared/src/variables";
+
+.card-layout {
+    width: 33%;
+    height: 50%;
+    .card-heading {
+        background-color: transparent;
+        text-align: center;
+        .title{
+            float: inherit;
+            padding-top: 5px;
+        }
+    }
+    .card-title {
+        margin-bottom: 0rem;
+    }
+
+}
