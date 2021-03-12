@@ -1,6 +1,8 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
 
+import './card-component.scss';
+
 const CardComponent = ({ title, body }: { title: string; body: string }) => {
     return (
         <Card className="card-layout">
