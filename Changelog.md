@@ -51,12 +51,12 @@
   - Replace calls to `sendEvent` with `sendUsageData`
 
 ## 4.17.3
-### Fix
+### Fixed
 - Property `active` was missing in the TypeScript definition of the pane
   components.
 
 ## 4.17.2
-### Fix
+### Fixed
 - Not defining an app reducer led to an error.
 
 ## 4.17.1
@@ -67,7 +67,7 @@
 ### Added
 - Currently active pane: Selector `currentPane` to query it and action creator
   `setCurrentPane` to change it.
-### Fix
+### Fixed
 - When clicking on URLs in log entries the web site was not opened on macOS.
 ### Changed
 - Add links to product page and distributors for the PPK2.
@@ -81,7 +81,7 @@
   changes.
 
 ## 4.16.1
-### Fix
+### Fixed
 - The opacity of disabled elements stacked up when they were nested. E.g.
   in the following code the input had the opacity applied twice (making the
   opacity squared), so it looked lighter than than supposed:
