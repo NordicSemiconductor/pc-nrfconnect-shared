@@ -37,9 +37,9 @@
 import React, { useEffect, useState } from 'react';
 import { ipcRenderer } from 'electron';
 
+import Card from '../Card/Card';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import AboutButton from './AboutButton';
-import AboutCard from './AboutCard';
 import Section from './Section';
 
 export default () => {
@@ -55,7 +55,7 @@ export default () => {
     if (appInfo == null) return null;
 
     return (
-        <AboutCard title="Application">
+        <Card title="Application">
             <Section title="Title">{appInfo.displayName}</Section>
             <Section title="Purpose">{appInfo.description}</Section>
             <Section title="Version">{appInfo.currentVersion}</Section>
@@ -73,8 +73,8 @@ export default () => {
                 />
             </Section>
             <Section>
-                <FactoryResetButton label="Restore defaults" />
+                <FactoryResetButton label="Restore defaults..." />
             </Section>
-        </AboutCard>
+        </Card>
     );
 };

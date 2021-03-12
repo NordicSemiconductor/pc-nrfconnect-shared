@@ -47,6 +47,7 @@ jest.mock('../utils/systemReport');
 jest.mock('react-ga');
 
 const SYSTEM_REPORT = 'system report';
+const OKBUTTONTEXT = 'Restore';
 
 generateSystemReport.mockImplementation(
     () => new Promise(res => res(SYSTEM_REPORT))
@@ -104,8 +105,8 @@ describe('ErrorBoundary', () => {
             </ErrorBoundary>
         );
         fireEvent.click(getByText('Restore default settings'));
-        await findByText('OK');
-        fireEvent.click(getByText('OK'));
+        await findByText(OKBUTTONTEXT);
+        fireEvent.click(getByText(OKBUTTONTEXT));
         expect(store().clear).toHaveBeenCalled();
     });
 

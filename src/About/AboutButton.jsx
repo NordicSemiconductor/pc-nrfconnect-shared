@@ -40,11 +40,9 @@ import { func, string } from 'prop-types';
 
 import { openUrl } from '../utils/open';
 
-import './about-button.scss';
-
 const AboutButton = ({ url, label, onClick }) => (
     <Button
-        className="about-button"
+        className="w-100"
         variant="secondary"
         disabled={!url && !onClick}
         onClick={onClick || (() => openUrl(url))}

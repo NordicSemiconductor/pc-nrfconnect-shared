@@ -37,6 +37,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
+import Card from '../Card/Card';
 import {
     buyOnlineUrl,
     deviceInfo,
@@ -47,7 +48,6 @@ import {
     selectedDevice,
 } from '../Device/deviceReducer';
 import AboutButton from './AboutButton';
-import AboutCard from './AboutCard';
 import Section from './Section';
 
 const memorySize = memoryInBytes => {
@@ -64,9 +64,9 @@ export default () => {
 
     if (device == null) {
         return (
-            <AboutCard title="Device">
+            <Card title="Device">
                 <Section title="No device selected" />
-            </AboutCard>
+            </Card>
         );
     }
 
@@ -74,7 +74,7 @@ export default () => {
     const { name, cores } = deviceInfo(device);
 
     return (
-        <AboutCard title="Device">
+        <Card title="Device">
             <Section title="Name">{name || 'Unknown'}</Section>
             <Section title="ID">{device.serialNumber}</Section>
             <Section title="PCA">{pca || 'Unknown'}</Section>
@@ -97,6 +97,6 @@ export default () => {
                     label="Go to product page"
                 />
             </Section>
-        </AboutCard>
+        </Card>
     );
 };

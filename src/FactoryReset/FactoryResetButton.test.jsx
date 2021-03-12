@@ -42,6 +42,7 @@ import { getAppSpecificStore as store } from '../utils/persistentStore';
 import FactoryResetButton from './FactoryResetButton';
 
 const LABEL = 'Factory reset';
+const OKBUTTONTEXT = 'Restore';
 
 describe('FactoryReset', () => {
     afterEach(() => {
@@ -53,8 +54,8 @@ describe('FactoryReset', () => {
             <FactoryResetButton label={LABEL} />
         );
         fireEvent.click(getByText(LABEL));
-        await findByText('OK');
-        fireEvent.click(getByText('OK'));
+        await findByText(OKBUTTONTEXT);
+        fireEvent.click(getByText(OKBUTTONTEXT));
         expect(store().clear).toHaveBeenCalled();
     });
 
@@ -74,8 +75,8 @@ describe('FactoryReset', () => {
             <FactoryResetButton label={LABEL} resetFn={overrideResetFn} />
         );
         fireEvent.click(getByText(LABEL));
-        await findByText('OK');
-        fireEvent.click(getByText('OK'));
+        await findByText(OKBUTTONTEXT);
+        fireEvent.click(getByText(OKBUTTONTEXT));
         expect(overrideResetFn).toHaveBeenCalled();
     });
 });

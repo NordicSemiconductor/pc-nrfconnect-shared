@@ -37,6 +37,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
+import Card from '../Card/Card';
 import {
     deviceInfo,
     selectedSerialNumber,
@@ -44,7 +45,6 @@ import {
 } from '../Device/deviceReducer';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
-import AboutCard from './AboutCard';
 import Section from './Section';
 
 export default () => {
@@ -53,7 +53,7 @@ export default () => {
     const currentDevice = useSelector(deviceInfo);
 
     return (
-        <AboutCard title="Support">
+        <Card title="Support">
             <Section title="DevZone">
                 <p>
                     All support requests must be sent through our developer
@@ -82,6 +82,6 @@ export default () => {
                     label="Create system report"
                 />
             </Section>
-        </AboutCard>
+        </Card>
     );
 };
