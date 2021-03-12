@@ -1,4 +1,4 @@
-## Unreleased
+## 4.19.0
 ### Added
 - Shared styles can now be imported in SCSS from
   `~pc-nrfconnect-shared/styles`.
