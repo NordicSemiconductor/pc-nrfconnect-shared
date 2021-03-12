@@ -1,5 +1,5 @@
 import React from 'react';
-import Card from 'react-bootstrap/Card';
+import { Card } from 'react-bootstrap';
 
 import './card-component.scss';
 

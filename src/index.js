@@ -46,6 +46,7 @@ export { default as Spinner } from './Dialog/Spinner';
 export { default as Slider } from './Slider/Slider';
 export { default as Toggle } from './Toggle/Toggle';
 export { default as Main } from './Main/Main';
+export { default as CardComponent } from './CardComponent/CardComponent';
 
 export { default as SidePanel } from './SidePanel/SidePanel';
 export { Group, CollapsibleGroup } from './SidePanel/Group';
