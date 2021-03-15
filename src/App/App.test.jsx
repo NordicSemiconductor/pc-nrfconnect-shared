@@ -53,8 +53,14 @@ const renderApp = panes => {
     );
 };
 
-const aPane = ['an menu item', () => <div>A pane</div>];
-const anotherPane = ['another menu item', () => <div>Another pane</div>];
+const aPane = {
+    name: 'an menu item',
+    Main: () => <div>A pane</div>,
+};
+const anotherPane = {
+    name: 'another menu item',
+    Main: () => <div>Another pane</div>,
+};
 
 describe('App', () => {
     it('automatically gets an About pane attached', () => {

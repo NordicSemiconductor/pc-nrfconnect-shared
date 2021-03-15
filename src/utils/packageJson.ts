@@ -34,26 +34,29 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { readFileSync } from 'fs';
+import { PackageJson } from 'pc-nrfconnect-shared'; // eslint-disable-line import/no-unresolved -- This is only importing a type and TypeScript can handle this
 
-/**
- * Observe and return the width of an element
- *
- * @returns {[elementWidth, elementRef]} The width of the element and the ref which has to be
- * attached to the target element.
- */
+let packageJson: PackageJson | undefined;
+
+export const loadPackageJson = (packageJsonPath: string) => {
+    try {
+        packageJson = JSON.parse(
+            readFileSync(packageJsonPath, 'utf8')
+        ) as PackageJson;
+    } catch (e) {
+        console.error(
+            'Failed to read "package.json" of the app. Please tell the app developer to package it correctly.'
+        );
+    }
+};
+
 export default () => {
-    const elementRef = useRef();
-    const [elementWidth, setElementWidth] = useState();
-    const reportWidth = () => setElementWidth(elementRef.current.clientWidth);
+    if (packageJson == null) {
+        throw new Error(`package.json was not read. This can be caused by one of two things:
+- Either a programming error in the app that tries to use the content of package.json very early before it was loaded.
+- Or if the app was packaged without a package.json, but in that case the launcher should not even launch this app.`);
+    }
 
-    useEffect(() => {
-        reportWidth();
-
-        const widthObserver = new ResizeObserver(reportWidth);
-        widthObserver.observe(elementRef.current);
-        return () => widthObserver.disconnect();
-    }, []);
-
-    return [elementWidth, elementRef];
+    return packageJson;
 };

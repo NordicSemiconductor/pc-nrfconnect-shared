@@ -71,6 +71,13 @@ declare module 'pc-nrfconnect-shared' {
         active: boolean;
     }
 
+    type LegacyPane = readonly [string, React.FC<PaneProps>];
+
+    interface Pane {
+        name: string;
+        Main: React.FC<PaneProps>;
+    }
+
     /**
      * Props for the `App` component.
      */
@@ -109,7 +116,7 @@ declare module 'pc-nrfconnect-shared' {
          *
          * `[['Connection Map', ConnectionMap], ['Server Setup', ServerSetup]]`
          */
-        panes: readonly (readonly [string, React.FC<PaneProps>])[];
+        panes: readonly (LegacyPane | Pane)[];
         /**
          * Describes whether the log will show automatically when the
          * application starts. Defaults to `true`.
@@ -396,7 +403,38 @@ declare module 'pc-nrfconnect-shared' {
 
     // colors.js
 
-    export const colors: Record<string, string>;
+    export const colors: {
+        nordicBlue: string;
+        blueSlate: string;
+
+        primary: string;
+        primaryDarkened: string;
+        secondary: string;
+        accent: string;
+        gray50: string;
+        gray100: string;
+        gray200: string;
+        gray300: string;
+        gray400: string;
+        gray500: string;
+        gray600: string;
+        gray700: string;
+        gray800: string;
+        gray900: string;
+
+        red: string;
+        indigo: string;
+        amber: string;
+        purple: string;
+        green: string;
+        deepPurple: string;
+        orange: string;
+        lime: string;
+        pink: string;
+
+        blueSlateLighter: string;
+        greenLighter: string;
+    };
 
     // appDirs.js
 

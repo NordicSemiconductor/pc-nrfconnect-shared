@@ -35,6 +35,7 @@
  */
 
 import React from 'react';
+import { useResizeDetector } from 'react-resize-detector';
 import { arrayOf, bool, func, number, string } from 'prop-types';
 
 import classNames from '../utils/classNames';
@@ -43,7 +44,6 @@ import Handle from './Handle';
 import { toPercentage } from './percentage';
 import rangeShape from './rangeShape';
 import Ticks from './Ticks';
-import useWidthObserver from './useWidthObserver';
 
 import './slider.scss';
 
@@ -70,7 +70,7 @@ const Slider = ({
             )}`
         );
 
-    const [sliderWidth, sliderRef] = useWidthObserver();
+    const { width, ref } = useResizeDetector();
 
     const valueRange = {
         min: values.length === 1 ? range.min : Math.min(...values),
@@ -82,7 +82,7 @@ const Slider = ({
             className={classNames('slider', disabled && 'disabled')}
             id={id}
             title={title}
-            ref={sliderRef}
+            ref={ref}
         >
             <Bar
                 start={toPercentage(valueRange.min, range)}
@@ -97,7 +97,7 @@ const Slider = ({
                     disabled={disabled}
                     onChange={onChange[index]}
                     onChangeComplete={onChangeComplete}
-                    sliderWidth={sliderWidth}
+                    sliderWidth={width}
                 />
             ))}
         </div>

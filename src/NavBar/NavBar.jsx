@@ -35,26 +35,25 @@
  */
 
 import React from 'react';
-import { array, arrayOf, node } from 'prop-types';
+import { node } from 'prop-types';
 
 import Logo from '../Logo/Logo';
 import NavMenu from './NavMenu';
 
 import './nav-bar.scss';
 
-const NavBar = ({ deviceSelect, panes }) => (
+const NavBar = ({ deviceSelect }) => (
     <div className="core19-nav-bar">
         {deviceSelect && (
             <div className="core19-nav-bar-device-selector">{deviceSelect}</div>
         )}
-        <NavMenu panes={panes} />
+        <NavMenu />
         <Logo changeWithDeviceState />
     </div>
 );
 
 NavBar.propTypes = {
     deviceSelect: node,
-    panes: arrayOf(array.isRequired).isRequired,
 };
 
 export default NavBar;

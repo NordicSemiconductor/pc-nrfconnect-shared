@@ -1,3 +1,6 @@
 // Allows jest to test files that import the electron-store package.
 
-module.exports = class MockStore {};
+export default jest.fn(() => ({
+    get: jest.fn(),
+    set: jest.fn(),
+}));

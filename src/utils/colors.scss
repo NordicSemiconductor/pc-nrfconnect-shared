@@ -1,6 +1,8 @@
 @use "sass:color";
 @import "../variables";
 
+// Remember: When changing any entries here, they also must be
+// changed at the corresponding place in index.d.ts
 :export {
     nordicBlue: $nordic-blue;
     blueSlate: $blue-slate;

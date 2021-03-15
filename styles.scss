@@ -34,67 +34,84 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { remote } from 'electron';
-import path from 'path';
+@use "sass:color";
 
-import { loadPackageJson } from './packageJson';
+$nordic-blue: #00a9ce;
+$blue-slate: #0033a0;
 
-const getUserDataDir = () => remote.getGlobal('userDataDir');
+$white: white;
+$black: black;
 
-let appDir;
-let appDataDir;
-let appLogDir;
+$primary: $nordic-blue;
+$primary-darkened: color.scale($nordic-blue, $lightness: -10%);
+$secondary: $white;
+$accent: $blue-slate;
 
-function setAppDirs(newAppDir, newAppDataDir, newAppLogDir) {
-    appDir = newAppDir;
-    appDataDir = newAppDataDir;
-    appLogDir = newAppLogDir;
+$gray-50: #eceff1;
+$gray-100: #cfd8dc;
+$gray-200: #b0bec5;
+$gray-300: #90a4ae;
+$gray-400: #78909c;
+$gray-500: #607d8b;
+$gray-600: #546e7a;
+$gray-700: #455a64;
+$gray-800: #37474f;
+$gray-900: #263238;
 
-    loadPackageJson(getAppFile('package.json'));
+$red: #f44336;
+$indigo: #3f51b5;
+$amber: #ffc107;
+$purple: #9c27b0;
+$green: #4caf50;
+$deep-purple: #673ab7;
+$orange: #ff9800;
+$lime: #cddc39;
+$pink: #e91e63;
+
+$brand-success: $green;
+$brand-warning: $orange;
+$brand-danger: $red;
+
+$custom-control-indicator-bg: $gray-50;
+$custom-control-indicator-checked-bg: $gray-300;
+
+$side-panel-width: 260px;
+$nav-bar-height: 40px;
+$log-viewer-height: 155px;
+$visibility-bar-height: 32px;
+
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+
+$normal-transition: 0.2s ease-in-out;
+
+$disabled-opacity: 0.38;
+
+@mixin scrollbars-helper($background-color, $scrollbar-color, $scrollbar-hover-color) {
+    &::-webkit-scrollbar, &::-webkit-scrollbar-corner {
+        width: 14px;
+        height: 14px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $scrollbar-color;
+        border-radius: 14px;
+        border: 5px solid $background-color;
+    }
+
+    &::-webkit-scrollbar-thumb:hover  {
+        background: $scrollbar-hover-color;
+    }
 }
 
-/**
- * Get the filesystem path of the currently loaded app.
- *
- * @returns {string|undefined} Absolute path of current app.
- */
-function getAppDir() {
-    return appDir;
+@mixin scrollbars($background-color) {
+    @if $background-color == $gray-50 or
+        $background-color == $white {
+        @include scrollbars-helper($background-color, $gray-200, $gray-400);
+    } @else if $background-color == $gray-900 {
+        @include scrollbars-helper($background-color, $gray-400, $gray-200);
+    } @else {
+        @error "Unable to configure scrollbars for background color #{$background-color}. You must add a configuration for it.";
+    }
 }
-
-/**
- * Get the filesystem path of a file for the currently loaded app.
- *
- * @param {string} filename relative name of file in the app directory
- * @returns {string|undefined} Absolute path of file.
- */
-function getAppFile(filename) {
-    return path.resolve(getAppDir(), filename);
-}
-
-/**
- * Get the filesystem path of the data directory of currently loaded app.
- *
- * @returns {string|undefined} Absolute path of data directory of the current app.
- */
-function getAppDataDir() {
-    return appDataDir;
-}
-
-/**
- * Get the filesystem path of the log directory of currently loaded app.
- *
- * @returns {string|undefined} Absolute path of data directory of the current app.
- */
-function getAppLogDir() {
-    return appLogDir;
-}
-
-export {
-    setAppDirs,
-    getAppDir,
-    getAppFile,
-    getAppDataDir,
-    getAppLogDir,
-    getUserDataDir,
-};

@@ -37,10 +37,17 @@
 import React from 'react';
 
 import render from '../../test/testrenderer';
+import { setPanes } from '../App/appLayout';
 import NavMenu from './NavMenu';
 
-const aPane = ['an menu item', () => <div>A pane</div>];
-const anotherPane = ['another menu item', () => <div>Another pane</div>];
+const aPane = {
+    name: 'an menu item',
+    Main: () => <div>A pane</div>,
+};
+const anotherPane = {
+    name: 'another menu item',
+    Main: () => <div>Another pane</div>,
+};
 
 expect.extend({
     toBeHighlighted(element) {
@@ -55,7 +62,9 @@ expect.extend({
 
 describe('NavMenu', () => {
     it('displays multiple items', () => {
-        const { getByText } = render(<NavMenu panes={[aPane, anotherPane]} />);
+        const { getByText } = render(<NavMenu />, [
+            setPanes([aPane, anotherPane]),
+        ]);
 
         expect(getByText('an menu item')).toBeInTheDocument();
         expect(getByText('another menu item')).toBeInTheDocument();
