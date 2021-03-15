@@ -57,6 +57,7 @@ import AppReloadDialog from '../AppReload/AppReloadDialog';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import LogViewer from '../Log/LogViewer';
 import NavBar from '../NavBar/NavBar';
+import classNames from '../utils/classNames';
 import useHotKey from '../utils/useHotKey';
 import {
     currentPane as currentPaneSelector,
@@ -70,8 +71,6 @@ import VisibilityBar from './VisibilityBar';
 
 import './shared.scss';
 import './app.scss';
-
-const hiddenUnless = isVisible => (isVisible ? '' : 'hidden');
 
 let warnedAboutLegacyPanes = false;
 const convertLegacy = pane => {
@@ -126,9 +125,10 @@ const ConnectedApp = ({
             <NavBar deviceSelect={deviceSelect} />
             <div className="core19-app-content">
                 <div
-                    className={`core19-side-panel-container ${hiddenUnless(
-                        isSidePanelVisible
-                    )}`}
+                    className={classNames(
+                        'core19-side-panel-container',
+                        isSidePanelVisible || 'hidden'
+                    )}
                 >
                     {sidePanel}
                 </div>
@@ -150,9 +150,10 @@ const ConnectedApp = ({
                         ))}
                     </Carousel>
                     <div
-                        className={`core19-log-viewer ${hiddenUnless(
-                            isLogVisible
-                        )}`}
+                        className={classNames(
+                            'core19-log-viewer',
+                            isLogVisible || 'hidden'
+                        )}
                     >
                         <LogViewer />
                     </div>
