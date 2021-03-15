@@ -103,7 +103,8 @@ const ConnectedApp = ({
         () => [...panes, { name: 'About', Main: About }].map(convertLegacy),
         [panes]
     );
-    const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
+    const isSidePanelVisible =
+        useSelector(isSidePanelVisibleSelector) && sidePanel;
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
     const dispatch = useDispatch();
@@ -126,7 +127,7 @@ const ConnectedApp = ({
             <div className="core19-app-content">
                 <div
                     className={`core19-side-panel-container ${hiddenUnless(
-                        sidePanel && isSidePanelVisible
+                        isSidePanelVisible
                     )}`}
                 >
                     {sidePanel}
