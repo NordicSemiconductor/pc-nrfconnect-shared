@@ -102,8 +102,6 @@ const ConnectedApp = ({
         () => [...panes, { name: 'About', Main: About }].map(convertLegacy),
         [panes]
     );
-    const isSidePanelVisible =
-        useSelector(isSidePanelVisibleSelector) && sidePanel;
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
     const dispatch = useDispatch();
@@ -120,6 +118,13 @@ const ConnectedApp = ({
         dispatch(setPanes(allPanes));
     }, [dispatch, allPanes]);
 
+    const SidePanelComponent = allPanes[currentPane].SidePanel;
+    const currentSidePanel =
+        SidePanelComponent != null ? <SidePanelComponent /> : sidePanel;
+
+    const isSidePanelVisible =
+        useSelector(isSidePanelVisibleSelector) && currentSidePanel;
+
     return (
         <div className="core19-app">
             <NavBar deviceSelect={deviceSelect} />
@@ -130,7 +135,7 @@ const ConnectedApp = ({
                         isSidePanelVisible || 'hidden'
                     )}
                 >
-                    {sidePanel}
+                    {currentSidePanel}
                 </div>
                 <div className="core19-main-and-log">
                     <Carousel
@@ -172,6 +177,7 @@ const LegacyPanePropType = array;
 const PanePropType = exact({
     name: string.isRequired,
     Main: elementType.isRequired,
+    SidePanel: elementType,
 });
 
 ConnectedApp.propTypes = {
