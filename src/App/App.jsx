@@ -57,6 +57,7 @@ import AppReloadDialog from '../AppReload/AppReloadDialog';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import LogViewer from '../Log/LogViewer';
 import NavBar from '../NavBar/NavBar';
+import classNames from '../utils/classNames';
 import useHotKey from '../utils/useHotKey';
 import {
     currentPane as currentPaneSelector,
@@ -70,8 +71,6 @@ import VisibilityBar from './VisibilityBar';
 
 import './shared.scss';
 import './app.scss';
-
-const hiddenUnless = isVisible => (isVisible ? '' : 'hidden');
 
 let warnedAboutLegacyPanes = false;
 const convertLegacy = pane => {
@@ -103,7 +102,6 @@ const ConnectedApp = ({
         () => [...panes, { name: 'About', Main: About }].map(convertLegacy),
         [panes]
     );
-    const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
     const dispatch = useDispatch();
@@ -120,16 +118,24 @@ const ConnectedApp = ({
         dispatch(setPanes(allPanes));
     }, [dispatch, allPanes]);
 
+    const SidePanelComponent = allPanes[currentPane].SidePanel;
+    const currentSidePanel =
+        SidePanelComponent != null ? <SidePanelComponent /> : sidePanel;
+
+    const isSidePanelVisible =
+        useSelector(isSidePanelVisibleSelector) && currentSidePanel;
+
     return (
         <div className="core19-app">
             <NavBar deviceSelect={deviceSelect} />
             <div className="core19-app-content">
                 <div
-                    className={`core19-side-panel-container ${hiddenUnless(
-                        sidePanel && isSidePanelVisible
-                    )}`}
+                    className={classNames(
+                        'core19-side-panel-container',
+                        isSidePanelVisible || 'hidden'
+                    )}
                 >
-                    {sidePanel}
+                    {currentSidePanel}
                 </div>
                 <div className="core19-main-and-log">
                     <Carousel
@@ -149,9 +155,10 @@ const ConnectedApp = ({
                         ))}
                     </Carousel>
                     <div
-                        className={`core19-log-viewer ${hiddenUnless(
-                            isLogVisible
-                        )}`}
+                        className={classNames(
+                            'core19-log-viewer',
+                            isLogVisible || 'hidden'
+                        )}
                     >
                         <LogViewer />
                     </div>
@@ -170,6 +177,7 @@ const LegacyPanePropType = array;
 const PanePropType = exact({
     name: string.isRequired,
     Main: elementType.isRequired,
+    SidePanel: elementType,
 });
 
 ConnectedApp.propTypes = {

@@ -76,6 +76,7 @@ declare module 'pc-nrfconnect-shared' {
     interface Pane {
         name: string;
         Main: React.FC<PaneProps>;
+        SidePanel?: React.FC;
     }
 
     /**

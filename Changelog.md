@@ -1,3 +1,28 @@
+## Unreleased
+### Added
+- Allow different side panels per pane. If a pane should show a special side
+  panel it can be defined in the list of panes. If no side panel is defined for
+  a pane, the general side panel defined for the whole app is used. E.g. in an
+  app defined like the following on the pane Dashboard (and also the pane About)
+  the normal `SidePanel` component is shown, while on the pane Terminal the
+  `TerminalSidePanel` is shown.
+  ```jsx
+  <App
+    sidePanel={<SidePanel />}
+    panes={[
+      {
+        name: 'Dashboard',
+        Main: Dashboard,
+      },
+      {
+        name: 'Terminal',
+        Main: Terminal
+        SidePanel: TerminalSidePanel,
+      },
+    ]}
+  />
+  ```
+
 ## 4.19.0
 ### Added
 - Shared styles can now be imported in SCSS from
