@@ -1,4 +1,6 @@
-## Unreleased
+## 4.20.0
+### Changed
+- Extended type definition `PackageJson`.
 ### Added
 - Allow different side panels per pane. If a pane should show a special side
   panel it can be defined in the list of panes. If no side panel is defined for
