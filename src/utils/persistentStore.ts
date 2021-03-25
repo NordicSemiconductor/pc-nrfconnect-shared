@@ -38,26 +38,43 @@ import Store from 'electron-store';
 
 import packageJson from './packageJson';
 
-export const store = new Store({ name: 'pc-nrfconnect-shared' });
+const sharedStore = new Store({ name: 'pc-nrfconnect-shared' });
 
 export const persistNickname = (serialNumber: string, nickname: string) =>
-    store.set(`${serialNumber}.name`, nickname);
+    sharedStore.set(`${serialNumber}.name`, nickname);
 export const getPersistedNickname = (serialNumber: string) =>
-    store.get(`${serialNumber}.name`, '') as string;
+    sharedStore.get(`${serialNumber}.name`, '') as string;
 
 export const persistIsFavorite = (serialNumber: string, value: boolean) =>
-    store.set(`${serialNumber}.fav`, value);
+    sharedStore.set(`${serialNumber}.fav`, value);
 export const getPersistedIsFavorite = (serialNumber: string) =>
-    store.get(`${serialNumber}.fav`, false) as boolean;
+    sharedStore.get(`${serialNumber}.fav`, false) as boolean;
 
 export const persistIsSendingUsageData = (value: boolean) =>
-    store.set('isSendingUsageData', value);
+    sharedStore.set('isSendingUsageData', value);
 export const getIsSendingUsageData = () =>
-    store.get('isSendingUsageData', undefined) as boolean | undefined;
+    sharedStore.get('isSendingUsageData', undefined) as boolean | undefined;
 export const deleteIsSendingUsageData = () =>
-    store.delete('isSendingUsageData');
+    sharedStore.delete('isSendingUsageData');
+
+// This one must be initialised lazily, because the package.json is not read yet when this module is initialised
+let appSpecificStore: Store | undefined;
+
+interface sharedAppSpecificStoreSchema {
+    currentPane?: number;
+}
+
+export const getAppSpecificStore = <StoreSchema>() => {
+    if (appSpecificStore == null) {
+        appSpecificStore = new Store({ name: packageJson().name });
+    }
+
+    return appSpecificStore as Store<
+        StoreSchema | sharedAppSpecificStoreSchema
+    >;
+};
 
 export const persistCurrentPane = (currentPane: number) =>
-    store.set(`app.${packageJson().name}.currentPane`, currentPane);
+    getAppSpecificStore<never>().set(`currentPane`, currentPane);
 export const getPersistedCurrentPane = () =>
-    store.get(`app.${packageJson().name}.currentPane`) as number | undefined;
+    getAppSpecificStore<never>().get(`currentPane`);

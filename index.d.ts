@@ -2,6 +2,7 @@ declare module 'pc-nrfconnect-shared' {
     import { Reducer, AnyAction } from 'redux';
     import React from 'react';
     import winston from 'winston';
+    import Store from 'electron-store';
 
     // State
 
@@ -554,4 +555,12 @@ declare module 'pc-nrfconnect-shared' {
     export function currentPane<AppState>(
         state: NrfConnectState<AppState>
     ): number;
+
+    // persistentStore.ts
+
+    /**
+     * Return a persistent store, specific for the app.
+     * The app name from package.json is used to identify the app.
+     */
+    export function getPersistentStore<StoreSchema>(): Store<StoreSchema>;
 }
