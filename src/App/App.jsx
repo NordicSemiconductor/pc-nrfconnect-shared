@@ -58,6 +58,8 @@ import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import LogViewer from '../Log/LogViewer';
 import NavBar from '../NavBar/NavBar';
 import classNames from '../utils/classNames';
+import packageJson from '../utils/packageJson';
+import usageData from '../utils/usageData';
 import useHotKey from '../utils/useHotKey';
 import {
     currentPane as currentPaneSelector,
@@ -92,11 +94,25 @@ const convertLegacy = pane => {
     };
 };
 
+let usageDataAlreadyInitialised = false;
+const initialiseUsageData = async () => {
+    if (!usageDataAlreadyInitialised) {
+        usageDataAlreadyInitialised = true;
+        try {
+            await usageData.init(packageJson());
+        } catch (error) {
+            // No need to display the error message for the user
+            console.log(error);
+        }
+    }
+};
+
 const ConnectedApp = ({
     deviceSelect,
     panes,
     sidePanel,
     showLogByDefault = true,
+    reportUsageData = false,
 }) => {
     const allPanes = useMemo(
         () => [...panes, { name: 'About', Main: About }].map(convertLegacy),
@@ -124,6 +140,12 @@ const ConnectedApp = ({
 
     const isSidePanelVisible =
         useSelector(isSidePanelVisibleSelector) && currentSidePanel;
+
+    useEffect(() => {
+        if (reportUsageData) {
+            initialiseUsageData();
+        }
+    }, [reportUsageData]);
 
     return (
         <div className="core19-app">
@@ -186,6 +208,7 @@ ConnectedApp.propTypes = {
         .isRequired,
     sidePanel: node,
     showLogByDefault: bool,
+    reportUsageData: bool,
 };
 
 const noopReducer = (state = null) => state;

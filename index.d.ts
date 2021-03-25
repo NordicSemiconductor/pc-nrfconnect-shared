@@ -123,6 +123,11 @@ declare module 'pc-nrfconnect-shared' {
          * application starts. Defaults to `true`.
          */
         showLogByDefault?: boolean;
+        /**
+         * Whether to initialise google analytics for usage data if the users
+         * opted in. Defaults to `false`.
+         */
+        reportUsageData?: boolean;
     }
 
     /**

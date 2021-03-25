@@ -1,3 +1,11 @@
+## 4.21.0
+### Added
+- Property `reportUsageData` to component App.
+### Steps to upgrade when using this package
+- If your app wants to report usage data, you can remove the code to call
+  `usageData.init()` and instead set the property `reportUsageData` to the
+  component `App`.
+
 ## 4.20.0
 ### Changed
 - Extended type definition `PackageJson`.
