@@ -1,19 +1,25 @@
 import React from 'react';
-import { Card } from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
+import { object } from 'prop-types';
 
 import './card-component.scss';
 
-const CardComponent = ({ title, body }: { title: string; body: string }) => {
-    return (
-        <Card className="card-layout">
-            <Card.Header className="card-heading">
-                <Card.Title>
-                    <span className="title"> {title} </span>
-                </Card.Title>
-            </Card.Header>
-            <Card.Body> {body} </Card.Body>
-        </Card>
-    );
+
+const CardComponent: React.FC<{
+    title: object;
+}> = ({ children, title }) => (
+    <Card className="card-layout">
+        <Card.Header className="card-heading">
+            <Card.Title>
+                <span className="title"> {title} </span>
+            </Card.Title>
+        </Card.Header>
+        <Card.Body> {children} </Card.Body>
+    </Card>
+);
+
+CardComponent.propTypes = {
+    title: object.isRequired,
 };
 
 export default CardComponent;
