@@ -182,8 +182,10 @@ declare module 'pc-nrfconnect-shared' {
         title?: string;
     }> {}
 
+    // CardComponent.tsx
+
     export class CardComponent extends React.Component<{
-        title: Record<string, unknown>;
+        title: React.ReactElement;
     }> {}
 
     // DeviceSelector.jsx
