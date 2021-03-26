@@ -1,3 +1,17 @@
+## 4.21.0
+### Added
+- Property `reportUsageData` to component App.
+- Function `getPersistentStore` to get a persistent store, specific for the
+  app. The app name from `package.json` is used to identify the app.
+### Steps to upgrade when using this package
+- If your app wants to report usage data, you can remove the code to call
+  `usageData.init()` and instead set the property `reportUsageData` to the
+  component `App`.
+- If your app already use a persistent store, you can switch to
+  `getPersistentStore()`, just be aware that if you currently use a different
+  name for the store than the app name from `package.json`, then the old
+  settings are either lost of you have to care for migrating them.
+
 ## 4.20.0
 ### Changed
 - Extended type definition `PackageJson`.
