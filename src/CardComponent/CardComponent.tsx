@@ -1,12 +1,11 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
-import { object } from 'prop-types';
+import { element } from 'prop-types';
 
 import './card-component.scss';
 
-
 const CardComponent: React.FC<{
-    title: object;
+    title: React.ReactElement;
 }> = ({ children, title }) => (
     <Card className="card-layout">
         <Card.Header className="card-heading">
@@ -19,7 +18,7 @@ const CardComponent: React.FC<{
 );
 
 CardComponent.propTypes = {
-    title: object.isRequired,
+    title: element.isRequired,
 };
 
 export default CardComponent;
