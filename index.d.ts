@@ -414,6 +414,9 @@ declare module 'pc-nrfconnect-shared' {
         nordicBlue: string;
         blueSlate: string;
 
+        white: string;
+        black: string;
+
         primary: string;
         primaryDarkened: string;
         secondary: string;

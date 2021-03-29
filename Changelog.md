@@ -1,3 +1,7 @@
+## 4.21.1
+### Fixed
+- Exported colors were missing definitions for `black` and `white`.
+
 ## 4.21.0
 ### Added
 - Property `reportUsageData` to component App.
