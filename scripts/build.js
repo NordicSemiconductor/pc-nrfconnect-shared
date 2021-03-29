@@ -75,6 +75,8 @@ const handleOutput = (err, stats) => {
             colors: true, //  Shows colors in the console
         })
     );
+
+    process.exitCode = stats.hasErrors() ? 1 : 0;
 };
 
 const args = process.argv.slice(2);

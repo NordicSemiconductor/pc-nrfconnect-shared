@@ -1,6 +1,7 @@
 ## 4.21.1
 ### Fixed
 - Exported colors were missing definitions for `black` and `white`.
+- The build scripts did not return a non-zero exit status on build errors.
 
 ## 4.21.0
 ### Added
