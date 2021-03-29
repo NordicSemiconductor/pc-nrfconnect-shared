@@ -41,18 +41,16 @@
 const path = require('path');
 const webpack = require('webpack');
 
-function getConfig() {
-    let config;
+const getConfig = () => {
     try {
         // Using custom webpack.config.js if it exists in project
-        config = require(path.join(process.cwd(), './webpack.config.js'));
+        return require(path.join(process.cwd(), './webpack.config.js'));
     } catch (err) {
-        config = require('../config/webpack.config.js');
+        return require('../config/webpack.config.js');
     }
-    return config;
-}
+};
 
-function handleOutput(err, stats) {
+const handleOutput = (err, stats) => {
     if (err) {
         console.error(err.stack || err);
         if (err.details) {
@@ -77,7 +75,7 @@ function handleOutput(err, stats) {
             colors: true, //  Shows colors in the console
         })
     );
-}
+};
 
 const args = process.argv.slice(2);
 if (args[0] === '--watch') {
