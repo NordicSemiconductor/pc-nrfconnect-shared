@@ -1,3 +1,7 @@
+## 4.22.0
+### Added
+- Component `CardComponent`.
+
 ## 4.21.1
 ### Fixed
 - Exported colors were missing definitions for `black` and `white`.
