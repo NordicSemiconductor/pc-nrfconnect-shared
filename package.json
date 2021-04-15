@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "4.21.1",
+    "version": "4.21.2",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -59,7 +59,6 @@
         "eslint-plugin-react-hooks": "4.0.4",
         "eslint-plugin-simple-import-sort": "7.0.0",
         "eslint-webpack-plugin": "^2.1.0",
-        "file-loader": "6.0.0",
         "focus-visible": "5.1.0",
         "ftp": "0.3.10",
         "husky": "4.2.5",
