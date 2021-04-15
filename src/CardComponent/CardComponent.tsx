@@ -10,10 +10,10 @@ const CardComponent: React.FC<{
     <Card className="card-component">
         <Card.Header className="card-component-header">
             <Card.Title>
-                <span className="card-component-title"> {title} </span>
+                <span className="card-component-title">{title}</span>
             </Card.Title>
         </Card.Header>
-        <Card.Body> {children} </Card.Body>
+        <Card.Body>{children}</Card.Body>
     </Card>
 );
 

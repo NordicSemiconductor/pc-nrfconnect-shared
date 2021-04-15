@@ -1,20 +1,18 @@
-@import "~pc-nrfconnect-shared/src/variables";
-
-.card-component:nth-child(3n + 1) {
-    margin-left: 0;
-}
-
-.card-component:nth-child(3n + 4) {
-    margin-top: 0.25em;
-}
 .card-component {
+    &:nth-child(3n + 1) {
+        margin-left: 0;
+    }
+    &:nth-child(3n + 4) {
+        margin-top: 0.25em;
+    }
+
     margin-left: 0.25em;
-}
-.card-component {
+
     flex: 1;
     max-width: 20em;
     flex-shrink: 0;
     padding: 0.6em 0.6em;
+
     .card-component-header {
         background-color: transparent;
         text-align: center;
