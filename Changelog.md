@@ -1,6 +1,6 @@
 ## 4.22.0
 ### Added
-- Component `CardComponent`.
+- Component `Card`.
 
 ## 4.21.1
 ### Fixed

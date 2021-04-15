@@ -37,23 +37,23 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import { element } from 'prop-types';
 
-import './card-component.scss';
+import './card.scss';
 
-const CardComponent: React.FC<{
+const NrfCard: React.FC<{
     title: React.ReactElement;
 }> = ({ children, title }) => (
-    <Card className="card-component">
-        <Card.Header className="card-component-header">
+    <Card className="nrf-card">
+        <Card.Header className="header">
             <Card.Title>
-                <span className="card-component-title">{title}</span>
+                <span className="title">{title}</span>
             </Card.Title>
         </Card.Header>
         <Card.Body>{children}</Card.Body>
     </Card>
 );
 
-CardComponent.propTypes = {
+NrfCard.propTypes = {
     title: element.isRequired,
 };
 
-export default CardComponent;
+export default NrfCard;

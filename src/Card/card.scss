@@ -1,4 +1,4 @@
-.card-component {
+.nrf-card {
     &:nth-child(3n + 1) {
         margin-left: 0;
     }
@@ -13,10 +13,11 @@
     flex-shrink: 0;
     padding: 0.6em 0.6em;
 
-    .card-component-header {
+    .header {
         background-color: transparent;
         text-align: center;
-        .card-component-title {
+
+        .title {
             float: inherit;
             padding-top: 5px;
         }
