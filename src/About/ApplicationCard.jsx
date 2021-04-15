@@ -38,7 +38,7 @@ import React, { useEffect, useState } from 'react';
 import { ipcRenderer } from 'electron';
 
 import AboutButton from './AboutButton';
-import Card from './Card';
+import AboutCard from './AboutCard';
 import Section from './Section';
 
 export default () => {
@@ -54,7 +54,7 @@ export default () => {
     if (appInfo == null) return null;
 
     return (
-        <Card title="Application">
+        <AboutCard title="Application">
             <Section title="Title">{appInfo.displayName}</Section>
             <Section title="Purpose">{appInfo.description}</Section>
             <Section title="Version">{appInfo.currentVersion}</Section>
@@ -71,6 +71,6 @@ export default () => {
                     label="Get source code"
                 />
             </Section>
-        </Card>
+        </AboutCard>
     );
 };

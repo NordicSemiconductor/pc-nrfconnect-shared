@@ -47,7 +47,7 @@ import {
     selectedDevice,
 } from '../Device/deviceReducer';
 import AboutButton from './AboutButton';
-import Card from './Card';
+import AboutCard from './AboutCard';
 import Section from './Section';
 
 const memorySize = memoryInBytes => {
@@ -64,9 +64,9 @@ export default () => {
 
     if (device == null) {
         return (
-            <Card title="Device">
+            <AboutCard title="Device">
                 <Section title="No device selected" />
-            </Card>
+            </AboutCard>
         );
     }
 
@@ -74,7 +74,7 @@ export default () => {
     const { name, cores } = deviceInfo(device);
 
     return (
-        <Card title="Device">
+        <AboutCard title="Device">
             <Section title="Name">{name || 'Unknown'}</Section>
             <Section title="ID">{device.serialNumber}</Section>
             <Section title="PCA">{pca || 'Unknown'}</Section>
@@ -97,6 +97,6 @@ export default () => {
                     label="Go to product page"
                 />
             </Section>
-        </Card>
+        </AboutCard>
     );
 };
