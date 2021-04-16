@@ -1,3 +1,7 @@
+## 4.21.2
+### Fixed
+- `url-loader` changed their export, which broke code that imported images.
+
 ## 4.21.1
 ### Fixed
 - Exported colors were missing definitions for `black` and `white`.
