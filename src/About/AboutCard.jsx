@@ -37,17 +37,17 @@
 import React from 'react';
 import { node, string } from 'prop-types';
 
-import './card.scss';
+import './about-card.scss';
 
-const Card = ({ children, title }) => (
+const AboutCard = ({ children, title }) => (
     <div className="about-card">
         <h2 className="about-card-title">{title}</h2>
         {children}
     </div>
 );
-Card.propTypes = {
+AboutCard.propTypes = {
     title: string.isRequired,
     children: node.isRequired,
 };
 
-export default Card;
+export default AboutCard;

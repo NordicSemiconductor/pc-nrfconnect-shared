@@ -33,49 +33,27 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import React from 'react';
+import Card from 'react-bootstrap/Card';
+import { element } from 'prop-types';
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+import './card.scss';
 
-export { ErrorDialogActions };
+const NrfCard: React.FC<{
+    title: React.ReactElement;
+}> = ({ children, title }) => (
+    <Card className="nrf-card">
+        <Card.Header className="header">
+            <Card.Title>
+                <span className="title">{title}</span>
+            </Card.Title>
+        </Card.Header>
+        <Card.Body>{children}</Card.Body>
+    </Card>
+);
 
-export { default as App } from './App/App';
-export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
-export { default as Spinner } from './Dialog/Spinner';
-export { default as Slider } from './Slider/Slider';
-export { default as Toggle } from './Toggle/Toggle';
-export { default as Main } from './Main/Main';
-export { default as Card } from './Card/Card';
+NrfCard.propTypes = {
+    title: element.isRequired,
+};
 
-export { default as SidePanel } from './SidePanel/SidePanel';
-export { Group, CollapsibleGroup } from './SidePanel/Group';
-
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
-export { default as InlineInput } from './InlineInput/InlineInput';
-export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
-
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
-export { default as logger } from './logging';
-export { default as bleChannels } from './utils/bleChannels';
-export { default as colors } from './utils/colors.scss';
-
-export {
-    setAppDirs,
-    getAppDir,
-    getAppFile,
-    getAppDataDir,
-    getAppLogDir,
-    getUserDataDir,
-} from './utils/appDirs';
-
-export { openUrl } from './utils/open';
-export { default as systemReport } from './utils/systemReport';
-export { default as usageData } from './utils/usageData';
-export { default as classNames } from './utils/classNames';
-
-export { default as useHotKey } from './utils/useHotKey';
-
-export { currentPane, setCurrentPane } from './App/appLayout';
-
-export { getAppSpecificStore as getPersistentStore } from './utils/persistentStore';
+export default NrfCard;

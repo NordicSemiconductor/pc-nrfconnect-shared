@@ -1,0 +1,25 @@
+.nrf-card {
+    &:nth-child(3n + 1) {
+        margin-left: 0;
+    }
+    &:nth-child(3n + 4) {
+        margin-top: 0.25em;
+    }
+
+    margin-left: 0.25em;
+
+    flex: 1;
+    max-width: 20em;
+    flex-shrink: 0;
+    padding: 0.6em 0.6em;
+
+    .header {
+        background-color: transparent;
+        text-align: center;
+
+        .title {
+            float: inherit;
+            padding-top: 5px;
+        }
+    }
+}
