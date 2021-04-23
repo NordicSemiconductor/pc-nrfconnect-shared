@@ -44,8 +44,8 @@ import {
 } from '../Device/deviceReducer';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
-import AboutCard from './AboutCard';
 import Section from './Section';
+import Card from '../Card/Card'
 
 export default () => {
     const devices = useSelector(sortedDevices);
@@ -53,7 +53,7 @@ export default () => {
     const currentDevice = useSelector(deviceInfo);
 
     return (
-        <AboutCard title="Support">
+        <Card title="Support">
             <Section title="DevZone">
                 <p>
                     All support requests must be sent through our developer
@@ -82,6 +82,6 @@ export default () => {
                     label="Create system report"
                 />
             </Section>
-        </AboutCard>
+        </Card>
     );
 };
