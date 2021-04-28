@@ -1,3 +1,10 @@
+## 4.22.1
+### Fixed
+- Wrong current pane could crash the app: E.g. when an app previously had four
+  panes, it was persisted that the user was previously on the last pane and a
+  new release of the app has just a single pane then the app crashes when that
+  user opens the app again.
+
 ## 4.22.0
 ### Added
 - Component `Card`.
