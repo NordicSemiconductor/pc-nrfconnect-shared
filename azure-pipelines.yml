@@ -9,3 +9,4 @@ steps:
     npm ci
     npm run lint
     npm test
+  displayName: "Lint & test"
