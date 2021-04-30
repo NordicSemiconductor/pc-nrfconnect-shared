@@ -44,9 +44,7 @@ const NrfCard: React.FC<{
 }> = ({ children, title }) => (
     <Card className="nrf-card">
         <Card.Header className="header">
-            <Card.Title>
-                <span className="title">{title}</span>
-            </Card.Title>
+            <Card.Title className="title">{title}</Card.Title>
         </Card.Header>
         <Card.Body>{children}</Card.Body>
     </Card>
