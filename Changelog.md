@@ -1,3 +1,7 @@
+## 4.22.2
+### Fixed
+- Type of `Toggle` props were slightly wrong.
+
 ## 4.22.1
 ### Fixed
 - Wrong current pane could crash the app: E.g. when an app previously had four

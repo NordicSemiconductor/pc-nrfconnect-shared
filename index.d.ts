@@ -400,13 +400,13 @@ declare module 'pc-nrfconnect-shared' {
         id?: string;
         title?: string;
         isToggled?: boolean;
-        onToggle: (isToggled: boolean) => void;
+        onToggle?: (isToggled: boolean) => void;
         variant?: 'primary' | 'secondary';
         barColor?: string;
-        barToggledColor?: string;
+        barColorToggled?: string;
         handleColor?: string;
         handleColorToggled?: string;
-        label: string;
+        label?: string;
         labelRight?: boolean;
         width?: string;
         disabled?: boolean;
