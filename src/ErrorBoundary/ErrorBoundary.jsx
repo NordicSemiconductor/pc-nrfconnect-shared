@@ -33,41 +33,64 @@ class ErrorBoundary extends React.Component {
             return (
                 <div className="error-boundary__container">
                     <div className="error-boundary__header">
-                        <h1>Oops! There was a problem!</h1>
+                        <h1>Oops! There was a problem</h1>
                         <img src={bugIcon} alt="" />
                     </div>
                     <div className="error-boundary__main">
-                        {error !== null && (
-                            <CollapsibleGroup heading="Show detailed error message">
-                                <h2>{error.message}</h2>
-                                <div>{error.stack}</div>
-                            </CollapsibleGroup>
-                        )}
+                        <div className="error-boundary__info">
+                            {
+                                // Add app name to this string
+                            }
+                            <b>
+                                nRF Connect for Desktop experienced an
+                                unrecoverable error
+                            </b>
+                            <p>
+                                If this is the first time you've seen this
+                                problem we recommend restarting the application.
+                            </p>
+                            <Button
+                                variant="primary"
+                                onClick={() => {
+                                    getCurrentWindow().reload();
+                                }}
+                            >
+                                Restart application
+                            </Button>
+
+                            <Button
+                                variant="primary"
+                                onClick={() => {
+                                    console.log('factory reset');
+                                }}
+                            >
+                                Factory reset
+                            </Button>
+                        </div>
                     </div>
                     <div className="error-boundary__footer">
-                        <Button
-                            variant="outline-primary"
-                            onClick={() => {
-                                getCurrentWindow().reload();
-                            }}
-                        >
-                            Reload
-                        </Button>
-                        <Button
-                            variant="outline-primary"
-                            onClick={() => {
-                                console.log('factory reset');
-                            }}
-                        >
-                            Restore defaults
-                        </Button>
+                        {error !== null && (
+                            <div className="error-boundary__message">
+                                <h4>Error message</h4>
+                                <CollapsibleGroup heading="Show detailed error message">
+                                    <div className="stacktrace">
+                                        <h4>{error.message}</h4>
+                                        <p>{error.stack}</p>
+                                    </div>
+                                </CollapsibleGroup>
+                            </div>
+                        )}
+                        <p>
+                            Please report problem on DevZone if you have
+                            experienced it multiple times
+                        </p>
                         <Button
                             variant="primary"
                             onClick={() => {
                                 console.log('submitting report');
                             }}
                         >
-                            Report issue
+                            Report problem
                         </Button>
                     </div>
                 </div>

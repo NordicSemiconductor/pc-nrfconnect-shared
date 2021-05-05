@@ -26,17 +26,39 @@
     }
 
     &__main {
+        button {
+            margin-right: 8px;
+        }
+    }
+
+    &__info {
+        p {
+            margin-top: 16px;
+        }
     }
 
     &__footer {
-        border-top: 1px solid #ccc;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        padding: 16px 4px;
+        margin-top: 32px;
+
+        p {
+            margin-top: 32px;
+        }
 
         button {
-            margin-left: 12px;
+            margin-top: 32px;
+        }
+    }
+
+    &__message {
+        .stacktrace {
+            border: 1px solid $gray-400;
+            padding: 16px;
+            user-select: text;
+        }
+
+        p {
+            margin-top: 12px;
+            font-size: 12px;
         }
     }
 }
