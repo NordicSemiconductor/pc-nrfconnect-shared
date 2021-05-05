@@ -2,7 +2,11 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
+import ConfirmationDialog from '../Dialog/ConfirmationDialog';
 import { CollapsibleGroup } from '../SidePanel/Group';
+import { openUrl } from '../utils/open';
+import { getAppSpecificStore as store } from '../utils/persistentStore';
+import { sendErrorReport } from '../utils/usageData';
 import bugIcon from './bug.svg';
 
 import './error-boundary.scss';
@@ -15,19 +19,24 @@ class ErrorBoundary extends React.Component {
         this.state = {
             hasError: false,
             error: null,
+            isFactoryResetting: false,
         };
     }
 
     componentDidCatch(error) {
-        // You can also log the error to an error reporting service
         this.setState({
             hasError: true,
             error,
         });
+        sendErrorReport(error.message);
     }
 
+    factoryReset = () => {
+        store().clear();
+    };
+
     render() {
-        const { hasError, error } = this.state;
+        const { hasError, error, isFactoryResetting } = this.state;
         const { children } = this.props;
         if (hasError) {
             return (
@@ -61,11 +70,22 @@ class ErrorBoundary extends React.Component {
                             <Button
                                 variant="primary"
                                 onClick={() => {
-                                    console.log('factory reset');
+                                    this.setState({ isFactoryResetting: true });
                                 }}
                             >
                                 Factory reset
                             </Button>
+                            <ConfirmationDialog
+                                isVisible={isFactoryResetting}
+                                onOk={this.factoryReset}
+                                onCancel={() =>
+                                    this.setState({ isFactoryResetting: false })
+                                }
+                            >
+                                Performing a factory reset will remove all
+                                stored configurations. Are you sure you want to
+                                proceed?
+                            </ConfirmationDialog>
                         </div>
                     </div>
                     <div className="error-boundary__footer">
@@ -81,14 +101,16 @@ class ErrorBoundary extends React.Component {
                             </div>
                         )}
                         <p>
-                            Please report problem on DevZone if you have
+                            Please report the problem on DevZone if you have
                             experienced it multiple times
                         </p>
                         <Button
                             variant="primary"
-                            onClick={() => {
-                                console.log('submitting report');
-                            }}
+                            onClick={() =>
+                                openUrl(
+                                    'https://devzone.nordicsemi.com/support/add'
+                                )
+                            }
                         >
                             Report problem
                         </Button>
