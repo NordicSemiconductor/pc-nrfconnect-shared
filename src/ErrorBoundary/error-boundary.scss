@@ -1,0 +1,42 @@
+@import '../variables.scss';
+
+.error-boundary {
+    &__container {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        padding: 16px;
+        width: 700px;
+        border: 1px solid $gray-400;
+        box-shadow: 5px 6px 5px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    &__header {
+        margin-bottom: 16px;
+        color: $nordic-blue;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        img {
+            height: 32px;
+            width: 32px;
+        }
+    }
+
+    &__main {
+    }
+
+    &__footer {
+        border-top: 1px solid #ccc;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 16px 4px;
+
+        button {
+            margin-left: 12px;
+        }
+    }
+}
