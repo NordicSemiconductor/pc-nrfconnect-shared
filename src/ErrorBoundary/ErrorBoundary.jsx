@@ -33,6 +33,7 @@ class ErrorBoundary extends React.Component {
 
     factoryReset = () => {
         store().clear();
+        getCurrentWindow().reload();
     };
 
     render() {
@@ -60,9 +61,7 @@ class ErrorBoundary extends React.Component {
                             </p>
                             <Button
                                 variant="primary"
-                                onClick={() => {
-                                    getCurrentWindow().reload();
-                                }}
+                                onClick={() => getCurrentWindow().reload()}
                             >
                                 Restart application
                             </Button>
@@ -73,7 +72,7 @@ class ErrorBoundary extends React.Component {
                                     this.setState({ isFactoryResetting: true });
                                 }}
                             >
-                                Factory reset
+                                Restore defaults
                             </Button>
                             <ConfirmationDialog
                                 isVisible={isFactoryResetting}
@@ -82,8 +81,8 @@ class ErrorBoundary extends React.Component {
                                     this.setState({ isFactoryResetting: false })
                                 }
                             >
-                                Performing a factory reset will remove all
-                                stored configurations. Are you sure you want to
+                                Restoring defaults will remove all stored
+                                configurations. Are you sure you want to
                                 proceed?
                             </ConfirmationDialog>
                         </div>
