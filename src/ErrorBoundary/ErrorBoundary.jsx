@@ -1,11 +1,14 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import ConfirmationDialog from '../Dialog/ConfirmationDialog';
+import Spinner from '../Dialog/Spinner';
 import { CollapsibleGroup } from '../SidePanel/Group';
 import { openUrl } from '../utils/open';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
+import { generateSystemReport } from '../utils/systemReport';
 import { sendErrorReport } from '../utils/usageData';
 import bugIcon from './bug.svg';
 
@@ -20,6 +23,7 @@ class ErrorBoundary extends React.Component {
             hasError: false,
             error: null,
             isFactoryResetting: false,
+            systemReport: null,
         };
     }
 
@@ -28,7 +32,18 @@ class ErrorBoundary extends React.Component {
             hasError: true,
             error,
         });
+        const {
+            device: { devices, selectedSerialNumber },
+        } = this.props;
         sendErrorReport(error.message);
+        generateSystemReport(
+            new Date().toISOString().replace(/:/g, '-'),
+            Object.values(devices),
+            selectedSerialNumber,
+            devices[selectedSerialNumber]
+        ).then(report => {
+            this.setState({ systemReport: report });
+        });
     }
 
     factoryReset = () => {
@@ -37,7 +52,13 @@ class ErrorBoundary extends React.Component {
     };
 
     render() {
-        const { hasError, error, isFactoryResetting } = this.state;
+        const {
+            hasError,
+            error,
+            isFactoryResetting,
+            systemReport,
+        } = this.state;
+
         const { children } = this.props;
         if (hasError) {
             return (
@@ -65,7 +86,10 @@ class ErrorBoundary extends React.Component {
                             >
                                 Restart application
                             </Button>
-
+                            <p>
+                                If restarting didn't help, you can also try
+                                restoring to default values.
+                            </p>
                             <Button
                                 variant="primary"
                                 onClick={() => {
@@ -90,13 +114,29 @@ class ErrorBoundary extends React.Component {
                     <div className="error-boundary__footer">
                         {error !== null && (
                             <div className="error-boundary__message">
-                                <h4>Error message</h4>
                                 <CollapsibleGroup heading="Show detailed error message">
-                                    <div className="stacktrace">
+                                    <div className="report">
                                         <h4>{error.message}</h4>
-                                        <p>{error.stack}</p>
+                                        <pre>{error.stack}</pre>
                                     </div>
                                 </CollapsibleGroup>
+                            </div>
+                        )}
+                        <hr />
+                        {systemReport !== null ? (
+                            <div className="error-boundary__message">
+                                <CollapsibleGroup heading="Show system report">
+                                    <div className="report">
+                                        <pre>{systemReport}</pre>
+                                    </div>
+                                </CollapsibleGroup>
+                            </div>
+                        ) : (
+                            <div className="error-boundary__message--loading">
+                                <h2 className="loading-header">
+                                    Generating system report...
+                                </h2>
+                                <Spinner />
                             </div>
                         )}
                         <p>
@@ -110,8 +150,9 @@ class ErrorBoundary extends React.Component {
                                     'https://devzone.nordicsemi.com/support/add'
                                 )
                             }
+                            disabled={!systemReport}
                         >
-                            Report problem
+                            Go to DevZone
                         </Button>
                     </div>
                 </div>
@@ -126,4 +167,8 @@ ErrorBoundary.propTypes = {
     children: PropTypes.node,
 };
 
-export default ErrorBoundary;
+const mapStateToProps = state => ({
+    device: state.device,
+});
+
+export default connect(mapStateToProps)(ErrorBoundary);
