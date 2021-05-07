@@ -8,6 +8,7 @@ import ConfirmationDialog from '../Dialog/ConfirmationDialog';
 import Spinner from '../Dialog/Spinner';
 import { CollapsibleGroup } from '../SidePanel/Group';
 import { openUrl } from '../utils/open';
+import packageJson from '../utils/packageJson';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
 import { generateSystemReport } from '../utils/systemReport';
 import { sendErrorReport } from '../utils/usageData';
@@ -68,11 +69,9 @@ class ErrorBoundary extends React.Component {
                     </div>
                     <div className="error-boundary__main">
                         <div className="error-boundary__info">
-                            {
-                                // Add app name to this string
-                            }
                             <b>
-                                nRF Connect for Desktop experienced an
+                                nRF Connect for Desktop{' '}
+                                {packageJson().displayName} experienced an
                                 unrecoverable error
                             </b>
                             <p>
