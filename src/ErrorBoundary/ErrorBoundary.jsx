@@ -3,6 +3,7 @@ import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import deviceShape from '../Device/DeviceSelector/deviceShape';
 import ConfirmationDialog from '../Dialog/ConfirmationDialog';
 import Spinner from '../Dialog/Spinner';
 import { CollapsibleGroup } from '../SidePanel/Group';
@@ -32,9 +33,7 @@ class ErrorBoundary extends React.Component {
             hasError: true,
             error,
         });
-        const {
-            device: { devices, selectedSerialNumber },
-        } = this.props;
+        const { devices, selectedSerialNumber } = this.props;
         sendErrorReport(error.message);
         generateSystemReport(
             new Date().toISOString().replace(/:/g, '-'),
@@ -165,10 +164,13 @@ class ErrorBoundary extends React.Component {
 
 ErrorBoundary.propTypes = {
     children: PropTypes.node,
+    selectedSerialNumber: PropTypes.string,
+    devices: PropTypes.objectOf(deviceShape),
 };
 
 const mapStateToProps = state => ({
-    device: state.device,
+    devices: state.device.devices,
+    selectedSerialNumber: state.device.selectedSerialNumber,
 });
 
 export default connect(mapStateToProps)(ErrorBoundary);
