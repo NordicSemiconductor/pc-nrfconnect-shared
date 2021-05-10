@@ -34,8 +34,8 @@ class ErrorBoundary extends React.Component {
             hasError: true,
             error,
         });
-        const { devices, selectedSerialNumber } = this.props;
         sendErrorReport(error.message);
+        const { devices, selectedSerialNumber } = this.props;
         generateSystemReport(
             new Date().toISOString().replace(/:/g, '-'),
             Object.values(devices),
@@ -60,104 +60,103 @@ class ErrorBoundary extends React.Component {
         } = this.state;
 
         const { children } = this.props;
-        if (hasError) {
-            return (
-                <div className="error-boundary__container">
-                    <div className="error-boundary__header">
-                        <h1>Oops! There was a problem</h1>
-                        <img src={bugIcon} alt="" />
-                    </div>
-                    <div className="error-boundary__main">
-                        <div className="error-boundary__info">
-                            <b>
-                                nRF Connect for Desktop{' '}
-                                {packageJson().displayName} experienced an
-                                unrecoverable error
-                            </b>
-                            <p>
-                                If this is the first time you've seen this
-                                problem we recommend restarting the application.
-                            </p>
-                            <Button
-                                variant="primary"
-                                onClick={() => getCurrentWindow().reload()}
-                            >
-                                Restart application
-                            </Button>
-                            <p>
-                                If restarting didn't help, you can also try
-                                restoring to default values.
-                            </p>
-                            <Button
-                                variant="primary"
-                                onClick={() => {
-                                    this.setState({ isFactoryResetting: true });
-                                }}
-                            >
-                                Restore defaults
-                            </Button>
-                            <ConfirmationDialog
-                                isVisible={isFactoryResetting}
-                                onOk={this.factoryReset}
-                                onCancel={() =>
-                                    this.setState({ isFactoryResetting: false })
-                                }
-                            >
-                                Restoring defaults will remove all stored
-                                configurations. Are you sure you want to
-                                proceed?
-                            </ConfirmationDialog>
-                        </div>
-                    </div>
-                    <div className="error-boundary__footer">
-                        {error !== null && (
-                            <div className="error-boundary__message">
-                                <CollapsibleGroup heading="Show detailed error message">
-                                    <div className="report">
-                                        <h4>{error.message}</h4>
-                                        <pre>{error.stack}</pre>
-                                    </div>
-                                </CollapsibleGroup>
-                            </div>
-                        )}
-                        <hr />
-                        {systemReport !== null ? (
-                            <div className="error-boundary__message">
-                                <CollapsibleGroup heading="Show system report">
-                                    <div className="report">
-                                        <pre>{systemReport}</pre>
-                                    </div>
-                                </CollapsibleGroup>
-                            </div>
-                        ) : (
-                            <div className="error-boundary__message--loading">
-                                <h2 className="loading-header">
-                                    Generating system report...
-                                </h2>
-                                <Spinner />
-                            </div>
-                        )}
+
+        if (!hasError) {
+            return children;
+        }
+
+        return (
+            <div className="error-boundary__container">
+                <div className="error-boundary__header">
+                    <h1>Oops! There was a problem</h1>
+                    <img src={bugIcon} alt="" />
+                </div>
+                <div className="error-boundary__main">
+                    <div className="error-boundary__info">
+                        <b>
+                            nRF Connect for Desktop {packageJson().displayName}{' '}
+                            experienced an unrecoverable error
+                        </b>
                         <p>
-                            Please report the problem on DevZone if you have
-                            experienced it multiple times
+                            If this is the first time you've seen this problem
+                            we recommend restarting the application.
                         </p>
                         <Button
                             variant="primary"
-                            onClick={() =>
-                                openUrl(
-                                    'https://devzone.nordicsemi.com/support/add'
-                                )
-                            }
-                            disabled={!systemReport}
+                            onClick={() => getCurrentWindow().reload()}
                         >
-                            Go to DevZone
+                            Restart application
                         </Button>
+                        <p>
+                            If restarting didn't help, you can also try
+                            restoring to default values.
+                        </p>
+                        <Button
+                            variant="primary"
+                            onClick={() => {
+                                this.setState({ isFactoryResetting: true });
+                            }}
+                        >
+                            Restore defaults
+                        </Button>
+                        <ConfirmationDialog
+                            isVisible={isFactoryResetting}
+                            onOk={this.factoryReset}
+                            onCancel={() =>
+                                this.setState({ isFactoryResetting: false })
+                            }
+                        >
+                            Restoring defaults will remove all stored
+                            configurations. Are you sure you want to proceed?
+                        </ConfirmationDialog>
                     </div>
                 </div>
-            );
-        }
-
-        return children;
+                <div className="error-boundary__footer">
+                    {error !== null && (
+                        <div className="error-boundary__message">
+                            <CollapsibleGroup heading="Show detailed error message">
+                                <div className="report">
+                                    <h4>{error.message}</h4>
+                                    <pre>{error.stack}</pre>
+                                </div>
+                            </CollapsibleGroup>
+                        </div>
+                    )}
+                    <hr />
+                    {systemReport !== null ? (
+                        <div className="error-boundary__message">
+                            <CollapsibleGroup heading="Show system report">
+                                <div className="report">
+                                    <pre>{systemReport}</pre>
+                                </div>
+                            </CollapsibleGroup>
+                        </div>
+                    ) : (
+                        <div className="error-boundary__message--loading">
+                            <h2 className="loading-header">
+                                Generating system report...
+                            </h2>
+                            <Spinner />
+                        </div>
+                    )}
+                    <p>
+                        Please report the problem on DevZone if you have
+                        experienced it multiple times
+                    </p>
+                    <Button
+                        variant="primary"
+                        onClick={() =>
+                            openUrl(
+                                'https://devzone.nordicsemi.com/support/add'
+                            )
+                        }
+                        disabled={!systemReport}
+                    >
+                        Go to DevZone
+                    </Button>
+                </div>
+            </div>
+        );
     }
 }
 
