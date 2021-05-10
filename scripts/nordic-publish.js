@@ -74,6 +74,8 @@ const config = {
     connTimeout: 60 * 60 * 1000,
     pasvTimeout: 60 * 60 * 1000,
     keepalive: 0,
+    secure: false,
+    debug: console.log,
 };
 
 const repoDirOfficial = '.pc-tools/nrfconnect-apps';
