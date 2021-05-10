@@ -11,12 +11,24 @@ import { openUrl } from '../utils/open';
 import packageJson from '../utils/packageJson';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
 import { generateSystemReport } from '../utils/systemReport';
-import { sendErrorReport } from '../utils/usageData';
+import {
+    getInitializedStatus as isGAInitialized,
+    init as initGA,
+    sendErrorReport,
+} from '../utils/usageData';
 import bugIcon from './bug.svg';
 
 import './error-boundary.scss';
 
 const { getCurrentWindow } = require('electron').remote;
+
+const sendGAEvent = async error => {
+    const isInitialized = await isGAInitialized();
+    if (!isInitialized) {
+        await initGA(packageJson());
+    }
+    sendErrorReport(error);
+};
 
 class ErrorBoundary extends React.Component {
     constructor(props) {
@@ -29,12 +41,13 @@ class ErrorBoundary extends React.Component {
         };
     }
 
-    componentDidCatch(error) {
+    async componentDidCatch(error) {
         this.setState({
             hasError: true,
             error,
         });
-        sendErrorReport(error.message);
+        await sendGAEvent(error.message);
+
         const { devices, selectedSerialNumber } = this.props;
         generateSystemReport(
             new Date().toISOString().replace(/:/g, '-'),
@@ -167,8 +180,8 @@ ErrorBoundary.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    devices: state.device.devices,
-    selectedSerialNumber: state.device.selectedSerialNumber,
+    devices: state.device?.devices || {},
+    selectedSerialNumber: state.device?.selectedSerialNumber,
 });
 
 export default connect(mapStateToProps)(ErrorBoundary);

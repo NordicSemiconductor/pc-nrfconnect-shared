@@ -209,6 +209,10 @@ const sendErrorReport = (error: string) => {
     );
 };
 
+const getInitializedStatus = async () => {
+    return isInitialized;
+};
+
 export default {
     init,
     isInitialized,
@@ -218,4 +222,5 @@ export default {
     reset,
     sendUsageData,
     sendErrorReport,
+    getInitializedStatus,
 };
