@@ -370,6 +370,14 @@ declare module 'pc-nrfconnect-shared' {
 
     export class ErrorDialog extends React.Component {}
 
+    // ErrorBoundary.jsx
+
+    interface ErrorBoundaryProps {
+        children: React.ReactNode;
+    }
+
+    export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {}
+
     // InlineInput.jsx
 
     interface InlineInputProps {
