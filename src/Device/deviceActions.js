@@ -214,29 +214,29 @@ const logDeviceListerError = error => dispatch => {
  * @param {function(device)} doDeselectDevice Invoke to start deselect the current device
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
-export const startWatchingDevices = (deviceListing, doDeselectDevice) => (
-    dispatch,
-    getState
-) => {
-    if (!deviceLister) {
-        deviceLister = new DeviceLister(deviceListing);
-    }
-    deviceLister.removeAllListeners('conflated');
-    deviceLister.removeAllListeners('error');
-    deviceLister.on('conflated', devices => {
-        const state = getState();
-        if (
-            state.device.selectedSerialNumber !== null &&
-            !devices.has(state.device.selectedSerialNumber)
-        ) {
-            doDeselectDevice();
+export const startWatchingDevices =
+    (deviceListing, doDeselectDevice) => (dispatch, getState) => {
+        if (!deviceLister) {
+            deviceLister = new DeviceLister(deviceListing);
         }
+        deviceLister.removeAllListeners('conflated');
+        deviceLister.removeAllListeners('error');
+        deviceLister.on('conflated', devices => {
+            const state = getState();
+            if (
+                state.device.selectedSerialNumber !== null &&
+                !devices.has(state.device.selectedSerialNumber)
+            ) {
+                doDeselectDevice();
+            }
 
-        dispatch(devicesDetected(Array.from(devices.values())));
-    });
-    deviceLister.on('error', error => dispatch(logDeviceListerError(error)));
-    deviceLister.start();
-};
+            dispatch(devicesDetected(Array.from(devices.values())));
+        });
+        deviceLister.on('error', error =>
+            dispatch(logDeviceListerError(error))
+        );
+        deviceLister.start();
+    };
 
 /**
  * Stops watching for devices.
@@ -288,46 +288,48 @@ const getDeviceSetupUserInput = dispatch => (message, choices) =>
  * @param {function(device)} doDeselectDevice Invoke to start deselect the current device
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
-export const setupDevice = (
-    device,
-    deviceSetup,
-    releaseCurrentDevice,
-    onDeviceIsReady,
-    doStartWatchingDevices,
-    doDeselectDevice
-) => async dispatch => {
-    // During device setup, the device may go in and out of bootloader
-    // mode. This will make it appear as detached in the device lister,
-    // causing a DESELECT_DEVICE. To avoid this, we stop the device
-    // lister while setting up the device, and start it again after the
-    // device has been set up.
-    stopWatchingDevices();
-    await releaseCurrentDevice();
-    const deviceSetupConfig = {
-        promiseConfirm: getDeviceSetupUserInput(dispatch),
-        promiseChoice: getDeviceSetupUserInput(dispatch),
-        allowCustomDevice: false,
-        ...deviceSetup,
-    };
+export const setupDevice =
+    (
+        device,
+        deviceSetup,
+        releaseCurrentDevice,
+        onDeviceIsReady,
+        doStartWatchingDevices,
+        doDeselectDevice
+    ) =>
+    async dispatch => {
+        // During device setup, the device may go in and out of bootloader
+        // mode. This will make it appear as detached in the device lister,
+        // causing a DESELECT_DEVICE. To avoid this, we stop the device
+        // lister while setting up the device, and start it again after the
+        // device has been set up.
+        stopWatchingDevices();
+        await releaseCurrentDevice();
+        const deviceSetupConfig = {
+            promiseConfirm: getDeviceSetupUserInput(dispatch),
+            promiseChoice: getDeviceSetupUserInput(dispatch),
+            allowCustomDevice: false,
+            ...deviceSetup,
+        };
 
-    nrfDeviceSetup
-        .setupDevice(device, deviceSetupConfig)
-        .then(preparedDevice => {
-            doStartWatchingDevices();
-            dispatch(deviceSetupComplete(preparedDevice));
-            onDeviceIsReady(preparedDevice);
-        })
-        .catch(error => {
-            dispatch(deviceSetupError(device, error));
-            if (!deviceSetupConfig.allowCustomDevice) {
-                logger.error(
-                    `Error while setting up device ${device.serialNumber}: ${error.message}`
-                );
-                doDeselectDevice();
-            }
-            doStartWatchingDevices();
-        });
-};
+        nrfDeviceSetup
+            .setupDevice(device, deviceSetupConfig)
+            .then(preparedDevice => {
+                doStartWatchingDevices();
+                dispatch(deviceSetupComplete(preparedDevice));
+                onDeviceIsReady(preparedDevice);
+            })
+            .catch(error => {
+                dispatch(deviceSetupError(device, error));
+                if (!deviceSetupConfig.allowCustomDevice) {
+                    logger.error(
+                        `Error while setting up device ${device.serialNumber}: ${error.message}`
+                    );
+                    doDeselectDevice();
+                }
+                doStartWatchingDevices();
+            });
+    };
 
 /**
  * Responds to a device setup confirmation request with the given input
