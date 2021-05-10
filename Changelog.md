@@ -1,3 +1,8 @@
+## 4.23.0
+### Added
+- Component `ErrorBoundary`. Errors inside components should now be caught
+  and the user is presented with tools for recovery.
+
 ## 4.22.2
 ### Fixed
 - Type of `Toggle` props were slightly wrong.
