@@ -1,7 +1,12 @@
 ## 4.23.0
 ### Added
-- Component `ErrorBoundary`. Errors inside components should now be caught
-  and the user is presented with tools for recovery.
+- Error robustness
+  - Added a component `ErrorBoundary` which can be used as an
+    [Error Boundary](https://reactjs.org/docs/error-boundaries.html): When an
+    error happens inside the enclosed components, users are presented with tools
+    for recovery.
+  - Use the `ErrorBoundary` for all apps using the component `App`, so these
+    usually do not need to use this error boundary explicitly.
 
 ## 4.22.2
 ### Fixed
