@@ -71,6 +71,8 @@ const config = {
     port: process.env.REPO_PORT || 21,
     user: process.env.REPO_USER || 'anonymous',
     password: process.env.REPO_PASS || 'anonymous@',
+    connTimeout: 60 * 60 * 1000,
+    pasvTimeout: 60 * 60 * 1000,
     keepalive: 60 * 60 * 1000,
 };
 
