@@ -86,10 +86,10 @@ class ErrorBoundary extends React.Component {
                 </div>
                 <div className="error-boundary__main">
                     <div className="error-boundary__info">
-                        <b>
+                        <div className="info-header">
                             nRF Connect for Desktop {packageJson().displayName}{' '}
                             experienced an unrecoverable error
-                        </b>
+                        </div>
                         <p>
                             If this is the first time you've seen this problem
                             we recommend restarting the application.

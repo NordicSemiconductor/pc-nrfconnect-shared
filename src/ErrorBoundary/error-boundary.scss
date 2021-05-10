@@ -33,6 +33,11 @@
     }
 
     &__info {
+        .info-header {
+            font-weight: 700;
+            color: $gray-700;
+        }
+
         p {
             margin-top: 16px;
         }
