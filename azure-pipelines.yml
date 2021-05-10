@@ -6,6 +6,6 @@ steps:
     versionSpec: 12
 - bash: |
     set -o errexit -o pipefail
-    npm i
+    npm ci
     npm run lint
     npm test
