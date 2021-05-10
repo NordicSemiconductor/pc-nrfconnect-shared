@@ -48,9 +48,8 @@ const createPreparedStore = actions => {
     return store;
 };
 
-const PreparedProvider = actions => props => (
-    <Provider store={createPreparedStore(actions)} {...props} />
-);
+const PreparedProvider = actions => props =>
+    <Provider store={createPreparedStore(actions)} {...props} />;
 
 export default (element, actions = []) =>
     render(element, { wrapper: PreparedProvider(actions) });

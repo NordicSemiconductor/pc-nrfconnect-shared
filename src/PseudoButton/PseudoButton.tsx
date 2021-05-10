@@ -39,22 +39,20 @@ import { func, string } from 'prop-types';
 
 import './pseudo-button.scss';
 
-const invokeIfSpaceOrEnterPressed = (onClick: () => void) => (
-    event: React.KeyboardEvent
-) => {
-    event.stopPropagation();
-    if (event.key === ' ' || event.key === 'Enter') {
-        onClick();
-    }
-};
+const invokeIfSpaceOrEnterPressed =
+    (onClick: () => void) => (event: React.KeyboardEvent) => {
+        event.stopPropagation();
+        if (event.key === ' ' || event.key === 'Enter') {
+            onClick();
+        }
+    };
 
-const blurAndInvoke = (onClick: () => void) => (
-    event: React.MouseEvent<HTMLElement>
-) => {
-    event.stopPropagation();
-    event.currentTarget.blur();
-    onClick();
-};
+const blurAndInvoke =
+    (onClick: () => void) => (event: React.MouseEvent<HTMLElement>) => {
+        event.stopPropagation();
+        event.currentTarget.blur();
+        onClick();
+    };
 
 // Motivation for this class: A normal button in HTML must not contain divs or other buttons,
 // but we do have things that behave like buttons and at the same time should contain such things
