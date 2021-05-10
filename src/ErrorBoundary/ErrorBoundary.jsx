@@ -65,12 +65,8 @@ class ErrorBoundary extends React.Component {
     };
 
     render() {
-        const {
-            hasError,
-            error,
-            isFactoryResetting,
-            systemReport,
-        } = this.state;
+        const { hasError, error, isFactoryResetting, systemReport } =
+            this.state;
 
         const { children } = this.props;
 
