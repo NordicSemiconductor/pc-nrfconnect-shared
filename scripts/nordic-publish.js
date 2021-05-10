@@ -73,8 +73,7 @@ const config = {
     password: process.env.REPO_PASS || 'anonymous@',
     connTimeout: 60 * 60 * 1000,
     pasvTimeout: 60 * 60 * 1000,
-    keepalive: 0,
-    secure: false,
+    keepalive: 60 * 60 * 1000,
     debug: console.log,
 };
 
