@@ -91,8 +91,8 @@ class ErrorBoundary extends React.Component {
                             experienced an unrecoverable error
                         </div>
                         <p>
-                            If this is the first time you've seen this problem
-                            we recommend restarting the application.
+                            If this is the first time you&apos;ve seen this
+                            problem we recommend restarting the application.
                         </p>
                         <Button
                             variant="primary"
@@ -101,7 +101,7 @@ class ErrorBoundary extends React.Component {
                             Restart application
                         </Button>
                         <p>
-                            If restarting didn't help, you can also try
+                            If restarting didn&apos;t help, you can also try
                             restoring to default values.
                         </p>
                         <Button
