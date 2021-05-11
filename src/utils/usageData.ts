@@ -118,8 +118,10 @@ const init = async (packageJson: PackageJson) => {
  * @returns {Boolean} returns whether the setting is on, off or undefined
  */
 const isInitialized = () => {
-    logger.debug(`Usage report instance is${initialized ? '' : ' not'} initialized`)
-    return initialized
+    logger.debug(
+        `Usage report instance is${initialized ? '' : ' not'} initialized`
+    );
+    return initialized;
 };
 
 /**

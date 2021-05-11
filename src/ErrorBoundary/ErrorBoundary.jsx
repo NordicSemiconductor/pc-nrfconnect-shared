@@ -47,8 +47,8 @@ import packageJson from '../utils/packageJson';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
 import { generateSystemReport } from '../utils/systemReport';
 import {
-    isInitialized as isGAInitialized,
     init as initGA,
+    isInitialized as isGAInitialized,
     sendErrorReport,
 } from '../utils/usageData';
 import bugIcon from './bug.svg';
