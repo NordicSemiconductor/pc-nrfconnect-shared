@@ -209,9 +209,7 @@ const sendErrorReport = (error: string) => {
     );
 };
 
-const getInitializedStatus = async () => {
-    return isInitialized;
-};
+const getInitializedStatus = () => isInitialized;
 
 export default {
     init,

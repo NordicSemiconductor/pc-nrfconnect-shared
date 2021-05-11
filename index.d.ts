@@ -500,6 +500,7 @@ declare module 'pc-nrfconnect-shared' {
             label: string | undefined
         ) => void;
         sendErrorReport: (error: string) => void;
+        getInitializedStatus: () => boolean;
     };
 
     interface ObjectContainingOptionalStrings {

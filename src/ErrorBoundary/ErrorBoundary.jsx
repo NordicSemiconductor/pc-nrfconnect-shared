@@ -58,8 +58,7 @@ import './error-boundary.scss';
 const { getCurrentWindow } = require('electron').remote;
 
 const sendGAEvent = async error => {
-    const isInitialized = await isGAInitialized();
-    if (!isInitialized) {
+    if (!isGAInitialized()) {
         await initGA(packageJson());
     }
     sendErrorReport(error);
