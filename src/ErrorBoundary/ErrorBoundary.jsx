@@ -57,9 +57,10 @@ import './error-boundary.scss';
 
 const { getCurrentWindow } = require('electron').remote;
 
-const sendGAEvent = async error => {
+const sendGAEvent = error => {
     if (!isGAInitialized()) {
-        await initGA(packageJson());
+        initGA(packageJson()).then(() => sendErrorReport(error));
+        return;
     }
     sendErrorReport(error);
 };
@@ -75,12 +76,12 @@ class ErrorBoundary extends React.Component {
         };
     }
 
-    async componentDidCatch(error) {
+    componentDidCatch(error) {
         this.setState({
             hasError: true,
             error,
         });
-        await sendGAEvent(error.message);
+        sendGAEvent(error.message);
 
         const { devices, selectedSerialNumber } = this.props;
         generateSystemReport(
