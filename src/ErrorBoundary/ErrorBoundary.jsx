@@ -76,11 +76,14 @@ class ErrorBoundary extends React.Component {
         };
     }
 
-    componentDidCatch(error) {
-        this.setState({
+    static getDerivedStateFromError(error) {
+        return {
             hasError: true,
             error,
-        });
+        };
+    }
+
+    componentDidCatch(error) {
         sendGAEvent(error.message);
 
         const { devices, selectedSerialNumber } = this.props;
