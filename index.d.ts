@@ -490,7 +490,7 @@ declare module 'pc-nrfconnect-shared' {
 
     export const usageData: {
         init: (packageJson: PackageJson) => Promise<void>;
-        isInitialized: boolean;
+        isInitialized: () => boolean;
         enable: () => void;
         disable: () => void;
         isEnabled: () => void;
@@ -500,7 +500,6 @@ declare module 'pc-nrfconnect-shared' {
             label: string | undefined
         ) => void;
         sendErrorReport: (error: string) => void;
-        getInitializedStatus: () => boolean;
     };
 
     interface ObjectContainingOptionalStrings {

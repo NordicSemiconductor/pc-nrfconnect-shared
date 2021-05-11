@@ -53,7 +53,7 @@ interface EventAction {
     label: string | undefined;
 }
 
-let isInitialized = false;
+let initialized = false;
 let appJson: PackageJson;
 let eventQueue: EventAction[] = [];
 
@@ -106,10 +106,20 @@ const init = async (packageJson: PackageJson) => {
 
     reactGA.pageview(appJson.name);
 
-    isInitialized = true;
+    initialized = true;
     logger.debug(
         `Google Analytics for category ${appJson.name} has initialized`
     );
+};
+
+/**
+ * Checks if usage report instance is initialized and ready to be sent
+ *
+ * @returns {Boolean} returns whether the setting is on, off or undefined
+ */
+const isInitialized = () => {
+    logger.debug(`Usage report instance is${initialized ? '' : ' not'} initialized`)
+    return initialized
 };
 
 /**
@@ -189,7 +199,7 @@ const sendUsageData = <T extends string>(
     label: string | undefined
 ) => {
     eventQueue.push({ action, label });
-    if (!isInitialized) {
+    if (!initialized) {
         return;
     }
     eventQueue.forEach(sendEvent);
@@ -209,16 +219,13 @@ const sendErrorReport = (error: string) => {
     );
 };
 
-const getInitializedStatus = () => isInitialized;
-
 export default {
     init,
-    isInitialized,
     enable,
     disable,
     isEnabled,
     reset,
     sendUsageData,
     sendErrorReport,
-    getInitializedStatus,
+    isInitialized,
 };
