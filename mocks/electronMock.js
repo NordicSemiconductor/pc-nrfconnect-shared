@@ -7,6 +7,9 @@ module.exports = {
     dialog: jest.fn(),
     remote: {
         require: jest.fn(),
+        getCurrentWindow: () => ({
+            reload: jest.fn(),
+        }),
     },
     ipcRenderer: {
         once: jest.fn(),
