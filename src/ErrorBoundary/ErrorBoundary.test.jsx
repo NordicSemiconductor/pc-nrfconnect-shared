@@ -35,15 +35,21 @@
  */
 
 import React from 'react';
+import reactGA from 'react-ga';
+import { fireEvent } from '@testing-library/react';
 
 import render from '../../test/testrenderer';
+import { getAppSpecificStore as store } from '../utils/persistentStore';
 import { generateSystemReport } from '../utils/systemReport';
 import ErrorBoundary from './ErrorBoundary';
 
 jest.mock('../utils/systemReport');
 jest.mock('react-ga');
+
+const SYSTEM_REPORT = 'system report';
+
 generateSystemReport.mockImplementation(
-    () => new Promise(res => res('report details'))
+    () => new Promise(res => res(SYSTEM_REPORT))
 );
 
 const Child = () => {
@@ -51,9 +57,27 @@ const Child = () => {
 };
 
 describe('ErrorBoundary', () => {
-    it('should render error boundary component when there is an error', () => {
+    beforeEach(() => {
         const spy = jest.spyOn(console, 'error');
         spy.mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('should send GA event', async () => {
+        render(
+            <ErrorBoundary>
+                <Child />
+            </ErrorBoundary>
+        );
+        const flushPromises = () => new Promise(setImmediate);
+        await flushPromises();
+        expect(reactGA.initialize).toHaveBeenCalled();
+    });
+
+    it('should render error boundary component when there is an error', () => {
         const { getByText } = render(
             <ErrorBoundary>
                 <Child />
@@ -61,7 +85,27 @@ describe('ErrorBoundary', () => {
         );
         const errorMessage = getByText('Oops! There was a problem');
         expect(errorMessage).toBeDefined();
+    });
 
-        spy.mockRestore();
+    it('should clear store if factory reset', async () => {
+        const { getByText, findByText } = render(
+            <ErrorBoundary>
+                <Child />
+            </ErrorBoundary>
+        );
+        fireEvent.click(getByText('Restore defaults'));
+        await findByText('OK');
+        fireEvent.click(getByText('OK'));
+        expect(store().clear).toHaveBeenCalled();
+    });
+
+    it('should present system information', async () => {
+        const { findByText } = render(
+            <ErrorBoundary>
+                <Child />
+            </ErrorBoundary>
+        );
+        const report = await findByText(SYSTEM_REPORT);
+        expect(report).toBeDefined();
     });
 });
