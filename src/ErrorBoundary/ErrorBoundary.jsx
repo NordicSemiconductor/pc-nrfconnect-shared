@@ -84,9 +84,11 @@ class ErrorBoundary extends React.Component {
     }
 
     componentDidCatch(error) {
-        sendGAEvent(error.message);
+        const { devices, selectedSerialNumber, sendUsageData } = this.props;
+        sendUsageData != null
+            ? sendUsageData(error.message)
+            : sendGAEvent(error.message);
 
-        const { devices, selectedSerialNumber } = this.props;
         generateSystemReport(
             new Date().toISOString().replace(/:/g, '-'),
             Object.values(devices),
@@ -97,7 +99,7 @@ class ErrorBoundary extends React.Component {
         });
     }
 
-    factoryReset = () => {
+    restoreDefaults = () => {
         store().clear();
         getCurrentWindow().reload();
     };
@@ -106,11 +108,13 @@ class ErrorBoundary extends React.Component {
         const { hasError, error, isFactoryResetting, systemReport } =
             this.state;
 
-        const { children } = this.props;
+        const { children, appName, restoreDefaults } = this.props;
 
         if (!hasError) {
             return children;
         }
+
+        const appDisplayName = appName || packageJson().displayName;
 
         return (
             <div className="error-boundary__container">
@@ -121,8 +125,8 @@ class ErrorBoundary extends React.Component {
                 <div className="error-boundary__main">
                     <div className="error-boundary__info">
                         <div className="info-header">
-                            nRF Connect for Desktop {packageJson().displayName}{' '}
-                            experienced an unrecoverable error
+                            nRF Connect for Desktop {appDisplayName} experienced
+                            an unrecoverable error
                         </div>
                         <p>
                             If this is the first time you&apos;ve seen this
@@ -148,7 +152,7 @@ class ErrorBoundary extends React.Component {
                         </Button>
                         <ConfirmationDialog
                             isVisible={isFactoryResetting}
-                            onOk={this.factoryReset}
+                            onOk={restoreDefaults || this.restoreDefaults}
                             onCancel={() =>
                                 this.setState({ isFactoryResetting: false })
                             }
@@ -211,6 +215,9 @@ ErrorBoundary.propTypes = {
     children: PropTypes.node.isRequired,
     selectedSerialNumber: PropTypes.string,
     devices: PropTypes.objectOf(deviceShape),
+    appName: PropTypes.string,
+    restoreDefaults: PropTypes.func,
+    sendUsageData: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
