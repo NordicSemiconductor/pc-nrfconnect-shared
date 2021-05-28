@@ -35,87 +35,47 @@
  */
 
 import React from 'react';
-import reactGA from 'react-ga';
 import { fireEvent } from '@testing-library/react';
 
 import render from '../../test/testrenderer';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
-import { generateSystemReport } from '../utils/systemReport';
-import ErrorBoundary from './ErrorBoundary';
+import FactoryResetButton from './FactoryResetButton';
 
-jest.mock('../utils/systemReport');
-jest.mock('react-ga');
+const LABEL = 'Factory reset';
 
-const SYSTEM_REPORT = 'system report';
-
-generateSystemReport.mockImplementation(
-    () => new Promise(res => res(SYSTEM_REPORT))
-);
-
-const Child = () => {
-    throw new Error();
-};
-
-describe('ErrorBoundary', () => {
-    beforeEach(() => {
-        const spy = jest.spyOn(console, 'error');
-        spy.mockImplementation(() => {});
-    });
-
+describe('FactoryReset', () => {
     afterEach(() => {
-        jest.clearAllMocks();
+        jest.resetAllMocks();
     });
 
-    it('should send GA event', async () => {
-        render(
-            <ErrorBoundary>
-                <Child />
-            </ErrorBoundary>
-        );
-        const flushPromises = () => new Promise(setImmediate);
-        await flushPromises();
-        expect(reactGA.initialize).toHaveBeenCalled();
-    });
-
-    it('can take custom reporting functions', async () => {
-        const sendUsageData = jest.fn();
-        render(
-            <ErrorBoundary sendUsageData={sendUsageData}>
-                <Child />
-            </ErrorBoundary>
-        );
-        expect(sendUsageData).toHaveBeenCalled();
-    });
-
-    it('should render error boundary component when there is an error', () => {
-        const { getByText } = render(
-            <ErrorBoundary>
-                <Child />
-            </ErrorBoundary>
-        );
-        const errorMessage = getByText('Oops! There was a problem');
-        expect(errorMessage).toBeDefined();
-    });
-
-    it('should clear store if factory reset', async () => {
+    it('should clear store when confirmed', async () => {
         const { getByText, findByText } = render(
-            <ErrorBoundary>
-                <Child />
-            </ErrorBoundary>
+            <FactoryResetButton label={LABEL} />
         );
-        fireEvent.click(getByText('Restore default settings'));
+        fireEvent.click(getByText(LABEL));
         await findByText('OK');
         fireEvent.click(getByText('OK'));
         expect(store().clear).toHaveBeenCalled();
     });
 
-    it('should present system information', async () => {
-        const { findByText } = render(
-            <ErrorBoundary>
-                <Child />
-            </ErrorBoundary>
+    it('should not clear store when cancelled', async () => {
+        const { getByText, findByText } = render(
+            <FactoryResetButton label={LABEL} />
         );
-        const report = await findByText(SYSTEM_REPORT);
-        expect(report).toBeDefined();
+        fireEvent.click(getByText(LABEL));
+        await findByText('Cancel');
+        fireEvent.click(getByText('Cancel'));
+        expect(store().clear).not.toHaveBeenCalled();
+    });
+
+    it('is possible to override reset function', async () => {
+        const overrideResetFn = jest.fn();
+        const { getByText, findByText } = render(
+            <FactoryResetButton label={LABEL} resetFn={overrideResetFn} />
+        );
+        fireEvent.click(getByText(LABEL));
+        await findByText('OK');
+        fireEvent.click(getByText('OK'));
+        expect(overrideResetFn).toHaveBeenCalled();
     });
 });
