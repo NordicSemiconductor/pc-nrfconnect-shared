@@ -39,8 +39,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import deviceShape from '../Device/DeviceSelector/deviceShape';
-import ConfirmationDialog from '../Dialog/ConfirmationDialog';
 import Spinner from '../Dialog/Spinner';
+import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { CollapsibleGroup } from '../SidePanel/Group';
 import { openUrl } from '../utils/open';
 import packageJson from '../utils/packageJson';
@@ -71,7 +71,6 @@ class ErrorBoundary extends React.Component {
         this.state = {
             hasError: false,
             error: null,
-            isFactoryResetting: false,
             systemReport: null,
         };
     }
@@ -105,8 +104,7 @@ class ErrorBoundary extends React.Component {
     };
 
     render() {
-        const { hasError, error, isFactoryResetting, systemReport } =
-            this.state;
+        const { hasError, error, systemReport } = this.state;
 
         const { children, appName, restoreDefaults } = this.props;
 
@@ -142,24 +140,10 @@ class ErrorBoundary extends React.Component {
                             If restarting didn&apos;t help, you can also try
                             restoring to default values.
                         </p>
-                        <Button
-                            variant="primary"
-                            onClick={() => {
-                                this.setState({ isFactoryResetting: true });
-                            }}
-                        >
-                            Restore defaults
-                        </Button>
-                        <ConfirmationDialog
-                            isVisible={isFactoryResetting}
-                            onOk={restoreDefaults || this.restoreDefaults}
-                            onCancel={() =>
-                                this.setState({ isFactoryResetting: false })
-                            }
-                        >
-                            Restoring defaults will remove all stored
-                            configurations. Are you sure you want to proceed?
-                        </ConfirmationDialog>
+                        <FactoryResetButton
+                            resetFn={restoreDefaults || this.restoreDefaults}
+                            label="Restore default settings"
+                        />
                     </div>
                 </div>
                 <div className="error-boundary__footer">

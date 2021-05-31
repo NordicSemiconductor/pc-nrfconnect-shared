@@ -1,4 +1,4 @@
-/* Copyright (c) 2015 - 2017, Nordic Semiconductor ASA
+/* Copyright (c) 2015 - 2021, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -34,47 +34,49 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from 'react';
-import { ipcRenderer } from 'electron';
+import React, { useState } from 'react';
+import { Button } from 'react-bootstrap';
+import { func, string } from 'prop-types';
 
-import FactoryResetButton from '../FactoryReset/FactoryResetButton';
-import AboutButton from './AboutButton';
-import AboutCard from './AboutCard';
-import Section from './Section';
+import ConfirmationDialog from '../Dialog/ConfirmationDialog';
+import logger from '../logging';
+import { getAppSpecificStore as store } from '../utils/persistentStore';
 
-export default () => {
-    const [appInfo, setAppInfo] = useState();
+const DEFAULT_MODAL_TEXT =
+    'By restoring defaults, all stored app-specific configuration values will be lost. This does not include configurations such as device renames and favorites. Are you sure you want to proceed?';
 
-    useEffect(() => {
-        ipcRenderer.once('app-details', (_, details) => {
-            setAppInfo(details);
-        });
-        ipcRenderer.send('get-app-details');
-    }, [setAppInfo]);
+const FactoryResetButton = ({ resetFn, label, modalText }) => {
+    const [isFactoryResetting, setIsFactoryResetting] = useState(false);
 
-    if (appInfo == null) return null;
+    const defaultResetFn = () => {
+        store().clear();
+        setIsFactoryResetting(false);
+        logger.info('Successfully restored defaults');
+    };
 
     return (
-        <AboutCard title="Application">
-            <Section title="Title">{appInfo.displayName}</Section>
-            <Section title="Purpose">{appInfo.description}</Section>
-            <Section title="Version">{appInfo.currentVersion}</Section>
-            <Section title="Source">{appInfo.source || 'local'}</Section>
-            <Section title="Supported engines">
-                nRF Connect {appInfo.engineVersion}
-            </Section>
-            <Section title="Current engine">
-                nRF Connect {appInfo.coreVersion}
-            </Section>
-            <Section>
-                <AboutButton
-                    url={appInfo.repositoryUrl}
-                    label="Get source code"
-                />
-            </Section>
-            <Section>
-                <FactoryResetButton label="Restore defaults" />
-            </Section>
-        </AboutCard>
+        <>
+            <Button
+                variant="primary"
+                onClick={() => setIsFactoryResetting(true)}
+            >
+                {label}
+            </Button>
+            <ConfirmationDialog
+                isVisible={isFactoryResetting}
+                onOk={resetFn || defaultResetFn}
+                onCancel={() => setIsFactoryResetting(false)}
+            >
+                {modalText || DEFAULT_MODAL_TEXT}
+            </ConfirmationDialog>
+        </>
     );
 };
+
+FactoryResetButton.propTypes = {
+    resetFn: func,
+    label: string.isRequired,
+    modalText: string,
+};
+
+export default FactoryResetButton;

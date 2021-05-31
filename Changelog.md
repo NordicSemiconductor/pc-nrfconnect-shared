@@ -1,3 +1,7 @@
+## 4.24.0
+### Added
+- Component `FactoryResetButton`. This component is also added to the `About` pane.
+
 ## 4.23.0
 ### Added
 - Error robustness
