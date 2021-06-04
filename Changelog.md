@@ -2,6 +2,11 @@
 ### Added
 - Component `FactoryResetButton`. This component is also added to the `About` pane.
 
+## 4.23.1
+### Changed
+- Allow overriding GA reporting and restore default functionality in `ErrorBoundary`
+  component.
+
 ## 4.23.0
 ### Added
 - Error robustness
