@@ -37,15 +37,15 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import { element } from 'prop-types';
 
-import './card.scss';
+import styles from './card.module.scss';
 
 const NrfCard: React.FC<{
     title: React.ReactElement;
 }> = ({ children, title }) => (
-    <Card className="nrf-card">
-        <Card.Header className="header">
+    <Card className={styles.card}>
+        <Card.Header className={styles.header}>
             <Card.Title>
-                <span className="title">{title}</span>
+                <span className={styles.title}>{title}</span>
             </Card.Title>
         </Card.Header>
         <Card.Body>{children}</Card.Body>

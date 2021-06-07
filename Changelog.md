@@ -1,6 +1,20 @@
+## 4.25.0
+### Fixed
+- Remove namespace pollution by `Card` component, which broke the layout of the
+  Toolchain Manager.
+### Changed
+- This version enables CSS modules. To use them, the CSS filename needs to
+  include `.module.` and you need to import that CSS file and use its content
+  in your JSX files as you can see in the `Card` component.
+
 ## 4.24.0
 ### Added
 - Component `FactoryResetButton`. This component is also added to the `About` pane.
+
+## 4.23.1
+### Changed
+- Allow overriding GA reporting and restore default functionality in `ErrorBoundary`
+  component.
 
 ## 4.23.0
 ### Added
