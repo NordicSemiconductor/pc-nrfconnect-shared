@@ -1,6 +1,7 @@
 ## Unreleased
 ### Changed
 - Upgrade several webpack related dependencies
+- Upgrade systeminformation, which had a security issue
 ### Steps to upgrade when using this package
 - eslint-loader was removed because it is deprecated. If you have a webpack
   config that still uses it, either install it yourself or (better) switch
