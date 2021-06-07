@@ -1,4 +1,4 @@
-## Unreleased
+## 4.26.0
 ### Changed
 - Upgrade several webpack related dependencies
 - Upgrade systeminformation, which had a security issue
