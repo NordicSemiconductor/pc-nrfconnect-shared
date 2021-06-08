@@ -155,7 +155,7 @@ export const generateSystemReport = async (
 export default async (allDevices, currentSerialNumber, currentDevice) => {
     logger.info('Generating system report...');
     const timestamp = new Date().toISOString().replace(/:/g, '-');
-    const report = generateSystemReport(
+    const report = await generateSystemReport(
         timestamp,
         allDevices,
         currentSerialNumber,
