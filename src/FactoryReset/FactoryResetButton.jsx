@@ -1,4 +1,4 @@
-/* Copyright (c) 2015 - 2017, Nordic Semiconductor ASA
+/* Copyright (c) 2015 - 2021, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -33,27 +33,50 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React from 'react';
-import Card from 'react-bootstrap/Card';
-import { element } from 'prop-types';
 
-import styles from './card.module.scss';
+import React, { useState } from 'react';
+import { Button } from 'react-bootstrap';
+import { func, string } from 'prop-types';
 
-const NrfCard: React.FC<{
-    title: React.ReactElement;
-}> = ({ children, title }) => (
-    <Card className={styles.card}>
-        <Card.Header className={styles.header}>
-            <Card.Title>
-                <span className={styles.title}>{title}</span>
-            </Card.Title>
-        </Card.Header>
-        <Card.Body>{children}</Card.Body>
-    </Card>
-);
+import ConfirmationDialog from '../Dialog/ConfirmationDialog';
+import logger from '../logging';
+import { getAppSpecificStore as store } from '../utils/persistentStore';
 
-NrfCard.propTypes = {
-    title: element.isRequired,
+const DEFAULT_MODAL_TEXT =
+    'By restoring defaults, all stored app-specific configuration values will be lost. This does not include configurations such as device renames and favorites. Are you sure you want to proceed?';
+
+const FactoryResetButton = ({ resetFn, label, modalText }) => {
+    const [isFactoryResetting, setIsFactoryResetting] = useState(false);
+
+    const defaultResetFn = () => {
+        store().clear();
+        setIsFactoryResetting(false);
+        logger.info('Successfully restored defaults');
+    };
+
+    return (
+        <>
+            <Button
+                variant="primary"
+                onClick={() => setIsFactoryResetting(true)}
+            >
+                {label}
+            </Button>
+            <ConfirmationDialog
+                isVisible={isFactoryResetting}
+                onOk={resetFn || defaultResetFn}
+                onCancel={() => setIsFactoryResetting(false)}
+            >
+                {modalText || DEFAULT_MODAL_TEXT}
+            </ConfirmationDialog>
+        </>
+    );
 };
 
-export default NrfCard;
+FactoryResetButton.propTypes = {
+    resetFn: func,
+    label: string.isRequired,
+    modalText: string,
+};
+
+export default FactoryResetButton;

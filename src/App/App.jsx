@@ -54,6 +54,7 @@ import {
 
 import About from '../About/About';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import LogViewer from '../Log/LogViewer';
 import NavBar from '../NavBar/NavBar';
@@ -214,7 +215,9 @@ ConnectedApp.propTypes = {
 const noopReducer = (state = null) => state;
 const App = ({ appReducer = noopReducer, ...props }) => (
     <ConnectedToStore appReducer={appReducer}>
-        <ConnectedApp {...props} />
+        <ErrorBoundary>
+            <ConnectedApp {...props} />
+        </ErrorBoundary>
     </ConnectedToStore>
 );
 

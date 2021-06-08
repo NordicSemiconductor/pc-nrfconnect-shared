@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 const { dependencies } = require(path.join(process.cwd(), 'package.json'));
 
@@ -34,12 +35,13 @@ function createExternals() {
         .reduce((prev, lib) => Object.assign(prev, { [lib]: lib }), {});
 }
 
-let eslintConfig;
-try {
-    eslintConfig = require.resolve('../../../.eslintrc');
-} catch (err) {
-    eslintConfig = require.resolve('./eslintrc.json');
-}
+const eslintConfig = () => {
+    try {
+        return require.resolve('../../../.eslintrc');
+    } catch (err) {
+        return require.resolve('./eslintrc.json');
+    }
+};
 
 function findEntryPoint() {
     const files = [
@@ -84,19 +86,6 @@ module.exports = {
                 exclude: /node_modules\/(?!pc-nrfconnect-shared\/)/,
             },
             {
-                enforce: 'pre',
-                test: /\.(jsx?|tsx?)$/,
-                use: [
-                    {
-                        loader: require.resolve('eslint-loader'),
-                        options: {
-                            configFile: eslintConfig,
-                        },
-                    },
-                ],
-                exclude: /node_modules/,
-            },
-            {
                 test: /\.scss|\.css$/,
                 use: [
                     'style-loader',
@@ -125,7 +114,10 @@ module.exports = {
                 NODE_ENV: JSON.stringify(nodeEnv),
             },
         }),
-        // new ESLintPlugin()
+        new ESLintPlugin({
+            extensions: ['ts', 'tsx', 'js', 'jsx'],
+            overrideConfigFile: eslintConfig(),
+        }),
     ],
     target: 'electron-renderer',
     externals: createExternals(),

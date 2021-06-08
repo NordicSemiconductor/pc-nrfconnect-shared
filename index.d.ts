@@ -370,6 +370,10 @@ declare module 'pc-nrfconnect-shared' {
 
     export class ErrorDialog extends React.Component {}
 
+    // ErrorBoundary.jsx
+
+    export class ErrorBoundary extends React.Component {}
+
     // InlineInput.jsx
 
     interface InlineInputProps {
@@ -400,13 +404,13 @@ declare module 'pc-nrfconnect-shared' {
         id?: string;
         title?: string;
         isToggled?: boolean;
-        onToggle: (isToggled: boolean) => void;
+        onToggle?: (isToggled: boolean) => void;
         variant?: 'primary' | 'secondary';
         barColor?: string;
-        barToggledColor?: string;
+        barColorToggled?: string;
         handleColor?: string;
         handleColorToggled?: string;
-        label: string;
+        label?: string;
         labelRight?: boolean;
         width?: string;
         disabled?: boolean;
@@ -486,7 +490,7 @@ declare module 'pc-nrfconnect-shared' {
 
     export const usageData: {
         init: (packageJson: PackageJson) => Promise<void>;
-        isInitialized: boolean;
+        isInitialized: () => boolean;
         enable: () => void;
         disable: () => void;
         isEnabled: () => void;

@@ -37,6 +37,7 @@
 import React, { useEffect, useState } from 'react';
 import { ipcRenderer } from 'electron';
 
+import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import AboutButton from './AboutButton';
 import AboutCard from './AboutCard';
 import Section from './Section';
@@ -70,6 +71,9 @@ export default () => {
                     url={appInfo.repositoryUrl}
                     label="Get source code"
                 />
+            </Section>
+            <Section>
+                <FactoryResetButton label="Restore defaults" />
             </Section>
         </AboutCard>
     );

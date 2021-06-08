@@ -133,8 +133,8 @@ export default (state = initialState, action) => {
         case DEVICE_SETUP_INPUT_RECEIVED:
             return { ...state, isSetupWaitingForUserInput: false };
         case DEVICE_FAVORITE_TOGGLED: {
-            const newFavoriteState = !state.devices[action.serialNumber]
-                .favorite;
+            const newFavoriteState =
+                !state.devices[action.serialNumber].favorite;
 
             persistIsFavorite(action.serialNumber, newFavoriteState);
             return withUpdatedDevice(state, action.serialNumber, {

@@ -1,3 +1,46 @@
+## 4.26.0
+### Changed
+- Upgrade several webpack related dependencies
+- Upgrade systeminformation, which had a security issue
+### Fixed
+- The system report generated from the about pane only contained `[object Promise]`.
+### Steps to upgrade when using this package
+- eslint-loader was removed because it is deprecated. If you have a webpack
+  config that still uses it, either install it yourself or (better) switch
+  to eslint-webpack-plugin.
+
+## 4.25.0
+### Fixed
+- Remove namespace pollution by `Card` component, which broke the layout of the
+  Toolchain Manager.
+### Changed
+- This version enables CSS modules. To use them, the CSS filename needs to
+  include `.module.` and you need to import that CSS file and use its content
+  in your JSX files as you can see in the `Card` component.
+
+## 4.24.0
+### Added
+- Component `FactoryResetButton`. This component is also added to the `About` pane.
+
+## 4.23.1
+### Changed
+- Allow overriding GA reporting and restore default functionality in `ErrorBoundary`
+  component.
+
+## 4.23.0
+### Added
+- Error robustness
+  - Added a component `ErrorBoundary` which can be used as an
+    [Error Boundary](https://reactjs.org/docs/error-boundaries.html): When an
+    error happens inside the enclosed components, users are presented with tools
+    for recovery.
+  - Use the `ErrorBoundary` for all apps using the component `App`, so these
+    usually do not need to use this error boundary explicitly.
+
+## 4.22.2
+### Fixed
+- Type of `Toggle` props were slightly wrong.
+
 ## 4.22.1
 ### Fixed
 - Wrong current pane could crash the app: E.g. when an app previously had four

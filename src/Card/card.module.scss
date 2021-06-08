@@ -1,4 +1,4 @@
-.nrf-card {
+.card {
     &:nth-child(3n + 1) {
         margin-left: 0;
     }
@@ -12,14 +12,14 @@
     max-width: 20em;
     flex-shrink: 0;
     padding: 0.6em 0.6em;
+}
 
-    .header {
-        background-color: transparent;
-        text-align: center;
+.header {
+    background-color: transparent;
+    text-align: center;
+}
 
-        .title {
-            float: inherit;
-            padding-top: 5px;
-        }
-    }
+.title {
+    float: inherit;
+    padding-top: 5px;
 }

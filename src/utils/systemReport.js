@@ -138,18 +138,29 @@ const currentDeviceReport = (serialNumber, device) => {
     ];
 };
 
-export default async (allDevices, currentSerialNumber, currentDevice) => {
-    logger.info('Generating system report...');
-
-    const timestamp = new Date().toISOString().replace(/:/g, '-');
-
-    const report = [
+export const generateSystemReport = async (
+    timestamp,
+    allDevices,
+    currentSerialNumber,
+    currentDevice
+) =>
+    [
         `# nRFConnect System Report - ${timestamp}`,
         '',
         ...(await generalInfoReport()),
         ...allDevicesReport(allDevices),
         ...currentDeviceReport(currentSerialNumber, currentDevice),
     ].join(EOL);
+
+export default async (allDevices, currentSerialNumber, currentDevice) => {
+    logger.info('Generating system report...');
+    const timestamp = new Date().toISOString().replace(/:/g, '-');
+    const report = await generateSystemReport(
+        timestamp,
+        allDevices,
+        currentSerialNumber,
+        currentDevice
+    );
 
     const fileName = `nrfconnect-system-report-${timestamp}.txt`;
     const filePath = path.resolve(getAppDataDir(), fileName);

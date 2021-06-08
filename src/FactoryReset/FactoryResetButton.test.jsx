@@ -1,4 +1,4 @@
-/* Copyright (c) 2015 - 2017, Nordic Semiconductor ASA
+/* Copyright (c) 2015 - 2021, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -33,27 +33,49 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 import React from 'react';
-import Card from 'react-bootstrap/Card';
-import { element } from 'prop-types';
+import { fireEvent } from '@testing-library/react';
 
-import styles from './card.module.scss';
+import render from '../../test/testrenderer';
+import { getAppSpecificStore as store } from '../utils/persistentStore';
+import FactoryResetButton from './FactoryResetButton';
 
-const NrfCard: React.FC<{
-    title: React.ReactElement;
-}> = ({ children, title }) => (
-    <Card className={styles.card}>
-        <Card.Header className={styles.header}>
-            <Card.Title>
-                <span className={styles.title}>{title}</span>
-            </Card.Title>
-        </Card.Header>
-        <Card.Body>{children}</Card.Body>
-    </Card>
-);
+const LABEL = 'Factory reset';
 
-NrfCard.propTypes = {
-    title: element.isRequired,
-};
+describe('FactoryReset', () => {
+    afterEach(() => {
+        jest.resetAllMocks();
+    });
 
-export default NrfCard;
+    it('should clear store when confirmed', async () => {
+        const { getByText, findByText } = render(
+            <FactoryResetButton label={LABEL} />
+        );
+        fireEvent.click(getByText(LABEL));
+        await findByText('OK');
+        fireEvent.click(getByText('OK'));
+        expect(store().clear).toHaveBeenCalled();
+    });
+
+    it('should not clear store when cancelled', async () => {
+        const { getByText, findByText } = render(
+            <FactoryResetButton label={LABEL} />
+        );
+        fireEvent.click(getByText(LABEL));
+        await findByText('Cancel');
+        fireEvent.click(getByText('Cancel'));
+        expect(store().clear).not.toHaveBeenCalled();
+    });
+
+    it('is possible to override reset function', async () => {
+        const overrideResetFn = jest.fn();
+        const { getByText, findByText } = render(
+            <FactoryResetButton label={LABEL} resetFn={overrideResetFn} />
+        );
+        fireEvent.click(getByText(LABEL));
+        await findByText('OK');
+        fireEvent.click(getByText('OK'));
+        expect(overrideResetFn).toHaveBeenCalled();
+    });
+});
