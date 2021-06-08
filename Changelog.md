@@ -1,3 +1,14 @@
+## 4.26.0
+### Changed
+- Upgrade several webpack related dependencies
+- Upgrade systeminformation, which had a security issue
+### Fixed
+- The system report generated from the about pane only contained `[object Promise]`.
+### Steps to upgrade when using this package
+- eslint-loader was removed because it is deprecated. If you have a webpack
+  config that still uses it, either install it yourself or (better) switch
+  to eslint-webpack-plugin.
+
 ## 4.25.0
 ### Fixed
 - Remove namespace pollution by `Card` component, which broke the layout of the
