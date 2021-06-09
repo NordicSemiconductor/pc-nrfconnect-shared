@@ -1,3 +1,7 @@
+## 4.27.0
+### Changed
+- Use `Card` component introduced in 4.22.0 in the `About` pane
+
 ## 4.26.0
 ### Changed
 - Upgrade several webpack related dependencies
