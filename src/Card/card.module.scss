@@ -1,9 +1,8 @@
+@import "../variables.scss";
+
 .card {
     &:nth-child(3n + 1) {
         margin-left: 0;
-    }
-    &:nth-child(3n + 4) {
-        margin-top: 0.25em;
     }
 
     margin-left: 0.25em;
@@ -11,15 +10,20 @@
     flex: 1;
     max-width: 20em;
     flex-shrink: 0;
-    padding: 0.6em 0.6em;
-}
+    padding: 0.75em 0.75em;     
 
+}
 .header {
-    background-color: transparent;
-    text-align: center;
+    background-color: transparent !important;
+    text-align: center !important;
+    padding: 0.5em 0em 0em 0em !important;   
 }
 
 .title {
-    float: inherit;
-    padding-top: 5px;
+    float: inherit !important;
+    margin-bottom: 0px !important;
+}
+
+.body {
+    padding: 1em 0em 0em 0em !important;
 }

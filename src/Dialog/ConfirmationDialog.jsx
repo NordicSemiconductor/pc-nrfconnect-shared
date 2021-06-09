@@ -53,6 +53,7 @@ import Spinner from './Spinner';
  * @param {function} onOk Invoked when the user clicks OK.
  * @param {function} [onCancel] Invoked when the user cancels. Not showing cancel button if
  *                              this is not provided.
+ * @param {string} [okButtonClassName] Class name for the OK button. Default: "".
  * @param {string} [okButtonText] Label text for the OK button. Default: "OK".
  * @param {string} [cancelButtonText] Label text for the cancel button. Default: "Cancel".
  * @param {boolean} [isOkButtonEnabled] Enable the OK button or not. Default: true.
@@ -66,6 +67,7 @@ const ConfirmationDialog = ({
     text,
     onOk,
     onCancel,
+    okButtonClassName = '',
     okButtonText = 'OK',
     cancelButtonText = 'Cancel',
     isOkButtonEnabled = true,
@@ -86,6 +88,7 @@ const ConfirmationDialog = ({
             {isInProgress ? <Spinner /> : null}
             &nbsp;
             <Button
+                className={okButtonClassName}
                 variant="primary"
                 onClick={onOk}
                 disabled={!isOkButtonEnabled || isInProgress}
@@ -110,6 +113,7 @@ ConfirmationDialog.propTypes = {
     children: oneOfType([arrayOf(node), node]),
     onOk: func.isRequired,
     onCancel: func.isRequired,
+    okButtonClassName: string,
     okButtonText: string,
     cancelButtonText: string,
     isInProgress: bool,

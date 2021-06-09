@@ -3,4 +3,7 @@
 .about {
     display: flex;
     justify-content: center;
+    .card {
+        max-width: 17em;
+    }
 }
