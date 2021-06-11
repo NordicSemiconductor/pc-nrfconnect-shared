@@ -1,6 +1,6 @@
 ## 4.27.1
-### Fixed
-- The tooltip backgroud color and opacity
+### Update
+- Small change to tooltip background color and opacity
 
 ## 4.27.0
 ### Changed
