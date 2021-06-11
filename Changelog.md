@@ -1,3 +1,7 @@
+## 4.27.1
+### Fixed
+- The tooltip backgroud color and opacity
+
 ## 4.27.0
 ### Changed
 - Use `Card` component introduced in 4.22.0 in the `About` pane
