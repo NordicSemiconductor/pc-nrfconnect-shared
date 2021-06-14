@@ -1,5 +1,5 @@
 ## 4.27.1
-### Update
+### Updated
 - Small change to tooltip background color and opacity
 
 ## 4.27.0
