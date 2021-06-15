@@ -147,6 +147,7 @@ class ErrorBoundary extends React.Component {
                         <FactoryResetButton
                             resetFn={restoreDefaults || this.restoreDefaults}
                             label="Restore default settings"
+                            variant="primary"
                         />
                     </div>
                 </div>
