@@ -48,6 +48,7 @@ import { getAppSpecificStore as store } from '../utils/persistentStore';
 import { generateSystemReport } from '../utils/systemReport';
 import {
     init as initGA,
+    isEnabled,
     isInitialized as isGAInitialized,
     sendErrorReport,
 } from '../utils/usageData';
@@ -58,6 +59,9 @@ import './error-boundary.scss';
 const { getCurrentWindow } = require('electron').remote;
 
 const sendGAEvent = error => {
+    if (!isEnabled()) {
+        return;
+    }
     if (!isGAInitialized()) {
         initGA(packageJson()).then(() => sendErrorReport(error));
         return;
