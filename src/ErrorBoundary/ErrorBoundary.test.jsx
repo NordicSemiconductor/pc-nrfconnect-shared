@@ -45,6 +45,10 @@ import ErrorBoundary from './ErrorBoundary';
 
 jest.mock('../utils/systemReport');
 jest.mock('react-ga');
+jest.mock('../utils/usageData', () => ({
+    ...jest.requireActual('../utils/usageData'),
+    isEnabled: () => true,
+}));
 
 const SYSTEM_REPORT = 'system report';
 const OKBUTTONTEXT = 'Restore';
