@@ -1,3 +1,12 @@
+## 4.27.3
+### Fixed
+- Exported `colors` object was empty.
+
+## 4.27.2
+### Fixed
+- GA events were sent even when the user had not consented.
+- `Restore defaults` button styling inside `ErrorBoundary` component was broken.
+
 ## 4.27.1
 ### Updated
 - Small change to tooltip background color and opacity
