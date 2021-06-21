@@ -59,7 +59,7 @@ export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
 export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
 export { default as logger } from './logging';
 export { default as bleChannels } from './utils/bleChannels';
-export { default as colors } from './utils/colors.scss';
+export { default as colors } from './utils/colors.icss.scss';
 
 export {
     setAppDirs,
