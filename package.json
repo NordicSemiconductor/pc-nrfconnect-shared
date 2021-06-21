@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "4.27.3",
+    "version": "4.28.0",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -68,7 +68,7 @@
         "klaw": "3.0.0",
         "lodash.range": "3.2.0",
         "mousetrap": "1.6.5",
-        "prettier": "^2.1.1",
+        "prettier": "2.3.1",
         "prettysize": "2.0.0",
         "react-bootstrap": "1.0.1",
         "react-flip-toolkit": "7.0.12",

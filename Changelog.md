@@ -1,3 +1,13 @@
+## 4.28.0
+### Updated
+- Pin the version of prettier to be used to an exact version, as
+  [recommended in the prettier documentation](https://prettier.io/docs/en/install.html).
+### Steps to upgrade when using this package
+- If you are using an older prettier version than 2.3.0, upgrading to this
+  version of shared can likely cause linting to fail due to formatting errors.
+  The majority of these can be fixed automatically, by running
+  `npm run lint -- --fix`.
+
 ## 4.27.3
 ### Fixed
 - Exported `colors` object was empty.
