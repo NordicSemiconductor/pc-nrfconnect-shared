@@ -185,7 +185,7 @@ declare module 'pc-nrfconnect-shared' {
     // Card.tsx
 
     export class Card extends React.Component<{
-        title: React.ReactElement;
+        title: React.ReactElement | string;
     }> {}
 
     // DeviceSelector.jsx
