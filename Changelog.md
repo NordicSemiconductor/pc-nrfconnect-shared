@@ -1,3 +1,7 @@
+## 4.28.1
+### Updated
+- Increase padding for `Card` component.
+
 ## 4.28.0
 ### Updated
 - Pin the version of prettier to be used to an exact version, as
