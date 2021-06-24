@@ -1,15 +1,15 @@
-@import "../variables.scss";
+@import '../variables.scss';
 
 .card {
     flex: 1;
     flex-shrink: 0;
-    padding: 0.75em 0.75em;  
+    padding: 16px;
 }
 
 .header {
     background-color: transparent !important;
     text-align: center !important;
-    padding: 0.5em 0em 0em 0em !important;   
+    padding: 0.5em 0em 0em 0em !important;
 }
 
 .title {
