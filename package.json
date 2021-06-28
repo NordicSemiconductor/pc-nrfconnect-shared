@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "4.28.1",
+    "version": "4.29.0",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -51,6 +51,7 @@
         "eslint": "7.1.0",
         "eslint-config-airbnb": "18.1.0",
         "eslint-config-prettier": "^6.11.0",
+        "eslint-import-resolver-typescript": "2.4.0",
         "eslint-plugin-import": "^2.22.1",
         "eslint-plugin-jsx-a11y": "6.2.3",
         "eslint-plugin-prettier": "^3.1.4",
