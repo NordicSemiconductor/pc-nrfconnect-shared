@@ -178,6 +178,20 @@ function putFile(local, remote) {
     });
 }
 
+function addVersionToAppJson(packageName, version) {
+    return new Promise((resolve, reject) => {
+        getFile('apps.json')
+            .then(content => {
+                const data = JSON.parse(content);
+                data[packageName].version = version;
+                putFile(Buffer.from(JSON.stringify(data, null, 4)), 'apps.json')
+                    .then(resolve)
+                    .catch(reject);
+            })
+            .catch(reject);
+    });
+}
+
 /**
  * Calculate SHASUM checksum of file
  *
@@ -272,6 +286,7 @@ Promise.resolve()
 
         return meta;
     })
+    .then(() => addVersionToAppJson(thisPackage.name, thisPackage.version))
     .then(meta => putFile(Buffer.from(JSON.stringify(meta)), thisPackage.name))
     .then(() => putFile(thisPackage.filename, thisPackage.filename))
     .then(() => uploadChangelog(thisPackage.name))
