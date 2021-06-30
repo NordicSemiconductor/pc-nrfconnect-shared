@@ -1,3 +1,8 @@
+## 4.28.2
+### Updated
+- Added app version to `apps.json` in the specified source, to be able to show the
+  current version in the launcher even for uninstalled apps.
+
 ## 4.28.1
 ### Updated
 - Increase padding for `Card` component.
