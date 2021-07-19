@@ -1,3 +1,7 @@
+## 4.28.2
+### Updated
+- Added `@nordicsemiconductor/nrf-device-lib-js` in webpack.config.js
+
 ## 4.28.1
 ### Updated
 - Increase padding for `Card` component.
