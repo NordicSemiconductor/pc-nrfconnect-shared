@@ -34,6 +34,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js'; // eslint-disable-line import/no-unresolved
 import DeviceLister from 'nrf-device-lister'; // eslint-disable-line import/no-unresolved
 import nrfDeviceSetup from 'nrf-device-setup';
 
@@ -147,6 +148,7 @@ export const resetDeviceNickname = serialNumber => ({
 });
 
 let deviceLister;
+let deviceLibContext;
 
 // Defined when user input is required during device setup. When input is
 // received from the user, this callback is invoked with the confirmation
@@ -215,27 +217,46 @@ const logDeviceListerError = error => dispatch => {
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
 export const startWatchingDevices =
-    (deviceListing, doDeselectDevice) => (dispatch, getState) => {
-        if (!deviceLister) {
-            deviceLister = new DeviceLister(deviceListing);
-        }
-        deviceLister.removeAllListeners('conflated');
-        deviceLister.removeAllListeners('error');
-        deviceLister.on('conflated', devices => {
-            const state = getState();
-            if (
-                state.device.selectedSerialNumber !== null &&
-                !devices.has(state.device.selectedSerialNumber)
-            ) {
-                doDeselectDevice();
-            }
+    (deviceListing, doDeselectDevice) => async (dispatch, getState) => {
+        // if (!deviceLister) {
+        //     deviceLister = new DeviceLister(deviceListing);
+        // }
+        // deviceLister.removeAllListeners('conflated');
+        // deviceLister.removeAllListeners('error');
+        // deviceLister.on('conflated', devices => {
+        //     const state = getState();
+        //     if (
+        //         state.device.selectedSerialNumber !== null &&
+        //         !devices.has(state.device.selectedSerialNumber)
+        //     ) {
+        //         doDeselectDevice();
+        //     }
 
-            dispatch(devicesDetected(Array.from(devices.values())));
+        //     dispatch(devicesDetected(Array.from(devices.values())));
+        // });
+        // deviceLister.on('error', error =>
+        //     dispatch(logDeviceListerError(error))
+        // );
+        // deviceLister.start();
+
+        if (!deviceLibContext) {
+            deviceLibContext = nrfDeviceLib.createContext();
+            console.log(deviceLibContext);
+        }
+        const devices = await nrfDeviceLib.enumerate(deviceLibContext);
+        const updatedDevices = devices.map(device => {
+            // TODO:
+            // - s/serialnumber/serialNumber/g
+            // - decide where to resolve PCA number
+            delete Object.assign(device, {
+                serialNumber: device.serialnumber,
+                boardVersion: device.jlink
+                    ? device.jlink.board_version
+                    : undefined,
+            }).serialnumber;
+            return device;
         });
-        deviceLister.on('error', error =>
-            dispatch(logDeviceListerError(error))
-        );
-        deviceLister.start();
+        dispatch(devicesDetected(updatedDevices));
     };
 
 /**
@@ -244,9 +265,13 @@ export const startWatchingDevices =
  * @returns {undefined}
  */
 export const stopWatchingDevices = () => {
-    deviceLister.removeAllListeners('conflated');
-    deviceLister.removeAllListeners('error');
-    deviceLister.stop();
+    // deviceLister.removeAllListeners('conflated');
+    // deviceLister.removeAllListeners('error');
+    // deviceLister.stop();
+    if (deviceLibContext) {
+        nrfDeviceLib.releaseContext(deviceLibContext);
+        deviceLibContext = undefined;
+    }
 };
 
 /**
