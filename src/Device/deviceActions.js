@@ -42,7 +42,7 @@ import logger from '../logging';
 /**
  * Indicates that a device has been selected.
  *
- * @param {Object} device Device object as given by nrf-device-lister.
+ * @param {Object} device Device object as given by nrf-device-lib.
  */
 export const DEVICE_SELECTED = 'DEVICE_SELECTED';
 export const selectDevice = device => ({
@@ -65,7 +65,7 @@ export function deselectDevice() {
  * ready for use according to the `config.deviceSetup` configuration provided
  * by the app.
  *
- * @param {Object} device Device object as given by nrf-device-lister.
+ * @param {Object} device Device object as given by nrf-device-lib.
  */
 export const DEVICE_SETUP_COMPLETE = 'DEVICE_SETUP_COMPLETE';
 const deviceSetupComplete = device => ({
@@ -76,7 +76,7 @@ const deviceSetupComplete = device => ({
 /**
  * Indicates that device setup failed.
  *
- * @param {Object} device Device object as given by nrf-device-lister.
+ * @param {Object} device Device object as given by nrf-device-lib.
  * @param {Object} error Error object describing the error.
  */
 export const DEVICE_SETUP_ERROR = 'DEVICE_SETUP_ERROR';
@@ -118,7 +118,7 @@ const deviceSetupInputReceived = input => ({
  * startup, and whenever a device is attached/detached. The app can configure
  * which devices to look for by providing a `config.selectorTraits` property.
  *
- * @param {Array} devices Array of all attached devices, ref. nrf-device-lister.
+ * @param {Array} devices Array of all attached devices, ref. nrf-device-lib.
  */
 export const DEVICES_DETECTED = 'DEVICES_DETECTED';
 const devicesDetected = devices => ({
@@ -153,7 +153,7 @@ let deviceLibContext;
 let deviceSetupCallback;
 
 /**
- * Starts watching for devices with the given traits. See the nrf-device-lister
+ * Starts watching for devices with the given traits. See the nrf-device-lib
  * library for available traits. Whenever devices are attached/detached, this
  * will dispatch DEVICES_DETECTED with a complete list of attached devices.
  *
@@ -260,7 +260,7 @@ const getDeviceSetupUserInput = dispatch => (message, choices) =>
  * Selects a device and sets it up for use according to the `config.deviceSetup`
  * configuration given by the app.
  *
- * @param {Object} device Device object, ref. nrf-device-lister.
+ * @param {Object} device Device object, ref. nrf-device-lib.
  * @param {Object} deviceSetup The object describing how to do the device setup
  * @param {function()} releaseCurrentDevice Callback invoked after stopping watching for devices
  *                     and before setting up the new device
@@ -282,7 +282,7 @@ export const setupDevice =
         // During device setup, the device may go in and out of bootloader
         // mode. This will make it appear as detached in the device lister,
         // causing a DESELECT_DEVICE. To avoid this, we stop the device
-        // lister while setting up the device, and start it again after the
+        // listing while setting up the device, and start it again after the
         // device has been set up.
         stopWatchingDevices();
         await releaseCurrentDevice();

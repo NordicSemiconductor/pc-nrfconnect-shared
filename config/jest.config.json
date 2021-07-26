@@ -6,7 +6,7 @@
     "packageJson$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/packageJsonMock.js",
     "nrfconnect/core": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/coreMock.js",
     "pc-ble-driver-js": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/bleDriverMock.js",
-    "pc-nrfjprog-js|nrf-device-lister|nrf-device-setup|serialport|usb": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/emptyMock.js",
+    "pc-nrfjprog-js|nrf-device-setup|serialport|usb": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/emptyMock.js",
     "^electron$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/electronMock.js",
     "^electron-store$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/electronStoreMock.js",
     "^react-ga$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/gaMock.js"
