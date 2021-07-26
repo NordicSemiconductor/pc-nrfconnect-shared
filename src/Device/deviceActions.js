@@ -35,10 +35,8 @@
  */
 
 import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js'; // eslint-disable-line import/no-unresolved
-import DeviceLister from 'nrf-device-lister'; // eslint-disable-line import/no-unresolved
 import nrfDeviceSetup from 'nrf-device-setup';
 
-import { showDialog as showAppReloadDialog } from '../AppReload/appReloadDialogActions';
 import logger from '../logging';
 
 /**
@@ -147,65 +145,12 @@ export const resetDeviceNickname = serialNumber => ({
     serialNumber,
 });
 
-let deviceLister;
 let deviceLibContext;
 
 // Defined when user input is required during device setup. When input is
 // received from the user, this callback is invoked with the confirmation
 // (Boolean) or choice (String) that the user provided as input.
 let deviceSetupCallback;
-
-const NORDIC_VENDOR_ID = 0x1915;
-const NORDIC_BOOTLOADER_PRODUCT_ID = 0x521f;
-
-const logDeviceListerError = error => dispatch => {
-    if (error.usb) {
-        // On win32 platforms, a USB device with no interfaces bound
-        // to a libusb-compatible-driver will fail to enumerate and trigger a
-        // LIBUSB_* error. This is the case of a nRF52840 in DFU mode.
-        // We don't want to show an error to the user in this particular case.
-        if (
-            error.errorCode ===
-                DeviceLister.ErrorCodes.LIBUSB_ERROR_NOT_FOUND &&
-            error.usb.deviceDescriptor
-        ) {
-            const { idProduct, idVendor } = error.usb.deviceDescriptor;
-            if (
-                idVendor === NORDIC_VENDOR_ID &&
-                idProduct === NORDIC_BOOTLOADER_PRODUCT_ID
-            ) {
-                return;
-            }
-        }
-
-        const usbAddr = `${error.usb.busNumber}.${error.usb.deviceAddress}`;
-
-        let message = `Error while probing usb device at bus.address ${usbAddr}: ${error.message}. `;
-        if (process.platform === 'linux') {
-            message +=
-                'Please check your udev rules concerning permissions for USB devices, see ' +
-                'https://github.com/NordicSemiconductor/nrf-udev';
-        } else if (process.platform === 'win32') {
-            message +=
-                'Please check that a libusb-compatible kernel driver is bound to this device, see https://github.com/NordicSemiconductor/pc-nrfconnect-launcher/blob/master/doc/win32-usb-troubleshoot.md';
-        }
-
-        dispatch(
-            showAppReloadDialog(
-                'LIBUSB error is detected. Reloading app could resolve the issue. Would you like to reload now?'
-            )
-        );
-        logger.error(message);
-    } else if (
-        error.serialport &&
-        error.errorCode === DeviceLister.ErrorCodes.COULD_NOT_FETCH_SNO_FOR_PORT
-    ) {
-        // Explicitly hide errors about serial ports without serial numbers
-        logger.verbose(error.message);
-    } else {
-        logger.error(`Error while probing devices: ${error.message}`);
-    }
-};
 
 /**
  * Starts watching for devices with the given traits. See the nrf-device-lister
@@ -218,45 +163,52 @@ const logDeviceListerError = error => dispatch => {
  */
 export const startWatchingDevices =
     (deviceListing, doDeselectDevice) => async (dispatch, getState) => {
-        // if (!deviceLister) {
-        //     deviceLister = new DeviceLister(deviceListing);
-        // }
-        // deviceLister.removeAllListeners('conflated');
-        // deviceLister.removeAllListeners('error');
-        // deviceLister.on('conflated', devices => {
-        //     const state = getState();
-        //     if (
-        //         state.device.selectedSerialNumber !== null &&
-        //         !devices.has(state.device.selectedSerialNumber)
-        //     ) {
-        //         doDeselectDevice();
-        //     }
+        const updateDeviceList = async () => {
+            if (!deviceLibContext) {
+                deviceLibContext = nrfDeviceLib.createContext();
+            }
 
-        //     dispatch(devicesDetected(Array.from(devices.values())));
-        // });
-        // deviceLister.on('error', error =>
-        //     dispatch(logDeviceListerError(error))
-        // );
-        // deviceLister.start();
+            const devices = await nrfDeviceLib.enumerate(
+                deviceLibContext,
+                deviceListing
+            );
 
-        if (!deviceLibContext) {
-            deviceLibContext = nrfDeviceLib.createContext();
-            console.log(deviceLibContext);
+            const state = getState();
+            if (
+                state.device.selectedSerialNumber !== null &&
+                !devices.has(state.device.selectedSerialNumber)
+            ) {
+                doDeselectDevice();
+            }
+
+            const updatedDevices = devices.map(device => {
+                // TODO:
+                // - s/serialnumber/serialNumber/g
+                // - decide where to resolve PCA number, shared / nrf-device-lib
+                delete Object.assign(device, {
+                    serialNumber: device.serialnumber,
+                    boardVersion: device.jlink
+                        ? device.jlink.board_version
+                        : undefined,
+                }).serialnumber;
+                return device;
+            });
+
+            dispatch(devicesDetected(updatedDevices));
+        };
+
+        try {
+            await updateDeviceList();
+            nrfDeviceLib.startHotplugEvents(
+                deviceLibContext,
+                () => {},
+                () => {
+                    updateDeviceList();
+                }
+            );
+        } catch (error) {
+            logger.error(`Error while probing devices: ${error.message}`);
         }
-        const devices = await nrfDeviceLib.enumerate(deviceLibContext);
-        const updatedDevices = devices.map(device => {
-            // TODO:
-            // - s/serialnumber/serialNumber/g
-            // - decide where to resolve PCA number
-            delete Object.assign(device, {
-                serialNumber: device.serialnumber,
-                boardVersion: device.jlink
-                    ? device.jlink.board_version
-                    : undefined,
-            }).serialnumber;
-            return device;
-        });
-        dispatch(devicesDetected(updatedDevices));
     };
 
 /**
@@ -265,12 +217,16 @@ export const startWatchingDevices =
  * @returns {undefined}
  */
 export const stopWatchingDevices = () => {
-    // deviceLister.removeAllListeners('conflated');
-    // deviceLister.removeAllListeners('error');
-    // deviceLister.stop();
     if (deviceLibContext) {
-        nrfDeviceLib.releaseContext(deviceLibContext);
-        deviceLibContext = undefined;
+        try {
+            nrfDeviceLib.releaseContext(deviceLibContext);
+        } catch (error) {
+            logger.error(
+                `Error while releasing nrf-device-lib-js: ${error.message}`
+            );
+        } finally {
+            deviceLibContext = undefined;
+        }
     }
 };
 
