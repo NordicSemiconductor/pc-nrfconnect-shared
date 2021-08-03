@@ -37,19 +37,23 @@
 import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js'; // eslint-disable-line import/no-unresolved
 import AdmZip from 'adm-zip';
 import { createHash } from 'crypto';
+import fs from 'fs';
 import MemoryMap from 'nrf-intel-hex';
 import SerialPort from 'serialport';
+import { snakeCase } from 'snake-case';
 
 import logger from '../logging';
 import {
+    createInitPacketBuffer,
     createInitPacketUint8Array,
+    defaultInitPacket,
     FwType,
     HashType,
-    InitPacket,
 } from '../utils/initPacket';
 
 const NORDIC_DFU_PRODUCT_ID = 0x521f;
 const NORDIC_VENDOR_ID = 0x1915;
+const DEFAULT_DEVICE_WAIT_TIME = 10000;
 
 /**
  * Indicates that a device has been selected.
@@ -157,7 +161,8 @@ export const resetDeviceNickname = serialNumber => ({
     serialNumber,
 });
 
-let deviceLibContext;
+export const deviceLibContext = nrfDeviceLib.createContext();
+let hotplugTaskId;
 
 // Defined when user input is required during device setup. When input is
 // received from the user, this callback is invoked with the confirmation
@@ -176,11 +181,11 @@ let deviceSetupCallback;
 export const startWatchingDevices =
     (deviceListing, doDeselectDevice) => async (dispatch, getState) => {
         const updateDeviceList = async () => {
-            console.log('update');
-            if (!deviceLibContext) {
-                deviceLibContext = nrfDeviceLib.createContext();
-            }
+            // if (!deviceLibContext) {
+            //     deviceLibContext = nrfDeviceLib.createContext();
+            // }
 
+            console.log(deviceLibContext);
             const devices = await nrfDeviceLib.enumerate(
                 deviceLibContext,
                 deviceListing
@@ -195,9 +200,6 @@ export const startWatchingDevices =
             }
 
             const updatedDevices = devices.map(device => {
-                // TODO:
-                // - s/serialnumber/serialNumber/g
-                // - decide where to resolve PCA number, shared / nrf-device-lib
                 delete Object.assign(device, {
                     serialNumber: device.serialnumber,
                     boardVersion: device.jlink
@@ -212,10 +214,11 @@ export const startWatchingDevices =
 
         try {
             await updateDeviceList();
-            nrfDeviceLib.startHotplugEvents(
+            hotplugTaskId = nrfDeviceLib.startHotplugEvents(
                 deviceLibContext,
                 () => {},
                 () => {
+                    console.log('should not happen');
                     updateDeviceList();
                 }
             );
@@ -230,15 +233,16 @@ export const startWatchingDevices =
  * @returns {undefined}
  */
 export const stopWatchingDevices = () => {
+    // Start here
+    console.log('stop');
+    console.log(deviceLibContext);
     if (deviceLibContext) {
         try {
-            nrfDeviceLib.releaseContext(deviceLibContext);
+            console.log('stop');
+            // nrfDeviceLib.releaseContext(deviceLibContext);
+            nrfDeviceLib.stopHotplugEvents(hotplugTaskId);
         } catch (error) {
-            logger.error(
-                `Error while releasing nrf-device-lib-js: ${error.message}`
-            );
-        } finally {
-            deviceLibContext = undefined;
+            logger.error(`Error while stop watching devices: ${error.message}`);
         }
     }
 };
@@ -454,9 +458,9 @@ const validateSerialPort = async (device, needSerialport) => {
     for (let i = 10; i > 1; i -= 1) {
         /* eslint-disable-next-line no-await-in-loop */
         await sleep(2000 / i);
-        logger.debug('validating serialport', device.serialport.path, i);
+        // logger.debug('validating serialport', device.serialport.path, i);
         /* eslint-disable-next-line no-await-in-loop */
-        if (await checkOpen(device.serialport.path)) {
+        if (await checkOpen(device.serialports[0].com_name)) {
             logger.debug('resolving', device);
             return device;
         }
@@ -485,7 +489,7 @@ function calculateSHA256Hash(image) {
 const createDfuDataFromImages = dfuImages => {
     const extract = image => ({
         bin: image.firmwareImage,
-        dat: initPacket.createInitPacketBuffer(
+        dat: createInitPacketBuffer(
             image.initPacket.fwVersion,
             image.initPacket.hwVersion,
             image.initPacket.sdReq,
@@ -561,6 +565,96 @@ const createDfuZipBuffer = async dfuImages => {
 };
 
 /**
+ * Waits until a device (with a matching serial number) is listed by
+ * nrf-device-lister, up to a maximum of `timeout` milliseconds.
+ *
+ * If `expectedTraits` is given, then the device must (in addition to
+ * a matching serial number) also have the given traits. See the
+ * nrf-device-lister library for the full list of traits.
+ *
+ * @param {string} serialNumber of the device expected to appear
+ * @param {number} [timeout] Timeout, in milliseconds, to wait for device enumeration
+ * @param {Array} [expectedTraits] The traits that the device is expected to have
+ * @returns {Promise} resolved to the expected device
+ */
+export const waitForDevice = (
+    serialNumber,
+    timeout = DEFAULT_DEVICE_WAIT_TIME,
+    expectedTraits = ['serialport']
+) => {
+    logger.debug(`Will wait for device ${serialNumber}`);
+
+    return new Promise((resolve, reject) => {
+        let timeoutId;
+        // if (!deviceLibContext) {
+        //     deviceLibContext = nrfDeviceLib.createContext();
+        // }
+
+        // console.log('a');
+        // const devices = await nrfDeviceLib.enumerate(deviceLibContext, {
+        //     nordicUsb: true,
+        //     nordicDfu: true,
+        //     serialport: true,
+        // });
+        // console.log(devices);
+        // console.log('b');
+        console.log(deviceLibContext);
+        nrfDeviceLib.startHotplugEvents(
+            deviceLibContext,
+            () => {},
+            event => {
+                const { device } = event;
+                const isTraitIncluded = () =>
+                    expectedTraits.every(
+                        trait => device.traits[snakeCase(trait)]
+                    );
+                if (
+                    device &&
+                    device.serialnumber === serialNumber &&
+                    isTraitIncluded()
+                ) {
+                    resolve(device);
+                }
+            }
+        );
+        console.log('c');
+
+        // function checkConflation(deviceMap) {
+        //     const device = deviceMap.get(serialNumber);
+        //     if (
+        //         device &&
+        //         expectedTraits.every(trait => device.traits.includes(trait))
+        //     ) {
+        //         clearTimeout(timeoutId);
+        //         lister.removeListener('conflated', checkConflation);
+        //         lister.removeListener('error', debugError);
+        //         lister.stop();
+        //         debug(`... found ${serialNumber}`);
+        //         resolve(device);
+        //     }
+        // }
+
+        // timeoutId = setTimeout(() => {
+        //     debug(
+        //         `Timeout when waiting for attachment of device with serial number ${serialNumber}`
+        //     );
+        //     lister.removeListener('conflated', checkConflation);
+        //     lister.removeListener('error', debugError);
+        //     lister.stop();
+        //     reject(
+        //         new Error(
+        //             `Timeout while waiting for device  ${serialNumber} to be attached and enumerated`
+        //         )
+        //     );
+        // }, timeout);
+
+        // lister.on('error', debugError);
+        // lister.on('conflated', checkConflation);
+        // lister.start();
+    });
+};
+
+/**
  * Prepares a device which is expected to be in DFU Bootloader.
  * First it loads the firmware from HEX file specified by dfu argument,
  * then performs the DFU operation.
@@ -572,7 +666,7 @@ const createDfuZipBuffer = async dfuImages => {
  */
 const prepareInDFUBootloader = async (device, dfu) => {
     logger.debug(
-        `${device.serialNumber} on ${device.serialport.path} is now in DFU-Bootloader...`
+        `${device.serialNumber} on ${device.serialports[0].com_name} is now in DFU-Bootloader...`
     );
 
     const { application, softdevice } = dfu;
@@ -583,16 +677,17 @@ const prepareInDFUBootloader = async (device, dfu) => {
     if (softdevice) {
         const firmwareImage = parseFirmwareImage(softdevice);
 
-        const initPacketParams = new InitPacket()
-            .set('fwType', FwType.SOFTDEVICE)
-            .set('fwVersion', 0xffffffff)
-            .set('hwVersion', params.hwVersion || 52)
-            .set('hashType', HashType.SHA256)
-            .set('hash', calculateSHA256Hash(firmwareImage))
-            .set('sdSize', firmwareImage.length)
-            .set('sdReq', params.sdReq || []);
+        const initPacketParams = {
+            fwType: FwType.SOFTDEVICE,
+            fwVersion: 0xffffffff,
+            hwVersion: params.hwVersion || 52,
+            hashType: HashType.SHA256,
+            hash: calculateSHA256Hash(firmwareImage),
+            sdSize: firmwareImage.length,
+            sdReq: params.sdReq || [],
+        };
 
-        const packet = createInitPacketUint8Array(initPacketParams);
+        const packet = { ...defaultInitPacket, ...initPacketParams };
         dfuImages.push({
             name: 'SoftDevice',
             initPacket: packet,
@@ -602,65 +697,69 @@ const prepareInDFUBootloader = async (device, dfu) => {
 
     const firmwareImage = parseFirmwareImage(application);
 
-    const initPacketParams = new InitPacket()
-        .set('fwType', FwType.APPLICATION)
-        .set('fwVersion', params.fwVersion || 4)
-        .set('hwVersion', params.hwVersion || 52)
-        .set('hashType', HashType.SHA256)
-        .set('hash', calculateSHA256Hash(firmwareImage))
-        .set('appSize', firmwareImage.length)
-        .set('sdReq', params.sdId || []);
+    const initPacketParams = {
+        fwType: FwType.APPLICATION,
+        fwVersion: params.fwVersion || 4,
+        hwVersion: params.hwVersion || 52,
+        hashType: HashType.SHA256,
+        hash: calculateSHA256Hash(firmwareImage),
+        appSize: firmwareImage.length,
+        sdReq: params.sdId || [],
+    };
 
-    const packet = createInitPacketUint8Array(initPacketParams);
+    const packet = { ...defaultInitPacket, ...initPacketParams };
+    console.log(packet);
     dfuImages.push({ name: 'Application', initPacket: packet, firmwareImage });
+    console.log(dfuImages);
 
     const zipBuffer = await createDfuZipBuffer(dfuImages);
+    fs.writeFileSync('tem.zip', zipBuffer);
 
     let prevPercentage;
 
     logger.debug('Starting DFU');
-    nrfDeviceLib.firmwareProgram(
-        deviceLibContext,
-        device.id,
-        'NRFDL_FW_BUFFER',
-        'NRFDL_FW_SDFU_ZIP',
-        zipBuffer,
-        err => {
-            if (err) {
-                if (
-                    err.error_code ===
-                    nrfDeviceLib.NRFDL_ERR_SDFU_EXT_SD_VERSION_FAILURE
-                ) {
-                    logger.error('Failed to write to the target device');
+    console.log(deviceLibContext);
+    console.log(device.id);
+    console.log(zipBuffer);
+    await new Promise(resolve =>
+        nrfDeviceLib.firmwareProgram(
+            deviceLibContext,
+            device.id,
+            'NRFDL_FW_BUFFER',
+            'NRFDL_FW_SDFU_ZIP',
+            zipBuffer,
+            err => {
+                if (err) {
                     logger.error(
-                        'The required SoftDevice version does not match'
+                        `Failed to write to the target device: ${
+                            err.message || err
+                        }`
                     );
                 } else {
-                    logger.error(err);
+                    logger.info(
+                        'All dfu images have been written to the target device'
+                    );
+                    logger.debug('DFU completed successfully!');
+                    resolve();
                 }
-            } else {
-                logger.info(
-                    'All dfu images have been written to the target device'
-                );
+            },
+            ({ progressJson: progress }) => {
+                // // Don't repeat percentage steps that have already been logged.
+                // if (prevPercentage !== progress.progress_percentage) {
+                //     const status = `${progress.message.replace('.', ':')} ${
+                //         progress.progress_percentage
+                //     }%`;
+                //     logger.info(status);
+                //     prevPercentage = progress.progress_percentage;
+                // }
             }
-            logger.debug('DFU completed successfully!');
-        },
-        ({ progressJson: progress }) => {
-            // Don't repeat percentage steps that have already been logged.
-            if (prevPercentage !== progress.progress_percentage) {
-                const status = `${progress.message.replace('.', ':')} ${
-                    progress.progress_percentage
-                }%`;
-                logger.info(status);
-                prevPercentage = progress.progress_percentage;
-            }
-        }
+        )
     );
 
-    // return waitForDevice(device.serialNumber, DEFAULT_DEVICE_WAIT_TIME, [
-    //     'serialport',
-    //     'nordicUsb',
-    // ]);
+    return waitForDevice(device.serialNumber, DEFAULT_DEVICE_WAIT_TIME, [
+        'serialport',
+        'nordicUsb',
+    ]);
 };
 
 /**
@@ -753,6 +852,8 @@ export const setupDevice =
         // listing while setting up the device, and start it again after the
         // device has been set up.
         stopWatchingDevices();
+        // deviceLibContext = nrfDeviceLib.createContext();
+
         await releaseCurrentDevice();
         const deviceSetupConfig = {
             promiseConfirm: getDeviceSetupUserInput(dispatch),
@@ -813,6 +914,90 @@ export const setupDevice =
             //             return performDFU(device, deviceSetupConfig);
             //         }
             //     }
+        }
+        if (jprog && selectedDevice.traits.includes('jlink')) {
+            let wasProgrammed = false;
+            return Promise.resolve()
+                .then(
+                    () =>
+                        needSerialport &&
+                        verifySerialPortAvailable(selectedDevice)
+                )
+                .then(() => openJLink(selectedDevice))
+                .then(() => getDeviceInfo(selectedDevice))
+                .then(deviceInfo => {
+                    Object.assign(selectedDevice, { deviceInfo });
+
+                    const family = (deviceInfo.family || '').toLowerCase();
+                    const deviceType = (
+                        deviceInfo.deviceType || ''
+                    ).toLowerCase();
+                    const shortDeviceType = deviceType.split('_').shift();
+                    const boardVersion = (
+                        selectedDevice.boardVersion || ''
+                    ).toLowerCase();
+
+                    const key =
+                        Object.keys(jprog).find(
+                            k => k.toLowerCase() === deviceType
+                        ) ||
+                        Object.keys(jprog).find(
+                            k => k.toLowerCase() === shortDeviceType
+                        ) ||
+                        Object.keys(jprog).find(
+                            k => k.toLowerCase() === boardVersion
+                        ) ||
+                        Object.keys(jprog).find(
+                            k => k.toLowerCase() === family
+                        );
+
+                    if (!key) {
+                        throw new Error(
+                            'No firmware defined for selected device'
+                        );
+                    }
+                    debug('Found matching firmware definition', key);
+                    return jprog[key];
+                })
+                .then(async firmwareDefinition => ({
+                    valid: await validateFirmware(
+                        selectedDevice,
+                        firmwareDefinition
+                    ),
+                    firmwareDefinition,
+                }))
+                .then(({ valid, firmwareDefinition }) => {
+                    if (valid) {
+                        debug('Application firmware id matches');
+                        return selectedDevice;
+                    }
+                    return confirmHelper(promiseConfirm).then(isConfirmed => {
+                        if (!isConfirmed) {
+                            // go on without update
+                            return selectedDevice;
+                        }
+                        return programFirmware(
+                            selectedDevice,
+                            firmwareDefinition
+                        ).then(() => {
+                            wasProgrammed = true;
+                        });
+                    });
+                })
+                .then(
+                    () => closeJLink(selectedDevice).then(() => selectedDevice),
+                    err =>
+                        closeJLink(selectedDevice).then(() =>
+                            Promise.reject(err)
+                        )
+                )
+                .then(() =>
+                    createReturnValue(
+                        selectedDevice,
+                        { wasProgrammed },
+                        detailedOutput
+                    )
+                );
         }
 
         // nrfDeviceSetup
