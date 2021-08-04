@@ -50,6 +50,12 @@ import {
     FwType,
     HashType,
 } from '../utils/initPacket';
+import {
+    getDeviceInfo,
+    programFirmware,
+    validateFirmware,
+    verifySerialPortAvailable,
+} from './jprogFunc';
 
 const NORDIC_DFU_PRODUCT_ID = 0x521f;
 const NORDIC_VENDOR_ID = 0x1915;
@@ -851,6 +857,7 @@ export const setupDevice =
         // causing a DESELECT_DEVICE. To avoid this, we stop the device
         // listing while setting up the device, and start it again after the
         // device has been set up.
+        let preparedDevice;
         stopWatchingDevices();
         // deviceLibContext = nrfDeviceLib.createContext();
 
@@ -869,7 +876,7 @@ export const setupDevice =
             // check if device is in DFU-Bootloader, it might _only_ have serialport
             if (isDeviceInDFUBootloader(device)) {
                 logger.debug('Device is in DFU-Bootloader, DFU is defined');
-                return performDFU(device, deviceSetupConfig);
+                preparedDevice = performDFU(device, deviceSetupConfig);
             }
             //     if (device.usb) {
             //         // const usbDevice = device.usb.device;
@@ -915,91 +922,136 @@ export const setupDevice =
             //         }
             //     }
         }
-        if (jprog && selectedDevice.traits.includes('jlink')) {
+        if (jprog && device.traits.jlink) {
+            console.log(jprog);
+            console.log(device);
             let wasProgrammed = false;
-            return Promise.resolve()
-                .then(
-                    () =>
-                        needSerialport &&
-                        verifySerialPortAvailable(selectedDevice)
-                )
-                .then(() => openJLink(selectedDevice))
-                .then(() => getDeviceInfo(selectedDevice))
-                .then(deviceInfo => {
-                    Object.assign(selectedDevice, { deviceInfo });
+            if (needSerialport) await verifySerialPortAvailable(device);
+            // preparedDevice = getDeviceInfo(device);
+            const family = (device.jlink.device_family || '').toLowerCase();
+            const deviceType = (
+                device.jlink.device_version || ''
+            ).toLowerCase();
+            const shortDeviceType = deviceType.split('_').shift();
+            const boardVersion = (
+                device.jlink.board_version || ''
+            ).toLowerCase();
 
-                    const family = (deviceInfo.family || '').toLowerCase();
-                    const deviceType = (
-                        deviceInfo.deviceType || ''
-                    ).toLowerCase();
-                    const shortDeviceType = deviceType.split('_').shift();
-                    const boardVersion = (
-                        selectedDevice.boardVersion || ''
-                    ).toLowerCase();
+            const key =
+                Object.keys(jprog).find(k => k.toLowerCase() === deviceType) ||
+                Object.keys(jprog).find(
+                    k => k.toLowerCase() === shortDeviceType
+                ) ||
+                Object.keys(jprog).find(
+                    k => k.toLowerCase() === boardVersion
+                ) ||
+                Object.keys(jprog).find(k => k.toLowerCase() === family);
+            console.log(key);
 
-                    const key =
-                        Object.keys(jprog).find(
-                            k => k.toLowerCase() === deviceType
-                        ) ||
-                        Object.keys(jprog).find(
-                            k => k.toLowerCase() === shortDeviceType
-                        ) ||
-                        Object.keys(jprog).find(
-                            k => k.toLowerCase() === boardVersion
-                        ) ||
-                        Object.keys(jprog).find(
-                            k => k.toLowerCase() === family
-                        );
+            if (!key) {
+                throw new Error('No firmware defined for selected device');
+            }
+            logger.debug('Found matching firmware definition', key);
+            const firmwareDefinition = jprog[key];
+            // const valid = await validateFirmware(device, firmwareDefinition);
+            //         if (valid) {
+            //             logger.debug('Application firmware id matches');
+            //             return device;
+            //         }
 
-                    if (!key) {
-                        throw new Error(
-                            'No firmware defined for selected device'
-                        );
-                    }
-                    debug('Found matching firmware definition', key);
-                    return jprog[key];
-                })
-                .then(async firmwareDefinition => ({
-                    valid: await validateFirmware(
-                        selectedDevice,
-                        firmwareDefinition
-                    ),
-                    firmwareDefinition,
-                }))
-                .then(({ valid, firmwareDefinition }) => {
-                    if (valid) {
-                        debug('Application firmware id matches');
-                        return selectedDevice;
-                    }
-                    return confirmHelper(promiseConfirm).then(isConfirmed => {
-                        if (!isConfirmed) {
-                            // go on without update
-                            return selectedDevice;
-                        }
-                        return programFirmware(
-                            selectedDevice,
-                            firmwareDefinition
-                        ).then(() => {
-                            wasProgrammed = true;
-                        });
-                    });
-                })
-                .then(
-                    () => closeJLink(selectedDevice).then(() => selectedDevice),
-                    err =>
-                        closeJLink(selectedDevice).then(() =>
-                            Promise.reject(err)
-                        )
-                )
-                .then(() =>
-                    createReturnValue(
-                        selectedDevice,
-                        { wasProgrammed },
-                        detailedOutput
-                    )
-                );
+            preparedDevice = await programFirmware(
+                device,
+                firmwareDefinition
+            ).then(() => {
+                wasProgrammed = true;
+            });
+            preparedDevice = createReturnValue(
+                preparedDevice,
+                { wasProgrammed },
+                detailedOutput
+            );
+            // return Promise.resolve()
+            //     .then(() => needSerialport && verifySerialPortAvailable(device))
+            //     .then(() => openJLink(device))
+            //     .then(() => getDeviceInfo(device))
+            //     .then(deviceInfo => {
+            //         Object.assign(device, { deviceInfo });
+
+            //         const family = (deviceInfo.family || '').toLowerCase();
+            //         const deviceType = (
+            //             deviceInfo.deviceType || ''
+            //         ).toLowerCase();
+            //         const shortDeviceType = deviceType.split('_').shift();
+            //         const boardVersion = (
+            //             device.boardVersion || ''
+            //         ).toLowerCase();
+
+            //         const key =
+            //             Object.keys(jprog).find(
+            //                 k => k.toLowerCase() === deviceType
+            //             ) ||
+            //             Object.keys(jprog).find(
+            //                 k => k.toLowerCase() === shortDeviceType
+            //             ) ||
+            //             Object.keys(jprog).find(
+            //                 k => k.toLowerCase() === boardVersion
+            //             ) ||
+            //             Object.keys(jprog).find(
+            //                 k => k.toLowerCase() === family
+            //             );
+
+            //         if (!key) {
+            //             throw new Error(
+            //                 'No firmware defined for selected device'
+            //             );
+            //         }
+            //         logger.debug('Found matching firmware definition', key);
+            //         return jprog[key];
+            //     })
+            //     .then(async firmwareDefinition => ({
+            //         valid: await validateFirmware(device, firmwareDefinition),
+            //         firmwareDefinition,
+            //     }))
+            //     .then(({ valid, firmwareDefinition }) => {
+            //         if (valid) {
+            //             logger.debug('Application firmware id matches');
+            //             return device;
+            //         }
+            //         return confirmHelper(promiseConfirm).then(isConfirmed => {
+            //             if (!isConfirmed) {
+            //                 // go on without update
+            //                 return device;
+            //             }
+            //             return programFirmware(device, firmwareDefinition).then(
+            //                 () => {
+            //                     wasProgrammed = true;
+            //                 }
+            //             );
+            //         });
+            //     })
+            //     .then(
+            //         () => closeJLink(device).then(() => device),
+            //         err => closeJLink(device).then(() => Promise.reject(err))
+            //     )
+            //     .then(() =>
+            //         createReturnValue(device, { wasProgrammed }, detailedOutput)
+            //     );
         }
 
+        try {
+            doStartWatchingDevices();
+            dispatch(deviceSetupComplete(preparedDevice));
+            onDeviceIsReady(preparedDevice);
+        } catch (error) {
+            dispatch(deviceSetupError(device, error));
+            if (!deviceSetupConfig.allowCustomDevice) {
+                logger.error(
+                    `Error while setting up device ${device.serialNumber}: ${error.message}`
+                );
+                doDeselectDevice();
+            }
+            doStartWatchingDevices();
+        }
         // nrfDeviceSetup
         //     .setupDevice(device, deviceSetupConfig)
         //     .then(preparedDevice => {
