@@ -38,7 +38,7 @@ import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js'; // eslint-dis
 import SerialPort from 'serialport';
 
 import logger from '../logging';
-import { deviceLibContext } from './deviceActions';
+import { deviceLibContext } from './deviceLister';
 
 function parseSerial(serialNumber) {
     return parseInt(serialNumber, 10);
@@ -125,7 +125,7 @@ const verifySerialPortAvailable = device => {
         );
     }
     return new Promise((resolve, reject) => {
-        const serialPort = new SerialPort(device.serialports[0].com_name, {
+        const serialPort = new SerialPort(device.serialports[0].comName, {
             autoOpen: false,
         });
         serialPort.open(openErr => {
@@ -186,7 +186,6 @@ async function validateFirmware(device, firmwareFamily) {
 }
 
 async function programFirmware(device, firmwareFamily) {
-    console.log('program');
     try {
         logger.debug(
             `Programming ${device.serialNumber} with ${firmwareFamily.fw}`

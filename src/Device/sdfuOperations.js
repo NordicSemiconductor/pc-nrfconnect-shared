@@ -140,6 +140,7 @@ const checkConfirmUpdateBootloader = async (device, promiseConfirm) => {
  */
 const confirmHelper = async promiseConfirm => {
     if (!promiseConfirm) return true;
+    console.log(promiseConfirm);
     try {
         return await promiseConfirm(
             'Device must be programmed, do you want to proceed?'

@@ -53,6 +53,7 @@ export const wrapDevices = devices => {
         }).serialnumber;
         return device;
     });
+    console.log(updatedDevices);
     return updatedDevices;
 };
 
