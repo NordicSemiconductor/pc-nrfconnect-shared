@@ -34,8 +34,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import logger from '../logging';
-
 /**
  * Indicates that a device has been selected.
  *
@@ -65,7 +63,7 @@ export function deselectDevice() {
  * @param {Object} device Device object as given by nrf-device-lib.
  */
 export const DEVICE_SETUP_COMPLETE = 'DEVICE_SETUP_COMPLETE';
-const deviceSetupComplete = device => ({
+export const deviceSetupComplete = device => ({
     type: DEVICE_SETUP_COMPLETE,
     device,
 });
@@ -77,7 +75,7 @@ const deviceSetupComplete = device => ({
  * @param {Object} error Error object describing the error.
  */
 export const DEVICE_SETUP_ERROR = 'DEVICE_SETUP_ERROR';
-const deviceSetupError = (device, error) => ({
+export const deviceSetupError = (device, error) => ({
     type: DEVICE_SETUP_ERROR,
     device,
     error,
@@ -141,51 +139,3 @@ export const resetDeviceNickname = serialNumber => ({
     type: DEVICE_NICKNAME_RESET,
     serialNumber,
 });
-
-// Defined when user input is required during device setup. When input is
-// received from the user, this callback is invoked with the confirmation
-// (Boolean) or choice (String) that the user provided as input.
-let deviceSetupCallback;
-
-/**
- * Asks the user to provide input during device setup. If a list of choices are
- * given, and the user selects one of them, then then promise will resolve with
- * the selected value. If no choices are given, and the user confirms, then the
- * promise will just resolve with true. Will reject if the user cancels.
- *
- * @param {function} dispatch The redux dispatch function.
- * @param {String} message The message to display to the user.
- * @param {Array<String>} [choices] The choices to display to the user (optional).
- * @returns {Promise<String>} Promise that resolves with the user input.
- */
-export const getDeviceSetupUserInput = dispatch => (message, choices) =>
-    new Promise((resolve, reject) => {
-        deviceSetupCallback = choice => {
-            if (!choices) {
-                // for confirmation resolve with boolean
-                resolve(!!choice);
-            } else if (choice) {
-                resolve(choice);
-            } else {
-                reject(new Error('Cancelled by user.'));
-            }
-        };
-        dispatch(deviceSetupInputRequired(message, choices));
-    });
-
-/**
- * Responds to a device setup confirmation request with the given input
- * as provided by the user.
- *
- * @param {Boolean|String} input Input made by the user.
- * @returns {function(*)} Function that can be passed to redux dispatch.
- */
-export const receiveDeviceSetupInput = input => dispatch => {
-    dispatch(deviceSetupInputReceived(input));
-    if (deviceSetupCallback) {
-        deviceSetupCallback(input);
-        deviceSetupCallback = undefined;
-    } else {
-        logger.error('Received device setup input, but no callback exists.');
-    }
-};

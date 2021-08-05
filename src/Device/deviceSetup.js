@@ -36,6 +36,8 @@
 
 import logger from '../logging';
 import {
+    deviceSetupComplete,
+    deviceSetupError,
     deviceSetupInputReceived,
     deviceSetupInputRequired,
 } from './deviceActions';
@@ -132,7 +134,6 @@ export const setupDevice =
         // device has been set up.
         let preparedDevice;
         stopWatchingDevices();
-        // deviceLibContext = nrfDeviceLib.createContext();
 
         await releaseCurrentDevice();
         const deviceSetupConfig = {
@@ -151,49 +152,6 @@ export const setupDevice =
                 logger.debug('Device is in DFU-Bootloader, DFU is defined');
                 preparedDevice = performDFU(device, deviceSetupConfig);
             }
-            //     if (device.usb) {
-            //         // const usbDevice = device.usb.device;
-            //         if (device.traits.nordic_dfu) {
-            //             logger.debug(
-            //                 'Device has DFU trigger interface, probably in Application mode'
-            //             );
-            //             // TODO
-            //             //     return getSemVersion(usbDevice, interfaceNumber).then(
-            //             //         semver => {
-            //             //             debug(`'${semver}'`);
-            //             //             if (
-            //             //                 Object.keys(dfu)
-            //             //                     .map(key => dfu[key].semver)
-            //             //                     .includes(semver)
-            //             //             ) {
-            //             //                 if (
-            //             //                     needSerialport &&
-            //             //                     !selectedDevice.serialport
-            //             //                 ) {
-            //             //                     return Promise.reject(
-            //             //                         new Error('Missing serial port')
-            //             //                     );
-            //             //                 }
-            //             //                 debug(
-            //             //                     'Device is running the correct fw version'
-            //             //                 );
-            //             //                 return createReturnValue(
-            //             //                     selectedDevice,
-            //             //                     { wasProgrammed: false },
-            //             //                     detailedOutput
-            //             //                 );
-            //             //             }
-            //             //             debug('Device requires different firmware');
-            //             //             return performDFU(selectedDevice, options);
-            //             //         }
-            //             //     );
-            //             // }
-            //             // debug(
-            //             //     'Device is not in DFU-Bootloader and has no DFU trigger interface'
-            //             // );
-            //             return performDFU(device, deviceSetupConfig);
-            //         }
-            //     }
         }
         if (jprog && device.traits.jlink) {
             console.log(jprog);
