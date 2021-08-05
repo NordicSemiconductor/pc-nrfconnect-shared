@@ -147,14 +147,14 @@ export const setupDevice =
         console.log(deviceSetup);
         console.log(deviceSetupConfig);
 
-        const { jprog, dfu, needSerialport, detailedOutput, promiseConfirm } =
+        const { jprog, dfu, needSerialport, detailedOutput } =
             deviceSetupConfig;
 
         if (dfu && Object.keys(dfu).length !== 0) {
             // check if device is in DFU-Bootloader, it might _only_ have serialport
             if (isDeviceInDFUBootloader(device)) {
                 logger.debug('Device is in DFU-Bootloader, DFU is defined');
-                preparedDevice = performDFU(device, deviceSetupConfig);
+                preparedDevice = await performDFU(device, deviceSetupConfig);
             }
         }
         if (jprog && device.traits.jlink) {
