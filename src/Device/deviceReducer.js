@@ -114,7 +114,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 ...noDialogShown,
-                deviceInfo: action.device.deviceInfo,
+                deviceInfo: action.device,
             };
         case DEVICE_SETUP_ERROR:
             return {

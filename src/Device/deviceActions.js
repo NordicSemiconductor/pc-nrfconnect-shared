@@ -143,7 +143,7 @@ const deviceSetupInputReceived = input => ({
  * @param {Array} devices Array of all attached devices, ref. nrf-device-lib.
  */
 export const DEVICES_DETECTED = 'DEVICES_DETECTED';
-const devicesDetected = devices => ({
+export const devicesDetected = devices => ({
     type: DEVICES_DETECTED,
     devices,
 });
@@ -167,91 +167,10 @@ export const resetDeviceNickname = serialNumber => ({
     serialNumber,
 });
 
-export const deviceLibContext = nrfDeviceLib.createContext();
-let hotplugTaskId;
-
 // Defined when user input is required during device setup. When input is
 // received from the user, this callback is invoked with the confirmation
 // (Boolean) or choice (String) that the user provided as input.
 let deviceSetupCallback;
-
-/**
- * Starts watching for devices with the given traits. See the nrf-device-lib
- * library for available traits. Whenever devices are attached/detached, this
- * will dispatch DEVICES_DETECTED with a complete list of attached devices.
- *
- * @param {Object} deviceListing The configuration for the DeviceLister
- * @param {function(device)} doDeselectDevice Invoke to start deselect the current device
- * @returns {function(*)} Function that can be passed to redux dispatch.
- */
-export const startWatchingDevices =
-    (deviceListing, doDeselectDevice) => async (dispatch, getState) => {
-        const updateDeviceList = async () => {
-            // if (!deviceLibContext) {
-            //     deviceLibContext = nrfDeviceLib.createContext();
-            // }
-
-            console.log(deviceLibContext);
-            const devices = await nrfDeviceLib.enumerate(
-                deviceLibContext,
-                deviceListing
-            );
-
-            const state = getState();
-            if (
-                state.device.selectedSerialNumber !== null &&
-                !devices.has(state.device.selectedSerialNumber)
-            ) {
-                doDeselectDevice();
-            }
-
-            const updatedDevices = devices.map(device => {
-                delete Object.assign(device, {
-                    serialNumber: device.serialnumber,
-                    boardVersion: device.jlink
-                        ? device.jlink.board_version
-                        : undefined,
-                }).serialnumber;
-                return device;
-            });
-
-            dispatch(devicesDetected(updatedDevices));
-        };
-
-        try {
-            await updateDeviceList();
-            hotplugTaskId = nrfDeviceLib.startHotplugEvents(
-                deviceLibContext,
-                () => {},
-                () => {
-                    console.log('should not happen');
-                    updateDeviceList();
-                }
-            );
-        } catch (error) {
-            logger.error(`Error while probing devices: ${error.message}`);
-        }
-    };
-
-/**
- * Stops watching for devices.
- *
- * @returns {undefined}
- */
-export const stopWatchingDevices = () => {
-    // Start here
-    console.log('stop');
-    console.log(deviceLibContext);
-    if (deviceLibContext) {
-        try {
-            console.log('stop');
-            // nrfDeviceLib.releaseContext(deviceLibContext);
-            nrfDeviceLib.stopHotplugEvents(hotplugTaskId);
-        } catch (error) {
-            logger.error(`Error while stop watching devices: ${error.message}`);
-        }
-    }
-};
 
 /**
  * Asks the user to provide input during device setup. If a list of choices are
