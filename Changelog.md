@@ -579,7 +579,7 @@
 
 ## 4.3
 ### Added
-- Ease configuration of git hooks #40.
+- Ease configuration of git hooks.
 ### Steps to upgrade when using this package
 - If you want to automatically run the `lint` and `test` scripts before pushing
   changes, add a file `.huskyrc.json` to your project with this content:
@@ -595,7 +595,7 @@
 ## 4.2
 ### Changed
 - Enhanced handling custom devices
-- Remove dependency of react-infinite. #38
+- Remove dependency of react-infinite.
 
 ## 4.1
 ### Changed
