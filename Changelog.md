@@ -1,13 +1,13 @@
 ## 4.28.2 -- 2021-07-19
-### Updated
+### Changed
 - Added `@nordicsemiconductor/nrf-device-lib-js` in webpack.config.js
 
 ## 4.28.1 -- 2021-06-24
-### Updated
+### Changed
 - Increase padding for `Card` component.
 
 ## 4.28.0 -- 2021-06-21
-### Updated
+### Changed
 - Pin the version of prettier to be used to an exact version, as
   [recommended in the prettier documentation](https://prettier.io/docs/en/install.html).
 ### Steps to upgrade when using this package
@@ -26,7 +26,7 @@
 - `Restore defaults` button styling inside `ErrorBoundary` component was broken.
 
 ## 4.27.1 -- 2021-06-14
-### Updated
+### Changed
 - Small change to tooltip background color and opacity
 
 ## 4.27.0 -- 2021-06-14
@@ -287,15 +287,15 @@
   you should check whether you add appropriate margins yourself.
 
 ## 4.14.4
-### Updated
+### Changed
 - Revert change from 4.14.2: Enable `import/no-cycle` ESLint rule again
 
 ## 4.14.3
-### Updated
+### Changed
 - Pin `eslint-plugin-import` version
 
 ## 4.14.2
-### Updated
+### Changed
 - Disabled `import/no-cycle` ESLint rule
 
 ## 4.14.1
@@ -316,13 +316,13 @@
   restarting the app, the device is automatically selected again.
 
 ## 4.13.0
-### Updated
+### Changed
 - Replaced moment.js with date-fns library
 
 ## 4.12.0
 ### Added
 - Support title property in Slider and Toggle
-### Updated
+### Changed
 - Enhance lint configuration by specifying it in `package.json`
 
 ## 4.11.0
@@ -330,19 +330,19 @@
 - Added icon for a PPK
 
 ## 4.10.4
-### Updated
+### Changed
 - Added `currentPane` field to `appLayout` type
 
 ## 4.10.3
-### Updated
+### Changed
 - Added `iface en0` for looking up IP address on macOS
 
 ## 4.10.2
-### Updated
+### Changed
 - Added persistent store for usage data settings in `shared` instead of in `launcher`
 
 ## 4.10.1
-### Updated
+### Changed
 - Updated from v4.9.8 due to breaking changes in 4.10.0
 
 ## 4.10.0
@@ -362,11 +362,11 @@
   changed for this.
 
 ## 4.9.8
-### Updated
+### Changed
 - Updated logic to decide which network interface to use to generate client id
 
 ## 4.9.7
-### Updated
+### Changed
 - Updated how client is generated for usage statistics
 
 ## 4.9.6
@@ -436,11 +436,11 @@
 - Version number for 4.8.18 release was wrong in `package.json`.
 
 ## 4.8.18
-### Updated
+### Changed
 - Added `prettier.config.js` to existing script `npm run lint-init`
 
 ## 4.8.17
-### Updated
+### Changed
 - New design, device selector: Add PCA number, better alignment for port names,
   removed wrong line below port names
 
@@ -487,7 +487,7 @@
 - Added toggle component
 
 ## 4.8.9
-### Updated
+### Changed
 - Updated several design elements for the release of the new RSSI app
 ### Steps to upgrade when using this package
 - Apps using the new design need to be adapted in areas were a scrollbar might
@@ -502,11 +502,11 @@
 - Fixed installation failure in local apps
 
 ## 4.8.7
-### Updated
+### Changed
 - Made the device picker, sidepanel, and log UI elements optional
 
 ## 4.8.6
-### Updated
+### Changed
 - Updated confirmation dialog style
 
 ## 4.8.5
@@ -605,7 +605,7 @@
     - Enabled custom error resolutions
 
 ## 4.0
-### Breaking change
+### Changed
 - This package was renamed to “pc-nrfconnect-shared”. If you refer to it anywhere under
   the old name (e.g. in a package.json or import a component from it) then you must
   update these references when upgrading to version 4.
