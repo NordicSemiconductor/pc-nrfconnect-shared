@@ -1,12 +1,12 @@
-## 4.28.2
+## 4.28.2 -- 2021-07-19
 ### Updated
 - Added `@nordicsemiconductor/nrf-device-lib-js` in webpack.config.js
 
-## 4.28.1
+## 4.28.1 -- 2021-06-24
 ### Updated
 - Increase padding for `Card` component.
 
-## 4.28.0
+## 4.28.0 -- 2021-06-21
 ### Updated
 - Pin the version of prettier to be used to an exact version, as
   [recommended in the prettier documentation](https://prettier.io/docs/en/install.html).
@@ -16,24 +16,24 @@
   The majority of these can be fixed automatically, by running
   `npm run lint -- --fix`.
 
-## 4.27.3
+## 4.27.3 -- 2021-06-21
 ### Fixed
 - Exported `colors` object was empty.
 
-## 4.27.2
+## 4.27.2 -- 2021-06-15
 ### Fixed
 - GA events were sent even when the user had not consented.
 - `Restore defaults` button styling inside `ErrorBoundary` component was broken.
 
-## 4.27.1
+## 4.27.1 -- 2021-06-14
 ### Updated
 - Small change to tooltip background color and opacity
 
-## 4.27.0
+## 4.27.0 -- 2021-06-14
 ### Changed
 - Use `Card` component introduced in 4.22.0 in the `About` pane
 
-## 4.26.0
+## 4.26.0 -- 2021-06-08
 ### Changed
 - Upgrade several webpack related dependencies
 - Upgrade systeminformation, which had a security issue
@@ -44,7 +44,7 @@
   config that still uses it, either install it yourself or (better) switch
   to eslint-webpack-plugin.
 
-## 4.25.0
+## 4.25.0 -- 2021-06-07
 ### Fixed
 - Remove namespace pollution by `Card` component, which broke the layout of the
   Toolchain Manager.
