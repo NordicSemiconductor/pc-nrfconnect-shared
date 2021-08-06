@@ -49,7 +49,7 @@ import {
     FwType,
     HashType,
 } from '../utils/initPacket';
-import { deviceLibContext } from './deviceLister';
+import { deviceLibContext, waitForDevice } from './deviceLister';
 
 const NORDIC_DFU_PRODUCT_ID = 0x521f;
 const NORDIC_VENDOR_ID = 0x1915;
@@ -140,7 +140,6 @@ const checkConfirmUpdateBootloader = async (device, promiseConfirm) => {
  */
 const confirmHelper = async promiseConfirm => {
     if (!promiseConfirm) return true;
-    console.log(promiseConfirm);
     try {
         return await promiseConfirm(
             'Device must be programmed, do you want to proceed?'
@@ -225,7 +224,7 @@ const validateSerialPort = async (device, needSerialport) => {
         await sleep(2000 / i);
         // logger.debug('validating serialport', device.serialport.path, i);
         /* eslint-disable-next-line no-await-in-loop */
-        if (await checkOpen(device.serialports[0].com_name)) {
+        if (await checkOpen(device.serialport.comName)) {
             logger.debug('resolving', device);
             return device;
         }
@@ -330,96 +329,6 @@ const createDfuZipBuffer = async dfuImages => {
 };
 
 /**
- * Waits until a device (with a matching serial number) is listed by
- * nrf-device-lister, up to a maximum of `timeout` milliseconds.
- *
- * If `expectedTraits` is given, then the device must (in addition to
- * a matching serial number) also have the given traits. See the
- * nrf-device-lister library for the full list of traits.
- *
- * @param {string} serialNumber of the device expected to appear
- * @param {number} [timeout] Timeout, in milliseconds, to wait for device enumeration
- * @param {Array} [expectedTraits] The traits that the device is expected to have
- * @returns {Promise} resolved to the expected device
- */
-export const waitForDevice = (
-    serialNumber,
-    timeout = DEFAULT_DEVICE_WAIT_TIME,
-    expectedTraits = ['serialport']
-) => {
-    logger.debug(`Will wait for device ${serialNumber}`);
-
-    return new Promise((resolve, reject) => {
-        let timeoutId;
-        // if (!deviceLibContext) {
-        //     deviceLibContext = nrfDeviceLib.createContext();
-        // }
-
-        // console.log('a');
-        // const devices = await nrfDeviceLib.enumerate(deviceLibContext, {
-        //     nordicUsb: true,
-        //     nordicDfu: true,
-        //     serialport: true,
-        // });
-        // console.log(devices);
-        // console.log('b');
-        console.log(deviceLibContext);
-        nrfDeviceLib.startHotplugEvents(
-            deviceLibContext,
-            () => {},
-            event => {
-                const { device } = event;
-                const isTraitIncluded = () =>
-                    expectedTraits.every(
-                        trait => device.traits[snakeCase(trait)]
-                    );
-                if (
-                    device &&
-                    device.serialnumber === serialNumber &&
-                    isTraitIncluded()
-                ) {
-                    resolve(device);
-                }
-            }
-        );
-        console.log('c');
-
-        // function checkConflation(deviceMap) {
-        //     const device = deviceMap.get(serialNumber);
-        //     if (
-        //         device &&
-        //         expectedTraits.every(trait => device.traits.includes(trait))
-        //     ) {
-        //         clearTimeout(timeoutId);
-        //         lister.removeListener('conflated', checkConflation);
-        //         lister.removeListener('error', debugError);
-        //         lister.stop();
-        //         debug(`... found ${serialNumber}`);
-        //         resolve(device);
-        //     }
-        // }
-
-        // timeoutId = setTimeout(() => {
-        //     debug(
-        //         `Timeout when waiting for attachment of device with serial number ${serialNumber}`
-        //     );
-        //     lister.removeListener('conflated', checkConflation);
-        //     lister.removeListener('error', debugError);
-        //     lister.stop();
-        //     reject(
-        //         new Error(
-        //             `Timeout while waiting for device  ${serialNumber} to be attached and enumerated`
-        //         )
-        //     );
-        // }, timeout);
-
-        // lister.on('error', debugError);
-        // lister.on('conflated', checkConflation);
-        // lister.start();
-    });
-};
-
-/**
  * Prepares a device which is expected to be in DFU Bootloader.
  * First it loads the firmware from HEX file specified by dfu argument,
  * then performs the DFU operation.
@@ -431,7 +340,7 @@ export const waitForDevice = (
  */
 const prepareInDFUBootloader = async (device, dfu) => {
     logger.debug(
-        `${device.serialNumber} on ${device.serialports[0].com_name} is now in DFU-Bootloader...`
+        `${device.serialNumber} on ${device.serialport.comName} is now in DFU-Bootloader...`
     );
 
     const { application, softdevice } = dfu;
@@ -473,9 +382,7 @@ const prepareInDFUBootloader = async (device, dfu) => {
     };
 
     const packet = { ...defaultInitPacket, ...initPacketParams };
-    console.log(packet);
     dfuImages.push({ name: 'Application', initPacket: packet, firmwareImage });
-    console.log(dfuImages);
 
     const zipBuffer = await createDfuZipBuffer(dfuImages);
     fs.writeFileSync('tem.zip', zipBuffer);
@@ -483,9 +390,6 @@ const prepareInDFUBootloader = async (device, dfu) => {
     let prevPercentage;
 
     logger.debug('Starting DFU');
-    console.log(deviceLibContext);
-    console.log(device.id);
-    console.log(zipBuffer);
     await new Promise(resolve =>
         nrfDeviceLib.firmwareProgram(
             deviceLibContext,

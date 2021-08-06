@@ -63,8 +63,6 @@ let deviceSetupCallback;
  */
 const getDeviceSetupUserInput = dispatch => (message, choices) =>
     new Promise((resolve, reject) => {
-        console.log(message);
-        console.log(choices);
         deviceSetupCallback = choice => {
             if (!choices) {
                 // for confirmation resolve with boolean
@@ -144,8 +142,6 @@ export const setupDevice =
             allowCustomDevice: false,
             ...deviceSetup,
         };
-        console.log(deviceSetup);
-        console.log(deviceSetupConfig);
 
         const { jprog, dfu, needSerialport, detailedOutput } =
             deviceSetupConfig;
@@ -158,8 +154,6 @@ export const setupDevice =
             }
         }
         if (jprog && device.traits.jlink) {
-            console.log(jprog);
-            console.log(device);
             let wasProgrammed = false;
             if (needSerialport) await verifySerialPortAvailable(device);
             // preparedDevice = getDeviceInfo(device);
@@ -179,7 +173,6 @@ export const setupDevice =
                     k => k.toLowerCase() === boardVersion
                 ) ||
                 Object.keys(jprog).find(k => k.toLowerCase() === family);
-            console.log(key);
 
             if (!key) {
                 throw new Error('No firmware defined for selected device');

@@ -44,18 +44,20 @@ import { devicesDetected } from './deviceActions';
 export const deviceLibContext = nrfDeviceLib.createContext();
 let hotplugTaskId;
 
-export const wrapDevices = devices => {
-    let updatedDevices = camelcaseKeys(devices, { deep: true });
-    updatedDevices = updatedDevices.map(device => {
-        delete Object.assign(device, {
-            serialNumber: device.serialnumber,
-            boardVersion: device.jlink ? device.jlink.boardVersion : undefined,
-        }).serialnumber;
-        return device;
+export const wrapDeviceFromNrfdl = inputDevice => {
+    const device = camelcaseKeys(inputDevice, { deep: true });
+    Object.assign(device, {
+        serialNumber: device.serialnumber,
+        boardVersion: device.jlink ? device.jlink.boardVersion : undefined,
+        serialport: Object.assign(device.serialports[0], {
+            path: device.serialports[0].comName,
+        }),
     });
-    console.log(updatedDevices);
-    return updatedDevices;
+    delete device.serialnumber;
+    return device;
 };
+
+export const wrapDevicesFromNrfdl = devices => devices.map(wrapDeviceFromNrfdl);
 
 /**
  * Starts watching for devices with the given traits. See the nrf-device-lib
@@ -73,7 +75,7 @@ export const startWatchingDevices =
                 deviceLibContext,
                 deviceListing
             );
-            devices = wrapDevices(devices);
+            devices = wrapDevicesFromNrfdl(devices);
 
             const { selectedSerialNumber } = getState().device;
             if (
@@ -112,4 +114,90 @@ export const stopWatchingDevices = () => {
             logger.error(`Error while stop watching devices: ${error.message}`);
         }
     }
+};
+
+/**
+ * Waits until a device (with a matching serial number) is listed by
+ * nrf-device-lister, up to a maximum of `timeout` milliseconds.
+ *
+ * If `expectedTraits` is given, then the device must (in addition to
+ * a matching serial number) also have the given traits. See the
+ * nrf-device-lister library for the full list of traits.
+ *
+ * @param {string} serialNumber of the device expected to appear
+ * @param {number} [timeout] Timeout, in milliseconds, to wait for device enumeration
+ * @param {Array} [expectedTraits] The traits that the device is expected to have
+ * @returns {Promise} resolved to the expected device
+ */
+export const waitForDevice = (
+    serialNumber,
+    timeout = DEFAULT_DEVICE_WAIT_TIME,
+    expectedTraits = ['serialport']
+) => {
+    logger.debug(`Will wait for device ${serialNumber}`);
+
+    return new Promise((resolve, reject) => {
+        let timeoutId;
+        // if (!deviceLibContext) {
+        //     deviceLibContext = nrfDeviceLib.createContext();
+        // }
+
+        // const devices = await nrfDeviceLib.enumerate(deviceLibContext, {
+        //     nordicUsb: true,
+        //     nordicDfu: true,
+        //     serialport: true,
+        // });
+        nrfDeviceLib.startHotplugEvents(
+            deviceLibContext,
+            () => {},
+            event => {
+                const { device: inputDevice } = event;
+                if (!inputDevice) return;
+
+                const device = wrapDeviceFromNrfdl(inputDevice);
+                const isTraitIncluded = () =>
+                    expectedTraits.every(trait => device.traits[trait]);
+                if (
+                    device &&
+                    device.serialNumber === serialNumber &&
+                    isTraitIncluded()
+                ) {
+                    resolve(device);
+                }
+            }
+        );
+
+        // function checkConflation(deviceMap) {
+        //     const device = deviceMap.get(serialNumber);
+        //     if (
+        //         device &&
+        //         expectedTraits.every(trait => device.traits.includes(trait))
+        //     ) {
+        //         clearTimeout(timeoutId);
+        //         lister.removeListener('conflated', checkConflation);
+        //         lister.removeListener('error', debugError);
+        //         lister.stop();
+        //         debug(`... found ${serialNumber}`);
+        //         resolve(device);
+        //     }
+        // }
+
+        // timeoutId = setTimeout(() => {
+        //     debug(
+        //         `Timeout when waiting for attachment of device with serial number ${serialNumber}`
+        //     );
+        //     lister.removeListener('conflated', checkConflation);
+        //     lister.removeListener('error', debugError);
+        //     lister.stop();
+        //     reject(
+        //         new Error(
+        //             `Timeout while waiting for device  ${serialNumber} to be attached and enumerated`
+        //         )
+        //     );
+        // }, timeout);
+
+        // lister.on('error', debugError);
+        // lister.on('conflated', checkConflation);
+        // lister.start();
+    });
 };

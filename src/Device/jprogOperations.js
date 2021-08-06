@@ -44,23 +44,6 @@ function parseSerial(serialNumber) {
     return parseInt(serialNumber, 10);
 }
 
-function read(serialNumber, address, length) {
-    return new Promise((resolve, reject) => {
-        nrfjprog.read(
-            parseSerial(serialNumber),
-            address,
-            length,
-            (err, contents) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(contents);
-                }
-            }
-        );
-    });
-}
-
 /**
  * Program the device with the given serial number with the given firmware
  * using nrfjprog.
@@ -80,9 +63,6 @@ const program = (deviceId, firmware) => {
         fw = firmware;
     }
     return new Promise((resolve, reject) => {
-        console.log(deviceLibContext);
-        console.log(deviceId);
-        console.log(fw);
         nrfDeviceLib.firmwareProgram(
             deviceLibContext,
             deviceId,
@@ -104,6 +84,12 @@ const program = (deviceId, firmware) => {
             'NRFDL_DEVICE_CORE_APPLICATION'
         );
     });
+};
+
+const reset = async deviceId => {
+    console.log(deviceLibContext);
+    console.log(deviceId);
+    await nrfDeviceLib.deviceControlReset(deviceLibContext, deviceId);
 };
 
 /**
@@ -144,22 +130,6 @@ const verifySerialPortAvailable = device => {
     });
 };
 
-function openJLink(device) {
-    return new Promise((resolve, reject) => {
-        nrfjprog.open(parseSerial(device.serialNumber), err =>
-            err ? reject(err) : resolve()
-        );
-    });
-}
-
-function closeJLink(device) {
-    return new Promise((resolve, reject) => {
-        nrfjprog.close(parseSerial(device.serialNumber), err =>
-            err ? reject(err) : resolve()
-        );
-    });
-}
-
 async function validateFirmware(device, firmwareFamily) {
     const { fwIdAddress, fwVersion } = firmwareFamily;
     let contents;
@@ -191,16 +161,11 @@ async function programFirmware(device, firmwareFamily) {
             `Programming ${device.serialNumber} with ${firmwareFamily.fw}`
         );
         await program(device.id, firmwareFamily.fw);
+        await reset(device.id);
     } catch (programError) {
         throw new Error(`Error when programming ${programError.message}`);
     }
     return device;
 }
 
-export {
-    openJLink,
-    closeJLink,
-    verifySerialPortAvailable,
-    validateFirmware,
-    programFirmware,
-};
+export { verifySerialPortAvailable, validateFirmware, programFirmware };
