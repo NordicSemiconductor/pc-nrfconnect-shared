@@ -1,13 +1,21 @@
-## 4.28.2
-### Updated
-- Added `@nordicsemiconductor/nrf-device-lib-js` in webpack.config.js
+# Changelog
+All notable changes to this project will be documented in this file.
 
-## 4.28.1
-### Updated
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## Unreleased
+
+## 4.28.2 -- 2021-07-19
+### Changed
+- Added `@nordicsemiconductor/nrf-device-lib-js` in webpack.config.js.
+
+## 4.28.1 -- 2021-06-24
+### Changed
 - Increase padding for `Card` component.
 
-## 4.28.0
-### Updated
+## 4.28.0 -- 2021-06-21
+### Changed
 - Pin the version of prettier to be used to an exact version, as
   [recommended in the prettier documentation](https://prettier.io/docs/en/install.html).
 ### Steps to upgrade when using this package
@@ -16,27 +24,27 @@
   The majority of these can be fixed automatically, by running
   `npm run lint -- --fix`.
 
-## 4.27.3
+## 4.27.3 -- 2021-06-21
 ### Fixed
 - Exported `colors` object was empty.
 
-## 4.27.2
+## 4.27.2 -- 2021-06-15
 ### Fixed
 - GA events were sent even when the user had not consented.
 - `Restore defaults` button styling inside `ErrorBoundary` component was broken.
 
-## 4.27.1
-### Updated
-- Small change to tooltip background color and opacity
-
-## 4.27.0
+## 4.27.1 -- 2021-06-14
 ### Changed
-- Use `Card` component introduced in 4.22.0 in the `About` pane
+- Small change to tooltip background color and opacity.
 
-## 4.26.0
+## 4.27.0 -- 2021-06-14
 ### Changed
-- Upgrade several webpack related dependencies
-- Upgrade systeminformation, which had a security issue
+- Use `Card` component introduced in 4.22.0 in the `About` pane.
+
+## 4.26.0 -- 2021-06-08
+### Changed
+- Upgrade several webpack related dependencies.
+- Upgrade systeminformation, which had a security issue.
 ### Fixed
 - The system report generated from the about pane only contained `[object Promise]`.
 ### Steps to upgrade when using this package
@@ -44,7 +52,7 @@
   config that still uses it, either install it yourself or (better) switch
   to eslint-webpack-plugin.
 
-## 4.25.0
+## 4.25.0 -- 2021-06-07
 ### Fixed
 - Remove namespace pollution by `Card` component, which broke the layout of the
   Toolchain Manager.
@@ -182,8 +190,8 @@
   Google Analytics.
 ### Steps to upgrade when using this package
 - When you are using `usageData`:
-  - Change the parameter when calling `init`
-  - Replace calls to `sendEvent` with `sendUsageData`
+  - Change the parameter when calling `init`.
+  - Replace calls to `sendEvent` with `sendUsageData`.
 
 ## 4.17.3
 ### Fixed
@@ -287,20 +295,20 @@
   you should check whether you add appropriate margins yourself.
 
 ## 4.14.4
-### Updated
-- Revert change from 4.14.2: Enable `import/no-cycle` ESLint rule again
+### Changed
+- Revert change from 4.14.2: Enable `import/no-cycle` ESLint rule again.
 
 ## 4.14.3
-### Updated
-- Pin `eslint-plugin-import` version
+### Changed
+- Pin `eslint-plugin-import` version.
 
 ## 4.14.2
-### Updated
-- Disabled `import/no-cycle` ESLint rule
+### Changed
+- Disabled `import/no-cycle` ESLint rule.
 
 ## 4.14.1
 ### Fixed
-- Fixed fail to upload Changelog.md to server
+- Fixed fail to upload Changelog.md to server.
 
 ## 4.14.0
 ### Added
@@ -316,34 +324,34 @@
   restarting the app, the device is automatically selected again.
 
 ## 4.13.0
-### Updated
-- Replaced moment.js with date-fns library
+### Changed
+- Replaced moment.js with date-fns library.
 
 ## 4.12.0
 ### Added
-- Support title property in Slider and Toggle
-### Updated
-- Enhance lint configuration by specifying it in `package.json`
+- Support title property in Slider and Toggle.
+### Changed
+- Enhance lint configuration by specifying it in `package.json`.
 
 ## 4.11.0
 ### Added
-- Added icon for a PPK
+- Added icon for a PPK.
 
 ## 4.10.4
-### Updated
-- Added `currentPane` field to `appLayout` type
+### Changed
+- Added `currentPane` field to `appLayout` type.
 
 ## 4.10.3
-### Updated
-- Added `iface en0` for looking up IP address on macOS
+### Changed
+- Added `iface en0` for looking up IP address on macOS.
 
 ## 4.10.2
-### Updated
-- Added persistent store for usage data settings in `shared` instead of in `launcher`
+### Changed
+- Added persistent store for usage data settings in `shared` instead of in `launcher`.
 
 ## 4.10.1
-### Updated
-- Updated from v4.9.8 due to breaking changes in 4.10.0
+### Changed
+- Updated from v4.9.8 due to breaking changes in 4.10.0.
 
 ## 4.10.0
 ### Added
@@ -362,54 +370,54 @@
   changed for this.
 
 ## 4.9.8
-### Updated
-- Updated logic to decide which network interface to use to generate client id
+### Changed
+- Updated logic to decide which network interface to use to generate client id.
 
 ## 4.9.7
-### Updated
-- Updated how client is generated for usage statistics
+### Changed
+- Updated how client is generated for usage statistics.
 
 ## 4.9.6
 ### Added
-- Added optional range.decimals to be validated for NumberInlineInput
-- Updated index.d.ts with rangeShape
+- Added optional range.decimals to be validated for NumberInlineInput.
+- Updated index.d.ts with rangeShape.
 
 ## 4.9.5
 ### Fixed
 - More type enhancements:
-  - Correct `systemReport` signature
-  - Limit array types to readonly where possible
-  - Do not use void as a callback return value
-- Make linting fail if the type check fails
-- Remove conflicting ESLint rule 'quotes'
-- Lint all JavaScript files in this project, not just the ones in src/
+  - Correct `systemReport` signature.
+  - Limit array types to readonly where possible.
+  - Do not use void as a callback return value.
+- Make linting fail if the type check fails.
+- Remove conflicting ESLint rule 'quotes'.
+- Lint all JavaScript files in this project, not just the ones in src/.
 
 ## 4.9.4
 ### Fixed
-- Fix app's dependencies in webpack config
+- Fix app's dependencies in webpack config.
 
 ## 4.9.3
 ### Added
-- Added focus-visible dependency and disabled focus styles when clicked
+- Added focus-visible dependency and disabled focus styles when clicked.
 
-## Version 4.9.2
+## 4.9.2
 ### Fixed
-- Some types
+- Some types.
 
-## Version 4.9.1
+## 4.9.1
 ### Fixed
-- Relax ESLint rule regarding @ts-ignore comments
+- Relax ESLint rule regarding @ts-ignore comments.
 
-## Version 4.9.0
+## 4.9.0
 ### Added
-- Default `tsconfig.json` for other projects to use
+- Default `tsconfig.json` for other projects to use.
 - Additional checks during linting:
   - Check for a `tsconfig.json` if the project uses TypeScript (if there are
-    any files with the endings `.ts` or `.tsx`)
+    any files with the endings `.ts` or `.tsx`).
   - Run `tsc --noEmit` if there is a `tsconfig.json` to check the TypeScript
-    types
+    types.
 ### Fixed
-- Type error in bleChannels
+- Type error in bleChannels.
 ### Steps to upgrade when using this package
 - If you want to use the settings from `config/tsconfig.json` in a
   TypeScript project, then put this into a `tsconfig.json` in the
@@ -431,23 +439,23 @@
   we aim for but you may want to relax that a bit when transitioning existing
   projects.
 
-## Version 4.8.19
+## 4.8.19
 ### Fixed
 - Version number for 4.8.18 release was wrong in `package.json`.
 
-## Version 4.8.18
-### Updated
-- Added `prettier.config.js` to existing script `npm run lint-init`
+## 4.8.18
+### Changed
+- Added `prettier.config.js` to existing script `npm run lint-init`.
 
-## Version 4.8.17
-### Updated
+## 4.8.17
+### Changed
 - New design, device selector: Add PCA number, better alignment for port names,
-  removed wrong line below port names
+  removed wrong line below port names.
 
-## Version 4.8.16
+## 4.8.16
 ## Added
-- Added support for files written in TypeScript
-- Added Prettier formatting
+- Added support for files written in TypeScript.
+- Added Prettier formatting.
 
 ### Steps to upgrade when using this package
 - Note that apps using this version should add the following entry to their `package.json` file:
@@ -460,35 +468,35 @@
   On first run, the linting is likely to fail due to the prevalence of formatting errors.
   The majority of these can be fixed automatically, by running `npm run lint -- --fix`.
 
-## Version 4.8.15
+## 4.8.15
 ### Added
-- Added onChangeComplete to InlineInput and NumberInlineInput
+- Added onChangeComplete to InlineInput and NumberInlineInput.
 
-## Version 4.8.14
+## 4.8.14
 ### Fixed
-- Restyle device selector
-- Fix scrollbars for old apps
+- Restyle device selector.
+- Fix scrollbars for old apps.
 
-## Version 4.8.13
+## 4.8.13
 ### Added
-- Added optional chars prop to define number of characters of NumberInput
-- Added optional decimals prop to range of Slider
+- Added optional chars prop to define number of characters of NumberInput.
+- Added optional decimals prop to range of Slider.
 
-## Version 4.8.12
+## 4.8.12
 ### Fixed
-- Fixed the Toggle components state in case it's controlled from outside
+- Fixed the Toggle components state in case it's controlled from outside.
 
-## Version 4.8.11
+## 4.8.11
 ### Fixed
-- Fixed the fix of installation failure in local apps
+- Fixed the fix of installation failure in local apps.
 
-## Version 4.8.10
+## 4.8.10
 ### Added
-- Added toggle component
+- Added toggle component.
 
-## Version 4.8.9
-### Updated
-- Updated several design elements for the release of the new RSSI app
+## 4.8.9
+### Changed
+- Updated several design elements for the release of the new RSSI app.
 ### Steps to upgrade when using this package
 - Apps using the new design need to be adapted in areas were a scrollbar might
   be shown. Add a `@include scrollbars(BACKGROUND-COLOUR);` with an
@@ -497,59 +505,59 @@
   example for this in the source code of
   `pc-nrfconnect-shared`](https://github.com/NordicSemiconductor/pc-nrfconnect-shared/blob/cef186fcc4631d6c737ce4c5d299fef53a0ffcc2/src/Device/DeviceSelector/DeviceList/device-list.scss#L7).
 
-## Version 4.8.8
+## 4.8.8
 ### Fixed
-- Fixed installation failure in local apps
+- Fixed installation failure in local apps.
 
-## Version 4.8.7
-### Updated
-- Made the device picker, sidepanel, and log UI elements optional
-
-## Version 4.8.6
-### Updated
-- Updated confirmation dialog style
-
-## Version 4.8.5
-### Fixed
-- The remote property on the electron mock was noch mocked correctly
+## 4.8.7
 ### Changed
-- Render all panes of the App, but only the current is visible
+- Made the device picker, sidepanel, and log UI elements optional.
 
-## Version 4.8.4
+## 4.8.6
+### Changed
+- Updated confirmation dialog style.
+
+## 4.8.5
+### Fixed
+- The remote property on the electron mock was noch mocked correctly.
+### Changed
+- Render all panes of the App, but only the current is visible.
+
+## 4.8.4
 ### Added
-- Favorite and nickname in device selector for new design
+- Favorite and nickname in device selector for new design.
 - Exported array bleChannels to provide a list of all BLE channels and some
-  convenience properties on it
+  convenience properties on it.
 ### Changed
-- Disabled the ESLint rule `react/require-default-props`
-- Updated the new design in many details
+- Disabled the ESLint rule `react/require-default-props`.
+- Updated the new design in many details.
 ### Steps to upgrade when using this package
 - Remove local overrides for the ESLint rule `react/require-default-props` and
-  also reconsider using defaultProps when not really needed
+  also reconsider using defaultProps when not really needed.
 
-## Version 4.8.3
+## 4.8.3
 ### Changed
-- Updated Google Analytics account and set IP as anonymized
+- Updated Google Analytics account and set IP as anonymized.
 
-## Version 4.8.2
+## 4.8.2
 ### Fixed
-- The mock fix in 4.8.1 broke mocks in another way 🤦‍♂️
+- The mock fix in 4.8.1 broke mocks in another way. 🤦‍♂️
 
-## Version 4.8.1
+## 4.8.1
 ### Fixed
 - Added missing mocks for nrf-device-lister and nrf-device-setup to jest config.
 
 ### Changed
-- Updated dependencies
+- Updated dependencies.
 - Removed mocking *.less files from the jest configuration, as we do not use them.
 
-## Version 4.8
+## 4.8
 ### Changed
 - Create and connect store in App component, so this does not need to be done
   in each app (unless they want to do it themselves).
 - New design for apps using the new app architecture.
-- Update many dependencies
-- Turned `react`, `react-dom` and `react-redux` into peerDependencies
+- Update many dependencies.
+- Turned `react`, `react-dom` and `react-redux` into peerDependencies.
 ### Steps to upgrade when using this package
 - Add `react`, `react-dom` and `react-redux` to your dev dependencies (you can
   omit any you do not strictly need, but most projects need all of them). Usually
@@ -562,24 +570,24 @@
   because jest was updated). E.g. in the BLE app, references to
   `require.requireActual` needed to be corrected to `jest.requireActual`.
 
-## Version 4.7
+## 4.7
 ### Changed
-- Add a few peer dependencies
+- Add a few peer dependencies.
 
-## Version 4.6
+## 4.6
 ### Added
-- Enable to send user data
+- Enable to send user data.
 
-## Version 4.5
+## 4.5
 ### Added
-- Enable to publish existing artifact instead of packing from source
+- Enable to publish existing artifact instead of packing from source.
 
-## Version 4.4
-- Update Jest
+## 4.4
+- Update Jest.
 
-## Version 4.3
+## 4.3
 ### Added
-- Ease configuration of git hooks #40.
+- Ease configuration of git hooks.
 ### Steps to upgrade when using this package
 - If you want to automatically run the `lint` and `test` scripts before pushing
   changes, add a file `.huskyrc.json` to your project with this content:
@@ -592,55 +600,55 @@
   ```
   Remember that in a case of emergency you can do `git push --no-verify` if you need to push even though tests might fail.
 
-## Version 4.2
+## 4.2
 ### Changed
-- Enhanced handling custom devices
-- Remove dependency of react-infinite. #38
+- Enhanced handling custom devices.
+- Remove dependency of react-infinite.
 
-## Version 4.1
+## 4.1
 ### Changed
 - Enhanced error dialogs:
-    - Made URLs in error messages clickable (and more generally interpret them as markdown)
+    - Made URLs in error messages clickable (and more generally interpret them as markdown).
     - Made error messages selectable again (regression) to enable copy&pasting them.
-    - Enabled custom error resolutions
+    - Enabled custom error resolutions.
 
-## Version 4.0
-### Breaking change
+## 4.0
+### Changed
 - This package was renamed to “pc-nrfconnect-shared”. If you refer to it anywhere under
   the old name (e.g. in a package.json or import a component from it) then you must
   update these references when upgrading to version 4.
 
-## Version 3.6
+## 3.6
 ### Changed
 - Moved the shared components from core to this project (They can now be used by importing
-  “pc-nrfconnect-devdep”)
+  “pc-nrfconnect-devdep”).
 - Provide a babel config for apps, instead of requiring them to provide one themselves.
 
-## Version 3.5
+## 3.5
 ### Added
-- Possibility to use the new architecture through “nrfconnect/shared”
+- Possibility to use the new architecture through “nrfconnect/shared”.
 ### Changed
-- Updated dependencies
+- Updated dependencies.
 
-## Version 3.4
+## 3.4
 ### Added
-- Internal publishing
+- Internal publishing.
 
-## Version 3.3
+## 3.3
 ### Added
-- Upload Changelog.md of apps when publishing
+- Upload Changelog.md of apps when publishing.
 
-## Version 3.2
+## 3.2
 ### Changed
-- Switch from node-sass to dart-sass
+- Switch from node-sass to dart-sass.
 
-## Version 3.1
+## 3.1
 ### Changed
-- Updated many dependencies
+- Updated many dependencies.
 
-## Version 3.0
+## 3.0
 ### Changed
-- Updated dependencies, most notably Bootstrap to 4
+- Updated dependencies, most notably Bootstrap to 4.
 ### Added
-- lint-init
-- electronMock
+- lint-init.
+- electronMock.
