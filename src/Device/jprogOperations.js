@@ -87,8 +87,6 @@ const program = (deviceId, firmware) => {
 };
 
 const reset = async deviceId => {
-    console.log(deviceLibContext);
-    console.log(deviceId);
     await nrfDeviceLib.deviceControlReset(deviceLibContext, deviceId);
 };
 

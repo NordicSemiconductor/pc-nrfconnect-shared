@@ -40,16 +40,15 @@ import { createHash } from 'crypto';
 import fs from 'fs';
 import MemoryMap from 'nrf-intel-hex';
 import SerialPort from 'serialport';
-import { snakeCase } from 'snake-case';
 
 import logger from '../logging';
+import { deviceLibContext, waitForDevice } from './deviceLister';
 import {
     createInitPacketBuffer,
     defaultInitPacket,
     FwType,
     HashType,
-} from '../utils/initPacket';
-import { deviceLibContext, waitForDevice } from './deviceLister';
+} from './initPacket';
 
 const NORDIC_DFU_PRODUCT_ID = 0x521f;
 const NORDIC_VENDOR_ID = 0x1915;
