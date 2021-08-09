@@ -424,10 +424,10 @@ const prepareInDFUBootloader = async (device, dfu) => {
         )
     );
 
-    return waitForDevice(device.serialNumber, DEFAULT_DEVICE_WAIT_TIME, [
-        'serialport',
-        'nordicUsb',
-    ]);
+    return waitForDevice(device.serialNumber, DEFAULT_DEVICE_WAIT_TIME, {
+        serialport: true,
+        nordicUsb: true,
+    });
 };
 
 /**

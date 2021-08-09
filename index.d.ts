@@ -3,6 +3,10 @@ declare module 'pc-nrfconnect-shared' {
     import React from 'react';
     import winston from 'winston';
     import Store from 'electron-store';
+    import {
+        DeviceTraits,
+        Device as NrfdlDevice,
+    } from '@nordicsemiconductor/nrf-device-lib-js';
 
     // State
 
@@ -220,20 +224,20 @@ declare module 'pc-nrfconnect-shared' {
         comName: string;
     }
 
-    interface Device {
-        boardVersion?: string;
-        serialNumber: string;
+    interface Device extends NrfdlDevice {
         serialnumber?: string; // from nrf-device-lib
-        traits: readonly string[];
-        nickname?: string;
-        serialport?: Serialport;
+        traits: DeviceTraits; // from nrf-device-lib
         serialports?: Serialport[]; // from nrf-device-lib
         usb?: {
             product?: string;
-        };
+        }; // from nrf-device-lib
         jlink?: {
             boardVersion: string;
-        };
+        }; // from nrf-device-lib
+        serialNumber: string;
+        boardVersion?: string;
+        nickname?: string;
+        serialport?: Serialport;
     }
 
     /**

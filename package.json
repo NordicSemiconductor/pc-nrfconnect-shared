@@ -97,6 +97,7 @@
         "winston": "3.2.1"
     },
     "devDependencies": {
+        "@nordicsemiconductor/nrf-device-lib-js": "^0.3.11",
         "electron-store": "5.1.1",
         "react": "16.13.1",
         "react-dom": "16.13.1",
