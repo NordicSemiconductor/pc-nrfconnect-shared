@@ -3,10 +3,7 @@ declare module 'pc-nrfconnect-shared' {
     import React from 'react';
     import winston from 'winston';
     import Store from 'electron-store';
-    import {
-        DeviceTraits,
-        Device as NrfdlDevice,
-    } from '@nordicsemiconductor/nrf-device-lib-js';
+    import { Device as NrfdlDevice } from '@nordicsemiconductor/nrf-device-lib-js';
 
     // State
 
@@ -585,13 +582,4 @@ declare module 'pc-nrfconnect-shared' {
      * The app name from package.json is used to identify the app.
      */
     export function getPersistentStore<StoreSchema>(): Store<StoreSchema>;
-}
-
-declare module 'nrf-intel-hex' {
-    export type MemoryBlocks =
-        | { [x: number]: Uint8Array }
-        | [number, Uint8Array][];
-
-    export type Overlap = [string, Uint8Array][];
-    export type Overlaps = Map<number, Overlap>;
 }

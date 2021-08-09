@@ -34,7 +34,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import MemoryMap from 'nrf-intel-hex';
+// eslint-disable-next-line import/no-unresolved
 import protobuf from 'protobufjs';
 
 import dfuCcProto from './dfu-cc';
@@ -99,7 +99,8 @@ export const defaultInitPacket: InitPacket = {
 export interface DfuImage {
     name: string;
     initPacket: InitPacket;
-    firmwareImage: MemoryMap;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    firmwareImage: any;
 }
 
 // Create hash by using hash type and bytes
