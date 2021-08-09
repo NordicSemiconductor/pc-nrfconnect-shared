@@ -42,7 +42,7 @@
         "babel-eslint": "10.1.0",
         "babel-loader": "8.2.2",
         "babel-plugin-add-module-exports": "1.0.2",
-        "camelcase-keys": "^7.0.0",
+        "camelcase-keys": "6.2.2",
         "commander": "5.1.0",
         "cross-env": "7.0.2",
         "css-loader": "5.2.6",
@@ -88,7 +88,6 @@
         "sass-loader": "10.2.0",
         "semver": "7.3.2",
         "shasum": "1.0.2",
-        "snake-case": "^3.0.4",
         "style-loader": "2.0.0",
         "systeminformation": "5.7.4",
         "typescript": "^3.9.7",
@@ -104,6 +103,7 @@
         "react-redux": "7.2.0"
     },
     "peerDependencies": {
+        "@nordicsemiconductor/nrf-device-lib-js": "^0.3.11",
         "electron-store": "^5.1.1",
         "react": "^16.13",
         "react-redux": "^7.2"

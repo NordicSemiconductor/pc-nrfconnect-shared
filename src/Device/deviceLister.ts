@@ -43,7 +43,6 @@ import nrfDeviceLib, {
 import camelcaseKeys from 'camelcase-keys';
 // eslint-disable-next-line import/no-unresolved
 import { Device, DeviceListing, Serialport } from 'pc-nrfconnect-shared';
-import { snakeCase } from 'snake-case';
 
 import logger from '../logging';
 import { devicesDetected } from './deviceActions';

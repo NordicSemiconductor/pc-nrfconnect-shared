@@ -225,9 +225,9 @@ declare module 'pc-nrfconnect-shared' {
     }
 
     interface Device extends NrfdlDevice {
-        serialnumber?: string; // from nrf-device-lib
-        traits: DeviceTraits; // from nrf-device-lib
-        serialports?: Serialport[]; // from nrf-device-lib
+        // serialnumber?: string; // from nrf-device-lib
+        // traits: DeviceTraits; // from nrf-device-lib
+        // serialports?: Serialport[]; // from nrf-device-lib
         usb?: {
             product?: string;
         }; // from nrf-device-lib

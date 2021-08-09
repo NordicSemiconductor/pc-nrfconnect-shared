@@ -40,10 +40,6 @@ import SerialPort from 'serialport';
 import logger from '../logging';
 import { deviceLibContext } from './deviceLister';
 
-function parseSerial(serialNumber) {
-    return parseInt(serialNumber, 10);
-}
-
 /**
  * Program the device with the given serial number with the given firmware
  * using nrfjprog.
@@ -129,15 +125,19 @@ const verifySerialPortAvailable = device => {
 };
 
 async function validateFirmware(device, firmwareFamily) {
-    const { fwIdAddress, fwVersion } = firmwareFamily;
+    const {
+        // fwIdAddress,
+        fwVersion,
+    } = firmwareFamily;
     let contents;
 
     try {
-        contents = await read(
-            device.serialNumber,
-            fwIdAddress,
-            fwVersion.length
-        );
+        // TODO
+        // contents = await read(
+        //     device.serialNumber,
+        //     fwIdAddress,
+        //     fwVersion.length
+        // );
     } catch (error) {
         throw new Error(`Error when validating firmware ${error.message}`);
     }

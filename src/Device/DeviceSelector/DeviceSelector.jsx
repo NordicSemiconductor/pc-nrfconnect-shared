@@ -38,7 +38,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { bool, exact, func, object } from 'prop-types';
 
-import { deselectDevice, selectDevice, } from '../deviceActions';
+import { deselectDevice, selectDevice } from '../deviceActions';
 import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
 import { deviceIsSelected as deviceIsSelectedSelector } from '../deviceReducer';
 import { setupDevice } from '../deviceSetup';
@@ -48,7 +48,7 @@ import SelectDevice from './SelectDevice';
 import SelectedDevice from './SelectedDevice';
 import useAutoselectDevice from './useAutoselectDevice';
 
-const noop = () => { };
+const noop = () => {};
 const DeviceSelector = ({
     deviceListing,
     deviceSetup,

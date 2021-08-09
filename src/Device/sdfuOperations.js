@@ -413,13 +413,13 @@ const prepareInDFUBootloader = async (device, dfu) => {
             },
             ({ progressJson: progress }) => {
                 // // Don't repeat percentage steps that have already been logged.
-                // if (prevPercentage !== progress.progress_percentage) {
-                //     const status = `${progress.message.replace('.', ':')} ${
-                //         progress.progress_percentage
-                //     }%`;
-                //     logger.info(status);
-                //     prevPercentage = progress.progress_percentage;
-                // }
+                if (prevPercentage !== progress.progress_percentage) {
+                    const status = `${progress.message.replace('.', ':')} ${
+                        progress.progress_percentage
+                    }%`;
+                    logger.info(status);
+                    prevPercentage = progress.progress_percentage;
+                }
             }
         )
     );
