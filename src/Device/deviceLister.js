@@ -44,17 +44,27 @@ import { devicesDetected } from './deviceActions';
 export const deviceLibContext = nrfDeviceLib.createContext();
 let hotplugTaskId;
 
-export const wrapDeviceFromNrfdl = inputDevice => {
-    const device = camelcaseKeys(inputDevice, { deep: true });
-    Object.assign(device, {
-        serialNumber: device.serialnumber,
-        boardVersion: device.jlink ? device.jlink.boardVersion : undefined,
-        serialport: Object.assign(device.serialports[0], {
-            path: device.serialports[0].comName,
+/**
+ * Starts watching for devices with the given traits. See the nrf-device-lib
+ * library for available traits. Whenever devices are attached/detached, this
+ * will dispatch DEVICES_DETECTED with a complete list of attached devices.
+ *
+ * @param {function(device)} device Invoke to start deselect the current device
+ * @returns {function(*)} Function that can be passed to redux dispatch.
+ */
+export const wrapDeviceFromNrfdl = device => {
+    const outputDevice = camelcaseKeys(device, { deep: true });
+    Object.assign(outputDevice, {
+        serialNumber: outputDevice.serialnumber,
+        boardVersion: outputDevice.jlink
+            ? outputDevice.jlink.boardVersion
+            : undefined,
+        serialport: Object.assign(outputDevice.serialports[0], {
+            path: outputDevice.serialports[0].comName,
         }),
     });
-    delete device.serialnumber;
-    return device;
+    delete outputDevice.serialnumber;
+    return outputDevice;
 };
 
 export const wrapDevicesFromNrfdl = devices => devices.map(wrapDeviceFromNrfdl);
