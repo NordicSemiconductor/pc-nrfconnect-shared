@@ -221,13 +221,18 @@ declare module 'pc-nrfconnect-shared' {
     }
 
     interface Device {
-        boardVersion: string;
+        boardVersion?: string;
         serialNumber: string;
+        serialnumber?: string; // from nrf-device-lib
         traits: readonly string[];
         nickname?: string;
         serialport?: Serialport;
+        serialports?: Serialport[]; // from nrf-device-lib
         usb?: {
             product?: string;
+        };
+        jlink?: {
+            boardVersion: string;
         };
     }
 
