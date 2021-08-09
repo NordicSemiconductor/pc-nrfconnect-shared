@@ -60,8 +60,8 @@ let hotplugTaskId: number;
  */
 export const wrapDeviceFromNrfdl = (device: Device): Device => {
     let outputDevice: Device = camelcaseKeys(device, { deep: true }) as Device;
-    const serialport = outputDevice.serialports
-        ? outputDevice.serialports[0]
+    const serialport: Serialport | undefined = outputDevice.serialports
+        ? (outputDevice.serialports[0] as unknown as Serialport)
         : undefined;
     outputDevice = {
         ...outputDevice,
@@ -100,10 +100,10 @@ export const startWatchingDevices =
     (deviceListing: DeviceListing, doDeselectDevice: Function) =>
     async (dispatch: Function, getState: Function): Promise<void> => {
         const updateDeviceList = async () => {
-            let devices = await nrfDeviceLib.enumerate(
+            let devices: Device[] = (await nrfDeviceLib.enumerate(
                 deviceLibContext,
-                deviceListing
-            );
+                deviceListing as unknown as DeviceTraits
+            )) as unknown as Device[];
             devices = wrapDevicesFromNrfdl(devices);
 
             const { selectedSerialNumber } = getState().device;
@@ -157,20 +157,23 @@ export const stopWatchingDevices = () => {
  *
  * @param {string} serialNumber of the device expected to appear
  * @param {number} [timeout] Timeout, in milliseconds, to wait for device enumeration
- * @param {DeviceTraits} [expectedTraits] The traits that the device is expected to have
+ * @param {DeviceListing} [expectedTraits] The traits that the device is expected to have
  * @returns {Promise} resolved to the expected device
  */
 export const waitForDevice = (
     serialNumber: string,
     timeout = DEFAULT_DEVICE_WAIT_TIME,
-    expectedTraits: DeviceTraits = { serialport: true }
+    expectedTraits: DeviceListing = { serialport: true }
 ) => {
     logger.debug(`Will wait for device ${serialNumber}`);
 
     return new Promise((resolve, reject) => {
         let timeoutId: NodeJS.Timeout;
 
-        nrfDeviceLib.enumerate(deviceLibContext, expectedTraits);
+        nrfDeviceLib.enumerate(
+            deviceLibContext,
+            expectedTraits as unknown as DeviceTraits
+        );
         nrfDeviceLib.startHotplugEvents(
             deviceLibContext,
             () => {},
@@ -178,10 +181,12 @@ export const waitForDevice = (
                 const { device: inputDevice } = event;
                 if (!inputDevice) return;
 
-                const device = wrapDeviceFromNrfdl(inputDevice);
+                const device = wrapDeviceFromNrfdl(
+                    inputDevice as unknown as Device
+                );
                 const isTraitIncluded = () =>
                     Object.keys(expectedTraits).every(
-                        (trait: string) => device.traits[trait]
+                        trait => device.traits[trait as keyof DeviceTraits]
                     );
                 if (
                     device &&

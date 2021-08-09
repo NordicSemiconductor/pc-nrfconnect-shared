@@ -224,7 +224,7 @@ declare module 'pc-nrfconnect-shared' {
         comName: string;
     }
 
-    interface Device extends NrfdlDevice {
+    interface Device extends Omit<NrfdlDevice, 'usb' | 'jlink'> {
         // serialnumber?: string; // from nrf-device-lib
         // traits: DeviceTraits; // from nrf-device-lib
         // serialports?: Serialport[]; // from nrf-device-lib
@@ -585,4 +585,13 @@ declare module 'pc-nrfconnect-shared' {
      * The app name from package.json is used to identify the app.
      */
     export function getPersistentStore<StoreSchema>(): Store<StoreSchema>;
+}
+
+declare module 'nrf-intel-hex' {
+    export type MemoryBlocks =
+        | { [x: number]: Uint8Array }
+        | [number, Uint8Array][];
+
+    export type Overlap = [string, Uint8Array][];
+    export type Overlaps = Map<number, Overlap>;
 }

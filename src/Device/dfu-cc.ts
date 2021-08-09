@@ -153,4 +153,5 @@ const $root = (
     },
 });
 
-export { $root as default };
+// export { $root as default };
+export default $root;
