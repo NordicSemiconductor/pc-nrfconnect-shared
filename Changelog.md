@@ -12,15 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Exposes deviceInfo
 
-## 4.28.2 -- 2021-07-19
+## 4.28.2 - 2021-07-19
 ### Changed
 - Added `@nordicsemiconductor/nrf-device-lib-js` in webpack.config.js.
 
-## 4.28.1 -- 2021-06-24
+## 4.28.1 - 2021-06-24
 ### Changed
 - Increase padding for `Card` component.
 
-## 4.28.0 -- 2021-06-21
+## 4.28.0 - 2021-06-21
 ### Changed
 - Pin the version of prettier to be used to an exact version, as
   [recommended in the prettier documentation](https://prettier.io/docs/en/install.html).
@@ -30,24 +30,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   The majority of these can be fixed automatically, by running
   `npm run lint -- --fix`.
 
-## 4.27.3 -- 2021-06-21
+## 4.27.3 - 2021-06-21
 ### Fixed
 - Exported `colors` object was empty.
 
-## 4.27.2 -- 2021-06-15
+## 4.27.2 - 2021-06-15
 ### Fixed
 - GA events were sent even when the user had not consented.
 - `Restore defaults` button styling inside `ErrorBoundary` component was broken.
 
-## 4.27.1 -- 2021-06-14
+## 4.27.1 - 2021-06-14
 ### Changed
 - Small change to tooltip background color and opacity.
 
-## 4.27.0 -- 2021-06-14
+## 4.27.0 - 2021-06-14
 ### Changed
 - Use `Card` component introduced in 4.22.0 in the `About` pane.
 
-## 4.26.0 -- 2021-06-08
+## 4.26.0 - 2021-06-08
 ### Changed
 - Upgrade several webpack related dependencies.
 - Upgrade systeminformation, which had a security issue.
@@ -58,7 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   config that still uses it, either install it yourself or (better) switch
   to eslint-webpack-plugin.
 
-## 4.25.0 -- 2021-06-07
+## 4.25.0 - 2021-06-07
 ### Fixed
 - Remove namespace pollution by `Card` component, which broke the layout of the
   Toolchain Manager.
