@@ -18,8 +18,8 @@ declare module 'pc-nrfconnect-shared' {
             message: string;
         };
         device: {
-            devices: readonly Device[];
-            deviceInfo: any;
+            devices: { [key: string]: Device };
+            deviceInfo: DeviceInfo;
             isSetupDialogVisible: boolean;
             isSetupWaitingForUserInput: boolean;
             selectedSerialNumber: string;
@@ -228,6 +228,16 @@ declare module 'pc-nrfconnect-shared' {
         serialport?: Serialport;
         usb?: {
             product?: string;
+        };
+    }
+
+    export interface DeviceInfo {
+        name?: string;
+        cores?: number;
+        icon: React.ElementType;
+        website: {
+            productPagePath?: string;
+            buyOnlineParams?: string;
         };
     }
 
@@ -576,4 +586,6 @@ declare module 'pc-nrfconnect-shared' {
      * The app name from package.json is used to identify the app.
      */
     export function getPersistentStore<StoreSchema>(): Store<StoreSchema>;
+
+    export const deviceInfo: (device: Device) => DeviceInfo;
 }

@@ -80,3 +80,5 @@ export { default as useHotKey } from './utils/useHotKey';
 export { currentPane, setCurrentPane } from './App/appLayout';
 
 export { getAppSpecificStore as getPersistentStore } from './utils/persistentStore';
+
+export { deviceInfo } from './Device/deviceInfo/deviceInfo';
