@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 4.28.3 - 2021-09-11
+### Fixed
+- Correct a typing for devices
+### Changed
+- Exposes deviceInfo
+
 ## 4.28.2 -- 2021-07-19
 ### Changed
 - Added `@nordicsemiconductor/nrf-device-lib-js` in webpack.config.js.
