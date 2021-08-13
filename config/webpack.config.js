@@ -1,6 +1,8 @@
 const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
+const { execSync } = require('child_process');
+
 const ESLintPlugin = require('eslint-webpack-plugin');
 
 const { dependencies } = require(path.join(process.cwd(), 'package.json'));
@@ -60,6 +62,11 @@ function findEntryPoint() {
     return undefined;
 }
 
+const run = command => execSync(command).toString().trim();
+
+const gitCommitHash = run('git rev-parse --short HEAD');
+const gitAnyLocalModifications = run('git status --porcelain') !== '';
+
 module.exports = {
     mode: nodeEnv,
     devtool: isProd ? 'hidden-source-map' : 'inline-cheap-source-map',
@@ -113,6 +120,8 @@ module.exports = {
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify(nodeEnv),
+                GIT_COMMIT_HASH: JSON.stringify(gitCommitHash),
+                GIT_ANY_LOCAL_MODIFICATIONS: gitAnyLocalModifications,
             },
         }),
         new ESLintPlugin({

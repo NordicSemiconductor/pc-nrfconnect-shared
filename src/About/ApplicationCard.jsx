@@ -54,11 +54,21 @@ export default () => {
 
     if (appInfo == null) return null;
 
+    const gitDirtyState = process.env.GIT_ANY_LOCAL_MODIFICATIONS
+        ? ` dirty`
+        : '';
+
+    const gitInfo = process.env.GIT_COMMIT_HASH
+        ? `(${process.env.GIT_COMMIT_HASH}${gitDirtyState})`
+        : '';
+
     return (
         <Card title="Application">
             <Section title="Title">{appInfo.displayName}</Section>
             <Section title="Purpose">{appInfo.description}</Section>
-            <Section title="Version">{appInfo.currentVersion}</Section>
+            <Section title="Version">
+                {appInfo.currentVersion} {gitInfo}
+            </Section>
             <Section title="Source">{appInfo.source || 'local'}</Section>
             <Section title="Supported engines">
                 nRF Connect {appInfo.engineVersion}
