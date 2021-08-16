@@ -104,6 +104,75 @@ export const receiveDeviceSetupInput = input => dispatch => {
 const createReturnValue = (device, details, detailedOutput) =>
     detailedOutput ? { device, details } : device;
 
+export const prepareDevice = async (device, deviceSetupConfig) => {
+    const { jprog, dfu, needSerialport, detailedOutput } = deviceSetupConfig;
+
+    if (dfu && Object.keys(dfu).length > 0) {
+        // Check if device is in DFU-Bootloader, it might only have serialport
+        if (isDeviceInDFUBootloader(device)) {
+            logger.debug('Device is in DFU-Bootloader, DFU is defined');
+            return performDFU(device, deviceSetupConfig);
+        }
+
+        if (device.dfuTriggerInfo) {
+            logger.info(
+                'Device has DFU trigger interface, the device is in Application mode'
+            );
+
+            const { semVer } = device.dfuTriggerVersion;
+            if (
+                Object.keys(dfu)
+                    .map(key => dfu[key].semver)
+                    .includes(semVer)
+            ) {
+                return createReturnValue(
+                    device,
+                    { wasProgrammed: false },
+                    detailedOutput
+                );
+            }
+            return performDFU(device, deviceSetupConfig);
+        }
+    }
+
+    if (jprog && device.traits.jlink) {
+        let wasProgrammed = false;
+        if (needSerialport) await verifySerialPortAvailable(device);
+        // preparedDevice = getDeviceInfo(device);
+        const family = (device.jlink.deviceFamily || '').toLowerCase();
+        const deviceType = (device.jlink.deviceVersion || '').toLowerCase();
+        const shortDeviceType = deviceType.split('_').shift();
+        const boardVersion = (device.jlink.boardVersion || '').toLowerCase();
+
+        const key =
+            Object.keys(jprog).find(k => k.toLowerCase() === deviceType) ||
+            Object.keys(jprog).find(k => k.toLowerCase() === shortDeviceType) ||
+            Object.keys(jprog).find(k => k.toLowerCase() === boardVersion) ||
+            Object.keys(jprog).find(k => k.toLowerCase() === family);
+
+        if (!key) {
+            throw new Error('No firmware defined for selected device');
+        }
+        logger.debug('Found matching firmware definition', key);
+        const firmwareDefinition = jprog[key];
+
+        try {
+            const programmedDevice = await programFirmware(
+                device,
+                firmwareDefinition
+            );
+            wasProgrammed = true;
+            return createReturnValue(
+                programmedDevice,
+                { wasProgrammed },
+                detailedOutput
+            );
+        } catch (error) {
+            throw new Error('Failed to program firmware');
+        }
+    }
+};
+
 /**
  * Selects a device and sets it up for use according to the `config.deviceSetup`
  * configuration given by the app.
@@ -132,71 +201,20 @@ export const setupDevice =
         // causing a DESELECT_DEVICE. To avoid this, we stop the device
         // listing while setting up the device, and start it again after the
         // device has been set up.
-        let preparedDevice;
         stopWatchingDevices();
 
         await releaseCurrentDevice();
-        const deviceSetupConfig = {
-            promiseConfirm: getDeviceSetupUserInput(dispatch),
-            promiseChoice: getDeviceSetupUserInput(dispatch),
-            allowCustomDevice: false,
-            ...deviceSetup,
-        };
-
-        const { jprog, dfu, needSerialport, detailedOutput } =
-            deviceSetupConfig;
-
-        if (dfu && Object.keys(dfu).length !== 0) {
-            // check if device is in DFU-Bootloader, it might _only_ have serialport
-            if (isDeviceInDFUBootloader(device)) {
-                logger.debug('Device is in DFU-Bootloader, DFU is defined');
-                preparedDevice = await performDFU(device, deviceSetupConfig);
-            }
-        }
-        if (jprog && device.traits.jlink) {
-            let wasProgrammed = false;
-            if (needSerialport) await verifySerialPortAvailable(device);
-            // preparedDevice = getDeviceInfo(device);
-            const family = (device.jlink.deviceFamily || '').toLowerCase();
-            const deviceType = (device.jlink.deviceVersion || '').toLowerCase();
-            const shortDeviceType = deviceType.split('_').shift();
-            const boardVersion = (
-                device.jlink.boardVersion || ''
-            ).toLowerCase();
-
-            const key =
-                Object.keys(jprog).find(k => k.toLowerCase() === deviceType) ||
-                Object.keys(jprog).find(
-                    k => k.toLowerCase() === shortDeviceType
-                ) ||
-                Object.keys(jprog).find(
-                    k => k.toLowerCase() === boardVersion
-                ) ||
-                Object.keys(jprog).find(k => k.toLowerCase() === family);
-
-            if (!key) {
-                throw new Error('No firmware defined for selected device');
-            }
-            logger.debug('Found matching firmware definition', key);
-            const firmwareDefinition = jprog[key];
-
-            try {
-                preparedDevice = await programFirmware(
-                    device,
-                    firmwareDefinition
-                );
-                wasProgrammed = true;
-            } catch (error) {
-                throw new Error('Failed to program firmware');
-            }
-            preparedDevice = createReturnValue(
-                preparedDevice,
-                { wasProgrammed },
-                detailedOutput
-            );
-        }
-
         try {
+            const deviceSetupConfig = {
+                promiseConfirm: getDeviceSetupUserInput(dispatch),
+                promiseChoice: getDeviceSetupUserInput(dispatch),
+                allowCustomDevice: false,
+                ...deviceSetup,
+            };
+            const preparedDevice = await prepareDevice(
+                device,
+                deviceSetupConfig
+            );
             doStartWatchingDevices();
             dispatch(deviceSetupComplete(preparedDevice));
             onDeviceIsReady(preparedDevice);
@@ -210,21 +228,4 @@ export const setupDevice =
             }
             doStartWatchingDevices();
         }
-        // nrfDeviceSetup
-        //     .setupDevice(device, deviceSetupConfig)
-        //     .then(preparedDevice => {
-        //         doStartWatchingDevices();
-        //         dispatch(deviceSetupComplete(preparedDevice));
-        //         onDeviceIsReady(preparedDevice);
-        //     })
-        //     .catch(error => {
-        //         dispatch(deviceSetupError(device, error));
-        //         if (!deviceSetupConfig.allowCustomDevice) {
-        //             logger.error(
-        //                 `Error while setting up device ${device.serialNumber}: ${error.message}`
-        //             );
-        //             doDeselectDevice();
-        //         }
-        //         doStartWatchingDevices();
-        //     });
     };

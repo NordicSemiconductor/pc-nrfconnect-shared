@@ -196,6 +196,12 @@ declare module 'pc-nrfconnect-shared' {
         nordicUsb?: boolean;
         seggerUsb?: boolean;
         nordicDfu?: boolean;
+        serialPort?: boolean;
+        /**
+         * @deprecated Using the property `serialport` has been
+         * deprecated. You should now use `serialPort`. The property
+         * will be removed in the next major release.
+         */
         serialport?: boolean;
         jlink?: boolean;
     }

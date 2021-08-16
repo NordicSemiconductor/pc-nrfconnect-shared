@@ -60,21 +60,16 @@ let hotplugTaskId: number;
  */
 export const wrapDeviceFromNrfdl = (device: Device): Device => {
     let outputDevice: Device = camelcaseKeys(device, { deep: true }) as Device;
-    const serialport: Serialport | undefined = outputDevice.serialports
-        ? (outputDevice.serialports[0] as unknown as Serialport)
+    const serialport: Serialport | undefined = outputDevice.serialPorts
+        ? (outputDevice.serialPorts[0] as unknown as Serialport)
         : undefined;
     outputDevice = {
         ...outputDevice,
-        serialNumber: outputDevice.serialnumber as string,
         boardVersion: outputDevice.jlink
             ? outputDevice.jlink.boardVersion
             : undefined,
-        serialport: {
-            ...serialport,
-            path: serialport?.comName as string,
-        } as Serialport,
+        serialport,
     };
-    delete outputDevice.serialnumber;
     return outputDevice;
 };
 
@@ -163,9 +158,14 @@ export const stopWatchingDevices = () => {
 export const waitForDevice = (
     serialNumber: string,
     timeout = DEFAULT_DEVICE_WAIT_TIME,
-    expectedTraits: DeviceListing = { serialport: true }
+    expectedTraits: DeviceListing = { serialPort: true }
 ) => {
     logger.debug(`Will wait for device ${serialNumber}`);
+
+    // To be compatible with `serialport`
+    expectedTraits = {
+        serialPort: expectedTraits.serialport,
+    };
 
     return new Promise((resolve, reject) => {
         let timeoutId: NodeJS.Timeout;
