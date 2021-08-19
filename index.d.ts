@@ -439,6 +439,18 @@ declare module 'pc-nrfconnect-shared' {
 
     export class StateSelector extends React.Component<StateSelectorProps> {}
 
+    // Drowdown.jsx
+
+    interface DrowdownProps {
+        label: string;
+        items: string[];
+        onSelect: (child: string) => void;
+        disabled?: boolean;
+        defaultItem?: string;
+    }
+
+    export class Drowdown extends React.Component<DrowdownProps> {}
+
     // colors.js
 
     export const colors: {
