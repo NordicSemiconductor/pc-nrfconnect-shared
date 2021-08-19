@@ -96,7 +96,7 @@ const reset = async deviceId => {
  * @returns {Promise} Promise that resolves if available, and rejects if not.
  */
 const verifySerialPortAvailable = device => {
-    if (!device.serialports || device.serialports.length === 0) {
+    if (!device.serialport) {
         return Promise.reject(
             new Error(
                 'No serial port available for device with ' +
@@ -105,7 +105,7 @@ const verifySerialPortAvailable = device => {
         );
     }
     return new Promise((resolve, reject) => {
-        const serialPort = new SerialPort(device.serialports[0].comName, {
+        const serialPort = new SerialPort(device.serialport.path, {
             autoOpen: false,
         });
         serialPort.open(openErr => {
@@ -124,41 +124,50 @@ const verifySerialPortAvailable = device => {
     });
 };
 
-async function validateFirmware(device, firmwareFamily) {
-    const {
-        // fwIdAddress,
-        fwVersion,
-    } = firmwareFamily;
-    let contents;
-
+async function validateFirmware(device, fwVersion) {
     try {
-        // TODO
-        // contents = await read(
-        //     device.serialNumber,
-        //     fwIdAddress,
-        //     fwVersion.length
-        // );
+        const fwInfo = await nrfDeviceLib.readFwInfo(
+            deviceLibContext,
+            device.id
+        );
+        console.log(fwInfo);
+        const valid = fwInfo.imageInfoList.find(imageInfo =>
+            imageInfo.version.string.includes(fwVersion)
+        );
+        if (valid) return true; // change to true after debugging
     } catch (error) {
         throw new Error(`Error when validating firmware ${error.message}`);
     }
-
-    if (
-        typeof fwVersion === 'object' &&
-        typeof fwVersion.validator === 'function'
-    ) {
-        return fwVersion.validator(contents);
-    }
-
-    const data = Buffer.from(contents).toString();
-    return data === fwVersion;
+    return false;
 }
 
-async function programFirmware(device, firmwareFamily) {
+/**
+ * Helper function that calls optional user defined confirmation e.g. dialog or inquirer.
+ *
+ * @param {function} promiseConfirm Promise returning function
+ * @returns {Promise} resolves to boolean
+ */
+const confirmHelper = async promiseConfirm => {
+    console.log('aaaaaaaaa');
+    console.log(promiseConfirm);
+    if (!promiseConfirm) return true;
     try {
-        logger.debug(
-            `Programming ${device.serialNumber} with ${firmwareFamily.fw}`
+        return await promiseConfirm(
+            'Device must be programmed, do you want to proceed?'
         );
-        await program(device.id, firmwareFamily.fw);
+    } catch (err) {
+        throw new Error('Preparation cancelled by user');
+    }
+};
+
+async function programFirmware(device, fw, deviceSetupConfig) {
+    try {
+        const confirmed = await confirmHelper(deviceSetupConfig.promiseConfirm);
+        if (!confirmed) return undefined;
+
+        logger.debug(`Programming ${device.serialNumber} with ${fw}`);
+        await program(device.id, fw);
+        logger.debug(`Resetting ${device.serialNumber}`);
         await reset(device.id);
     } catch (programError) {
         throw new Error(`Error when programming ${programError.message}`);

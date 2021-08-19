@@ -42,7 +42,11 @@ import {
     deviceSetupInputRequired,
 } from './deviceActions';
 import { stopWatchingDevices } from './deviceLister';
-import { programFirmware, verifySerialPortAvailable } from './jprogOperations';
+import {
+    programFirmware,
+    validateFirmware,
+    verifySerialPortAvailable,
+} from './jprogOperations';
 import { isDeviceInDFUBootloader, performDFU } from './sdfuOperations';
 
 // Defined when user input is required during device setup. When input is
@@ -106,7 +110,9 @@ const createReturnValue = (device, details, detailedOutput) =>
 
 export const prepareDevice = async (device, deviceSetupConfig) => {
     const { jprog, dfu, needSerialport, detailedOutput } = deviceSetupConfig;
+    console.log(device);
 
+    let wasProgrammed = false;
     if (dfu && Object.keys(dfu).length > 0) {
         // Check if device is in DFU-Bootloader, it might only have serialport
         if (isDeviceInDFUBootloader(device)) {
@@ -115,7 +121,7 @@ export const prepareDevice = async (device, deviceSetupConfig) => {
         }
 
         if (device.dfuTriggerInfo) {
-            logger.info(
+            logger.debug(
                 'Device has DFU trigger interface, the device is in Application mode'
             );
 
@@ -127,7 +133,7 @@ export const prepareDevice = async (device, deviceSetupConfig) => {
             ) {
                 return createReturnValue(
                     device,
-                    { wasProgrammed: false },
+                    { wasProgrammed },
                     detailedOutput
                 );
             }
@@ -136,9 +142,7 @@ export const prepareDevice = async (device, deviceSetupConfig) => {
     }
 
     if (jprog && device.traits.jlink) {
-        let wasProgrammed = false;
         if (needSerialport) await verifySerialPortAvailable(device);
-        // preparedDevice = getDeviceInfo(device);
         const family = (device.jlink.deviceFamily || '').toLowerCase();
         const deviceType = (device.jlink.deviceVersion || '').toLowerCase();
         const shortDeviceType = deviceType.split('_').shift();
@@ -153,24 +157,32 @@ export const prepareDevice = async (device, deviceSetupConfig) => {
         if (!key) {
             throw new Error('No firmware defined for selected device');
         }
-        logger.debug('Found matching firmware definition', key);
-        const firmwareDefinition = jprog[key];
 
-        try {
-            const programmedDevice = await programFirmware(
-                device,
-                firmwareDefinition
-            );
-            wasProgrammed = true;
-            return createReturnValue(
-                programmedDevice,
-                { wasProgrammed },
-                detailedOutput
-            );
-        } catch (error) {
-            throw new Error('Failed to program firmware');
-        }
+        logger.debug('Found matching firmware definition', key);
+        console.log(deviceSetupConfig);
+        const { fw, fwVersion } = jprog[key];
+        const valid = await validateFirmware(device, fwVersion);
+        // if (valid)
+        //     return createReturnValue(device, { wasProgrammed }, detailedOutput);
+
+        // try {
+        //     const programmedDevice = await programFirmware(
+        //         device,
+        //         fw,
+        //         deviceSetupConfig
+        //     );
+        //     wasProgrammed = true;
+        //     return createReturnValue(
+        //         programmedDevice,
+        //         { wasProgrammed },
+        //         detailedOutput
+        //     );
+        // } catch (error) {
+        //     throw new Error('Failed to program firmware');
+        // }
     }
+
+    return createReturnValue(device, { wasProgrammed }, detailedOutput);
 };
 
 /**
@@ -204,13 +216,14 @@ export const setupDevice =
         stopWatchingDevices();
 
         await releaseCurrentDevice();
+        const deviceSetupConfig = {
+            promiseConfirm: getDeviceSetupUserInput(dispatch),
+            promiseChoice: getDeviceSetupUserInput(dispatch),
+            allowCustomDevice: false,
+            ...deviceSetup,
+        };
+
         try {
-            const deviceSetupConfig = {
-                promiseConfirm: getDeviceSetupUserInput(dispatch),
-                promiseChoice: getDeviceSetupUserInput(dispatch),
-                allowCustomDevice: false,
-                ...deviceSetup,
-            };
             const preparedDevice = await prepareDevice(
                 device,
                 deviceSetupConfig
