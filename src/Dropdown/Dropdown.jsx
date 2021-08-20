@@ -69,14 +69,14 @@ const Dropdown = ({ label, items, disabled, onSelect, defaultIndex }) => {
                     isActive ? 'active' : 'inactive'
                 }`}
             >
-                {items.map(item => (
+                {items.map((item, index) => (
                     <button
                         type="button"
                         className="dropdown-item"
                         key={item}
                         onClick={() => {
                             setSelected(item);
-                            onSelect(item);
+                            onSelect(index);
                         }}
                     >
                         {item}
