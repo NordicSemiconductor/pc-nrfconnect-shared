@@ -42,7 +42,7 @@ import { deviceLibContext } from './deviceLister';
 
 /**
  * Program the device with the given serial number with the given firmware
- * using nrfjprog.
+ * using nrf-device-lib-js
  *
  * @param {String|Number} deviceId The Id of the device.
  * @param {String|Buffer} firmware Firmware path or firmware contents as buffer.
@@ -82,6 +82,12 @@ const program = (deviceId, firmware) => {
     });
 };
 
+/**
+ * Reset the device after programming
+ *
+ * @param {Number} deviceId The Id of the device.
+ * @returns {Promise} Promise that resolves if successful or rejects with error.
+ */
 const reset = async deviceId => {
     await nrfDeviceLib.deviceControlReset(deviceLibContext, deviceId);
 };
@@ -124,6 +130,13 @@ const verifySerialPortAvailable = device => {
     });
 };
 
+/**
+ * Validate the firmware on the device whether it matches the provided firmware or not
+ *
+ * @param {Device} device The device to be validated.
+ * @param {String} fwVersion The firmware version to be matched.
+ * @returns {Promise} Promise that resolves if successful or rejects with error.
+ */
 async function validateFirmware(device, fwVersion) {
     try {
         const fwInfo = await nrfDeviceLib.readFwInfo(
@@ -157,6 +170,14 @@ const confirmHelper = async promiseConfirm => {
     }
 };
 
+/**
+ * Program the device with the given serial number with the given firmware with provided configuration
+ *
+ * @param {Device} device The device to be programmed.
+ * @param {Object} fw Firmware path or firmware contents as buffer.
+ * @param {Object} deviceSetupConfig The configuration provided.
+ * @returns {Promise} Promise that resolves if successful or rejects with error.
+ */
 async function programFirmware(device, fw, deviceSetupConfig) {
     try {
         const confirmed = await confirmHelper(deviceSetupConfig.promiseConfirm);
