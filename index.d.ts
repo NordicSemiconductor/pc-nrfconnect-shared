@@ -444,9 +444,9 @@ declare module 'pc-nrfconnect-shared' {
     interface DropdownProps {
         label: string;
         items: string[];
-        onSelect: (child: string) => void;
+        onSelect: (item: number) => void;
         disabled?: boolean;
-        defaultItem?: string;
+        defaultIndex?: number;
     }
 
     export class Dropdown extends React.Component<DropdownProps> {}
