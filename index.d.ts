@@ -428,6 +428,17 @@ declare module 'pc-nrfconnect-shared' {
 
     export class Toggle extends React.Component<ToggleProps> {}
 
+    // StateSelector.jsx
+
+    interface StateSelectorProps {
+        items: string[];
+        defaultIndex?: number;
+        onSelect: (item: number) => void;
+        disabled?: boolean;
+    }
+
+    export class StateSelector extends React.Component<StateSelectorProps> {}
+
     // colors.js
 
     export const colors: {

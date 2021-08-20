@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Correct a typing for devices
 ### Changed
 - Exposes deviceInfo
+- Added `StateSelector` component.
 
 ## 4.28.2 - 2021-07-19
 ### Changed
