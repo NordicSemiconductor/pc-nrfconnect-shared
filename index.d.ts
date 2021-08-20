@@ -441,7 +441,7 @@ declare module 'pc-nrfconnect-shared' {
 
     // Drowdown.jsx
 
-    interface DrowdownProps {
+    interface DropdownProps {
         label: string;
         items: string[];
         onSelect: (child: string) => void;
@@ -449,7 +449,7 @@ declare module 'pc-nrfconnect-shared' {
         defaultItem?: string;
     }
 
-    export class Drowdown extends React.Component<DrowdownProps> {}
+    export class Dropdown extends React.Component<DropdownProps> {}
 
     // colors.js
 
