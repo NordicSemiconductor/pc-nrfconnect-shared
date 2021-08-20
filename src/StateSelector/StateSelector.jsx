@@ -7,6 +7,7 @@ const StateSelector = ({ items, defaultIndex, onSelect, disabled }) => {
 
     const selectionButton = (item, index) => (
         <Button
+            key={item}
             variant={selected === item ? 'set' : 'unset'}
             onClick={() => {
                 setSelected(item);
