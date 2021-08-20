@@ -130,11 +130,10 @@ async function validateFirmware(device, fwVersion) {
             deviceLibContext,
             device.id
         );
-        console.log(fwInfo);
         const valid = fwInfo.imageInfoList.find(imageInfo =>
             imageInfo.version.string.includes(fwVersion)
         );
-        if (valid) return true; // change to true after debugging
+        if (valid) return true;
     } catch (error) {
         throw new Error(`Error when validating firmware ${error.message}`);
     }
@@ -148,8 +147,6 @@ async function validateFirmware(device, fwVersion) {
  * @returns {Promise} resolves to boolean
  */
 const confirmHelper = async promiseConfirm => {
-    console.log('aaaaaaaaa');
-    console.log(promiseConfirm);
     if (!promiseConfirm) return true;
     try {
         return await promiseConfirm(

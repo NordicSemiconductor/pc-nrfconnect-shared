@@ -110,7 +110,6 @@ const createReturnValue = (device, details, detailedOutput) =>
 
 export const prepareDevice = async (device, deviceSetupConfig) => {
     const { jprog, dfu, needSerialport, detailedOutput } = deviceSetupConfig;
-    console.log(device);
 
     let wasProgrammed = false;
     if (dfu && Object.keys(dfu).length > 0) {
@@ -159,27 +158,26 @@ export const prepareDevice = async (device, deviceSetupConfig) => {
         }
 
         logger.debug('Found matching firmware definition', key);
-        console.log(deviceSetupConfig);
         const { fw, fwVersion } = jprog[key];
         const valid = await validateFirmware(device, fwVersion);
-        // if (valid)
-        //     return createReturnValue(device, { wasProgrammed }, detailedOutput);
+        if (valid)
+            return createReturnValue(device, { wasProgrammed }, detailedOutput);
 
-        // try {
-        //     const programmedDevice = await programFirmware(
-        //         device,
-        //         fw,
-        //         deviceSetupConfig
-        //     );
-        //     wasProgrammed = true;
-        //     return createReturnValue(
-        //         programmedDevice,
-        //         { wasProgrammed },
-        //         detailedOutput
-        //     );
-        // } catch (error) {
-        //     throw new Error('Failed to program firmware');
-        // }
+        try {
+            const programmedDevice = await programFirmware(
+                device,
+                fw,
+                deviceSetupConfig
+            );
+            wasProgrammed = true;
+            return createReturnValue(
+                programmedDevice,
+                { wasProgrammed },
+                detailedOutput
+            );
+        } catch (error) {
+            throw new Error('Failed to program firmware');
+        }
     }
 
     return createReturnValue(device, { wasProgrammed }, detailedOutput);
