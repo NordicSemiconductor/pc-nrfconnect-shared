@@ -43,7 +43,13 @@ import useDetectClick from './useDetectClick';
 
 import './Dropdown.scss';
 
-const Dropdown = ({ label, items, disabled, onSelect, defaultIndex }) => {
+const Dropdown = ({
+    label,
+    items,
+    disabled = false,
+    onSelect,
+    defaultIndex,
+}) => {
     const dropdownRef = useRef(null);
     const [isActive, setIsActive] = useDetectClick(dropdownRef, false);
     const onClick = () => setIsActive(!isActive);
