@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import { arrayOf, bool, func, number, string } from 'prop-types';
 
-const StateSelector = ({ items, defaultIndex, onSelect, disabled }) => {
+const StateSelector = ({ items, defaultIndex, onSelect, disabled = false }) => {
     const [selected, setSelected] = useState(items[defaultIndex] ?? items[0]);
 
     const selectionButton = (item, index) => (
