@@ -76,7 +76,7 @@ const Dropdown = ({ label, items, disabled, onSelect, defaultIndex }) => {
                         key={item}
                         onClick={() => {
                             setSelected(item);
-                            onSelect(index);
+                            onSelect(item, index);
                         }}
                     >
                         {item}
