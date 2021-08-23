@@ -48,6 +48,7 @@ export { default as Toggle } from './Toggle/Toggle';
 export { default as Main } from './Main/Main';
 export { default as Card } from './Card/Card';
 export { default as ErrorBoundary } from './ErrorBoundary/ErrorBoundary';
+export { default as StateSelector } from './StateSelector/StateSelector';
 
 export { default as SidePanel } from './SidePanel/SidePanel';
 export { Group, CollapsibleGroup } from './SidePanel/Group';
