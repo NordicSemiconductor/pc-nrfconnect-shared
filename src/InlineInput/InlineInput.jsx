@@ -142,7 +142,7 @@ const InlineInput = React.forwardRef(
                     disabled && 'disabled',
                     className
                 )}
-                size={internalValue.length + 2}
+                size={Math.max(1, internalValue.length)}
                 disabled={disabled}
                 value={internalValue}
                 onChange={onChangeIfValid}
