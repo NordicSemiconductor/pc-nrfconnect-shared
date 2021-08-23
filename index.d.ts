@@ -439,6 +439,17 @@ declare module 'pc-nrfconnect-shared' {
 
     export class StateSelector extends React.Component<StateSelectorProps> {}
 
+    // StartStopButton.jsx
+
+    interface StartStopButtonProps {
+        startText?: string;
+        stopText?: string;
+        onClick: () => void;
+        disabled?: boolean;
+    }
+
+    export class StartStopButton extends React.Component<StartStopButtonProps> {}
+
     // colors.js
 
     export const colors: {
