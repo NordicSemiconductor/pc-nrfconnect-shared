@@ -47,9 +47,12 @@ const logVersion = (
     moduleName: string,
     description: string
 ) => {
-    const nrfdlJsVersion = versions.find(v => v.moduleName === moduleName)!
-        .version as SemanticVersion;
-    const nrfdlJsVersionString = `${nrfdlJsVersion.major}.${nrfdlJsVersion.minor}.${nrfdlJsVersion.patch}`;
+    const nrfdlJsVersion = versions.find(v => v.moduleName === moduleName)
+        ?.version as SemanticVersion;
+    const nrfdlJsVersionString =
+        nrfdlJsVersion == null
+            ? 'Unknown'
+            : `${nrfdlJsVersion.major}.${nrfdlJsVersion.minor}.${nrfdlJsVersion.patch}`;
     logger.verbose(`Using ${description} version: ${nrfdlJsVersionString}`);
 };
 
