@@ -34,26 +34,32 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import nrfdl, {
-    ModuleVersion,
-    SemanticVersion,
-} from '@nordicsemiconductor/nrf-device-lib-js';
+import nrfdl, { ModuleVersion } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import { deviceLibContext } from '../Device/deviceLister';
 import logger from '../logging';
+
+const describe = (version?: ModuleVersion) => {
+    if (version == null) {
+        return 'Unknown';
+    }
+
+    switch (version.versionFormat) {
+        case 'incremental':
+        case 'string':
+            return version.version;
+        case 'semantic':
+            return `${version.version.major}.${version.version.minor}.${version.version.patch}`;
+    }
+};
 
 const logVersion = (
     versions: ModuleVersion[],
     moduleName: string,
     description: string
 ) => {
-    const nrfdlJsVersion = versions.find(v => v.moduleName === moduleName)
-        ?.version as SemanticVersion;
-    const nrfdlJsVersionString =
-        nrfdlJsVersion == null
-            ? 'Unknown'
-            : `${nrfdlJsVersion.major}.${nrfdlJsVersion.minor}.${nrfdlJsVersion.patch}`;
-    logger.verbose(`Using ${description} version: ${nrfdlJsVersionString}`);
+    const version = versions.find(v => v.moduleName === moduleName);
+    logger.verbose(`Using ${description} version: ${describe(version)}`);
 };
 
 export default async () => {
