@@ -62,9 +62,12 @@ let hotplugTaskId: number;
  */
 export const wrapDeviceFromNrfdl = (device: Device): Device => {
     let outputDevice: Device = camelcaseKeys(device, { deep: true }) as Device;
-    const serialport: Serialport | undefined = outputDevice.serialPorts
-        ? (outputDevice.serialPorts[0] as unknown as Serialport)
+    let serialport: Serialport | undefined = outputDevice.serialports
+        ? (outputDevice.serialports[0] as unknown as Serialport)
         : undefined;
+    serialport = outputDevice.serialPorts
+        ? (outputDevice.serialPorts[0] as unknown as Serialport)
+        : serialport;
     outputDevice = {
         ...outputDevice,
         boardVersion: outputDevice.jlink

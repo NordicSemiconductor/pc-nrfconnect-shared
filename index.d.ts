@@ -228,20 +228,25 @@ declare module 'pc-nrfconnect-shared' {
     }
 
     interface Device extends Omit<NrfdlDevice, 'usb' | 'jlink'> {
+        /**
+         * @deprecated Using the property `serialnumber` has been
+         * deprecated. You should now use `serialNumber`. The property
+         * will be removed in the next major release.
+         */
+        serialnumber?: string; // from nrf-device-lib
+        /**
+         * @deprecated Using the property `serialports` has been
+         * deprecated. You should now use `serialPorts`. The property
+         * will be removed in the next major release.
+         */
+        serialports?: Serialport[]; // from nrf-device-lib
         // traits: DeviceTraits; // from nrf-device-lib
-        // serialports?: Serialport[]; // from nrf-device-lib
         usb?: {
             product?: string;
         }; // from nrf-device-lib
         jlink?: {
             boardVersion: string;
         }; // from nrf-device-lib
-        /**
-         * @deprecated Using the property `comName` has been
-         * deprecated. You should now use `path`. The property
-         * will be removed in the next major release.
-         */
-        serialnumber?: string; // from nrf-device-lib
         serialNumber: string;
         boardVersion?: string;
         nickname?: string;
