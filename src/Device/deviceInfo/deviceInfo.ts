@@ -57,7 +57,7 @@
    through CSS, e.g. to change the colours.
 */
 
-import { Device, Serialport } from 'pc-nrfconnect-shared';
+import { Device, DeviceInfo, Serialport } from 'pc-nrfconnect-shared';
 
 import nrf51logo from '!!@svgr/webpack!./nRF51-Series-logo.svg';
 import nrf52logo from '!!@svgr/webpack!./nRF52-Series-logo.svg';
@@ -66,16 +66,6 @@ import nrf91logo from '!!@svgr/webpack!./nRF91-Series-logo.svg';
 import ppkLogo from '!!@svgr/webpack!./ppk-logo.svg';
 import unknownLogo from '!!@svgr/webpack!./unknown-logo.svg';
 import unknownNordicLogo from '!!@svgr/webpack!./unknown-nordic-logo.svg';
-
-interface DeviceInfo {
-    name?: string;
-    cores?: number;
-    icon: React.ElementType;
-    website: {
-        productPagePath?: string;
-        buyOnlineParams?: string;
-    };
-}
 
 type DevicePCA =
     | 'PCA10028'

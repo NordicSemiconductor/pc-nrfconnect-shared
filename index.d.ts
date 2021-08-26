@@ -19,8 +19,8 @@ declare module 'pc-nrfconnect-shared' {
             message: string;
         };
         device: {
-            devices: readonly Device[];
-            deviceInfo: any;
+            devices: { [key: string]: Device };
+            deviceInfo: DeviceInfo;
             isSetupDialogVisible: boolean;
             isSetupWaitingForUserInput: boolean;
             selectedSerialNumber: string;
@@ -253,6 +253,16 @@ declare module 'pc-nrfconnect-shared' {
         serialport?: Serialport;
     }
 
+    export interface DeviceInfo {
+        name?: string;
+        cores?: number;
+        icon: React.ElementType;
+        website: {
+            productPagePath?: string;
+            buyOnlineParams?: string;
+        };
+    }
+
     /**
      * Props for the `DeviceSelector` component.
      */
@@ -440,6 +450,28 @@ declare module 'pc-nrfconnect-shared' {
 
     export class Toggle extends React.Component<ToggleProps> {}
 
+    // StateSelector.jsx
+
+    interface StateSelectorProps {
+        items: string[];
+        defaultIndex?: number;
+        onSelect: (item: number) => void;
+        disabled?: boolean;
+    }
+
+    export class StateSelector extends React.Component<StateSelectorProps> {}
+
+    // StartStopButton.jsx
+
+    interface StartStopButtonProps {
+        startText?: string;
+        stopText?: string;
+        onClick: () => void;
+        disabled?: boolean;
+    }
+
+    export class StartStopButton extends React.Component<StartStopButtonProps> {}
+
     // colors.js
 
     export const colors: {
@@ -598,4 +630,6 @@ declare module 'pc-nrfconnect-shared' {
      * The app name from package.json is used to identify the app.
      */
     export function getPersistentStore<StoreSchema>(): Store<StoreSchema>;
+
+    export const deviceInfo: (device: Device) => DeviceInfo;
 }
