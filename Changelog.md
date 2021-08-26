@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Log the versions of our low level libraries.
 
-## 4.28.3 - 2021-09-11
+## 4.28.3 - 2021-08-11
 ### Fixed
 - Correct a typing for devices
 ### Changed
