@@ -1,4 +1,4 @@
-/* Copyright (c) 2015 - 2021, Nordic Semiconductor ASA
+/* Copyright (c) 2015 - 2017, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -34,40 +34,49 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from 'react';
-import { Button, ButtonGroup } from 'react-bootstrap';
-import { arrayOf, bool, func, number, string } from 'prop-types';
+import nrfdl, { ModuleVersion } from '@nordicsemiconductor/nrf-device-lib-js';
 
-const StateSelector = ({ items, defaultIndex, onSelect, disabled = false }) => {
-    const [selected, setSelected] = useState(items[defaultIndex] ?? items[0]);
+import { getDeviceLibContext } from '../Device/deviceLister';
+import logger from '../logging';
 
-    const selectionButton = (item, index) => (
-        <Button
-            key={item}
-            variant={selected === item ? 'set' : 'unset'}
-            onClick={() => {
-                setSelected(item);
-                onSelect(index);
-            }}
-            active={selected === item}
-            disabled={disabled}
-        >
-            {item}
-        </Button>
-    );
+const describe = (version?: ModuleVersion) => {
+    if (version == null) {
+        return 'Unknown';
+    }
 
-    return (
-        <ButtonGroup className="w-100 d-flex flex-row channel-selection">
-            {items.map((item, index) => selectionButton(item, index))}
-        </ButtonGroup>
-    );
+    switch (version.versionFormat) {
+        case 'incremental':
+        case 'string':
+            return version.version;
+        case 'semantic':
+            return `${version.version.major}.${version.version.minor}.${version.version.patch}`;
+    }
 };
 
-StateSelector.propTypes = {
-    items: arrayOf(string).isRequired,
-    defaultIndex: number,
-    onSelect: func.isRequired,
-    disabled: bool,
+const logVersion = (
+    versions: ModuleVersion[],
+    moduleName: string,
+    description: string
+) => {
+    const version = versions.find(v => v.moduleName === moduleName);
+    logger.verbose(`Using ${description} version: ${describe(version)}`);
 };
 
-export default StateSelector;
+export default async () => {
+    try {
+        const versions = await nrfdl.getModuleVersions(getDeviceLibContext());
+
+        logVersion(
+            versions,
+            'nrfdl-js',
+            '@nordicsemiconductor/nrf-device-lib-js'
+        );
+        logVersion(versions, 'nrfdl', 'nrf-device-lib');
+        logVersion(versions, 'nrfjprog_dll', 'nrfjprog dll');
+        logVersion(versions, 'jlink_dll', 'JLink');
+    } catch (error) {
+        logger.error(
+            `Failed to get the library versions: ${error.message || error}`
+        );
+    }
+};

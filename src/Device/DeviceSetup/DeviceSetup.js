@@ -36,7 +36,7 @@
 
 import { connect } from 'react-redux';
 
-import { receiveDeviceSetupInput } from '../deviceActions';
+import { receiveDeviceSetupInput } from '../deviceSetup';
 import DeviceSetupView from './DeviceSetupView';
 
 const mapStateToProps = ({

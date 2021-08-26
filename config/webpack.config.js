@@ -19,6 +19,7 @@ function createExternals() {
         'redux-thunk',
         'electron',
         'serialport',
+        'nrf-device-lib-js',
         'pc-ble-driver-js',
         'pc-nrfjprog-js',
         'usb',

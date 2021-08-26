@@ -35,39 +35,44 @@
  */
 
 import React, { useState } from 'react';
-import { Button, ButtonGroup } from 'react-bootstrap';
-import { arrayOf, bool, func, number, string } from 'prop-types';
+import Button from 'react-bootstrap/Button';
+import { bool, func, string } from 'prop-types';
 
-const StateSelector = ({ items, defaultIndex, onSelect, disabled = false }) => {
-    const [selected, setSelected] = useState(items[defaultIndex] ?? items[0]);
+import playSvg from './play-circle.svg';
+import stopSvg from './stop-circle.svg';
 
-    const selectionButton = (item, index) => (
-        <Button
-            key={item}
-            variant={selected === item ? 'set' : 'unset'}
-            onClick={() => {
-                setSelected(item);
-                onSelect(index);
-            }}
-            active={selected === item}
-            disabled={disabled}
-        >
-            {item}
-        </Button>
-    );
+const StartStopButton = ({
+    startText = 'Start',
+    stopText = 'Stop',
+    onClick,
+    disabled = false,
+}) => {
+    const [showStart, setShowStart] = useState(true);
+    const label = showStart ? startText : stopText;
+    const src = showStart ? playSvg : stopSvg;
 
     return (
-        <ButtonGroup className="w-100 d-flex flex-row channel-selection">
-            {items.map((item, index) => selectionButton(item, index))}
-        </ButtonGroup>
+        <Button
+            className={`w-100 secondary-btn start-stop  ${
+                showStart ? '' : 'active-animation'
+            }`}
+            variant="secondary"
+            disabled={disabled}
+            onClick={() => {
+                setShowStart(!showStart);
+                onClick();
+            }}
+        >
+            <img alt="" src={src} />
+            {label}
+        </Button>
     );
 };
 
-StateSelector.propTypes = {
-    items: arrayOf(string).isRequired,
-    defaultIndex: number,
-    onSelect: func.isRequired,
+StartStopButton.propTypes = {
+    startText: string,
+    stopText: string,
+    onClick: func.isRequired,
     disabled: bool,
 };
-
-export default StateSelector;
+export default StartStopButton;
