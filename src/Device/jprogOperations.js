@@ -38,7 +38,7 @@ import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js'; // eslint-dis
 import SerialPort from 'serialport';
 
 import logger from '../logging';
-import { deviceLibContext } from './deviceLister';
+import { getDeviceLibContext } from './deviceLister';
 
 /**
  * Program the device with the given serial number with the given firmware
@@ -60,7 +60,7 @@ const program = (deviceId, firmware) => {
     }
     return new Promise((resolve, reject) => {
         nrfDeviceLib.firmwareProgram(
-            deviceLibContext,
+            getDeviceLibContext(),
             deviceId,
             'NRFDL_FW_FILE',
             'NRFDL_FW_INTEL_HEX',
@@ -89,7 +89,7 @@ const program = (deviceId, firmware) => {
  * @returns {Promise} Promise that resolves if successful or rejects with error.
  */
 const reset = async deviceId => {
-    await nrfDeviceLib.deviceControlReset(deviceLibContext, deviceId);
+    await nrfDeviceLib.deviceControlReset(getDeviceLibContext(), deviceId);
 };
 
 /**
@@ -140,12 +140,13 @@ const verifySerialPortAvailable = device => {
 async function validateFirmware(device, fwVersion) {
     try {
         const fwInfo = await nrfDeviceLib.readFwInfo(
-            deviceLibContext,
+            getDeviceLibContext(),
             device.id
         );
         const valid = fwInfo.imageInfoList.find(imageInfo =>
             imageInfo.version.string.includes(fwVersion)
         );
+        await reset(device.id); // Remove after fixing in nrf-device-lib
         if (valid) return true;
     } catch (error) {
         throw new Error(`Error when validating firmware ${error.message}`);

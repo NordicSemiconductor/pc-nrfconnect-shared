@@ -49,7 +49,9 @@ import { devicesDetected } from './deviceActions';
 
 const DEFAULT_DEVICE_WAIT_TIME = 3000;
 
-export const deviceLibContext = nrfDeviceLib.createContext();
+const deviceLibContext = nrfDeviceLib.createContext();
+export const getDeviceLibContext = () => deviceLibContext;
+
 let hotplugTaskId: number;
 
 /**
@@ -68,8 +70,12 @@ export const wrapDeviceFromNrfdl = (device: Device): Device => {
         boardVersion: outputDevice.jlink
             ? outputDevice.jlink.boardVersion
             : undefined,
+        serialNumber: outputDevice.serialnumber
+            ? outputDevice.serialnumber
+            : outputDevice.serialNumber,
         serialport,
     };
+    delete outputDevice.serialnumber;
     return outputDevice;
 };
 
@@ -96,7 +102,7 @@ export const startWatchingDevices =
     async (dispatch: Function, getState: Function): Promise<void> => {
         const updateDeviceList = async () => {
             let devices: Device[] = (await nrfDeviceLib.enumerate(
-                deviceLibContext,
+                getDeviceLibContext(),
                 deviceListing as unknown as DeviceTraits
             )) as unknown as Device[];
             devices = wrapDevicesFromNrfdl(devices);
@@ -117,7 +123,7 @@ export const startWatchingDevices =
         try {
             await updateDeviceList();
             hotplugTaskId = nrfDeviceLib.startHotplugEvents(
-                deviceLibContext,
+                getDeviceLibContext(),
                 () => {},
                 updateDeviceList
             );
@@ -133,7 +139,7 @@ export const startWatchingDevices =
  */
 export const stopWatchingDevices = () => {
     // Start here
-    if (deviceLibContext) {
+    if (getDeviceLibContext()) {
         try {
             nrfDeviceLib.stopHotplugEvents(hotplugTaskId);
         } catch (error) {
@@ -171,11 +177,11 @@ export const waitForDevice = (
         let timeoutId: NodeJS.Timeout;
 
         nrfDeviceLib.enumerate(
-            deviceLibContext,
+            getDeviceLibContext(),
             expectedTraits as unknown as DeviceTraits
         );
         nrfDeviceLib.startHotplugEvents(
-            deviceLibContext,
+            getDeviceLibContext(),
             () => {},
             (event: HotplugEvent) => {
                 const { device: inputDevice } = event;

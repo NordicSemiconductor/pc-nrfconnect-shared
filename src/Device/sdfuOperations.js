@@ -42,7 +42,7 @@ import MemoryMap from 'nrf-intel-hex';
 import SerialPort from 'serialport';
 
 import logger from '../logging';
-import { deviceLibContext, waitForDevice } from './deviceLister';
+import { getDeviceLibContext, waitForDevice } from './deviceLister';
 import {
     createInitPacketBuffer,
     defaultInitPacket,
@@ -391,7 +391,7 @@ const prepareInDFUBootloader = async (device, dfu) => {
     logger.debug('Starting DFU');
     await new Promise(resolve =>
         nrfDeviceLib.firmwareProgram(
-            deviceLibContext,
+            getDeviceLibContext(),
             device.id,
             'NRFDL_FW_BUFFER',
             'NRFDL_FW_SDFU_ZIP',
