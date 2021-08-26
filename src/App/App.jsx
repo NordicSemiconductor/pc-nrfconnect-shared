@@ -59,6 +59,7 @@ import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import LogViewer from '../Log/LogViewer';
 import NavBar from '../NavBar/NavBar';
 import classNames from '../utils/classNames';
+import logLibVersions from '../utils/logLibVersions';
 import packageJson from '../utils/packageJson';
 import usageData from '../utils/usageData';
 import useHotKey from '../utils/useHotKey';
@@ -74,6 +75,8 @@ import VisibilityBar from './VisibilityBar';
 
 import './shared.scss';
 import './app.scss';
+
+logLibVersions();
 
 let warnedAboutLegacyPanes = false;
 const convertLegacy = pane => {
