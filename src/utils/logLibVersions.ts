@@ -34,28 +34,49 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { connect } from 'react-redux';
+import nrfdl, { ModuleVersion } from '@nordicsemiconductor/nrf-device-lib-js';
 
-import { receiveDeviceSetupInput } from '../deviceSetup';
-import DeviceSetupView from './DeviceSetupView';
+import { getDeviceLibContext } from '../Device/deviceLister';
+import logger from '../logging';
 
-const mapStateToProps = ({
-    device: {
-        isSetupDialogVisible,
-        isSetupWaitingForUserInput,
-        setupDialogText,
-        setupDialogChoices,
-    },
-}) => ({
-    isVisible: isSetupDialogVisible,
-    isInProgress: isSetupDialogVisible && !isSetupWaitingForUserInput,
-    text: setupDialogText,
-    choices: setupDialogChoices,
-});
+const describe = (version?: ModuleVersion) => {
+    if (version == null) {
+        return 'Unknown';
+    }
 
-const mapDispatchToProps = dispatch => ({
-    onOk: input => dispatch(receiveDeviceSetupInput(input)),
-    onCancel: () => dispatch(receiveDeviceSetupInput(false)),
-});
+    switch (version.versionFormat) {
+        case 'incremental':
+        case 'string':
+            return version.version;
+        case 'semantic':
+            return `${version.version.major}.${version.version.minor}.${version.version.patch}`;
+    }
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(DeviceSetupView);
+const logVersion = (
+    versions: ModuleVersion[],
+    moduleName: string,
+    description: string
+) => {
+    const version = versions.find(v => v.moduleName === moduleName);
+    logger.verbose(`Using ${description} version: ${describe(version)}`);
+};
+
+export default async () => {
+    try {
+        const versions = await nrfdl.getModuleVersions(getDeviceLibContext());
+
+        logVersion(
+            versions,
+            'nrfdl-js',
+            '@nordicsemiconductor/nrf-device-lib-js'
+        );
+        logVersion(versions, 'nrfdl', 'nrf-device-lib');
+        logVersion(versions, 'nrfjprog_dll', 'nrfjprog dll');
+        logVersion(versions, 'jlink_dll', 'JLink');
+    } catch (error) {
+        logger.error(
+            `Failed to get the library versions: ${error.message || error}`
+        );
+    }
+};

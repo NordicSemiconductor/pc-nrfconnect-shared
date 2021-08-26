@@ -3,6 +3,7 @@ declare module 'pc-nrfconnect-shared' {
     import React from 'react';
     import winston from 'winston';
     import Store from 'electron-store';
+    import { Device as NrfdlDevice } from '@nordicsemiconductor/nrf-device-lib-js';
 
     // State
 
@@ -195,6 +196,12 @@ declare module 'pc-nrfconnect-shared' {
         nordicUsb?: boolean;
         seggerUsb?: boolean;
         nordicDfu?: boolean;
+        serialPort?: boolean;
+        /**
+         * @deprecated Using the property `serialport` has been
+         * deprecated. You should now use `serialPort`. The property
+         * will be removed in the next major release.
+         */
         serialport?: boolean;
         jlink?: boolean;
     }
@@ -220,15 +227,30 @@ declare module 'pc-nrfconnect-shared' {
         comName: string;
     }
 
-    interface Device {
-        boardVersion: string;
-        serialNumber: string;
-        traits: readonly string[];
-        nickname?: string;
-        serialport?: Serialport;
+    interface Device extends Omit<NrfdlDevice, 'usb' | 'jlink'> {
+        /**
+         * @deprecated Using the property `serialnumber` has been
+         * deprecated. You should now use `serialNumber`. The property
+         * will be removed in the next major release.
+         */
+        serialnumber?: string; // from nrf-device-lib
+        /**
+         * @deprecated Using the property `serialports` has been
+         * deprecated. You should now use `serialPorts`. The property
+         * will be removed in the next major release.
+         */
+        serialports?: Serialport[]; // from nrf-device-lib
+        // traits: DeviceTraits; // from nrf-device-lib
         usb?: {
             product?: string;
-        };
+        }; // from nrf-device-lib
+        jlink?: {
+            boardVersion: string;
+        }; // from nrf-device-lib
+        serialNumber: string;
+        boardVersion?: string;
+        nickname?: string;
+        serialport?: Serialport;
     }
 
     export interface DeviceInfo {

@@ -38,14 +38,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { bool, exact, func, object } from 'prop-types';
 
-import {
-    deselectDevice,
-    selectDevice,
-    setupDevice,
-    startWatchingDevices,
-    stopWatchingDevices,
-} from '../deviceActions';
+import { deselectDevice, selectDevice } from '../deviceActions';
+import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
 import { deviceIsSelected as deviceIsSelectedSelector } from '../deviceReducer';
+import { setupDevice } from '../deviceSetup';
 import DeviceSetup from '../DeviceSetup/DeviceSetup';
 import DeviceList from './DeviceList/DeviceList';
 import SelectDevice from './SelectDevice';
