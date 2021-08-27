@@ -44,13 +44,24 @@ const describe = (version?: ModuleVersion) => {
         return 'Unknown';
     }
 
-    switch (version.versionFormat) {
-        case 'incremental':
-        case 'string':
-            return version.version;
-        case 'semantic':
-            return `${version.version.major}.${version.version.minor}.${version.version.patch}`;
-    }
+    // TODO: the format is updating in nrf-device-lib-js,
+    // and will be update in a newer version than v0.3.12
+    // switch (version.versionFormat) {
+    //     case 'incremental':
+    //     case 'string':
+    //         return version.version;
+    //     case 'semantic':
+    //         return `${version.version.major}.${version.version.minor}.${version.version.patch}`;
+    // }
+
+    if (version.version)
+        return `${version.version.major}.${version.version.minor}.${version.version.patch}`;
+    if (version.semantic)
+        return `${version.semantic.major}.${version.semantic.minor}.${version.semantic.patch}`;
+    if (version.incremental) return version.incremental;
+    if (version.string) return version.string;
+
+    return 'Unknown';
 };
 
 const logVersion = (
