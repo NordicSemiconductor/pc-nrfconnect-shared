@@ -19,7 +19,7 @@ declare module 'pc-nrfconnect-shared' {
             message: string;
         };
         device: {
-            devices: { [key: string]: Device };
+            devices: { [key: string]: Device | undefined };
             deviceInfo: DeviceInfo;
             isSetupDialogVisible: boolean;
             isSetupWaitingForUserInput: boolean;
