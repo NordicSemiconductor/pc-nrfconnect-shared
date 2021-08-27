@@ -115,7 +115,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 
 Dropdown.propTypes = {
     label: string.isRequired,
-    items: arrayOf(string).isRequired,
+    items: arrayOf(string.isRequired).isRequired,
     onSelect: func.isRequired,
     disabled: bool,
     defaultIndex: number,
