@@ -84,3 +84,5 @@ export { currentPane, setCurrentPane } from './App/appLayout';
 export { getAppSpecificStore as getPersistentStore } from './utils/persistentStore';
 
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
+export { getDeviceLibContext } from './Device/deviceLister';
+export { prepareDevice } from './Device/deviceSetup';
