@@ -39,7 +39,8 @@ import nrfdl, { ModuleVersion } from '@nordicsemiconductor/nrf-device-lib-js';
 import { getDeviceLibContext } from '../Device/deviceLister';
 import logger from '../logging';
 
-const describe = (version?: ModuleVersion) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const describe = (version?: any) => {
     if (version == null) {
         return 'Unknown';
     }
