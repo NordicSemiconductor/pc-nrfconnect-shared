@@ -316,6 +316,8 @@ declare module 'pc-nrfconnect-shared' {
      */
     export class DeviceSelector extends React.Component<DeviceSelectorProps> {}
 
+    export const getDeviceLibContext: () => number;
+
     // bleChannels.js
 
     interface BleChannels extends Array<number> {
