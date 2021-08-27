@@ -57,6 +57,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     onSelect,
     defaultIndex,
 }) => {
+    const [selected, setSelected] = useState(items[defaultIndex ?? 0]);
     const dropdownRef = useRef(null);
     const [isActive, setIsActive] = useState(false);
 
@@ -73,7 +74,6 @@ const Dropdown: React.FC<DropdownProps> = ({
     }, [isActive, dropdownRef]);
 
     const onClick = () => setIsActive(!isActive);
-    const [selected, setSelected] = useState(items[defaultIndex] ?? items[0]);
 
     return (
         <div className="dropdown-container">
