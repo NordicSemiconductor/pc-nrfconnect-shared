@@ -34,12 +34,11 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import FormLabel from 'react-bootstrap/FormLabel';
 import { arrayOf, bool, func, number, string } from 'prop-types';
 
 import chevron from './chevron.svg';
-import useDetectClick from './useDetectClick';
 
 import './Dropdown.scss';
 
@@ -59,7 +58,20 @@ const Dropdown: React.FC<DropdownProps> = ({
     defaultIndex,
 }) => {
     const dropdownRef = useRef(null);
-    const [isActive, setIsActive] = useDetectClick(dropdownRef, false);
+    const [isActive, setIsActive] = useState(false);
+
+    useEffect(() => {
+        const clickEvent = () => setIsActive(!isActive);
+
+        if (isActive) {
+            window.addEventListener('click', clickEvent);
+        }
+
+        return () => {
+            window.removeEventListener('click', clickEvent);
+        };
+    }, [isActive, dropdownRef]);
+
     const onClick = () => setIsActive(!isActive);
     const [selected, setSelected] = useState(items[defaultIndex] ?? items[0]);
 
