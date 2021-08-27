@@ -43,7 +43,15 @@ import useDetectClick from './useDetectClick';
 
 import './Dropdown.scss';
 
-const Dropdown = ({
+interface DropdownProps {
+    label: string;
+    items: string[];
+    onSelect: (item: string, index?: number) => void;
+    disabled?: boolean;
+    defaultIndex?: number;
+}
+
+const Dropdown: React.FC<DropdownProps> = ({
     label,
     items,
     disabled = false,
