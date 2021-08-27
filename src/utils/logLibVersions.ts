@@ -39,22 +39,20 @@ import nrfdl, { ModuleVersion } from '@nordicsemiconductor/nrf-device-lib-js';
 import { getDeviceLibContext } from '../Device/deviceLister';
 import logger from '../logging';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const describe = (version?: any) => {
-    if (version == null) {
-        return 'Unknown';
-    }
+// TODO: All these types and the function describeBuggyVersion are just needed
+// because the versions in nrf-device-lib-js v0.3.12 are buggy. As soon as we
+// upgrade to a version where this is fixed, we can remove all of this.
+type Semantic = { major: number; minor: number; patch: number };
+type SemanticInVersion = { version?: Semantic };
+type SemanticInSemantic = { semantic?: Semantic };
+type Incremental = { incremental?: number };
+type PlainString = { string?: string };
+type BuggyModuleVersion = SemanticInVersion &
+    SemanticInSemantic &
+    Incremental &
+    PlainString;
 
-    // TODO: the format is updating in nrf-device-lib-js,
-    // and will be updated in a newer version than v0.3.12
-    // switch (version.versionFormat) {
-    //     case 'incremental':
-    //     case 'string':
-    //         return version.version;
-    //     case 'semantic':
-    //         return `${version.version.major}.${version.version.minor}.${version.version.patch}`;
-    // }
-
+const describeBuggyVersion = (version: BuggyModuleVersion) => {
     if (version.version)
         return `${version.version.major}.${version.version.minor}.${version.version.patch}`;
     if (version.semantic)
@@ -63,6 +61,24 @@ const describe = (version?: any) => {
     if (version.string) return version.string;
 
     return 'Unknown';
+};
+
+const describe = (version?: ModuleVersion) => {
+    if (version == null) {
+        return 'Unknown';
+    }
+
+    if (version.versionFormat == null) {
+        return describeBuggyVersion(version);
+    }
+
+    switch (version.versionFormat) {
+        case 'incremental':
+        case 'string':
+            return version.version;
+        case 'semantic':
+            return `${version.version.major}.${version.version.minor}.${version.version.patch}`;
+    }
 };
 
 const logVersion = (
