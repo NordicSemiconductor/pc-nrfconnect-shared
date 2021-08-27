@@ -466,7 +466,7 @@ declare module 'pc-nrfconnect-shared' {
     interface DropdownProps {
         label: string;
         items: string[];
-        onSelect: (item: string, index?: number) => void;
+        onSelect: (item: string, index: number) => void;
         disabled?: boolean;
         defaultIndex?: number;
     }
