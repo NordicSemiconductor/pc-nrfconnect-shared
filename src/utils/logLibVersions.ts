@@ -45,7 +45,7 @@ const describe = (version?: ModuleVersion) => {
     }
 
     // TODO: the format is updating in nrf-device-lib-js,
-    // and will be update in a newer version than v0.3.12
+    // and will be updated in a newer version than v0.3.12
     // switch (version.versionFormat) {
     //     case 'incremental':
     //     case 'string':
