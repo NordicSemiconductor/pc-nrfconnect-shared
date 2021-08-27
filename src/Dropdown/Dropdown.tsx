@@ -58,7 +58,6 @@ const Dropdown: React.FC<DropdownProps> = ({
     defaultIndex,
 }) => {
     const [selected, setSelected] = useState(items[defaultIndex ?? 0]);
-    const dropdownRef = useRef(null);
     const [isActive, setIsActive] = useState(false);
 
     useEffect(() => {
@@ -71,7 +70,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         return () => {
             window.removeEventListener('click', clickEvent);
         };
-    }, [isActive, dropdownRef]);
+    }, [isActive]);
 
     const onClick = () => setIsActive(!isActive);
 
@@ -90,7 +89,6 @@ const Dropdown: React.FC<DropdownProps> = ({
                 <img src={chevron} alt="" />
             </button>
             <div
-                ref={dropdownRef}
                 className={`dropdown-content dropdown-${
                     isActive ? 'active' : 'inactive'
                 }`}
