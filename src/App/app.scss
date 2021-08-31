@@ -1,4 +1,4 @@
-@import "../variables";
+@import '../variables';
 
 .core19-app {
     background-color: $gray-50;
@@ -42,12 +42,16 @@
             overflow: hidden;
             width: 100%;
 
-            margin-bottom: 0;
-            transition: margin-bottom $normal-transition;
+            max-height: $log-viewer-height;
+            transition: max-height $normal-transition;
 
-            &.hidden { margin-bottom: -$log-viewer-height; }
+            &.hidden {
+                max-height: 0;
+            }
 
-            &:hover { color: $gray-100; }
+            &:hover {
+                color: $gray-100;
+            }
         }
     }
 
@@ -59,7 +63,9 @@
         margin-left: 0;
         transition: margin-left $normal-transition;
 
-        &.hidden { margin-left: -$side-panel-width; }
+        &.hidden {
+            margin-left: -$side-panel-width;
+        }
 
         overflow-y: overlay;
         @include scrollbars($gray-50);
