@@ -1,22 +1,25 @@
-$roboto-font-path: "~roboto-fontface/fonts" !default;
-@import "~roboto-fontface/css/roboto/sass/roboto-fontface";
+$roboto-font-path: '~roboto-fontface/fonts' !default;
+@import '~roboto-fontface/css/roboto/sass/roboto-fontface';
 
-@import "~@mdi/font/css/materialdesignicons.min.css";
-@import "../variables";
-@import "~bootstrap/scss/bootstrap";
+@import '~@mdi/font/css/materialdesignicons.min.css';
+@import '../variables';
+@import '~bootstrap/scss/bootstrap';
 
 @each $color, $value in $theme-colors {
     .btn-#{$color} {
         border-color: $gray-200;
 
-        &.disabled,&:disabled {
+        &.disabled,
+        &:disabled {
             color: $gray-300;
             border-color: $gray-100;
         }
     }
 }
 
-html, body, #webapp {
+html,
+body,
+#webapp {
     height: 100%;
 
     .core19-app {
@@ -34,11 +37,13 @@ body {
     border-radius: 0px;
 }
 
-.disabled, :disabled {
+.disabled,
+:disabled {
     opacity: $disabled-opacity;
 
     // To prevent opacity from stacking up
-    .disabled, :disabled {
+    .disabled,
+    :disabled {
         opacity: 1;
     }
 }
