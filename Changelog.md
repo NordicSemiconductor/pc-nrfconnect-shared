@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Component `Dropdown`.
 ### Fixed
 - CSS issue where hidden content was scrollable
+- Correctly displays Thingy91 in `SELECT DEVICE`
 
 ## 4.28.3 - 2021-08-11
 ### Fixed

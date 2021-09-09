@@ -193,10 +193,17 @@ const ppkDeviceInfo = (device: Device): DeviceInfo => ({
     },
 });
 
-const deviceByUsb = (device: Device) =>
-    isNordicDevice(device) && device.usb?.product?.startsWith('PPK')
-        ? ppkDeviceInfo(device)
-        : null;
+const deviceByUsb = (device: Device) => {
+    if (isNordicDevice(device)) {
+        if (device.usb?.product?.startsWith('PPK')) {
+            return ppkDeviceInfo(device);
+        }
+        if (device.serialNumber.startsWith('THINGY91')) {
+            return devicesByPca.PCA20035;
+        }
+    }
+    return null;
+};
 
 const unknownDevice = (device: Device): DeviceInfo => ({
     name: device.usb?.product,
