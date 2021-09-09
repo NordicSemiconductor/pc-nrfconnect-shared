@@ -466,7 +466,7 @@ declare module 'pc-nrfconnect-shared' {
     // Drowdown.jsx
 
     interface DropdownProps {
-        label: string;
+        label?: string;
         items: string[];
         onSelect: (item: string, index: number) => void;
         disabled?: boolean;

@@ -43,7 +43,7 @@ import chevron from './chevron.svg';
 import './Dropdown.scss';
 
 interface DropdownProps {
-    label: string;
+    label?: string;
     items: string[];
     onSelect: (item: string, index: number) => void;
     disabled?: boolean;
@@ -76,7 +76,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 
     return (
         <div className="dropdown-container">
-            <FormLabel className="dropdown-label">{label}</FormLabel>
+            {label && <FormLabel className="dropdown-label">{label}</FormLabel>}
             <button
                 type="button"
                 className={`dropdown-btn dropdown-btn-${
@@ -112,7 +112,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 };
 
 Dropdown.propTypes = {
-    label: string.isRequired,
+    label: string,
     items: arrayOf(string.isRequired).isRequired,
     onSelect: func.isRequired,
     disabled: bool,
