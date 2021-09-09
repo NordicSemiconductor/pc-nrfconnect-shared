@@ -96,6 +96,7 @@
         "winston": "3.2.1"
     },
     "devDependencies": {
+        "@nordicsemiconductor/nrf-device-lib-js": "^0.3.12",
         "@types/react": "16.14.4",
         "electron-store": "5.1.1",
         "react": "16.13.1",
@@ -103,6 +104,7 @@
         "react-redux": "7.2.0"
     },
     "peerDependencies": {
+        "@nordicsemiconductor/nrf-device-lib-js": "^0.3.12",
         "electron-store": "^5.1.1",
         "react": "^16.13",
         "react-redux": "^7.2"
