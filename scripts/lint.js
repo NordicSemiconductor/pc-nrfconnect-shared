@@ -107,7 +107,8 @@ const checkTypeScriptTypes = () => {
     return undefined;
 };
 
-runESLint()
-    .then(checkForTsconfigJson)
-    .then(checkTypeScriptTypes)
-    .catch(error => process.exit(error));
+Promise.all([
+    runESLint(),
+    checkForTsconfigJson(),
+    checkTypeScriptTypes(),
+]).catch(error => process.exit(error));
