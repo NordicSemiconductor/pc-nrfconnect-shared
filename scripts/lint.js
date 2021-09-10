@@ -11,6 +11,8 @@ const { spawn } = require('child_process');
 const { existsSync } = require('fs');
 const klaw = require('klaw');
 
+const packageJson = require(`${process.cwd()}/package.json`);
+
 const spawnInPromise = (command, argv) => {
     const options = {
         env: process.env,
@@ -82,7 +84,13 @@ const nrfconnectLicense = runningInShared
     ? './bin/nrfconnect-license.mjs'
     : 'nrfconnect-license';
 
-const checkLicenses = () => spawnInPromise(nrfconnectLicense, ['check']);
+const checkLicenses = () => {
+    if (packageJson.disableLicenseCheck) {
+        return Promise.resolve();
+    }
+
+    return spawnInPromise(nrfconnectLicense, ['check']);
+};
 
 Promise.all([
     runESLint(),
