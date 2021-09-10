@@ -20,8 +20,9 @@ const spawnInPromise = (command, argv) => {
         stdio: 'inherit',
     };
 
-    return new Promise((resolve, reject) => {
-        spawn(command, argv, options).on('exit', code => {
+    const childProcess = spawn(command, argv, options);
+    const promise = new Promise((resolve, reject) => {
+        childProcess.on('exit', code => {
             if (code !== 0) {
                 reject(code);
             } else {
@@ -29,6 +30,8 @@ const spawnInPromise = (command, argv) => {
             }
         });
     });
+
+    return { promise, terminator: () => childProcess.kill() };
 };
 
 const runESLint = () => {
@@ -53,8 +56,9 @@ const errorForMissingTsconfigJson = 2;
 const messageForMissingTsconfigJson =
     'Your project contains TypeScript files (with the file ending .ts ' +
     "or .tsx), so it also must contain a file 'tsconfig.json'.\n";
-const checkForTsconfigJson = () =>
-    new Promise((resolve, reject) => {
+const checkForTsconfigJson = () => ({
+    terminator: () => {},
+    promise: new Promise((resolve, reject) => {
         if (existsSync('tsconfig.json')) {
             resolve();
         } else {
@@ -70,13 +74,14 @@ const checkForTsconfigJson = () =>
                     resolve();
                 });
         }
-    });
+    }),
+});
 
 const checkTypeScriptTypes = () => {
     if (existsSync('tsconfig.json')) {
         return spawnInPromise('tsc', ['--noEmit']);
     }
-    return undefined;
+    return { promise: undefined, terminator: () => {} };
 };
 
 const runningInShared = existsSync('./bin/nrfconnect-license.mjs');
@@ -92,9 +97,14 @@ const checkLicenses = () => {
     return spawnInPromise(nrfconnectLicense, ['check']);
 };
 
-Promise.all([
+const checks = [
     runESLint(),
     checkForTsconfigJson(),
     checkTypeScriptTypes(),
     checkLicenses(),
-]).catch(error => process.exit(error));
+];
+
+Promise.all(checks.map(check => check.promise)).catch(error => {
+    checks.forEach(check => check.terminator());
+    process.exit(error);
+});
