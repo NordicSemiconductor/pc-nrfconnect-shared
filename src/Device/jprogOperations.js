@@ -151,11 +151,12 @@ async function validateFirmware(device, fwVersion) {
             typeof fwVersion.validator === 'function'
         ) {
             valid = fwVersion.validator(fwInfo.imageInfoList);
+        } else {
+            valid = fwInfo.imageInfoList.find(imageInfo => {
+                if (!imageInfo.version.string) return false;
+                return imageInfo.version.string.includes(fwVersion);
+            });
         }
-        valid = fwInfo.imageInfoList.find(imageInfo => {
-            if (!imageInfo.version.string) return false;
-            return imageInfo.version.string.includes(fwVersion);
-        });
         await reset(device.id); // Remove after fixing in nrf-device-lib
         return valid;
     } catch (error) {
