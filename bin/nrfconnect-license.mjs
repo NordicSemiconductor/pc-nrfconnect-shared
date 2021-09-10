@@ -11,8 +11,9 @@
 import glob from 'fast-glob';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 
-const SHEBANG_LINE = /^#!.*?\n+/;
+const SHEBANG_LINE = /^#!.*?(\r?\n)+/;
 const SPECIAL_REGEXP_CHARACTERS = /([.*+\\(){}[\]])/g;
+const LINE_ENDINGS = /\r?\n/g;
 
 const correctLicense = `Copyright (c) __YEAR__ Nordic Semiconductor ASA
 All rights reserved.
@@ -101,6 +102,7 @@ const asRegexp = string =>
     RegExp(
         `^${string
             .replace(SPECIAL_REGEXP_CHARACTERS, '\\$1')
+            .replace(LINE_ENDINGS, '\\r?\\n') // Because reference string and input string could have different EOLs
             .replace('__YEAR__', '\\d{4}')
             .replace('__YEARS__', '(?<oldStartingYear>\\d{4})( - \\d{4})?')}`
     );
@@ -168,6 +170,13 @@ const check = () => {
     checkHeaders();
 };
 
+const firstLineEnding = content => {
+    if (content.match(LINE_ENDINGS)) {
+        return content.match(LINE_ENDINGS)[0];
+    }
+    return '\n';
+};
+
 const splitOffShebangLine = content => {
     if (content.match(SHEBANG_LINE)) {
         const shebangLine = content.match(SHEBANG_LINE)[0];
@@ -205,6 +214,8 @@ const updateHeader = file => {
 
     const originalContent = readFileSync(file, { encoding: 'utf8' });
 
+    const lineEnding = firstLineEnding(originalContent);
+
     const { shebangLine, contentWithoutShebang } =
         splitOffShebangLine(originalContent);
     const { hadOutdatedLicense, oldStartYear, remainingContent } =
@@ -219,12 +230,14 @@ const updateHeader = file => {
     }
 
     const currentYear = new Date().getFullYear();
-    const newHeader = correctHeader.replace(
-        '__YEAR__',
-        oldStartYear ?? currentYear
-    );
+    const newHeader = correctHeader
+        .replace(/\r?\n/g, lineEnding)
+        .replace('__YEAR__', oldStartYear ?? currentYear);
 
-    writeFileSync(file, `${shebangLine}${newHeader}\n\n${remainingContent}`);
+    writeFileSync(
+        file,
+        shebangLine + newHeader + lineEnding + lineEnding + remainingContent
+    );
     console.log(
         `${
             hadOutdatedLicense ? 'Updated' : 'Added'
