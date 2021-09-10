@@ -77,8 +77,16 @@ const checkTypeScriptTypes = () => {
     return undefined;
 };
 
+const runningInShared = existsSync('./bin/nrfconnect-license.mjs');
+const nrfconnectLicense = runningInShared
+    ? './bin/nrfconnect-license.mjs'
+    : 'nrfconnect-license';
+
+const checkLicenses = () => spawnInPromise(nrfconnectLicense, ['check']);
+
 Promise.all([
     runESLint(),
     checkForTsconfigJson(),
     checkTypeScriptTypes(),
+    checkLicenses(),
 ]).catch(error => process.exit(error));
