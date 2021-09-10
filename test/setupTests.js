@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2021 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
 /* eslint-disable simple-import-sort/imports --
    sorting the import order must be disabled for this file because enzyme
    and testing-library are sensitive to the order in which they are run
