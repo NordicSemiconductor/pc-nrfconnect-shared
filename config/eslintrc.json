@@ -50,11 +50,9 @@
                 "ignore": [
                     "nrfconnect/.*",
                     "pc-ble-driver-js",
-                    "pc-nrfjprog-js",
                     "serialport",
-                    "usb",
-                    "nrf-device-setup",
-                    "electron"
+                    "electron",
+                    "@nordicsemiconductor/nrf-device-lib-js"
                 ]
             }
         ],

@@ -218,7 +218,6 @@ declare module 'pc-nrfconnect-shared' {
         productId: string;
         serialNumber: string;
         vendorId: string;
-        pnpId?: string;
         /**
          * @deprecated Using the property `comName` has been
          * deprecated. You should now use `path`. The property

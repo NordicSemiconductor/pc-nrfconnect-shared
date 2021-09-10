@@ -40,6 +40,8 @@ import SerialPort from 'serialport';
 import logger from '../logging';
 import { getDeviceLibContext } from './deviceLister';
 
+const deviceLibContext = getDeviceLibContext();
+
 /**
  * Program the device with the given serial number with the given firmware
  * using nrf-device-lib-js
@@ -60,7 +62,7 @@ const program = (deviceId, firmware) => {
     }
     return new Promise((resolve, reject) => {
         nrfDeviceLib.firmwareProgram(
-            getDeviceLibContext(),
+            deviceLibContext,
             deviceId,
             'NRFDL_FW_FILE',
             'NRFDL_FW_INTEL_HEX',
@@ -89,7 +91,7 @@ const program = (deviceId, firmware) => {
  * @returns {Promise} Promise that resolves if successful or rejects with error.
  */
 const reset = async deviceId => {
-    await nrfDeviceLib.deviceControlReset(getDeviceLibContext(), deviceId);
+    await nrfDeviceLib.deviceControlReset(deviceLibContext, deviceId);
 };
 
 /**
@@ -111,7 +113,7 @@ const verifySerialPortAvailable = device => {
         );
     }
     return new Promise((resolve, reject) => {
-        const serialPort = new SerialPort(device.serialport.path, {
+        const serialPort = new SerialPort(device.serialport.comName, {
             autoOpen: false,
         });
         serialPort.open(openErr => {
@@ -138,20 +140,28 @@ const verifySerialPortAvailable = device => {
  * @returns {Promise} Promise that resolves if successful or rejects with error.
  */
 async function validateFirmware(device, fwVersion) {
+    let valid = false;
     try {
         const fwInfo = await nrfDeviceLib.readFwInfo(
-            getDeviceLibContext(),
+            deviceLibContext,
             device.id
         );
-        const valid = fwInfo.imageInfoList.find(imageInfo =>
-            imageInfo.version.string.includes(fwVersion)
-        );
+        if (
+            typeof fwVersion === 'object' &&
+            typeof fwVersion.validator === 'function'
+        ) {
+            valid = fwVersion.validator(fwInfo.imageInfoList);
+        } else {
+            valid = fwInfo.imageInfoList.find(imageInfo => {
+                if (!imageInfo.version.string) return false;
+                return imageInfo.version.string.includes(fwVersion);
+            });
+        }
         await reset(device.id); // Remove after fixing in nrf-device-lib
-        if (valid) return true;
+        return valid;
     } catch (error) {
         throw new Error(`Error when validating firmware ${error.message}`);
     }
-    return false;
 }
 
 /**

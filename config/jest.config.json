@@ -9,7 +9,8 @@
     "pc-nrfjprog-js|nrf-device-setup|serialport|usb": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/emptyMock.js",
     "^electron$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/electronMock.js",
     "^electron-store$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/electronStoreMock.js",
-    "^react-ga$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/gaMock.js"
+    "^react-ga$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/gaMock.js",
+    "@nordicsemiconductor/nrf-device-lib-js": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/deviceLibMock.js"
   },
   "transform": {
     "^.+\\.[jt]sx?$": [
