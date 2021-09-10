@@ -36,6 +36,8 @@
 
 @import '~pc-nrfconnect-shared/styles';
 
+$dropdownSize: 32px;
+
 .dropdown-container {
     position: relative;
     width: 100%;
@@ -47,7 +49,7 @@
 
     .dropdown-btn {
         width: 100%;
-        height: 32px;
+        height: $dropdownSize;
         padding: 0 8px;
         background: $gray-700;
         color: $white;
@@ -67,7 +69,7 @@
         color: $white;
         position: absolute;
         width: 100%;
-        top: 48px;
+        top: $dropdownSize;
         right: 0;
         padding: 0;
         border-top: solid 2px $gray-600;
