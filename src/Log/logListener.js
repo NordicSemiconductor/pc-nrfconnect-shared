@@ -77,7 +77,6 @@ function startListening(dispatch) {
     };
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export const useLogListener = () => {
     const dispatch = useDispatch();
     useEffect(() => startListening(dispatch), [dispatch]);
