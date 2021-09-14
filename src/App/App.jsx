@@ -117,6 +117,7 @@ const ConnectedApp = ({
     sidePanel,
     showLogByDefault = true,
     reportUsageData = false,
+    documentationUrl,
 }) => {
     const allPanes = useMemo(
         () => [...panes, { name: 'About', Main: About }].map(convertLegacy),
@@ -153,7 +154,10 @@ const ConnectedApp = ({
 
     return (
         <div className="core19-app">
-            <NavBar deviceSelect={deviceSelect} />
+            <NavBar
+                deviceSelect={deviceSelect}
+                documentationUrl={documentationUrl}
+            />
             <div className="core19-app-content">
                 <div
                     className={classNames(
@@ -213,6 +217,7 @@ ConnectedApp.propTypes = {
     sidePanel: node,
     showLogByDefault: bool,
     reportUsageData: bool,
+    documentationUrl: string,
 };
 
 const noopReducer = (state = null) => state;

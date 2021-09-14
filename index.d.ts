@@ -130,6 +130,12 @@ declare module 'pc-nrfconnect-shared' {
          * opted in. Defaults to `false`.
          */
         reportUsageData?: boolean;
+
+        /**
+         * Url used to redirect the user to the given to the apps homepage or
+         * documentations url.
+         */
+        documentationUrl?: string;
     }
 
     /**

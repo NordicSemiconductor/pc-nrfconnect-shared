@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CSS issue where hidden content was scrollable
 - Correctly displays Thingy91 in `SELECT DEVICE`
 
+## 4.29.2
+### Changed
+- Exposed a way for apps to configure documentation url.
+
 ## 4.28.3 - 2021-08-11
 ### Fixed
 - Correct a typing for devices

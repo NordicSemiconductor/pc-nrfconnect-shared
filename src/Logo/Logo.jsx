@@ -36,7 +36,7 @@
 
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { bool } from 'prop-types';
+import { bool, string } from 'prop-types';
 
 import { deviceIsSelected as deviceIsSelectedSelector } from '../Device/deviceReducer';
 import { openUrl } from '../utils/open';
@@ -46,8 +46,7 @@ import logoUniform from './nordic-logo-white-icon-only.png';
 
 import './logo.scss';
 
-const goToNRFConnectWebsite = () =>
-    openUrl('http://www.nordicsemi.com/nRFConnect');
+const goToNRFConnectWebsite = url => () => openUrl(url);
 
 const chooseLogo = (changeWithDeviceState, deviceIsSelected) => {
     if (!changeWithDeviceState) {
@@ -57,7 +56,10 @@ const chooseLogo = (changeWithDeviceState, deviceIsSelected) => {
     return deviceIsSelected ? logoConnected : logoDisconnected;
 };
 
-const Logo = ({ changeWithDeviceState = false }) => {
+const Logo = ({
+    changeWithDeviceState = false,
+    documentationUrl = 'http://www.nordicsemi.com/nRFConnect',
+}) => {
     const deviceIsSelected = useSelector(deviceIsSelectedSelector);
     const logo = chooseLogo(changeWithDeviceState, deviceIsSelected);
     return (
@@ -67,13 +69,13 @@ const Logo = ({ changeWithDeviceState = false }) => {
             alt="Nordic Semiconductor logo"
             // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
             role="link"
-            onClick={goToNRFConnectWebsite}
+            onClick={goToNRFConnectWebsite(documentationUrl)}
             onKeyPress={() => {}}
             tabIndex="0"
         />
     );
 };
 
-Logo.propTypes = { changeWithDeviceState: bool };
+Logo.propTypes = { changeWithDeviceState: bool, documentationUrl: string };
 
 export default Logo;
