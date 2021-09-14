@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CSS issue where hidden content was scrollable
 - Correctly displays Thingy91 in `SELECT DEVICE`
 
-## 4.29.2
+## 4.29.2 - 2021-09-14
 ### Changed
 - Exposed a way for apps to configure documentation url.
 
