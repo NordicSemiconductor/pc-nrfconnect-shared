@@ -34,10 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   during `npm run lint` in parallel. This makes them run faster but especially
   also makes them fail faster, because e.g. a missing copyright header can be
   detected faster than wrong types.
+- Disabled ESLint rule
+  [`import/prefer-default-export`](https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/prefer-default-export.md).
 ### Fixed
 - CSS issue where hidden content was scrollable.
 - Correct name of Nordic Thingy:91 in the device selector.
 ### Steps to upgrade when using this package
+- Remove manual overrides that disable the ESLint rule
+  `import/prefer-default-export`.
 - To accommodate for the new Node requirement, make sure you have at least
   Node.js 14 while developing. The `azure-pipelines.yml` may also need to be
   updated.
