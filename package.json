@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "4.29.1",
+    "version": "5.0.0",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -9,6 +9,7 @@
     "author": "Nordic Semiconductor ASA",
     "license": "ISC",
     "bin": {
+        "nrfconnect-license": "./bin/nrfconnect-license.mjs",
         "nrfconnect-scripts": "./bin/nrfconnect-scripts.js"
     },
     "main": "src",
@@ -60,6 +61,7 @@
         "eslint-plugin-react-hooks": "4.0.4",
         "eslint-plugin-simple-import-sort": "7.0.0",
         "eslint-webpack-plugin": "2.5.4",
+        "fast-glob": "3.2.7",
         "file-loader": "6.2.0",
         "focus-visible": "5.1.0",
         "ftp": "0.3.10",

@@ -4,13 +4,55 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 5.0.0 - 2021-09-13
+### Breaking
+- Require Node.js 14 while building.
+- Require new license and copyright headers: During running `npm run lint`
+  it is now checked, that `LICENSE` has the right content for a nRF Connect
+  for Desktop program from Nordic Semiconductors and that all source files
+  have the short copyright header, which references the license. The license
+  should be the same as before, just adding the license identifier.
+
+  There is a new script `nrfconnect-license` which is automatically ran as
+  `nrfconnect-license check` during the automated build to check the license
+  and headers. It can also be ran as `nrfconnect-license update` to add
+  copyright headers to all files which currently either do not have such a
+  header at all or have the known old copyright header.
+
+  If there is a comment at the beginning of a file, which is not recognised
+  as the known old copyright header, then the script plays it safe and does
+  not touch the file. So in these cases (which can also happen if there is
+  an ESLint directive) you have to inspect the file manually. The script does
+  recognise and preserve a shebang line (one starting with `#!`) at the
+  beginning of files. The script also does not touch the file `LICENSE`,
+  you are supposed to update that manually.
 ### Added
 - Log the versions of our low level libraries.
 - Component `Dropdown`.
+### Changed
+- Run the different checks (ESLint, TypeScript types and correct copyrights)
+  during `npm run lint` in parallel. This makes them run faster but especially
+  also makes them fail faster, because e.g. a missing copyright header can be
+  detected faster than wrong types.
+- Disabled ESLint rule
+  [`import/prefer-default-export`](https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/prefer-default-export.md).
 ### Fixed
-- CSS issue where hidden content was scrollable
-- Correctly displays Thingy91 in `SELECT DEVICE`
+- CSS issue where hidden content was scrollable.
+- Correct name of Nordic Thingy:91 in the device selector.
+### Steps to upgrade when using this package
+- Remove manual overrides that disable the ESLint rule
+  `import/prefer-default-export`.
+- To accommodate for the new Node requirement, make sure you have at least
+  Node.js 14 while developing. The `azure-pipelines.yml` may also need to be
+  updated.
+- The new license check will probably fail for a lot of source files initially.
+  - Run `nrfconnect-license update` to update most of them. Afterwards run
+    `nrfconnect-license check` to inspect which still need manual inspection.
+    Commit all these copyright changes in a commit together without any other
+    changes, to make it easier for other folks to understand the commits.
+  - If you do not develop a public nRF Connect for Desktop program from Nordic
+    Semiconductors, you might want to turn off the license check. Do so by
+    adding `"disableLicenseCheck": false` to `package.json`.
 
 ## 4.28.3 - 2021-08-11
 ### Fixed
