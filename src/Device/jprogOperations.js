@@ -48,7 +48,7 @@ const program = (deviceId, firmware) => {
                 }%`;
                 logger.info(status);
             },
-            null,
+            {},
             'NRFDL_DEVICE_CORE_APPLICATION'
         );
     });
@@ -123,11 +123,10 @@ async function validateFirmware(device, fwVersion) {
             valid = fwVersion.validator(fwInfo.imageInfoList);
         } else {
             valid = fwInfo.imageInfoList.find(imageInfo => {
-                if (!imageInfo.version.string) return false;
-                return imageInfo.version.string.includes(fwVersion);
+                if (!imageInfo.version) return false;
+                return imageInfo.version.includes(fwVersion);
             });
         }
-        await reset(device.id); // Remove after fixing in nrf-device-lib
         return valid;
     } catch (error) {
         throw new Error(`Error when validating firmware ${error.message}`);
@@ -169,6 +168,7 @@ async function programFirmware(device, fw, deviceSetupConfig) {
         logger.debug(`Resetting ${device.serialNumber}`);
         await reset(device.id);
     } catch (programError) {
+        logger.error(programError);
         throw new Error(`Error when programming ${programError.message}`);
     }
     return device;

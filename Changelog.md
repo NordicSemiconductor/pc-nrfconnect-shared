@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 5.0.1 - 2021-09-17
+### Fixed
+- Format of library version from nrf-device-lib-js.
+- Reset not longer need to be called explicitly since it's been fixed in nrf-device-lib.
+- API firmwareProgram breaks due to argument type change.
+
 ## 5.0.0 - 2021-09-13
 ### Breaking
 - Require Node.js 14 while building.
@@ -27,6 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   beginning of files. The script also does not touch the file `LICENSE`,
   you are supposed to update that manually.
 ### Added
+- @nordicsemiconductor/nrf-device-lib-js in dependencies and devDependencies
+- Device lister implemented with nrf-device-lib-js
+- Device setup implemented with nrf-device-lib-js
 - Log the versions of our low level libraries.
 - Component `Dropdown`.
 ### Changed
@@ -53,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - If you do not develop a public nRF Connect for Desktop program from Nordic
     Semiconductors, you might want to turn off the license check. Do so by
     adding `"disableLicenseCheck": false` to `package.json`.
+
 
 ## 4.28.3 - 2021-08-11
 ### Fixed
