@@ -22,19 +22,22 @@ const deviceLibContext = getDeviceLibContext();
  */
 const program = (deviceId, firmware) => {
     let fw;
+    let fwFormat;
     const options = {};
     if (firmware instanceof Buffer) {
         fw = firmware.toString('utf-8');
         const INPUT_FORMAT_HEX_STRING = 1;
         options.inputFormat = INPUT_FORMAT_HEX_STRING;
+        fwFormat = 'NRFDL_FW_BUFFER';
     } else {
         fw = firmware;
+        fwFormat = 'NRFDL_FW_FILE';
     }
     return new Promise((resolve, reject) => {
         nrfDeviceLib.firmwareProgram(
             deviceLibContext,
             deviceId,
-            'NRFDL_FW_FILE',
+            fwFormat,
             'NRFDL_FW_INTEL_HEX',
             fw,
             err => {
