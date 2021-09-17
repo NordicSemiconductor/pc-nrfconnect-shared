@@ -63,7 +63,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     Semiconductors, you might want to turn off the license check. Do so by
     adding `"disableLicenseCheck": false` to `package.json`.
 
-
 ## 4.28.3 - 2021-08-11
 ### Fixed
 - Correct a typing for devices
