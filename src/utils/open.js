@@ -29,7 +29,7 @@ function openFile(filePath) {
     if (os.type() === 'Darwin') {
         childProcess.execSync(`open ${escapedPath}`);
     } else {
-        shell.openItem(escapedPath);
+        shell.openPath(escapedPath);
     }
 }
 
