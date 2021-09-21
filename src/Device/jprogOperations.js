@@ -111,26 +111,24 @@ const verifySerialPortAvailable = device => {
  */
 async function validateFirmware(device, fwVersion) {
     let valid = false;
+    let fwInfo;
     try {
-        const fwInfo = await nrfDeviceLib.readFwInfo(
-            deviceLibContext,
-            device.id
-        );
-        if (
-            typeof fwVersion === 'object' &&
-            typeof fwVersion.validator === 'function'
-        ) {
-            valid = fwVersion.validator(fwInfo.imageInfoList);
-        } else {
-            valid = fwInfo.imageInfoList.find(imageInfo => {
-                if (!imageInfo.version) return false;
-                return imageInfo.version.includes(fwVersion);
-            });
-        }
-        return valid;
+        fwInfo = await nrfDeviceLib.readFwInfo(deviceLibContext, device.id);
     } catch (error) {
-        throw new Error(`Error when validating firmware ${error.message}`);
+        return false;
     }
+    if (
+        typeof fwVersion === 'object' &&
+        typeof fwVersion.validator === 'function'
+    ) {
+        valid = fwVersion.validator(fwInfo.imageInfoList, true);
+    } else {
+        valid = fwInfo.imageInfoList.find(imageInfo => {
+            if (!imageInfo.version) return false;
+            return imageInfo.version.includes(fwVersion);
+        });
+    }
+    return valid;
 }
 
 /**
