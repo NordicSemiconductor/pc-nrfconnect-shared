@@ -21,16 +21,13 @@ const deviceLibContext = getDeviceLibContext();
  * @returns {Promise} Promise that resolves if successful or rejects with error.
  */
 const program = (deviceId, firmware) => {
-    let fw;
     let fwFormat;
     const options = {};
     if (firmware instanceof Buffer) {
-        fw = firmware.toString('utf-8');
         const INPUT_FORMAT_HEX_STRING = 1;
         options.inputFormat = INPUT_FORMAT_HEX_STRING;
         fwFormat = 'NRFDL_FW_BUFFER';
     } else {
-        fw = firmware;
         fwFormat = 'NRFDL_FW_FILE';
     }
     return new Promise((resolve, reject) => {
@@ -39,7 +36,7 @@ const program = (deviceId, firmware) => {
             deviceId,
             fwFormat,
             'NRFDL_FW_INTEL_HEX',
-            fw,
+            firmware,
             err => {
                 if (err) reject(err);
                 logger.info('Device programming completed.');
@@ -47,11 +44,11 @@ const program = (deviceId, firmware) => {
             },
             ({ progressJson: progress }) => {
                 const status = `${progress.message.replace('.', ':')} ${
-                    progress.progress_percentage
+                    progress.progressPercentage
                 }%`;
                 logger.info(status);
             },
-            {},
+            null,
             'NRFDL_DEVICE_CORE_APPLICATION'
         );
     });
