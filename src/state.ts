@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2021 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
 import { Device as NrfdlDevice } from '@nordicsemiconductor/nrf-device-lib-js';
 
 export interface RootState {
