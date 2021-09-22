@@ -1,5 +1,6 @@
 export interface RootState {
     appLayout: AppLayout;
+    appReloadDialog: AppReloadDialog;
 }
 
 export interface AppLayout {
@@ -11,4 +12,9 @@ export interface AppLayout {
 
 export interface AppLayoutPane {
     name: string;
+}
+
+export interface AppReloadDialog {
+    isVisible: boolean;
+    message: string;
 }
