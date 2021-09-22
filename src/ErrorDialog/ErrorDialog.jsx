@@ -15,7 +15,7 @@ import {
     errorResolutions as errorResolutionsSelector,
     isVisible as isVisibleSelector,
     messages as messagesSelector,
-} from './errorDialogReducer';
+} from './errorDialogSlice';
 
 import './error.scss';
 

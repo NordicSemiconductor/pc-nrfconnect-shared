@@ -1,6 +1,7 @@
 export interface RootState {
     appLayout: AppLayout;
     appReloadDialog: AppReloadDialog;
+    errorDialog: ErrorDialog;
 }
 
 export interface AppLayout {
@@ -17,4 +18,14 @@ export interface AppLayoutPane {
 export interface AppReloadDialog {
     isVisible: boolean;
     message: string;
+}
+
+export interface ErrorDialog {
+    isVisible: boolean;
+    messages: string[];
+    errorResolutions?: { [key: string]: () => void };
+}
+
+export interface ErrorResolutions {
+    [key: string]: () => void;
 }
