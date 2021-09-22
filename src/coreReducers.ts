@@ -6,7 +6,7 @@
 
 import { reducer as appLayout } from './App/appLayout';
 import { reducer as appReloadDialog } from './AppReload/appReloadDialogSlice';
-import device from './Device/deviceReducer';
+import { reducer as device } from './Device/deviceSlice';
 import { reducer as errorDialog } from './ErrorDialog/errorDialogSlice';
 import { reducer as log } from './Log/logSlice';
 
