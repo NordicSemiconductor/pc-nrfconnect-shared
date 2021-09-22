@@ -2,6 +2,7 @@ export interface RootState {
     appLayout: AppLayout;
     appReloadDialog: AppReloadDialog;
     errorDialog: ErrorDialog;
+    log: Log;
 }
 
 export interface AppLayout {
@@ -28,4 +29,16 @@ export interface ErrorDialog {
 
 export interface ErrorResolutions {
     [key: string]: () => void;
+}
+
+export interface Log {
+    autoScroll: boolean;
+    logEntries: LogEntry[];
+}
+
+export interface LogEntry {
+    id: number;
+    timestamp: string;
+    level: string;
+    message: string;
 }

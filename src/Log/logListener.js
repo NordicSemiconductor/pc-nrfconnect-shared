@@ -10,7 +10,7 @@ import { ipcRenderer } from 'electron';
 
 import logger from '../logging';
 import { getAppDataDir } from '../utils/appDirs';
-import { addEntries } from './logActions';
+import { addEntries } from './logSlice';
 
 let initialMessageSent = false;
 const sendInitialMessage = () => {

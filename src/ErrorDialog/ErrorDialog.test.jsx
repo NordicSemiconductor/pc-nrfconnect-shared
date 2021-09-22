@@ -9,7 +9,7 @@ import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 
 import render from '../../test/testrenderer';
 import ErrorDialog from './ErrorDialog';
-import { showDialog } from './errorDialogActions';
+import { showDialog } from './errorDialogSlice';
 
 describe('ErrorDialog', () => {
     it('is not rendered when there is no error', () => {

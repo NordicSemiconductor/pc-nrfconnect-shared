@@ -8,7 +8,7 @@ import { reducer as appLayout } from './App/appLayout';
 import { reducer as appReloadDialog } from './AppReload/appReloadDialogSlice';
 import device from './Device/deviceReducer';
 import { reducer as errorDialog } from './ErrorDialog/errorDialogSlice';
-import log from './Log/logReducer';
+import { reducer as log } from './Log/logSlice';
 
 export default {
     appLayout,

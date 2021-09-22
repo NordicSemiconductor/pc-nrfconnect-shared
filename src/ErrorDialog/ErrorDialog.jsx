@@ -10,9 +10,9 @@ import Modal from 'react-bootstrap/Modal';
 import ReactMarkdown from 'react-markdown';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { hideDialog } from './errorDialogActions';
 import {
     errorResolutions as errorResolutionsSelector,
+    hideDialog,
     isVisible as isVisibleSelector,
     messages as messagesSelector,
 } from './errorDialogSlice';
