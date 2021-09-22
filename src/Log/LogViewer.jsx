@@ -12,7 +12,7 @@ import { useLogListener } from './logListener';
 import {
     autoScroll as autoScrollSelector,
     logEntries as logEntriesSelector,
-} from './logReducer';
+} from './logSlice';
 
 import './log-viewer.scss';
 

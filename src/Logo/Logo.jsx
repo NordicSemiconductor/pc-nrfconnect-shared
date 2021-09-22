@@ -8,7 +8,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { bool } from 'prop-types';
 
-import { deviceIsSelected as deviceIsSelectedSelector } from '../Device/deviceReducer';
+import { deviceIsSelected as deviceIsSelectedSelector } from '../Device/deviceSlice';
 import { openUrl } from '../utils/open';
 import logoConnected from './nordic-logo-blue-icon-only.png';
 import logoDisconnected from './nordic-logo-gray-icon-only.png';

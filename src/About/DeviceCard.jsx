@@ -16,7 +16,7 @@ import {
 import {
     deviceInfo as deviceInfoSelector,
     selectedDevice,
-} from '../Device/deviceReducer';
+} from '../Device/deviceSlice';
 import AboutButton from './AboutButton';
 import Section from './Section';
 

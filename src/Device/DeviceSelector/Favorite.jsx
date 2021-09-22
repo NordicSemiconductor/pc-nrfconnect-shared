@@ -8,7 +8,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
-import { toggleDeviceFavorited } from '../deviceActions';
+import { toggleDeviceFavorited } from '../deviceSlice';
 import deviceShape from './deviceShape';
 
 import './favorite.scss';

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nordic Semiconductor ASA
+ * Copyright (c) 2021 Nordic Semiconductor ASA
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
@@ -40,8 +40,8 @@ const slice = createSlice({
                 );
             },
         },
-        hideDialog: state => {
-            state.isVisible = false;
+        hideDialog: () => {
+            return initialState;
         },
     },
 });
