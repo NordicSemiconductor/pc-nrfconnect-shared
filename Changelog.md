@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - The license check now ignores all files in `.gitignore` and the folder
   `.git`. Before it just ignored `node_modules`, `dist`, and `.git`.
+### Fixed
+- With `npm run lint` the license check failed to run for shared on Windows.
 
 ## 5.0.1 - 2021-09-17
 ### Fixed

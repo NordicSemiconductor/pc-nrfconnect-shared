@@ -84,17 +84,17 @@ const checkTypeScriptTypes = () => {
     return { promise: undefined, terminator: () => {} };
 };
 
-const runningInShared = existsSync('./bin/nrfconnect-license.mjs');
-const nrfconnectLicense = runningInShared
-    ? './bin/nrfconnect-license.mjs'
-    : 'nrfconnect-license';
-
 const checkLicenses = () => {
     if (packageJson.disableLicenseCheck) {
         return Promise.resolve();
     }
 
-    return spawnInPromise(nrfconnectLicense, ['check']);
+    const runningInShared = existsSync('./bin/nrfconnect-license.mjs');
+    const args = runningInShared
+        ? ['node', ['./bin/nrfconnect-license.mjs', 'check']]
+        : ['nrfconnect-license', ['check']];
+
+    return spawnInPromise(...args);
 };
 
 const checks = [
