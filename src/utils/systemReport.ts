@@ -11,7 +11,7 @@ import pretty from 'prettysize';
 import si from 'systeminformation';
 
 import logger from '../logging';
-import { Device } from '../state';
+import { Device, DeviceInfo } from '../state';
 import { getAppDataDir } from './appDirs';
 import { openFile } from './open';
 
@@ -82,36 +82,17 @@ const hexpad2 = (n: number) =>
 
 const hexToKiB = (n: number) => (n == null ? 'Unknown' : `${n / 1024} KiB`);
 
-const currentDeviceReport = (device: Device) => {
+const currentDeviceReport = (device: DeviceInfo,currentSerialNumber: string) => {
     if (device == null) {
         return [];
     }
 
     return [
         '- Current device:',
-        `    - serialNumber:       ${device.serialNumber}`,
-        `    - boardVersion:       ${device.boardVersion}`,
-        `    - jlink:              ${device.jlink?.boardVersion}`,
-        `    - nickname:           ${device.nickname}`,
-        `    - serialNumber:       ${device.serialNumber}`,
-        `    - serialport:         ${device.serialport}`,
-        `        - path:           ${device.serialport?.path}`,
-        `        - manufacturer:   ${device.serialport?.manufacturer}`,
-        `        - productId:      ${device.serialport?.productId}`,
-        `        - serialNumber:   ${device.serialport?.serialNumber}`,
-        `        - vendorId:       ${device.serialport?.vendorId}`,
-        `        - comName:       ${device.serialport?.comName}`,
-        `    - traits:             ${device.traits}`,
-        `        - usb:            ${device.traits.usb}`,
-        `        - nordicUsb:      ${device.traits.nordicUsb}`,
-        `        - nordicDfu:      ${device.traits.nordicDfu}`,
-        `        - seggerUsb:      ${device.traits.seggerUsb}`,
-        `        - jlink:          ${device.traits.jlink}`,
-        `        - serialPort:     ${device.traits.serialPort}`,
-        `        - broken:         ${device.traits.broken}`,
-        `        - mcuboot:        ${device.traits.mcuboot}`,
-        `        - modem:          ${device.traits.modem}`,
-        `    - usb:             ${device.usb?.product}`,
+        `    - name:          ${device.name}`,
+        `    - serialNumber:  ${currentSerialNumber}`,
+        `    - cores:         ${device.cores}`,
+        `    - website:       ${device.website}`,
         '',
     ];
 };
@@ -119,23 +100,25 @@ const currentDeviceReport = (device: Device) => {
 export const generateSystemReport = async (
     timestamp: string,
     allDevices: Device[],
-    currentDevice: Device
+    currentDevice: DeviceInfo,
+    currentSerialNumber: string
 ) =>
     [
         `# nRFConnect System Report - ${timestamp}`,
         '',
         ...(await generalInfoReport()),
         ...allDevicesReport(allDevices),
-        ...currentDeviceReport(currentDevice),
+        ...currentDeviceReport(currentDevice, currentSerialNumber),
     ].join(EOL);
 
-export default async (allDevices: Device[], currentSerialNumber: string, currentDevice: Device) => {
+export default async (allDevices: Device[], currentSerialNumber: string, currentDevice: DeviceInfo) => {
     logger.info('Generating system report...');
     const timestamp = new Date().toISOString().replace(/:/g, '-');
     const report = await generateSystemReport(
         timestamp,
         allDevices,
-        currentDevice
+        currentDevice,
+        currentSerialNumber
     );
 
     const fileName = `nrfconnect-system-report-${timestamp}.txt`;
