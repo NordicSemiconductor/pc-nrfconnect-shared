@@ -579,3 +579,7 @@ declare module 'pc-nrfconnect-shared' {
 
     export const deviceInfo: (device: Device) => DeviceInfo;
 }
+
+declare module 'prettysize' {
+    export default function pretty(n: number): string;
+}

@@ -11,6 +11,7 @@ import pretty from 'prettysize';
 import si from 'systeminformation';
 
 import logger from '../logging';
+import { Device } from '../state';
 import { getAppDataDir } from './appDirs';
 import { openFile } from './open';
 
@@ -63,72 +64,77 @@ const generalInfoReport = async () => {
     ];
 };
 
-const allDevicesReport = allDevices => [
+const allDevicesReport = (allDevices: Device[]) => [
     '- Connected devices:',
     ...allDevices.map(
         d =>
-            `    - ${d.serialport.path}: ${d.serialNumber} ${
+            `    - ${d.serialport?.path}: ${d.serialNumber} ${
                 d.boardVersion || ''
             }`
     ),
     '',
 ];
 
-const hexpad2 = n =>
+const hexpad2 = (n: number) =>
     n == null
         ? 'Unknown'
         : `0x${n.toString(16).toUpperCase().padStart(2, '0')}`;
 
-const hexToKiB = n => (n == null ? 'Unknown' : `${n / 1024} KiB`);
+const hexToKiB = (n: number) => (n == null ? 'Unknown' : `${n / 1024} KiB`);
 
-const currentDeviceReport = (serialNumber, device) => {
+const currentDeviceReport = (device: Device) => {
     if (device == null) {
         return [];
     }
 
     return [
         '- Current device:',
-        `    - serialNumber:    ${serialNumber}`,
-        `    - family:          ${device.family}`,
-        `    - type:            ${device.deviceType}`,
-        `    - codeAddress      ${hexpad2(device.codeAddress)}`,
-        `    - codePageSize     ${hexToKiB(device.codePageSize)}`,
-        `    - codeSize         ${hexToKiB(device.codeSize)}`,
-        `    - uicrAddress      ${hexpad2(device.uicrAddress)}`,
-        `    - infoPageSize     ${hexToKiB(device.infoPageSize)}`,
-        `    - codeRamPresent   ${device.codeRamPresent}`,
-        `    - codeRamAddress   ${hexpad2(device.codeRamAddress)}`,
-        `    - dataRamAddress   ${hexpad2(device.dataRamAddress)}`,
-        `    - ramSize          ${hexToKiB(device.ramSize)}`,
-        `    - qspiPresent      ${device.qspiPresent}`,
-        `    - xipAddress       ${hexpad2(device.xipAddress)}`,
-        `    - xipSize          ${hexToKiB(device.xipSize)}`,
-        `    - pinResetPin      ${device.pinResetPin}`,
+        `    - serialNumber:       ${device.serialNumber}`,
+        `    - boardVersion:       ${device.boardVersion}`,
+        `    - jlink:              ${device.jlink?.boardVersion}`,
+        `    - nickname:           ${device.nickname}`,
+        `    - serialNumber:       ${device.serialNumber}`,
+        `    - serialport:         ${device.serialport}`,
+        `        - path:           ${device.serialport?.path}`,
+        `        - manufacturer:   ${device.serialport?.manufacturer}`,
+        `        - productId:      ${device.serialport?.productId}`,
+        `        - serialNumber:   ${device.serialport?.serialNumber}`,
+        `        - vendorId:       ${device.serialport?.vendorId}`,
+        `        - comName:       ${device.serialport?.comName}`,
+        `    - traits:             ${device.traits}`,
+        `        - usb:            ${device.traits.usb}`,
+        `        - nordicUsb:      ${device.traits.nordicUsb}`,
+        `        - nordicDfu:      ${device.traits.nordicDfu}`,
+        `        - seggerUsb:      ${device.traits.seggerUsb}`,
+        `        - jlink:          ${device.traits.jlink}`,
+        `        - serialPort:     ${device.traits.serialPort}`,
+        `        - broken:         ${device.traits.broken}`,
+        `        - mcuboot:        ${device.traits.mcuboot}`,
+        `        - modem:          ${device.traits.modem}`,
+        `    - usb:             ${device.usb?.product}`,
         '',
     ];
 };
 
 export const generateSystemReport = async (
-    timestamp,
-    allDevices,
-    currentSerialNumber,
-    currentDevice
+    timestamp: string,
+    allDevices: Device[],
+    currentDevice: Device
 ) =>
     [
         `# nRFConnect System Report - ${timestamp}`,
         '',
         ...(await generalInfoReport()),
         ...allDevicesReport(allDevices),
-        ...currentDeviceReport(currentSerialNumber, currentDevice),
+        ...currentDeviceReport(currentDevice),
     ].join(EOL);
 
-export default async (allDevices, currentSerialNumber, currentDevice) => {
+export default async (allDevices: Device[], currentSerialNumber: string, currentDevice: Device) => {
     logger.info('Generating system report...');
     const timestamp = new Date().toISOString().replace(/:/g, '-');
     const report = await generateSystemReport(
         timestamp,
         allDevices,
-        currentSerialNumber,
         currentDevice
     );
 
@@ -140,6 +146,7 @@ export default async (allDevices, currentSerialNumber, currentDevice) => {
         logger.info(`System report: ${filePath}`);
         openFile(filePath);
     } catch (error) {
-        logger.error(`Failed to generate system report: ${error.message}`);
+        const details = error instanceof Error ? error.message : error;
+        logger.error(`Failed to generate system report: ${details}`);
     }
 };
