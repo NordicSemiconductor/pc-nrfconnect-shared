@@ -120,6 +120,14 @@ const checkLicense = () => {
     }
 };
 
+// Replace entries like '/node_modules' with something like 'node_modules/**'
+const replaceRootEntries = entry => entry.replace(/^\/(.*)/, '$1/**');
+
+const entriesInGitignore = readFileSync('.gitignore', { encoding: 'utf8' })
+    .trim()
+    .split(/\r?\n/)
+    .map(replaceRootEntries);
+
 const allSourceFiles = () =>
     glob.sync(
         [
@@ -133,7 +141,7 @@ const allSourceFiles = () =>
             '*.sass',
         ],
         {
-            ignore: ['node_modules', 'dist', '.git'],
+            ignore: [...entriesInGitignore, '.git'],
             baseNameMatch: true,
         }
     );
