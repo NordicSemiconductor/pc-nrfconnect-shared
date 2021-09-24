@@ -124,7 +124,7 @@ async function validateFirmware(device, fwVersion) {
         valid = fwVersion.validator(fwInfo.imageInfoList, true);
     } else {
         valid = fwInfo.imageInfoList.find(imageInfo => {
-            if (!imageInfo.version) return false;
+            if (imageInfo.versionFormat !== 'string') return false;
             return imageInfo.version.includes(fwVersion);
         });
     }
