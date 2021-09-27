@@ -87,6 +87,7 @@ const ConnectedApp = ({
     sidePanel,
     showLogByDefault = true,
     reportUsageData = false,
+    children,
 }) => {
     const allPanes = useMemo(
         () => [...panes, { name: 'About', Main: About }].map(convertLegacy),
@@ -164,6 +165,7 @@ const ConnectedApp = ({
 
             <AppReloadDialog />
             <ErrorDialog />
+            {children}
         </div>
     );
 };
@@ -183,6 +185,7 @@ ConnectedApp.propTypes = {
     sidePanel: node,
     showLogByDefault: bool,
     reportUsageData: bool,
+    children: node,
 };
 
 const noopReducer = (state = null) => state;

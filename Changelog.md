@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## 5.2.0 - 2021-09-28
+### Added
+- Render children of the component `App`. Children of the component `App`
+  usually should not render to something that is directly visible on the
+  screen, as this would break the normal layout of the app. There are mainly
+  two use cases:
+  - Components like dialogs, which are displayed outside of the normal render
+    flow.
+  - Components which are displayed not at all, but are rendered just for other
+    means, e.g. to dispatch Redux actions when the App is started.
 ### Fixed
 - The property `allowCustomDevice` was used but missing in the type and props
   definitions for DeviceSetup.
