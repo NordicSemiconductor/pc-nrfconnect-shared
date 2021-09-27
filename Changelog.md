@@ -14,10 +14,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     flow.
   - Components which are displayed not at all, but are rendered just for other
     means, e.g. to dispatch Redux actions when the App is started.
+### Changed
+- Enabled two additional ESLint rules:
+  - [`require-await`](https://eslint.org/docs/rules/require-await), to
+    disallow async functions which have no await expression.
+  - [`react/jsx-key`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-key.md),
+    to check that a key property is used for lists in JSX.
 ### Fixed
 - The property `allowCustomDevice` was used but missing in the type and props
   definitions for DeviceSetup.
 - Run complete setup for custom devices.
+### Steps to upgrade when using this package
+- The two newly enabled ESLint rules `require-await` and `react/jsx-key` may
+  require you to update some code. Please note that you should not blindly
+  remove an `async` in front of a function if there is no `await` in it: When
+  you have other code which depends on this function returning a Promise (e.g.
+  by calling `.then` on the returned object), then you also need to change that
+  code.
 
 ## 5.1.0 - 2021-09-23
 ### Changed

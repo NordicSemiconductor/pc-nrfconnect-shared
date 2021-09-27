@@ -52,7 +52,7 @@ describe('ErrorBoundary', () => {
         expect(reactGA.initialize).toHaveBeenCalled();
     });
 
-    it('can take custom reporting functions', async () => {
+    it('can take custom reporting functions', () => {
         const sendUsageData = jest.fn();
         render(
             <ErrorBoundary sendUsageData={sendUsageData}>
