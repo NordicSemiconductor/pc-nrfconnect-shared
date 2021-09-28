@@ -223,10 +223,10 @@ export const setupDevice =
                     `Connected to device with serial number: ${device.serialNumber} ` +
                         `and family: ${device.deviceInfo.family || 'Unknown'} `
                 );
-                logger.debug(
+                logger.info(
                     'Note: no pre-compiled firmware is available for the selected device. ' +
                         'You may still use the app if you have programmed the device ' +
-                        'with a compatible connectivity firmware.'
+                        'with a compatible firmware.'
                 );
 
                 onSuccessfulDeviceSetup(
