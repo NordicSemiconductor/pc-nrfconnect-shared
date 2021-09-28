@@ -106,6 +106,7 @@ DeviceSelector.propTypes = {
         jprog: object,
         dfu: object,
         needSerialport: bool,
+        allowCustomDevice: bool,
     }),
     releaseCurrentDevice: func, // () => {}
     onDeviceSelected: func, // (device) => {}

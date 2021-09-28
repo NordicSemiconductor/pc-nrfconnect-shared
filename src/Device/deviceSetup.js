@@ -153,6 +153,17 @@ export const prepareDevice = async (device, deviceSetupConfig) => {
     return createReturnValue(device, { wasProgrammed }, detailedOutput);
 };
 
+const onSuccessfulDeviceSetup = (
+    dispatch,
+    device,
+    doStartWatchingDevices,
+    onDeviceIsReady
+) => {
+    doStartWatchingDevices();
+    dispatch(deviceSetupComplete(device));
+    onDeviceIsReady(device);
+};
+
 /**
  * Selects a device and sets it up for use according to the `config.deviceSetup`
  * configuration given by the app.
@@ -196,12 +207,35 @@ export const setupDevice =
                 device,
                 deviceSetupConfig
             );
-            doStartWatchingDevices();
-            dispatch(deviceSetupComplete(preparedDevice));
-            onDeviceIsReady(preparedDevice);
+            onSuccessfulDeviceSetup(
+                dispatch,
+                preparedDevice,
+                doStartWatchingDevices,
+                onDeviceIsReady
+            );
         } catch (error) {
             dispatch(deviceSetupError(device, error));
-            if (!deviceSetupConfig.allowCustomDevice) {
+            if (
+                deviceSetupConfig.allowCustomDevice &&
+                error.message.includes('No firmware defined')
+            ) {
+                logger.info(
+                    `Connected to device with serial number: ${device.serialNumber} ` +
+                        `and family: ${device.deviceInfo.family || 'Unknown'} `
+                );
+                logger.info(
+                    'Note: no pre-compiled firmware is available for the selected device. ' +
+                        'You may still use the app if you have programmed the device ' +
+                        'with a compatible firmware.'
+                );
+
+                onSuccessfulDeviceSetup(
+                    dispatch,
+                    device,
+                    doStartWatchingDevices,
+                    onDeviceIsReady
+                );
+            } else {
                 logger.error(
                     `Error while setting up device ${device.serialNumber}: ${error.message}`
                 );
