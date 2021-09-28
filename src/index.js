@@ -55,5 +55,11 @@ export { currentPane, setCurrentPane } from './App/appLayout';
 export { getAppSpecificStore as getPersistentStore } from './utils/persistentStore';
 
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
-export { getDeviceLibContext } from './Device/deviceLister';
+export {
+    getDeviceLibContext,
+    stopWatchingDevices,
+    startWatchingDevices,
+    waitForDevice,
+} from './Device/deviceLister';
 export { prepareDevice } from './Device/deviceSetup';
+export { default as sdfuOperations } from './Device/sdfuOperations';

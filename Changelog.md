@@ -32,6 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   by calling `.then` on the returned object), then you also need to change that
   code.
 
+## 5.1.1 - 2021-09-28
+### Added
+- Expose functions for USB serial DFU
+
 ## 5.1.0 - 2021-09-23
 ### Changed
 - The license check now ignores all files in `.gitignore` and the folder

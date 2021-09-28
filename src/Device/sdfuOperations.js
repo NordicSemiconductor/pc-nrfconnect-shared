@@ -460,3 +460,7 @@ export const performDFU = async (selectedDevice, options) => {
         throw err;
     }
 };
+
+export default {
+    createDfuZipBuffer,
+};
