@@ -15,6 +15,7 @@ export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
 export { default as Spinner } from './Dialog/Spinner';
 export { default as Slider } from './Slider/Slider';
 export { default as Toggle } from './Toggle/Toggle';
+export { Alert } from './Alert/Alert';
 export { default as Main } from './Main/Main';
 export { default as Card } from './Card/Card';
 export { default as ErrorBoundary } from './ErrorBoundary/ErrorBoundary';
