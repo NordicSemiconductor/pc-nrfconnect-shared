@@ -99,6 +99,7 @@
     },
     "devDependencies": {
         "@nordicsemiconductor/nrf-device-lib-js": "^0.3.14",
+        "@reduxjs/toolkit": "^1.6.1",
         "@types/react": "16.14.4",
         "electron-store": "5.1.1",
         "react": "16.13.1",
