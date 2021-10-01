@@ -31,6 +31,7 @@
         "@babel/plugin-transform-spread": "7.10.0",
         "@babel/preset-react": "7.10.0",
         "@babel/preset-typescript": "^7.10.4",
+        "@reduxjs/toolkit": "^1.6.1",
         "@svgr/webpack": "5.5.0",
         "@testing-library/jest-dom": "5.8.0",
         "@testing-library/react": "10.0.4",
@@ -99,7 +100,6 @@
     },
     "devDependencies": {
         "@nordicsemiconductor/nrf-device-lib-js": "^0.3.14",
-        "@reduxjs/toolkit": "^1.6.1",
         "@types/react": "16.14.4",
         "electron-store": "5.1.1",
         "react": "16.13.1",
