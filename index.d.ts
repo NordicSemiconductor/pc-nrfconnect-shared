@@ -458,6 +458,10 @@ declare module 'pc-nrfconnect-shared' {
 
     export class Toggle extends React.Component<ToggleProps> {}
 
+    // Alert.tsx
+    type AlertProps = import('./src/Alert/Alert').AlertProps;
+    export class Alert extends React.Component<AlertProps> {}
+
     // StateSelector.jsx
 
     interface StateSelectorProps {
