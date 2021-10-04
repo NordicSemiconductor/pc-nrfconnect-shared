@@ -16,7 +16,7 @@ interface DocumentationState {
     sections: DocumentationSection[];
 }
 
-const initialState = {
+const initialState: DocumentationState = {
     sections: [],
 };
 
