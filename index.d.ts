@@ -42,6 +42,9 @@ declare module 'pc-nrfconnect-shared' {
             autoScroll: boolean;
             logEntries: readonly string[];
         };
+        documentation: {
+            sections: DocumentationSection[];
+        };
     }
 
     // Actions
@@ -85,6 +88,12 @@ declare module 'pc-nrfconnect-shared' {
         name: string;
         Main: React.FC<PaneProps>;
         SidePanel?: React.FC;
+    }
+
+    interface DocumentationSection extends React.FC {
+        title: string;
+        linkLabel: string;
+        link: string;
     }
 
     /**
@@ -136,6 +145,12 @@ declare module 'pc-nrfconnect-shared' {
          * opted in. Defaults to `false`.
          */
         reportUsageData?: boolean;
+        /**
+         * Describes the sections of the Documentaion card displayed in the About pane.
+         *
+         * Each section will have a heading, content and a button which links to the relevant website.
+         */
+        documentation?: DocumentationSection[];
     }
 
     /**

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import { reducer as documentation } from './About/documentationSlice';
 import { reducer as appLayout } from './App/appLayout';
 import appReloadDialog from './AppReload/appReloadDialogReducer';
 import device from './Device/deviceReducer';
@@ -16,4 +17,5 @@ export default {
     device,
     errorDialog,
     log,
+    documentation,
 };

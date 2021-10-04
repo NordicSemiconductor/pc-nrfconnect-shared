@@ -23,6 +23,7 @@ import {
 } from 'prop-types';
 
 import About from '../About/About';
+import { setDocumentationSections } from '../About/documentationSlice';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
@@ -87,6 +88,7 @@ const ConnectedApp = ({
     sidePanel,
     showLogByDefault = true,
     reportUsageData = false,
+    documentation,
     children,
 }) => {
     const allPanes = useMemo(
@@ -108,6 +110,10 @@ const ConnectedApp = ({
     useEffect(() => {
         dispatch(setPanes(allPanes));
     }, [dispatch, allPanes]);
+
+    useEffect(() => {
+        if (documentation) dispatch(setDocumentationSections(documentation));
+    }, [dispatch, documentation]);
 
     const SidePanelComponent = allPanes[currentPane].SidePanel;
     const currentSidePanel =
@@ -178,6 +184,12 @@ const PanePropType = exact({
     SidePanel: elementType,
 });
 
+const DocumentationPropType = exact({
+    title: string,
+    linkLabel: string,
+    link: string,
+});
+
 ConnectedApp.propTypes = {
     deviceSelect: node,
     panes: arrayOf(oneOfType([LegacyPanePropType, PanePropType]).isRequired)
@@ -185,6 +197,7 @@ ConnectedApp.propTypes = {
     sidePanel: node,
     showLogByDefault: bool,
     reportUsageData: bool,
+    documentation: arrayOf(DocumentationPropType),
     children: node,
 };
 
