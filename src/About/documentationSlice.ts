@@ -6,6 +6,16 @@
 
 import { createSlice } from '@reduxjs/toolkit';
 
+interface DocumentationSection extends React.FC {
+    title: string;
+    linkLabel: string;
+    link: string;
+}
+
+interface DocumentationState {
+    sections: DocumentationSection[];
+}
+
 const initialState = {
     sections: [],
 };
@@ -25,5 +35,6 @@ export const {
     actions: { setDocumentationSections },
 } = slice;
 
-export const documentationSections = ({ documentation }) =>
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+export const documentationSections = ({ documentation }: any) =>
     documentation.sections;
