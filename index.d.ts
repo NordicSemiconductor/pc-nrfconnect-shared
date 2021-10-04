@@ -42,6 +42,9 @@ declare module 'pc-nrfconnect-shared' {
             autoScroll: boolean;
             logEntries: readonly string[];
         };
+        documentation: {
+            sections: DocumentationSection[];
+        };
     }
 
     // Actions
