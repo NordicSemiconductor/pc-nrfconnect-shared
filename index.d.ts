@@ -672,3 +672,6 @@ declare module 'pc-nrfconnect-shared' {
 
     export const deviceInfo: (device: Device) => DeviceInfo;
 }
+
+// Let typescript compiler in `npm run lint` resolve css modules
+declare module '*.module.scss';
