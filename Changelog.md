@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Removed the outdated externals `pc-nrfjprog-js`, `usb`, and
   `nrf-device-setup` from the webpack config for apps.
+- Handle trailing slashes in `.gitignore` correctly in
+  `bin/nrfconnect-license.mjs`.
 
 ## 5.3.1 - 2021-10-05
 ### Fixed
