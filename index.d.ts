@@ -327,6 +327,13 @@ declare module 'pc-nrfconnect-shared' {
          * failed.
          */
         onDeviceDeselected?: () => void;
+        /**
+         * When providing this function, it is called for every device and
+         * only when the function returns true, the corresponding device
+         * is also displayed in the list of devices. When no function is
+         * provided, all devices are shown.
+         */
+        deviceFilter?: (device: Device) => boolean;
     }
 
     /**
