@@ -10,7 +10,7 @@ import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 
 import chevron from './chevron.svg';
 
-import './Dropdown.scss';
+import styles from './Dropdown.module.scss';
 
 interface DropdownItem {
     label: string;
@@ -56,30 +56,29 @@ const Dropdown: React.FC<DropdownProps> = ({
     };
 
     return (
-        <div className="dropdown-container">
-            {label && <FormLabel className="dropdown-label">{label}</FormLabel>}
+        <div className={styles.container}>
+            {label && <FormLabel className={styles.label}>{label}</FormLabel>}
             <button
                 type="button"
-                className={`dropdown-btn dropdown-btn-${
-                    isActive ? 'active' : 'inactive'
+                className={`${styles.btn} ${
+                    isActive ? styles.btnActive : styles.btnInactive
                 }`}
                 onClick={onClick}
                 disabled={disabled}
             >
-                <span>{selected}</span>
-                <img src={chevron} alt="" />
+                <span>{selected?.label}</span>
+                <img className={styles.image} src={chevron} alt="" />
             </button>
             <div
-                className={`dropdown-content dropdown-${
-                    isActive ? 'active' : 'inactive'
+                className={`${styles.content} ${
+                    isActive ? styles.itemsActive : styles.itemsInactive
                 }`}
             >
                 {items.map(item => (
                     <button
                         type="button"
-                        className="dropdown-item"
+                        className={styles.item}
                         key={item.value}
-                        value={item.value}
                         onClick={() => onClickItem(item)}
                     >
                         {item.label}
