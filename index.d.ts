@@ -496,11 +496,15 @@ declare module 'pc-nrfconnect-shared' {
     export class StateSelector extends React.Component<StateSelectorProps> {}
 
     // Drowdown.jsx
+    interface DropdownItem {
+        label: string;
+        value: string;
+    }
 
     interface DropdownProps {
         label?: string;
-        items: string[];
-        onSelect: (item: string, index: number) => void;
+        items: DropdownItem[];
+        onSelect: (item: DropdownItem) => void;
         disabled?: boolean;
         defaultIndex?: number;
     }
