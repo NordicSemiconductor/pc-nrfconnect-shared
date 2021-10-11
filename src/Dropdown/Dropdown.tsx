@@ -6,28 +6,34 @@
 
 import React, { useEffect, useState } from 'react';
 import FormLabel from 'react-bootstrap/FormLabel';
-import { arrayOf, bool, func, number, string } from 'prop-types';
+import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 
 import chevron from './chevron.svg';
 
 import './Dropdown.scss';
 
+interface DropdownItem {
+    label: string;
+    value: string;
+}
+
 interface DropdownProps {
     label?: string;
-    items: string[];
-    onSelect: (item: string, index: number) => void;
+    items: DropdownItem[];
+    onSelect: (item: DropdownItem) => void;
     disabled?: boolean;
     defaultIndex?: number;
+    truncateOptions?: boolean;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
     label,
     items,
-    disabled = false,
     onSelect,
-    defaultIndex,
+    disabled = false,
+    defaultIndex = 0,
 }) => {
-    const [selected, setSelected] = useState(items[defaultIndex ?? 0]);
+    const [selected, setSelected] = useState(items[defaultIndex]);
     const [isActive, setIsActive] = useState(false);
 
     useEffect(() => {
@@ -43,6 +49,11 @@ const Dropdown: React.FC<DropdownProps> = ({
     }, [isActive]);
 
     const onClick = () => setIsActive(!isActive);
+
+    const onClickItem = (item: DropdownItem) => {
+        setSelected(item);
+        onSelect(item);
+    };
 
     return (
         <div className="dropdown-container">
@@ -63,17 +74,15 @@ const Dropdown: React.FC<DropdownProps> = ({
                     isActive ? 'active' : 'inactive'
                 }`}
             >
-                {items.map((item, index) => (
+                {items.map(item => (
                     <button
                         type="button"
                         className="dropdown-item"
-                        key={item}
-                        onClick={() => {
-                            setSelected(item);
-                            onSelect(item, index);
-                        }}
+                        key={item.value}
+                        value={item.value}
+                        onClick={() => onClickItem(item)}
                     >
-                        {item}
+                        {item.label}
                     </button>
                 ))}
             </div>
@@ -83,7 +92,12 @@ const Dropdown: React.FC<DropdownProps> = ({
 
 Dropdown.propTypes = {
     label: string,
-    items: arrayOf(string.isRequired).isRequired,
+    items: arrayOf(
+        shape({
+            label: string.isRequired,
+            value: string.isRequired,
+        }).isRequired
+    ).isRequired,
     onSelect: func.isRequired,
     disabled: bool,
     defaultIndex: number,
