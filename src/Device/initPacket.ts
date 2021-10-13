@@ -5,12 +5,26 @@
  */
 
 // eslint-disable-next-line import/no-unresolved
-import { FwType, HashType } from 'pc-nrfconnect-shared';
 import protobuf from 'protobufjs';
 
 import dfuCcProto from './dfu-cc';
 
 const root = protobuf.Root.fromJSON(dfuCcProto);
+
+export enum FwType {
+    APPLICATION,
+    SOFTDEVICE,
+    BOOTLOADER,
+    SOFTDEVICE_BOOTLOADER,
+}
+
+export enum HashType {
+    NO_HASH,
+    CRC,
+    SHA128,
+    SHA256,
+    SHA512,
+}
 
 export const OpCode = {
     RESET: 0,
