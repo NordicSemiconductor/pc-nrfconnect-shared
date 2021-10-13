@@ -685,15 +685,32 @@ declare module 'pc-nrfconnect-shared' {
 
     // sdfuOperations.js
     export class sdfuOperations {
-        static createDfuZipBuffer(
-            inputDfuImages: import('./src/Device/initPacket').DfuImage[]
-        ): string | Buffer;
+        static createDfuZipBuffer(inputDfuImages: DfuImage[]): string | Buffer;
     }
 
     // deviceLister.ts
     export function startWatchingDevices(): void;
     export function stopWatchingDevices(): void;
     export function waitForDevice(serialNumber: string): Device;
+
+    // initPacket.ts
+    export type DfuImage = import('./src/Device/initPacket').DfuImage;
+    export type InitPacket = import('./src/Device/initPacket').InitPacket;
+    export const defaultInitPacket: InitPacket;
+    export enum FwType {
+        APPLICATION,
+        SOFTDEVICE,
+        BOOTLOADER,
+        SOFTDEVICE_BOOTLOADER,
+    }
+
+    export enum HashType {
+        NO_HASH,
+        CRC,
+        SHA128,
+        SHA256,
+        SHA512,
+    }
 }
 
 // Let typescript compiler in `npm run lint` resolve css modules
