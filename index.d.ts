@@ -43,7 +43,7 @@ declare module 'pc-nrfconnect-shared' {
             logEntries: readonly string[];
         };
         documentation: {
-            sections: DocumentationSection[];
+            sections: React.FC<DocumentationSectionProps>[];
         };
     }
 
@@ -90,7 +90,7 @@ declare module 'pc-nrfconnect-shared' {
         SidePanel?: React.FC;
     }
 
-    interface DocumentationSection extends React.FC {
+    interface DocumentationSectionProps {
         title: string;
         linkLabel: string;
         link: string;
@@ -150,7 +150,7 @@ declare module 'pc-nrfconnect-shared' {
          *
          * Each section will have a heading, content and a button which links to the relevant website.
          */
-        documentation?: DocumentationSection[];
+        documentation?: React.FC<DocumentationSectionProps>[];
     }
 
     /**
