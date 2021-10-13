@@ -697,20 +697,8 @@ declare module 'pc-nrfconnect-shared' {
     export type DfuImage = import('./src/Device/initPacket').DfuImage;
     export type InitPacket = import('./src/Device/initPacket').InitPacket;
     export const defaultInitPacket: InitPacket;
-    export enum FwType {
-        APPLICATION,
-        SOFTDEVICE,
-        BOOTLOADER,
-        SOFTDEVICE_BOOTLOADER,
-    }
-
-    export enum HashType {
-        NO_HASH,
-        CRC,
-        SHA128,
-        SHA256,
-        SHA512,
-    }
+    export const FwType: typeof import('./src/Device/initPacket').FwType;
+    export const HashType: typeof import('./src/Device/initPacket').HashType;
 }
 
 // Let typescript compiler in `npm run lint` resolve css modules
