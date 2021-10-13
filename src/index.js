@@ -22,6 +22,7 @@ export { default as ErrorBoundary } from './ErrorBoundary/ErrorBoundary';
 export { default as StateSelector } from './StateSelector/StateSelector';
 export { default as Dropdown } from './Dropdown/Dropdown';
 export { default as StartStopButton } from './StartStopButton/StartStopButton';
+export { default as DocumentationSection } from './About/DocumentationSection';
 
 export { default as SidePanel } from './SidePanel/SidePanel';
 export { Group, CollapsibleGroup } from './SidePanel/Group';
