@@ -682,6 +682,18 @@ declare module 'pc-nrfconnect-shared' {
     export function getPersistentStore<StoreSchema>(): Store<StoreSchema>;
 
     export const deviceInfo: (device: Device) => DeviceInfo;
+
+    // sdfuOperations.js
+    export class sdfuOperations {
+        static createDfuZipBuffer(
+            inputDfuImages: import('./src/Device/initPacket').DfuImage[]
+        ): string | Buffer;
+    }
+
+    // deviceLister.ts
+    export function startWatchingDevices(): void;
+    export function stopWatchingDevices(): void;
+    export function waitForDevice(serialNumber: string): Device;
 }
 
 // Let typescript compiler in `npm run lint` resolve css modules
