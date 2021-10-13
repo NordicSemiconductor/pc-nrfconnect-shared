@@ -44,6 +44,7 @@ export {
     getUserDataDir,
 } from './utils/appDirs';
 
+export { defaultInitPacket } from './Device/initPacket';
 export { openUrl } from './utils/open';
 export { default as systemReport } from './utils/systemReport';
 export { default as usageData } from './utils/usageData';

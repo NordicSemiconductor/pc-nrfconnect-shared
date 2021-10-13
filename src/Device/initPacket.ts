@@ -5,6 +5,7 @@
  */
 
 // eslint-disable-next-line import/no-unresolved
+import { FwType, HashType } from 'pc-nrfconnect-shared';
 import protobuf from 'protobufjs';
 
 import dfuCcProto from './dfu-cc';
@@ -16,21 +17,6 @@ export const OpCode = {
     INIT: 1,
 };
 
-export const FwType = {
-    APPLICATION: 0,
-    SOFTDEVICE: 1,
-    BOOTLOADER: 2,
-    SOFTDEVICE_BOOTLOADER: 3,
-};
-
-export const HashType = {
-    NO_HASH: 0,
-    CRC: 1,
-    SHA128: 2,
-    SHA256: 3,
-    SHA512: 4,
-};
-
 export const SignatureType = {
     ECDSA_P256_SHA256: 0,
     ED25519: 1,
@@ -39,7 +25,7 @@ export const SignatureType = {
 export interface InitPacket {
     fwVersion?: number;
     hwVersion?: number;
-    sdReq?: number;
+    sdReq?: number[];
     fwType?: number;
     sdSize: number;
     blSize: number;
@@ -69,8 +55,7 @@ export const defaultInitPacket: InitPacket = {
 export interface DfuImage {
     name: string;
     initPacket: InitPacket;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    firmwareImage: any;
+    firmwareImage: Uint8Array;
 }
 
 // Create hash by using hash type and bytes
@@ -100,7 +85,7 @@ const createResetCommand = (timeout: number): protobuf.Message => {
 const createInitCommand = (
     fwVersion: number | undefined,
     hwVersion: number | undefined,
-    sdReq: number | undefined,
+    sdReq: number[] | undefined,
     type: number | undefined,
     sdSize: number | undefined,
     blSize: number | undefined,
@@ -276,7 +261,7 @@ export const createResetPacketBuffer = (
 export const createInitPacket = (
     fwVersion: number | undefined,
     hwVersion: number | undefined,
-    sdReq: number | undefined,
+    sdReq: number[] | undefined,
     fwType: number | undefined,
     sdSize: number | undefined,
     blSize: number | undefined,
@@ -344,7 +329,7 @@ export const createInitPacket = (
 export const createInitPacketBuffer = (
     fwVersion: number,
     hwVersion: number,
-    sdReq: number,
+    sdReq: number[],
     fwType: number,
     sdSize: number,
     blSize: number,
