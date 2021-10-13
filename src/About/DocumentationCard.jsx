@@ -14,5 +14,5 @@ export default () => {
     const sections = useSelector(documentationSections);
     if (sections.length === 0) return null;
 
-    return <Card title="Documentation">{...sections}</Card>;
+    return <Card title="Documentation">{sections}</Card>;
 };
