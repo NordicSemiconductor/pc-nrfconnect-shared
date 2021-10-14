@@ -7,7 +7,7 @@
 import React from 'react';
 import { arrayOf, node, shape, string } from 'prop-types';
 
-import { displayedDeviceName, serialports } from '../../deviceInfo/deviceInfo';
+import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
 import deviceShape from '../deviceShape';
 
 import './more-device-info.scss';
