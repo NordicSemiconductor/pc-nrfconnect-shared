@@ -90,12 +90,6 @@ declare module 'pc-nrfconnect-shared' {
         SidePanel?: React.FC;
     }
 
-    interface DocumentationSection extends React.FC {
-        title: string;
-        linkLabel: string;
-        link: string;
-    }
-
     /**
      * Props for the `App` component.
      */
@@ -150,7 +144,7 @@ declare module 'pc-nrfconnect-shared' {
          *
          * Each section will have a heading, content and a button which links to the relevant website.
          */
-        documentation?: DocumentationSection[];
+        documentation?: React.ReactElement[] | null;
     }
 
     /**
@@ -521,6 +515,16 @@ declare module 'pc-nrfconnect-shared' {
     }
 
     export class StartStopButton extends React.Component<StartStopButtonProps> {}
+
+    // DocumentationSection.jsx
+
+    interface DocumentationSectionProps {
+        title?: string;
+        linkLabel?: string;
+        link?: string;
+    }
+
+    export class DocumentationSection extends React.Component<DocumentationSectionProps> {}
 
     // colors.js
 
