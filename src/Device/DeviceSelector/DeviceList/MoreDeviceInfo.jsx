@@ -52,7 +52,7 @@ MaybeDeviceName.propTypes = {
 const Serialports = ({ ports }) => (
     <ul className="ports">
         {ports.map(port => (
-            <li key={port.path}>{port.path}</li>
+            <li key={port.path}>{port.comName}</li>
         ))}
     </ul>
 );
