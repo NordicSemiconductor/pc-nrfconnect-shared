@@ -73,7 +73,7 @@ const MoreDeviceInfo = ({ device }) => (
             <MaybeDeviceName device={device} />
         </Row>
         <Row>
-            <Serialports ports={serialports(device)} />
+            <Serialports ports={device.serialPorts} />
         </Row>
     </div>
 );
