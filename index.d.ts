@@ -43,7 +43,7 @@ declare module 'pc-nrfconnect-shared' {
             logEntries: readonly string[];
         };
         documentation: {
-            sections: DocumentationSection[];
+            sections: React.ReactElement[] | null;
         };
     }
 
