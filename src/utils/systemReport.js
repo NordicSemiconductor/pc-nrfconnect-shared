@@ -67,7 +67,7 @@ const allDevicesReport = allDevices => [
     '- Connected devices:',
     ...allDevices.map(
         d =>
-            `    - ${d.serialport.path}: ${d.serialNumber} ${
+            `    - ${d.serialport.comName}: ${d.serialNumber} ${
                 d.boardVersion || ''
             }`
     ),

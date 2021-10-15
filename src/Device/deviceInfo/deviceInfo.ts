@@ -195,11 +195,6 @@ export const displayedDeviceName = (
     return deviceInfo(device).name || device.boardVersion || 'Unknown';
 };
 
-export const serialports = (device: Device) =>
-    Object.entries(device)
-        .filter(([key]) => key.startsWith('serialport'))
-        .map(([, value]: [string, Serialport]) => value);
-
 export const productPageUrl = (device: Device) =>
     deviceInfo(device).website.productPagePath &&
     `https://www.nordicsemi.com/${deviceInfo(device).website.productPagePath}`;

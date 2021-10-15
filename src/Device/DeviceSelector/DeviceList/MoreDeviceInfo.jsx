@@ -7,7 +7,7 @@
 import React from 'react';
 import { arrayOf, node, shape, string } from 'prop-types';
 
-import { displayedDeviceName, serialports } from '../../deviceInfo/deviceInfo';
+import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
 import deviceShape from '../deviceShape';
 
 import './more-device-info.scss';
@@ -52,7 +52,7 @@ MaybeDeviceName.propTypes = {
 const Serialports = ({ ports }) => (
     <ul className="ports">
         {ports.map(port => (
-            <li key={port.path}>{port.path}</li>
+            <li key={port.path}>{port.comName}</li>
         ))}
     </ul>
 );
@@ -73,7 +73,7 @@ const MoreDeviceInfo = ({ device }) => (
             <MaybeDeviceName device={device} />
         </Row>
         <Row>
-            <Serialports ports={serialports(device)} />
+            <Serialports ports={device.serialPorts} />
         </Row>
     </div>
 );
