@@ -48,7 +48,7 @@ export const isDeviceInDFUBootloader = device => {
  * @param {Object} device device
  * @returns {Promise<Object>} device object which is already in bootloader.
  */
-export const ensureBootloaderMode = async device => {
+export const ensureBootloaderMode = /* async */ device => {
     if (isDeviceInDFUBootloader(device)) {
         logger.debug('Device is in bootloader mode');
         return device;
@@ -83,7 +83,7 @@ export const ensureBootloaderMode = async device => {
  * @param {function} promiseConfirm funtion that returns Promise<boolean> for confirmation
  * @returns {Promise<Object>} updated device
  */
-const checkConfirmUpdateBootloader = async (device, promiseConfirm) => {
+const checkConfirmUpdateBootloader = /* async */ (device, promiseConfirm) => {
     if (!promiseConfirm) {
         // without explicit consent bootloader will not be updated
         return device;
@@ -125,7 +125,7 @@ const confirmHelper = async promiseConfirm => {
  * @param {function} promiseChoice Promise returning function
  * @returns {Promise} resolves to user selected choice or first element
  */
-const choiceHelper = async (choices, promiseChoice) => {
+const choiceHelper = /* async */ (choices, promiseChoice) => {
     if (choices.length > 1 && promiseChoice) {
         return promiseChoice('Which firmware do you want to program?', choices);
     }
@@ -459,4 +459,8 @@ export const performDFU = async (selectedDevice, options) => {
         logger.debug('DFU failed: ', err);
         throw err;
     }
+};
+
+export default {
+    createDfuZipBuffer,
 };

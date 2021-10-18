@@ -29,6 +29,7 @@ const DeviceSelector = ({
     onDeviceSelected = noop,
     onDeviceDeselected = noop,
     onDeviceIsReady = noop,
+    deviceFilter,
 }) => {
     const dispatch = useDispatch();
     const [deviceListVisible, setDeviceListVisible] = useState(false);
@@ -89,6 +90,7 @@ const DeviceSelector = ({
             <DeviceList
                 isVisible={deviceListVisible}
                 doSelectDevice={doSelectDevice}
+                deviceFilter={deviceFilter}
             />
 
             <DeviceSetup />
@@ -109,11 +111,13 @@ DeviceSelector.propTypes = {
         jprog: object,
         dfu: object,
         needSerialport: bool,
+        allowCustomDevice: bool,
     }),
     releaseCurrentDevice: func, // () => {}
     onDeviceSelected: func, // (device) => {}
     onDeviceDeselected: func, // () => {}
     onDeviceIsReady: func, // (device) => {}
+    deviceFilter: func, // (device) => boolean
 };
 
 export default DeviceSelector;

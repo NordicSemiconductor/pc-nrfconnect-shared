@@ -120,12 +120,15 @@ const checkLicense = () => {
     }
 };
 
+const removeTrailingSlashes = entry => entry.replace(/\/$/, '');
+
 // Replace entries like '/node_modules' with something like 'node_modules/**'
 const replaceRootEntries = entry => entry.replace(/^\/(.*)/, '$1/**');
 
 const entriesInGitignore = readFileSync('.gitignore', { encoding: 'utf8' })
     .trim()
     .split(/\r?\n/)
+    .map(removeTrailingSlashes)
     .map(replaceRootEntries);
 
 const allSourceFiles = () =>

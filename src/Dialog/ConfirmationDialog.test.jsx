@@ -135,7 +135,7 @@ describe('ConfirmationDialog', () => {
             });
         });
 
-        it('is disabled when in progess', async () => {
+        it('is disabled when in progess', () => {
             const onCancelMock = jest.fn();
             const { rerender, queryByText, getByText } = render(
                 <ConfirmationDialog {...defaultProps} onCancel={onCancelMock} />

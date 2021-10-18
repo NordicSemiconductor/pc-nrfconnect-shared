@@ -11,6 +11,7 @@
     "rules": {
         "react/jsx-indent": ["error", 4],
         "react/jsx-indent-props": ["error", 4],
+        "react/jsx-key": ["error", { "checkFragmentShorthand": true }],
         "react/jsx-one-expression-per-line": "off",
         "react/jsx-props-no-spreading": "off",
         "react/require-default-props": "off",
@@ -60,6 +61,7 @@
         "import/extensions": ["off"],
         "no-undef": 1,
         "no-unused-vars": "off",
+        "require-await": "error",
         "prettier/prettier": "error",
         "import/order": "off",
         "simple-import-sort/imports": [

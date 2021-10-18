@@ -4,6 +4,88 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 5.5.5 - 2021-10-15
+### Fixed
+- Only one serialport was shown in the Device Selector regardless of how many were available
+- Wrong serialport property was displayed in the Device Selector
+- Wrong serialport property was displayed in the System Report
+
+## 5.5.4 - 2021-10-14
+### Fixed
+- Export `DocumentationSection` as react component instead of interface
+
+## 5.5.3 - 2021-10-13
+### Added
+- Expose enum values for types in init packet.
+
+## 5.5.2 - 2021-10-13
+### Added
+- Expose types for init packet.
+
+## 5.5.1 - 2021-10-13
+### Added
+- Expose types for sdfu operations and device lister.
+
+## 5.5.0 - 2021-10-12
+### Added
+- Show `no supported devices found` message when all devices were filtered out with `deviceFilter`
+
+## 5.4.0 - 2021-10-07
+### Added
+- Property `deviceFilter` on `DeviceSelector` to filter which devices are
+  shown.
+
+## 5.3.2 - 2021-10-06
+### Fixed
+- Removed the outdated externals `pc-nrfjprog-js`, `usb`, and
+  `nrf-device-setup` from the webpack config for apps.
+- Handle trailing slashes in `.gitignore` correctly in
+  `bin/nrfconnect-license.mjs`.
+
+## 5.3.1 - 2021-10-05
+### Fixed
+- Add ambient module for resolving css modules
+
+## 5.3.0 - 2021-09-04
+### Added
+- Documentation card in About pane
+
+## 5.2.1 - 2021-10-01
+### Added
+- Alert component
+
+## 5.2.0 - 2021-09-28
+### Added
+- Render children of the component `App`. Children of the component `App`
+  usually should not render to something that is directly visible on the
+  screen, as this would break the normal layout of the app. There are mainly
+  two use cases:
+  - Components like dialogs, which are displayed outside of the normal render
+    flow.
+  - Components which are displayed not at all, but are rendered just for other
+    means, e.g. to dispatch Redux actions when the App is started.
+### Changed
+- Enabled two additional ESLint rules:
+  - [`require-await`](https://eslint.org/docs/rules/require-await), to
+    disallow async functions which have no await expression.
+  - [`react/jsx-key`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-key.md),
+    to check that a key property is used for lists in JSX.
+### Fixed
+- The property `allowCustomDevice` was used but missing in the type and props
+  definitions for DeviceSetup.
+- Run complete setup for custom devices.
+### Steps to upgrade when using this package
+- The two newly enabled ESLint rules `require-await` and `react/jsx-key` may
+  require you to update some code. Please note that you should not blindly
+  remove an `async` in front of a function if there is no `await` in it: When
+  you have other code which depends on this function returning a Promise (e.g.
+  by calling `.then` on the returned object), then you also need to change that
+  code.
+
+## 5.1.1 - 2021-09-28
+### Added
+- Expose functions for USB serial DFU
+
 ## 5.1.0 - 2021-09-23
 ### Changed
 - The license check now ignores all files in `.gitignore` and the folder

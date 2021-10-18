@@ -12,6 +12,9 @@ export interface RootState {
     errorDialog: ErrorDialog;
     log: Log;
     device: DeviceState;
+    documentation: {
+        sections: React.ReactElement[] | null;
+    };
 }
 
 export interface AppLayout {

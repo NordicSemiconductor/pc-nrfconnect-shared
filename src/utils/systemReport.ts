@@ -68,21 +68,17 @@ const allDevicesReport = (allDevices: Device[]) => [
     '- Connected devices:',
     ...allDevices.map(
         d =>
-            `    - ${d.serialport?.path}: ${d.serialNumber} ${
+            `    - ${d.serialport?.comName}: ${d.serialNumber} ${
                 d.boardVersion || ''
             }`
     ),
     '',
 ];
 
-const hexpad2 = (n: number) =>
-    n == null
-        ? 'Unknown'
-        : `0x${n.toString(16).toUpperCase().padStart(2, '0')}`;
-
-const hexToKiB = (n: number) => (n == null ? 'Unknown' : `${n / 1024} KiB`);
-
-const currentDeviceReport = (device: DeviceInfo,currentSerialNumber: string) => {
+const currentDeviceReport = (
+    device: DeviceInfo,
+    currentSerialNumber: string
+) => {
     if (device == null) {
         return [];
     }
@@ -111,7 +107,11 @@ export const generateSystemReport = async (
         ...currentDeviceReport(currentDevice, currentSerialNumber),
     ].join(EOL);
 
-export default async (allDevices: Device[], currentSerialNumber: string, currentDevice: DeviceInfo) => {
+export default async (
+    allDevices: Device[],
+    currentSerialNumber: string,
+    currentDevice: DeviceInfo
+) => {
     logger.info('Generating system report...');
     const timestamp = new Date().toISOString().replace(/:/g, '-');
     const report = await generateSystemReport(

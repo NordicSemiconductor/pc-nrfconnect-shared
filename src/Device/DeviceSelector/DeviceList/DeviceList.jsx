@@ -29,16 +29,28 @@ const NoDevicesConnected = () => (
     </div>
 );
 
-const DeviceList = ({ isVisible, doSelectDevice }) => {
+const NoSupportedDevicesConnected = () => (
+    <div className="no-devices-connected">No supported devices connected</div>
+);
+
+const showAllDevices = () => true;
+
+const DeviceList = ({
+    isVisible,
+    doSelectDevice,
+    deviceFilter = showAllDevices,
+}) => {
     const devices = useSelector(sortedDevices);
+    const filteredDevices = devices.filter(deviceFilter);
 
     return (
         <div className={classNames('device-list', isVisible || 'hidden')}>
-            {devices.length === 0 ? (
-                <NoDevicesConnected />
+            {devices.length === 0 && <NoDevicesConnected />}
+            {devices.length > 0 && filteredDevices.length === 0 ? (
+                <NoSupportedDevicesConnected />
             ) : (
                 <AnimatedList devices={devices}>
-                    {devices.map(device => (
+                    {filteredDevices.map(device => (
                         <AnimatedItem
                             key={device.serialNumber}
                             itemKey={device.serialNumber}
@@ -58,6 +70,7 @@ const DeviceList = ({ isVisible, doSelectDevice }) => {
 DeviceList.propTypes = {
     doSelectDevice: func.isRequired,
     isVisible: bool.isRequired,
+    deviceFilter: func, // (device) => boolean
 };
 
 export default DeviceList;

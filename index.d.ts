@@ -113,6 +113,12 @@ declare module 'pc-nrfconnect-shared' {
          * opted in. Defaults to `false`.
          */
         reportUsageData?: boolean;
+        /**
+         * Describes the sections of the Documentaion card displayed in the About pane.
+         *
+         * Each section will have a heading, content and a button which links to the relevant website.
+         */
+        documentation?: React.ReactElement[] | null;
     }
 
     /**
@@ -193,6 +199,7 @@ declare module 'pc-nrfconnect-shared' {
         jprog?: Record<string, unknown>;
         dfu?: Record<string, unknown>;
         needSerialPort?: boolean;
+        allowCustomDevice?: boolean;
     }
 
     /**
@@ -238,6 +245,13 @@ declare module 'pc-nrfconnect-shared' {
          * failed.
          */
         onDeviceDeselected?: () => void;
+        /**
+         * When providing this function, it is called for every device and
+         * only when the function returns true, the corresponding device
+         * is also displayed in the list of devices. When no function is
+         * provided, all devices are shown.
+         */
+        deviceFilter?: (device: Device) => boolean;
     }
 
     /**
@@ -384,6 +398,10 @@ declare module 'pc-nrfconnect-shared' {
 
     export class Toggle extends React.Component<ToggleProps> {}
 
+    // Alert.tsx
+    type AlertProps = import('./src/Alert/Alert').AlertProps;
+    export class Alert extends React.Component<AlertProps> {}
+
     // StateSelector.jsx
 
     interface StateSelectorProps {
@@ -396,11 +414,15 @@ declare module 'pc-nrfconnect-shared' {
     export class StateSelector extends React.Component<StateSelectorProps> {}
 
     // Drowdown.jsx
+    interface DropdownItem {
+        label: string;
+        value: string;
+    }
 
     interface DropdownProps {
         label?: string;
-        items: string[];
-        onSelect: (item: string, index: number) => void;
+        items: DropdownItem[];
+        onSelect: (item: DropdownItem) => void;
         disabled?: boolean;
         defaultIndex?: number;
     }
@@ -417,6 +439,16 @@ declare module 'pc-nrfconnect-shared' {
     }
 
     export class StartStopButton extends React.Component<StartStopButtonProps> {}
+
+    // DocumentationSection.jsx
+
+    interface DocumentationSectionProps {
+        title?: string;
+        linkLabel?: string;
+        link?: string;
+    }
+
+    export class DocumentationSection extends React.Component<DocumentationSectionProps> {}
 
     // colors.js
 
@@ -578,8 +610,27 @@ declare module 'pc-nrfconnect-shared' {
     export function getPersistentStore<StoreSchema>(): Store<StoreSchema>;
 
     export const deviceInfo: (device: Device) => DeviceInfo;
+
+    // sdfuOperations.js
+    export class sdfuOperations {
+        static createDfuZipBuffer(inputDfuImages: DfuImage[]): string | Buffer;
+    }
+
+    // deviceLister.ts
+    export function startWatchingDevices(): void;
+    export function stopWatchingDevices(): void;
+    export function waitForDevice(serialNumber: string): Device;
+
+    // initPacket.ts
+    export type DfuImage = import('./src/Device/initPacket').DfuImage;
+    export type InitPacket = import('./src/Device/initPacket').InitPacket;
+    export const defaultInitPacket: InitPacket;
+    export const FwType: typeof import('./src/Device/initPacket').FwType;
+    export const HashType: typeof import('./src/Device/initPacket').HashType;
 }
 
 declare module 'prettysize' {
     export default function pretty(n: number): string;
 }
+// Let typescript compiler in `npm run lint` resolve css modules
+declare module '*.module.scss';

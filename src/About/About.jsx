@@ -8,6 +8,7 @@ import React from 'react';
 
 import ApplicationCard from './ApplicationCard';
 import DeviceCard from './DeviceCard';
+import DocumentationCard from './DocumentationCard';
 import SupportCard from './SupportCard';
 
 import './about.scss';
@@ -16,6 +17,7 @@ export default () => (
     <div className="about">
         <ApplicationCard />
         <DeviceCard />
+        <DocumentationCard />
         <SupportCard />
     </div>
 );
