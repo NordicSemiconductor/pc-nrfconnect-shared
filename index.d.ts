@@ -224,7 +224,7 @@ declare module 'pc-nrfconnect-shared' {
     interface DeviceSetup {
         jprog?: Record<string, unknown>;
         dfu?: Record<string, unknown>;
-        needSerialPort?: boolean;
+        needSerialport?: boolean;
         allowCustomDevice?: boolean;
     }
 
