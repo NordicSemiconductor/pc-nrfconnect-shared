@@ -7,7 +7,7 @@
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
-import { getDevice } from '../deviceReducer';
+import { getDevice } from '../deviceSlice';
 
 export default doSelectDevice => {
     const alreadyTriedToAutoselect = useRef(false);

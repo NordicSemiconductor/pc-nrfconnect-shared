@@ -9,11 +9,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { remote } from 'electron';
 
 import ConfirmationDialog from '../Dialog/ConfirmationDialog';
-import { hideDialog } from './appReloadDialogActions';
 import {
+    hideDialog,
     isVisible as isVisibleSelector,
     message as messageSelector,
-} from './appReloadDialogReducer';
+} from './appReloadDialogSlice';
 
 const reloadApp = () => setImmediate(() => remote.getCurrentWindow().reload());
 

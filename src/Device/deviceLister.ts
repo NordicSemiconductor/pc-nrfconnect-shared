@@ -16,7 +16,7 @@ import camelcaseKeys from 'camelcase-keys';
 import { Device, DeviceListing, Serialport } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';
-import { devicesDetected } from './deviceActions';
+import { devicesDetected } from './deviceSlice';
 
 const DEFAULT_DEVICE_WAIT_TIME = 3000;
 

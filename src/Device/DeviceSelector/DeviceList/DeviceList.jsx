@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { bool, func } from 'prop-types';
 
 import classNames from '../../../utils/classNames';
-import { sortedDevices } from '../../deviceReducer';
+import { sortedDevices } from '../../deviceSlice';
 import { AnimatedItem, AnimatedList } from './AnimatedList';
 import Device from './Device';
 

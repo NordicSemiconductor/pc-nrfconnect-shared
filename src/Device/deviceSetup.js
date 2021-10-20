@@ -5,13 +5,13 @@
  */
 
 import logger from '../logging';
+import { stopWatchingDevices } from './deviceLister';
 import {
     deviceSetupComplete,
     deviceSetupError,
     deviceSetupInputReceived,
     deviceSetupInputRequired,
-} from './deviceActions';
-import { stopWatchingDevices } from './deviceLister';
+} from './deviceSlice';
 import {
     programFirmware,
     validateFirmware,

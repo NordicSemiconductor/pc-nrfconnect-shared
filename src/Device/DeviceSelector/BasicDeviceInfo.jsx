@@ -9,8 +9,8 @@ import { useDispatch } from 'react-redux';
 import { func, node, shape } from 'prop-types';
 
 import InlineInput from '../../InlineInput/InlineInput';
-import { resetDeviceNickname, setDeviceNickname } from '../deviceActions';
 import { displayedDeviceName } from '../deviceInfo/deviceInfo';
+import { resetDeviceNickname, setDeviceNickname } from '../deviceSlice';
 import DeviceIcon from './DeviceIcon';
 import deviceShape from './deviceShape';
 

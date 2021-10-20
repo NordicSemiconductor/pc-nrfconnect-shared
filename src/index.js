@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import * as ErrorDialogActions from './ErrorDialog/errorDialogActions';
+import { hideDialog, showDialog } from './ErrorDialog/errorDialogSlice';
+
+const ErrorDialogActions = { hideDialog, showDialog };
 
 export { ErrorDialogActions };
 
@@ -31,7 +33,7 @@ export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
 export { default as InlineInput } from './InlineInput/InlineInput';
 export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
 
-export { default as errorDialogReducer } from './ErrorDialog/errorDialogReducer';
+export { reducer as errorDialogReducer } from './ErrorDialog/errorDialogSlice';
 export { default as logger } from './logging';
 export { default as bleChannels } from './utils/bleChannels';
 export { default as colors } from './utils/colors.icss.scss';

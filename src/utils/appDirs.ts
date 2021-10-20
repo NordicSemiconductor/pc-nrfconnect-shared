@@ -11,11 +11,15 @@ import { loadPackageJson } from './packageJson';
 
 const getUserDataDir = () => remote.getGlobal('userDataDir');
 
-let appDir;
-let appDataDir;
-let appLogDir;
+let appDir: string;
+let appDataDir: string;
+let appLogDir: string;
 
-function setAppDirs(newAppDir, newAppDataDir, newAppLogDir) {
+function setAppDirs(
+    newAppDir: string,
+    newAppDataDir: string,
+    newAppLogDir: string
+) {
     appDir = newAppDir;
     appDataDir = newAppDataDir;
     appLogDir = newAppLogDir;
@@ -38,7 +42,7 @@ function getAppDir() {
  * @param {string} filename relative name of file in the app directory
  * @returns {string|undefined} Absolute path of file.
  */
-function getAppFile(filename) {
+function getAppFile(filename: string) {
     return path.resolve(getAppDir(), filename);
 }
 

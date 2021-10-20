@@ -9,8 +9,11 @@ import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 import { bool } from 'prop-types';
 
-import { clear, toggleAutoScroll } from '../Log/logActions';
-import { autoScroll as autoScrollSelector } from '../Log/logReducer';
+import {
+    autoScroll as autoScrollSelector,
+    clear,
+    toggleAutoScroll,
+} from '../Log/logSlice';
 import logger from '../logging';
 import {
     isLogVisible as isLogVisibleSelector,

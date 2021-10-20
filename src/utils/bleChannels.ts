@@ -14,7 +14,7 @@ Object.defineProperty(bleChannels, 'min', { value: Math.min(...bleChannels) });
 Object.defineProperty(bleChannels, 'max', { value: Math.max(...bleChannels) });
 
 Object.defineProperty(bleChannels, 'isAdvertisement', {
-    value: channel => channel >= 37,
+    value: (channel: number) => channel >= 37,
 });
 
 export default bleChannels;

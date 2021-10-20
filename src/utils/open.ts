@@ -15,7 +15,7 @@ import os from 'os';
  * @param {string} filePath path to the file to open.
  * @returns {void}
  */
-function openFile(filePath) {
+function openFile(filePath: string) {
     const exists = fs.existsSync(filePath);
     if (!exists) {
         throw new Error(`Could not find file at path: ${filePath}`);
@@ -39,7 +39,7 @@ function openFile(filePath) {
  * @param {string} url The URL to open.
  * @returns {void}
  */
-function openUrl(url) {
+function openUrl(url: string) {
     shell.openExternal(url);
 }
 

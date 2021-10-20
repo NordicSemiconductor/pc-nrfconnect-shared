@@ -9,42 +9,16 @@ declare module 'pc-nrfconnect-shared' {
     import React from 'react';
     import winston from 'winston';
     import Store from 'electron-store';
-    import { Device as NrfdlDevice } from '@nordicsemiconductor/nrf-device-lib-js';
+
+    type RootState = import('./src/state').RootState;
+    type Device = import('./src/state').Device;
+    type DeviceInfo = import('./src/state').DeviceInfo;
+    type Serialport = import('./src/state').Serialport;
 
     // State
 
-    interface NrfConnectState<AppState> {
+    interface NrfConnectState<AppState> extends RootState {
         app: AppState;
-        appLayout: {
-            isSidePanelVisible: boolean;
-            isLogVisible: boolean;
-            currentPane: number;
-        };
-        appReloadDialog: {
-            isVisible: boolean;
-            message: string;
-        };
-        device: {
-            devices: { [key: string]: Device | undefined };
-            deviceInfo: DeviceInfo;
-            isSetupDialogVisible: boolean;
-            isSetupWaitingForUserInput: boolean;
-            selectedSerialNumber: string;
-            setupDialogChoices: readonly string[];
-            setupDialogText: string | null;
-        };
-        errorDialog: {
-            errorResolutions: any;
-            isVisible: boolean;
-            messages: readonly string[];
-        };
-        log: {
-            autoScroll: boolean;
-            logEntries: readonly string[];
-        };
-        documentation: {
-            sections: React.ReactElement[] | null;
-        };
     }
 
     // Actions
@@ -226,56 +200,6 @@ declare module 'pc-nrfconnect-shared' {
         dfu?: Record<string, unknown>;
         needSerialport?: boolean;
         allowCustomDevice?: boolean;
-    }
-
-    export interface Serialport {
-        path: string;
-        manufacturer: string;
-        productId: string;
-        serialNumber: string;
-        vendorId: string;
-        /**
-         * @deprecated Using the property `comName` has been
-         * deprecated. You should now use `path`. The property
-         * will be removed in the next major release.
-         */
-        comName: string;
-    }
-
-    interface Device extends Omit<NrfdlDevice, 'usb' | 'jlink'> {
-        /**
-         * @deprecated Using the property `serialnumber` has been
-         * deprecated. You should now use `serialNumber`. The property
-         * will be removed in the next major release.
-         */
-        serialnumber?: string; // from nrf-device-lib
-        /**
-         * @deprecated Using the property `serialports` has been
-         * deprecated. You should now use `serialPorts`. The property
-         * will be removed in the next major release.
-         */
-        serialports?: Serialport[]; // from nrf-device-lib
-        // traits: DeviceTraits; // from nrf-device-lib
-        usb?: {
-            product?: string;
-        }; // from nrf-device-lib
-        jlink?: {
-            boardVersion: string;
-        }; // from nrf-device-lib
-        serialNumber: string;
-        boardVersion?: string;
-        nickname?: string;
-        serialport?: Serialport;
-    }
-
-    export interface DeviceInfo {
-        name?: string;
-        cores?: number;
-        icon: React.ElementType;
-        website: {
-            productPagePath?: string;
-            buyOnlineParams?: string;
-        };
     }
 
     /**
@@ -705,5 +629,8 @@ declare module 'pc-nrfconnect-shared' {
     export const HashType: typeof import('./src/Device/initPacket').HashType;
 }
 
+declare module 'prettysize' {
+    export default function pretty(n: number): string;
+}
 // Let typescript compiler in `npm run lint` resolve css modules
 declare module '*.module.scss';

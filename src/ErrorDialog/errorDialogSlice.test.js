@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { hideDialog, showDialog } from './errorDialogActions';
-import reducer from './errorDialogReducer';
+import { hideDialog, reducer, showDialog } from './errorDialogSlice';
 
 const initialState = reducer(undefined, {});
 

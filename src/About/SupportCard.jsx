@@ -12,7 +12,7 @@ import {
     deviceInfo,
     selectedSerialNumber,
     sortedDevices,
-} from '../Device/deviceReducer';
+} from '../Device/deviceSlice';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
 import Section from './Section';
