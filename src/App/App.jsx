@@ -184,12 +184,6 @@ const PanePropType = exact({
     SidePanel: elementType,
 });
 
-const DocumentationPropType = exact({
-    title: string,
-    linkLabel: string,
-    link: string,
-});
-
 ConnectedApp.propTypes = {
     deviceSelect: node,
     panes: arrayOf(oneOfType([LegacyPanePropType, PanePropType]).isRequired)
@@ -197,7 +191,7 @@ ConnectedApp.propTypes = {
     sidePanel: node,
     showLogByDefault: bool,
     reportUsageData: bool,
-    documentation: arrayOf(DocumentationPropType),
+    documentation: arrayOf(node),
     children: node,
 };
 

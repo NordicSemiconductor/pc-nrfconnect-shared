@@ -4,16 +4,17 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import React from 'react';
 import { createSlice } from '@reduxjs/toolkit';
 
-interface DocumentationSection extends React.FC {
-    title: string;
-    linkLabel: string;
-    link: string;
+interface DocumentationSectionProps {
+    title?: string;
+    linkLabel?: string;
+    link?: string;
 }
 
 interface DocumentationState {
-    sections: DocumentationSection[];
+    sections: React.Component<DocumentationSectionProps>[];
 }
 
 const initialState: DocumentationState = {
