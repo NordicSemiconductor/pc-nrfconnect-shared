@@ -23,11 +23,11 @@ const slice = createSlice({
     name: 'appLayout',
     initialState,
     reducers: {
-        toggleLogVisible: (state, action) => {
-            state.isLogVisible = action.payload;
+        toggleLogVisible: state => {
+            state.isLogVisible = !state.isLogVisible;
         },
-        toggleSidePanelVisible: (state, action) => {
-            state.isSidePanelVisible = action.payload;
+        toggleSidePanelVisible: state => {
+            state.isSidePanelVisible = !state.isSidePanelVisible;
         },
         setCurrentPane: (state, action) => {
             if (!isAboutPane(action.payload, state.panes)) {

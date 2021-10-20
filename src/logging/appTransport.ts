@@ -4,10 +4,18 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import Transport from 'winston-transport';
+import { LogEntry } from 'winston';
+import Transport, { TransportStreamOptions } from 'winston-transport';
+
+interface Options extends TransportStreamOptions {
+    onLogEntry: (entry: LogEntry) => void;
+}
 
 export default class AppTransport extends Transport {
-    constructor(options) {
+    private onLogEntry: (entry: LogEntry) => void;
+    private entryCount: number;
+
+    constructor(options: Options) {
         super(options);
 
         if (!options.onLogEntry) {
@@ -20,7 +28,7 @@ export default class AppTransport extends Transport {
         this.entryCount = 0;
     }
 
-    log({ level, message, timestamp }, callback) {
+    log({ level, message, timestamp }: LogEntry, next: () => void) {
         this.onLogEntry({
             id: this.entryCount,
             timestamp,
@@ -28,6 +36,6 @@ export default class AppTransport extends Transport {
             message,
         });
         this.entryCount += 1;
-        callback(null, true);
+        next();
     }
 }

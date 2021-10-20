@@ -634,3 +634,5 @@ declare module 'prettysize' {
 }
 // Let typescript compiler in `npm run lint` resolve css modules
 declare module '*.module.scss';
+
+declare module 'triple-beam';

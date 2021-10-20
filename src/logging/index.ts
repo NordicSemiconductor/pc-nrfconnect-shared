@@ -6,7 +6,8 @@
 
 import path from 'path';
 import { SPLAT } from 'triple-beam';
-import { createLogger, format, transports } from 'winston';
+import winston, { createLogger, format, transports } from 'winston';
+import Transport from 'winston-transport';
 
 import { openFile } from '../utils/open';
 import AppTransport from './appTransport';
@@ -14,7 +15,7 @@ import ConsoleTransport from './consoleTransport';
 import createLogBuffer from './logBuffer';
 
 const filePrefix = new Date().toISOString().replace(/:/gi, '_');
-let logFilePath;
+let logFilePath: string;
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isConsoleAvailable = (() => {
@@ -28,30 +29,25 @@ const isConsoleAvailable = (() => {
 
 const logBuffer = createLogBuffer();
 
-const logTransports = [
+const logTransports: Transport[] = [
     new AppTransport({
-        name: 'app',
         level: 'info',
         onLogEntry: logBuffer.addEntry,
     }),
 ];
-
+transports.Console;
 if (isDevelopment && isConsoleAvailable) {
     logTransports.push(
         new ConsoleTransport({
-            name: 'console',
             level: 'silly',
-            debugStdout: false,
-            stderrLevels: [
-                'silly',
-                'debug',
-                'verbose',
-                'info',
-                'warn',
-                'error',
-            ],
         })
     );
+}
+
+interface SharedLogger extends winston.Logger {
+    addFileTransport: (appLogDir: string) => void;
+    getAndClearEntries: () => void;
+    openLogFile: () => void;
 }
 
 const logger = createLogger({
@@ -69,16 +65,15 @@ const logger = createLogger({
         )
     ),
     transports: logTransports,
-});
+}) as SharedLogger;
 
-logger.addFileTransport = appLogDir => {
+logger.addFileTransport = (appLogDir: string) => {
     logFilePath = path.join(appLogDir, `${filePrefix}-log.txt`);
     const fileTransport = new transports.File({
-        name: 'file',
         filename: logFilePath,
         level: 'debug',
     });
-    logger.add(fileTransport, {}, true);
+    logger.add(fileTransport);
 };
 
 logger.getAndClearEntries = () => logBuffer.clear();
@@ -87,7 +82,10 @@ logger.openLogFile = () => {
     try {
         openFile(logFilePath);
     } catch (error) {
-        logger.error(`Unable to open log file: ${error.message}`);
+        const message = error instanceof Error ? error.message : error;
+        if (error instanceof Error) {
+            logger.error(`Unable to open log file: ${message}`);
+        }
     }
 };
 

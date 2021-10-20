@@ -5,6 +5,7 @@
  */
 
 import { Device as NrfdlDevice } from '@nordicsemiconductor/nrf-device-lib-js';
+import { LogEntry } from 'winston';
 
 export interface RootState {
     appLayout: AppLayout;
@@ -46,13 +47,6 @@ export interface ErrorResolutions {
 export interface Log {
     autoScroll: boolean;
     logEntries: LogEntry[];
-}
-
-export interface LogEntry {
-    id: number;
-    timestamp: string;
-    level: string;
-    message: string;
 }
 
 export type Devices = { [key: string]: Device | undefined };

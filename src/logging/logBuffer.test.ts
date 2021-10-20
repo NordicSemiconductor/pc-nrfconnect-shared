@@ -7,7 +7,7 @@
 import createLogBuffer from './logBuffer';
 
 describe('logBuffer', () => {
-    let logBuffer;
+    let logBuffer: ReturnType<typeof createLogBuffer>;
 
     beforeEach(() => {
         logBuffer = createLogBuffer();
@@ -18,12 +18,15 @@ describe('logBuffer', () => {
     });
 
     it('should have 1 entry when 1 entry has been added', () => {
-        logBuffer.addEntry({ id: 0 });
+        logBuffer.addEntry({ id: 0, level: '', message: '' });
         expect(logBuffer.size()).toEqual(1);
     });
 
     it('should return all added entries when clearing buffer', () => {
-        const inputEntries = [{ id: 0 }, { id: 1 }];
+        const inputEntries = [
+            { id: 0, level: '', message: '' },
+            { id: 1, level: '', message: '' },
+        ];
         logBuffer.addEntry(inputEntries[0]);
         logBuffer.addEntry(inputEntries[1]);
         const outputEntries = logBuffer.clear();
@@ -31,7 +34,7 @@ describe('logBuffer', () => {
     });
 
     it('should have no entries when buffer has been cleared', () => {
-        logBuffer.addEntry({ id: 0 });
+        logBuffer.addEntry({ id: 0, level: '', message: '' });
         logBuffer.clear();
         expect(logBuffer.size()).toEqual(0);
     });
