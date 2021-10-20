@@ -7,29 +7,21 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { AppLayout, AppLayoutPane, RootState } from '../state';
-import {
-    getPersistedCurrentPane,
-    persistCurrentPane,
-} from '../utils/persistentStore';
+import { persistCurrentPane } from '../utils/persistentStore';
 
-/* This must be a function because of getPersistedCurrentPane:
-  getPersistedCurrentPane can only be called when package.json was
-  already read in packageJson.ts. So the initial state must not be
-  determined as early as loading the module but only later when invoking
-  the reducer with an undefined state */
-const initialState = (): AppLayout => ({
+const initialState: AppLayout = {
     isSidePanelVisible: true,
     isLogVisible: true,
-    currentPane: getPersistedCurrentPane() ?? 0,
+    currentPane: 0,
     panes: [],
-});
+};
 
 const isAboutPane = (pane: number, allPanes: AppLayoutPane[]) =>
     pane === allPanes.length - 1;
 
 const slice = createSlice({
     name: 'appLayout',
-    initialState: initialState(),
+    initialState,
     reducers: {
         toggleLogVisible: (state, action) => {
             state.isLogVisible = action.payload;

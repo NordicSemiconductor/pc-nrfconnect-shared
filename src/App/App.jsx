@@ -32,12 +32,14 @@ import NavBar from '../NavBar/NavBar';
 import classNames from '../utils/classNames';
 import logLibVersions from '../utils/logLibVersions';
 import packageJson from '../utils/packageJson';
+import { getPersistedCurrentPane } from '../utils/persistentStore';
 import usageData from '../utils/usageData';
 import useHotKey from '../utils/useHotKey';
 import {
     currentPane as currentPaneSelector,
     isLogVisible as isLogVisibleSelector,
     isSidePanelVisible as isSidePanelVisibleSelector,
+    setCurrentPane,
     setPanes,
     toggleLogVisible,
 } from './appLayout';
@@ -91,12 +93,10 @@ const ConnectedApp = ({
     documentation,
     children,
 }) => {
-    const allPanes = useMemo(
-        () => [...panes, { name: 'About', Main: About }].map(convertLegacy),
-        [panes]
-    );
+    usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
+    const allPanes = useAllPanes(panes);
     const dispatch = useDispatch();
 
     useHotKey('alt+l', () => ipcRenderer.send('open-app-launcher'));
@@ -106,10 +106,6 @@ const ConnectedApp = ({
             dispatch(toggleLogVisible());
         }
     }, [dispatch, showLogByDefault]);
-
-    useEffect(() => {
-        dispatch(setPanes(allPanes));
-    }, [dispatch, allPanes]);
 
     useEffect(() => {
         if (documentation) dispatch(setDocumentationSections(documentation));
@@ -215,3 +211,26 @@ App.propTypes = {
 };
 
 export default App;
+
+const usePersistedPane = () => {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        const pane = getPersistedCurrentPane() ?? 0;
+        dispatch(setCurrentPane(pane));
+    }, [dispatch]);
+};
+
+const useAllPanes = panes => {
+    const dispatch = useDispatch();
+
+    const allPanes = useMemo(
+        () => [...panes, { name: 'About', Main: About }].map(convertLegacy),
+        [panes]
+    );
+
+    useEffect(() => {
+        dispatch(setPanes(allPanes));
+    }, [dispatch, allPanes]);
+
+    return allPanes;
+};
