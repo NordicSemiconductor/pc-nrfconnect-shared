@@ -5,8 +5,9 @@
  */
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { LogEntry } from 'winston';
 
-import { Log, LogEntry, RootState } from '../state';
+import { Log, RootState } from '../state';
 
 const MAX_ENTRIES = 1000;
 

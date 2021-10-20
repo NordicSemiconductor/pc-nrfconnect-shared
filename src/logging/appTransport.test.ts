@@ -14,7 +14,7 @@ describe('AppTransport', () => {
     };
 
     it('should throw error if onLogEntry is not provided to constructor', () => {
-        expect(() => new AppTransport({})).toThrow();
+        expect(() => new AppTransport(<never>{})).toThrow();
     });
 
     it('should include message in log entry', () => {
@@ -73,6 +73,6 @@ describe('AppTransport', () => {
 
         appTransport.log(info, onLogDone);
 
-        expect(onLogDone).toHaveBeenCalledWith(null, true);
+        expect(onLogDone).toHaveBeenCalled();
     });
 });
