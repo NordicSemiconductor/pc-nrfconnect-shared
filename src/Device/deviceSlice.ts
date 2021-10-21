@@ -138,10 +138,9 @@ const slice = createSlice({
         //  * Indicates that the user has provided input to the device setup operation.
         //  * This action is dispatched after DEVICE_SETUP_INPUT_REQUIRED.
         //  *
-        //  * @param {Boolean|String} input The input made by the user.
         //  */
-        deviceSetupInputReceived: (state, action: PayloadAction<boolean>) => {
-            state.isSetupWaitingForUserInput = action.payload;
+        deviceSetupInputReceived: state => {
+            state.isSetupWaitingForUserInput = false;
         },
 
         // /**

@@ -58,7 +58,7 @@ const getDeviceSetupUserInput = dispatch => (message, choices) =>
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
 export const receiveDeviceSetupInput = input => dispatch => {
-    dispatch(deviceSetupInputReceived(input));
+    dispatch(deviceSetupInputReceived());
     if (deviceSetupCallback) {
         deviceSetupCallback(input);
         deviceSetupCallback = undefined;
@@ -89,7 +89,7 @@ export const prepareDevice = async (device, deviceSetupConfig) => {
             return performDFU(device, deviceSetupConfig);
         }
 
-        if (device.dfuTriggerInfo) {
+        if (device.dfuTriggerVersion) {
             logger.debug(
                 'Device has DFU trigger interface, the device is in Application mode'
             );
