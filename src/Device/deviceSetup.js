@@ -58,7 +58,7 @@ const getDeviceSetupUserInput = dispatch => (message, choices) =>
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
 export const receiveDeviceSetupInput = input => dispatch => {
-    dispatch(deviceSetupInputReceived(input));
+    dispatch(deviceSetupInputReceived());
     if (deviceSetupCallback) {
         deviceSetupCallback(input);
         deviceSetupCallback = undefined;
