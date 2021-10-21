@@ -14,12 +14,6 @@ $roboto-font-path: '~roboto-fontface/fonts' !default;
 @each $color, $value in $theme-colors {
     .btn-#{$color} {
         border-color: $gray-200;
-
-        &.disabled,
-        &:disabled {
-            color: $gray-300;
-            border-color: $gray-100;
-        }
     }
 }
 
@@ -45,7 +39,7 @@ body {
 
 .disabled,
 :disabled {
-    opacity: $disabled-opacity;
+    opacity: $disabled-opacity !important;
 
     // To prevent opacity from stacking up
     .disabled,
