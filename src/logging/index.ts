@@ -6,7 +6,7 @@
 
 import path from 'path';
 import { SPLAT } from 'triple-beam';
-import winston, { createLogger, format, transports } from 'winston';
+import winston, { createLogger, format, LogEntry, transports } from 'winston';
 import Transport from 'winston-transport';
 
 import { openFile } from '../utils/open';
@@ -46,7 +46,7 @@ if (isDevelopment && isConsoleAvailable) {
 
 interface SharedLogger extends winston.Logger {
     addFileTransport: (appLogDir: string) => void;
-    getAndClearEntries: () => void;
+    getAndClearEntries: () => LogEntry[];
     openLogFile: () => void;
 }
 

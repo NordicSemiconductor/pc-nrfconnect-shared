@@ -12,10 +12,12 @@ import MemoryMap from 'nrf-intel-hex';
 import SerialPort from 'serialport';
 
 import logger from '../logging';
+import { Device } from '../state';
 import { getDeviceLibContext, waitForDevice } from './deviceLister';
 import {
     createInitPacketBuffer,
     defaultInitPacket,
+    DfuImage,
     FwType,
     HashType,
 } from './initPacket';
@@ -24,7 +26,7 @@ const NORDIC_DFU_PRODUCT_ID = 0x521f;
 const NORDIC_VENDOR_ID = 0x1915;
 const DEFAULT_DEVICE_WAIT_TIME = 10000;
 
-export const isDeviceInDFUBootloader = device => {
+export const isDeviceInDFUBootloader = (device: Device) => {
     if (!device) {
         return false;
     }
@@ -48,7 +50,7 @@ export const isDeviceInDFUBootloader = device => {
  * @param {Object} device device
  * @returns {Promise<Object>} device object which is already in bootloader.
  */
-export const ensureBootloaderMode = /* async */ device => {
+export const ensureBootloaderMode = /* async */ (device: Device) => {
     if (isDeviceInDFUBootloader(device)) {
         logger.debug('Device is in bootloader mode');
         return device;
@@ -83,7 +85,10 @@ export const ensureBootloaderMode = /* async */ device => {
  * @param {function} promiseConfirm funtion that returns Promise<boolean> for confirmation
  * @returns {Promise<Object>} updated device
  */
-const checkConfirmUpdateBootloader = /* async */ (device, promiseConfirm) => {
+const checkConfirmUpdateBootloader = /* async */ (
+    device: Device,
+    promiseConfirm
+) => {
     if (!promiseConfirm) {
         // without explicit consent bootloader will not be updated
         return device;
@@ -219,22 +224,22 @@ function calculateSHA256Hash(image) {
  * @param {Array} dfuImages to be created
  * @returns {Object} DFU data
  */
-const createDfuDataFromImages = dfuImages => {
-    const extract = image => ({
+const createDfuDataFromImages = (dfuImages: DfuImage[]) => {
+    const extract = (image: DfuImage) => ({
         bin: image.firmwareImage,
         dat: createInitPacketBuffer(
-            image.initPacket.fwVersion,
-            image.initPacket.hwVersion,
-            image.initPacket.sdReq,
-            image.initPacket.fwType,
+            image.initPacket.fwVersion!,
+            image.initPacket.hwVersion!,
+            image.initPacket.sdReq!,
+            image.initPacket.fwType!,
             image.initPacket.sdSize,
             image.initPacket.blSize,
             image.initPacket.appSize,
             image.initPacket.hashType,
-            image.initPacket.hash,
+            image.initPacket.hash!,
             image.initPacket.isDebug,
-            image.initPacket.signatureType,
-            image.initPacket.signature
+            image.initPacket.signatureType!,
+            image.initPacket.signature!
         ),
     });
 

@@ -4,8 +4,14 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { Device as NrfdlDevice } from '@nordicsemiconductor/nrf-device-lib-js';
+import {
+    Device as NrfdlDevice,
+    SemanticVersion,
+} from '@nordicsemiconductor/nrf-device-lib-js';
+import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { LogEntry } from 'winston';
+
+export type TDispatch = ThunkDispatch<RootState, null, AnyAction>;
 
 export interface RootState {
     appLayout: AppLayout;
@@ -76,15 +82,10 @@ export interface Serialport {
     productId: string;
     serialNumber: string;
     vendorId: string;
-    /**
-     * @deprecated Using the property `comName` has been
-     * deprecated. You should now use `path`. The property
-     * will be removed in the next major release.
-     */
     comName: string;
 }
 
-export interface Device extends Omit<NrfdlDevice, 'usb' | 'jlink'> {
+export interface Device extends Omit<NrfdlDevice, 'jlink'> {
     /**
      * @deprecated Using the property `serialnumber` has been
      * deprecated. You should now use `serialNumber`. The property
@@ -98,15 +99,21 @@ export interface Device extends Omit<NrfdlDevice, 'usb' | 'jlink'> {
      */
     serialports?: Serialport[]; // from nrf-device-lib
     // traits: DeviceTraits; // from nrf-device-lib
-    usb?: {
-        product?: string;
-    }; // from nrf-device-lib
+
     jlink?: {
         boardVersion: string;
+        deviceFamily: string;
+        deviceVersion: string;
+        jlinkObFirmwareVersion: string;
+        serialNumber: string;
     }; // from nrf-device-lib
+
     serialNumber: string;
     boardVersion?: string;
     nickname?: string;
     serialport?: Serialport;
     favorite?: boolean;
+
+    dfuTriggerInfo: unknown;
+    dfuTriggerVersion: { semVer: string };
 }
