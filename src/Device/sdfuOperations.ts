@@ -20,6 +20,7 @@ import {
     DfuImage,
     FwType,
     HashType,
+    InitPacket,
 } from './initPacket';
 
 const NORDIC_DFU_PRODUCT_ID = 0x521f;
@@ -130,7 +131,10 @@ const confirmHelper = async promiseConfirm => {
  * @param {function} promiseChoice Promise returning function
  * @returns {Promise} resolves to user selected choice or first element
  */
-const choiceHelper = /* async */ (choices, promiseChoice) => {
+const choiceHelper = /* async */ (
+    choices: string[],
+    promiseChoice: (question: string, choices: string[]) => Promise<string>
+) => {
     if (choices.length > 1 && promiseChoice) {
         return promiseChoice('Which firmware do you want to program?', choices);
     }
@@ -218,13 +222,19 @@ function calculateSHA256Hash(image) {
     return Buffer.from(digest.digest().reverse());
 }
 
+interface DfuData {
+    application?: unknown;
+    softdevice?: unknown;
+    params?: InitPacket;
+}
+
 /**
  * Create DFU data from prepared DFU images
  *
  * @param {Array} dfuImages to be created
  * @returns {Object} DFU data
  */
-const createDfuDataFromImages = (dfuImages: DfuImage[]) => {
+const createDfuDataFromImages = (dfuImages: DfuImage[]): DfuData => {
     const extract = (image: DfuImage) => ({
         bin: image.firmwareImage,
         dat: createInitPacketBuffer(
@@ -258,11 +268,11 @@ const createDfuDataFromImages = (dfuImages: DfuImage[]) => {
  * @param {Array} dfuImages to be created
  * @returns {Object} zip
  */
-const createDfuZip = dfuImages => {
+const createDfuZip = (dfuImages: DfuImage[]) => {
     return new Promise(resolve => {
         const data = createDfuDataFromImages(dfuImages);
         const zip = new AdmZip();
-        const manifest = {};
+        const manifest: DfuData = {};
 
         if (data.application) {
             manifest.application = {
@@ -296,7 +306,7 @@ const createDfuZip = dfuImages => {
  * @param {Array} dfuImages to be created
  * @returns {Buffer} buffer
  */
-const createDfuZipBuffer = async dfuImages => {
+const createDfuZipBuffer = async (dfuImages: DfuImage[]) => {
     const zip = await createDfuZip(dfuImages);
     const buffer = zip.toBuffer();
     return buffer;
@@ -312,16 +322,15 @@ const createDfuZipBuffer = async dfuImages => {
  * @param {object} dfu configuration object for performing the DFU
  * @returns {Promise} resolved to prepared device
  */
-const prepareInDFUBootloader = async (device, dfu) => {
+const prepareInDFUBootloader = async (device: Device, dfu: DfuData) => {
     logger.debug(
         `${device.serialNumber} on ${device.serialport.comName} is now in DFU-Bootloader...`
     );
 
     const { application, softdevice } = dfu;
-    let { params } = dfu;
-    params = params || {};
+    const params: Partial<InitPacket> = dfu.params || {};
 
-    const dfuImages = [];
+    const dfuImages: DfuImage[] = [];
     if (softdevice) {
         const firmwareImage = parseFirmwareImage(softdevice);
 
@@ -361,7 +370,7 @@ const prepareInDFUBootloader = async (device, dfu) => {
     const zipBuffer = await createDfuZipBuffer(dfuImages);
     fs.writeFileSync('tem.zip', zipBuffer);
 
-    let prevPercentage;
+    let prevPercentage: number;
 
     logger.debug('Starting DFU');
     await new Promise(resolve =>
@@ -388,12 +397,12 @@ const prepareInDFUBootloader = async (device, dfu) => {
             },
             ({ progressJson: progress }) => {
                 // // Don't repeat percentage steps that have already been logged.
-                if (prevPercentage !== progress.progress_percentage) {
+                if (prevPercentage !== progress.progressPercentage) {
                     const status = `${progress.message.replace('.', ':')} ${
-                        progress.progress_percentage
+                        progress.progressPercentage
                     }%`;
                     logger.info(status);
-                    prevPercentage = progress.progress_percentage;
+                    prevPercentage = progress.progressPercentage;
                 }
             }
         )
