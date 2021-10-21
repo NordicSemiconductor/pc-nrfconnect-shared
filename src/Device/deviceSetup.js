@@ -89,7 +89,7 @@ export const prepareDevice = async (device, deviceSetupConfig) => {
             return performDFU(device, deviceSetupConfig);
         }
 
-        if (device.dfuTriggerInfo) {
+        if (device.dfuTriggerVersion) {
             logger.debug(
                 'Device has DFU trigger interface, the device is in Application mode'
             );
