@@ -382,7 +382,6 @@ const prepareInDFUBootloader = async (device, dfu) => {
                 }
             },
             ({ progressJson: progress }) => {
-                // // Don't repeat percentage steps that have already been logged.
                 if (prevPercentage !== progress.progressPercentage) {
                     const status = `${progress.message.replace('.', ':')} ${
                         progress.progressPercentage
