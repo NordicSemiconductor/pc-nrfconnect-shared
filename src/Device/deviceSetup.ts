@@ -27,6 +27,26 @@ import {
     PromiseConfirm,
 } from './sdfuOperations';
 
+export interface DfuEntry {
+    application: string;
+    semver: string;
+    softdevice?: string | Buffer;
+    params: Partial<InitPacket>;
+}
+export interface DeviceSetup {
+    dfu: {
+        [key: string]: DfuEntry;
+    };
+    jprog: {
+        [key: string]: {
+            fw: string;
+            fwIdAddress: number;
+            fwVersion: string;
+        };
+    };
+    needSerialport: boolean;
+}
+
 // Defined when user input is required during device setup. When input is
 // received from the user, this callback is invoked with the confirmation
 // (Boolean) or choice (String) that the user provided as input.
@@ -68,7 +88,7 @@ const getDeviceSetupUserInput =
  */
 export const receiveDeviceSetupInput =
     (input: boolean | string) => (dispatch: TDispatch) => {
-        dispatch(deviceSetupInputReceived(input));
+        dispatch(deviceSetupInputReceived());
         if (deviceSetupCallback) {
             deviceSetupCallback(input);
             deviceSetupCallback = undefined;
@@ -78,25 +98,6 @@ export const receiveDeviceSetupInput =
             );
         }
     };
-export interface DfuEntry {
-    application: string;
-    semver: string;
-    softdevice?: string | Buffer;
-    params: Partial<InitPacket>;
-}
-export interface DeviceSetup {
-    dfu: {
-        [key: string]: DfuEntry;
-    };
-    jprog: {
-        [key: string]: {
-            fw: string;
-            fwIdAddress: number;
-            fwVersion: string;
-        };
-    };
-    needSerialport: boolean;
-}
 
 export interface DeviceSetupConfig extends DeviceSetup {
     allowCustomDevice: boolean;
@@ -117,7 +118,7 @@ export const prepareDevice = async (
             return performDFU(device, deviceSetupConfig);
         }
 
-        if (device.dfuTriggerInfo) {
+        if (device.dfuTriggerVersion) {
             logger.debug(
                 'Device has DFU trigger interface, the device is in Application mode'
             );
