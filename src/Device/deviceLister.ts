@@ -16,6 +16,7 @@ import camelcaseKeys from 'camelcase-keys';
 import { Device, DeviceListing, Serialport } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';
+import { Devices } from '../state';
 import { devicesDetected } from './deviceSlice';
 
 const DEFAULT_DEVICE_WAIT_TIME = 3000;
@@ -75,15 +76,18 @@ export const startWatchingDevices =
     (deviceListing: DeviceListing, doDeselectDevice: Function) =>
     async (dispatch: Function, getState: Function): Promise<void> => {
         const updateDeviceList = async () => {
-            let devices: Device[] = (await nrfDeviceLib.enumerate(
+            const { selectedSerialNumber, devices: devicesFromState } =
+                getState().device;
+            await waitForModeSwitch(devicesFromState, selectedSerialNumber);
+            let devices: Device[] = await nrfDeviceLib.enumerate(
                 getDeviceLibContext(),
                 deviceListing as unknown as DeviceTraits
-            )) as unknown as Device[];
+            );
             devices = wrapDevicesFromNrfdl(devices);
+            const hasSerialNumber = (d: Device) => {
+                return d.serialNumber === selectedSerialNumber;
+            };
 
-            const { selectedSerialNumber } = getState().device;
-            const hasSerialNumber = (d: Device) =>
-                d.serialNumber === selectedSerialNumber;
             if (
                 selectedSerialNumber !== null &&
                 !devices.find(hasSerialNumber)
@@ -189,4 +193,25 @@ export const waitForDevice = (
             );
         }, timeout);
     });
+};
+
+const waitForModeSwitch = async (
+    devices: Devices,
+    selectedSerialNumber: string
+) => {
+    const hasDfuTriggerVersion =
+        devices[selectedSerialNumber]?.dfuTriggerVersion != null;
+
+    // Wait some time in case device is being put in either app or bootloader mode
+    if (hasDfuTriggerVersion) {
+        try {
+            await waitForDevice(selectedSerialNumber, DEFAULT_DEVICE_WAIT_TIME);
+        } catch (err) {
+            logger.debug(
+                `Device did not show up after ${
+                    DEFAULT_DEVICE_WAIT_TIME / 1000
+                } seconds`
+            );
+        }
+    }
 };
