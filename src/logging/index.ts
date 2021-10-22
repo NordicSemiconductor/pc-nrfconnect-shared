@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import { TransformableInfo } from 'logform';
 import path from 'path';
 import { SPLAT } from 'triple-beam';
 import winston, { createLogger, format, transports } from 'winston';
@@ -50,12 +51,19 @@ interface SharedLogger extends winston.Logger {
     openLogFile: () => void;
 }
 
+/* This function is only needed, because our version of TypeScript still seems
+   unable to accept (unique) symbols as index types. As soon as we have
+   upgraded to a version that is capable of that, the invocations of this
+   function can be replaced by a simple `info[splat]` and this function can
+   be removed. */
+const splat = (info: TransformableInfo) => info[SPLAT as unknown as string];
+
 const logger = createLogger({
     format: format.combine(
         format(info => ({
             ...info,
-            message: info[SPLAT]
-                ? `${info.message} ${info[SPLAT].join(' ')}`
+            message: splat(info)
+                ? `${info.message} ${splat(info).join(' ')}`
                 : info.message,
         }))(),
         format.timestamp(),
