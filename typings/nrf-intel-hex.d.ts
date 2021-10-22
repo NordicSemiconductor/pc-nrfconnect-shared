@@ -8,7 +8,7 @@
  * Parser/writer for the "Intel hex" format.
  */
 
-declare module "nrf-intel-hex" {
+declare module 'nrf-intel-hex' {
     export type MemoryBlocks =
         | { [x: number]: Uint8Array }
         | [number, Uint8Array][]
@@ -20,13 +20,9 @@ declare module "nrf-intel-hex" {
     export type MemoryMaps = MemoryMapTuple[];
 
     export default class MemoryMap extends Map<number, Uint8Array> {
-        constructor(blocks: MemoryBlocks);
-
         static flattenOverlaps(overlaps: Overlaps): MemoryMap;
 
-        static overlapMemoryMaps(
-            memoryMaps: MemoryMaps
-        ): Overlaps;
+        static overlapMemoryMaps(memoryMaps: MemoryMaps): Overlaps;
 
         static fromHex(hexText: string, maxBlockSize?: number): MemoryMap;
 

@@ -45,7 +45,7 @@ export interface InitPacket {
     blSize: number;
     appSize: number;
     hashType: number;
-    hash?: [];
+    hash?: Buffer;
     isDebug: boolean;
     signatureType?: number;
     signature?: [];
@@ -69,11 +69,11 @@ export const defaultInitPacket: InitPacket = {
 export interface DfuImage {
     name: string;
     initPacket: InitPacket;
-    firmwareImage: Uint8Array;
+    firmwareImage: Buffer;
 }
 
 // Create hash by using hash type and bytes
-const createHash = (hashType: number, hashInput: []): protobuf.Message => {
+const createHash = (hashType: number, hashInput: Buffer): protobuf.Message => {
     const hashMessage = root.lookupType('dfu.Hash');
     const hashPayload = {
         hashType,
@@ -171,10 +171,7 @@ const createPacket = (
 };
 
 // Convert protocol buffer message to buffer
-const messageToBuffer = (
-    type: string,
-    message: protobuf.Message
-): Uint8Array => {
+const messageToBuffer = (type: string, message: protobuf.Message) => {
     if (!message) {
         throw Error('The message to be converted is undefined.');
     }
@@ -186,7 +183,7 @@ const messageToBuffer = (
 
     const buffer = dfuMessage.encode(message).finish();
 
-    return buffer;
+    return buffer as Buffer;
 };
 
 /**
@@ -281,7 +278,7 @@ export const createInitPacket = (
     blSize: number | undefined,
     appSize: number | undefined,
     hashType: number | undefined,
-    hash: [] | undefined,
+    hash: Buffer | undefined,
     isDebug: boolean,
     signatureType: number | undefined,
     signature: [] | undefined
@@ -295,7 +292,10 @@ export const createInitPacket = (
     }
 
     // Create init command
-    const hashInput = createHash(hashType || HashType.NO_HASH, hash || []);
+    const hashInput = createHash(
+        hashType || HashType.NO_HASH,
+        hash ?? Buffer.from([])
+    );
     const initCommand = createInitCommand(
         fwVersion,
         hwVersion,
@@ -349,11 +349,11 @@ export const createInitPacketBuffer = (
     blSize: number,
     appSize: number,
     hashType: number,
-    hash: [],
+    hash: Buffer,
     isDebug: boolean,
     signatureType: number,
     signature: []
-): Uint8Array => {
+): Buffer => {
     const packet = createInitPacket(
         fwVersion,
         hwVersion,

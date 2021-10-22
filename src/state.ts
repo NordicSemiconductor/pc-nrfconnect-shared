@@ -4,10 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import {
-    Device as NrfdlDevice,
-    SemanticVersion,
-} from '@nordicsemiconductor/nrf-device-lib-js';
+import { Device as NrfdlDevice } from '@nordicsemiconductor/nrf-device-lib-js';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { LogEntry } from 'winston';
 
@@ -60,7 +57,7 @@ export interface DeviceState {
     devices: Devices;
     deviceInfo: DeviceInfo | null;
     isSetupDialogVisible: boolean;
-    isSetupWaitingForUserInput: boolean;
+    isSetupWaitingForUserInput: boolean | string;
     selectedSerialNumber: string | null;
     setupDialogChoices: readonly string[];
     setupDialogText: string | null;

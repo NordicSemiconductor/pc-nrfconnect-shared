@@ -149,7 +149,7 @@ export const waitForDevice = (
         serialPort: expectedTraits.serialport,
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise<Device>((resolve, reject) => {
         let timeoutId: NodeJS.Timeout;
 
         nrfDeviceLib.enumerate(

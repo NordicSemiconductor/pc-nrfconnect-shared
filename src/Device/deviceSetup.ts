@@ -14,17 +14,23 @@ import {
     deviceSetupInputReceived,
     deviceSetupInputRequired,
 } from './deviceSlice';
+import { InitPacket } from './initPacket';
 import {
     programFirmware,
     validateFirmware,
     verifySerialPortAvailable,
 } from './jprogOperations';
-import { isDeviceInDFUBootloader, performDFU } from './sdfuOperations';
+import {
+    isDeviceInDFUBootloader,
+    performDFU,
+    PromiseChoice,
+    PromiseConfirm,
+} from './sdfuOperations';
 
 // Defined when user input is required during device setup. When input is
 // received from the user, this callback is invoked with the confirmation
 // (Boolean) or choice (String) that the user provided as input.
-let deviceSetupCallback: ((choice: boolean) => void) | undefined;
+let deviceSetupCallback: ((choice: string | boolean) => void) | undefined;
 
 /**
  * Asks the user to provide input during device setup. If a list of choices are
@@ -39,8 +45,8 @@ let deviceSetupCallback: ((choice: boolean) => void) | undefined;
  */
 const getDeviceSetupUserInput =
     (dispatch: TDispatch) => (message: string, choices: string[]) =>
-        new Promise<boolean>((resolve, reject) => {
-            deviceSetupCallback = (choice: boolean) => {
+        new Promise<boolean | string>((resolve, reject) => {
+            deviceSetupCallback = (choice: boolean | string) => {
                 if (!choices) {
                     // for confirmation resolve with boolean
                     resolve(!!choice);
@@ -61,7 +67,7 @@ const getDeviceSetupUserInput =
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
 export const receiveDeviceSetupInput =
-    (input: boolean) => (dispatch: TDispatch) => {
+    (input: boolean | string) => (dispatch: TDispatch) => {
         dispatch(deviceSetupInputReceived(input));
         if (deviceSetupCallback) {
             deviceSetupCallback(input);
@@ -72,18 +78,15 @@ export const receiveDeviceSetupInput =
             );
         }
     };
-
-const createReturnValue = (
-    device: Device,
-    details: { wasProgrammed: boolean }
-) => ({ device, details });
-
+export interface DfuEntry {
+    application: string;
+    semver: string;
+    softdevice?: string | Buffer;
+    params: Partial<InitPacket>;
+}
 export interface DeviceSetup {
     dfu: {
-        [key: string]: {
-            application: string;
-            semver: string;
-        };
+        [key: string]: DfuEntry;
     };
     jprog: {
         [key: string]: {
@@ -97,18 +100,16 @@ export interface DeviceSetup {
 
 export interface DeviceSetupConfig extends DeviceSetup {
     allowCustomDevice: boolean;
-    promiseChoice: (message: string, choices: string[]) => void;
-    promiseConfirm: (message: string, choices?: string[]) => Promise<boolean>;
-    detailedOutput?: boolean;
+    promiseChoice: PromiseChoice;
+    promiseConfirm: PromiseConfirm;
 }
 
 export const prepareDevice = async (
     device: Device,
     deviceSetupConfig: DeviceSetupConfig
-): Promise<Device> => {
-    const { jprog, dfu, needSerialport, detailedOutput } = deviceSetupConfig;
+): Promise<Device | undefined> => {
+    const { jprog, dfu, needSerialport } = deviceSetupConfig;
 
-    let wasProgrammed = false;
     if (dfu && Object.keys(dfu).length > 0) {
         // Check if device is in DFU-Bootloader, it might only have serialport
         if (isDeviceInDFUBootloader(device)) {
@@ -127,11 +128,7 @@ export const prepareDevice = async (
                     .map(key => dfu[key].semver)
                     .includes(semVer)
             ) {
-                return createReturnValue(
-                    device,
-                    { wasProgrammed },
-                    detailedOutput
-                );
+                return device;
             }
             return performDFU(device, deviceSetupConfig);
         }
@@ -157,8 +154,7 @@ export const prepareDevice = async (
         logger.debug('Found matching firmware definition', key);
         const { fw, fwVersion } = jprog[key];
         const valid = await validateFirmware(device, fwVersion);
-        if (valid)
-            return createReturnValue(device, { wasProgrammed }, detailedOutput);
+        if (valid) return device;
 
         try {
             const programmedDevice = await programFirmware(
@@ -168,12 +164,7 @@ export const prepareDevice = async (
             );
             if (programmedDevice === undefined) throw new Error();
 
-            wasProgrammed = true;
-            return createReturnValue(
-                programmedDevice,
-                { wasProgrammed },
-                detailedOutput
-            );
+            return programmedDevice;
         } catch (error) {
             throw new Error('Failed to program firmware');
         }
@@ -187,7 +178,7 @@ const onSuccessfulDeviceSetup = (
     onDeviceIsReady: (device: DeviceInfo) => void
 ) => {
     doStartWatchingDevices();
-    console.log('info', info);
+    console.log('onSuccessfulDeviceSetup', info);
     dispatch(deviceSetupComplete(info));
     onDeviceIsReady(info);
 };
@@ -224,8 +215,8 @@ export const setupDevice =
 
         await releaseCurrentDevice();
         const deviceSetupConfig: DeviceSetupConfig = {
-            promiseConfirm: getDeviceSetupUserInput(dispatch),
-            promiseChoice: getDeviceSetupUserInput(dispatch),
+            promiseConfirm: getDeviceSetupUserInput(dispatch) as any,
+            promiseChoice: getDeviceSetupUserInput(dispatch) as any,
             allowCustomDevice: false,
             ...deviceSetup,
         };
@@ -235,9 +226,13 @@ export const setupDevice =
                 device,
                 deviceSetupConfig
             );
+
+            if (preparedDevice === undefined)
+                throw new Error('Unable to prepare device');
+
             onSuccessfulDeviceSetup(
                 dispatch,
-                preparedDevice,
+                deviceInfo(preparedDevice),
                 doStartWatchingDevices,
                 onDeviceIsReady
             );

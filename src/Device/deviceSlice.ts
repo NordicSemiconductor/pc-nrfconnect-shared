@@ -140,7 +140,10 @@ const slice = createSlice({
         //  *
         //  * @param {Boolean|String} input The input made by the user.
         //  */
-        deviceSetupInputReceived: (state, action: PayloadAction<boolean>) => {
+        deviceSetupInputReceived: (
+            state,
+            action: PayloadAction<boolean | string>
+        ) => {
             state.isSetupWaitingForUserInput = action.payload;
         },
 
