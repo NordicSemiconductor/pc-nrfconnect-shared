@@ -78,7 +78,7 @@ export const startWatchingDevices =
         const updateDeviceList = async () => {
             const { selectedSerialNumber, devices: devicesFromState } =
                 getState().device;
-            await waitForBootLoaderMode(devicesFromState, selectedSerialNumber);
+            await waitForModeSwitch(devicesFromState, selectedSerialNumber);
             let devices: Device[] = await nrfDeviceLib.enumerate(
                 getDeviceLibContext(),
                 deviceListing as unknown as DeviceTraits
@@ -195,14 +195,14 @@ export const waitForDevice = (
     });
 };
 
-const waitForBootLoaderMode = async (
+const waitForModeSwitch = async (
     devices: Devices,
     selectedSerialNumber: string
 ) => {
     const hasDfuTriggerVersion =
         devices[selectedSerialNumber]?.dfuTriggerVersion != null;
 
-    // Wait some time in case device is being put in bootloader mode
+    // Wait some time in case device is being put in either app or bootloader mode
     if (hasDfuTriggerVersion) {
         try {
             await waitForDevice(selectedSerialNumber, DEFAULT_DEVICE_WAIT_TIME);
