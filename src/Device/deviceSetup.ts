@@ -124,6 +124,7 @@ export const prepareDevice = async (
             );
 
             const { semVer } = device.dfuTriggerVersion;
+
             if (
                 Object.keys(dfu)
                     .map(key => dfu[key].semver)
@@ -179,7 +180,6 @@ const onSuccessfulDeviceSetup = (
     onDeviceIsReady: (device: DeviceInfo) => void
 ) => {
     doStartWatchingDevices();
-    console.log('onSuccessfulDeviceSetup', info);
     dispatch(deviceSetupComplete(info));
     onDeviceIsReady(info);
 };

@@ -284,7 +284,6 @@ interface Manifest {
 const createDfuZip = (dfuImages: DfuImage[]) => {
     return new Promise<AdmZip>(resolve => {
         const data = createDfuDataFromImages(dfuImages);
-        console.log('createDfuDataFromImages', data);
         const zip = new AdmZip();
         const manifest: Manifest = {};
 
@@ -343,9 +342,6 @@ const prepareInDFUBootloader = async (
     logger.debug(
         `${device.serialNumber} on ${device.serialport?.comName} is now in DFU-Bootloader...`
     );
-
-    console.log('prepareInDFUBootloader', dfu);
-
     const { application, softdevice } = dfu;
     const params: Partial<InitPacket> = dfu.params || {};
 
@@ -386,8 +382,6 @@ const prepareInDFUBootloader = async (
         sdReq: params.sdReq,
     };
 
-    console.log('firmwareImage', firmwareImage);
-
     const packet = { ...defaultInitPacket, ...initPacketParams };
     dfuImages.push({ name: 'Application', initPacket: packet, firmwareImage });
 
@@ -420,7 +414,6 @@ const prepareInDFUBootloader = async (
                 }
             },
             ({ progressJson: progress }) => {
-                // // Don't repeat percentage steps that have already been logged.
                 if (prevPercentage !== progress.progressPercentage) {
                     const status = `${progress.message.replace('.', ':')} ${
                         progress.progressPercentage
@@ -452,11 +445,12 @@ export const performDFU = async (
 ): Promise<Device> => {
     const { dfu, needSerialport, promiseConfirm, promiseChoice } = options;
     const isConfirmed = await confirmHelper(promiseConfirm);
-    console.log('options', options);
+
     if (!isConfirmed) {
         // go on without DFU
         return selectedDevice;
     }
+
     const choice = await choiceHelper(Object.keys(dfu), promiseChoice);
 
     try {

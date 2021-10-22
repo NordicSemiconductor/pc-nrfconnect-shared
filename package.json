@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "5.5.7",
+    "version": "5.5.8",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -104,8 +104,8 @@
     "devDependencies": {
         "@nordicsemiconductor/nrf-device-lib-js": "^0.3.16",
         "@types/react": "16.14.4",
+        "electron": "^13.5.1",
         "electron-store": "5.1.1",
-        "electron": "13.1.9",
         "react": "16.13.1",
         "react-dom": "16.13.1",
         "react-redux": "7.2.0"
