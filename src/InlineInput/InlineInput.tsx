@@ -36,8 +36,8 @@ external value and comparing with it to determine whether it has changed.
 */
 
 const useSynchronisationIfChangedFromOutside = (
-    externalValue,
-    setInternalValue
+    externalValue: string,
+    setInternalValue: (value: string) => void
 ) => {
     const previousExternalValue = useRef(externalValue);
     useEffect(() => {
@@ -49,7 +49,16 @@ const useSynchronisationIfChangedFromOutside = (
     return previousExternalValue.current;
 };
 
-const InlineInput = React.forwardRef(
+interface Props {
+    disabled?: boolean;
+    value: string;
+    isValid?: (value: string) => boolean;
+    onChange: (value: string) => void;
+    onChangeComplete?: (value: string) => void;
+    className?: string;
+}
+
+const InlineInput = React.forwardRef<HTMLInputElement, Props>(
     (
         {
             disabled = false,
@@ -64,7 +73,9 @@ const InlineInput = React.forwardRef(
         const [internalValue, setInternalValue] = useState(externalValue);
         useSynchronisationIfChangedFromOutside(externalValue, setInternalValue);
 
-        const onChangeIfValid = event => {
+        const onChangeIfValid = (
+            event: React.ChangeEvent<HTMLInputElement>
+        ) => {
             if (disabled) {
                 return;
             }
@@ -88,7 +99,7 @@ const InlineInput = React.forwardRef(
             }
         };
 
-        const onChangeCompleteIfValid = event => {
+        const onChangeCompleteIfValid = (event: React.KeyboardEvent) => {
             if (disabled) {
                 return;
             }
@@ -100,7 +111,8 @@ const InlineInput = React.forwardRef(
             }
         };
 
-        const stopPropagation = event => event.stopPropagation();
+        const stopPropagation = (event: React.MouseEvent) =>
+            event.stopPropagation();
 
         return (
             <input

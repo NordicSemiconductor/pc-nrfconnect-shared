@@ -6,8 +6,16 @@
 
 import { number, shape } from 'prop-types';
 
-export default shape({
+export interface RangeProp {
+    min: number;
+    max: number;
+    decimals: number;
+}
+
+const rangeShape = shape({
     min: number.isRequired,
     max: number.isRequired,
-    decimals: number,
+    decimals: number.isRequired,
 });
+
+export default rangeShape;

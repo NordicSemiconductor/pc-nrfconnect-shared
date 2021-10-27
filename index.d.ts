@@ -642,3 +642,14 @@ declare module '*.module.scss' {
     };
     export = properties;
 }
+
+declare module '*.icss.scss';
+
+declare module 'triple-beam';
+declare module 'lodash.range' {
+    export default function (
+        start: number,
+        end: number,
+        step: number
+    ): number[];
+}

@@ -4,17 +4,29 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import { arrayOf, bool, func, number, string } from 'prop-types';
 
-const StateSelector = ({ items, defaultIndex, onSelect, disabled = false }) => {
+interface Props {
+    items: string[];
+    defaultIndex: number;
+    onSelect: (index: number) => void;
+    disabled?: boolean;
+}
+
+const StateSelector: FC<Props> = ({
+    items,
+    defaultIndex = 0,
+    onSelect,
+    disabled = false,
+}) => {
     const [selected, setSelected] = useState(items[defaultIndex] ?? items[0]);
 
-    const selectionButton = (item, index) => (
+    const selectionButton = (item: string, index: number) => (
         <Button
             key={item}
-            variant={selected === item ? 'set' : 'unset'}
+            className={selected === item ? 'btn-set' : 'btn-unset'}
             onClick={() => {
                 setSelected(item);
                 onSelect(index);
@@ -34,8 +46,8 @@ const StateSelector = ({ items, defaultIndex, onSelect, disabled = false }) => {
 };
 
 StateSelector.propTypes = {
-    items: arrayOf(string).isRequired,
-    defaultIndex: number,
+    items: arrayOf(string.isRequired).isRequired,
+    defaultIndex: number.isRequired,
     onSelect: func.isRequired,
     disabled: bool,
 };

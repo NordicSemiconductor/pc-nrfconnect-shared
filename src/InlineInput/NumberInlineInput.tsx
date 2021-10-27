@@ -4,18 +4,26 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC } from 'react';
 import { bool, func, number } from 'prop-types';
 
-import rangeShape from '../Slider/rangeShape';
+import rangeShape, { RangeProp } from '../Slider/rangeShape';
 import InlineInput from './InlineInput';
 
 import './number-inline-input.scss';
 
-const isInRange = (value, { min, max, decimals = 0 }) =>
+const isInRange = (value: number, { min, max, decimals = 0 }: RangeProp) =>
     value >= min && value <= max && value === Number(value.toFixed(decimals));
 
-const NumberInlineInput = ({
+interface Props {
+    disabled?: boolean;
+    value: number;
+    range: RangeProp;
+    onChange: () => void;
+    onChangeComplete?: () => void;
+}
+
+const NumberInlineInput: FC<Props> = ({
     disabled,
     value,
     range,
