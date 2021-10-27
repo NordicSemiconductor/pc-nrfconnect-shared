@@ -19,7 +19,7 @@ const NavMenu = () => {
 
     return (
         <div data-testid="nav-menu">
-            {paneNames.map((name, index) => (
+            {paneNames.map((name, index: number) => (
                 <NavMenuItem
                     key={name}
                     index={index}

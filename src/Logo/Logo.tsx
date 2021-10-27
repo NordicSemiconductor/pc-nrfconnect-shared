@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { bool } from 'prop-types';
 
@@ -19,7 +19,10 @@ import './logo.scss';
 const goToNRFConnectWebsite = () =>
     openUrl('http://www.nordicsemi.com/nRFConnect');
 
-const chooseLogo = (changeWithDeviceState, deviceIsSelected) => {
+const chooseLogo = (
+    changeWithDeviceState: boolean,
+    deviceIsSelected: boolean
+) => {
     if (!changeWithDeviceState) {
         return logoUniform;
     }
@@ -27,7 +30,9 @@ const chooseLogo = (changeWithDeviceState, deviceIsSelected) => {
     return deviceIsSelected ? logoConnected : logoDisconnected;
 };
 
-const Logo = ({ changeWithDeviceState = false }) => {
+const Logo: FC<{ changeWithDeviceState?: boolean }> = ({
+    changeWithDeviceState = false,
+}) => {
     const deviceIsSelected = useSelector(deviceIsSelectedSelector);
     const logo = chooseLogo(changeWithDeviceState, deviceIsSelected);
     return (
@@ -39,7 +44,7 @@ const Logo = ({ changeWithDeviceState = false }) => {
             role="link"
             onClick={goToNRFConnectWebsite}
             onKeyPress={() => {}}
-            tabIndex="0"
+            tabIndex={0}
         />
     );
 };

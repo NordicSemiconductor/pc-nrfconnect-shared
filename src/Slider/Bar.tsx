@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC } from 'react';
 import { number } from 'prop-types';
 
 import './bar.scss';
 
-const Bar = ({ start, end }) => (
+const Bar: FC<{ start: number; end: number }> = ({ start, end }) => (
     <>
         <div className="bar background" />
         <div

@@ -4,14 +4,31 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useState } from 'react';
+import React, { FC, ReactNode, useState } from 'react';
 import { bool, func, node, oneOf, string } from 'prop-types';
 
 import classNames from '../utils/classNames';
 
 import './toggle.scss';
 
-const Toggle = ({
+interface Props {
+    id?: string;
+    title?: string;
+    isToggled?: boolean;
+    onToggle?: (isToggled: boolean) => void;
+    label?: string;
+    labelRight?: boolean;
+    variant?: 'primary' | 'secondary';
+    barColor?: string;
+    barColorToggled?: string;
+    handleColor?: string;
+    handleColorToggled?: string;
+    width?: string;
+    disabled?: boolean;
+    children?: ReactNode;
+}
+
+export const Toggle: FC<Props> = ({
     id,
     title,
     isToggled,
@@ -72,7 +89,7 @@ const Toggle = ({
                         id={id}
                         type="checkbox"
                         checked={toggled}
-                        onChange={disabled ? null : handleToggle}
+                        onChange={disabled ? undefined : handleToggle}
                         aria-checked={toggled}
                         disabled={disabled}
                     />
@@ -123,5 +140,3 @@ Toggle.propTypes = {
     disabled: bool,
     children: node,
 };
-
-export default Toggle;

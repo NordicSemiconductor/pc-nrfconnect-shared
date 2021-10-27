@@ -32,7 +32,7 @@ export default () => {
     return (
         <div ref={logContainer} className="core19-log">
             {logEntries.map(entry => (
-                <LogEntry {...{ entry }} key={entry.id} />
+                <LogEntry entry={entry} key={entry.id} />
             ))}
         </div>
     );

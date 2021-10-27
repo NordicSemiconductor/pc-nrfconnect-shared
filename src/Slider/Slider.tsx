@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 import { arrayOf, bool, func, number, string } from 'prop-types';
 
@@ -12,12 +12,23 @@ import classNames from '../utils/classNames';
 import Bar from './Bar';
 import Handle from './Handle';
 import { toPercentage } from './percentage';
-import rangeShape from './rangeShape';
+import rangeShape, { RangeProp } from './rangeShape';
 import Ticks from './Ticks';
 
 import './slider.scss';
 
-const Slider = ({
+interface Props {
+    id?: string;
+    title?: string;
+    disabled?: boolean;
+    values: number[];
+    range: RangeProp;
+    ticks?: boolean;
+    onChange: (() => void)[];
+    onChangeComplete?: () => void;
+}
+
+const Slider: FC<Props> = ({
     id,
     title,
     disabled = false,
@@ -52,7 +63,7 @@ const Slider = ({
             className={classNames('slider', disabled && 'disabled')}
             id={id}
             title={title}
-            ref={ref}
+            ref={ref as React.MutableRefObject<HTMLDivElement>}
         >
             <Bar
                 start={toPercentage(valueRange.min, range)}

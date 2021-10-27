@@ -4,19 +4,27 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC } from 'react';
 import lodashRange from 'lodash.range';
 import { exact, number } from 'prop-types';
 
 import classNames from '../utils/classNames';
-import rangeShape from './rangeShape';
+import rangeShape, { RangeProp } from './rangeShape';
 
 import './ticks.scss';
 
-const Ticks = ({ valueRange, range: { min, max, decimals = 0 } }) => {
+interface Props {
+    range: RangeProp;
+    valueRange: { min: number; max: number };
+}
+
+const Ticks: FC<Props> = ({
+    valueRange,
+    range: { min, max, decimals = 0 },
+}) => {
     const step = 0.1 ** decimals;
 
-    const isSelected = value =>
+    const isSelected = (value: number) =>
         value >= valueRange.min && value <= valueRange.max;
 
     return (

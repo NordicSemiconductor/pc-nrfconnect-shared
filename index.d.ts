@@ -642,3 +642,16 @@ declare module '*.module.scss' {
     };
     export = properties;
 }
+
+// Let typescript compiler in `npm run lint` resolve css modules
+declare module '*.icss.scss';
+
+declare module 'triple-beam';
+
+declare module 'lodash.range' {
+    export default function (
+        start: number,
+        end: number,
+        step: number
+    ): number[];
+}

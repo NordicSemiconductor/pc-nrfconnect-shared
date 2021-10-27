@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC } from 'react';
 import Button from 'react-bootstrap/Button';
 import { useDispatch } from 'react-redux';
 import { bool, number, string } from 'prop-types';
@@ -14,7 +14,14 @@ import classNames from '../utils/classNames';
 
 import './nav-menu-item.scss';
 
-const NavMenuItem = ({ index, isFirst, isSelected, label }) => {
+interface Props {
+    index: number;
+    isFirst: boolean;
+    isSelected: boolean;
+    label: string;
+}
+
+const NavMenuItem: FC<Props> = ({ index, isFirst, isSelected, label }) => {
     const dispatch = useDispatch();
 
     return (

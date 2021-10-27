@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useRef, useState } from 'react';
+import React, { FC, MouseEventHandler, useRef, useState } from 'react';
 import { bool, func, number } from 'prop-types';
 
 import classNames from '../utils/classNames';
@@ -13,18 +13,27 @@ import {
     fromPercentage,
     toPercentage,
 } from './percentage';
-import rangeShape from './rangeShape';
+import rangeShape, { RangeProp } from './rangeShape';
 
 import './handle.scss';
 
-const useAutoupdatingRef = value => {
+const useAutoupdatingRef = (value: (number: number) => void) => {
     const ref = useRef(value);
     if (ref.current !== value) ref.current = value;
     return ref;
 };
 
+interface Props {
+    value: number;
+    disabled: boolean;
+    range: RangeProp;
+    onChange: (number: number) => void;
+    onChangeComplete?: () => void;
+    sliderWidth?: number;
+}
+
 const noop = () => {};
-const Handle = ({
+const Handle: FC<Props> = ({
     value,
     disabled,
     range,
@@ -41,7 +50,9 @@ const Handle = ({
     const onChangeRef = useAutoupdatingRef(onChange);
     const onChangeCompleteRef = useAutoupdatingRef(onChangeComplete);
 
-    const grabHandle = event => {
+    const grabHandle: MouseEventHandler<HTMLDivElement> = (
+        event: MouseEvent
+    ) => {
         const sliderWidthStillUnknown = sliderWidth == null;
         if (sliderWidthStillUnknown) return;
 
@@ -53,7 +64,7 @@ const Handle = ({
         window.addEventListener('mouseup', releaseHandle); // eslint-disable-line no-use-before-define
     };
 
-    const dragHandle = event => {
+    const dragHandle = (event: MouseEvent) => {
         const oldMousePosition = onMouseDragStart.current.mousePosition;
         const newMousePosition = event.clientX;
         const percentageChange =

@@ -4,9 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC } from 'react';
 import formatDate from 'date-fns/format';
 import { number, shape, string } from 'prop-types';
+import { LogEntry } from 'winston';
 
 import { openUrl } from '../utils/open';
 
@@ -28,7 +29,7 @@ const regex = /(.*?)(https?:\/\/[^\s]+)/g;
  * @param {string} str input string
  * @returns {Array} strings and JSX <a> tags
  */
-function hrefReplacer(str) {
+function hrefReplacer(str: string) {
     const message = [];
     const remainder = str.replace(regex, (match, before, href, index) => {
         message.push(before);
@@ -49,7 +50,11 @@ function hrefReplacer(str) {
     return message;
 }
 
-const LogEntry = ({ entry }) => {
+interface Props {
+    entry: LogEntry;
+}
+
+const LogEntry: FC<Props> = ({ entry }) => {
     const className = `core19-log-entry core19-log-level-${entry.level}`;
     const time = formatDate(new Date(entry.timestamp), 'HH:mm:ss.SSS');
 
