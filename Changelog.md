@@ -4,33 +4,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Added
+- Selector `selectedDevice` to retrieve the currently selected device in apps.
+
 ## 5.5.8 - 2021-10-22
 ### Fixed
-- Wait for device to boot up after being set to bootloader mode
+- Wait for device to boot up after being set to bootloader mode.
 
 ## 5.5.7 - 2021-10-21
 ### Changed
-- Outdated styling for disabled elements used in old architecture
-
+- Outdated styling for disabled elements used in old architecture.
 ### Fixed
-- Displaying progress percentage for usb sdfu
-- Firmware validation for nordic usb device
-- Loading indicator/disabled buttons for fw installation in progress
+- Displaying progress percentage for USB SDFU.
+- Firmware validation for Nordic USB device.
+- Loading indicator/disabled buttons for FW installation in progress.
 
 ## 5.5.6 - 2021-10-20
 ### Fixed
-- `DocumentationSection` type validation error
-- `deviceSetup` type validation error
+- `DocumentationSection` type validation error.
+- `deviceSetup` type validation error.
 
 ## 5.5.5 - 2021-10-15
 ### Fixed
-- Only one serialport was shown in the Device Selector regardless of how many were available
-- Wrong serialport property was displayed in the Device Selector
-- Wrong serialport property was displayed in the System Report
+- Only one serialport was shown in the Device Selector regardless of how many
+  were available.
+- Wrong serialport property was displayed in the Device Selector.
+- Wrong serialport property was displayed in the System Report.
 
 ## 5.5.4 - 2021-10-14
 ### Fixed
-- Export `DocumentationSection` as react component instead of interface
+- Export `DocumentationSection` as React component instead of interface.
 
 ## 5.5.3 - 2021-10-13
 ### Added
@@ -42,11 +46,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 5.5.1 - 2021-10-13
 ### Added
-- Expose types for sdfu operations and device lister.
+- Expose types for SDFU operations and device lister.
 
 ## 5.5.0 - 2021-10-12
 ### Added
-- Show `no supported devices found` message when all devices were filtered out with `deviceFilter`
+- Show `no supported devices found` message when all devices were filtered out
+  with `deviceFilter`.
 
 ## 5.4.0 - 2021-10-07
 ### Added
@@ -62,15 +67,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 5.3.1 - 2021-10-05
 ### Fixed
-- Add ambient module for resolving css modules
+- Add ambient module for resolving css modules.
 
 ## 5.3.0 - 2021-09-04
 ### Added
-- Documentation card in About pane
+- Documentation card in About pane.
 
 ## 5.2.1 - 2021-10-01
 ### Added
-- Alert component
+- Alert component.
 
 ## 5.2.0 - 2021-09-28
 ### Added
@@ -102,7 +107,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 5.1.1 - 2021-09-28
 ### Added
-- Expose functions for USB serial DFU
+- Expose functions for USB serial DFU.
 
 ## 5.1.0 - 2021-09-23
 ### Changed
@@ -172,9 +177,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 4.28.3 - 2021-08-11
 ### Fixed
-- Correct a typing for devices
+- Correct a typing for devices.
 ### Changed
-- Exposes deviceInfo
+- Exposes deviceInfo.
 ### Added
 - Component `StateSelector`.
 - Component `StartStopButton`.

@@ -627,6 +627,9 @@ declare module 'pc-nrfconnect-shared' {
     export const defaultInitPacket: InitPacket;
     export const FwType: typeof import('./src/Device/initPacket').FwType;
     export const HashType: typeof import('./src/Device/initPacket').HashType;
+
+    // deviceSlice.ts
+    export const selectedDevice: (state: RootState) => Device | undefined;
 }
 
 declare module 'prettysize' {
