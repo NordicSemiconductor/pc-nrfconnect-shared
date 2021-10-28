@@ -28,12 +28,16 @@
         background-color: $gray-100;
 
         .core19-main-container {
-            margin: 1em;
             flex: 1;
             overflow: auto;
 
             .carousel-inner {
                 height: 100%;
+                padding: 1em;
+
+                overflow-y: overlay;
+                @include scrollbars($gray-100);
+
                 .carousel-item {
                     height: 100%;
                     transition: opacity $normal-transition;

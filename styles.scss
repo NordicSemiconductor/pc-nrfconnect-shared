@@ -77,6 +77,7 @@ $disabled-opacity: 0.38;
 
 @mixin scrollbars($background-color) {
     @if $background-color == $gray-50 or
+        $background-color == $gray-100 or
         $background-color == $white {
         @include scrollbars-helper($background-color, $gray-200, $gray-400);
     } @else if $background-color == $gray-900 {
