@@ -635,7 +635,10 @@ declare module 'pc-nrfconnect-shared' {
 declare module 'prettysize' {
     export default function pretty(n: number): string;
 }
-// Let typescript compiler in `npm run lint` resolve css modules
-declare module '*.module.scss';
 
-declare module 'triple-beam';
+declare module '*.module.scss' {
+    const properties: {
+        [property: string]: string;
+    };
+    export = properties;
+}

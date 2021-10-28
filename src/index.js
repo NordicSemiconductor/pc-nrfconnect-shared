@@ -47,7 +47,6 @@ export {
     getUserDataDir,
 } from './utils/appDirs';
 
-export { defaultInitPacket } from './Device/initPacket';
 export { openUrl } from './utils/open';
 export { default as systemReport } from './utils/systemReport';
 export { default as usageData } from './utils/usageData';
@@ -69,4 +68,4 @@ export {
 } from './Device/deviceLister';
 export { prepareDevice } from './Device/deviceSetup';
 export { default as sdfuOperations } from './Device/sdfuOperations';
-export { HashType, FwType } from './Device/initPacket';
+export { defaultInitPacket, HashType, FwType } from './Device/initPacket';
