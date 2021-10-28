@@ -108,7 +108,6 @@ export interface Device extends Omit<NrfdlDevice, 'jlink'> {
         serialNumber: string;
     }; // from nrf-device-lib
 
-    serialNumber: string;
     boardVersion?: string;
     nickname?: string;
     serialport?: Serialport;

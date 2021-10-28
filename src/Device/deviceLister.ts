@@ -8,6 +8,7 @@
 
 // eslint-disable-next-line import/no-unresolved
 import nrfDeviceLib, {
+    Device as nrfdlDevice,
     DeviceTraits,
     HotplugEvent,
 } from '@nordicsemiconductor/nrf-device-lib-js';
@@ -32,7 +33,7 @@ let hotplugTaskId: number;
  * @param {Device} device The input device from nrf-device-lib
  * @returns {Device} The updated device
  */
-export const wrapDeviceFromNrfdl = (device: Device): Device => {
+export const wrapDeviceFromNrfdl = (device: nrfdlDevice): Device => {
     let outputDevice: Device = camelcaseKeys(device, { deep: true }) as Device;
     let serialport: Serialport | undefined = outputDevice.serialports
         ? (outputDevice.serialports[0] as unknown as Serialport)
@@ -60,7 +61,7 @@ export const wrapDeviceFromNrfdl = (device: Device): Device => {
  * @param {Device[]} devices The input devices from nrf-device-lib
  * @returns {Device[]} The updated devices
  */
-export const wrapDevicesFromNrfdl = (devices: Device[]): Device[] =>
+export const wrapDevicesFromNrfdl = (devices: nrfdlDevice[]): Device[] =>
     devices.map(wrapDeviceFromNrfdl);
 
 /**
@@ -79,11 +80,11 @@ export const startWatchingDevices =
             const { selectedSerialNumber, devices: devicesFromState } =
                 getState().device;
             await waitForModeSwitch(devicesFromState, selectedSerialNumber);
-            let devices: Device[] = await nrfDeviceLib.enumerate(
+            const nrfDevices = await nrfDeviceLib.enumerate(
                 getDeviceLibContext(),
                 deviceListing as unknown as DeviceTraits
             );
-            devices = wrapDevicesFromNrfdl(devices);
+            const devices = wrapDevicesFromNrfdl(nrfDevices);
             const hasSerialNumber = (d: Device) => {
                 return d.serialNumber === selectedSerialNumber;
             };
