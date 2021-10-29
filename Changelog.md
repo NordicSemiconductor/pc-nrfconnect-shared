@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Selector `selectedDevice` to retrieve the currently selected device in apps.
 
+## 5.6.2 - 2021-10-29
+### Fixed
+- Properties of the main panes (and their children) were frozen by immer.
+
 ## 5.6.1 - 2021-10-28
 ### Fixed
 - Dropdown styling when label prop is used.

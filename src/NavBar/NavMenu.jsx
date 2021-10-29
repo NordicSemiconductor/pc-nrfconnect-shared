@@ -9,17 +9,17 @@ import { useSelector } from 'react-redux';
 
 import {
     currentPane as currentPaneSelector,
-    panes as panesSelector,
+    paneNames as paneNamesSelector,
 } from '../App/appLayout';
 import NavMenuItem from './NavMenuItem';
 
 const NavMenu = () => {
     const currentPane = useSelector(currentPaneSelector);
-    const panes = useSelector(panesSelector);
+    const paneNames = useSelector(paneNamesSelector);
 
     return (
         <div data-testid="nav-menu">
-            {panes.map(({ name }, index) => (
+            {paneNames.map((name, index) => (
                 <NavMenuItem
                     key={name}
                     index={index}
