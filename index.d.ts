@@ -644,6 +644,7 @@ declare module '*.module.scss' {
 }
 
 declare module '*.icss.scss';
+declare module '*.gif';
 
 declare module 'triple-beam';
 declare module 'lodash.range' {
