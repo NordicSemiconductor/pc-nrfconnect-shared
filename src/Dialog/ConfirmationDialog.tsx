@@ -4,12 +4,26 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC, ReactNode } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { arrayOf, bool, func, node, oneOfType, string } from 'prop-types';
 
 import Spinner from './Spinner';
+
+interface Props {
+    isVisible: boolean;
+    title?: string;
+    text?: string;
+    children?: ReactNode;
+    onOk: () => void;
+    onCancel: () => void;
+    okButtonClassName?: string;
+    okButtonText?: string;
+    cancelButtonText?: string;
+    isInProgress?: boolean;
+    isOkButtonEnabled?: boolean;
+}
 
 /**
  * Generic dialog that asks the user to confirm something. The dialog content
@@ -29,7 +43,7 @@ import Spinner from './Spinner';
  * @param {boolean} [isOkButtonEnabled] Enable the OK button or not. Default: true.
  * @returns {*} React element to be rendered.
  */
-const ConfirmationDialog = ({
+const ConfirmationDialog: FC<Props> = ({
     isVisible,
     isInProgress = false,
     title = 'Confirm',

@@ -4,12 +4,14 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import deviceShape from '../Device/DeviceSelector/deviceShape';
+import deviceShape, {
+    DeviceShapeProps,
+} from '../Device/DeviceSelector/deviceShape';
 import Spinner from '../Dialog/Spinner';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { CollapsibleGroup } from '../SidePanel/Group';
@@ -29,7 +31,7 @@ import './error-boundary.scss';
 
 const { getCurrentWindow } = require('electron').remote;
 
-const sendGAEvent = error => {
+const sendGAEvent = (error: string) => {
     if (!isEnabled()) {
         return;
     }
@@ -40,8 +42,20 @@ const sendGAEvent = error => {
     sendErrorReport(error);
 };
 
-class ErrorBoundary extends React.Component {
-    constructor(props) {
+interface Props {
+    children: ReactNode;
+    selectedSerialNumber?: string;
+    devices?: DeviceShapeProps;
+    appName?: string;
+    restoreDefaults?: () => void;
+    sendUsageData?: (message: string) => void;
+}
+
+class ErrorBoundary extends React.Component<
+    Props,
+    { hasError: boolean; error: Error | null; systemReport: any }
+> {
+    constructor(props: Props) {
         super(props);
         this.state = {
             hasError: false,
@@ -50,14 +64,14 @@ class ErrorBoundary extends React.Component {
         };
     }
 
-    static getDerivedStateFromError(error) {
+    static getDerivedStateFromError(error: Error) {
         return {
             hasError: true,
             error,
         };
     }
 
-    componentDidCatch(error) {
+    componentDidCatch(error: Error) {
         const { devices, selectedSerialNumber, sendUsageData } = this.props;
         sendUsageData != null
             ? sendUsageData(error.message)

@@ -645,6 +645,7 @@ declare module '*.module.scss' {
 
 // Let typescript compiler in `npm run lint` resolve css modules
 declare module '*.icss.scss';
+declare module '*.gif';
 
 declare module 'triple-beam';
 
