@@ -10,6 +10,7 @@
 import nrfDeviceLib, {
     DeviceTraits,
     HotplugEvent,
+    stopHotplugEvents,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import camelcaseKeys from 'camelcase-keys';
 // eslint-disable-next-line import/no-unresolved
@@ -158,7 +159,7 @@ export const waitForDevice = (
             getDeviceLibContext(),
             expectedTraits as unknown as DeviceTraits
         );
-        nrfDeviceLib.startHotplugEvents(
+        const hotplugEventsId = nrfDeviceLib.startHotplugEvents(
             getDeviceLibContext(),
             () => {},
             (event: HotplugEvent) => {
@@ -178,6 +179,7 @@ export const waitForDevice = (
                     isTraitIncluded()
                 ) {
                     clearTimeout(timeoutId);
+                    stopHotplugEvents(hotplugEventsId);
                     resolve(device);
                 }
             }
