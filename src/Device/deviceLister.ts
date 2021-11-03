@@ -11,6 +11,7 @@ import nrfDeviceLib, {
     Device as nrfdlDevice,
     DeviceTraits,
     HotplugEvent,
+    stopHotplugEvents,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import camelcaseKeys from 'camelcase-keys';
 // eslint-disable-next-line import/no-unresolved
@@ -129,6 +130,18 @@ export const stopWatchingDevices = () => {
     }
 };
 
+const DEFAULT_TRAITS: DeviceTraits = {
+    usb: false,
+    nordicUsb: false,
+    nordicDfu: false,
+    seggerUsb: false,
+    jlink: false,
+    serialPort: true,
+    broken: false,
+    mcuboot: false,
+    modem: false,
+};
+
 /**
  * Waits until a device (with a matching serial number) is listed by
  * nrf-device-lister, up to a maximum of `timeout` milliseconds.
@@ -139,38 +152,31 @@ export const stopWatchingDevices = () => {
  *
  * @param {string} serialNumber of the device expected to appear
  * @param {number} [timeout] Timeout, in milliseconds, to wait for device enumeration
- * @param {DeviceListing} [expectedTraits] The traits that the device is expected to have
+ * @param {DeviceTraits} [expectedTraits] The traits that the device is expected to have
  * @returns {Promise} resolved to the expected device
  */
 export const waitForDevice = (
     serialNumber: string,
     timeout = DEFAULT_DEVICE_WAIT_TIME,
-    expectedTraits: DeviceListing = { serialPort: true }
+    expectedTraits: DeviceTraits = DEFAULT_TRAITS
 ) => {
     logger.debug(`Will wait for device ${serialNumber}`);
 
     // To be compatible with `serialport`
-    expectedTraits = {
-        serialPort: expectedTraits.serialport,
-    };
+    expectedTraits.serialPort = (<any>expectedTraits).serialport;
 
     return new Promise<Device>((resolve, reject) => {
         let timeoutId: NodeJS.Timeout;
 
-        nrfDeviceLib.enumerate(
-            getDeviceLibContext(),
-            expectedTraits as unknown as DeviceTraits
-        );
-        nrfDeviceLib.startHotplugEvents(
+        nrfDeviceLib.enumerate(getDeviceLibContext(), expectedTraits);
+        const hotplugEventsId = nrfDeviceLib.startHotplugEvents(
             getDeviceLibContext(),
             () => {},
             (event: HotplugEvent) => {
                 const { device: inputDevice } = event;
                 if (!inputDevice) return;
 
-                const device = wrapDeviceFromNrfdl(
-                    inputDevice as unknown as Device
-                );
+                const device = wrapDeviceFromNrfdl(inputDevice);
                 const isTraitIncluded = () =>
                     Object.keys(expectedTraits).every(
                         trait => device.traits[trait as keyof DeviceTraits]
@@ -181,6 +187,7 @@ export const waitForDevice = (
                     isTraitIncluded()
                 ) {
                     clearTimeout(timeoutId);
+                    stopHotplugEvents(hotplugEventsId);
                     resolve(device);
                 }
             }

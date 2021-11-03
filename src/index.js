@@ -47,7 +47,6 @@ export {
     getUserDataDir,
 } from './utils/appDirs';
 
-export { defaultInitPacket } from './Device/initPacket';
 export { openUrl } from './utils/open';
 export { default as systemReport } from './utils/systemReport';
 export { default as usageData } from './utils/usageData';
@@ -59,6 +58,7 @@ export { currentPane, setCurrentPane } from './App/appLayout';
 
 export { getAppSpecificStore as getPersistentStore } from './utils/persistentStore';
 
+export { selectedDevice } from './Device/deviceSlice';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
 export {
     getDeviceLibContext,
@@ -67,4 +67,4 @@ export {
     waitForDevice,
 } from './Device/deviceLister';
 export { default as sdfuOperations } from './Device/sdfuOperations';
-export { HashType, FwType } from './Device/initPacket';
+export { defaultInitPacket, HashType, FwType } from './Device/initPacket';

@@ -28,11 +28,7 @@ export interface AppLayout {
     isSidePanelVisible: boolean;
     isLogVisible: boolean;
     currentPane: number;
-    panes: AppLayoutPane[];
-}
-
-export interface AppLayoutPane {
-    name: string;
+    paneNames: string[];
 }
 
 export interface AppReloadDialog {

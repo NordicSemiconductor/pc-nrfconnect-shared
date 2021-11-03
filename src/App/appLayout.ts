@@ -4,20 +4,24 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { AppLayout, AppLayoutPane, RootState } from '../state';
+import { AppLayout, RootState } from '../state';
 import { persistCurrentPane } from '../utils/persistentStore';
 
 const initialState: AppLayout = {
     isSidePanelVisible: true,
     isLogVisible: true,
     currentPane: 0,
-    panes: [],
+    paneNames: [],
 };
 
-const isAboutPane = (pane: number, allPanes: AppLayoutPane[]) =>
-    pane === allPanes.length - 1;
+const isAboutPane = (pane: number, paneCount: number) => pane === paneCount - 1;
+
+interface PaneSpec {
+    name: string;
+    Main: unknown;
+}
 
 const slice = createSlice({
     name: 'appLayout',
@@ -30,13 +34,13 @@ const slice = createSlice({
             state.isSidePanelVisible = !state.isSidePanelVisible;
         },
         setCurrentPane: (state, action) => {
-            if (!isAboutPane(action.payload, state.panes)) {
+            if (!isAboutPane(action.payload, state.paneNames.length)) {
                 persistCurrentPane(action.payload);
             }
             state.currentPane = action.payload;
         },
-        setPanes: (state, action) => {
-            state.panes = action.payload;
+        setPanes: (state, action: PayloadAction<PaneSpec[]>) => {
+            state.paneNames = action.payload.map(pane => pane.name);
         },
     },
 });
@@ -54,7 +58,9 @@ export const {
 export const isSidePanelVisible = (state: RootState) =>
     state.appLayout.isSidePanelVisible;
 export const isLogVisible = (state: RootState) => state.appLayout.isLogVisible;
-export const panes = (state: RootState) => state.appLayout.panes;
+export const paneNames = (state: RootState) => state.appLayout.paneNames;
 
 export const currentPane = ({ appLayout }: RootState) =>
-    appLayout.currentPane >= appLayout.panes.length ? 0 : appLayout.currentPane;
+    appLayout.currentPane >= appLayout.paneNames.length
+        ? 0
+        : appLayout.currentPane;
