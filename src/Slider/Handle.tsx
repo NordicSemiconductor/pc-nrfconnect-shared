@@ -17,7 +17,7 @@ import rangeShape, { RangeProp } from './rangeShape';
 
 import './handle.scss';
 
-const useAutoupdatingRef = (value: (number: number) => void) => {
+const useAutoupdatingRef = (value: (_: number) => void) => {
     const ref = useRef(value);
     if (ref.current !== value) ref.current = value;
     return ref;
@@ -44,15 +44,14 @@ const Handle: FC<Props> = ({
     const [currentlyDragged, setCurrentlyDragged] = useState(false);
     const percentage = toPercentage(value, range);
 
-    const onMouseDragStart = useRef();
+    const onMouseDragStart =
+        useRef<{ mousePosition: number; percentage: number }>();
 
     // We have to put the callbacks into refs, so that we do not call outdated references later
     const onChangeRef = useAutoupdatingRef(onChange);
     const onChangeCompleteRef = useAutoupdatingRef(onChangeComplete);
 
-    const grabHandle: MouseEventHandler<HTMLDivElement> = (
-        event: MouseEvent
-    ) => {
+    const grabHandle: React.MouseEventHandler<HTMLDivElement> = event => {
         const sliderWidthStillUnknown = sliderWidth == null;
         if (sliderWidthStillUnknown) return;
 
@@ -65,12 +64,12 @@ const Handle: FC<Props> = ({
     };
 
     const dragHandle = (event: MouseEvent) => {
-        const oldMousePosition = onMouseDragStart.current.mousePosition;
+        const oldMousePosition = onMouseDragStart.current?.mousePosition ?? 0;
         const newMousePosition = event.clientX;
         const percentageChange =
-            ((oldMousePosition - newMousePosition) * 100) / sliderWidth;
+            ((oldMousePosition - newMousePosition) * 100) / (sliderWidth ?? 1);
 
-        const oldPercentage = onMouseDragStart.current.percentage;
+        const oldPercentage = onMouseDragStart.current?.percentage ?? 0;
         const newPercentage = constrainedToPercentage(
             oldPercentage - percentageChange
         );
@@ -82,7 +81,7 @@ const Handle: FC<Props> = ({
         window.removeEventListener('mousemove', dragHandle);
         window.removeEventListener('mouseup', releaseHandle);
         setCurrentlyDragged(false);
-        onChangeCompleteRef.current();
+        onChangeCompleteRef.current(0);
     };
 
     return (

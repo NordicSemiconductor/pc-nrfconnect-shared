@@ -49,7 +49,9 @@ export {
 
 export { openUrl } from './utils/open';
 export { default as systemReport } from './utils/systemReport';
-export { default as usageData } from './utils/usageData';
+export { disable,
+enable,init,isEnabled,isInitialized,reset,sendErrorReport,sendUsageData
+ } from './utils/usageData';
 export { default as classNames } from './utils/classNames';
 
 export { default as useHotKey } from './utils/useHotKey';

@@ -4,12 +4,17 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC, ReactNode } from 'react';
 import { node, string } from 'prop-types';
 
 import './section.scss';
 
-const Section = ({ children, title }) => (
+interface Props {
+    title?: string;
+    children?: ReactNode;
+}
+
+const Section: FC<Props> = ({ children, title }) => (
     <div className="about-section">
         {title != null && <h3 className="about-section-title">{title}</h3>}
         {children}

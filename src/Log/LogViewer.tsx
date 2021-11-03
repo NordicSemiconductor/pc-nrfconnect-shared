@@ -21,11 +21,11 @@ export default () => {
 
     const autoScroll = useSelector(autoScrollSelector);
     const logEntries = useSelector(logEntriesSelector);
-    const logContainer = useRef(null);
+    const logContainer = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (autoScroll && logContainer.current.lastChild) {
-            logContainer.current.lastChild.scrollIntoView();
+        if (autoScroll && logContainer.current?.lastChild) {
+            (logContainer.current?.lastChild as Element).scrollIntoView();
         }
     });
 

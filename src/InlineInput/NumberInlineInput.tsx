@@ -19,8 +19,8 @@ interface Props {
     disabled?: boolean;
     value: number;
     range: RangeProp;
-    onChange: () => void;
-    onChangeComplete?: () => void;
+    onChange: (number: number) => void;
+    onChangeComplete?: (number: number) => void;
 }
 
 const NumberInlineInput: FC<Props> = ({

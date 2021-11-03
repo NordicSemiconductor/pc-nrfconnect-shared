@@ -15,6 +15,7 @@ import deviceShape, {
 import Spinner from '../Dialog/Spinner';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { CollapsibleGroup } from '../SidePanel/Group';
+import { RootState } from '../state';
 import { openUrl } from '../utils/open';
 import packageJson from '../utils/packageJson';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
@@ -79,8 +80,10 @@ class ErrorBoundary extends React.Component<
 
         generateSystemReport(
             new Date().toISOString().replace(/:/g, '-'),
+            // @ts-ignore abc
             Object.values(devices),
             selectedSerialNumber,
+            // @ts-ignore abc
             devices[selectedSerialNumber]
         ).then(report => {
             this.setState({ systemReport: report });
@@ -185,6 +188,7 @@ class ErrorBoundary extends React.Component<
     }
 }
 
+// @ts-ignore abc
 ErrorBoundary.propTypes = {
     children: PropTypes.node.isRequired,
     selectedSerialNumber: PropTypes.string,
@@ -194,9 +198,10 @@ ErrorBoundary.propTypes = {
     sendUsageData: PropTypes.func,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
     devices: state.device?.devices || {},
     selectedSerialNumber: state.device?.selectedSerialNumber,
 });
 
+// @ts-ignore abc
 export default connect(mapStateToProps)(ErrorBoundary);

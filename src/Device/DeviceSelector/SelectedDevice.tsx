@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { func } from 'prop-types';
 
@@ -13,8 +13,11 @@ import { selectedDevice } from '../deviceSlice';
 import BasicDeviceInfo from './BasicDeviceInfo';
 
 import './selected-device.scss';
+import { Device } from '../../state';
 
-const DisconnectDevice = ({ doDeselectDevice }) => (
+type SelectDevice = (device: Device) => void
+
+const DisconnectDevice: FC<{ doDeselectDevice: () => void }> = ({ doDeselectDevice }) => (
     <PseudoButton
         className="mdi mdi-24px mdi-eject disconnect"
         onClick={doDeselectDevice}
@@ -25,7 +28,10 @@ DisconnectDevice.propTypes = {
     doDeselectDevice: func.isRequired,
 };
 
-const SelectedDevice = ({ doDeselectDevice, toggleDeviceListVisible }) => {
+const SelectedDevice: FC<{
+    doDeselectDevice: () => void,
+    toggleDeviceListVisible: () => void
+}> = ({ doDeselectDevice, toggleDeviceListVisible }) => {
     const device = useSelector(selectedDevice);
 
     return (

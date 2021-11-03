@@ -4,13 +4,25 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC, ReactNode } from 'react';
 import { node, string } from 'prop-types';
 
 import AboutButton from './AboutButton';
 import Section from './Section';
 
-export const DocumentationSection = ({ title, link, linkLabel, children }) => (
+interface Props {
+    title?: string;
+    link?: string;
+    linkLabel?: string;
+    children?: ReactNode;
+}
+
+export const DocumentationSection: FC<Props> = ({
+    title,
+    link,
+    linkLabel,
+    children,
+}) => (
     <Section title={title}>
         <p>{children}</p>
         {link && <AboutButton url={link} label={linkLabel} />}

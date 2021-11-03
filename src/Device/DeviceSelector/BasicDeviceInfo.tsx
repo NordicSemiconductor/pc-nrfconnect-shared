@@ -4,21 +4,25 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC, ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
-import { func, node, shape } from 'prop-types';
 
 import InlineInput from '../../InlineInput/InlineInput';
+import { Device } from '../../state';
 import { displayedDeviceName } from '../deviceInfo/deviceInfo';
 import { resetDeviceNickname, setDeviceNickname } from '../deviceSlice';
 import DeviceIcon from './DeviceIcon';
-import deviceShape from './deviceShape';
 
 import './basic-device-info.scss';
 
-const DeviceName = ({ device, inputRef }) => {
+interface Props {
+    device: Device;
+    inputRef?: any;
+}
+
+const DeviceName: FC<Props> = ({ device, inputRef }) => {
     const dispatch = useDispatch();
-    const setOrResetNickname = name => {
+    const setOrResetNickname = (name: string) => {
         const newNameIsEqualToDefaultName =
             name === displayedDeviceName(device, { respectNickname: false });
 
@@ -39,19 +43,22 @@ const DeviceName = ({ device, inputRef }) => {
         />
     );
 };
-DeviceName.propTypes = {
-    device: deviceShape.isRequired,
-    inputRef: shape({ current: shape({ focus: func.isRequired }) }),
-};
 
-const DeviceSerialNumber = ({ device }) => (
+const DeviceSerialNumber: FC<{ device: Device }> = ({ device }) => (
     <div className="serial-number">{device.serialNumber}</div>
 );
-DeviceSerialNumber.propTypes = {
-    device: deviceShape.isRequired,
-};
 
-const BasicDeviceInfo = ({ device, deviceNameInputRef, toggles }) => (
+interface BasicDeviceProps {
+    device?: Device;
+    deviceNameInputRef?: any; // shape({ current: shape({ focus: func.isRequired }) }),
+    toggles: ReactNode;
+}
+
+const BasicDeviceInfo: FC<BasicDeviceProps> = ({
+    device,
+    deviceNameInputRef,
+    toggles,
+}) => (
     <div className="basic-device-info">
         <DeviceIcon device={device} />
         <div className="details">
@@ -61,10 +68,5 @@ const BasicDeviceInfo = ({ device, deviceNameInputRef, toggles }) => (
         <div className="toggles">{toggles}</div>
     </div>
 );
-BasicDeviceInfo.propTypes = {
-    device: deviceShape.isRequired,
-    deviceNameInputRef: shape({ current: shape({ focus: func.isRequired }) }),
-    toggles: node,
-};
 
 export default BasicDeviceInfo;

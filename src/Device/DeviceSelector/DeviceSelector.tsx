@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { bool, exact, func, object } from 'prop-types';
 
@@ -20,9 +20,26 @@ import DeviceList from './DeviceList/DeviceList';
 import SelectDevice from './SelectDevice';
 import SelectedDevice from './SelectedDevice';
 import useAutoselectDevice from './useAutoselectDevice';
+import { Device, DeviceInfo } from '../../state';
+import { DeviceListing } from 'pc-nrfconnect-shared';
+
+interface Props {
+    deviceListing: DeviceListing 
+    deviceSetup?: {
+        jprog: any;
+        dfu: any;
+        needSerialport: boolean;
+        allowCustomDevice: boolean;
+    };
+    releaseCurrentDevice?: () => void;
+    onDeviceSelected?: (device: Device) => void;
+    onDeviceDeselected?: () => void;
+    onDeviceIsReady?: (device: DeviceInfo) => void;
+    deviceFilter?: (device: Device) => boolean;
+}
 
 const noop = () => {};
-const DeviceSelector = ({
+const DeviceSelector: FC<Props> = ({
     deviceListing,
     deviceSetup,
     releaseCurrentDevice = noop,
@@ -46,7 +63,7 @@ const DeviceSelector = ({
         [deviceListing, dispatch, doDeselectDevice]
     );
 
-    const doSelectDevice = device => {
+    const doSelectDevice = (device: Device) => {
         setDeviceListVisible(false);
         dispatch(selectDevice(device));
         onDeviceSelected(device);
@@ -96,28 +113,6 @@ const DeviceSelector = ({
             <DeviceSetup />
         </div>
     );
-};
-
-DeviceSelector.propTypes = {
-    deviceListing: exact({
-        usb: bool,
-        nordicUsb: bool,
-        seggerUsb: bool,
-        nordicDfu: bool,
-        serialport: bool,
-        jlink: bool,
-    }).isRequired,
-    deviceSetup: exact({
-        jprog: object,
-        dfu: object,
-        needSerialport: bool,
-        allowCustomDevice: bool,
-    }),
-    releaseCurrentDevice: func, // () => {}
-    onDeviceSelected: func, // (device) => {}
-    onDeviceDeselected: func, // () => {}
-    onDeviceIsReady: func, // (device) => {}
-    deviceFilter: func, // (device) => boolean
 };
 
 export default DeviceSelector;
