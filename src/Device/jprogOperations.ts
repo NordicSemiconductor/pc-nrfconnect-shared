@@ -114,7 +114,17 @@ export const verifySerialPortAvailable = (device: Device) => {
  * @param {String} fwVersion The firmware version to be matched.
  * @returns {Promise} Promise that resolves if successful or rejects with error.
  */
-export async function validateFirmware(device: Device, fwVersion: any) {
+export async function validateFirmware(
+    device: Device,
+    fwVersion:
+        | string
+        | {
+              validator: (
+                  imageInfoList: FWInfo.Image[],
+                  fromDeviceLib: boolean
+              ) => boolean;
+          }
+) {
     let valid: boolean | FWInfo.Image | undefined = false;
     let fwInfo: FWInfo.ReadResult;
     try {
@@ -127,7 +137,7 @@ export async function validateFirmware(device: Device, fwVersion: any) {
         typeof fwVersion.validator === 'function'
     ) {
         valid = fwVersion.validator(fwInfo.imageInfoList, true);
-    } else {
+    } else if (typeof fwVersion === 'string') {
         valid = fwInfo.imageInfoList.find(imageInfo => {
             if (typeof imageInfo.version !== 'string') return false;
             return imageInfo.version.includes(fwVersion);
