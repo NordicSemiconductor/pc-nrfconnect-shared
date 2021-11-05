@@ -6,10 +6,11 @@
 
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { bool, exact, func, object } from 'prop-types';
+import { DeviceListing } from 'pc-nrfconnect-shared';
 
+import { Device, DeviceInfo } from '../../state';
 import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
-import { setupDevice } from '../deviceSetup';
+import { DeviceSetup as DeviceSetupShared, setupDevice } from '../deviceSetup';
 import DeviceSetup from '../DeviceSetup/DeviceSetup';
 import {
     deselectDevice,
@@ -20,17 +21,10 @@ import DeviceList from './DeviceList/DeviceList';
 import SelectDevice from './SelectDevice';
 import SelectedDevice from './SelectedDevice';
 import useAutoselectDevice from './useAutoselectDevice';
-import { Device, DeviceInfo } from '../../state';
-import { DeviceListing } from 'pc-nrfconnect-shared';
 
 interface Props {
-    deviceListing: DeviceListing 
-    deviceSetup?: {
-        jprog: any;
-        dfu: any;
-        needSerialport: boolean;
-        allowCustomDevice: boolean;
-    };
+    deviceListing: DeviceListing;
+    deviceSetup?: DeviceSetupShared;
     releaseCurrentDevice?: () => void;
     onDeviceSelected?: (device: Device) => void;
     onDeviceDeselected?: () => void;

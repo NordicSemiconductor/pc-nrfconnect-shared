@@ -6,6 +6,7 @@
 
 import { connect } from 'react-redux';
 
+import { TDispatch } from '../../state';
 import { receiveDeviceSetupInput } from '../deviceSetup';
 import DeviceSetupView from './DeviceSetupView';
 
@@ -23,8 +24,8 @@ const mapStateToProps = ({
     choices: setupDialogChoices,
 });
 
-const mapDispatchToProps = dispatch => ({
-    onOk: input => dispatch(receiveDeviceSetupInput(input)),
+const mapDispatchToProps = (dispatch: TDispatch) => ({
+    onOk: (input: string | boolean) => dispatch(receiveDeviceSetupInput(input)),
     onCancel: () => dispatch(receiveDeviceSetupInput(false)),
 });
 

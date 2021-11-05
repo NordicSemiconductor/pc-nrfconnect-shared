@@ -6,9 +6,21 @@
 
 import React from 'react';
 import Form from 'react-bootstrap/Form';
-import { arrayOf, bool, func, string } from 'prop-types';
 
 import ConfirmationDialog from '../../Dialog/ConfirmationDialog';
+
+interface Props {
+    isVisible: boolean;
+    isInProgress: boolean;
+    text?: string;
+    choices: string[];
+    onOk: (choice: string | boolean | null) => void;
+    onCancel: () => void;
+}
+
+interface State {
+    selectedChoice: null | string;
+}
 
 /**
  * Dialog that allows the user to provide input that is required during device setup
@@ -19,8 +31,8 @@ import ConfirmationDialog from '../../Dialog/ConfirmationDialog';
  * simple yes/no confirmation. Shows a spinner and disables input if the 'isInProgress'
  * prop is set to true.
  */
-export default class DeviceSetupDialog extends React.Component {
-    constructor(props) {
+export default class DeviceSetupDialog extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         this.onSelectChoice = this.onSelectChoice.bind(this);
         this.state = {
@@ -28,7 +40,7 @@ export default class DeviceSetupDialog extends React.Component {
         };
     }
 
-    onSelectChoice(choice) {
+    onSelectChoice(choice: string) {
         this.setState({ selectedChoice: choice });
     }
 
@@ -37,7 +49,7 @@ export default class DeviceSetupDialog extends React.Component {
             this.props;
         const { selectedChoice } = this.state;
 
-        if (choices && (choices.length > 0 || choices.size > 0)) {
+        if (choices && (choices.length > 0 || (choices as any).size > 0)) {
             return (
                 <ConfirmationDialog
                     isVisible={isVisible}
@@ -75,12 +87,3 @@ export default class DeviceSetupDialog extends React.Component {
         );
     }
 }
-
-DeviceSetupDialog.propTypes = {
-    isVisible: bool.isRequired,
-    isInProgress: bool.isRequired,
-    text: string,
-    choices: arrayOf(string).isRequired,
-    onOk: func.isRequired,
-    onCancel: func.isRequired,
-};

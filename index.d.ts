@@ -180,7 +180,7 @@ declare module 'pc-nrfconnect-shared' {
 
     // DeviceSelector.jsx
 
-    interface DeviceListing {
+    export interface DeviceListing {
         usb?: boolean;
         nordicUsb?: boolean;
         seggerUsb?: boolean;
@@ -195,7 +195,7 @@ declare module 'pc-nrfconnect-shared' {
         jlink?: boolean;
     }
 
-    interface DeviceSetup {
+    export interface DeviceSetup {
         jprog?: Record<string, unknown>;
         dfu?: Record<string, unknown>;
         needSerialport?: boolean;
