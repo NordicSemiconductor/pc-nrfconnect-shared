@@ -649,6 +649,7 @@ declare module '*.gif';
 declare module '*.png';
 
 declare module 'triple-beam';
+declare module 'focus-visible';
 
 declare module 'lodash.range' {
     export default function (

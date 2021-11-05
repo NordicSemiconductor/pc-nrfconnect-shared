@@ -6,7 +6,6 @@
 
 import React, { useContext, useRef } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
-// @ts-expect-error: React-Bootstrap misses a type definition in the version we currently use
 import AccordionContext from 'react-bootstrap/AccordionContext';
 import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
 import { bool, func, string } from 'prop-types';

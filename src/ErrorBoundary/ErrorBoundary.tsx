@@ -80,10 +80,11 @@ class ErrorBoundary extends React.Component<
 
         generateSystemReport(
             new Date().toISOString().replace(/:/g, '-'),
-            // @ts-ignore abc
+            // @ts-ignore Don't know what to do with these yet
             Object.values(devices),
+            // @ts-ignore Don't know what to do with these yet
             selectedSerialNumber,
-            // @ts-ignore abc
+            // @ts-ignore Don't know what to do with these yet
             devices[selectedSerialNumber]
         ).then(report => {
             this.setState({ systemReport: report });

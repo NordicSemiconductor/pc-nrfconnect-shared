@@ -7,7 +7,7 @@
 import React, { FC } from 'react';
 import formatDate from 'date-fns/format';
 import { number, shape, string } from 'prop-types';
-import { LogEntry } from 'winston';
+import { LogEntry as winstonLogEntry } from 'winston';
 
 import { openUrl } from '../utils/open';
 
@@ -51,7 +51,7 @@ function hrefReplacer(str: string) {
 }
 
 interface Props {
-    entry: LogEntry;
+    entry: winstonLogEntry;
 }
 
 const LogEntry: FC<Props> = ({ entry }) => {

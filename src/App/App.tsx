@@ -6,21 +6,11 @@
 
 import 'focus-visible';
 
-import React, { useEffect, useMemo } from 'react';
+import React, { FC, ReactNode, useEffect, useMemo } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import { useDispatch, useSelector } from 'react-redux';
 import { ipcRenderer } from 'electron';
-import {
-    array,
-    arrayOf,
-    bool,
-    elementType,
-    exact,
-    func,
-    node,
-    oneOfType,
-    string,
-} from 'prop-types';
+import { func } from 'prop-types';
 
 import About from '../About/About';
 import { setDocumentationSections } from '../About/documentationSlice';
@@ -33,7 +23,7 @@ import classNames from '../utils/classNames';
 import logLibVersions from '../utils/logLibVersions';
 import packageJson from '../utils/packageJson';
 import { getPersistedCurrentPane } from '../utils/persistentStore';
-import usageData from '../utils/usageData';
+import { init as usageDataInit } from '../utils/usageData';
 import useHotKey from '../utils/useHotKey';
 import {
     currentPane as currentPaneSelector,
@@ -46,13 +36,13 @@ import {
 import ConnectedToStore from './ConnectedToStore';
 import VisibilityBar from './VisibilityBar';
 
-import './shared.scss';
 import './app.scss';
+import './shared.scss';
 
 logLibVersions();
 
 let warnedAboutLegacyPanes = false;
-const convertLegacy = pane => {
+const convertLegacy = (pane: Pane): Pane => {
     const isLegacyPane = Array.isArray(pane);
     if (!isLegacyPane) {
         return pane;
@@ -76,7 +66,7 @@ const initialiseUsageData = async () => {
     if (!usageDataAlreadyInitialised) {
         usageDataAlreadyInitialised = true;
         try {
-            await usageData.init(packageJson());
+            await usageDataInit(packageJson());
         } catch (error) {
             // No need to display the error message for the user
             console.log(error);
@@ -84,7 +74,23 @@ const initialiseUsageData = async () => {
     }
 };
 
-const ConnectedApp = ({
+interface Pane {
+    name: string;
+    Main: FC<{ active: boolean }>;
+    SidePanel?: FC;
+}
+
+interface ConnectedAppProps {
+    deviceSelect?: ReactNode;
+    panes: Pane[];
+    sidePanel?: ReactNode;
+    showLogByDefault?: boolean;
+    reportUsageData?: boolean;
+    documentation?: ReactNode[];
+    children?: ReactNode;
+}
+
+const ConnectedApp: FC<ConnectedAppProps> = ({
     deviceSelect,
     panes,
     sidePanel,
@@ -172,27 +178,11 @@ const ConnectedApp = ({
     );
 };
 
-const LegacyPanePropType = array;
-
-const PanePropType = exact({
-    name: string.isRequired,
-    Main: elementType.isRequired,
-    SidePanel: elementType,
-});
-
-ConnectedApp.propTypes = {
-    deviceSelect: node,
-    panes: arrayOf(oneOfType([LegacyPanePropType, PanePropType]).isRequired)
-        .isRequired,
-    sidePanel: node,
-    showLogByDefault: bool,
-    reportUsageData: bool,
-    documentation: arrayOf(node),
-    children: node,
-};
-
 const noopReducer = (state = null) => state;
-const App = ({ appReducer = noopReducer, ...props }) => (
+const App = ({
+    appReducer = noopReducer,
+    ...props
+}: { appReducer: any } & ConnectedAppProps) => (
     <ConnectedToStore appReducer={appReducer}>
         <ErrorBoundary>
             <ConnectedApp {...props} />
@@ -214,7 +204,7 @@ const usePersistedPane = () => {
     }, [dispatch]);
 };
 
-const useAllPanes = panes => {
+const useAllPanes = (panes: Pane[]) => {
     const dispatch = useDispatch();
 
     const allPanes = useMemo(

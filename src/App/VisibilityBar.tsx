@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC } from 'react';
 import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 import { bool } from 'prop-types';
@@ -24,7 +24,9 @@ import {
 
 import './visibility-bar.scss';
 
-const VisibilityBar = ({ isSidePanelEnabled }) => {
+const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
+    isSidePanelEnabled,
+}) => {
     const dispatch = useDispatch();
     const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);

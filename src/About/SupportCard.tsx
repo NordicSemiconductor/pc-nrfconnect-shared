@@ -13,6 +13,7 @@ import {
     selectedSerialNumber,
     sortedDevices,
 } from '../Device/deviceSlice';
+import { DeviceInfo } from '../state';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
 import Section from './Section';
@@ -45,8 +46,8 @@ export default () => {
                     onClick={() =>
                         systemReport(
                             devices,
-                            currentSerialNumber,
-                            currentDevice
+                            currentSerialNumber ?? '',
+                            currentDevice as DeviceInfo
                         )
                     }
                     label="Create system report"

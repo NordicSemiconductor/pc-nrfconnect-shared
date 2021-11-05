@@ -190,3 +190,14 @@ export const sendErrorReport = (error: string) => {
         `${process.platform}; ${process.arch}; v${appJson.version}; ${error}`
     );
 };
+
+export default {
+    disable,
+    enable,
+    init,
+    isEnabled,
+    isInitialized,
+    reset,
+    sendErrorReport,
+    sendUsageData,
+};

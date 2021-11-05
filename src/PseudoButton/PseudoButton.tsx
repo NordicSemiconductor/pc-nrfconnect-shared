@@ -4,24 +4,28 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { EventHandler } from 'react';
 import { func, string } from 'prop-types';
 
 import './pseudo-button.scss';
 
 const invokeIfSpaceOrEnterPressed =
-    (onClick: () => void) => (event: React.KeyboardEvent) => {
+    (onClick: React.KeyboardEventHandler<Element>) =>
+    (event: React.KeyboardEvent) => {
         event.stopPropagation();
         if (event.key === ' ' || event.key === 'Enter') {
-            onClick();
+            onClick(event);
         }
     };
 
 const blurAndInvoke =
-    (onClick: () => void) => (event: React.MouseEvent<HTMLElement>) => {
+    (
+        onClick: React.MouseEventHandler<HTMLElement>
+    ): React.MouseEventHandler<HTMLElement> =>
+    (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();
         event.currentTarget.blur();
-        onClick();
+        onClick(event);
     };
 
 // Motivation for this class: A normal button in HTML must not contain divs or other buttons,
@@ -29,7 +33,7 @@ const blurAndInvoke =
 const PseudoButton: React.FC<{
     className?: string;
     title?: string;
-    onClick?: () => void;
+    onClick?: React.EventHandler<React.SyntheticEvent>;
 }> = ({ onClick = () => {}, className = '', children, title }) => (
     <div
         role="button"
