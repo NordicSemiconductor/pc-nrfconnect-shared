@@ -83,7 +83,7 @@ export interface Serialport {
     comName: string;
 }
 
-export interface Device extends Omit<NrfdlDevice, 'usb' | 'jlink'> {
+export interface Device extends NrfdlDevice {
     /**
      * @deprecated Using the property `serialnumber` has been
      * deprecated. You should now use `serialNumber`. The property
@@ -97,16 +97,9 @@ export interface Device extends Omit<NrfdlDevice, 'usb' | 'jlink'> {
      */
     serialports?: Serialport[]; // from nrf-device-lib
     // traits: DeviceTraits; // from nrf-device-lib
-    usb?: {
-        product?: string;
-    }; // from nrf-device-lib
-    jlink?: {
-        boardVersion: string;
-    }; // from nrf-device-lib
     serialNumber: string;
     boardVersion?: string;
     nickname?: string;
     serialport?: Serialport;
     favorite?: boolean;
-    dfuTriggerVersion?: ModuleVersion;
 }
