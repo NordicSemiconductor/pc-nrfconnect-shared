@@ -112,7 +112,10 @@ export const startWatchingDevices =
                 updateDeviceList
             );
         } catch (error) {
-            logger.error(`Error while probing devices: ${error.message}`);
+            logger.error(
+                `Error while probing devices, more details in the debug log: ${error.message}`
+            );
+            logger.debug(JSON.stringify(error.origin, undefined, 2));
         }
     };
 
