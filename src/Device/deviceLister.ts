@@ -6,7 +6,6 @@
 
 /* eslint-disable @typescript-eslint/ban-types */
 
-// eslint-disable-next-line import/no-unresolved
 import nrfDeviceLib, {
     Device as NrfdlDevice,
     DeviceTraits,
