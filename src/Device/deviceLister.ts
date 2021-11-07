@@ -24,6 +24,10 @@ import { devicesDetected } from './deviceSlice';
 const DEFAULT_DEVICE_WAIT_TIME = 3000;
 
 const deviceLibContext = nrfDeviceLib.createContext();
+// @ts-expect-error: The type TimeoutConfig currently wrongly has all properies
+// required while they should be optional, it is correct to just specify
+// enumerateMs
+nrfDeviceLib.setTimeoutConfig(deviceLibContext, { enumerateMs: 3 * 60 * 1000 });
 export const getDeviceLibContext = () => deviceLibContext;
 
 let hotplugTaskId: number;

@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Debug log would always claim that engine was not supported.
 ### Changed
 - Requires now `nrf-device-lib-js` 0.3.18.
+- Increase enumeration timeout to 3 minutes, because according to reports the
+  current enumeration timeout can be too short.
 
 ## 5.6.4 - 2021-11-02
 ### Changed
