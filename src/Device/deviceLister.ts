@@ -8,6 +8,7 @@
 
 // eslint-disable-next-line import/no-unresolved
 import nrfDeviceLib, {
+    Device as NrfdlDevice,
     DeviceTraits,
     HotplugEvent,
     stopHotplugEvents,
@@ -33,7 +34,7 @@ let hotplugTaskId: number;
  * @param {Device} device The input device from nrf-device-lib
  * @returns {Device} The updated device
  */
-export const wrapDeviceFromNrfdl = (device: Device): Device => {
+export const wrapDeviceFromNrfdl = (device: NrfdlDevice): Device => {
     let outputDevice: Device = camelcaseKeys(device, { deep: true }) as Device;
     let serialport: Serialport | undefined = outputDevice.serialports
         ? (outputDevice.serialports[0] as unknown as Serialport)
@@ -61,7 +62,7 @@ export const wrapDeviceFromNrfdl = (device: Device): Device => {
  * @param {Device[]} devices The input devices from nrf-device-lib
  * @returns {Device[]} The updated devices
  */
-export const wrapDevicesFromNrfdl = (devices: Device[]): Device[] =>
+export const wrapDevicesFromNrfdl = (devices: NrfdlDevice[]): Device[] =>
     devices.map(wrapDeviceFromNrfdl);
 
 /**
@@ -80,11 +81,11 @@ export const startWatchingDevices =
             const { selectedSerialNumber, devices: devicesFromState } =
                 getState().device;
             await waitForModeSwitch(devicesFromState, selectedSerialNumber);
-            let devices: Device[] = await nrfDeviceLib.enumerate(
+            const nrfdlDevices = await nrfDeviceLib.enumerate(
                 getDeviceLibContext(),
                 deviceListing as unknown as DeviceTraits
             );
-            devices = wrapDevicesFromNrfdl(devices);
+            const devices = wrapDevicesFromNrfdl(nrfdlDevices);
             const hasSerialNumber = (d: Device) => {
                 return d.serialNumber === selectedSerialNumber;
             };
@@ -163,12 +164,10 @@ export const waitForDevice = (
             getDeviceLibContext(),
             () => {},
             (event: HotplugEvent) => {
-                const { device: inputDevice } = event;
-                if (!inputDevice) return;
+                const { device: nrfdlDevice } = event;
+                if (!nrfdlDevice) return;
 
-                const device = wrapDeviceFromNrfdl(
-                    inputDevice as unknown as Device
-                );
+                const device = wrapDeviceFromNrfdl(nrfdlDevice);
                 const isTraitIncluded = () =>
                     Object.keys(expectedTraits).every(
                         trait => device.traits[trait as keyof DeviceTraits]
