@@ -9,6 +9,7 @@ import { bool, func } from 'prop-types';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
 import classNames from '../../utils/classNames';
+import chevron from './arrow-down.svg';
 
 import './select-device.scss';
 
@@ -21,6 +22,11 @@ const SelectDevice = ({ deviceListVisible, toggleDeviceListVisible }) => (
         onClick={toggleDeviceListVisible}
     >
         <div>Select device</div>
+        <img
+            className={deviceListVisible && 'img-rotate'}
+            src={chevron}
+            alt=""
+        />
     </PseudoButton>
 );
 SelectDevice.propTypes = {
