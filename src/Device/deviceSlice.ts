@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
-/* eslint-disable valid-jsdoc */
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -61,7 +60,7 @@ const slice = createSlice({
     name: 'device',
     initialState,
     reducers: {
-        /**
+        /*
          * Indicates that a device has been selected.
          *
          * @param {Device} device Device object as given by nrf-device-lib.
@@ -70,7 +69,7 @@ const slice = createSlice({
             state.selectedSerialNumber = action.payload.serialNumber;
         },
 
-        /**
+        /*
          * Indicates that the currently selected device has been deselected.
          */
         deselectDevice: state => {
@@ -78,7 +77,7 @@ const slice = createSlice({
             state.deviceInfo = null;
         },
 
-        /**
+        /*
          * Indicates that device setup is complete. This means that the device is
          * ready for use according to the `config.deviceSetup` configuration provided
          * by the app.

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js'; // eslint-disable-line import/no-unresolved
+import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js';
 import SerialPort from 'serialport';
 
 import logger from '../logging';

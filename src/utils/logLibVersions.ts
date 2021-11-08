@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import nrfdl, { ModuleVersion } from '@nordicsemiconductor/nrf-device-lib-js';
+import nrfDeviceLib, {
+    ModuleVersion,
+} from '@nordicsemiconductor/nrf-device-lib-js';
 
 import { getDeviceLibContext } from '../Device/deviceLister';
 import logger from '../logging';
@@ -62,7 +64,9 @@ const logVersion = (
 
 export default async () => {
     try {
-        const versions = await nrfdl.getModuleVersions(getDeviceLibContext());
+        const versions = await nrfDeviceLib.getModuleVersions(
+            getDeviceLibContext()
+        );
 
         logVersion(
             versions,

@@ -4,10 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import {
-    Device as NrfdlDevice,
-    ModuleVersion,
-} from '@nordicsemiconductor/nrf-device-lib-js';
+import { Device as NrfdlDevice } from '@nordicsemiconductor/nrf-device-lib-js';
 import { LogEntry } from 'winston';
 
 export interface RootState {

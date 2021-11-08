@@ -6,11 +6,10 @@
 
 /* eslint-disable @typescript-eslint/ban-types */
 
-// eslint-disable-next-line import/no-unresolved
 import nrfDeviceLib, {
+    Device as NrfdlDevice,
     DeviceTraits,
     HotplugEvent,
-    stopHotplugEvents,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import camelcaseKeys from 'camelcase-keys';
 // eslint-disable-next-line import/no-unresolved
@@ -23,6 +22,10 @@ import { devicesDetected } from './deviceSlice';
 const DEFAULT_DEVICE_WAIT_TIME = 3000;
 
 const deviceLibContext = nrfDeviceLib.createContext();
+// @ts-expect-error: The type TimeoutConfig currently wrongly has all properies
+// required while they should be optional, it is correct to just specify
+// enumerateMs
+nrfDeviceLib.setTimeoutConfig(deviceLibContext, { enumerateMs: 3 * 60 * 1000 });
 export const getDeviceLibContext = () => deviceLibContext;
 
 let hotplugTaskId: number;
@@ -33,7 +36,7 @@ let hotplugTaskId: number;
  * @param {Device} device The input device from nrf-device-lib
  * @returns {Device} The updated device
  */
-export const wrapDeviceFromNrfdl = (device: Device): Device => {
+export const wrapDeviceFromNrfdl = (device: NrfdlDevice): Device => {
     let outputDevice: Device = camelcaseKeys(device, { deep: true }) as Device;
     let serialport: Serialport | undefined = outputDevice.serialports
         ? (outputDevice.serialports[0] as unknown as Serialport)
@@ -61,7 +64,7 @@ export const wrapDeviceFromNrfdl = (device: Device): Device => {
  * @param {Device[]} devices The input devices from nrf-device-lib
  * @returns {Device[]} The updated devices
  */
-export const wrapDevicesFromNrfdl = (devices: Device[]): Device[] =>
+export const wrapDevicesFromNrfdl = (devices: NrfdlDevice[]): Device[] =>
     devices.map(wrapDeviceFromNrfdl);
 
 /**
@@ -80,11 +83,11 @@ export const startWatchingDevices =
             const { selectedSerialNumber, devices: devicesFromState } =
                 getState().device;
             await waitForModeSwitch(devicesFromState, selectedSerialNumber);
-            let devices: Device[] = await nrfDeviceLib.enumerate(
+            const nrfdlDevices = await nrfDeviceLib.enumerate(
                 getDeviceLibContext(),
                 deviceListing as unknown as DeviceTraits
             );
-            devices = wrapDevicesFromNrfdl(devices);
+            const devices = wrapDevicesFromNrfdl(nrfdlDevices);
             const hasSerialNumber = (d: Device) => {
                 return d.serialNumber === selectedSerialNumber;
             };
@@ -107,7 +110,10 @@ export const startWatchingDevices =
                 updateDeviceList
             );
         } catch (error) {
-            logger.error(`Error while probing devices: ${error.message}`);
+            logger.error(
+                `Error while probing devices, more details in the debug log: ${error.message}`
+            );
+            logger.debug(JSON.stringify(error.origin, undefined, 2));
         }
     };
 
@@ -163,12 +169,10 @@ export const waitForDevice = (
             getDeviceLibContext(),
             () => {},
             (event: HotplugEvent) => {
-                const { device: inputDevice } = event;
-                if (!inputDevice) return;
+                const { device: nrfdlDevice } = event;
+                if (!nrfdlDevice) return;
 
-                const device = wrapDeviceFromNrfdl(
-                    inputDevice as unknown as Device
-                );
+                const device = wrapDeviceFromNrfdl(nrfdlDevice);
                 const isTraitIncluded = () =>
                     Object.keys(expectedTraits).every(
                         trait => device.traits[trait as keyof DeviceTraits]
@@ -179,7 +183,7 @@ export const waitForDevice = (
                     isTraitIncluded()
                 ) {
                     clearTimeout(timeoutId);
-                    stopHotplugEvents(hotplugEventsId);
+                    nrfDeviceLib.stopHotplugEvents(hotplugEventsId);
                     resolve(device);
                 }
             }
