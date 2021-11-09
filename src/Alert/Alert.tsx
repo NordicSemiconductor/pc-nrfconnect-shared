@@ -12,12 +12,22 @@ import styles from './Alert.module.scss';
 type Variant = 'info' | 'warning' | 'success' | 'danger';
 export interface AlertProps {
     variant: Variant;
-    label: React.ReactElement | string;
+    label?: React.ReactElement | string;
+    dismissable?: boolean;
+    onClose?: () => void;
 }
 
-export const Alert: React.FC<AlertProps> = ({ children, label, variant }) => (
+export const Alert: React.FC<AlertProps> = ({
+    children,
+    label,
+    variant,
+    dismissable = false,
+    onClose,
+}) => (
     <BootstrapAlert
         variant={variant}
+        dismissible={dismissable}
+        onClose={onClose}
         className={`${styles.container} ${styles[variant]}`}
     >
         {label && <strong>{label}</strong>} <>{children}</>

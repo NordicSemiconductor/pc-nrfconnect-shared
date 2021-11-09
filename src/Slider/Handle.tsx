@@ -17,7 +17,7 @@ import rangeShape, { RangeProp } from './rangeShape';
 
 import './handle.scss';
 
-const useAutoupdatingRef = (value: (_: number) => void) => {
+const useAutoupdatingRef = (value: (number: number) => void) => {
     const ref = useRef(value);
     if (ref.current !== value) ref.current = value;
     return ref;
@@ -51,7 +51,9 @@ const Handle: FC<Props> = ({
     const onChangeRef = useAutoupdatingRef(onChange);
     const onChangeCompleteRef = useAutoupdatingRef(onChangeComplete);
 
-    const grabHandle: React.MouseEventHandler<HTMLDivElement> = event => {
+    const grabHandle: MouseEventHandler<HTMLDivElement> = (
+        event: MouseEvent
+    ) => {
         const sliderWidthStillUnknown = sliderWidth == null;
         if (sliderWidthStillUnknown) return;
 
@@ -64,7 +66,7 @@ const Handle: FC<Props> = ({
     };
 
     const dragHandle = (event: MouseEvent) => {
-        const oldMousePosition = onMouseDragStart.current?.mousePosition ?? 0;
+        const oldMousePosition = onMouseDragStart.current.mousePosition;
         const newMousePosition = event.clientX;
         const percentageChange =
             ((oldMousePosition - newMousePosition) * 100) / (sliderWidth ?? 1);
