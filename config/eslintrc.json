@@ -53,8 +53,7 @@
                     "nrfconnect/.*",
                     "pc-ble-driver-js",
                     "serialport",
-                    "electron",
-                    "@nordicsemiconductor/nrf-device-lib-js"
+                    "electron"
                 ]
             }
         ],

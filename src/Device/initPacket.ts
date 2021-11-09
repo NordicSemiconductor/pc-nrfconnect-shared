@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-// eslint-disable-next-line import/no-unresolved
 import protobuf from 'protobufjs';
 
 import dfuCcProto from './dfu-cc';

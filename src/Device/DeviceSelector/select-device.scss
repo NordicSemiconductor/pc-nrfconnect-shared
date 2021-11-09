@@ -21,9 +21,18 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        justify-content: space-between;
 
         &:hover,&.device-list-visible {
             background: $primary-darkened;
+        }
+
+        img {
+            margin-right: 10px !important;
+            transition: transform 100ms linear;
+            &.img-rotate {
+                transform: rotate(180deg);
+            }
         }
     }
 }

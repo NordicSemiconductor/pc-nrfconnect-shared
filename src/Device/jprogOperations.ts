@@ -4,11 +4,14 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import nrfDeviceLib, {
+import {
+    deviceControlReset,
     Error as nrfError,
+    firmwareProgram,
     FirmwareStreamType,
     FWInfo,
     Progress,
+    readFWInfo,
 } from '@nordicsemiconductor/nrf-device-lib-js'; // eslint-disable-line import/no-unresolved
 import SerialPort from 'serialport';
 
@@ -35,7 +38,7 @@ const program = (deviceId: number, firmware: string | Buffer) => {
         fwFormat = 'NRFDL_FW_FILE';
     }
     return new Promise<void>((resolve, reject) => {
-        nrfDeviceLib.firmwareProgram(
+        firmwareProgram(
             deviceLibContext,
             deviceId,
             fwFormat,
@@ -65,7 +68,7 @@ const program = (deviceId: number, firmware: string | Buffer) => {
  * @returns {Promise} Promise that resolves if successful or rejects with error.
  */
 const reset = async (deviceId: number) => {
-    await nrfDeviceLib.deviceControlReset(deviceLibContext, deviceId);
+    await deviceControlReset(deviceLibContext, deviceId);
 };
 
 /**
@@ -128,7 +131,7 @@ export async function validateFirmware(
     let valid: boolean | FWInfo.Image | undefined = false;
     let fwInfo: FWInfo.ReadResult;
     try {
-        fwInfo = await nrfDeviceLib.readFWInfo(deviceLibContext, device.id);
+        fwInfo = await readFWInfo(deviceLibContext, device.id);
     } catch (error) {
         return false;
     }
