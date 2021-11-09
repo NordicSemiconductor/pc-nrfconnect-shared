@@ -12,19 +12,29 @@ import MemoryMap from 'nrf-intel-hex';
 import SerialPort from 'serialport';
 
 import logger from '../logging';
+import { Device } from '../state';
 import { getDeviceLibContext, waitForDevice } from './deviceLister';
+import { DeviceSetupConfig, DfuEntry } from './deviceSetup';
 import {
     createInitPacketBuffer,
     defaultInitPacket,
+    DfuImage,
     FwType,
     HashType,
+    InitPacket,
 } from './initPacket';
+
+export type PromiseConfirm = (message: string) => Promise<boolean>;
+export type PromiseChoice = (
+    question: string,
+    choices: string[]
+) => Promise<string>;
 
 const NORDIC_DFU_PRODUCT_ID = 0x521f;
 const NORDIC_VENDOR_ID = 0x1915;
 const DEFAULT_DEVICE_WAIT_TIME = 10000;
 
-export const isDeviceInDFUBootloader = device => {
+export const isDeviceInDFUBootloader = (device: Device) => {
     if (!device) {
         return false;
     }
@@ -48,7 +58,7 @@ export const isDeviceInDFUBootloader = device => {
  * @param {Object} device device
  * @returns {Promise<Object>} device object which is already in bootloader.
  */
-export const ensureBootloaderMode = /* async */ device => {
+export const ensureBootloaderMode = /* async */ (device: Device) => {
     if (isDeviceInDFUBootloader(device)) {
         logger.debug('Device is in bootloader mode');
         return device;
@@ -83,7 +93,10 @@ export const ensureBootloaderMode = /* async */ device => {
  * @param {function} promiseConfirm funtion that returns Promise<boolean> for confirmation
  * @returns {Promise<Object>} updated device
  */
-const checkConfirmUpdateBootloader = /* async */ (device, promiseConfirm) => {
+const checkConfirmUpdateBootloader = /* async */ (
+    device: Device,
+    promiseConfirm: PromiseConfirm
+) => {
     if (!promiseConfirm) {
         // without explicit consent bootloader will not be updated
         return device;
@@ -107,7 +120,7 @@ const checkConfirmUpdateBootloader = /* async */ (device, promiseConfirm) => {
  * @param {function} promiseConfirm Promise returning function
  * @returns {Promise} resolves to boolean
  */
-const confirmHelper = async promiseConfirm => {
+const confirmHelper = async (promiseConfirm: PromiseConfirm) => {
     if (!promiseConfirm) return true;
     try {
         return await promiseConfirm(
@@ -125,11 +138,14 @@ const confirmHelper = async promiseConfirm => {
  * @param {function} promiseChoice Promise returning function
  * @returns {Promise} resolves to user selected choice or first element
  */
-const choiceHelper = /* async */ (choices, promiseChoice) => {
+const choiceHelper = /* async */ (
+    choices: string[],
+    promiseChoice: PromiseChoice
+) => {
     if (choices.length > 1 && promiseChoice) {
         return promiseChoice('Which firmware do you want to program?', choices);
     }
-    return choices.pop();
+    return choices.slice(-1)[0];
 };
 
 /**
@@ -138,12 +154,13 @@ const choiceHelper = /* async */ (choices, promiseChoice) => {
  * @param {Buffer|string} firmware contents of HEX file if Buffer otherwise path of HEX file
  * @returns {Uint8Array} the loaded firmware
  */
-function parseFirmwareImage(firmware) {
+function parseFirmwareImage(firmware: Buffer | string) {
     const contents =
         firmware instanceof Buffer ? firmware : fs.readFileSync(firmware);
-    const memMap = MemoryMap.fromHex(contents);
-    let startAddress;
-    let endAddress;
+
+    const memMap = MemoryMap.fromHex(contents.toString());
+    let startAddress = 0;
+    let endAddress = 0;
     memMap.forEach((block, address) => {
         startAddress = !startAddress ? address : startAddress;
         endAddress = address + block.length;
@@ -151,7 +168,7 @@ function parseFirmwareImage(firmware) {
     return memMap.slicePad(
         startAddress,
         Math.ceil((endAddress - startAddress) / 4) * 4
-    );
+    ) as Buffer;
 }
 
 /**
@@ -160,7 +177,7 @@ function parseFirmwareImage(firmware) {
  * @param {number} ms Time, in milliseconds, to wait until promise resolution
  * @returns {Promise<undefined>} Promise that resolves after a time
  */
-const sleep = ms => {
+const sleep = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 };
 
@@ -170,13 +187,13 @@ const sleep = ms => {
  * @param {boolean} needSerialport indicates if the device is expected to have a serialport
  * @returns {Promise} resolved to device
  */
-const validateSerialPort = async (device, needSerialport) => {
+const validateSerialPort = async (device: Device, needSerialport: boolean) => {
     if (!needSerialport) {
         logger.debug('device does not need serialport');
         return device;
     }
 
-    const checkOpen = serialPath =>
+    const checkOpen = (serialPath: string) =>
         new Promise(resolve => {
             const port = new SerialPort(
                 serialPath,
@@ -193,7 +210,7 @@ const validateSerialPort = async (device, needSerialport) => {
         await sleep(2000 / i);
         // logger.debug('validating serialport', device.serialport.path, i);
         /* eslint-disable-next-line no-await-in-loop */
-        if (await checkOpen(device.serialport.comName)) {
+        if (await checkOpen(device.serialport?.comName ?? '')) {
             logger.debug('resolving', device);
             return device;
         }
@@ -207,10 +224,16 @@ const validateSerialPort = async (device, needSerialport) => {
  * @param {Uint8Array} image to calculate hash from
  * @returns {Buffer} SHA256 hash
  */
-function calculateSHA256Hash(image) {
+function calculateSHA256Hash(image: Uint8Array) {
     const digest = createHash('sha256');
     digest.update(image);
     return Buffer.from(digest.digest().reverse());
+}
+
+interface DfuData {
+    application?: { bin: Buffer; dat: Buffer };
+    softdevice?: { bin: Uint8Array; dat: Uint8Array };
+    params?: InitPacket;
 }
 
 /**
@@ -219,22 +242,22 @@ function calculateSHA256Hash(image) {
  * @param {Array} dfuImages to be created
  * @returns {Object} DFU data
  */
-const createDfuDataFromImages = dfuImages => {
-    const extract = image => ({
+const createDfuDataFromImages = (dfuImages: DfuImage[]): DfuData => {
+    const extract = (image: DfuImage) => ({
         bin: image.firmwareImage,
         dat: createInitPacketBuffer(
-            image.initPacket.fwVersion,
-            image.initPacket.hwVersion,
-            image.initPacket.sdReq,
-            image.initPacket.fwType,
+            image.initPacket.fwVersion!,
+            image.initPacket.hwVersion!,
+            image.initPacket.sdReq!,
+            image.initPacket.fwType!,
             image.initPacket.sdSize,
             image.initPacket.blSize,
             image.initPacket.appSize,
             image.initPacket.hashType,
-            image.initPacket.hash,
+            image.initPacket.hash!,
             image.initPacket.isDebug,
-            image.initPacket.signatureType,
-            image.initPacket.signature
+            image.initPacket.signatureType!,
+            image.initPacket.signature!
         ),
     });
 
@@ -247,17 +270,22 @@ const createDfuDataFromImages = dfuImages => {
     };
 };
 
+interface Manifest {
+    application?: { bin_file: string; dat_file: string };
+    softdevice?: { bin_file: string; dat_file: string };
+}
+
 /**
  * Create DFU zip from prepared DFU images
  *
  * @param {Array} dfuImages to be created
  * @returns {Object} zip
  */
-const createDfuZip = dfuImages => {
-    return new Promise(resolve => {
+const createDfuZip = (dfuImages: DfuImage[]) => {
+    return new Promise<AdmZip>(resolve => {
         const data = createDfuDataFromImages(dfuImages);
         const zip = new AdmZip();
-        const manifest = {};
+        const manifest: Manifest = {};
 
         if (data.application) {
             manifest.application = {
@@ -273,8 +301,8 @@ const createDfuZip = dfuImages => {
                 bin_file: 'softdevice.bin',
                 dat_file: 'softdevice.dat',
             };
-            zip.addFile('softdevice.bin', data.softdevice.bin);
-            zip.addFile('softdevice.dat', data.softdevice.dat);
+            zip.addFile('softdevice.bin', data.softdevice.bin as Buffer);
+            zip.addFile('softdevice.dat', data.softdevice.dat as Buffer);
         }
 
         const manifestJson = JSON.stringify({ manifest });
@@ -291,7 +319,7 @@ const createDfuZip = dfuImages => {
  * @param {Array} dfuImages to be created
  * @returns {Buffer} buffer
  */
-const createDfuZipBuffer = async dfuImages => {
+const createDfuZipBuffer = async (dfuImages: DfuImage[]) => {
     const zip = await createDfuZip(dfuImages);
     const buffer = zip.toBuffer();
     return buffer;
@@ -307,16 +335,17 @@ const createDfuZipBuffer = async dfuImages => {
  * @param {object} dfu configuration object for performing the DFU
  * @returns {Promise} resolved to prepared device
  */
-const prepareInDFUBootloader = async (device, dfu) => {
+const prepareInDFUBootloader = async (
+    device: Device,
+    dfu: DfuEntry
+): Promise<Device> => {
     logger.debug(
-        `${device.serialNumber} on ${device.serialport.comName} is now in DFU-Bootloader...`
+        `${device.serialNumber} on ${device.serialport?.comName} is now in DFU-Bootloader...`
     );
-
     const { application, softdevice } = dfu;
-    let { params } = dfu;
-    params = params || {};
+    const params: Partial<InitPacket> = dfu.params || {};
 
-    const dfuImages = [];
+    const dfuImages: DfuImage[] = [];
     if (softdevice) {
         const firmwareImage = parseFirmwareImage(softdevice);
 
@@ -330,7 +359,10 @@ const prepareInDFUBootloader = async (device, dfu) => {
             sdReq: params.sdReq || [],
         };
 
-        const packet = { ...defaultInitPacket, ...initPacketParams };
+        const packet: InitPacket = {
+            ...defaultInitPacket,
+            ...initPacketParams,
+        };
         dfuImages.push({
             name: 'SoftDevice',
             initPacket: packet,
@@ -347,7 +379,7 @@ const prepareInDFUBootloader = async (device, dfu) => {
         hashType: HashType.SHA256,
         hash: calculateSHA256Hash(firmwareImage),
         appSize: firmwareImage.length,
-        sdReq: params.sdId || [],
+        sdReq: params.sdReq,
     };
 
     const packet = { ...defaultInitPacket, ...initPacketParams };
@@ -356,10 +388,10 @@ const prepareInDFUBootloader = async (device, dfu) => {
     const zipBuffer = await createDfuZipBuffer(dfuImages);
     fs.writeFileSync('tem.zip', zipBuffer);
 
-    let prevPercentage;
+    let prevPercentage: number;
 
     logger.debug('Starting DFU');
-    await new Promise(resolve =>
+    await new Promise<void>(resolve =>
         nrfDeviceLib.firmwareProgram(
             getDeviceLibContext(),
             device.id,
@@ -394,21 +426,17 @@ const prepareInDFUBootloader = async (device, dfu) => {
     );
 
     return waitForDevice(device.serialNumber, DEFAULT_DEVICE_WAIT_TIME, {
-        serialport: true,
+        serialPort: true,
         nordicUsb: true,
+        broken: false,
+        jlink: false,
+        mcuboot: false,
+        modem: false,
+        nordicDfu: false,
+        seggerUsb: false,
+        usb: false,
     });
 };
-
-/**
- * Adds detailed output if enabled in options
- *
- * @param {Object} device device
- * @param {Object} details device
- * @param {boolean} detailedOutput device
- * @returns {Object} Either the device or the {device, details} object
- */
-const createReturnValue = (device, details, detailedOutput) =>
-    detailedOutput ? { device, details } : device;
 
 /**
  * DFU procedure which also tries to update bootloader in case bootloader mode is
@@ -418,42 +446,29 @@ const createReturnValue = (device, details, detailedOutput) =>
  * @param {Object} options options
  * @returns {Promise} device or { device, details } object
  */
-export const performDFU = async (selectedDevice, options) => {
-    const {
-        dfu,
-        needSerialport,
-        detailedOutput,
-        promiseConfirm,
-        promiseConfirmBootloader,
-        promiseChoice,
-    } = options;
+export const performDFU = async (
+    selectedDevice: Device,
+    options: DeviceSetupConfig
+): Promise<Device> => {
+    const { dfu, needSerialport, promiseConfirm, promiseChoice } = options;
     const isConfirmed = await confirmHelper(promiseConfirm);
+
     if (!isConfirmed) {
         // go on without DFU
-        return createReturnValue(
-            selectedDevice,
-            { wasProgrammed: false },
-            detailedOutput
-        );
+        return selectedDevice;
     }
+
     const choice = await choiceHelper(Object.keys(dfu), promiseChoice);
 
     try {
         let device = await ensureBootloaderMode(selectedDevice);
-        device = await checkConfirmUpdateBootloader(
-            device,
-            promiseConfirmBootloader || promiseConfirm
-        );
+        device = await checkConfirmUpdateBootloader(device, promiseConfirm);
         device = await ensureBootloaderMode(device);
         device = await prepareInDFUBootloader(device, dfu[choice]);
         device = await validateSerialPort(device, needSerialport);
 
         logger.debug('DFU finished: ', device);
-        return createReturnValue(
-            device,
-            { wasProgrammed: true },
-            detailedOutput
-        );
+        return device;
     } catch (err) {
         logger.debug('DFU failed: ', err);
         throw err;

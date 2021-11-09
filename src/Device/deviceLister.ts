@@ -110,9 +110,11 @@ export const startWatchingDevices =
                 updateDeviceList
             );
         } catch (error) {
+            const message = error instanceof Error ? error.message : error;
             logger.error(
-                `Error while probing devices, more details in the debug log: ${error.message}`
+                `Error while probing devices, more details in the debug log: ${message}`
             );
+            // @ts-ignore It's ok if the next line is undefined.
             logger.debug(JSON.stringify(error.origin, undefined, 2));
         }
     };
@@ -128,9 +130,22 @@ export const stopWatchingDevices = () => {
         try {
             nrfDeviceLib.stopHotplugEvents(hotplugTaskId);
         } catch (error) {
-            logger.error(`Error while stop watching devices: ${error.message}`);
+            const message = error instanceof Error ? error.message : error;
+            logger.error(`Error while stop watching devices: ${message}`);
         }
     }
+};
+
+const DEFAULT_TRAITS: DeviceTraits = {
+    usb: false,
+    nordicUsb: false,
+    nordicDfu: false,
+    seggerUsb: false,
+    jlink: false,
+    serialPort: true,
+    broken: false,
+    mcuboot: false,
+    modem: false,
 };
 
 /**
@@ -143,28 +158,23 @@ export const stopWatchingDevices = () => {
  *
  * @param {string} serialNumber of the device expected to appear
  * @param {number} [timeout] Timeout, in milliseconds, to wait for device enumeration
- * @param {DeviceListing} [expectedTraits] The traits that the device is expected to have
+ * @param {DeviceTraits} [expectedTraits] The traits that the device is expected to have
  * @returns {Promise} resolved to the expected device
  */
 export const waitForDevice = (
     serialNumber: string,
     timeout = DEFAULT_DEVICE_WAIT_TIME,
-    expectedTraits: DeviceListing = { serialPort: true }
+    expectedTraits: DeviceTraits = DEFAULT_TRAITS
 ) => {
     logger.debug(`Will wait for device ${serialNumber}`);
 
     // To be compatible with `serialport`
-    expectedTraits = {
-        serialPort: expectedTraits.serialport,
-    };
+    expectedTraits.serialPort = (<any>expectedTraits).serialport;
 
-    return new Promise((resolve, reject) => {
+    return new Promise<Device>((resolve, reject) => {
         let timeoutId: NodeJS.Timeout;
 
-        nrfDeviceLib.enumerate(
-            getDeviceLibContext(),
-            expectedTraits as unknown as DeviceTraits
-        );
+        nrfDeviceLib.enumerate(getDeviceLibContext(), expectedTraits);
         const hotplugEventsId = nrfDeviceLib.startHotplugEvents(
             getDeviceLibContext(),
             () => {},

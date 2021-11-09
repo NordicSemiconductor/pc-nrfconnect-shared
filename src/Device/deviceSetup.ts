@@ -5,6 +5,8 @@
  */
 
 import logger from '../logging';
+import { Device, DeviceInfo, TDispatch } from '../state';
+import { deviceInfo } from './deviceInfo/deviceInfo';
 import { stopWatchingDevices } from './deviceLister';
 import {
     deviceSetupComplete,
@@ -12,17 +14,43 @@ import {
     deviceSetupInputReceived,
     deviceSetupInputRequired,
 } from './deviceSlice';
+import { InitPacket } from './initPacket';
 import {
     programFirmware,
     validateFirmware,
     verifySerialPortAvailable,
 } from './jprogOperations';
-import { isDeviceInDFUBootloader, performDFU } from './sdfuOperations';
+import {
+    isDeviceInDFUBootloader,
+    performDFU,
+    PromiseChoice,
+    PromiseConfirm,
+} from './sdfuOperations';
+
+export interface DfuEntry {
+    application: string;
+    semver: string;
+    softdevice?: string | Buffer;
+    params: Partial<InitPacket>;
+}
+export interface DeviceSetup {
+    dfu: {
+        [key: string]: DfuEntry;
+    };
+    jprog: {
+        [key: string]: {
+            fw: string;
+            fwIdAddress: number;
+            fwVersion: string;
+        };
+    };
+    needSerialport: boolean;
+}
 
 // Defined when user input is required during device setup. When input is
 // received from the user, this callback is invoked with the confirmation
 // (Boolean) or choice (String) that the user provided as input.
-let deviceSetupCallback;
+let deviceSetupCallback: ((choice: string | boolean) => void) | undefined;
 
 /**
  * Asks the user to provide input during device setup. If a list of choices are
@@ -35,20 +63,21 @@ let deviceSetupCallback;
  * @param {Array<String>} [choices] The choices to display to the user (optional).
  * @returns {Promise<String>} Promise that resolves with the user input.
  */
-const getDeviceSetupUserInput = dispatch => (message, choices) =>
-    new Promise((resolve, reject) => {
-        deviceSetupCallback = choice => {
-            if (!choices) {
-                // for confirmation resolve with boolean
-                resolve(!!choice);
-            } else if (choice) {
-                resolve(choice);
-            } else {
-                reject(new Error('Cancelled by user.'));
-            }
-        };
-        dispatch(deviceSetupInputRequired(message, choices));
-    });
+const getDeviceSetupUserInput =
+    (dispatch: TDispatch) => (message: string, choices: string[]) =>
+        new Promise<boolean | string>((resolve, reject) => {
+            deviceSetupCallback = (choice: boolean | string) => {
+                if (!choices) {
+                    // for confirmation resolve with boolean
+                    resolve(!!choice);
+                } else if (choice) {
+                    resolve(choice);
+                } else {
+                    reject(new Error('Cancelled by user.'));
+                }
+            };
+            dispatch(deviceSetupInputRequired(message, choices));
+        });
 
 /**
  * Responds to a device setup confirmation request with the given input
@@ -57,31 +86,31 @@ const getDeviceSetupUserInput = dispatch => (message, choices) =>
  * @param {Boolean|String} input Input made by the user.
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
-export const receiveDeviceSetupInput = input => dispatch => {
-    dispatch(deviceSetupInputReceived());
-    if (deviceSetupCallback) {
-        deviceSetupCallback(input);
-        deviceSetupCallback = undefined;
-    } else {
-        logger.error('Received device setup input, but no callback exists.');
-    }
-};
+export const receiveDeviceSetupInput =
+    (input: boolean | string) => (dispatch: TDispatch) => {
+        dispatch(deviceSetupInputReceived());
+        if (deviceSetupCallback) {
+            deviceSetupCallback(input);
+            deviceSetupCallback = undefined;
+        } else {
+            logger.error(
+                'Received device setup input, but no callback exists.'
+            );
+        }
+    };
 
-/**
- * Adds detailed output if enabled in options
- *
- * @param {Object} device device
- * @param {Object} details device
- * @param {boolean} detailedOutput device
- * @returns {Object} Either the device or the {device, details} object
- */
-const createReturnValue = (device, details, detailedOutput) =>
-    detailedOutput ? { device, details } : device;
+export interface DeviceSetupConfig extends DeviceSetup {
+    allowCustomDevice: boolean;
+    promiseChoice: PromiseChoice;
+    promiseConfirm: PromiseConfirm;
+}
 
-export const prepareDevice = async (device, deviceSetupConfig) => {
-    const { jprog, dfu, needSerialport, detailedOutput } = deviceSetupConfig;
+export const prepareDevice = async (
+    device: Device,
+    deviceSetupConfig: DeviceSetupConfig
+): Promise<Device | undefined> => {
+    const { jprog, dfu, needSerialport } = deviceSetupConfig;
 
-    let wasProgrammed = false;
     if (dfu && Object.keys(dfu).length > 0) {
         // Check if device is in DFU-Bootloader, it might only have serialport
         if (isDeviceInDFUBootloader(device)) {
@@ -95,16 +124,13 @@ export const prepareDevice = async (device, deviceSetupConfig) => {
             );
 
             const { semVer } = device.dfuTriggerVersion;
+
             if (
                 Object.keys(dfu)
                     .map(key => dfu[key].semver)
                     .includes(semVer)
             ) {
-                return createReturnValue(
-                    device,
-                    { wasProgrammed },
-                    detailedOutput
-                );
+                return device;
             }
             return performDFU(device, deviceSetupConfig);
         }
@@ -112,10 +138,10 @@ export const prepareDevice = async (device, deviceSetupConfig) => {
 
     if (jprog && device.traits.jlink) {
         if (needSerialport) await verifySerialPortAvailable(device);
-        const family = (device.jlink.deviceFamily || '').toLowerCase();
-        const deviceType = (device.jlink.deviceVersion || '').toLowerCase();
+        const family = (device.jlink?.deviceFamily || '').toLowerCase();
+        const deviceType = (device.jlink?.deviceVersion || '').toLowerCase();
         const shortDeviceType = deviceType.split('_').shift();
-        const boardVersion = (device.jlink.boardVersion || '').toLowerCase();
+        const boardVersion = (device.jlink?.boardVersion || '').toLowerCase();
 
         const key =
             Object.keys(jprog).find(k => k.toLowerCase() === deviceType) ||
@@ -130,8 +156,7 @@ export const prepareDevice = async (device, deviceSetupConfig) => {
         logger.debug('Found matching firmware definition', key);
         const { fw, fwVersion } = jprog[key];
         const valid = await validateFirmware(device, fwVersion);
-        if (valid)
-            return createReturnValue(device, { wasProgrammed }, detailedOutput);
+        if (valid) return device;
 
         try {
             const programmedDevice = await programFirmware(
@@ -139,29 +164,24 @@ export const prepareDevice = async (device, deviceSetupConfig) => {
                 fw,
                 deviceSetupConfig
             );
-            wasProgrammed = true;
-            return createReturnValue(
-                programmedDevice,
-                { wasProgrammed },
-                detailedOutput
-            );
+            if (programmedDevice === undefined) throw new Error();
+
+            return programmedDevice;
         } catch (error) {
             throw new Error('Failed to program firmware');
         }
     }
-
-    return createReturnValue(device, { wasProgrammed }, detailedOutput);
 };
 
 const onSuccessfulDeviceSetup = (
-    dispatch,
-    device,
-    doStartWatchingDevices,
-    onDeviceIsReady
+    dispatch: TDispatch,
+    info: DeviceInfo,
+    doStartWatchingDevices: () => void,
+    onDeviceIsReady: (device: DeviceInfo) => void
 ) => {
     doStartWatchingDevices();
-    dispatch(deviceSetupComplete(device));
-    onDeviceIsReady(device);
+    dispatch(deviceSetupComplete(info));
+    onDeviceIsReady(info);
 };
 
 /**
@@ -179,14 +199,14 @@ const onSuccessfulDeviceSetup = (
  */
 export const setupDevice =
     (
-        device,
-        deviceSetup,
-        releaseCurrentDevice,
-        onDeviceIsReady,
-        doStartWatchingDevices,
-        doDeselectDevice
+        device: Device,
+        deviceSetup: DeviceSetup,
+        releaseCurrentDevice: () => void,
+        onDeviceIsReady: (device: DeviceInfo) => void,
+        doStartWatchingDevices: () => void,
+        doDeselectDevice: () => void
     ) =>
-    async dispatch => {
+    async (dispatch: TDispatch) => {
         // During device setup, the device may go in and out of bootloader
         // mode. This will make it appear as detached in the device lister,
         // causing a DESELECT_DEVICE. To avoid this, we stop the device
@@ -195,9 +215,9 @@ export const setupDevice =
         stopWatchingDevices();
 
         await releaseCurrentDevice();
-        const deviceSetupConfig = {
-            promiseConfirm: getDeviceSetupUserInput(dispatch),
-            promiseChoice: getDeviceSetupUserInput(dispatch),
+        const deviceSetupConfig: DeviceSetupConfig = {
+            promiseConfirm: getDeviceSetupUserInput(dispatch) as any,
+            promiseChoice: getDeviceSetupUserInput(dispatch) as any,
             allowCustomDevice: false,
             ...deviceSetup,
         };
@@ -207,21 +227,28 @@ export const setupDevice =
                 device,
                 deviceSetupConfig
             );
+
+            if (preparedDevice === undefined)
+                throw new Error('Unable to prepare device');
+
             onSuccessfulDeviceSetup(
                 dispatch,
-                preparedDevice,
+                deviceInfo(preparedDevice),
                 doStartWatchingDevices,
                 onDeviceIsReady
             );
         } catch (error) {
-            dispatch(deviceSetupError(device, error));
+            dispatch(deviceSetupError());
             if (
                 deviceSetupConfig.allowCustomDevice &&
+                error instanceof Error &&
                 error.message.includes('No firmware defined')
             ) {
                 logger.info(
                     `Connected to device with serial number: ${device.serialNumber} ` +
-                        `and family: ${device.deviceInfo.family || 'Unknown'} `
+                        `and family: ${
+                            device.jlink?.deviceFamily || 'Unknown'
+                        } `
                 );
                 logger.info(
                     'Note: no pre-compiled firmware is available for the selected device. ' +
@@ -231,13 +258,14 @@ export const setupDevice =
 
                 onSuccessfulDeviceSetup(
                     dispatch,
-                    device,
+                    deviceInfo(device),
                     doStartWatchingDevices,
                     onDeviceIsReady
                 );
             } else {
+                const message = error instanceof Error ? error.message : error;
                 logger.error(
-                    `Error while setting up device ${device.serialNumber}: ${error.message}`
+                    `Error while setting up device ${device.serialNumber}: ${message}`
                 );
                 doDeselectDevice();
             }

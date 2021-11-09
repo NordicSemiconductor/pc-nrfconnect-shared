@@ -4,11 +4,21 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js';
+import {
+    deviceControlReset,
+    Error as nrfError,
+    firmwareProgram,
+    FirmwareStreamType,
+    FWInfo,
+    Progress,
+    readFWInfo,
+} from '@nordicsemiconductor/nrf-device-lib-js'; // eslint-disable-line import/no-unresolved
 import SerialPort from 'serialport';
 
 import logger from '../logging';
+import { Device } from '../state';
 import { getDeviceLibContext } from './deviceLister';
+import { DeviceSetupConfig } from './deviceSetup';
 
 const deviceLibContext = getDeviceLibContext();
 
@@ -20,29 +30,26 @@ const deviceLibContext = getDeviceLibContext();
  * @param {String|Buffer} firmware Firmware path or firmware contents as buffer.
  * @returns {Promise} Promise that resolves if successful or rejects with error.
  */
-const program = (deviceId, firmware) => {
-    let fwFormat;
-    const options = {};
+const program = (deviceId: number, firmware: string | Buffer) => {
+    let fwFormat: FirmwareStreamType;
     if (firmware instanceof Buffer) {
-        const INPUT_FORMAT_HEX_STRING = 1;
-        options.inputFormat = INPUT_FORMAT_HEX_STRING;
         fwFormat = 'NRFDL_FW_BUFFER';
     } else {
         fwFormat = 'NRFDL_FW_FILE';
     }
-    return new Promise((resolve, reject) => {
-        nrfDeviceLib.firmwareProgram(
+    return new Promise<void>((resolve, reject) => {
+        firmwareProgram(
             deviceLibContext,
             deviceId,
             fwFormat,
             'NRFDL_FW_INTEL_HEX',
             firmware,
-            err => {
-                if (err) reject(err);
+            (error?: nrfError) => {
+                if (error) reject(error);
                 logger.info('Device programming completed.');
                 resolve();
             },
-            ({ progressJson: progress }) => {
+            ({ progressJson: progress }: Progress.CallbackParameters) => {
                 const status = `${progress.message.replace('.', ':')} ${
                     progress.progressPercentage
                 }%`;
@@ -60,8 +67,8 @@ const program = (deviceId, firmware) => {
  * @param {Number} deviceId The Id of the device.
  * @returns {Promise} Promise that resolves if successful or rejects with error.
  */
-const reset = async deviceId => {
-    await nrfDeviceLib.deviceControlReset(deviceLibContext, deviceId);
+const reset = async (deviceId: number) => {
+    await deviceControlReset(deviceLibContext, deviceId);
 };
 
 /**
@@ -73,7 +80,7 @@ const reset = async deviceId => {
  * @param {object} device Device object, ref. nrf-device-lister.
  * @returns {Promise} Promise that resolves if available, and rejects if not.
  */
-const verifySerialPortAvailable = device => {
+export const verifySerialPortAvailable = (device: Device) => {
     if (!device.serialport) {
         return Promise.reject(
             new Error(
@@ -82,8 +89,9 @@ const verifySerialPortAvailable = device => {
             )
         );
     }
-    return new Promise((resolve, reject) => {
-        const serialPort = new SerialPort(device.serialport.comName, {
+    return new Promise<void>((resolve, reject) => {
+        if (!device.serialport?.comName) return reject();
+        const serialPort = new SerialPort(device.serialport?.comName, {
             autoOpen: false,
         });
         serialPort.open(openErr => {
@@ -109,11 +117,21 @@ const verifySerialPortAvailable = device => {
  * @param {String} fwVersion The firmware version to be matched.
  * @returns {Promise} Promise that resolves if successful or rejects with error.
  */
-async function validateFirmware(device, fwVersion) {
-    let valid = false;
-    let fwInfo;
+export async function validateFirmware(
+    device: Device,
+    fwVersion:
+        | string
+        | {
+              validator: (
+                  imageInfoList: FWInfo.Image[],
+                  fromDeviceLib: boolean
+              ) => boolean;
+          }
+) {
+    let valid: boolean | FWInfo.Image | undefined = false;
+    let fwInfo: FWInfo.ReadResult;
     try {
-        fwInfo = await nrfDeviceLib.readFwInfo(deviceLibContext, device.id);
+        fwInfo = await readFWInfo(deviceLibContext, device.id);
     } catch (error) {
         return false;
     }
@@ -122,9 +140,9 @@ async function validateFirmware(device, fwVersion) {
         typeof fwVersion.validator === 'function'
     ) {
         valid = fwVersion.validator(fwInfo.imageInfoList, true);
-    } else {
+    } else if (typeof fwVersion === 'string') {
         valid = fwInfo.imageInfoList.find(imageInfo => {
-            if (imageInfo.versionFormat !== 'string') return false;
+            if (typeof imageInfo.version !== 'string') return false;
             return imageInfo.version.includes(fwVersion);
         });
     }
@@ -137,7 +155,9 @@ async function validateFirmware(device, fwVersion) {
  * @param {function} promiseConfirm Promise returning function
  * @returns {Promise} resolves to boolean
  */
-const confirmHelper = async promiseConfirm => {
+const confirmHelper = async (
+    promiseConfirm: (message: string) => Promise<boolean>
+) => {
     if (!promiseConfirm) return true;
     try {
         return await promiseConfirm(
@@ -156,7 +176,11 @@ const confirmHelper = async promiseConfirm => {
  * @param {Object} deviceSetupConfig The configuration provided.
  * @returns {Promise} Promise that resolves if successful or rejects with error.
  */
-async function programFirmware(device, fw, deviceSetupConfig) {
+export async function programFirmware(
+    device: Device,
+    fw: string | Buffer,
+    deviceSetupConfig: DeviceSetupConfig
+) {
     try {
         const confirmed = await confirmHelper(deviceSetupConfig.promiseConfirm);
         if (!confirmed) return undefined;
@@ -166,10 +190,10 @@ async function programFirmware(device, fw, deviceSetupConfig) {
         logger.debug(`Resetting ${device.serialNumber}`);
         await reset(device.id);
     } catch (programError) {
-        logger.error(programError);
-        throw new Error(`Error when programming ${programError.message}`);
+        if (programError instanceof Error) {
+            logger.error(programError);
+            throw new Error(`Error when programming ${programError.message}`);
+        }
     }
     return device;
 }
-
-export { verifySerialPortAvailable, validateFirmware, programFirmware };

@@ -5,7 +5,10 @@
  */
 
 import { Device as NrfdlDevice } from '@nordicsemiconductor/nrf-device-lib-js';
+import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { LogEntry } from 'winston';
+
+export type TDispatch = ThunkDispatch<RootState, null, AnyAction>;
 
 export interface RootState {
     appLayout: AppLayout;
@@ -50,7 +53,7 @@ export interface DeviceState {
     devices: Devices;
     deviceInfo: DeviceInfo | null;
     isSetupDialogVisible: boolean;
-    isSetupWaitingForUserInput: boolean;
+    isSetupWaitingForUserInput: boolean | string;
     selectedSerialNumber: string | null;
     setupDialogChoices: readonly string[];
     setupDialogText: string | null;
@@ -72,11 +75,6 @@ export interface Serialport {
     productId: string;
     serialNumber: string;
     vendorId: string;
-    /**
-     * @deprecated Using the property `comName` has been
-     * deprecated. You should now use `path`. The property
-     * will be removed in the next major release.
-     */
     comName: string;
 }
 

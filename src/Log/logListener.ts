@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { ipcRenderer } from 'electron';
 
 import logger from '../logging';
+import { TDispatch } from '../state';
 import { getAppDataDir } from '../utils/appDirs';
 import { addEntries } from './logSlice';
 
@@ -44,7 +45,7 @@ const sendInitialMessage = () => {
     ipcRenderer.send('get-app-details');
 };
 
-const addLogEntriesToStore = dispatch => () => {
+const addLogEntriesToStore = (dispatch: TDispatch) => () => {
     const entries = logger.getAndClearEntries();
     if (entries.length > 0) {
         dispatch(addEntries(entries));
@@ -59,7 +60,7 @@ const addLogEntriesToStore = dispatch => () => {
  * @param {function} dispatch The redux dispatch function.
  * @returns {function(*)} Function that stops the listener.
  */
-function startListening(dispatch) {
+function startListening(dispatch: TDispatch) {
     sendInitialMessage();
 
     const LOG_UPDATE_INTERVAL = 400;

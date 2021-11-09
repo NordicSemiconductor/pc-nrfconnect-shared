@@ -66,6 +66,5 @@ export {
     startWatchingDevices,
     waitForDevice,
 } from './Device/deviceLister';
-export { prepareDevice } from './Device/deviceSetup';
 export { default as sdfuOperations } from './Device/sdfuOperations';
 export { defaultInitPacket, HashType, FwType } from './Device/initPacket';
