@@ -39,12 +39,14 @@ const SelectedDevice: FC<{
             className="selected-device"
             onClick={toggleDeviceListVisible}
         >
-            <BasicDeviceInfo
-                device={device}
-                toggles={
-                    <DisconnectDevice doDeselectDevice={doDeselectDevice} />
-                }
-            />
+            {device && (
+                <BasicDeviceInfo
+                    device={device}
+                    toggles={
+                        <DisconnectDevice doDeselectDevice={doDeselectDevice} />
+                    }
+                />
+            )}
         </PseudoButton>
     );
 };
