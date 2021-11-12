@@ -30,7 +30,7 @@ export const SelectDevice: FC<Props> = ({
     >
         <div>Select device</div>
         <img
-            className={deviceListVisible ? 'img-rotate' : ''}
+            className={classNames(deviceListVisible && 'img-rotate')}
             src={chevron}
             alt=""
         />
