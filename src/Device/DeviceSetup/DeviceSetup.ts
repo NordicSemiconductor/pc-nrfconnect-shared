@@ -6,7 +6,7 @@
 
 import { connect } from 'react-redux';
 
-import { TDispatch } from '../../state';
+import { RootState, TDispatch } from '../../state';
 import { receiveDeviceSetupInput } from '../deviceSetup';
 import DeviceSetupView from './DeviceSetupView';
 
@@ -17,7 +17,7 @@ const mapStateToProps = ({
         setupDialogText,
         setupDialogChoices,
     },
-}) => ({
+}: RootState) => ({
     isVisible: isSetupDialogVisible,
     isInProgress: isSetupDialogVisible && !isSetupWaitingForUserInput,
     text: setupDialogText,

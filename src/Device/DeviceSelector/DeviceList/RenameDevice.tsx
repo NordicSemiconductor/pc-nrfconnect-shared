@@ -4,14 +4,16 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC } from 'react';
 import { func } from 'prop-types';
 
 import PseudoButton from '../../../PseudoButton/PseudoButton';
 
 import './rename-device.scss';
 
-const RenameDevice = ({ startEditingDeviceName }) => (
+export const RenameDevice: FC<{ startEditingDeviceName: () => void }> = ({
+    startEditingDeviceName,
+}) => (
     <PseudoButton className="rename-button" onClick={startEditingDeviceName}>
         <span className="mdi mdi-pencil-circle pencil" />
         Rename device

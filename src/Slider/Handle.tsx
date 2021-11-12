@@ -52,7 +52,7 @@ const Handle: FC<Props> = ({
     const onChangeCompleteRef = useAutoupdatingRef(onChangeComplete);
 
     const grabHandle: MouseEventHandler<HTMLDivElement> = (
-        event: MouseEvent
+        event: React.MouseEvent
     ) => {
         const sliderWidthStillUnknown = sliderWidth == null;
         if (sliderWidthStillUnknown) return;
@@ -66,7 +66,7 @@ const Handle: FC<Props> = ({
     };
 
     const dragHandle = (event: MouseEvent) => {
-        const oldMousePosition = onMouseDragStart.current.mousePosition;
+        const oldMousePosition = onMouseDragStart.current?.mousePosition ?? 0;
         const newMousePosition = event.clientX;
         const percentageChange =
             ((oldMousePosition - newMousePosition) * 100) / (sliderWidth ?? 1);

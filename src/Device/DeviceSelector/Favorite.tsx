@@ -4,16 +4,16 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC } from 'react';
 import { useDispatch } from 'react-redux';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
+import { Device } from '../../state';
 import { toggleDeviceFavorited } from '../deviceSlice';
-import deviceShape from './deviceShape';
 
 import './favorite.scss';
 
-export const MakeDeviceFavorite = ({ device }) => {
+export const MakeDeviceFavorite: FC<{ device: Device }> = ({ device }) => {
     const dispatch = useDispatch();
 
     const toggleFavorite = () => {
@@ -31,11 +31,8 @@ export const MakeDeviceFavorite = ({ device }) => {
         </PseudoButton>
     );
 };
-MakeDeviceFavorite.propTypes = {
-    device: deviceShape.isRequired,
-};
 
-export const FavoriteIndicator = ({ device }) => {
+export const FavoriteIndicator: FC<{ device: Device }> = ({ device }) => {
     const dispatch = useDispatch();
 
     const toggleFavorite = () => {
@@ -50,7 +47,4 @@ export const FavoriteIndicator = ({ device }) => {
             onClick={toggleFavorite}
         />
     );
-};
-FavoriteIndicator.propTypes = {
-    device: deviceShape.isRequired,
 };

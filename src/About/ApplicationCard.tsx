@@ -12,11 +12,40 @@ import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import AboutButton from './AboutButton';
 import Section from './Section';
 
+interface AppDetails {
+    coreVersion: string;
+    corePath: string;
+    homeDir: string;
+    tmpDir: string;
+}
+
+interface LauncerApp {
+    name?: string;
+    displayName?: string;
+    description?: string;
+    homepage?: string;
+    currentVersion?: string;
+    latestVersion?: string;
+    engineVersion?: string;
+    path?: string;
+    iconPath?: string;
+    shortcutIconPath?: string;
+    isOfficial?: string;
+    sharedVersion?: string;
+    source?: string;
+    url?: string;
+    releaseNote?: string;
+    upgradeAvailable?: string;
+    repositoryUrl?: string;
+}
+
+type DetailsFromLauncher = AppDetails & LauncerApp;
+
 export default () => {
-    const [appInfo, setAppInfo] = useState();
+    const [appInfo, setAppInfo] = useState<DetailsFromLauncher>();
 
     useEffect(() => {
-        ipcRenderer.once('app-details', (_, details) => {
+        ipcRenderer.once('app-details', (_, details: DetailsFromLauncher) => {
             setAppInfo(details);
         });
         ipcRenderer.send('get-app-details');

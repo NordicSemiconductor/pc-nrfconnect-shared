@@ -4,20 +4,23 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useRef, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import { bool, func } from 'prop-types';
 
 import PseudoButton from '../../../PseudoButton/PseudoButton';
+import { Device as DeviceProps } from '../../../state';
 import classNames from '../../../utils/classNames';
 import BasicDeviceInfo from '../BasicDeviceInfo';
-import deviceShape from '../deviceShape';
 import { FavoriteIndicator } from '../Favorite';
 import EditDeviceButtons from './EditDeviceButtons';
 import MoreDeviceInfo from './MoreDeviceInfo';
 
 import './device.scss';
 
-const ShowMoreInfo = ({ isVisible, toggleVisible }) => (
+const ShowMoreInfo: FC<{ isVisible: boolean; toggleVisible: () => void }> = ({
+    isVisible,
+    toggleVisible,
+}) => (
     <PseudoButton
         className={`show-more mdi mdi-chevron-${isVisible ? 'up' : 'down'}`}
         onClick={toggleVisible}
@@ -29,13 +32,23 @@ ShowMoreInfo.propTypes = {
     toggleVisible: func.isRequired,
 };
 
-const Device = ({ device, doSelectDevice, allowMoreInfoVisible }) => {
+interface Props {
+    device: DeviceProps;
+    doSelectDevice: (device: DeviceProps) => void;
+    allowMoreInfoVisible: boolean;
+}
+
+export const Device: FC<Props> = ({
+    device,
+    doSelectDevice,
+    allowMoreInfoVisible,
+}) => {
     const [moreVisible, setMoreVisible] = useState(false);
     const toggleMoreVisible = () => setMoreVisible(!moreVisible);
 
-    const deviceNameInputRef = useRef();
+    const deviceNameInputRef = useRef<HTMLInputElement>();
     const startEditingDeviceName = () => {
-        deviceNameInputRef.current.focus();
+        deviceNameInputRef.current?.focus();
     };
 
     if (moreVisible && !allowMoreInfoVisible) {
@@ -74,12 +87,6 @@ const Device = ({ device, doSelectDevice, allowMoreInfoVisible }) => {
             )}
         </PseudoButton>
     );
-};
-
-Device.propTypes = {
-    device: deviceShape.isRequired,
-    doSelectDevice: func.isRequired,
-    allowMoreInfoVisible: bool.isRequired,
 };
 
 export default Device;

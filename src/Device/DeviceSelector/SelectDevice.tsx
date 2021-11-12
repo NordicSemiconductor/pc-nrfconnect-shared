@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
-import { bool, func } from 'prop-types';
+import React, { FC } from 'react';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
 import classNames from '../../utils/classNames';
@@ -13,7 +12,15 @@ import chevron from './arrow-down.svg';
 
 import './select-device.scss';
 
-const SelectDevice = ({ deviceListVisible, toggleDeviceListVisible }) => (
+interface Props {
+    deviceListVisible: boolean;
+    toggleDeviceListVisible: () => void;
+}
+
+export const SelectDevice: FC<Props> = ({
+    deviceListVisible,
+    toggleDeviceListVisible,
+}) => (
     <PseudoButton
         className={classNames(
             'select-device',
@@ -23,15 +30,11 @@ const SelectDevice = ({ deviceListVisible, toggleDeviceListVisible }) => (
     >
         <div>Select device</div>
         <img
-            className={deviceListVisible && 'img-rotate'}
+            className={deviceListVisible ? 'img-rotate' : ''}
             src={chevron}
             alt=""
         />
     </PseudoButton>
 );
-SelectDevice.propTypes = {
-    deviceListVisible: bool.isRequired,
-    toggleDeviceListVisible: func.isRequired,
-};
 
 export default SelectDevice;

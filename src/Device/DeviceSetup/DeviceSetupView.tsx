@@ -12,9 +12,9 @@ import ConfirmationDialog from '../../Dialog/ConfirmationDialog';
 interface Props {
     isVisible: boolean;
     isInProgress: boolean;
-    text?: string;
-    choices: string[];
-    onOk: (choice: string | boolean | null) => void;
+    text?: string | null;
+    choices: readonly string[];
+    onOk: (choice: string | boolean) => void;
     onCancel: () => void;
 }
 
@@ -55,7 +55,7 @@ export default class DeviceSetupDialog extends React.Component<Props, State> {
                     isVisible={isVisible}
                     isInProgress={isInProgress}
                     isOkButtonEnabled={!!selectedChoice}
-                    onOk={() => onOk(selectedChoice)}
+                    onOk={() => onOk(selectedChoice ?? false)}
                     onCancel={onCancel}
                 >
                     <p>{text}</p>
@@ -82,7 +82,7 @@ export default class DeviceSetupDialog extends React.Component<Props, State> {
                 cancelButtonText="No"
                 onOk={() => onOk(true)}
                 onCancel={() => onOk(false)}
-                text={text}
+                text={text ?? ''}
             />
         );
     }

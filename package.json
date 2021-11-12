@@ -98,7 +98,7 @@
         "shasum": "1.0.2",
         "style-loader": "2.0.0",
         "systeminformation": "5.7.4",
-        "typescript": "^3.9.7",
+        "typescript": "^4.4.4",
         "url-loader": "4.1.1",
         "webpack": "4.46.0",
         "winston": "3.2.1"

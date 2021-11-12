@@ -4,15 +4,15 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
-import { arrayOf, node, shape, string } from 'prop-types';
+import React, { FC, ReactNode } from 'react';
+import { node } from 'prop-types';
 
+import { Device, Serialport } from '../../../state';
 import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
-import deviceShape from '../deviceShape';
 
 import './more-device-info.scss';
 
-const Row = ({ children }) => (
+const Row: FC<{ children: ReactNode }> = ({ children }) => (
     <div className="info-row">
         <div className="flex-space" />
         {children}
@@ -22,18 +22,15 @@ Row.propTypes = {
     children: node.isRequired,
 };
 
-const PcaNumber = ({ device }) => {
+const PcaNumber: FC<{ device: Device }> = ({ device }) => {
     if (device.boardVersion == null) {
         return null;
     }
 
     return <div>{device.boardVersion}</div>;
 };
-PcaNumber.propTypes = {
-    device: deviceShape.isRequired,
-};
 
-const MaybeDeviceName = ({ device }) => {
+const MaybeDeviceName: FC<{ device: Device }> = ({ device }) => {
     const hasNickname = device.nickname !== '';
     if (!hasNickname) {
         return null;
@@ -45,26 +42,16 @@ const MaybeDeviceName = ({ device }) => {
         </div>
     );
 };
-MaybeDeviceName.propTypes = {
-    device: deviceShape.isRequired,
-};
 
-const Serialports = ({ ports }) => (
+const Serialports: FC<{ ports: Serialport[] }> = ({ ports }) => (
     <ul className="ports">
         {ports.map(port => (
             <li key={port.path}>{port.comName}</li>
         ))}
     </ul>
 );
-Serialports.propTypes = {
-    ports: arrayOf(
-        shape({
-            path: string.isRequired,
-        }).isRequired
-    ).isRequired,
-};
 
-const MoreDeviceInfo = ({ device }) => (
+export const MoreDeviceInfo: FC<{ device: Device }> = ({ device }) => (
     <div className="more-infos">
         <Row>
             <PcaNumber device={device} />
@@ -73,13 +60,9 @@ const MoreDeviceInfo = ({ device }) => (
             <MaybeDeviceName device={device} />
         </Row>
         <Row>
-            <Serialports ports={device.serialPorts} />
+            <Serialports ports={device.serialports ?? []} />
         </Row>
     </div>
 );
-
-MoreDeviceInfo.propTypes = {
-    device: deviceShape.isRequired,
-};
 
 export default MoreDeviceInfo;

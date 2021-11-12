@@ -41,8 +41,9 @@ import './shared.scss';
 
 logLibVersions();
 
+type LegacyPane = [string, FC];
 let warnedAboutLegacyPanes = false;
-const convertLegacy = (pane: Pane): Pane => {
+const convertLegacy = (pane: Pane | LegacyPane): Pane => {
     const isLegacyPane = Array.isArray(pane);
     if (!isLegacyPane) {
         return pane;
@@ -204,7 +205,7 @@ const usePersistedPane = () => {
     }, [dispatch]);
 };
 
-const useAllPanes = (panes: Pane[]) => {
+const useAllPanes = (panes: (Pane | LegacyPane)[]) => {
     const dispatch = useDispatch();
 
     const allPanes = useMemo(

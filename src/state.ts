@@ -56,7 +56,7 @@ export interface DeviceState {
     isSetupWaitingForUserInput: boolean | string;
     selectedSerialNumber: string | null;
     setupDialogChoices: readonly string[];
-    setupDialogText: string | null;
+    setupDialogText?: string | null;
 }
 
 export interface DeviceInfo {

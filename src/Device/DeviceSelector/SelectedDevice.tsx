@@ -9,15 +9,15 @@ import { useSelector } from 'react-redux';
 import { func } from 'prop-types';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
+import { Device } from '../../state';
 import { selectedDevice } from '../deviceSlice';
 import BasicDeviceInfo from './BasicDeviceInfo';
 
 import './selected-device.scss';
-import { Device } from '../../state';
 
-type SelectDevice = (device: Device) => void
-
-const DisconnectDevice: FC<{ doDeselectDevice: () => void }> = ({ doDeselectDevice }) => (
+const DisconnectDevice: FC<{ doDeselectDevice: () => void }> = ({
+    doDeselectDevice,
+}) => (
     <PseudoButton
         className="mdi mdi-24px mdi-eject disconnect"
         onClick={doDeselectDevice}
@@ -29,8 +29,8 @@ DisconnectDevice.propTypes = {
 };
 
 const SelectedDevice: FC<{
-    doDeselectDevice: () => void,
-    toggleDeviceListVisible: () => void
+    doDeselectDevice: () => void;
+    toggleDeviceListVisible: () => void;
 }> = ({ doDeselectDevice, toggleDeviceListVisible }) => {
     const device = useSelector(selectedDevice);
 

@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { bool, func } from 'prop-types';
 
+import { Device as DeviceProps } from '../../../state';
 import classNames from '../../../utils/classNames';
 import { sortedDevices } from '../../deviceSlice';
 import { AnimatedItem, AnimatedList } from './AnimatedList';
@@ -35,7 +36,13 @@ const NoSupportedDevicesConnected = () => (
 
 const showAllDevices = () => true;
 
-const DeviceList = ({
+interface Props {
+    doSelectDevice: (device: DeviceProps) => void;
+    isVisible: boolean;
+    deviceFilter?: (device: DeviceProps) => boolean;
+}
+
+const DeviceList: FC<Props> = ({
     isVisible,
     doSelectDevice,
     deviceFilter = showAllDevices,

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, ReactNode } from 'react';
+import React, { FC, ReactNode, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
 import InlineInput from '../../InlineInput/InlineInput';
@@ -22,6 +22,7 @@ interface Props {
 
 const DeviceName: FC<Props> = ({ device, inputRef }) => {
     const dispatch = useDispatch();
+    const t = useRef<HTMLInputElement>();
     const setOrResetNickname = (name: string) => {
         const newNameIsEqualToDefaultName =
             name === displayedDeviceName(device, { respectNickname: false });
@@ -49,8 +50,11 @@ const DeviceSerialNumber: FC<{ device: Device }> = ({ device }) => (
 );
 
 interface BasicDeviceProps {
-    device?: Device;
-    deviceNameInputRef?: any; // shape({ current: shape({ focus: func.isRequired }) }),
+    foo: string;
+    bar: string;
+    device: Device;
+
+    deviceNameInputRef?: any;
     toggles: ReactNode;
 }
 
