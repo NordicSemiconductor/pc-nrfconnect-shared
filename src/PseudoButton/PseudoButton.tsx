@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { EventHandler } from 'react';
+import React from 'react';
 import { func, string } from 'prop-types';
 
 import './pseudo-button.scss';

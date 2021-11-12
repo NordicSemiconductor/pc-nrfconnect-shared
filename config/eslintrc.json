@@ -125,6 +125,10 @@
         "jasmine": true,
         "jest": true
     },
+    "globals": {
+        "NodeJS": true,
+        "React": true
+    },
     "settings": {
         "import/resolver": {
             "node": {

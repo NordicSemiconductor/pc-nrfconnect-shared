@@ -54,7 +54,7 @@ interface Props {
 
 class ErrorBoundary extends React.Component<
     Props,
-    { hasError: boolean; error: Error | null; systemReport: any }
+    { hasError: boolean; error: Error | null; systemReport: string | null }
 > {
     constructor(props: Props) {
         super(props);

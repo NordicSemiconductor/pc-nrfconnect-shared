@@ -11,6 +11,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import { useDispatch, useSelector } from 'react-redux';
 import { ipcRenderer } from 'electron';
 import { func } from 'prop-types';
+import { Reducer } from 'redux';
 
 import About from '../About/About';
 import { setDocumentationSections } from '../About/documentationSlice';
@@ -183,7 +184,7 @@ const noopReducer = (state = null) => state;
 const App = ({
     appReducer = noopReducer,
     ...props
-}: { appReducer: any } & ConnectedAppProps) => (
+}: { appReducer: Reducer } & ConnectedAppProps) => (
     <ConnectedToStore appReducer={appReducer}>
         <ErrorBoundary>
             <ConnectedApp {...props} />

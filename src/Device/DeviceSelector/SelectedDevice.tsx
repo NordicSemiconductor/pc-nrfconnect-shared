@@ -9,7 +9,6 @@ import { useSelector } from 'react-redux';
 import { func } from 'prop-types';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
-import { Device } from '../../state';
 import { selectedDevice } from '../deviceSlice';
 import BasicDeviceInfo from './BasicDeviceInfo';
 
