@@ -112,7 +112,9 @@ export const startWatchingDevices =
         } catch (error) {
             const message = error instanceof Error ? error.message : error;
             logger.error(
-                `Error while probing devices, more details in the debug log: ${message}`
+                `Error while probing devices, more details in the debug log: ${JSON.stringify(
+                    message
+                )}`
             );
             // @ts-ignore It's ok if the next line is undefined.
             logger.debug(JSON.stringify(error.origin, undefined, 2));
