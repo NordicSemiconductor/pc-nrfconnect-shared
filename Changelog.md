@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Fixed
 - [Object object] error message when device enumeration failed.
+### Added
+- Function `logError` to ease logging error.
 
 ## 5.8.0 - 2021-11-08
 ### Added
