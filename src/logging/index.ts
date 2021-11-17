@@ -92,10 +92,7 @@ logger.openLogFile = () => {
     try {
         openFile(logFilePath);
     } catch (error) {
-        const message = error instanceof Error ? error.message : error;
-        if (error instanceof Error) {
-            logger.error(`Unable to open log file: ${message}`);
-        }
+        logger.logError('Unable to open log file', error);
     }
 };
 
