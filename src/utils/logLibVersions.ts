@@ -77,8 +77,6 @@ export default async () => {
         logVersion(versions, 'nrfjprog_dll', 'nrfjprog dll');
         logVersion(versions, 'jlink_dll', 'JLink');
     } catch (error) {
-        logger.error(
-            `Failed to get the library versions: ${error.message || error}`
-        );
+        logger.logError('Failed to get the library versions', error);
     }
 };

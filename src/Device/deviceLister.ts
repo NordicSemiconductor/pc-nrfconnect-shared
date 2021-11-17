@@ -110,10 +110,10 @@ export const startWatchingDevices =
                 updateDeviceList
             );
         } catch (error) {
-            logger.error(
-                `Error while probing devices, more details in the debug log: ${error.message}`
+            logger.logError(
+                'Error while probing devices, more details in the debug log',
+                error
             );
-            logger.debug(JSON.stringify(error.origin, undefined, 2));
         }
     };
 
@@ -128,7 +128,7 @@ export const stopWatchingDevices = () => {
         try {
             nrfDeviceLib.stopHotplugEvents(hotplugTaskId);
         } catch (error) {
-            logger.error(`Error while stop watching devices: ${error.message}`);
+            logger.logError('Error while stopping to watch devices', error);
         }
     }
 };
