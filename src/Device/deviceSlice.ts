@@ -6,7 +6,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { Device, DeviceInfo, Devices, DeviceState, RootState } from '../state';
+import { Device, Devices, DeviceState, RootState } from '../state';
 import {
     getPersistedIsFavorite,
     getPersistedNickname,
@@ -84,7 +84,7 @@ const slice = createSlice({
          *
          * @param {Object} device Device object as given by nrf-device-lib.
          */
-        deviceSetupComplete: (state, action: PayloadAction<DeviceInfo>) => {
+        deviceSetupComplete: (state, action: PayloadAction<Device>) => {
             return { ...state, ...noDialogShown, deviceInfo: action.payload };
         },
 
