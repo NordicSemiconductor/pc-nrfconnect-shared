@@ -108,7 +108,7 @@ export interface DeviceSetupConfig extends DeviceSetup {
 export const prepareDevice = async (
     device: Device,
     deviceSetupConfig: DeviceSetupConfig
-): Promise<Device | undefined> => {
+): Promise<Device> => {
     const { jprog, dfu, needSerialport } = deviceSetupConfig;
 
     if (dfu && Object.keys(dfu).length > 0) {
@@ -159,19 +159,13 @@ export const prepareDevice = async (
         if (valid) return device;
 
         try {
-            const programmedDevice = await programFirmware(
-                device,
-                fw,
-                deviceSetupConfig
-            );
-
-            if (programmedDevice === undefined) throw new Error();
-
-            return programmedDevice;
+            return await programFirmware(device, fw, deviceSetupConfig);
         } catch (error) {
             throw new Error('Failed to program firmware');
         }
     }
+
+    return device;
 };
 
 const onSuccessfulDeviceSetup = (
@@ -228,9 +222,6 @@ export const setupDevice =
                 device,
                 deviceSetupConfig
             );
-
-            if (preparedDevice === undefined)
-                throw new Error('Unable to prepare device');
 
             onSuccessfulDeviceSetup(
                 dispatch,
