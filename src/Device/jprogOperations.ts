@@ -183,7 +183,7 @@ export async function programFirmware(
 ) {
     try {
         const confirmed = await confirmHelper(deviceSetupConfig.promiseConfirm);
-        if (!confirmed) return undefined;
+        if (!confirmed) return device;
 
         logger.debug(`Programming ${device.serialNumber} with ${fw}`);
         await program(device.id, fw);
