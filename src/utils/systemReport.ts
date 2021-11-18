@@ -129,7 +129,6 @@ export default async (
         logger.info(`System report: ${filePath}`);
         openFile(filePath);
     } catch (error) {
-        const details = error instanceof Error ? error.message : error;
-        logger.error(`Failed to generate system report: ${details}`);
+        logger.logError('Failed to generate system report', error);
     }
 };

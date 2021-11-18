@@ -7,7 +7,7 @@
 declare module 'pc-nrfconnect-shared' {
     import { Reducer, AnyAction } from 'redux';
     import React from 'react';
-    import winston from 'winston';
+    import { Logger, LogEntry } from 'winston';
     import Store from 'electron-store';
 
     type RootState = import('./src/state').RootState;
@@ -49,7 +49,14 @@ declare module 'pc-nrfconnect-shared' {
 
     // Logging
 
-    export const logger: winston.Logger;
+    interface SharedLogger extends Logger {
+        addFileTransport: (appLogDir: string) => void;
+        getAndClearEntries: () => LogEntry[];
+        openLogFile: () => void;
+        logError: (message: string, error: unknown) => void;
+    }
+
+    export const logger: SharedLogger;
 
     // App.jsx
     export interface PaneProps {

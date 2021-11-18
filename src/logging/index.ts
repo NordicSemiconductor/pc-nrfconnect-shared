@@ -7,12 +7,13 @@
 import { TransformableInfo } from 'logform';
 import path from 'path';
 import { SPLAT } from 'triple-beam';
-import winston, { createLogger, format, LogEntry, transports } from 'winston';
+import { createLogger, format, LogEntry, Logger, transports } from 'winston';
 import Transport from 'winston-transport';
 
 import { openFile } from '../utils/open';
 import AppTransport from './appTransport';
 import ConsoleTransport from './consoleTransport';
+import createErrorMessage from './createErrorMessage';
 import createLogBuffer from './logBuffer';
 
 const filePrefix = new Date().toISOString().replace(/:/gi, '_');
@@ -45,10 +46,11 @@ if (isDevelopment && isConsoleAvailable) {
     );
 }
 
-interface SharedLogger extends winston.Logger {
+interface SharedLogger extends Logger {
     addFileTransport: (appLogDir: string) => void;
     getAndClearEntries: () => LogEntry[];
     openLogFile: () => void;
+    logError: (message: string, error: unknown) => void;
 }
 
 /* This function is only needed, because our version of TypeScript still seems
@@ -90,11 +92,12 @@ logger.openLogFile = () => {
     try {
         openFile(logFilePath);
     } catch (error) {
-        const message = error instanceof Error ? error.message : error;
-        if (error instanceof Error) {
-            logger.error(`Unable to open log file: ${message}`);
-        }
+        logger.logError('Unable to open log file', error);
     }
+};
+
+logger.logError = (message: string, error: unknown) => {
+    logger.error(createErrorMessage(message, error));
 };
 
 export default logger;

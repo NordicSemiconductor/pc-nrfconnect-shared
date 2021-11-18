@@ -263,9 +263,9 @@ export const setupDevice =
                     onDeviceIsReady
                 );
             } else {
-                const message = error instanceof Error ? error.message : error;
-                logger.error(
-                    `Error while setting up device ${device.serialNumber}: ${message}`
+                logger.logError(
+                    `Error while setting up device ${device.serialNumber}`,
+                    error
                 );
                 doDeselectDevice();
             }
