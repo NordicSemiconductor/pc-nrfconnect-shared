@@ -164,6 +164,7 @@ export const prepareDevice = async (
                 fw,
                 deviceSetupConfig
             );
+
             if (programmedDevice === undefined) throw new Error();
 
             return programmedDevice;
@@ -175,13 +176,13 @@ export const prepareDevice = async (
 
 const onSuccessfulDeviceSetup = (
     dispatch: TDispatch,
-    info: DeviceInfo,
+    device: Device,
     doStartWatchingDevices: () => void,
-    onDeviceIsReady: (device: DeviceInfo) => void
+    onDeviceIsReady: (device: Device) => void
 ) => {
     doStartWatchingDevices();
-    dispatch(deviceSetupComplete(info));
-    onDeviceIsReady(info);
+    dispatch(deviceSetupComplete(device));
+    onDeviceIsReady(device);
 };
 
 /**
@@ -202,7 +203,7 @@ export const setupDevice =
         device: Device,
         deviceSetup: DeviceSetup,
         releaseCurrentDevice: () => void,
-        onDeviceIsReady: (device: DeviceInfo) => void,
+        onDeviceIsReady: (device: Device) => void,
         doStartWatchingDevices: () => void,
         doDeselectDevice: () => void
     ) =>
@@ -233,7 +234,7 @@ export const setupDevice =
 
             onSuccessfulDeviceSetup(
                 dispatch,
-                deviceInfo(preparedDevice),
+                preparedDevice,
                 doStartWatchingDevices,
                 onDeviceIsReady
             );
@@ -258,14 +259,14 @@ export const setupDevice =
 
                 onSuccessfulDeviceSetup(
                     dispatch,
-                    deviceInfo(device),
+                    device,
                     doStartWatchingDevices,
                     onDeviceIsReady
                 );
             } else {
-                const message = error instanceof Error ? error.message : error;
-                logger.error(
-                    `Error while setting up device ${device.serialNumber}: ${message}`
+                logger.logError(
+                    `Error while setting up device ${device.serialNumber}`,
+                    error
                 );
                 doDeselectDevice();
             }

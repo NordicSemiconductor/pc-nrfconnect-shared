@@ -51,7 +51,7 @@ export interface Log {
 export type Devices = { [key: string]: Device | undefined };
 export interface DeviceState {
     devices: Devices;
-    deviceInfo: DeviceInfo | null;
+    deviceInfo: Device | null;
     isSetupDialogVisible: boolean;
     isSetupWaitingForUserInput: boolean | string;
     selectedSerialNumber: string | null;

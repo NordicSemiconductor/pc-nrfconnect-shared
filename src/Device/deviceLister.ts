@@ -110,12 +110,10 @@ export const startWatchingDevices =
                 updateDeviceList
             );
         } catch (error) {
-            const message = error instanceof Error ? error.message : error;
-            logger.error(
-                `Error while probing devices, more details in the debug log: ${message}`
+            logger.logError(
+                'Error while probing devices, more details in the debug log',
+                error
             );
-            // @ts-ignore It's ok if the next line is undefined.
-            logger.debug(JSON.stringify(error.origin, undefined, 2));
         }
     };
 
@@ -130,8 +128,7 @@ export const stopWatchingDevices = () => {
         try {
             nrfDeviceLib.stopHotplugEvents(hotplugTaskId);
         } catch (error) {
-            const message = error instanceof Error ? error.message : error;
-            logger.error(`Error while stop watching devices: ${message}`);
+            logger.logError('Error while stopping to watch devices', error);
         }
     }
 };
