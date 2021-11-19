@@ -17,7 +17,7 @@ import './basic-device-info.scss';
 
 interface Props {
     device: Device;
-    inputRef?: any;
+    inputRef?: React.Ref<HTMLInputElement>;
 }
 
 const DeviceName: FC<Props> = ({ device, inputRef }) => {
@@ -50,7 +50,7 @@ const DeviceSerialNumber: FC<{ device: Device }> = ({ device }) => (
 
 interface BasicDeviceProps {
     device: Device;
-    deviceNameInputRef?: any;
+    deviceNameInputRef?: React.Ref<HTMLInputElement>;
     toggles: ReactNode;
 }
 

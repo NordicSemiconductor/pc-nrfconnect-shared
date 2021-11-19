@@ -46,7 +46,7 @@ export const Device: FC<Props> = ({
     const [moreVisible, setMoreVisible] = useState(false);
     const toggleMoreVisible = () => setMoreVisible(!moreVisible);
 
-    const deviceNameInputRef = useRef<HTMLInputElement>();
+    const deviceNameInputRef = useRef<HTMLInputElement>(null);
     const startEditingDeviceName = () => {
         deviceNameInputRef.current?.focus();
     };
