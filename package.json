@@ -96,7 +96,7 @@
         "semver": "7.3.2",
         "shasum": "1.0.2",
         "style-loader": "2.0.0",
-        "systeminformation": "5.7.4",
+        "systeminformation": "5.9.15",
         "typescript": "^3.9.7",
         "url-loader": "4.1.1",
         "webpack": "4.46.0",
