@@ -49,11 +49,7 @@ export default class DeviceSetupDialog extends React.Component<Props, State> {
             this.props;
         const { selectedChoice } = this.state;
 
-        if (
-            choices &&
-            (choices.length > 0 ||
-                (choices as unknown as { size: number }).size > 0)
-        ) {
+        if (choices && choices.length > 0) {
             return (
                 <ConfirmationDialog
                     isVisible={isVisible}
