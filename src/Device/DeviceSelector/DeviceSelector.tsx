@@ -8,7 +8,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeviceListing } from 'pc-nrfconnect-shared';
 
-import { Device, DeviceInfo } from '../../state';
+import { Device } from '../../state';
 import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
 import { DeviceSetup as DeviceSetupShared, setupDevice } from '../deviceSetup';
 import DeviceSetup from '../DeviceSetup/DeviceSetup';
@@ -28,7 +28,7 @@ interface Props {
     releaseCurrentDevice?: () => void;
     onDeviceSelected?: (device: Device) => void;
     onDeviceDeselected?: () => void;
-    onDeviceIsReady?: (device: DeviceInfo) => void;
+    onDeviceIsReady?: (device: Device) => void;
     deviceFilter?: (device: Device) => boolean;
 }
 

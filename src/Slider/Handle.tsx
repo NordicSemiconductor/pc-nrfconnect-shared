@@ -66,12 +66,14 @@ const Handle: FC<Props> = ({
     };
 
     const dragHandle = (event: MouseEvent) => {
-        const oldMousePosition = onMouseDragStart.current?.mousePosition ?? 0;
+        const oldMousePosition = onMouseDragStart.current
+            ?.mousePosition as number;
         const newMousePosition = event.clientX;
         const percentageChange =
-            ((oldMousePosition - newMousePosition) * 100) / (sliderWidth ?? 1);
+            ((oldMousePosition - newMousePosition) * 100) /
+            (sliderWidth as number);
 
-        const oldPercentage = onMouseDragStart.current?.percentage ?? 0;
+        const oldPercentage = onMouseDragStart.current?.percentage as number;
         const newPercentage = constrainedToPercentage(
             oldPercentage - percentageChange
         );

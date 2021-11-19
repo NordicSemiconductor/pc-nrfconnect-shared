@@ -210,7 +210,7 @@ const validateSerialPort = async (device: Device, needSerialport: boolean) => {
         await sleep(2000 / i);
         // logger.debug('validating serialport', device.serialport.path, i);
         /* eslint-disable-next-line no-await-in-loop */
-        if (await checkOpen(device.serialport?.comName ?? '')) {
+        if (await checkOpen(device.serialport?.comName as string)) {
             logger.debug('resolving', device);
             return device;
         }

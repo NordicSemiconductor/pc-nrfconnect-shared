@@ -5,8 +5,7 @@
  */
 
 import logger from '../logging';
-import { Device, DeviceInfo, TDispatch } from '../state';
-import { deviceInfo } from './deviceInfo/deviceInfo';
+import { Device, TDispatch } from '../state';
 import { stopWatchingDevices } from './deviceLister';
 import {
     deviceSetupComplete,

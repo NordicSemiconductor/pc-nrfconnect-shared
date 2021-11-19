@@ -86,7 +86,7 @@ export default class DeviceSetupDialog extends React.Component<Props, State> {
                 cancelButtonText="No"
                 onOk={() => onOk(true)}
                 onCancel={() => onOk(false)}
-                text={text ?? ''}
+                text={text as string}
             />
         );
     }

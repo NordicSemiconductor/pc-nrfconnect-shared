@@ -21,7 +21,7 @@ const AboutButton: FC<Props> = ({ url, label, onClick }) => (
         className="w-100"
         variant="secondary"
         disabled={!url && !onClick}
-        onClick={onClick || (() => openUrl(url ?? ''))}
+        onClick={onClick || (() => openUrl(url as string))}
     >
         {label}
     </Button>

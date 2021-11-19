@@ -14,7 +14,7 @@ export default (doSelectDevice: (device: Device) => void) => {
     const alreadyTriedToAutoselect = useRef(false);
 
     const autoselectDevice = useSelector(
-        getDevice(process.env.AUTOSELECT_DEVICE ?? '')
+        getDevice(process.env.AUTOSELECT_DEVICE as string)
     );
 
     useEffect(() => {

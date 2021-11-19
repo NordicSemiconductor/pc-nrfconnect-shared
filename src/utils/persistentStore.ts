@@ -45,6 +45,9 @@ export const getAppSpecificStore = <StoreSchema>() => {
 };
 
 export const persistCurrentPane = (currentPane: number) =>
-    getAppSpecificStore<never>().set(`currentPane`, currentPane);
+    getAppSpecificStore<sharedAppSpecificStoreSchema>().set(
+        `currentPane`,
+        currentPane
+    );
 export const getPersistedCurrentPane = () =>
-    getAppSpecificStore<never>().get(`currentPane`);
+    getAppSpecificStore<sharedAppSpecificStoreSchema>().get(`currentPane`);

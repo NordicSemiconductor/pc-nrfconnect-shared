@@ -60,7 +60,7 @@ export const MoreDeviceInfo: FC<{ device: Device }> = ({ device }) => (
             <MaybeDeviceName device={device} />
         </Row>
         <Row>
-            <Serialports ports={device.serialports ?? []} />
+            <Serialports ports={device.serialports as Serialport[]} />
         </Row>
     </div>
 );

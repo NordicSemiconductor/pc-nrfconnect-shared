@@ -226,7 +226,7 @@ export const deviceIsSelected = (state: RootState) =>
     state.device?.selectedSerialNumber != null;
 
 export const selectedDevice = (state: RootState) =>
-    state.device.devices[state.device.selectedSerialNumber ?? ''];
+    state.device.devices[state.device.selectedSerialNumber as string];
 
 export const deviceInfo = (state: RootState) => state.device.deviceInfo;
 export const selectedSerialNumber = (state: RootState) =>

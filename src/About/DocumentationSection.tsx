@@ -25,7 +25,7 @@ export const DocumentationSection: FC<Props> = ({
 }) => (
     <Section title={title}>
         <p>{children}</p>
-        {link && <AboutButton url={link} label={linkLabel ?? ''} />}
+        {link && <AboutButton url={link} label={linkLabel as string} />}
     </Section>
 );
 
