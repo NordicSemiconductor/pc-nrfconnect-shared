@@ -656,11 +656,3 @@ declare module '*.gif';
 declare module '*.png';
 
 declare module 'focus-visible';
-
-declare module 'lodash.range' {
-    export default function (
-        start: number,
-        end: number,
-        step: number
-    ): number[];
-}
