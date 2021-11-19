@@ -246,18 +246,18 @@ const createDfuDataFromImages = (dfuImages: DfuImage[]): DfuData => {
     const extract = (image: DfuImage) => ({
         bin: image.firmwareImage,
         dat: createInitPacketBuffer(
-            image.initPacket.fwVersion!,
-            image.initPacket.hwVersion!,
-            image.initPacket.sdReq!,
-            image.initPacket.fwType!,
+            image.initPacket.fwVersion as number,
+            image.initPacket.hwVersion as number,
+            image.initPacket.sdReq as number[],
+            image.initPacket.fwType as number,
             image.initPacket.sdSize,
             image.initPacket.blSize,
             image.initPacket.appSize,
             image.initPacket.hashType,
-            image.initPacket.hash!,
+            image.initPacket.hash as Buffer,
             image.initPacket.isDebug,
-            image.initPacket.signatureType!,
-            image.initPacket.signature!
+            image.initPacket.signatureType as number,
+            image.initPacket.signature as []
         ),
     });
 

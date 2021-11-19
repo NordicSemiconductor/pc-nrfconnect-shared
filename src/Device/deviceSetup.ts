@@ -210,8 +210,8 @@ export const setupDevice =
 
         await releaseCurrentDevice();
         const deviceSetupConfig: DeviceSetupConfig = {
-            promiseConfirm: getDeviceSetupUserInput(dispatch) as any,
-            promiseChoice: getDeviceSetupUserInput(dispatch) as any,
+            promiseConfirm: getDeviceSetupUserInput(dispatch) as PromiseConfirm,
+            promiseChoice: getDeviceSetupUserInput(dispatch) as PromiseChoice,
             allowCustomDevice: false,
             ...deviceSetup,
         };

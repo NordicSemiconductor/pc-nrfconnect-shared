@@ -201,7 +201,7 @@ export default App;
 const usePersistedPane = () => {
     const dispatch = useDispatch();
     useEffect(() => {
-        const pane = getPersistedCurrentPane();
+        const pane = getPersistedCurrentPane() ?? 0;
         dispatch(setCurrentPane(pane));
     }, [dispatch]);
 };
