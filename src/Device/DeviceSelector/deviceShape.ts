@@ -4,9 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { bool, shape, string } from 'prop-types';
+import { bool, InferProps, shape, string } from 'prop-types';
 
-export default shape({
+export type DeviceShapeProps = InferProps<typeof deviceShape>;
+
+const deviceShape = shape({
     serialNumber: string.isRequired,
     nickname: string.isRequired,
     favorite: bool.isRequired,
@@ -15,3 +17,5 @@ export default shape({
         product: string,
     }),
 });
+
+export default deviceShape;

@@ -187,7 +187,7 @@ declare module 'pc-nrfconnect-shared' {
 
     // DeviceSelector.jsx
 
-    interface DeviceListing {
+    export interface DeviceListing {
         usb?: boolean;
         nordicUsb?: boolean;
         seggerUsb?: boolean;
@@ -202,7 +202,7 @@ declare module 'pc-nrfconnect-shared' {
         jlink?: boolean;
     }
 
-    interface DeviceSetup {
+    export interface DeviceSetup {
         jprog?: Record<string, unknown>;
         dfu?: Record<string, unknown>;
         needSerialport?: boolean;
@@ -648,4 +648,19 @@ declare module '*.module.scss' {
         [property: string]: string;
     };
     export = properties;
+}
+
+// Let typescript compiler in `npm run lint` resolve css modules
+declare module '*.icss.scss';
+declare module '*.gif';
+declare module '*.png';
+
+declare module 'focus-visible';
+
+declare module 'lodash.range' {
+    export default function (
+        start: number,
+        end: number,
+        step: number
+    ): number[];
 }

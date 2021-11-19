@@ -33,7 +33,7 @@ let eventQueue: EventAction[] = [];
  *
  * @returns {Promise<void>} void
  */
-const init = async (packageJson: PackageJson) => {
+export const init = async (packageJson: PackageJson) => {
     appJson = packageJson;
 
     const networkInterfaces = await si.networkInterfaces();
@@ -87,7 +87,7 @@ const init = async (packageJson: PackageJson) => {
  *
  * @returns {Boolean} returns whether the setting is on, off or undefined
  */
-const isInitialized = () => {
+export const isInitialized = () => {
     logger.debug(
         `Usage report instance is${initialized ? '' : ' not'} initialized`
     );
@@ -99,7 +99,7 @@ const isInitialized = () => {
  *
  * @returns {Boolean | undefined} returns whether the setting is on, off or undefined
  */
-const isEnabled = () => {
+export const isEnabled = () => {
     const isSendingUsageData = getIsSendingUsageData() as boolean | undefined;
     logger.debug(`Usage data is ${isSendingUsageData}`);
     return isSendingUsageData;
@@ -110,7 +110,7 @@ const isEnabled = () => {
  *
  * @returns {void}
  */
-const enable = () => {
+export const enable = () => {
     persistIsSendingUsageData(true);
     logger.debug('Usage data has enabled');
 };
@@ -120,7 +120,7 @@ const enable = () => {
  *
  * @returns {void}
  */
-const disable = () => {
+export const disable = () => {
     persistIsSendingUsageData(false);
     logger.debug('Usage data has disabled');
 };
@@ -131,7 +131,7 @@ const disable = () => {
  *
  * @returns {void}
  */
-const reset = () => {
+export const reset = () => {
     deleteIsSendingUsageData();
     logger.debug('Usage data has reset');
 };
@@ -166,7 +166,7 @@ const sendEvent = ({ action, label }: EventAction) => {
  * @param {string} label The event label
  * @returns {void}
  */
-const sendUsageData = <T extends string>(
+export const sendUsageData = <T extends string>(
     action: T,
     label: string | undefined
 ) => {
@@ -183,7 +183,7 @@ const sendUsageData = <T extends string>(
  * @param {string} error The event action
  * @returns {void}
  */
-const sendErrorReport = (error: string) => {
+export const sendErrorReport = (error: string) => {
     logger.error(error);
     sendUsageData(
         'Report error',
@@ -192,12 +192,12 @@ const sendErrorReport = (error: string) => {
 };
 
 export default {
-    init,
-    enable,
     disable,
+    enable,
+    init,
     isEnabled,
-    reset,
-    sendUsageData,
-    sendErrorReport,
     isInitialized,
+    reset,
+    sendErrorReport,
+    sendUsageData,
 };

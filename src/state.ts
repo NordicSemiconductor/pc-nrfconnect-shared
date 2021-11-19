@@ -56,7 +56,7 @@ export interface DeviceState {
     isSetupWaitingForUserInput: boolean | string;
     selectedSerialNumber: string | null;
     setupDialogChoices: readonly string[];
-    setupDialogText: string | null;
+    setupDialogText?: string | null;
 }
 
 export interface DeviceInfo {
@@ -92,7 +92,6 @@ export interface Device extends NrfdlDevice {
      */
     serialports?: Serialport[]; // from nrf-device-lib
     // traits: DeviceTraits; // from nrf-device-lib
-    serialNumber: string;
     boardVersion?: string;
     nickname?: string;
     serialport?: Serialport;

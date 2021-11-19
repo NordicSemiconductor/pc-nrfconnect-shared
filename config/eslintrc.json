@@ -9,6 +9,8 @@
         "prettier/@typescript-eslint"
     ],
     "rules": {
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": ["error"],
         "react/jsx-indent": ["error", 4],
         "react/jsx-indent-props": ["error", 4],
         "react/jsx-key": ["error", { "checkFragmentShorthand": true }],
@@ -53,7 +55,8 @@
                     "nrfconnect/.*",
                     "pc-ble-driver-js",
                     "serialport",
-                    "electron"
+                    "electron",
+                    "pc-nrfconnect-shared"
                 ]
             }
         ],
@@ -121,6 +124,10 @@
         "node": true,
         "jasmine": true,
         "jest": true
+    },
+    "globals": {
+        "NodeJS": true,
+        "React": true
     },
     "settings": {
         "import/resolver": {
