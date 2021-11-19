@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - [Object object] error message when device enumeration failed.
 - Allow selecting device without flashing it if firmware doesn't match.
+- macOS Monterey: There was a warning when creating a system report for the
+  first time.
 ### Added
 - Function `logError` to ease logging error.
 
