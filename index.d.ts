@@ -654,5 +654,3 @@ declare module '*.module.scss' {
 declare module '*.icss.scss';
 declare module '*.gif';
 declare module '*.png';
-
-declare module 'focus-visible';
