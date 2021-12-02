@@ -5,10 +5,11 @@
  */
 
 declare module 'pc-nrfconnect-shared' {
-    import { Reducer, AnyAction } from 'redux';
+    import { Reducer, Action, AnyAction } from 'redux';
     import React from 'react';
     import { Logger, LogEntry } from 'winston';
     import Store from 'electron-store';
+    import { RenderResult } from '@testing-library/react';
 
     type RootState = import('./src/state').RootState;
     type Device = import('./src/state').Device;
@@ -82,7 +83,7 @@ declare module 'pc-nrfconnect-shared' {
          * this is the root reducer to handle that. It will handle the
          * slice of state under the name `app`.
          */
-        appReducer?: Reducer<any, AnyAction>;
+        appReducer?: Reducer;
         /**
          * The React element that appears in the upper left corner of the app.
          * Apps usually utilise the component `DeviceSelector` for this.
@@ -637,6 +638,18 @@ declare module 'pc-nrfconnect-shared' {
 
     // deviceSlice.ts
     export const selectedDevice: (state: RootState) => Device | undefined;
+
+    export const testUtils: {
+        // testrenderer.tsx
+        render: (
+            appReducer?: Reducer
+        ) => (element: React.ReactElement, actions?: Action[]) => RenderResult;
+
+        // rootReducer.ts
+        rootReducer: <AppState>(
+            appReducer?: Reducer<AppState>
+        ) => Reducer<NrfConnectState<AppState>>;
+    };
 }
 
 declare module 'prettysize' {

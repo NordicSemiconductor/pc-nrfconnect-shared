@@ -5,15 +5,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
-### Changed
-- Move nrf-device-lib-js to dependencies as the exposed types system uses 
-  types from it.
-- Bump version of nrf-device-lib-js  
 
+## 5.9.0 - 2021-12-07
 ### Fixed
 - [Object object] error message when device enumeration failed.
 - macOS Monterey: There was a warning when creating a system report for the
   first time.
+### Added
+- Export `render` and `rootReducer` as an object `testUtils` to aid testing.
+### Changed
+- Move nrf-device-lib-js to dependencies as the exposed types system uses
+  types from it.
+- Bump version of nrf-device-lib-js to 0.3.20.
 
 ## 5.8.1 - 2021-11-18
 ### Fixed
