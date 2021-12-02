@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Move nrf-device-lib-js to dependencies as the exposed types system uses
   types from it.
 - Bump version of nrf-device-lib-js to 0.3.20.
+### Steps to upgrade when using this package
+- If your project previously used `@types/react@16.14.4` to fix that nasty
+  compatibility problem with react-bootstrap, you now must upgrade
+  `@types/react`, best to the latest version.
 
 ## 5.8.1 - 2021-11-18
 ### Fixed
