@@ -7,12 +7,12 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
-import { combineReducers, createStore } from 'redux';
+import { createStore } from 'redux';
 
-import coreReducers from '../src/coreReducers';
+import rootReducer from '../src/rootReducer';
 
 const createPreparedStore = actions => {
-    const store = createStore(combineReducers(coreReducers));
+    const store = createStore(rootReducer());
     actions.forEach(store.dispatch);
 
     return store;
