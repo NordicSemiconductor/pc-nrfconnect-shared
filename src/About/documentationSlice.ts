@@ -13,7 +13,7 @@ interface DocumentationSectionProps {
     link?: string;
 }
 
-interface DocumentationState {
+export interface DocumentationState {
     sections: React.Component<DocumentationSectionProps>[];
 }
 
