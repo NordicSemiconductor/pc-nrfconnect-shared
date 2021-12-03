@@ -640,6 +640,12 @@ declare module 'pc-nrfconnect-shared' {
     export const selectedDevice: (state: RootState) => Device | undefined;
 
     export const testUtils: {
+        // dispatchTo.tsx
+        dispatchTo: <State>(
+            aReducer: Reducer<State>,
+            actions: [Action, ...Action[]]
+        ) => State;
+
         // testrenderer.tsx
         render: (
             appReducer?: Reducer

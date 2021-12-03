@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import dispatchTo from '../test/dispatchTo';
 import { testRendererForApps } from '../test/testrenderer';
 import { hideDialog, showDialog } from './ErrorDialog/errorDialogSlice';
 import rootReducer from './rootReducer';
@@ -73,6 +74,7 @@ export { default as sdfuOperations } from './Device/sdfuOperations';
 export { defaultInitPacket, HashType, FwType } from './Device/initPacket';
 
 export const testUtils = {
+    dispatchTo,
     render: testRendererForApps,
     rootReducer,
 };
