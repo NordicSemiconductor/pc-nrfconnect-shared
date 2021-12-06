@@ -6,7 +6,7 @@
 
 import React from 'react';
 import reactGA from 'react-ga';
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 
 import render from '../../test/testrenderer';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
@@ -47,9 +47,7 @@ describe('ErrorBoundary', () => {
                 <Child />
             </ErrorBoundary>
         );
-        const flushPromises = () => new Promise(setImmediate);
-        await flushPromises();
-        expect(reactGA.initialize).toHaveBeenCalled();
+        await waitFor(() => expect(reactGA.initialize).toHaveBeenCalled());
     });
 
     it('can take custom reporting functions', () => {
