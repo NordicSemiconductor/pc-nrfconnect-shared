@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- Move nrf-device-lib-js to dependencies as the exposed types system uses 
+  types from it.
+- Bump version of nrf-device-lib-js  
+
 ### Fixed
 - [Object object] error message when device enumeration failed.
 - Allow selecting device without flashing it if firmware doesn't match.
