@@ -639,6 +639,9 @@ declare module 'pc-nrfconnect-shared' {
     // deviceSlice.ts
     export const selectedDevice: (state: RootState) => Device | undefined;
 
+    // describeError.ts
+    export const describeError: (error: unknown) => string;
+
     export const testUtils: {
         // dispatchTo.tsx
         dispatchTo: <State>(

@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Export `render`, `dispatchTo`, and `rootReducer` as an object `testUtils` to
   aid testing.
+- Export `describeError` to convert any error object to a reasonable string
+  representation.
 ### Changed
 - Move nrf-device-lib-js to dependencies as the exposed types system uses
   types from it.
