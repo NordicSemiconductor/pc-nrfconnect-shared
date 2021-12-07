@@ -35,9 +35,9 @@ const describeOrigin = (origin?: MaybeWithMessageAndOrigin) => {
     return ` (Origin: ${describe(origin)})`;
 };
 
-export default (message: string, error: unknown) => {
+export default (error: unknown) => {
     if (error == null) {
-        return message;
+        return String(error);
     }
 
     /* Because we asserted that error is neither null nor undefined above, we
@@ -52,5 +52,5 @@ export default (message: string, error: unknown) => {
         throw Error('Will never be thrown');
     }
 
-    return `${message}: ${describe(error)}${describeOrigin(error.origin)}`;
+    return describe(error) + describeOrigin(error.origin);
 };

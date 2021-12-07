@@ -5,10 +5,11 @@
  */
 
 declare module 'pc-nrfconnect-shared' {
-    import { Reducer, AnyAction } from 'redux';
+    import { Reducer, Action, AnyAction } from 'redux';
     import React from 'react';
     import { Logger, LogEntry } from 'winston';
     import Store from 'electron-store';
+    import { RenderResult } from '@testing-library/react';
 
     type RootState = import('./src/state').RootState;
     type Device = import('./src/state').Device;
@@ -82,7 +83,7 @@ declare module 'pc-nrfconnect-shared' {
          * this is the root reducer to handle that. It will handle the
          * slice of state under the name `app`.
          */
-        appReducer?: Reducer<any, AnyAction>;
+        appReducer?: Reducer;
         /**
          * The React element that appears in the upper left corner of the app.
          * Apps usually utilise the component `DeviceSelector` for this.
@@ -534,10 +535,7 @@ declare module 'pc-nrfconnect-shared' {
         disable: () => void;
         isEnabled: () => void;
         reset: () => void;
-        sendUsageData: <T extends string>(
-            action: T,
-            label: string | undefined
-        ) => void;
+        sendUsageData: <T extends string>(action: T, label?: string) => void;
         sendErrorReport: (error: string) => void;
     };
 
@@ -637,6 +635,27 @@ declare module 'pc-nrfconnect-shared' {
 
     // deviceSlice.ts
     export const selectedDevice: (state: RootState) => Device | undefined;
+
+    // describeError.ts
+    export const describeError: (error: unknown) => string;
+
+    export const testUtils: {
+        // dispatchTo.tsx
+        dispatchTo: <State>(
+            aReducer: Reducer<State>,
+            actions: [Action, ...Action[]]
+        ) => State;
+
+        // testrenderer.tsx
+        render: (
+            appReducer?: Reducer
+        ) => (element: React.ReactElement, actions?: Action[]) => RenderResult;
+
+        // rootReducer.ts
+        rootReducer: <AppState>(
+            appReducer?: Reducer<AppState>
+        ) => Reducer<NrfConnectState<AppState>>;
+    };
 }
 
 declare module 'prettysize' {

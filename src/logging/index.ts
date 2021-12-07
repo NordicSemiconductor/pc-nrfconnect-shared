@@ -13,7 +13,7 @@ import Transport from 'winston-transport';
 import { openFile } from '../utils/open';
 import AppTransport from './appTransport';
 import ConsoleTransport from './consoleTransport';
-import createErrorMessage from './createErrorMessage';
+import describeError from './describeError';
 import createLogBuffer from './logBuffer';
 
 const filePrefix = new Date().toISOString().replace(/:/gi, '_');
@@ -97,7 +97,10 @@ logger.openLogFile = () => {
 };
 
 logger.logError = (message: string, error: unknown) => {
-    logger.error(createErrorMessage(message, error));
+    const errorMessage =
+        error == null ? message : `${message}: ${describeError(error)}`;
+
+    logger.error(errorMessage);
 };
 
 export default logger;

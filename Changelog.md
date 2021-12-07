@@ -5,16 +5,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
-### Changed
-- Move nrf-device-lib-js to dependencies as the exposed types system uses 
-  types from it.
-- Bump version of nrf-device-lib-js  
 
+## 5.9.0 - 2021-12-07
 ### Fixed
 - [Object object] error message when device enumeration failed.
-- Allow selecting device without flashing it if firmware doesn't match.
 - macOS Monterey: There was a warning when creating a system report for the
   first time.
+### Added
+- Export `render`, `dispatchTo`, and `rootReducer` as an object `testUtils` to
+  aid testing.
+- Export `describeError` to convert any error object to a reasonable string
+  representation.
+### Changed
+- Move nrf-device-lib-js to dependencies as the exposed types system uses
+  types from it.
+- Bump version of nrf-device-lib-js to 0.3.20.
+### Steps to upgrade when using this package
+- If your project previously used `@types/react@16.14.4` to fix that nasty
+  compatibility problem with react-bootstrap, you now must upgrade
+  `@types/react`, best to the latest version.
+
+## 5.8.1 - 2021-11-18
+### Fixed
+- Allow selecting device without flashing it if firmware doesn't match.
 ### Added
 - Function `logError` to ease logging error.
 

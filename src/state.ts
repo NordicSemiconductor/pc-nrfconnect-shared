@@ -8,6 +8,8 @@ import { Device as NrfdlDevice } from '@nordicsemiconductor/nrf-device-lib-js';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { LogEntry } from 'winston';
 
+import type { DocumentationState } from './About/documentationSlice';
+
 export type TDispatch = ThunkDispatch<RootState, null, AnyAction>;
 
 export interface RootState {
@@ -16,9 +18,7 @@ export interface RootState {
     errorDialog: ErrorDialog;
     log: Log;
     device: DeviceState;
-    documentation: {
-        sections: React.ReactElement[] | null;
-    };
+    documentation: DocumentationState;
 }
 
 export interface AppLayout {

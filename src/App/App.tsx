@@ -180,11 +180,10 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     );
 };
 
-const noopReducer = (state = null) => state;
 const App = ({
-    appReducer = noopReducer,
+    appReducer,
     ...props
-}: { appReducer: Reducer } & ConnectedAppProps) => (
+}: { appReducer?: Reducer } & ConnectedAppProps) => (
     <ConnectedToStore appReducer={appReducer}>
         <ErrorBoundary>
             <ConnectedApp {...props} />
