@@ -20,7 +20,7 @@ const trackId = 'UA-22498474-5';
 
 interface EventAction {
     action: string;
-    label: string | undefined;
+    label?: string;
 }
 
 let initialized = false;
@@ -166,10 +166,7 @@ const sendEvent = ({ action, label }: EventAction) => {
  * @param {string} label The event label
  * @returns {void}
  */
-export const sendUsageData = <T extends string>(
-    action: T,
-    label: string | undefined
-) => {
+export const sendUsageData = <T extends string>(action: T, label?: string) => {
     eventQueue.push({ action, label });
     if (!initialized) {
         return;

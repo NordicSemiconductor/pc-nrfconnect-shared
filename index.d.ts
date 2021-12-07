@@ -535,10 +535,7 @@ declare module 'pc-nrfconnect-shared' {
         disable: () => void;
         isEnabled: () => void;
         reset: () => void;
-        sendUsageData: <T extends string>(
-            action: T,
-            label: string | undefined
-        ) => void;
+        sendUsageData: <T extends string>(action: T, label?: string) => void;
         sendErrorReport: (error: string) => void;
     };
 
