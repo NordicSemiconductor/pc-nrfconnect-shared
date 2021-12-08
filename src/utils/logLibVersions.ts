@@ -59,7 +59,7 @@ const logVersion = (
     description: string
 ) => {
     const version = versions.find(v => v.moduleName === moduleName);
-    logger.verbose(`Using ${description} version: ${describe(version)}`);
+    logger.info(`Using ${description} version: ${describe(version)}`);
 };
 
 export default async () => {
