@@ -35,7 +35,7 @@ const describeBuggyVersion = (version: BuggyModuleVersion) => {
     return 'Unknown';
 };
 
-const describe = (version?: ModuleVersion) => {
+export const describe = (version?: ModuleVersion) => {
     if (version == null) {
         return 'Unknown';
     }

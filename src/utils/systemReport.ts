@@ -4,15 +4,18 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js';
 import fs from 'fs';
 import { EOL } from 'os';
 import path from 'path';
 import pretty from 'prettysize';
 import si from 'systeminformation';
 
+import { getDeviceLibContext } from '../Device/deviceLister';
 import logger from '../logging';
 import { Device, DeviceInfo } from '../state';
 import { getAppDataDir } from './appDirs';
+import { describe } from './logLibVersions';
 import { openFile } from './open';
 
 /* eslint-disable object-curly-newline */
@@ -42,6 +45,13 @@ const generalInfoReport = async () => {
         si.fsSize(),
     ]);
 
+    const versions = await nrfDeviceLib.getModuleVersions(
+        getDeviceLibContext()
+    );
+
+    const nrfjprog = versions.find(v => v.moduleName === 'nrfjprog_dll');
+    const jlink = versions.find(v => v.moduleName === 'jlink_dll');
+
     return [
         `- System:     ${manufacturer} ${model}`,
         `- BIOS:       ${vendor} ${version}`,
@@ -60,6 +70,8 @@ const generalInfoReport = async () => {
         `    - node: ${node}`,
         `    - python: ${python}`,
         `    - python3: ${python3}`,
+        nrfjprog ? `    - nrfjprog: ${describe(nrfjprog)}` : '',
+        jlink ? `    - jlink: ${describe(jlink)}` : '',
         '',
     ];
 };
