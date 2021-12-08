@@ -80,9 +80,9 @@ const allDevicesReport = (allDevices: Device[]) => [
     '- Connected devices:',
     ...allDevices.map(
         d =>
-            `    - ${d.serialport?.comName}: ${d.serialNumber} ${
-                d.boardVersion || ''
-            }`
+            `    - ${d.serialNumber} ${d.boardVersion || ''}: ${d.serialPorts
+                ?.map(s => s.comName)
+                .join(', ')}`
     ),
     '',
 ];
