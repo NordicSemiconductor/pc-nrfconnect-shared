@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 5.9.1 - 2021-12-09
+### Fixed
+- Mock nrf-device-lib-js function used by testing framework.
+
 ## 5.9.0 - 2021-12-07
 ### Fixed
 - [Object object] error message when device enumeration failed.
