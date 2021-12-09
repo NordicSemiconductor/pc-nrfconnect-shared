@@ -55,6 +55,7 @@ export { default as systemReport } from './utils/systemReport';
 
 export { default as usageData } from './utils/usageData';
 export { default as classNames } from './utils/classNames';
+export { truncateMiddle } from './utils/truncateMiddle';
 
 export { default as useHotKey } from './utils/useHotKey';
 

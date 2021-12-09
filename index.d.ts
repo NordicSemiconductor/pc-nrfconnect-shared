@@ -592,6 +592,16 @@ declare module 'pc-nrfconnect-shared' {
      */
     export function classNames(...className: unknown[]): string;
 
+    // truncateMiddle.ts
+    /**
+     * Truncate middle of a string if it is too long.
+     */
+    export const truncateMiddle: (
+        str: string,
+        clipStart?: number,
+        clipEnd?: number
+    ) => string;
+
     // appLayout.js
 
     /**
