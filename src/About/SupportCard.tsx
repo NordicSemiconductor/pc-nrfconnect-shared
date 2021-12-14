@@ -8,13 +8,11 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import Card from '../Card/Card';
-import { deviceInfo as getDeviceInfo } from '../Device/deviceInfo/deviceInfo';
 import {
     deviceInfo,
     selectedSerialNumber,
     sortedDevices,
 } from '../Device/deviceSlice';
-import { Device } from '../state';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
 import Section from './Section';
@@ -48,7 +46,7 @@ export default () => {
                         systemReport(
                             devices,
                             currentSerialNumber as string,
-                            getDeviceInfo(currentDevice as Device)
+                            currentDevice
                         )
                     }
                     label="Create system report"
