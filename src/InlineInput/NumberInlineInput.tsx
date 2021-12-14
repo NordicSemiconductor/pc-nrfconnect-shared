@@ -13,7 +13,9 @@ import InlineInput from './InlineInput';
 import './number-inline-input.scss';
 
 const isInRange = (value: number, { min, max, decimals = 0 }: RangeProp) =>
-    value >= min && value <= max && value === Number(value.toFixed(decimals));
+    value >= min &&
+    value <= max &&
+    value === Number(value.toFixed(decimals as number));
 
 interface Props {
     disabled?: boolean;

@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import { RangeProp } from './rangeShape';
+
 export const constrainedToPercentage = (percentage: number) => {
     if (percentage < 0) return 0;
     if (percentage > 100) return 100;
@@ -17,5 +19,5 @@ export const toPercentage = (
 
 export const fromPercentage = (
     value: number,
-    { min, max, decimals = 0 }: { min: number; max: number; decimals: number }
-) => Number(((value * (max - min)) / 100 + min).toFixed(decimals));
+    { min, max, decimals = 0 }: RangeProp
+) => Number(((value * (max - min)) / 100 + min).toFixed(decimals as number));
