@@ -9,13 +9,13 @@ import { number, shape } from 'prop-types';
 export interface RangeProp {
     min: number;
     max: number;
-    decimals: number;
+    decimals?: number | null;
 }
 
 const rangeShape = shape({
     min: number.isRequired,
     max: number.isRequired,
-    decimals: number.isRequired,
+    decimals: number,
 });
 
 export default rangeShape;

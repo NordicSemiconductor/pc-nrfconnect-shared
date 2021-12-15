@@ -11,9 +11,13 @@ import path from 'path';
 import pretty from 'prettysize';
 import si from 'systeminformation';
 
+import {
+    deviceInfo as getDeviceInfo,
+    productPageUrl,
+} from '../Device/deviceInfo/deviceInfo';
 import { getDeviceLibContext } from '../Device/deviceLister';
 import logger from '../logging';
-import { Device, DeviceInfo } from '../state';
+import { Device } from '../state';
 import { getAppDataDir } from './appDirs';
 import { describe } from './logLibVersions';
 import { openFile } from './open';
@@ -88,19 +92,21 @@ const allDevicesReport = (allDevices: Device[]) => [
 ];
 
 const currentDeviceReport = (
-    device: DeviceInfo,
+    device: Device | null,
     currentSerialNumber: string
 ) => {
     if (device == null) {
         return [];
     }
 
+    const deviceInfo = getDeviceInfo(device);
+
     return [
         '- Current device:',
-        `    - name:          ${device.name}`,
+        `    - name:          ${deviceInfo.name}`,
         `    - serialNumber:  ${currentSerialNumber}`,
-        `    - cores:         ${device.cores}`,
-        `    - website:       ${device.website}`,
+        `    - cores:         ${deviceInfo.cores}`,
+        `    - website:       ${productPageUrl(device)}`,
         '',
     ];
 };
@@ -108,7 +114,7 @@ const currentDeviceReport = (
 export const generateSystemReport = async (
     timestamp: string,
     allDevices: Device[],
-    currentDevice: DeviceInfo,
+    currentDevice: Device | null,
     currentSerialNumber: string
 ) =>
     [
@@ -122,7 +128,7 @@ export const generateSystemReport = async (
 export default async (
     allDevices: Device[],
     currentSerialNumber: string,
-    currentDevice: DeviceInfo
+    currentDevice: Device | null
 ) => {
     logger.info('Generating system report...');
     const timestamp = new Date().toISOString().replace(/:/g, '-');

@@ -22,7 +22,7 @@ const Ticks: FC<Props> = ({
     valueRange,
     range: { min, max, decimals = 0 },
 }) => {
-    const step = 0.1 ** decimals;
+    const step = 0.1 ** (decimals as number);
 
     const isSelected = (value: number) =>
         value >= valueRange.min && value <= valueRange.max;
