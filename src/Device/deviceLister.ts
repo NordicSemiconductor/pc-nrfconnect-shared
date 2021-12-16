@@ -133,16 +133,17 @@ export const stopWatchingDevices = () => {
     }
 };
 
+// @ts-ignore This is how the nrfdl-js api works at the moment.
 const DEFAULT_TRAITS: DeviceTraits = {
-    usb: false,
-    nordicUsb: false,
-    nordicDfu: false,
-    seggerUsb: false,
-    jlink: false,
     serialPort: true,
-    broken: false,
-    mcuboot: false,
-    modem: false,
+    // usb: false,
+    // nordicUsb: false,
+    // nordicDfu: false,
+    // seggerUsb: false,
+    // jlink: false,
+    // broken: false,
+    // mcuboot: false,
+    // modem: false,
 };
 
 /**
@@ -164,10 +165,6 @@ export const waitForDevice = (
     expectedTraits: DeviceTraits = DEFAULT_TRAITS
 ) => {
     logger.debug(`Will wait for device ${serialNumber}`);
-
-    // To be compatible with `serialport`
-    expectedTraits.serialPort = (<any>expectedTraits).serialport;
-
     return new Promise<Device>((resolve, reject) => {
         let timeoutId: NodeJS.Timeout;
 

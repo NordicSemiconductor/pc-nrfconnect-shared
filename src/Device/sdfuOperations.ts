@@ -379,7 +379,8 @@ const prepareInDFUBootloader = async (
         hashType: HashType.SHA256,
         hash: calculateSHA256Hash(firmwareImage),
         appSize: firmwareImage.length,
-        sdReq: params.sdReq,
+        // @ts-ignore This parameter is set.
+        sdReq: params.sdId || [],
     };
 
     const packet = { ...defaultInitPacket, ...initPacketParams };
@@ -425,16 +426,17 @@ const prepareInDFUBootloader = async (
         )
     );
 
+    // @ts-ignore This is how the nrfdl-js api works at the moment.
     return waitForDevice(device.serialNumber, DEFAULT_DEVICE_WAIT_TIME, {
         serialPort: true,
         nordicUsb: true,
-        broken: false,
-        jlink: false,
-        mcuboot: false,
-        modem: false,
-        nordicDfu: false,
-        seggerUsb: false,
-        usb: false,
+        // broken: false,
+        // jlink: false,
+        // mcuboot: false,
+        // modem: false,
+        // nordicDfu: false,
+        // seggerUsb: false,
+        // usb: false,
     });
 };
 
