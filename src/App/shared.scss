@@ -12,7 +12,7 @@ $roboto-font-path: '~roboto-fontface/fonts' !default;
 @import '~bootstrap/scss/bootstrap';
 
 @each $color, $value in $theme-colors {
-    .btn-#{$color} {
+    .btn-#{$color}, .btn-#{$color}.disabled, .btn-#{$color}:disabled {
         border-color: $gray-200;
     }
 }
