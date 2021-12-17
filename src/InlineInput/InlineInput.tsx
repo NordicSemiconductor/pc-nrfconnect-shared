@@ -124,7 +124,10 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
                     disabled && 'disabled',
                     className
                 )}
-                size={Math.max(1, internalValue.length)}
+                size={
+                    Math.max(1, internalValue.length) +
+                    (process.platform === 'darwin' ? 2 : 0)
+                }
                 disabled={disabled}
                 value={internalValue}
                 onChange={onChangeIfValid}
