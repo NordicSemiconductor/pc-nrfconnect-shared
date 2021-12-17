@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Fixed
+- Secondary disabled buttons had no border.
+
 ## 5.12.1 - 2021-12-16
 ### Fixed
 - Device reconnects correctly after flashing dongle.
@@ -11,7 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 5.12.0 - 2021-12-15
 ### Added
 - Support for Nordic JLink OB based development kits.
-
 ### Changed
 - Updated device lib with various fixes [0.4.0](https://github.com/NordicPlayground/nrf-device-lib-js/blob/master/Changelog.md#040---2021-12-15).
 
@@ -19,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - System Report feature now works when no device is selected.
 - System Report feature now displays website formatted correctly.
-- Typing for `RangeProp`  
+- Typing for `RangeProp`.
 
 ## 5.11.0 - 2021-12-09
 ### Added
@@ -29,9 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Print nRFjprog and JLink version in system report.
 - Print all serialports of connected devices in system report.
-
 ### Changed
-- nRF Device Lib versions now print at info level
+- nRF Device Lib versions now printed at info level.
 
 ## 5.9.1 - 2021-12-09
 ### Fixed
