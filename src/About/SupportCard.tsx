@@ -44,7 +44,7 @@ export default () => {
                     In order to get the best support it is helpful for our
                     employees to know details about your operating system and
                     related software. Create a system report and add to your
-                    suport request.
+                    support request.
                 </p>
                 <AboutButton
                     onClick={() =>
