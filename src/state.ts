@@ -46,6 +46,7 @@ export interface ErrorResolutions {
 export interface Log {
     autoScroll: boolean;
     logEntries: LogEntry[];
+    extendedLogging: boolean;
 }
 
 export type Devices = { [key: string]: Device | undefined };
