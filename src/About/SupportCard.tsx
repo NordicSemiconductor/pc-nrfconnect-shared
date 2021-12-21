@@ -6,8 +6,8 @@
 
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { colors } from '..';
 
+import { colors } from '..';
 import Card from '../Card/Card';
 import {
     deviceInfo,
