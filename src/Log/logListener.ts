@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import {
     setLogLevel,
     startLogEvents,
+    stopLogEvents,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import { ipcRenderer } from 'electron';
 
@@ -71,9 +72,11 @@ function startListening(dispatch: TDispatch) {
     sendInitialMessage();
 
     setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_CRITICAL');
-    startLogEvents(
+    const taskID = startLogEvents(
         getDeviceLibContext(),
-        err => console.log(err),
+        err => {
+            if (err) logger.info(err.message);
+        },
         event => logger.debug(formatNrfdlLogs(event.message))
     );
 
@@ -84,6 +87,7 @@ function startListening(dispatch: TDispatch) {
     );
 
     return () => {
+        stopLogEvents(taskID);
         clearInterval(logListener);
     };
 }
