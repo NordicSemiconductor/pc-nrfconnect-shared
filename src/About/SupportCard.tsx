@@ -7,7 +7,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { colors } from '..';
 import Card from '../Card/Card';
 import {
     deviceInfo,
@@ -19,6 +18,8 @@ import { Toggle } from '../Toggle/Toggle';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
 import Section from './Section';
+
+import colors from '../utils/colors.icss.scss';
 
 export default () => {
     const dispatch = useDispatch();
