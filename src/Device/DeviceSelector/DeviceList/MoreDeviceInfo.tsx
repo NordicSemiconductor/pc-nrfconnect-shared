@@ -5,9 +5,10 @@
  */
 
 import React, { FC, ReactNode } from 'react';
+import { SerialPort } from '@nordicsemiconductor/nrf-device-lib-js';
 import { node } from 'prop-types';
 
-import { Device, Serialport } from '../../../state';
+import { Device } from '../../../state';
 import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
 
 import './more-device-info.scss';
@@ -43,7 +44,18 @@ const MaybeDeviceName: FC<{ device: Device }> = ({ device }) => {
     );
 };
 
-const Serialports: FC<{ ports: Serialport[] }> = ({ ports }) => (
+/* The type FixedSerialPort is currently needed, because the type SerialPort in
+   device-lib-js is missing the path property. This is already corrected in
+   https://github.com/NordicPlayground/nrf-device-lib-js/commit/d318962c but
+   that change is not released as a version yet. As soon as that is released
+   and we use the version here, then we can remove FixedSerialPort. */
+interface FixedSerialPort {
+    path?: string;
+}
+
+const Serialports: FC<{ ports: (SerialPort & FixedSerialPort)[] }> = ({
+    ports,
+}) => (
     <ul className="ports">
         {ports.map(port => (
             <li key={port.path}>{port.comName}</li>
@@ -60,7 +72,7 @@ export const MoreDeviceInfo: FC<{ device: Device }> = ({ device }) => (
             <MaybeDeviceName device={device} />
         </Row>
         <Row>
-            <Serialports ports={device.serialports as Serialport[]} />
+            <Serialports ports={device.serialPorts} />
         </Row>
     </div>
 );
