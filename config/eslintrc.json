@@ -130,7 +130,11 @@
         "React": true
     },
     "settings": {
+        "import/parsers": {
+            "@typescript-eslint/parser": [".ts", ".tsx"]
+          },
         "import/resolver": {
+            "typescript": {},
             "node": {
                 "extensions": [".jsx", ".tsx", ".js", ".ts"]
             }
