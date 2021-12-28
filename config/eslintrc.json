@@ -6,7 +6,8 @@
         "plugin:@typescript-eslint/recommended",
         "prettier",
         "prettier/react",
-        "prettier/@typescript-eslint"
+        "prettier/@typescript-eslint",
+        "plugin:md/recommended"
     ],
     "rules": {
         "no-shadow": "off",
@@ -65,6 +66,12 @@
         "no-unused-vars": "off",
         "require-await": "error",
         "prettier/prettier": "error",
+        "md/remark": [
+            "error",
+            {
+                "plugins": ["preset-lint-markdown-style-guide", "frontmatter", ["lint-no-duplicate-headings", false]]
+            }
+        ],
         "import/order": "off",
         "simple-import-sort/imports": [
             "error",
@@ -109,7 +116,17 @@
                 "consistent-return": "off",
                 "react/prop-types": "off"
             }
-        }
+        },
+        {
+            "files": ["*.md"],
+            "parser": "markdown-eslint-parser",
+            "rules": {
+              "prettier/prettier": [
+                "error",
+                { "parser": "markdown" }
+              ]
+            }
+          }
     ],
     "plugins": [
         "react",
