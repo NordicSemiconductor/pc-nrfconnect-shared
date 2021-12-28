@@ -26,10 +26,13 @@
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/no-var-requires": "off",
-        "@typescript-eslint/ban-ts-comment": ["error", {
-            "ts-expect-error": "allow-with-description",
-            "ts-ignore": "allow-with-description"
-        }],
+        "@typescript-eslint/ban-ts-comment": [
+            "error",
+            {
+                "ts-expect-error": "allow-with-description",
+                "ts-ignore": "allow-with-description"
+            }
+        ],
         "camelcase": "off",
         "linebreak-style": "off",
         "arrow-parens": ["error", "as-needed"],
@@ -128,12 +131,9 @@
             "files": ["*.md"],
             "parser": "markdown-eslint-parser",
             "rules": {
-              "prettier/prettier": [
-                "error",
-                { "parser": "markdown" }
-              ]
+                "prettier/prettier": ["error", { "parser": "markdown" }]
             }
-          }
+        }
     ],
     "plugins": [
         "react",
