@@ -36,20 +36,7 @@ const spawnInPromise = (command, argv) => {
 
 const runESLint = () => {
     const eslint = join('node_modules', '.bin', 'eslint');
-
-    let configFile;
-    try {
-        // Using custom .eslintrc if it exists in project
-        configFile = require.resolve('../../../.eslintrc');
-    } catch (err) {
-        configFile = require.resolve('../config/eslintrc.json');
-    }
-
-    const argv = process.argv.slice(2);
-    argv.unshift('--ext', 'js,jsx,ts,tsx');
-    argv.unshift('--config', configFile);
-
-    return spawnInPromise(eslint, argv);
+    return spawnInPromise(eslint, process.argv.slice(2));
 };
 
 const errorForMissingTsconfigJson = 2;
