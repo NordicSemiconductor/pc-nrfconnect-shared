@@ -66,7 +66,7 @@ and this project adheres to
 
 ### Fixed
 
--   [Object object] error message when device enumeration failed.
+-   `[Object object]` error message when device enumeration failed.
 -   macOS Monterey: There was a warning when creating a system report for the
     first time.
 
