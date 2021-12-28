@@ -9,4 +9,5 @@ module.exports = {
     tabWidth: 4,
     arrowParens: 'avoid',
     endOfLine: 'auto',
+    proseWrap: 'always',
 };
