@@ -69,7 +69,14 @@
         "md/remark": [
             "error",
             {
-                "plugins": ["preset-lint-markdown-style-guide", "frontmatter", ["lint-no-duplicate-headings", false]]
+                "plugins": [
+                    "preset-lint-markdown-style-guide",
+                    "frontmatter",
+                    ["lint-no-duplicate-headings", false],
+                    ["lint-list-item-indent", false],
+                    ["lint-emphasis-marker", false],
+                    ["lint-list-item-spacing", false]
+                ]
             }
         ],
         "import/order": "off",
