@@ -6,8 +6,7 @@
         "plugin:@typescript-eslint/recommended",
         "prettier",
         "prettier/react",
-        "prettier/@typescript-eslint",
-        "plugin:md/recommended"
+        "prettier/@typescript-eslint"
     ],
     "rules": {
         "no-shadow": "off",
@@ -140,7 +139,8 @@
         "import",
         "react-hooks",
         "prettier",
-        "simple-import-sort"
+        "simple-import-sort",
+        "md"
     ],
     "env": {
         "es6": true,
