@@ -9,7 +9,7 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 import { Device } from '../../../state';
 import { MakeDeviceFavorite } from '../Favorite';
-import RenameDevice from './RenameDevice';
+import { RenameDevice } from './RenameDevice';
 
 import './edit-device-buttons.scss';
 

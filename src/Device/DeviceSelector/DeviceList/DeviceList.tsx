@@ -12,7 +12,7 @@ import { Device as DeviceProps } from '../../../state';
 import classNames from '../../../utils/classNames';
 import { sortedDevices } from '../../deviceSlice';
 import { AnimatedItem, AnimatedList } from './AnimatedList';
-import Device from './Device';
+import { Device } from './Device';
 
 import './device-list.scss';
 

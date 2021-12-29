@@ -18,7 +18,7 @@ import {
     selectDevice,
 } from '../deviceSlice';
 import DeviceList from './DeviceList/DeviceList';
-import SelectDevice from './SelectDevice';
+import { SelectDevice } from './SelectDevice';
 import SelectedDevice from './SelectedDevice';
 import useAutoselectDevice from './useAutoselectDevice';
 

@@ -18,7 +18,7 @@ import SerialPort from 'serialport';
 import logger from '../logging';
 import { Device } from '../state';
 import { getDeviceLibContext } from './deviceLister';
-import { DeviceSetupConfig } from './deviceSetup';
+import type { DeviceSetupConfig } from './deviceSetup';
 
 const deviceLibContext = getDeviceLibContext();
 

@@ -12,8 +12,8 @@ import { Device as DeviceProps } from '../../../state';
 import classNames from '../../../utils/classNames';
 import BasicDeviceInfo from '../BasicDeviceInfo';
 import { FavoriteIndicator } from '../Favorite';
-import EditDeviceButtons from './EditDeviceButtons';
-import MoreDeviceInfo from './MoreDeviceInfo';
+import { EditDeviceButtons } from './EditDeviceButtons';
+import { MoreDeviceInfo } from './MoreDeviceInfo';
 
 import './device.scss';
 
