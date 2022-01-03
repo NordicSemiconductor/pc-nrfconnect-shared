@@ -77,7 +77,8 @@
                     ["lint-no-duplicate-headings", false],
                     ["lint-list-item-indent", false],
                     ["lint-emphasis-marker", false],
-                    ["lint-list-item-spacing", false]
+                    ["lint-list-item-spacing", false],
+                    ["lint-no-literal-urls", false]
                 ]
             }
         ],
