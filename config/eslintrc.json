@@ -120,6 +120,9 @@
             }
         },
         {
+            "files": ["*.js", "*.jsx"]
+        },
+        {
             "files": ["*.ts", "*.tsx"],
             "rules": {
                 "default-case": "off",
