@@ -25,10 +25,13 @@
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/no-var-requires": "off",
-        "@typescript-eslint/ban-ts-comment": ["error", {
-            "ts-expect-error": "allow-with-description",
-            "ts-ignore": "allow-with-description"
-        }],
+        "@typescript-eslint/ban-ts-comment": [
+            "error",
+            {
+                "ts-expect-error": "allow-with-description",
+                "ts-ignore": "allow-with-description"
+            }
+        ],
         "camelcase": "off",
         "linebreak-style": "off",
         "arrow-parens": ["error", "as-needed"],
@@ -65,6 +68,20 @@
         "no-unused-vars": "off",
         "require-await": "error",
         "prettier/prettier": "error",
+        "md/remark": [
+            "error",
+            {
+                "plugins": [
+                    "preset-lint-markdown-style-guide",
+                    "frontmatter",
+                    ["lint-no-duplicate-headings", false],
+                    ["lint-list-item-indent", false],
+                    ["lint-emphasis-marker", false],
+                    ["lint-list-item-spacing", false],
+                    ["lint-no-literal-urls", false]
+                ]
+            }
+        ],
         "import/order": "off",
         "simple-import-sort/imports": [
             "error",
@@ -103,11 +120,21 @@
             }
         },
         {
+            "files": ["*.js", "*.jsx"]
+        },
+        {
             "files": ["*.ts", "*.tsx"],
             "rules": {
                 "default-case": "off",
                 "consistent-return": "off",
                 "react/prop-types": "off"
+            }
+        },
+        {
+            "files": ["*.md"],
+            "parser": "markdown-eslint-parser",
+            "rules": {
+                "prettier/prettier": ["error", { "parser": "markdown" }]
             }
         }
     ],
@@ -116,7 +143,8 @@
         "import",
         "react-hooks",
         "prettier",
-        "simple-import-sort"
+        "simple-import-sort",
+        "md"
     ],
     "env": {
         "es6": true,
