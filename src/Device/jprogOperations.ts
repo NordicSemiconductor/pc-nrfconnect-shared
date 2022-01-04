@@ -11,7 +11,8 @@ import {
     FirmwareStreamType,
     FWInfo,
     Progress,
-    readFWInfo,
+    // @ts-ignore -- wrong type declaration in nrf-device-lib-js
+    readFwInfo,
 } from '@nordicsemiconductor/nrf-device-lib-js'; // eslint-disable-line import/no-unresolved
 import SerialPort from 'serialport';
 
@@ -131,7 +132,7 @@ export async function validateFirmware(
     let valid: boolean | FWInfo.Image | undefined = false;
     let fwInfo: FWInfo.ReadResult;
     try {
-        fwInfo = await readFWInfo(deviceLibContext, device.id);
+        fwInfo = await readFwInfo(deviceLibContext, device.id);
     } catch (error) {
         return false;
     }

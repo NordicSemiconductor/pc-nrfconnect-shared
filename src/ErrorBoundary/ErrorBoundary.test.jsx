@@ -19,6 +19,9 @@ jest.mock('../utils/usageData', () => ({
     ...jest.requireActual('../utils/usageData'),
     isEnabled: () => true,
 }));
+jest.mock('systeminformation', () => ({
+    networkInterfaces: () => [],
+}));
 
 const SYSTEM_REPORT = 'system report';
 const OKBUTTONTEXT = 'Restore';
