@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### Steps to upgrade when using this package
+
+-   Run `npm run lint -- --fix` once to update the formatting of all markdown
+    files and check the changes manually. Make sure, that markdown files are
+    linted too, e.g. the entry for the `lint` script in `package.json` should
+    contain either `.` or `*.md`.
+
 ## 5.13.0 - 2022-01-04
 
 ### Changed
@@ -15,13 +22,6 @@ and this project adheres to
 ### Fixed
 
 -   Firmware validation using the wrong function.
-
-### Steps to upgrade when using this package
-
--   Run `npm run lint -- --fix` once to update the formatting of all markdown
-    files and check the changes manually. Make sure, that markdown files are
-    linted too, e.g. the entry for the `lint` script in `package.json` should
-    contain either `.` or `*.md`.
 
 ## 5.12.2 - 2021-12-22
 
