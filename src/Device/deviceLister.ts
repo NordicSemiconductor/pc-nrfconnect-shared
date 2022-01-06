@@ -46,7 +46,7 @@ const logNrfdlLogs = (evt: LogEvent) => {
             logger.info(evt.message);
             break;
         case 'NRFDL_LOG_WARNING':
-            logger.warning(evt.message);
+            logger.warn(evt.message);
             break;
         case 'NRFDL_LOG_ERROR':
             logger.error(evt.message);
