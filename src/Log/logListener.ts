@@ -6,14 +6,8 @@
 
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-    setLogLevel,
-    startLogEvents,
-    stopLogEvents,
-} from '@nordicsemiconductor/nrf-device-lib-js';
 import { ipcRenderer } from 'electron';
 
-import { getDeviceLibContext } from '../Device/deviceLister';
 import logger from '../logging';
 import { TDispatch } from '../state';
 import { getAppDataDir } from '../utils/appDirs';
@@ -58,8 +52,6 @@ const addLogEntriesToStore = (dispatch: TDispatch) => () => {
     }
 };
 
-const formatNrfdlLogs = (msg: string) => msg.split(' ').slice(1).join(' ');
-
 /**
  * Starts listening to new log entries from the application's log buffer.
  * Incoming entries are added to the state, so that they can be displayed
@@ -71,15 +63,6 @@ const formatNrfdlLogs = (msg: string) => msg.split(' ').slice(1).join(' ');
 function startListening(dispatch: TDispatch) {
     sendInitialMessage();
 
-    setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_CRITICAL');
-    const taskID = startLogEvents(
-        getDeviceLibContext(),
-        err => {
-            if (err) logger.info(err.message);
-        },
-        event => logger.debug(formatNrfdlLogs(event.message))
-    );
-
     const LOG_UPDATE_INTERVAL = 400;
     const logListener = setInterval(
         addLogEntriesToStore(dispatch),
@@ -87,7 +70,6 @@ function startListening(dispatch: TDispatch) {
     );
 
     return () => {
-        stopLogEvents(taskID);
         clearInterval(logListener);
     };
 }

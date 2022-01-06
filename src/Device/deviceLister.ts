@@ -9,7 +9,12 @@
 import nrfDeviceLib, {
     Device as NrfdlDevice,
     DeviceTraits,
+    Error,
     HotplugEvent,
+    LogEvent,
+    setLogLevel,
+    setLogPattern,
+    startLogEvents,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import camelcaseKeys from 'camelcase-keys';
 // eslint-disable-next-line import/no-unresolved
@@ -17,6 +22,10 @@ import { Device, DeviceListing, Serialport } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';
 import { Devices } from '../state';
+import {
+    getExtendedLoggingEnabled,
+    persistExtendedLoggingEnabled,
+} from '../utils/persistentStore';
 import { devicesDetected } from './deviceSlice';
 
 const DEFAULT_DEVICE_WAIT_TIME = 3000;
@@ -27,6 +36,49 @@ const deviceLibContext = nrfDeviceLib.createContext();
 // enumerateMs
 nrfDeviceLib.setTimeoutConfig(deviceLibContext, { enumerateMs: 3 * 60 * 1000 });
 export const getDeviceLibContext = () => deviceLibContext;
+
+const logNrfdlLogs = (evt: LogEvent) => {
+    switch (evt.level) {
+        case 'NRFDL_LOG_TRACE':
+            logger.verbose(evt.message);
+            break;
+        case 'NRFDL_LOG_DEBUG':
+            logger.debug(evt.message);
+            break;
+        case 'NRFDL_LOG_INFO':
+            logger.info(evt.message);
+            break;
+        case 'NRFDL_LOG_WARNING':
+            logger.warning(evt.message);
+            break;
+        case 'NRFDL_LOG_ERROR':
+            logger.error(evt.message);
+            break;
+        case 'NRFDL_LOG_CRITICAL':
+            logger.error(evt.message);
+            break;
+    }
+};
+
+export const setDefaultNrfdlLogLevel = () =>
+    setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_WARNING');
+
+if (getExtendedLoggingEnabled()) {
+    setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_TRACE');
+} else setDefaultNrfdlLogLevel();
+
+setLogPattern(getDeviceLibContext(), '%n %T.%e %v');
+startLogEvents(
+    getDeviceLibContext(),
+    (err: Error | undefined) => {
+        if (err)
+            logger.logError(
+                'Error while stopping log messages from nrf-device-lib',
+                err
+            );
+    },
+    event => logNrfdlLogs(event)
+);
 
 let hotplugTaskId: number;
 

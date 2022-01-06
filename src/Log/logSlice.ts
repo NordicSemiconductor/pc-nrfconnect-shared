@@ -4,11 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { setLogLevel } from '@nordicsemiconductor/nrf-device-lib-js';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { LogEntry } from 'winston';
 
-import { getDeviceLibContext } from '../Device/deviceLister';
 import { Log, RootState } from '../state';
 
 const MAX_ENTRIES = 1000;
@@ -16,7 +14,6 @@ const MAX_ENTRIES = 1000;
 const initialState: Log = {
     autoScroll: true,
     logEntries: [],
-    extendedLogging: false,
 };
 
 const infoEntry = () => ({
@@ -52,16 +49,10 @@ const slice = createSlice({
         toggleAutoScroll: state => {
             state.autoScroll = !state.autoScroll;
         },
-        toggleExtendedLogging: state => {
-            state.extendedLogging = !state.extendedLogging;
-            if (state.extendedLogging)
-                setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_TRACE');
-            else setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_CRITICAL');
-        },
     },
 });
 
 export const {
     reducer,
-    actions: { addEntries, clear, toggleAutoScroll, toggleExtendedLogging },
+    actions: { addEntries, clear, toggleAutoScroll },
 } = slice;

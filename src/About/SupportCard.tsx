@@ -4,29 +4,41 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { setLogLevel } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import Card from '../Card/Card';
+import {
+    getDeviceLibContext,
+    setDefaultNrfdlLogLevel,
+} from '../Device/deviceLister';
 import {
     deviceInfo,
     selectedSerialNumber,
     sortedDevices,
 } from '../Device/deviceSlice';
-import { extendedLogging, toggleExtendedLogging } from '../Log/logSlice';
 import { Toggle } from '../Toggle/Toggle';
+import {
+    getExtendedLoggingEnabled,
+    persistExtendedLoggingEnabled,
+} from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
 import Section from './Section';
 
 import colors from '../utils/colors.icss.scss';
 
+const { getCurrentWindow } = require('electron').remote;
+
 export default () => {
-    const dispatch = useDispatch();
     const devices = useSelector(sortedDevices);
     const currentSerialNumber = useSelector(selectedSerialNumber);
     const currentDevice = useSelector(deviceInfo);
-    const enableExtendedLogging = useSelector(extendedLogging);
+    const [extendedLogging, setExtendedLogging] = useState(
+        getExtendedLoggingEnabled()
+    );
+    persistExtendedLoggingEnabled(false);
 
     return (
         <Card title="Support">
@@ -62,17 +74,35 @@ export default () => {
                 <p>
                     Aid our support team with additional log information. Enable
                     this only when necessary as it will fill up the log quickly.
+                    This setting is not persisted.
                 </p>
                 <Toggle
                     id="enableExtendedLoggin"
                     label="EXTENDED LOGGING"
-                    onToggle={() => dispatch(toggleExtendedLogging())}
-                    isToggled={enableExtendedLogging}
+                    onToggle={() => {
+                        if (!extendedLogging)
+                            setLogLevel(
+                                getDeviceLibContext(),
+                                'NRFDL_LOG_TRACE'
+                            );
+                        else setDefaultNrfdlLogLevel();
+                        setExtendedLogging(!extendedLogging);
+                    }}
+                    isToggled={extendedLogging}
                     variant="primary"
                     handleColor={colors.white}
                     barColor={colors.gray700}
                     barColorToggled={colors.nordicBlue}
                 />
+                <Section>
+                    <AboutButton
+                        onClick={() => {
+                            persistExtendedLoggingEnabled(true);
+                            getCurrentWindow().reload();
+                        }}
+                        label="Restart with extended logging"
+                    />
+                </Section>
             </Section>
         </Card>
     );
