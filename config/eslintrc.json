@@ -136,6 +136,12 @@
             "rules": {
                 "prettier/prettier": ["error", { "parser": "markdown" }]
             }
+        },
+        {
+            "files": ["*.test.*"],
+            "rules": {
+                "@typescript-eslint/no-non-null-assertion": "off"
+            }
         }
     ],
     "plugins": [
