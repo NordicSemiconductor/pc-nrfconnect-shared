@@ -31,7 +31,6 @@ const limitedToMaxSize = (entries: LogEntry[]) =>
 
 export const autoScroll = (state: RootState) => state.log.autoScroll;
 export const logEntries = (state: RootState) => state.log.logEntries;
-export const extendedLogging = (state: RootState) => state.log.extendedLogging;
 
 const slice = createSlice({
     name: 'log',
