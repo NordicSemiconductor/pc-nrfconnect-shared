@@ -22,10 +22,7 @@ import { Device, DeviceListing, Serialport } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';
 import { Devices } from '../state';
-import {
-    getExtendedLoggingEnabled,
-    persistExtendedLoggingEnabled,
-} from '../utils/persistentStore';
+import { getVerboseLoggingEnabled } from '../utils/persistentStore';
 import { devicesDetected } from './deviceSlice';
 
 const DEFAULT_DEVICE_WAIT_TIME = 3000;
@@ -63,7 +60,7 @@ const logNrfdlLogs = (evt: LogEvent) => {
 export const setDefaultNrfdlLogLevel = () =>
     setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_WARNING');
 
-if (getExtendedLoggingEnabled()) {
+if (getVerboseLoggingEnabled()) {
     setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_TRACE');
 } else setDefaultNrfdlLogLevel();
 

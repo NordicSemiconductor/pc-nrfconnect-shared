@@ -20,8 +20,8 @@ import {
 } from '../Device/deviceSlice';
 import { Toggle } from '../Toggle/Toggle';
 import {
-    getExtendedLoggingEnabled,
-    persistExtendedLoggingEnabled,
+    getVerboseLoggingEnabled,
+    persistVerboseLoggingEnabled,
 } from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
@@ -35,10 +35,10 @@ export default () => {
     const devices = useSelector(sortedDevices);
     const currentSerialNumber = useSelector(selectedSerialNumber);
     const currentDevice = useSelector(deviceInfo);
-    const [extendedLogging, setExtendedLogging] = useState(
-        getExtendedLoggingEnabled()
+    const [verboseLogging, setVerboseLogging] = useState(
+        getVerboseLoggingEnabled()
     );
-    persistExtendedLoggingEnabled(false);
+    persistVerboseLoggingEnabled(false);
 
     return (
         <Card title="Support">
@@ -70,25 +70,25 @@ export default () => {
                     label="Create system report"
                 />
             </Section>
-            <Section title="Extended Logging">
+            <Section title="Verbose Logging">
                 <p>
                     Aid our support team with additional log information. Enable
                     this only when necessary as it will fill up the log quickly.
                     This setting is not persisted.
                 </p>
                 <Toggle
-                    id="enableExtendedLoggin"
-                    label="EXTENDED LOGGING"
+                    id="enableVerboseLoggin"
+                    label="VERBOSE LOGGING"
                     onToggle={() => {
-                        if (!extendedLogging)
+                        if (!verboseLogging)
                             setLogLevel(
                                 getDeviceLibContext(),
                                 'NRFDL_LOG_TRACE'
                             );
                         else setDefaultNrfdlLogLevel();
-                        setExtendedLogging(!extendedLogging);
+                        setVerboseLogging(!verboseLogging);
                     }}
-                    isToggled={extendedLogging}
+                    isToggled={verboseLogging}
                     variant="primary"
                     handleColor={colors.white}
                     barColor={colors.gray700}
@@ -97,10 +97,10 @@ export default () => {
                 <Section>
                     <AboutButton
                         onClick={() => {
-                            persistExtendedLoggingEnabled(true);
+                            persistVerboseLoggingEnabled(true);
                             getCurrentWindow().reload();
                         }}
-                        label="Restart with extended logging"
+                        label="Restart with verbose logging"
                     />
                 </Section>
             </Section>
