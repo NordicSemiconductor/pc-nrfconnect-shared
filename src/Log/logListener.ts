@@ -63,6 +63,8 @@ const addLogEntriesToStore = (dispatch: TDispatch) => () => {
 function startListening(dispatch: TDispatch) {
     sendInitialMessage();
 
+    logger.warn('This is a warning');
+
     const LOG_UPDATE_INTERVAL = 400;
     const logListener = setInterval(
         addLogEntriesToStore(dispatch),
