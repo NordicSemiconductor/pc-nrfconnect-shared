@@ -73,8 +73,7 @@ export default () => {
             <Section title="Verbose Logging">
                 <p>
                     Aid our support team with additional log information. Enable
-                    this only when necessary as the log will grow quickly. This
-                    setting is not persisted.
+                    this only when necessary as the log will grow quickly.
                 </p>
                 <Toggle
                     id="enableVerboseLoggin"
