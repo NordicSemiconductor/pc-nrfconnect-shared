@@ -7,4 +7,8 @@
 export default {
     createContext: jest.fn().mockReturnValue(1),
     setTimeoutConfig: jest.fn(),
+    startLogEvents: jest.fn(),
+    stopLogEvents: jest.fn(),
+    setLogLevel: jest.fn(),
+    setLogPattern: jest.fn(),
 };
