@@ -8,6 +8,7 @@
         "prettier/react",
         "prettier/@typescript-eslint"
     ],
+    "ignorePatterns": ["/dist/"],
     "rules": {
         "no-shadow": "off",
         "@typescript-eslint/no-shadow": ["error"],
