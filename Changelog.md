@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 5.15.0 - 2022-01-07
+
+### Changes
+
+-   Ignore the `/dist` folder while linting.
+
+### Steps to upgrade when using this package
+
+-   Since the `dist` folder is now ignored during linting, it should be fine to
+    tell ESLint to lint _all_ files, by changing the `lint` script in
+    `package.json` to `nrfconnect-scripts lint .`. If there is also a `lintfix`
+    script or alike, those of course also need to be changed. If there are more
+    (e.g. generated) files that need to be ignored during linting, you can
+    create
+    [a `.eslintignore` file](https://eslint.org/docs/user-guide/configuring/ignoring-code#the-eslintignore-file)
+    and add the files to be ignore there in your project.
+
 ## 5.14.0 - 2022-01-06
 
 ### Changes
