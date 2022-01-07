@@ -9,12 +9,10 @@
 import nrfDeviceLib, {
     Device as NrfdlDevice,
     DeviceTraits,
-    Error,
     HotplugEvent,
     LogEvent,
     setLogLevel,
     setLogPattern,
-    startLogEvents,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import camelcaseKeys from 'camelcase-keys';
 // eslint-disable-next-line import/no-unresolved
@@ -34,7 +32,7 @@ const deviceLibContext = nrfDeviceLib.createContext();
 nrfDeviceLib.setTimeoutConfig(deviceLibContext, { enumerateMs: 3 * 60 * 1000 });
 export const getDeviceLibContext = () => deviceLibContext;
 
-const logNrfdlLogs = (evt: LogEvent) => {
+export const logNrfdlLogs = (evt: LogEvent) => {
     switch (evt.level) {
         case 'NRFDL_LOG_TRACE':
             logger.verbose(evt.message);
@@ -65,17 +63,6 @@ if (getVerboseLoggingEnabled()) {
 } else setDefaultNrfdlLogLevel();
 
 setLogPattern(getDeviceLibContext(), '%n %T.%e %v');
-startLogEvents(
-    getDeviceLibContext(),
-    (err: Error | undefined) => {
-        if (err)
-            logger.logError(
-                'Error while stopping log messages from nrf-device-lib',
-                err
-            );
-    },
-    event => logNrfdlLogs(event)
-);
 
 let hotplugTaskId: number;
 
