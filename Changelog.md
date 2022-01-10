@@ -10,7 +10,8 @@ and this project adheres to
 
 ### Added
 
--   Log messages from nRF-device-lib-js.
+-   Toggle in `About` pane to select minimum nrf-device-lib-js log level (trace
+    or warning).
 
 ## 5.15.1 - 2022-01-10
 
