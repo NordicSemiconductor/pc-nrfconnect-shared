@@ -8,13 +8,13 @@ and this project adheres to
 
 ## 5.15.1 - 2022-01-10
 
-### Changes
+### Changed
 
 -   Increased `About` pane card width and bottom margin.
 
 ## 5.15.0 - 2022-01-07
 
-### Changes
+### Changed
 
 -   Ignore the `/dist` folder while linting.
 
@@ -31,7 +31,7 @@ and this project adheres to
 
 ## 5.14.0 - 2022-01-06
 
-### Changes
+### Changed
 
 -   Allow TypeScript's non null assertion parameter `!` in tests, because there
     it is often ok to use it and have it fail the test if something is
