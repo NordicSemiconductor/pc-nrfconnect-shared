@@ -216,7 +216,7 @@ const useNrfdlLogs = () => {
                         err
                     );
             },
-            event => logNrfdlLogs(event)
+            logNrfdlLogs
         );
         return () => {
             stopLogEvents(taskId);
