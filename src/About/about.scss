@@ -10,7 +10,10 @@
     display: flex;
     justify-content: center;
     .card {
-        max-width: 17em;
+        max-width: 20em;
         margin-left: 0.25em;
+    }
+    .card-body {
+        margin-bottom: 1em;
     }
 }

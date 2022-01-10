@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 5.15.1 - 2022-01-10
+
+### Changes
+
+-   Increased `About` pane card width and bottom margin.
+
 ## 5.15.0 - 2022-01-07
 
 ### Changes
