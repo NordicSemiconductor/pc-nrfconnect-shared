@@ -27,6 +27,11 @@ export const getIsSendingUsageData = () =>
 export const deleteIsSendingUsageData = () =>
     sharedStore.delete('isSendingUsageData');
 
+export const persistVerboseLoggingEnabled = (value: boolean) =>
+    sharedStore.set('verboseLogging', value);
+export const getVerboseLoggingEnabled = () =>
+    sharedStore.get('verboseLogging', false);
+
 // This one must be initialised lazily, because the package.json is not read yet when this module is initialised
 let appSpecificStore: Store | undefined;
 

@@ -10,6 +10,9 @@ import nrfDeviceLib, {
     Device as NrfdlDevice,
     DeviceTraits,
     HotplugEvent,
+    LogEvent,
+    setLogLevel,
+    setLogPattern,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import camelcaseKeys from 'camelcase-keys';
 // eslint-disable-next-line import/no-unresolved
@@ -17,6 +20,7 @@ import { Device, DeviceListing, Serialport } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';
 import { Devices } from '../state';
+import { getVerboseLoggingEnabled } from '../utils/persistentStore';
 import { devicesDetected } from './deviceSlice';
 
 const DEFAULT_DEVICE_WAIT_TIME = 3000;
@@ -27,6 +31,38 @@ const deviceLibContext = nrfDeviceLib.createContext();
 // enumerateMs
 nrfDeviceLib.setTimeoutConfig(deviceLibContext, { enumerateMs: 3 * 60 * 1000 });
 export const getDeviceLibContext = () => deviceLibContext;
+
+export const logNrfdlLogs = (evt: LogEvent) => {
+    switch (evt.level) {
+        case 'NRFDL_LOG_TRACE':
+            logger.verbose(evt.message);
+            break;
+        case 'NRFDL_LOG_DEBUG':
+            logger.debug(evt.message);
+            break;
+        case 'NRFDL_LOG_INFO':
+            logger.info(evt.message);
+            break;
+        case 'NRFDL_LOG_WARNING':
+            logger.warn(evt.message);
+            break;
+        case 'NRFDL_LOG_ERROR':
+            logger.error(evt.message);
+            break;
+        case 'NRFDL_LOG_CRITICAL':
+            logger.error(evt.message);
+            break;
+    }
+};
+
+export const setDefaultNrfdlLogLevel = () =>
+    setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_WARNING');
+
+if (getVerboseLoggingEnabled()) {
+    setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_TRACE');
+} else setDefaultNrfdlLogLevel();
+
+setLogPattern(getDeviceLibContext(), '%n %T.%e %v');
 
 let hotplugTaskId: number;
 

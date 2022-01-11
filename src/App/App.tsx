@@ -9,6 +9,11 @@ import 'focus-visible';
 import React, { FC, ReactNode, useEffect, useMemo } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+    Error,
+    startLogEvents,
+    stopLogEvents,
+} from '@nordicsemiconductor/nrf-device-lib-js';
 import { ipcRenderer } from 'electron';
 import { func } from 'prop-types';
 import { Reducer } from 'redux';
@@ -16,9 +21,11 @@ import { Reducer } from 'redux';
 import About from '../About/About';
 import { setDocumentationSections } from '../About/documentationSlice';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
+import { getDeviceLibContext, logNrfdlLogs } from '../Device/deviceLister';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import LogViewer from '../Log/LogViewer';
+import logger from '../logging';
 import NavBar from '../NavBar/NavBar';
 import classNames from '../utils/classNames';
 import logLibVersions from '../utils/logLibVersions';
@@ -101,6 +108,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     documentation,
     children,
 }) => {
+    useNrfdlLogs();
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
@@ -196,6 +204,25 @@ App.propTypes = {
 };
 
 export default App;
+
+const useNrfdlLogs = () => {
+    useEffect(() => {
+        const taskId = startLogEvents(
+            getDeviceLibContext(),
+            (err?: Error) => {
+                if (err)
+                    logger.logError(
+                        'Error while listening to log messages from nrf-device-lib',
+                        err
+                    );
+            },
+            logNrfdlLogs
+        );
+        return () => {
+            stopLogEvents(taskId);
+        };
+    });
+};
 
 const usePersistedPane = () => {
     const dispatch = useDispatch();

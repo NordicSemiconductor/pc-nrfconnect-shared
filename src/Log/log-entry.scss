@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-@import "../variables";
+@import '../variables';
 
 .core19-log-entry {
     white-space: nowrap;
@@ -23,4 +23,8 @@
 
 .core19-log-level-error {
     color: $brand-danger;
+}
+
+.core19-log-level-warn {
+    color: $brand-warning;
 }
