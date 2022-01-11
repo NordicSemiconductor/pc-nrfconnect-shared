@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { setLogLevel } from '@nordicsemiconductor/nrf-device-lib-js';
 
@@ -39,6 +39,12 @@ export default () => {
         getVerboseLoggingEnabled()
     );
     persistVerboseLoggingEnabled(false);
+
+    useEffect(() => {
+        if (verboseLogging)
+            setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_TRACE');
+        else setDefaultNrfdlLogLevel();
+    }, [verboseLogging]);
 
     return (
         <Card title="Support">
@@ -78,15 +84,7 @@ export default () => {
                 <Toggle
                     id="enableVerboseLoggin"
                     label="VERBOSE LOGGING"
-                    onToggle={() => {
-                        if (!verboseLogging)
-                            setLogLevel(
-                                getDeviceLibContext(),
-                                'NRFDL_LOG_TRACE'
-                            );
-                        else setDefaultNrfdlLogLevel();
-                        setVerboseLogging(!verboseLogging);
-                    }}
+                    onToggle={() => setVerboseLogging(!verboseLogging)}
                     isToggled={verboseLogging}
                     variant="primary"
                     handleColor={colors.white}
