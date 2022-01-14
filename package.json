@@ -108,7 +108,7 @@
     },
     "devDependencies": {
         "@types/lodash.range": "3.2.6",
-        "@types/react": "17.0.37",
+        "@types/react": "17.0.38",
         "electron": "13.5.1",
         "electron-store": "5.1.1",
         "react": "16.13.1",
