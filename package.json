@@ -53,7 +53,7 @@
         "babel-plugin-add-module-exports": "1.0.2",
         "camelcase-keys": "6.2.2",
         "commander": "5.1.0",
-        "cross-env": "7.0.2",
+        "cross-env": "7.0.3",
         "css-loader": "5.2.6",
         "date-fns": "^2.16.1",
         "enzyme": "3.11.0",
