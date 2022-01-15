@@ -57,7 +57,7 @@
         "css-loader": "5.2.6",
         "date-fns": "^2.16.1",
         "enzyme": "3.11.0",
-        "enzyme-adapter-react-16": "1.15.2",
+        "enzyme-adapter-react-16": "1.15.6",
         "enzyme-to-json": "3.5.0",
         "eslint": "7.1.0",
         "eslint-config-airbnb": "18.1.0",
