@@ -70,7 +70,7 @@
         "eslint-plugin-react-hooks": "4.0.4",
         "eslint-plugin-simple-import-sort": "7.0.0",
         "eslint-webpack-plugin": "2.5.4",
-        "fast-glob": "3.2.7",
+        "fast-glob": "3.2.11",
         "file-loader": "6.2.0",
         "focus-visible": "5.1.0",
         "ftp": "0.3.10",
