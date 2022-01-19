@@ -5,6 +5,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import Button from 'react-bootstrap/Button';
 import { useSelector } from 'react-redux';
 import { setLogLevel } from '@nordicsemiconductor/nrf-device-lib-js';
 
@@ -92,13 +93,18 @@ export default () => {
                     barColorToggled={colors.nordicBlue}
                 />
                 <Section>
-                    <AboutButton
+                    <Button
+                        className="w-100"
+                        variant="secondary"
                         onClick={() => {
                             persistVerboseLoggingEnabled(true);
                             getCurrentWindow().reload();
                         }}
-                        label="Restart with verbose logging"
-                    />
+                        title="Restart application with verbose logging turned on to get log messages from initial enumeration"
+                        disabled={!verboseLogging}
+                    >
+                        Restart with verbose logging
+                    </Button>
                 </Section>
             </Section>
         </Card>
