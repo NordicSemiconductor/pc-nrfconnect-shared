@@ -90,7 +90,7 @@
         "react-ga": "2.7.0",
         "react-markdown": "4.3.1",
         "react-resize-detector": "6.5.0",
-        "react-test-renderer": "16.13.1",
+        "react-test-renderer": "16.14.0",
         "redux": "4.1.2",
         "redux-devtools-extension": "2.13.9",
         "redux-thunk": "2.4.1",
@@ -111,8 +111,8 @@
         "@types/react": "17.0.38",
         "electron": "13.5.1",
         "electron-store": "5.1.1",
-        "react": "16.13.1",
-        "react-dom": "16.13.1",
+        "react": "16.14.0",
+        "react-dom": "16.14.0",
         "react-redux": "7.2.6"
     },
     "peerDependencies": {
