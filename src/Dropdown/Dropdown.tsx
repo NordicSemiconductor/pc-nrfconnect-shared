@@ -23,7 +23,6 @@ interface DropdownProps {
     onSelect: (item: DropdownItem) => void;
     disabled?: boolean;
     defaultIndex?: number;
-    truncateOptions?: boolean;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
