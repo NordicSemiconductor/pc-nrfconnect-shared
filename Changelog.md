@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 5.16.1 - 2022-01-19
+
+### Changed
+
+-    Update default nrf-device-lib-js log level to `ERROR`.
+-    `Restart with verbose logging` button is now disabled until verbose logging is switched on.
+
+### Fixed
+
+-   In some cases nrf-device-lib-js log event callback was registered twice, which caused an error message to be logged.
+
 ## 5.16.0 - 2022-01-11
 
 ### Added
