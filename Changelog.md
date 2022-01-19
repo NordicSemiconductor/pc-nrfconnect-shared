@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 5.16.1 - 2022-01-19
+
+### Changed
+
+-   Update default nrf-device-lib-js log level to `ERROR`.
+-   `Restart with verbose logging` button is now disabled until verbose logging
+    is switched on.
+
+### Fixed
+
+-   In some cases nrf-device-lib-js log event callback was registered twice,
+    which caused an error message to be logged.
+
 ## 5.16.0 - 2022-01-11
 
 ### Added
@@ -620,6 +633,7 @@ and this project adheres to
     in an app defined like the following on the pane Dashboard (and also the
     pane About) the normal `SidePanel` component is shown, while on the pane
     Terminal the `TerminalSidePanel` is shown.
+
     ```jsx
     <App
       sidePanel={<SidePanel />}
@@ -656,32 +670,41 @@ and this project adheres to
 ### Steps to upgrade when using this package
 
 -   If you had an import like
+
     ```scss
     @import '~pc-nrfconnect-shared/src/variables';
     ```
+
     in your SCSS code before, you should replace it with
+
     ```scss
     @import '~pc-nrfconnect-shared/styles';
     ```
+
     because even though for now the code with
     `~pc-nrfconnect-shared/src/variables` will keep on working, it is not part
     of the public API that we try to preserve. Contrary to
     `~pc-nrfconnect-shared/styles`, which is part of the supported API.
+
 -   Previously panes were defined as a pair of pane name and component, like
     this:
+
     ```js
     panes={[
       ['Dashboard', Dashboard],
       ['Terminal', Terminal],
     ]}
     ```
+
     This was changed to an array of objects, like this:
+
     ```js
     panes={[
       { name: 'Dashboard', Main: Dashboard, },
       { name: 'Terminal', Main: Terminal, },
     ]}
     ```
+
     The old format still is supported but will issue a warning and will be
     removed in the future.
 
@@ -749,6 +772,7 @@ and this project adheres to
 -   The opacity of disabled elements stacked up when they were nested. E.g. in
     the following code the input had the opacity applied twice (making the
     opacity squared), so it looked lighter than than supposed:
+
     ```html
       <div className="disabled">
         This
@@ -769,6 +793,7 @@ and this project adheres to
     names. It filters out all values that are not strings. The idea of this
     function is to use it with conditionals and potentially unset values like
     this:
+
     ```js
     classNames(
         'fixed-class-name',
@@ -777,10 +802,12 @@ and this project adheres to
         potentiallyUndefined
     );
     ```
+
 -   Set a property `active` on all rendered panes that is only for the currently
     active `true` and `false` for all others. This can be used to disable
     rendering of expensive components on inactive panes or to trigger effects
     when a pane gets activated or deactivated like this:
+
     ```js
     useEffect(() => {
         if (active) {
@@ -791,6 +818,7 @@ and this project adheres to
         }
     }, [active]);
     ```
+
 -   The component `Slider` now takes a property `ticks` to display ticks at all
     possible values. This only looks reasonable if there are just a few possible
     values.
@@ -859,9 +887,11 @@ and this project adheres to
 -   Enable automatically selecting a specified device when it is detected in an
     app. To use this, set the environment variable `AUTOSELECT_DEVICE`, e.g. by
     running the launcher with
+
     ```cli
     AUTOSELECT_DEVICE=000680407810 npm run app
     ```
+
     the device with the serial number 000680407810 is automatically selected
     when apps using the new architecture see it for the first time. When one
     deselects the device it is not automatically selected again. After
@@ -1250,6 +1280,7 @@ and this project adheres to
 -   If you want to automatically run the `lint` and `test` scripts before
     pushing changes, add a file `.huskyrc.json` to your project with this
     content:
+
     ```json
     {
         "hooks": {
@@ -1257,6 +1288,7 @@ and this project adheres to
         }
     }
     ```
+
     Remember that in a case of emergency you can do `git push --no-verify` if
     you need to push even though tests might fail.
 

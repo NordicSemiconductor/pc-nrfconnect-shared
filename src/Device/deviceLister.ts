@@ -56,7 +56,7 @@ export const logNrfdlLogs = (evt: LogEvent) => {
 };
 
 export const setDefaultNrfdlLogLevel = () =>
-    setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_WARNING');
+    setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_ERROR');
 
 if (getVerboseLoggingEnabled()) {
     setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_TRACE');

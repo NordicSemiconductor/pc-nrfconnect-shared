@@ -221,7 +221,7 @@ const useNrfdlLogs = () => {
         return () => {
             stopLogEvents(taskId);
         };
-    });
+    }, []);
 };
 
 const usePersistedPane = () => {
