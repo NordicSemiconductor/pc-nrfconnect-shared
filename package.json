@@ -110,7 +110,7 @@
         "@types/lodash.range": "3.2.6",
         "@types/react": "17.0.38",
         "electron": "13.5.1",
-        "electron-store": "5.1.1",
+        "electron-store": "5.2.0",
         "react": "16.13.1",
         "react-dom": "16.13.1",
         "react-redux": "7.2.6"
