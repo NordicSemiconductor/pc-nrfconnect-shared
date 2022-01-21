@@ -10,8 +10,8 @@ and this project adheres to
 
 ### Fixed
 
--   Updated nrfdl module version logging according to recent changes
- in the nrfdl api.
+-   Updated nrfdl module version logging according to recent changes in the
+    nrfdl api.
 
 ### Changed
 
