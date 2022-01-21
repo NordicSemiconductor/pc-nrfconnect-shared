@@ -8,6 +8,12 @@ and this project adheres to
 
 ## Unreleased
 
+### Added
+
+-   Warn if ESLint disable directives (like `eslint-disable` or
+    `eslint-disable-next-line`) are used, even though they are not necessary
+    (anymore).
+
 ### Changed
 
 -   Updated a lot of dependencies.
