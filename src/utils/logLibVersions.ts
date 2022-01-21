@@ -62,6 +62,25 @@ const logVersion = (
     logger.info(`Using ${description} version: ${describe(version)}`);
 };
 
+const logDependency = (versions: ModuleVersion[],
+    moduleName: string,
+    description: string) => {
+    versions.forEach((version) => {
+        searchForAndLogDependency(version, description, moduleName)
+    })
+
+}
+
+const searchForAndLogDependency = (version: ModuleVersion, description: string, name: string) => {
+    if (version.moduleName === name) {
+        logger.info(`Using ${description} version: ${describe(version)}`);
+        return version;
+    }
+    // @ts-expect-error -- ModuleVersion type has dependencies now which is a ModuleVersion[]
+    return version.dependencies?.map((dep) => searchForAndLogDependency(dep, description, name));
+}
+
+
 export default async () => {
     try {
         const versions = await nrfDeviceLib.getModuleVersions(
@@ -74,8 +93,8 @@ export default async () => {
             '@nordicsemiconductor/nrf-device-lib-js'
         );
         logVersion(versions, 'nrfdl', 'nrf-device-lib');
-        logVersion(versions, 'nrfjprog_dll', 'nrfjprog dll');
-        logVersion(versions, 'jlink_dll', 'JLink');
+        logDependency(versions, 'jprog', 'nrfjprog dll');
+        logDependency(versions, 'jlink', 'JLink');
     } catch (error) {
         logger.logError('Failed to get the library versions', error);
     }
