@@ -44,18 +44,7 @@ const MaybeDeviceName: FC<{ device: Device }> = ({ device }) => {
     );
 };
 
-/* The type FixedSerialPort is currently needed, because the type SerialPort in
-   device-lib-js is missing the path property. This is already corrected in
-   https://github.com/NordicPlayground/nrf-device-lib-js/commit/d318962c but
-   that change is not released as a version yet. As soon as that is released
-   and we use the version here, then we can remove FixedSerialPort. */
-interface FixedSerialPort {
-    path?: string;
-}
-
-const Serialports: FC<{ ports: (SerialPort & FixedSerialPort)[] }> = ({
-    ports,
-}) => (
+const Serialports: FC<{ ports: SerialPort[] }> = ({ ports }) => (
     <ul className="ports">
         {ports.map(port => (
             <li key={port.path}>{port.comName}</li>
