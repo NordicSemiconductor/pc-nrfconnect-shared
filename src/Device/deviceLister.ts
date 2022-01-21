@@ -15,7 +15,6 @@ import nrfDeviceLib, {
     setLogPattern,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import camelcaseKeys from 'camelcase-keys';
-// eslint-disable-next-line import/no-unresolved
 import { Device, DeviceListing, Serialport } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';

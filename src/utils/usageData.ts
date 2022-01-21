@@ -5,7 +5,7 @@
  */
 
 import reactGA from 'react-ga';
-import { PackageJson } from 'pc-nrfconnect-shared'; // eslint-disable-line import/no-unresolved -- This is only importing a type and TypeScript can handle this
+import { PackageJson } from 'pc-nrfconnect-shared';
 import shasum from 'shasum';
 import si from 'systeminformation';
 

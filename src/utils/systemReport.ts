@@ -22,7 +22,6 @@ import { getAppDataDir } from './appDirs';
 import { describe } from './logLibVersions';
 import { openFile } from './open';
 
-/* eslint-disable object-curly-newline */
 const generalInfoReport = async () => {
     const [
         { manufacturer, model },
