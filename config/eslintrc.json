@@ -1,4 +1,5 @@
 {
+    "reportUnusedDisableDirectives": true,
     "parser": "@typescript-eslint/parser",
     "extends": [
         "eslint:recommended",
@@ -29,8 +30,7 @@
         "@typescript-eslint/ban-ts-comment": [
             "error",
             {
-                "ts-expect-error": "allow-with-description",
-                "ts-ignore": "allow-with-description"
+                "ts-expect-error": "allow-with-description"
             }
         ],
         "camelcase": "off",

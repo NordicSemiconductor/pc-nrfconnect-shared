@@ -15,7 +15,6 @@ import nrfDeviceLib, {
     setLogPattern,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import camelcaseKeys from 'camelcase-keys';
-// eslint-disable-next-line import/no-unresolved
 import { Device, DeviceListing, Serialport } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';
@@ -166,7 +165,7 @@ export const stopWatchingDevices = () => {
     }
 };
 
-// @ts-ignore This is how the nrfdl-js api works at the moment.
+// @ts-expect-error This is how the nrfdl-js api works at the moment.
 const DEFAULT_TRAITS: DeviceTraits = {
     serialPort: true,
     // usb: false,

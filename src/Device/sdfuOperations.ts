@@ -379,7 +379,7 @@ const prepareInDFUBootloader = async (
         hashType: HashType.SHA256,
         hash: calculateSHA256Hash(firmwareImage),
         appSize: firmwareImage.length,
-        // @ts-ignore This parameter is set.
+        // @ts-expect-error This parameter is set.
         sdReq: params.sdId || [],
     };
 
@@ -426,7 +426,7 @@ const prepareInDFUBootloader = async (
         )
     );
 
-    // @ts-ignore This is how the nrfdl-js api works at the moment.
+    // @ts-expect-error This is how the nrfdl-js api works at the moment.
     return waitForDevice(device.serialNumber, DEFAULT_DEVICE_WAIT_TIME, {
         serialPort: true,
         nordicUsb: true,

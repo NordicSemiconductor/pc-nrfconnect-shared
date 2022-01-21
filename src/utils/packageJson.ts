@@ -5,7 +5,7 @@
  */
 
 import { readFileSync } from 'fs';
-import { PackageJson } from 'pc-nrfconnect-shared'; // eslint-disable-line import/no-unresolved -- This is only importing a type and TypeScript can handle this
+import { PackageJson } from 'pc-nrfconnect-shared';
 
 let packageJson: PackageJson | undefined;
 

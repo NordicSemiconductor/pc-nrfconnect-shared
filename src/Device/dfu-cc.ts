@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-/* eslint-disable block-scoped-var, no-redeclare, no-control-regex, no-prototype-builtins */
 import * as $protobuf from 'protobufjs/light';
 
 const $root = (

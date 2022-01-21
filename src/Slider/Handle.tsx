@@ -61,8 +61,8 @@ const Handle: FC<Props> = ({
         onMouseDragStart.current = { mousePosition, percentage };
         setCurrentlyDragged(true);
 
-        window.addEventListener('mousemove', dragHandle); // eslint-disable-line no-use-before-define
-        window.addEventListener('mouseup', releaseHandle); // eslint-disable-line no-use-before-define
+        window.addEventListener('mousemove', dragHandle);
+        window.addEventListener('mouseup', releaseHandle);
     };
 
     const dragHandle = (event: MouseEvent) => {
