@@ -17,12 +17,20 @@ and this project adheres to
 ### Changed
 
 -   Updated a lot of dependencies.
+-   Forbid use of @ts-ignore.
 
 ### Steps to upgrade when using this package
 
 -   A lot of dependencies were updated, including linting and testing tools. So
     there can be some new warnings or errors when linting, testing, or building.
     Check that after updating to this version.
+-   If your project currently uses @ts-ignore you have to change something. In
+    most cases @ts-ignore is used to correct a glitch from another library. At
+    least in these cases @ts-expect-error should be used instead. If the library
+    is corrected, we will then see that we can remove the directive. If it is
+    one of the rare cases that you _really_ want to use @ts-ignore, you can
+    disable the rule @typescript-eslint/ban-ts-comment in that spot, but please
+    think twice about this.
 
 ## 5.16.1 - 2022-01-19
 

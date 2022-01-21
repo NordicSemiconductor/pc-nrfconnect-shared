@@ -165,7 +165,7 @@ export const stopWatchingDevices = () => {
     }
 };
 
-// @ts-ignore This is how the nrfdl-js api works at the moment.
+// @ts-expect-error This is how the nrfdl-js api works at the moment.
 const DEFAULT_TRAITS: DeviceTraits = {
     serialPort: true,
     // usb: false,

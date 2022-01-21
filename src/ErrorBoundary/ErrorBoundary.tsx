@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import React, { ReactNode } from 'react';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -45,7 +47,7 @@ const sendGAEvent = (error: string) => {
 
 interface Props {
     children: ReactNode;
-    selectedSerialNumber?: string;
+    selectedSerialNumber?: string | null;
     devices?: DeviceShapeProps;
     appName?: string;
     restoreDefaults?: () => void;
@@ -189,7 +191,7 @@ class ErrorBoundary extends React.Component<
     }
 }
 
-// @ts-ignore abc
+// @ts-ignore Don't know what to do with these yet
 ErrorBoundary.propTypes = {
     children: PropTypes.node.isRequired,
     selectedSerialNumber: PropTypes.string,
@@ -204,5 +206,5 @@ const mapStateToProps = (state: RootState) => ({
     selectedSerialNumber: state.device?.selectedSerialNumber,
 });
 
-// @ts-ignore abc
+// @ts-ignore Don't know what to do with these yet
 export default connect(mapStateToProps)(ErrorBoundary);

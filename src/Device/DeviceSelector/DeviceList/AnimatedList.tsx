@@ -29,7 +29,7 @@ const fadeIn: onAppear = element =>
             opacity: [0, 1],
             scale: [0, 1],
         },
-        // @ts-ignore Library types not correct
+        // @ts-expect-error Library types not correct
         onUpdate: ({ opacity, scale }) => {
             element.style.opacity = opacity;
             element.style.transform = `scaleY(${scale})`;
@@ -42,7 +42,7 @@ const fadeOut: onExit = (element, _, removeElement) =>
             opacity: [1, 0],
             scale: [1, 0],
         },
-        // @ts-ignore Library types not correct
+        // @ts-expect-error Library types not correct
         onUpdate: ({ opacity, scale }) => {
             element.style.opacity = opacity;
             element.style.transform = `scaleY(${scale})`;

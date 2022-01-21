@@ -11,7 +11,6 @@ import {
     FirmwareStreamType,
     FWInfo,
     Progress,
-    // @ts-ignore -- wrong type declaration in nrf-device-lib-js
     readFwInfo,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import SerialPort from 'serialport';
