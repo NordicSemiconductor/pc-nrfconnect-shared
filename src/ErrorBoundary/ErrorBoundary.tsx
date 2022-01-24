@@ -9,15 +9,11 @@
 import React, { ReactNode } from 'react';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
-import deviceShape, {
-    DeviceShapeProps,
-} from '../Device/DeviceSelector/deviceShape';
 import Spinner from '../Dialog/Spinner';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { CollapsibleGroup } from '../SidePanel/Group';
-import { RootState } from '../state';
+import { Devices, RootState } from '../state';
 import { openUrl } from '../utils/open';
 import packageJson from '../utils/packageJson';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
@@ -48,7 +44,7 @@ const sendGAEvent = (error: string) => {
 interface Props {
     children: ReactNode;
     selectedSerialNumber?: string | null;
-    devices?: DeviceShapeProps;
+    devices?: Devices;
     appName?: string;
     restoreDefaults?: () => void;
     sendUsageData?: (message: string) => void;
@@ -190,20 +186,9 @@ class ErrorBoundary extends React.Component<
     }
 }
 
-// @ts-ignore Don't know what to do with these yet
-ErrorBoundary.propTypes = {
-    children: PropTypes.node.isRequired,
-    selectedSerialNumber: PropTypes.string,
-    devices: PropTypes.objectOf(deviceShape),
-    appName: PropTypes.string,
-    restoreDefaults: PropTypes.func,
-    sendUsageData: PropTypes.func,
-};
-
 const mapStateToProps = (state: RootState) => ({
     devices: state.device?.devices || {},
     selectedSerialNumber: state.device?.selectedSerialNumber,
 });
 
-// @ts-ignore Don't know what to do with these yet
 export default connect(mapStateToProps)(ErrorBoundary);
