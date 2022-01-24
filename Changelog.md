@@ -19,6 +19,10 @@ and this project adheres to
 -   Updated a lot of dependencies.
 -   Forbid use of @ts-ignore.
 
+### Removed
+
+-   Dependency on `immutable`.
+
 ### Steps to upgrade when using this package
 
 -   A lot of dependencies were updated, including linting and testing tools. So
@@ -31,6 +35,8 @@ and this project adheres to
     one of the rare cases that you _really_ want to use @ts-ignore, you can
     disable the rule @typescript-eslint/ban-ts-comment in that spot, but please
     think twice about this.
+-   If you still use `immutable` in your project and do not want to change that
+    now, then you need to add it to the direct dependencies of your project.
 
 ## 5.16.1 - 2022-01-19
 
