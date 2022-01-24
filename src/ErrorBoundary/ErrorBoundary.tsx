@@ -85,9 +85,8 @@ class ErrorBoundary extends React.Component<
             // @ts-ignore Don't know what to do with these yet
             Object.values(devices),
             // @ts-ignore Don't know what to do with these yet
-            selectedSerialNumber,
-            // @ts-ignore Don't know what to do with these yet
-            devices[selectedSerialNumber]
+            devices[selectedSerialNumber],
+            selectedSerialNumber
         ).then(report => {
             this.setState({ systemReport: report });
         });
