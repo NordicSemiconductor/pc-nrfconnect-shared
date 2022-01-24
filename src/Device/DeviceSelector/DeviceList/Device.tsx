@@ -23,6 +23,7 @@ const ShowMoreInfo: FC<{ isVisible: boolean; toggleVisible: () => void }> = ({
 }) => (
     <PseudoButton
         className={`show-more mdi mdi-chevron-${isVisible ? 'up' : 'down'}`}
+        testId="show-more-device-info"
         onClick={toggleVisible}
     />
 );
