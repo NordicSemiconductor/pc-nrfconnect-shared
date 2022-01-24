@@ -58,8 +58,24 @@ const logVersion = (
     moduleName: string,
     description: string
 ) => {
-    const version = versions.find(v => v.moduleName === moduleName);
-    logger.info(`Using ${description} version: ${describe(version)}`);
+    versions.forEach(version => {
+        findDependency(version, description, moduleName);
+    });
+};
+
+const findDependency = (
+    version: ModuleVersion,
+    description: string,
+    name: string
+) => {
+    if (version.moduleName === name) {
+        logger.info(`Using ${description} version: ${describe(version)}`);
+        return;
+    }
+
+    version.dependencies?.forEach(dep =>
+        findDependency(dep, description, name)
+    );
 };
 
 export default async () => {
@@ -67,15 +83,13 @@ export default async () => {
         const versions = await nrfDeviceLib.getModuleVersions(
             getDeviceLibContext()
         );
+        const log = (moduleName: string, description: string) =>
+            logVersion(versions, moduleName, description);
 
-        logVersion(
-            versions,
-            'nrfdl-js',
-            '@nordicsemiconductor/nrf-device-lib-js'
-        );
-        logVersion(versions, 'nrfdl', 'nrf-device-lib');
-        logVersion(versions, 'nrfjprog_dll', 'nrfjprog dll');
-        logVersion(versions, 'jlink_dll', 'JLink');
+        log('nrfdl-js', '@nordicsemiconductor/nrf-device-lib-js');
+        log('nrfdl', 'nrf-device-lib');
+        log('jprog', 'nrfjprog dll');
+        log('jlink', 'JLink');
     } catch (error) {
         logger.logError('Failed to get the library versions', error);
     }

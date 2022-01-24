@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "5.16.1",
+    "version": "5.16.2",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -31,7 +31,7 @@
         "@babel/plugin-transform-spread": "7.10.0",
         "@babel/preset-react": "7.10.0",
         "@babel/preset-typescript": "^7.10.4",
-        "@nordicsemiconductor/nrf-device-lib-js": "0.4.0",
+        "@nordicsemiconductor/nrf-device-lib-js": "^0.4.3",
         "@reduxjs/toolkit": "^1.6.1",
         "@svgr/webpack": "5.5.0",
         "@testing-library/jest-dom": "5.8.0",
