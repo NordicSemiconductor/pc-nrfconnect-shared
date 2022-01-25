@@ -27,8 +27,8 @@ and this project adheres to
     - Current device:
       - name:          nRF52 RSSI Dongle
       - serialNumber:  F31282696FF5
-      - cores:         undefined
-      - website:       undefined
+      - cores:         Unknown
+      - website:       Unknown
     </pre>
 
 ### Added

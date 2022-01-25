@@ -101,8 +101,8 @@ const currentDeviceReport = (device?: Device, currentSerialNumber?: string) => {
         '- Current device:',
         `    - name:          ${deviceInfo.name}`,
         `    - serialNumber:  ${currentSerialNumber}`,
-        `    - cores:         ${deviceInfo.cores}`,
-        `    - website:       ${productPageUrl(device)}`,
+        `    - cores:         ${deviceInfo.cores ?? 'Unknown'}`,
+        `    - website:       ${productPageUrl(device) ?? 'Unknown'}`,
         '',
     ];
 };
