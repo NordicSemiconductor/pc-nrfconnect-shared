@@ -178,7 +178,6 @@ class ErrorBoundary extends React.Component<
                                 'https://devzone.nordicsemi.com/support/add'
                             )
                         }
-                        disabled={!systemReport}
                     >
                         Go to DevZone
                     </Button>
