@@ -4,11 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 import React, { ReactNode } from 'react';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import { Device } from 'pc-nrfconnect-shared';
 
 import Spinner from '../Dialog/Spinner';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
@@ -43,8 +42,8 @@ const sendGAEvent = (error: string) => {
 
 interface Props {
     children: ReactNode;
-    selectedSerialNumber?: string | null;
-    devices?: Devices;
+    selectedSerialNumber?: string;
+    devices: Devices;
     appName?: string;
     restoreDefaults?: () => void;
     sendUsageData?: (message: string) => void;
@@ -76,12 +75,15 @@ class ErrorBoundary extends React.Component<
             ? sendUsageData(error.message)
             : sendGAEvent(error.message);
 
+        const selectedDevice =
+            selectedSerialNumber == null
+                ? undefined
+                : devices[selectedSerialNumber];
+
         generateSystemReport(
             new Date().toISOString().replace(/:/g, '-'),
-            // @ts-ignore Don't know what to do with these yet
-            Object.values(devices),
-            // @ts-ignore Don't know what to do with these yet
-            devices[selectedSerialNumber],
+            Object.values(devices) as Device[],
+            selectedDevice,
             selectedSerialNumber
         ).then(report => {
             this.setState({ systemReport: report });
@@ -187,8 +189,8 @@ class ErrorBoundary extends React.Component<
 }
 
 const mapStateToProps = (state: RootState) => ({
-    devices: state.device?.devices || {},
-    selectedSerialNumber: state.device?.selectedSerialNumber,
+    devices: state.device?.devices ?? {},
+    selectedSerialNumber: state.device?.selectedSerialNumber ?? undefined,
 });
 
 export default connect(mapStateToProps)(ErrorBoundary);

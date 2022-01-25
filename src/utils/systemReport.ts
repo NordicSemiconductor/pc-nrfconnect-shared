@@ -90,10 +90,7 @@ const allDevicesReport = (allDevices: Device[]) => [
     '',
 ];
 
-const currentDeviceReport = (
-    device: Device | null,
-    currentSerialNumber: string
-) => {
+const currentDeviceReport = (device?: Device, currentSerialNumber?: string) => {
     if (device == null) {
         return [];
     }
@@ -113,8 +110,8 @@ const currentDeviceReport = (
 export const generateSystemReport = async (
     timestamp: string,
     allDevices: Device[],
-    currentDevice: Device | null,
-    currentSerialNumber: string
+    currentDevice?: Device,
+    currentSerialNumber?: string
 ) =>
     [
         `# nRFConnect System Report - ${timestamp}`,
@@ -134,7 +131,7 @@ export default async (
     const report = await generateSystemReport(
         timestamp,
         allDevices,
-        currentDevice,
+        currentDevice ?? undefined,
         currentSerialNumber
     );
 
