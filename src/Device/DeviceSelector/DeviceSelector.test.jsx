@@ -60,6 +60,16 @@ const testDevice = {
     },
 };
 
+const validFirmware = {
+    jprog: {
+        PCATest: {
+            fw: 'firmware/PCATest.hex',
+            fwVersion: 'test-fw-1.0.0',
+            fwIdAddress: 0x6000,
+        },
+    },
+};
+
 describe('DeviceSelector', () => {
     it('should have no device selected by default', () => {
         const { getByText } = render(
@@ -193,9 +203,9 @@ describe('DeviceSelector', () => {
                 }}
                 deviceSetup={{
                     jprog: {
-                        pca10056: {
-                            fw: 'firmware/direct_test_mode_pca10056.hex',
-                            fwVersion: 'dtm-fw-1.0.0',
+                        invalidDevice: {
+                            fw: 'firmware/invalidDevice.hex',
+                            fwVersion: 'fw-1.0.0',
                             fwIdAddress: 0x6000,
                         },
                     },
@@ -222,9 +232,9 @@ describe('DeviceSelector', () => {
                 }}
                 deviceSetup={{
                     jprog: {
-                        pca10056: {
-                            fw: 'firmware/direct_test_mode_pca10056.hex',
-                            fwVersion: 'dtm-fw-1.0.0',
+                        invalidDevice: {
+                            fw: 'firmware/invalidDevice.hex',
+                            fwVersion: 'fw-1.0.0',
                             fwIdAddress: 0x6000,
                         },
                     },
@@ -255,15 +265,7 @@ describe('DeviceSelector', () => {
                     jlink: true,
                     mcuboot: true,
                 }}
-                deviceSetup={{
-                    jprog: {
-                        PCATest: {
-                            fw: 'firmware/direct_test_mode_pca10056.hex',
-                            fwVersion: 'dtm-fw-1.0.0',
-                            fwIdAddress: 0x6000,
-                        },
-                    },
-                }}
+                deviceSetup={validFirmware}
             />,
             [devicesDetected([testDevice])]
         );
