@@ -17,10 +17,7 @@ import DeviceSelector from './DeviceSelector';
 
 jest.mock('../jprogOperations', () => ({
     ...jest.requireActual('../jprogOperations'),
-    verifySerialPortAvailable: () => true,
-    validateFirmware: () => false,
-    program: device => device,
-    reset: device => device,
+    validateFirmware: jest.fn(false),
 }));
 
 jest.mock('../sdfuOperations', () => ({}));
