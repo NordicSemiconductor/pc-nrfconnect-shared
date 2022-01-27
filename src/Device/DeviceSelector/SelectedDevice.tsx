@@ -21,6 +21,7 @@ const DisconnectDevice: FC<{ doDeselectDevice: () => void }> = ({
         className="mdi mdi-24px mdi-eject disconnect"
         onClick={doDeselectDevice}
         title="Disconnect device"
+        testId="disconnect-device"
     />
 );
 DisconnectDevice.propTypes = {

@@ -34,7 +34,8 @@ const PseudoButton: React.FC<{
     className?: string;
     title?: string;
     onClick?: React.EventHandler<React.SyntheticEvent>;
-}> = ({ onClick = () => {}, className = '', children, title }) => (
+    testId?: string;
+}> = ({ onClick = () => {}, className = '', children, title, testId }) => (
     <div
         role="button"
         className={`core19-pseudo-button ${className}`}
@@ -42,6 +43,7 @@ const PseudoButton: React.FC<{
         onClick={blurAndInvoke(onClick)}
         onKeyUp={invokeIfSpaceOrEnterPressed(onClick)}
         title={title}
+        data-testid={testId}
     >
         {children}
     </div>
@@ -50,6 +52,7 @@ PseudoButton.propTypes = {
     onClick: func,
     className: string,
     title: string,
+    testId: string,
 };
 
 export default PseudoButton;
