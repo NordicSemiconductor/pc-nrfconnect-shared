@@ -5,7 +5,11 @@
  */
 
 import React from 'react';
-import { fireEvent, waitFor } from '@testing-library/react';
+import {
+    fireEvent,
+    waitFor,
+    waitForElementToBeRemoved,
+} from '@testing-library/react';
 
 import render from '../../../test/testrenderer';
 import { devicesDetected } from '../deviceSlice';
@@ -278,5 +282,30 @@ describe('DeviceSelector', () => {
                 getByText('Device must be programmed, do you want to proceed?')
             ).toBeInTheDocument()
         );
+    });
+
+    it('should select device when cancelling firmware prompt', async () => {
+        const { getByText, getAllByText, findByText } = render(
+            <DeviceSelector
+                deviceListing={{
+                    nordicUsb: true,
+                    serialport: true,
+                    jlink: true,
+                    mcuboot: true,
+                }}
+                deviceSetup={validFirmware}
+            />,
+            [devicesDetected([testDevice])]
+        );
+
+        fireEvent.click(getByText('Select device'));
+        fireEvent.click(getByText(testDevice.serialNumber));
+        await findByText('No');
+        fireEvent.click(getByText('No'));
+
+        await waitForElementToBeRemoved(() =>
+            getByText('Device must be programmed, do you want to proceed?')
+        );
+        expect(getAllByText(testDevice.serialNumber)).toHaveLength(2);
     });
 });
