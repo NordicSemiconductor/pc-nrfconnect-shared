@@ -61,7 +61,7 @@ if (getVerboseLoggingEnabled()) {
     setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_TRACE');
 } else setDefaultNrfdlLogLevel();
 
-setLogPattern(getDeviceLibContext(), '%n %T.%e %v');
+setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
 
 let hotplugTaskId: number;
 
