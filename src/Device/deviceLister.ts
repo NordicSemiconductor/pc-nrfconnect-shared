@@ -15,6 +15,7 @@ import nrfDeviceLib, {
     setLogPattern,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import camelcaseKeys from 'camelcase-keys';
+import { remote } from 'electron';
 // eslint-disable-next-line import/no-unresolved
 import { Device, DeviceListing, Serialport } from 'pc-nrfconnect-shared';
 
@@ -30,6 +31,7 @@ nrfDeviceLib.setTimeoutConfig(deviceLibContext, { enumerateMs: 3 * 60 * 1000 });
 export const getDeviceLibContext = () => deviceLibContext;
 
 export const logNrfdlLogs = (evt: LogEvent) => {
+    if (remote.app.isPackaged) return;
     switch (evt.level) {
         case 'NRFDL_LOG_TRACE':
             logger.verbose(evt.message);
