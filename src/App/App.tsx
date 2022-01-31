@@ -28,6 +28,7 @@ import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import LogViewer from '../Log/LogViewer';
 import logger from '../logging';
 import NavBar from '../NavBar/NavBar';
+import { TDispatch } from '../state';
 import classNames from '../utils/classNames';
 import logLibVersions from '../utils/logLibVersions';
 import packageJson from '../utils/packageJson';
@@ -127,22 +128,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
         if (documentation) dispatch(setDocumentationSections(documentation));
     }, [dispatch, documentation]);
 
-    useEffect(() => {
-        const taskId = startLogEvents(
-            getDeviceLibContext(),
-            (err?: Error) => {
-                if (err)
-                    logger.logError(
-                        'Error while listening to log messages from nrf-device-lib',
-                        err
-                    );
-            },
-            (evt: LogEvent) => dispatch(logNrfdlLogs(evt))
-        );
-        return () => {
-            stopLogEvents(taskId);
-        };
-    }, [dispatch]);
+    useNrfdlLogging(dispatch);
 
     const SidePanelComponent = allPanes[currentPane].SidePanel;
     const currentSidePanel =
@@ -221,6 +207,25 @@ App.propTypes = {
 };
 
 export default App;
+
+const useNrfdlLogging = (dispatch: TDispatch) => {
+    useEffect(() => {
+        const taskId = startLogEvents(
+            getDeviceLibContext(),
+            (err?: Error) => {
+                if (err)
+                    logger.logError(
+                        'Error while listening to log messages from nrf-device-lib',
+                        err
+                    );
+            },
+            (evt: LogEvent) => dispatch(logNrfdlLogs(evt))
+        );
+        return () => {
+            stopLogEvents(taskId);
+        };
+    }, [dispatch]);
+};
 
 const usePersistedPane = () => {
     const dispatch = useDispatch();

@@ -12,11 +12,11 @@ import { getVerboseLoggingEnabled } from '../utils/persistentStore';
 
 const MAX_ENTRIES = 1000;
 
-const initialState = (): Log => ({
+const initialState: Log = {
     autoScroll: true,
     logEntries: [],
     nrfdlVerboseLogging: getVerboseLoggingEnabled(),
-});
+};
 
 const infoEntry = () => ({
     id: -1,
@@ -38,7 +38,7 @@ export const nrfdlVerboseLoggingEnabled = (state: RootState) =>
 
 const slice = createSlice({
     name: 'log',
-    initialState: initialState(),
+    initialState,
     reducers: {
         addEntries: (state, action: PayloadAction<LogEntry[]>) => {
             state.logEntries = limitedToMaxSize([
