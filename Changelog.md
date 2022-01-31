@@ -10,7 +10,7 @@ and this project adheres to
 
 ### Changed
 
--   Only propagate device-lib logs for production builds.
+-   Only propagate device-lib logs while in development.
 -   Update nrfdl log formatting.
 
 ## 5.16.2 - 2022-01-24
