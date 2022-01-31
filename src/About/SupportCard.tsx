@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setLogLevel } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import Card from '../Card/Card';
@@ -19,11 +19,12 @@ import {
     selectedSerialNumber,
     sortedDevices,
 } from '../Device/deviceSlice';
-import { Toggle } from '../Toggle/Toggle';
 import {
-    getVerboseLoggingEnabled,
-    persistVerboseLoggingEnabled,
-} from '../utils/persistentStore';
+    nrfdlVerboseLoggingEnabled,
+    toggleNrflVerboseLogging,
+} from '../Log/logSlice';
+import { Toggle } from '../Toggle/Toggle';
+import { persistVerboseLoggingEnabled } from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
 import Section from './Section';
@@ -33,13 +34,15 @@ import colors from '../utils/colors.icss.scss';
 const { getCurrentWindow } = require('electron').remote;
 
 export default () => {
+    const dispatch = useDispatch();
     const devices = useSelector(sortedDevices);
     const currentSerialNumber = useSelector(selectedSerialNumber);
+    const verboseLogging = useSelector(nrfdlVerboseLoggingEnabled);
     const currentDevice = useSelector(deviceInfo);
-    const [verboseLogging, setVerboseLogging] = useState(
-        getVerboseLoggingEnabled()
-    );
-    persistVerboseLoggingEnabled(false);
+
+    useEffect(() => {
+        persistVerboseLoggingEnabled(false);
+    }, []);
 
     useEffect(() => {
         if (verboseLogging)
@@ -85,7 +88,7 @@ export default () => {
                 <Toggle
                     id="enableVerboseLoggin"
                     label="VERBOSE LOGGING"
-                    onToggle={() => setVerboseLogging(!verboseLogging)}
+                    onToggle={() => dispatch(toggleNrflVerboseLogging())}
                     isToggled={verboseLogging}
                     variant="primary"
                     handleColor={colors.white}
