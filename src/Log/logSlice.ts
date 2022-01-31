@@ -8,13 +8,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { LogEntry } from 'winston';
 
 import { Log, RootState } from '../state';
+import { getVerboseLoggingEnabled } from '../utils/persistentStore';
 
 const MAX_ENTRIES = 1000;
 
-const initialState: Log = {
+const initialState = (): Log => ({
     autoScroll: true,
     logEntries: [],
-};
+    nrfdlVerboseLogging: getVerboseLoggingEnabled(),
+});
 
 const infoEntry = () => ({
     id: -1,
@@ -31,10 +33,12 @@ const limitedToMaxSize = (entries: LogEntry[]) =>
 
 export const autoScroll = (state: RootState) => state.log.autoScroll;
 export const logEntries = (state: RootState) => state.log.logEntries;
+export const nrfdlVerboseLoggingEnabled = (state: RootState) =>
+    state.log.nrfdlVerboseLogging;
 
 const slice = createSlice({
     name: 'log',
-    initialState,
+    initialState: initialState(),
     reducers: {
         addEntries: (state, action: PayloadAction<LogEntry[]>) => {
             state.logEntries = limitedToMaxSize([
@@ -48,10 +52,13 @@ const slice = createSlice({
         toggleAutoScroll: state => {
             state.autoScroll = !state.autoScroll;
         },
+        toggleNrflVerboseLogging: state => {
+            state.nrfdlVerboseLogging = !state.nrfdlVerboseLogging;
+        },
     },
 });
 
 export const {
     reducer,
-    actions: { addEntries, clear, toggleAutoScroll },
+    actions: { addEntries, clear, toggleAutoScroll, toggleNrflVerboseLogging },
 } = slice;
