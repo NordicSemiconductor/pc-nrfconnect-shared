@@ -11,12 +11,13 @@ import Carousel from 'react-bootstrap/Carousel';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     Error,
+    LogEvent,
     startLogEvents,
     stopLogEvents,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import { ipcRenderer } from 'electron';
 import { func } from 'prop-types';
-import { Reducer } from 'redux';
+import { Dispatch, Reducer } from 'redux';
 
 import About from '../About/About';
 import { setDocumentationSections } from '../About/documentationSlice';
@@ -27,6 +28,7 @@ import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import LogViewer from '../Log/LogViewer';
 import logger from '../logging';
 import NavBar from '../NavBar/NavBar';
+import { TDispatch } from '../state';
 import classNames from '../utils/classNames';
 import logLibVersions from '../utils/logLibVersions';
 import packageJson from '../utils/packageJson';
@@ -108,7 +110,6 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     documentation,
     children,
 }) => {
-    useNrfdlLogs();
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
@@ -126,6 +127,8 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     useEffect(() => {
         if (documentation) dispatch(setDocumentationSections(documentation));
     }, [dispatch, documentation]);
+
+    useNrfdlLogging(dispatch);
 
     const SidePanelComponent = allPanes[currentPane].SidePanel;
     const currentSidePanel =
@@ -205,7 +208,7 @@ App.propTypes = {
 
 export default App;
 
-const useNrfdlLogs = () => {
+const useNrfdlLogging = (dispatch: TDispatch) => {
     useEffect(() => {
         const taskId = startLogEvents(
             getDeviceLibContext(),
@@ -216,12 +219,12 @@ const useNrfdlLogs = () => {
                         err
                     );
             },
-            logNrfdlLogs
+            (evt: LogEvent) => dispatch(logNrfdlLogs(evt))
         );
         return () => {
             stopLogEvents(taskId);
         };
-    }, []);
+    }, [dispatch]);
 };
 
 const usePersistedPane = () => {
