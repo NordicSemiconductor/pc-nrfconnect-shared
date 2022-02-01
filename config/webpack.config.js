@@ -66,7 +66,7 @@ function findEntryPoint() {
 
 module.exports = {
     mode: nodeEnv,
-    devtool: isProd ? 'hidden-source-map' : 'inline-cheap-source-map',
+    devtool: isProd ? 'source-map' : 'inline-cheap-source-map',
     entry: findEntryPoint(),
     output: {
         path: path.join(appDirectory, 'dist'),
