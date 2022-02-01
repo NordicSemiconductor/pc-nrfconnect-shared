@@ -41,6 +41,7 @@ and this project adheres to
 
 -   Updated a lot of dependencies.
 -   Forbid use of @ts-ignore.
+-   Use source map in apps in production.
 
 ### Removed
 
