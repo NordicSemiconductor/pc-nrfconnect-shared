@@ -17,7 +17,7 @@ import {
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import { ipcRenderer } from 'electron';
 import { func } from 'prop-types';
-import { Dispatch, Reducer } from 'redux';
+import { Reducer } from 'redux';
 
 import About from '../About/About';
 import { setDocumentationSections } from '../About/documentationSlice';
