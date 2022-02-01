@@ -15,8 +15,10 @@ import nrfDeviceLib, {
     setLogPattern,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import camelcaseKeys from 'camelcase-keys';
+import { remote } from 'electron';
 import { Device, DeviceListing, Serialport } from 'pc-nrfconnect-shared';
 
+import { nrfdlVerboseLoggingEnabled } from '../Log/logSlice';
 import logger from '../logging';
 import { Devices } from '../state';
 import { getVerboseLoggingEnabled } from '../utils/persistentStore';
@@ -28,28 +30,31 @@ const deviceLibContext = nrfDeviceLib.createContext();
 nrfDeviceLib.setTimeoutConfig(deviceLibContext, { enumerateMs: 3 * 60 * 1000 });
 export const getDeviceLibContext = () => deviceLibContext;
 
-export const logNrfdlLogs = (evt: LogEvent) => {
-    switch (evt.level) {
-        case 'NRFDL_LOG_TRACE':
-            logger.verbose(evt.message);
-            break;
-        case 'NRFDL_LOG_DEBUG':
-            logger.debug(evt.message);
-            break;
-        case 'NRFDL_LOG_INFO':
-            logger.info(evt.message);
-            break;
-        case 'NRFDL_LOG_WARNING':
-            logger.warn(evt.message);
-            break;
-        case 'NRFDL_LOG_ERROR':
-            logger.error(evt.message);
-            break;
-        case 'NRFDL_LOG_CRITICAL':
-            logger.error(evt.message);
-            break;
-    }
-};
+export const logNrfdlLogs =
+    (evt: LogEvent) => (_: Function, getState: Function) => {
+        if (remote.app.isPackaged && !nrfdlVerboseLoggingEnabled(getState()))
+            return;
+        switch (evt.level) {
+            case 'NRFDL_LOG_TRACE':
+                logger.verbose(evt.message);
+                break;
+            case 'NRFDL_LOG_DEBUG':
+                logger.debug(evt.message);
+                break;
+            case 'NRFDL_LOG_INFO':
+                logger.info(evt.message);
+                break;
+            case 'NRFDL_LOG_WARNING':
+                logger.warn(evt.message);
+                break;
+            case 'NRFDL_LOG_ERROR':
+                logger.error(evt.message);
+                break;
+            case 'NRFDL_LOG_CRITICAL':
+                logger.error(evt.message);
+                break;
+        }
+    };
 
 export const setDefaultNrfdlLogLevel = () =>
     setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_ERROR');
@@ -58,7 +63,7 @@ if (getVerboseLoggingEnabled()) {
     setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_TRACE');
 } else setDefaultNrfdlLogLevel();
 
-setLogPattern(getDeviceLibContext(), '%n %T.%e %v');
+setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
 
 let hotplugTaskId: number;
 

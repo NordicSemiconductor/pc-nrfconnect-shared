@@ -65,6 +65,20 @@ and this project adheres to
 -   If you still use `immutable` in your project and do not want to change that
     now, then you need to add it to the direct dependencies of your project.
 
+## 5.16.3 - 2022-01-28
+
+### Changed
+
+-   Only propagate device-lib logs while in development.
+-   Update nrfdl log formatting.
+
+## 5.16.2 - 2022-01-24
+
+### Fixed
+
+-   Updated nrfdl module version logging according to recent changes in the
+    nrfdl api.
+
 ## 5.16.1 - 2022-01-19
 
 ### Changed
