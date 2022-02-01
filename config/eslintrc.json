@@ -9,7 +9,7 @@
         "prettier/react",
         "prettier/@typescript-eslint"
     ],
-    "ignorePatterns": ["/dist/"],
+    "ignorePatterns": ["/dist/", "/jest.json"],
     "rules": {
         "no-shadow": "off",
         "@typescript-eslint/no-shadow": ["error"],
@@ -121,7 +121,7 @@
             }
         },
         {
-            "files": ["*.js", "*.jsx"]
+            "files": ["*.js", "*.jsx", "*.json"]
         },
         {
             "files": ["*.ts", "*.tsx"],
