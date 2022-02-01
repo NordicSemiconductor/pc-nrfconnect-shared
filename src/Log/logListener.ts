@@ -11,7 +11,7 @@ import { ipcRenderer } from 'electron';
 import logger from '../logging';
 import { TDispatch } from '../state';
 import { getAppDataDir } from '../utils/appDirs';
-import logLibVersions from '../utils/logLibVersions';
+import logLibVersions, { describe } from '../utils/logLibVersions';
 import { addEntries } from './logSlice';
 
 let initialMessageSent = false;
@@ -21,7 +21,7 @@ const sendInitialMessage = () => {
     initialMessageSent = true;
     logger.info(`Application data folder: ${getAppDataDir()}`);
 
-    ipcRenderer.once('app-details', (_event, details) => {
+    ipcRenderer.once('app-details', async (_event, details) => {
         const {
             name,
             currentVersion,
@@ -32,6 +32,7 @@ const sendInitialMessage = () => {
             path,
             homeDir,
             tmpDir,
+            bundledJlink,
         } = details;
         const official = isOfficial ? 'official' : 'local';
         logger.debug(`App ${name} v${currentVersion} ${official}`);
@@ -43,7 +44,19 @@ const sendInitialMessage = () => {
         logger.debug(`HomeDir: ${homeDir}`);
         logger.debug(`TmpDir: ${tmpDir}`);
 
-        logLibVersions();
+        const versions = await logLibVersions();
+
+        if (bundledJlink) {
+            if (
+                describe(versions?.find(v => v.moduleName === 'jlink_dll')) !==
+                describe(bundledJlink)
+            )
+                logger.info(
+                    `Installed JLink version does not match the recommended (${describe(
+                        bundledJlink
+                    )})`
+                );
+        }
     });
     ipcRenderer.send('get-app-details');
 };
