@@ -11,6 +11,7 @@ import { ipcRenderer } from 'electron';
 import logger from '../logging';
 import { TDispatch } from '../state';
 import { getAppDataDir } from '../utils/appDirs';
+import logLibVersions from '../utils/logLibVersions';
 import { addEntries } from './logSlice';
 
 let initialMessageSent = false;
@@ -41,6 +42,8 @@ const sendInitialMessage = () => {
         logger.debug(`nRFConnect path: ${corePath}`);
         logger.debug(`HomeDir: ${homeDir}`);
         logger.debug(`TmpDir: ${tmpDir}`);
+
+        logLibVersions();
     });
     ipcRenderer.send('get-app-details');
 };

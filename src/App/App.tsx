@@ -30,7 +30,6 @@ import logger from '../logging';
 import NavBar from '../NavBar/NavBar';
 import { TDispatch } from '../state';
 import classNames from '../utils/classNames';
-import logLibVersions from '../utils/logLibVersions';
 import packageJson from '../utils/packageJson';
 import { getPersistedCurrentPane } from '../utils/persistentStore';
 import { init as usageDataInit } from '../utils/usageData';
@@ -48,8 +47,6 @@ import VisibilityBar from './VisibilityBar';
 
 import './app.scss';
 import './shared.scss';
-
-logLibVersions();
 
 type LegacyPane = [string, FC];
 let warnedAboutLegacyPanes = false;
