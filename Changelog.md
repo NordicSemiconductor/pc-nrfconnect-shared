@@ -8,6 +8,29 @@ and this project adheres to
 
 ## Unreleased
 
+### Fixed
+
+-   When the app crashed and the error reporter was displayed, users can
+    generate a system report. In that report, the current device was not
+    displayed correctly. E.g. with a nRF52 Dongle with the RSSI app on this was
+    shown:
+    <pre>
+    - Current device:
+      - name:          undefined
+      - serialNumber:  [object Object]
+      - cores:         undefined
+      - website:       undefined
+    </pre>
+
+    After this fix this is correctly shown like this:
+    <pre>
+    - Current device:
+      - name:          nRF52 RSSI Dongle
+      - serialNumber:  F31282696FF5
+      - cores:         Unknown
+      - website:       Unknown
+    </pre>
+
 ### Added
 
 -   Warn if ESLint disable directives (like `eslint-disable` or
