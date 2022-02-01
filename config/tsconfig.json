@@ -7,6 +7,6 @@
 
         "strict": true,
         "isolatedModules": true,
-        "forceConsistentCasingInFileNames": true,
+        "forceConsistentCasingInFileNames": true
     }
 }

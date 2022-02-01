@@ -42,6 +42,7 @@ and this project adheres to
 -   Updated a lot of dependencies.
 -   Forbid use of @ts-ignore.
 -   Use source map in apps in production.
+-   Lint also JSON files.
 
 ### Removed
 
@@ -49,6 +50,8 @@ and this project adheres to
 
 ### Steps to upgrade when using this package
 
+-   Because JSON files are now linted also, you might need to adapt yours to the
+    general style (usually an auto fix).
 -   A lot of dependencies were updated, including linting and testing tools. So
     there can be some new warnings or errors when linting, testing, or building.
     Check that after updating to this version.
