@@ -76,7 +76,7 @@ const addLogEntriesToStore = (dispatch: TDispatch) => () => {
  * @param {function} dispatch The redux dispatch function.
  * @returns {function(*)} Function that stops the listener.
  */
-function startListening(dispatch: TDispatch) {
+const startListening = (dispatch: TDispatch) => {
     sendInitialMessage();
 
     const LOG_UPDATE_INTERVAL = 400;
@@ -88,7 +88,7 @@ function startListening(dispatch: TDispatch) {
     return () => {
         clearInterval(logListener);
     };
-}
+};
 
 export const useLogListener = () => {
     const dispatch = useDispatch();
