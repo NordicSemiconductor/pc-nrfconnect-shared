@@ -48,13 +48,14 @@ const sendInitialMessage = () => {
 
         if (bundledJlink) {
             if (
-                describe(versions?.find(v => v.moduleName === 'jlink_dll')) !==
-                describe(bundledJlink)
+                !(
+                    describe(
+                        versions?.find(v => v.moduleName === 'jlink_dll')
+                    ) as string
+                ).includes(bundledJlink)
             )
                 logger.info(
-                    `Installed JLink version does not match the recommended (${describe(
-                        bundledJlink
-                    )})`
+                    `Installed JLink version does not match the provided version (${bundledJlink})`
                 );
         }
     });
