@@ -30,6 +30,12 @@ export const Alert: React.FC<AlertProps> = ({
         onClose={onClose}
         className={`${styles.container} ${styles[variant]}`}
     >
-        {label && <strong>{label}</strong>} <>{children}</>
+        {label && (
+            <>
+                <strong>{label}</strong>
+                <br />
+            </>
+        )}{' '}
+        <>{children}</>
     </BootstrapAlert>
 );
