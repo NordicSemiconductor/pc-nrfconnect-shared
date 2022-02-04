@@ -45,6 +45,7 @@ and this project adheres to
 -   Forbid use of @ts-ignore.
 -   Use source map in apps in production.
 -   Lint also JSON files.
+-   Added linebreak after label from `Alert` component
 
 ### Removed
 
