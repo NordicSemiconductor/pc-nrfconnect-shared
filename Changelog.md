@@ -10,6 +10,8 @@ and this project adheres to
 
 ### Fixed
 
+-   The error reporter UI didn't handle content overflow when the available
+    options were expanded
 -   When the app crashed and the error reporter was displayed, users can
     generate a system report. In that report, the current device was not
     displayed correctly. E.g. with a nRF52 Dongle with the RSSI app on this was
