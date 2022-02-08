@@ -90,6 +90,8 @@ export default async () => {
         log('nrfdl', 'nrf-device-lib');
         log('jprog', 'nrfjprog dll');
         log('jlink', 'JLink');
+
+        return versions;
     } catch (error) {
         logger.logError('Failed to get the library versions', error);
     }

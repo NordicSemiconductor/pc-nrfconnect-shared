@@ -11,6 +11,7 @@ import { ipcRenderer } from 'electron';
 import logger from '../logging';
 import { TDispatch } from '../state';
 import { getAppDataDir } from '../utils/appDirs';
+import logLibVersions, { describe } from '../utils/logLibVersions';
 import { addEntries } from './logSlice';
 
 let initialMessageSent = false;
@@ -20,7 +21,7 @@ const sendInitialMessage = () => {
     initialMessageSent = true;
     logger.info(`Application data folder: ${getAppDataDir()}`);
 
-    ipcRenderer.once('app-details', (_event, details) => {
+    ipcRenderer.once('app-details', async (_event, details) => {
         const {
             name,
             currentVersion,
@@ -31,6 +32,7 @@ const sendInitialMessage = () => {
             path,
             homeDir,
             tmpDir,
+            bundledJlink,
         } = details;
         const official = isOfficial ? 'official' : 'local';
         logger.debug(`App ${name} v${currentVersion} ${official}`);
@@ -41,6 +43,21 @@ const sendInitialMessage = () => {
         logger.debug(`nRFConnect path: ${corePath}`);
         logger.debug(`HomeDir: ${homeDir}`);
         logger.debug(`TmpDir: ${tmpDir}`);
+
+        const versions = await logLibVersions();
+
+        if (bundledJlink) {
+            if (
+                !(
+                    describe(
+                        versions?.find(v => v.moduleName === 'jlink_dll')
+                    ) as string
+                ).includes(bundledJlink)
+            )
+                logger.info(
+                    `Installed JLink version does not match the provided version (${bundledJlink})`
+                );
+        }
     });
     ipcRenderer.send('get-app-details');
 };
@@ -60,7 +77,7 @@ const addLogEntriesToStore = (dispatch: TDispatch) => () => {
  * @param {function} dispatch The redux dispatch function.
  * @returns {function(*)} Function that stops the listener.
  */
-function startListening(dispatch: TDispatch) {
+const startListening = (dispatch: TDispatch) => {
     sendInitialMessage();
 
     const LOG_UPDATE_INTERVAL = 400;
@@ -72,7 +89,7 @@ function startListening(dispatch: TDispatch) {
     return () => {
         clearInterval(logListener);
     };
-}
+};
 
 export const useLogListener = () => {
     const dispatch = useDispatch();

@@ -38,6 +38,7 @@ and this project adheres to
 -   Warn if ESLint disable directives (like `eslint-disable` or
     `eslint-disable-next-line`) are used, even though they are not necessary
     (anymore).
+-   Inform user if installed JLink version and the provided one do not match.
 
 ### Changed
 
