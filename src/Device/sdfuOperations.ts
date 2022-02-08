@@ -7,9 +7,9 @@
 import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js';
 import AdmZip from 'adm-zip';
 import { createHash } from 'crypto';
+import { ipcRenderer } from 'electron';
 import fs from 'fs';
 import MemoryMap from 'nrf-intel-hex';
-import SerialPort from 'serialport';
 
 import logger from '../logging';
 import { Device } from '../state';
@@ -193,16 +193,16 @@ const validateSerialPort = async (device: Device, needSerialport: boolean) => {
         return device;
     }
 
-    const checkOpen = (serialPath: string) =>
-        new Promise(resolve => {
-            const port = new SerialPort(
-                serialPath,
-                { baudRate: 115200 },
-                err => {
-                    if (!err) port.close();
-                    resolve(!err);
-                }
-            );
+    const checkOpen = () =>
+        new Promise((resolve, reject) => {
+            ipcRenderer.send('verify-serialport-available', {
+                device,
+                options: { baudRate: 115200 },
+            });
+            ipcRenderer.on('serialport-available', () => resolve(true));
+            ipcRenderer.on('serialport-not-available', (_, err) => {
+                reject(err);
+            });
         });
 
     for (let i = 10; i > 1; i -= 1) {
@@ -210,7 +210,7 @@ const validateSerialPort = async (device: Device, needSerialport: boolean) => {
         await sleep(2000 / i);
         // logger.debug('validating serialport', device.serialport.path, i);
         /* eslint-disable-next-line no-await-in-loop */
-        if (await checkOpen(device.serialport?.comName as string)) {
+        if (await checkOpen()) {
             logger.debug('resolving', device);
             return device;
         }

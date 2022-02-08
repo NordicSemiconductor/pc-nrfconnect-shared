@@ -13,7 +13,7 @@ import {
     Progress,
     readFwInfo,
 } from '@nordicsemiconductor/nrf-device-lib-js';
-import SerialPort from 'serialport';
+import { ipcRenderer } from 'electron';
 
 import logger from '../logging';
 import { Device } from '../state';
@@ -81,31 +81,14 @@ const reset = async (deviceId: number) => {
  * @returns {Promise} Promise that resolves if available, and rejects if not.
  */
 export const verifySerialPortAvailable = (device: Device) => {
-    if (!device.serialport) {
-        return Promise.reject(
-            new Error(
-                'No serial port available for device with ' +
-                    `serial number ${device.serialNumber}`
-            )
-        );
-    }
     return new Promise<void>((resolve, reject) => {
-        if (!device.serialport?.comName) return reject();
-        const serialPort = new SerialPort(device.serialport?.comName, {
-            autoOpen: false,
+        ipcRenderer.send('verify-serialport-available', {
+            device,
+            options: { autoOpen: false },
         });
-        serialPort.open(openErr => {
-            if (openErr) {
-                reject(openErr);
-            } else {
-                serialPort.close(closeErr => {
-                    if (closeErr) {
-                        reject(closeErr);
-                    } else {
-                        resolve();
-                    }
-                });
-            }
+        ipcRenderer.on('serialport-available', () => resolve());
+        ipcRenderer.on('serialport-not-available', (_, err) => {
+            reject(err);
         });
     });
 };
