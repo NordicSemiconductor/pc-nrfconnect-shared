@@ -24,6 +24,7 @@ function createExternals() {
         'redux-devtools-extension',
         'redux-thunk',
         'electron',
+        '@electron/remote',
         'serialport',
         'nrf-device-lib-js',
         'pc-ble-driver-js',
