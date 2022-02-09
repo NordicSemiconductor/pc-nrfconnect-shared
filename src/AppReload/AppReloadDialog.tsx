@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { remote } from 'electron';
+import { getCurrentWindow } from '@electron/remote';
 
 import ConfirmationDialog from '../Dialog/ConfirmationDialog';
 import {
@@ -15,7 +15,7 @@ import {
     message as messageSelector,
 } from './appReloadDialogSlice';
 
-const reloadApp = () => setImmediate(() => remote.getCurrentWindow().reload());
+const reloadApp = () => setImmediate(() => getCurrentWindow().reload());
 
 const AppReloadDialog = () => {
     const dispatch = useDispatch();

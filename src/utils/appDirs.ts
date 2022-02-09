@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { remote } from 'electron';
+import remote from '@electron/remote';
 import path from 'path';
 
 import { loadPackageJson } from './packageJson';

@@ -31,6 +31,7 @@
         "@babel/plugin-transform-spread": "7.16.7",
         "@babel/preset-react": "7.16.7",
         "@babel/preset-typescript": "7.16.7",
+        "@electron/remote": "^2.0.4",
         "@nordicsemiconductor/nrf-device-lib-js": "0.4.3",
         "@reduxjs/toolkit": "1.7.1",
         "@svgr/webpack": "5.5.0",

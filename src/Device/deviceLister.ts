@@ -6,6 +6,7 @@
 
 /* eslint-disable @typescript-eslint/ban-types */
 
+import remote from '@electron/remote';
 import nrfDeviceLib, {
     Device as NrfdlDevice,
     DeviceTraits,
@@ -15,7 +16,6 @@ import nrfDeviceLib, {
     setLogPattern,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import camelcaseKeys from 'camelcase-keys';
-import { remote } from 'electron';
 import { Device, DeviceListing, Serialport } from 'pc-nrfconnect-shared';
 
 import { nrfdlVerboseLoggingEnabled } from '../Log/logSlice';

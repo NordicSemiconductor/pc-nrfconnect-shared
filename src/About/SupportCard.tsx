@@ -31,7 +31,7 @@ import Section from './Section';
 
 import colors from '../utils/colors.icss.scss';
 
-const { getCurrentWindow } = require('electron').remote;
+const { getCurrentWindow } = require('@electron/remote');
 
 export default () => {
     const dispatch = useDispatch();
