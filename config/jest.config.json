@@ -10,7 +10,8 @@
         "^electron$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/electronMock.js",
         "^electron-store$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/electronStoreMock.js",
         "^react-ga$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/gaMock.js",
-        "@nordicsemiconductor/nrf-device-lib-js": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/deviceLibMock.js"
+        "@nordicsemiconductor/nrf-device-lib-js": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/deviceLibMock.js",
+        "@electron/remote": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/remoteMock.js"
     },
     "transform": {
         "^.+\\.[jt]sx?$": [

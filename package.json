@@ -129,7 +129,8 @@
             "^electron-store$": "<rootDir>/mocks/electronStoreMock.js",
             "pc-nrfjprog-js|nrf-device-setup": "<rootDir>/mocks/emptyMock.js",
             "@nordicsemiconductor/nrf-device-lib-js": "<rootDir>/mocks/deviceLibMock.js",
-            "serialport": "<rootDir>/mocks/serialportMock.js"
+            "serialport": "<rootDir>/mocks/serialportMock.js",
+            "@electron/remote": "<rootDir>/mocks/remoteMock.js"
         },
         "transform": {
             "^.+\\.[jt]sx?$": [
