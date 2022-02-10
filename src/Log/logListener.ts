@@ -11,7 +11,8 @@ import { ipcRenderer } from 'electron';
 import logger from '../logging';
 import { TDispatch } from '../state';
 import { getAppDataDir } from '../utils/appDirs';
-import logLibVersions, { describe } from '../utils/logLibVersions';
+import describeVersion from '../utils/describeVersion';
+import logLibVersions from '../utils/logLibVersions';
 import { addEntries } from './logSlice';
 
 let initialMessageSent = false;
@@ -47,16 +48,14 @@ const sendInitialMessage = () => {
         const versions = await logLibVersions();
 
         if (bundledJlink) {
-            if (
-                !(
-                    describe(
-                        versions?.find(v => v.moduleName === 'jlink_dll')
-                    ) as string
-                ).includes(bundledJlink)
-            )
+            const jlinkVersion = versions?.find(
+                v => v.moduleName === 'jlink_dll'
+            );
+            if (!describeVersion(jlinkVersion).includes(bundledJlink)) {
                 logger.info(
                     `Installed JLink version does not match the provided version (${bundledJlink})`
                 );
+            }
         }
     });
     ipcRenderer.send('get-app-details');
