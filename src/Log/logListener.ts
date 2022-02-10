@@ -48,14 +48,14 @@ const sendInitialMessage = () => {
         const versions = await logLibVersions();
 
         if (bundledJlink) {
-            if (
-                !describeVersion(
-                    versions?.find(v => v.moduleName === 'jlink_dll')
-                ).includes(bundledJlink)
-            )
+            const jlinkVersion = versions?.find(
+                v => v.moduleName === 'jlink_dll'
+            );
+            if (!describeVersion(jlinkVersion).includes(bundledJlink)) {
                 logger.info(
                     `Installed JLink version does not match the provided version (${bundledJlink})`
                 );
+            }
         }
     });
     ipcRenderer.send('get-app-details');
