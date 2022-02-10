@@ -9,12 +9,6 @@ import 'focus-visible';
 import React, { FC, ReactNode, useEffect, useMemo } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    Error,
-    LogEvent,
-    startLogEvents,
-    stopLogEvents,
-} from '@nordicsemiconductor/nrf-device-lib-js';
 import { ipcRenderer } from 'electron';
 import { func } from 'prop-types';
 import { Reducer } from 'redux';
@@ -22,13 +16,11 @@ import { Reducer } from 'redux';
 import About from '../About/About';
 import { setDocumentationSections } from '../About/documentationSlice';
 import AppReloadDialog from '../AppReload/AppReloadDialog';
-import { getDeviceLibContext, logNrfdlLogs } from '../Device/deviceLister';
+import { forwardLogEventsFromDeviceLib } from '../Device/deviceLibWrapper';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import LogViewer from '../Log/LogViewer';
-import logger from '../logging';
 import NavBar from '../NavBar/NavBar';
-import { TDispatch } from '../state';
 import classNames from '../utils/classNames';
 import packageJson from '../utils/packageJson';
 import { getPersistedCurrentPane } from '../utils/persistentStore';
@@ -125,7 +117,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
         if (documentation) dispatch(setDocumentationSections(documentation));
     }, [dispatch, documentation]);
 
-    useNrfdlLogging(dispatch);
+    useNrfdlLogging();
 
     const SidePanelComponent = allPanes[currentPane].SidePanel;
     const currentSidePanel =
@@ -205,23 +197,10 @@ App.propTypes = {
 
 export default App;
 
-const useNrfdlLogging = (dispatch: TDispatch) => {
-    useEffect(() => {
-        const taskId = startLogEvents(
-            getDeviceLibContext(),
-            (err?: Error) => {
-                if (err)
-                    logger.logError(
-                        'Error while listening to log messages from nrf-device-lib',
-                        err
-                    );
-            },
-            (evt: LogEvent) => dispatch(logNrfdlLogs(evt))
-        );
-        return () => {
-            stopLogEvents(taskId);
-        };
-    }, [dispatch]);
+const useNrfdlLogging = () => {
+    const dispatch = useDispatch();
+
+    useEffect(() => forwardLogEventsFromDeviceLib(dispatch), [dispatch]);
 };
 
 const usePersistedPane = () => {

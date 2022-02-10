@@ -8,7 +8,7 @@ import nrfDeviceLib, {
     ModuleVersion,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
-import { getDeviceLibContext } from '../Device/deviceLister';
+import { getDeviceLibContext } from '../Device/deviceLibWrapper';
 import logger from '../logging';
 import describeVersion from './describeVersion';
 

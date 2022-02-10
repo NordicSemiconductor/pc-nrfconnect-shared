@@ -15,7 +15,7 @@ import {
     deviceInfo as getDeviceInfo,
     productPageUrl,
 } from '../Device/deviceInfo/deviceInfo';
-import { getDeviceLibContext } from '../Device/deviceLister';
+import { getDeviceLibContext } from '../Device/deviceLibWrapper';
 import logger from '../logging';
 import { Device } from '../state';
 import { getAppDataDir } from './appDirs';
