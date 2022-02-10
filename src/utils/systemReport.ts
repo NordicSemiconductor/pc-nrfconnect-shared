@@ -19,7 +19,7 @@ import { getDeviceLibContext } from '../Device/deviceLister';
 import logger from '../logging';
 import { Device } from '../state';
 import { getAppDataDir } from './appDirs';
-import { describe } from './logLibVersions';
+import describeVersion from './describeVersion';
 import { openFile } from './open';
 
 const generalInfoReport = async () => {
@@ -73,8 +73,8 @@ const generalInfoReport = async () => {
         `    - node: ${node}`,
         `    - python: ${python}`,
         `    - python3: ${python3}`,
-        nrfjprog ? `    - nrfjprog: ${describe(nrfjprog)}` : '',
-        jlink ? `    - jlink: ${describe(jlink)}` : '',
+        nrfjprog ? `    - nrfjprog: ${describeVersion(nrfjprog)}` : '',
+        jlink ? `    - jlink: ${describeVersion(jlink)}` : '',
         '',
     ];
 };

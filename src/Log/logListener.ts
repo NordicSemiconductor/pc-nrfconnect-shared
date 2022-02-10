@@ -11,7 +11,8 @@ import { ipcRenderer } from 'electron';
 import logger from '../logging';
 import { TDispatch } from '../state';
 import { getAppDataDir } from '../utils/appDirs';
-import logLibVersions, { describe } from '../utils/logLibVersions';
+import describeVersion from '../utils/describeVersion';
+import logLibVersions from '../utils/logLibVersions';
 import { addEntries } from './logSlice';
 
 let initialMessageSent = false;
@@ -48,7 +49,7 @@ const sendInitialMessage = () => {
 
         if (bundledJlink) {
             if (
-                !describe(
+                !describeVersion(
                     versions?.find(v => v.moduleName === 'jlink_dll')
                 ).includes(bundledJlink)
             )
