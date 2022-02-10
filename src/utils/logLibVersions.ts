@@ -47,9 +47,9 @@ export default async () => {
         const log = (moduleName: string, description: string) =>
             logVersion(versions, moduleName, description);
 
-        log('nrfdl-js', '@nordicsemiconductor/nrf-device-lib-js');
+        log('nrfdl-js', 'nrf-device-lib-js');
         log('nrfdl', 'nrf-device-lib');
-        log('jprog', 'nrfjprog dll');
+        log('jprog', 'nrfjprog DLL');
         log('jlink', 'JLink');
 
         return versions;
