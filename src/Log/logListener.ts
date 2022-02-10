@@ -48,10 +48,8 @@ const sendInitialMessage = () => {
 
         if (bundledJlink) {
             if (
-                !(
-                    describe(
-                        versions?.find(v => v.moduleName === 'jlink_dll')
-                    ) as string
+                !describe(
+                    versions?.find(v => v.moduleName === 'jlink_dll')
                 ).includes(bundledJlink)
             )
                 logger.info(

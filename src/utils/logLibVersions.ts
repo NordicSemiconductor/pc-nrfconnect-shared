@@ -29,7 +29,7 @@ const describeBuggyVersion = (version: BuggyModuleVersion) => {
         return `${version.version.major}.${version.version.minor}.${version.version.patch}`;
     if (version.semantic)
         return `${version.semantic.major}.${version.semantic.minor}.${version.semantic.patch}`;
-    if (version.incremental) return version.incremental;
+    if (version.incremental) return String(version.incremental);
     if (version.string) return version.string;
 
     return 'Unknown';
@@ -47,7 +47,7 @@ export const describe = (version?: ModuleVersion) => {
     switch (version.versionFormat) {
         case 'incremental':
         case 'string':
-            return version.version;
+            return String(version.version);
         case 'semantic':
             return `${version.version.major}.${version.version.minor}.${version.version.patch}`;
     }
