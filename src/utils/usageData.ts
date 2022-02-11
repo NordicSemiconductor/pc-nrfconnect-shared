@@ -10,6 +10,7 @@ import shasum from 'shasum';
 import si from 'systeminformation';
 
 import logger from '../logging';
+import { isDevelopment } from './environment';
 import {
     deleteIsSendingUsageData,
     getIsSendingUsageData,
@@ -17,7 +18,6 @@ import {
 } from './persistentStore';
 
 const trackId = 'UA-22498474-5';
-const isDevelopment = process.env.NODE_ENV === 'development';
 const categoryName = () =>
     isDevelopment ? `${appJson.name}-dev` : appJson.name;
 
