@@ -10,6 +10,8 @@ and this project adheres to
 
 ### Fixed
 
+-   The system report did not contain the version numbers for the nrfjprog DLL
+    and JLink.
 -   The error reporter UI didn't handle content overflow when the available
     options were expanded
 -   When the app crashed and the error reporter was displayed, users can
