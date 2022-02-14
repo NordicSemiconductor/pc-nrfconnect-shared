@@ -116,9 +116,7 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: JSON.stringify(nodeEnv),
-            },
+            'process.env.NODE_ENV': JSON.stringify(nodeEnv),
         }),
         new ESLintPlugin({
             extensions: ['ts', 'tsx', 'js', 'jsx'],
