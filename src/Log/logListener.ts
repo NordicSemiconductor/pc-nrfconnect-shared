@@ -6,8 +6,13 @@
 
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { getModuleVersions } from '@nordicsemiconductor/nrf-device-lib-js';
 import { ipcRenderer } from 'electron';
 
+import {
+    getDeviceLibContext,
+    getModuleVersion,
+} from '../Device/deviceLibWrapper';
 import logger from '../logging';
 import { TDispatch } from '../state';
 import { getAppDataDir } from '../utils/appDirs';
@@ -20,6 +25,7 @@ const sendInitialMessage = () => {
     if (initialMessageSent) return;
 
     initialMessageSent = true;
+    logLibVersions();
     logger.info(`Application data folder: ${getAppDataDir()}`);
 
     ipcRenderer.once('app-details', async (_event, details) => {
@@ -45,12 +51,10 @@ const sendInitialMessage = () => {
         logger.debug(`HomeDir: ${homeDir}`);
         logger.debug(`TmpDir: ${tmpDir}`);
 
-        const versions = await logLibVersions();
-
         if (bundledJlink) {
-            const jlinkVersion = versions?.find(
-                v => v.moduleName === 'jlink_dll'
-            );
+            const versions = await getModuleVersions(getDeviceLibContext());
+            const jlinkVersion = getModuleVersion('jlink', versions);
+
             if (!describeVersion(jlinkVersion).includes(bundledJlink)) {
                 logger.info(
                     `Installed JLink version does not match the provided version (${bundledJlink})`
