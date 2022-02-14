@@ -37,6 +37,7 @@ and this project adheres to
 
 ### Added
 
+-   Added version numbers for device-lib and device-lib-js to the system report.
 -   Warn if ESLint disable directives (like `eslint-disable` or
     `eslint-disable-next-line`) are used, even though they are not necessary
     (anymore).

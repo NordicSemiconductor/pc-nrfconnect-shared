@@ -73,6 +73,12 @@ const generalInfoReport = async () => {
         `    - node: ${node}`,
         `    - python: ${python}`,
         `    - python3: ${python3}`,
+        `    - nrf-device-lib-js: ${describeVersion(
+            getModuleVersion('nrfdl-js', versions)
+        )}`,
+        `    - nrf-device-lib: ${describeVersion(
+            getModuleVersion('nrfdl', versions)
+        )}`,
         `    - nrfjprog DLL: ${describeVersion(
             getModuleVersion('jprog', versions)
         )}`,
