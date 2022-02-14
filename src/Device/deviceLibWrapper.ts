@@ -5,12 +5,14 @@
  */
 
 import { app } from '@electron/remote';
-import nrfDeviceLib, {
+import {
+    createContext,
     Error,
     LogEvent,
     ModuleVersion,
     setLogLevel,
     setLogPattern,
+    setTimeoutConfig,
     startLogEvents,
     stopLogEvents,
 } from '@nordicsemiconductor/nrf-device-lib-js';
@@ -20,7 +22,7 @@ import logger from '../logging';
 import { RootState, TDispatch } from '../state';
 import { getVerboseLoggingEnabled } from '../utils/persistentStore';
 
-const deviceLibContext = nrfDeviceLib.createContext();
+const deviceLibContext = createContext();
 export const getDeviceLibContext = () => deviceLibContext;
 
 export const logNrfdlLogs =
@@ -90,6 +92,6 @@ export const getModuleVersion = (
 
 setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
 setDeviceLibLogLevel(getVerboseLoggingEnabled());
-nrfDeviceLib.setTimeoutConfig(deviceLibContext, {
+setTimeoutConfig(deviceLibContext, {
     enumerateMs: 3 * 60 * 1000,
 });
