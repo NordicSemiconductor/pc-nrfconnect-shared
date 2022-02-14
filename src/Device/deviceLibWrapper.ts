@@ -8,6 +8,7 @@ import { app } from '@electron/remote';
 import nrfDeviceLib, {
     Error,
     LogEvent,
+    ModuleVersion,
     setLogLevel,
     setLogPattern,
     startLogEvents,
@@ -69,6 +70,23 @@ export const setDeviceLibLogLevel = (verboseLogging: boolean) =>
         getDeviceLibContext(),
         verboseLogging ? 'NRFDL_LOG_TRACE' : 'NRFDL_LOG_ERROR'
     );
+
+type KnownModule = 'nrfdl' | 'nrfdl-js' | 'jprog' | 'jlink';
+
+const findTopLevel = (module: KnownModule, versions: ModuleVersion[]) =>
+    versions.find(version => version.moduleName === module);
+
+const findInDependencies = (module: KnownModule, versions: ModuleVersion[]) =>
+    getModuleVersion(
+        module,
+        versions.flatMap(version => version.dependencies ?? [])
+    );
+
+export const getModuleVersion = (
+    module: KnownModule,
+    versions: ModuleVersion[] = []
+): ModuleVersion | undefined =>
+    findTopLevel(module, versions) ?? findInDependencies(module, versions);
 
 setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
 setDeviceLibLogLevel(getVerboseLoggingEnabled());
