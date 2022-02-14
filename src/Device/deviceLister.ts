@@ -6,7 +6,7 @@
 
 /* eslint-disable @typescript-eslint/ban-types */
 
-import remote from '@electron/remote';
+import { app } from '@electron/remote';
 import nrfDeviceLib, {
     Device as NrfdlDevice,
     DeviceTraits,
@@ -32,8 +32,7 @@ export const getDeviceLibContext = () => deviceLibContext;
 
 export const logNrfdlLogs =
     (evt: LogEvent) => (_: Function, getState: Function) => {
-        if (remote.app.isPackaged && !nrfdlVerboseLoggingEnabled(getState()))
-            return;
+        if (app.isPackaged && !nrfdlVerboseLoggingEnabled(getState())) return;
         switch (evt.level) {
             case 'NRFDL_LOG_TRACE':
                 logger.verbose(evt.message);

@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import remote from '@electron/remote';
+import { getGlobal } from '@electron/remote';
 import path from 'path';
 
 import { loadPackageJson } from './packageJson';
 
-const getUserDataDir = () => remote.getGlobal('userDataDir');
+const getUserDataDir = () => getGlobal('userDataDir');
 
 let appDir: string;
 let appDataDir: string;
