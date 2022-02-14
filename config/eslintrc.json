@@ -60,7 +60,8 @@
                     "pc-ble-driver-js",
                     "serialport",
                     "electron",
-                    "pc-nrfconnect-shared"
+                    "pc-nrfconnect-shared",
+                    "@electron/remote"
                 ]
             }
         ],

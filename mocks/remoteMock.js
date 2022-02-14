@@ -8,11 +8,7 @@
 
 module.exports = {
     require: jest.fn(),
-    match: jest.fn(),
-    app: jest.fn(),
-    dialog: jest.fn(),
-    ipcRenderer: {
-        once: jest.fn(),
-        send: jest.fn(),
-    },
+    getCurrentWindow: () => ({
+        reload: jest.fn(),
+    }),
 };

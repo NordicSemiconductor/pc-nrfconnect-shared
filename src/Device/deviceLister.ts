@@ -6,6 +6,7 @@
 
 /* eslint-disable @typescript-eslint/ban-types */
 
+import { app } from '@electron/remote';
 import nrfDeviceLib, {
     Device as NrfdlDevice,
     DeviceTraits,
@@ -15,7 +16,6 @@ import nrfDeviceLib, {
     setLogPattern,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import camelcaseKeys from 'camelcase-keys';
-import { remote } from 'electron';
 import { Device, DeviceListing, Serialport } from 'pc-nrfconnect-shared';
 
 import { nrfdlVerboseLoggingEnabled } from '../Log/logSlice';
@@ -32,8 +32,7 @@ export const getDeviceLibContext = () => deviceLibContext;
 
 export const logNrfdlLogs =
     (evt: LogEvent) => (_: Function, getState: Function) => {
-        if (remote.app.isPackaged && !nrfdlVerboseLoggingEnabled(getState()))
-            return;
+        if (app.isPackaged && !nrfdlVerboseLoggingEnabled(getState())) return;
         switch (evt.level) {
             case 'NRFDL_LOG_TRACE':
                 logger.verbose(evt.message);

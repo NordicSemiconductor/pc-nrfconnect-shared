@@ -39,6 +39,7 @@ and this project adheres to
     `eslint-disable-next-line`) are used, even though they are not necessary
     (anymore).
 -   Inform user if installed JLink version and the provided one do not match.
+-   Added `@electron/remote` to replace electron.remote
 
 ### Changed
 

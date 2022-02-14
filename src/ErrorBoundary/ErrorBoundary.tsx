@@ -27,7 +27,7 @@ import bugIcon from './bug.svg';
 
 import './error-boundary.scss';
 
-const { getCurrentWindow } = require('electron').remote;
+const { getCurrentWindow } = require('@electron/remote');
 
 const sendGAEvent = (error: string) => {
     if (!isEnabled()) {

@@ -24,6 +24,7 @@ function createExternals() {
         'redux-devtools-extension',
         'redux-thunk',
         'electron',
+        '@electron/remote',
         'serialport',
         'nrf-device-lib-js',
         'pc-ble-driver-js',
@@ -115,9 +116,7 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: JSON.stringify(nodeEnv),
-            },
+            'process.env.NODE_ENV': JSON.stringify(nodeEnv),
         }),
         new ESLintPlugin({
             extensions: ['ts', 'tsx', 'js', 'jsx'],
