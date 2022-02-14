@@ -50,6 +50,8 @@ and this project adheres to
 -   Forbid use of @ts-ignore.
 -   Use source map in apps in production.
 -   Lint also JSON files.
+-   Initial `Application data folder` is now logged only at debug level, no
+    longer at info.
 
 ### Removed
 

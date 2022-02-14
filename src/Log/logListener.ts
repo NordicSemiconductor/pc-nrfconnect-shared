@@ -26,7 +26,7 @@ const sendInitialMessage = () => {
 
     initialMessageSent = true;
     logLibVersions();
-    logger.info(`Application data folder: ${getAppDataDir()}`);
+    logger.debug(`Application data folder: ${getAppDataDir()}`);
 
     ipcRenderer.once('app-details', async (_event, details) => {
         const {
