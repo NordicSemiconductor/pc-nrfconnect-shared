@@ -7,13 +7,9 @@
 import React, { useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLogLevel } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import Card from '../Card/Card';
-import {
-    getDeviceLibContext,
-    setDefaultNrfdlLogLevel,
-} from '../Device/deviceLister';
+import { setDeviceLibLogLevel } from '../Device/deviceLibWrapper';
 import {
     deviceInfo,
     selectedSerialNumber,
@@ -45,9 +41,7 @@ export default () => {
     }, []);
 
     useEffect(() => {
-        if (verboseLogging)
-            setLogLevel(getDeviceLibContext(), 'NRFDL_LOG_TRACE');
-        else setDefaultNrfdlLogLevel();
+        setDeviceLibLogLevel(verboseLogging);
     }, [verboseLogging]);
 
     return (

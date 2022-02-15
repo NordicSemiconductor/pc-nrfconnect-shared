@@ -6,10 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 5.16.4 - 2022-02-14
+## 5.17.0 - 2022-02-15
 
 ### Fixed
 
+-   The system report did not contain the version numbers for the nrfjprog DLL
+    and JLink.
 -   The error reporter UI didn't handle content overflow when the available
     options were expanded
 -   When the app crashed and the error reporter was displayed, users can
@@ -35,6 +37,7 @@ and this project adheres to
 
 ### Added
 
+-   Added version numbers for device-lib and device-lib-js to the system report.
 -   Warn if ESLint disable directives (like `eslint-disable` or
     `eslint-disable-next-line`) are used, even though they are not necessary
     (anymore).
@@ -47,6 +50,8 @@ and this project adheres to
 -   Forbid use of @ts-ignore.
 -   Use source map in apps in production.
 -   Lint also JSON files.
+-   Initial `Application data folder` is now logged only at debug level, no
+    longer at info.
 
 ### Removed
 

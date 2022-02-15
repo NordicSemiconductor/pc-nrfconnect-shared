@@ -15,7 +15,10 @@ import {
     deviceInfo as getDeviceInfo,
     productPageUrl,
 } from '../Device/deviceInfo/deviceInfo';
-import { getDeviceLibContext } from '../Device/deviceLister';
+import {
+    getDeviceLibContext,
+    getModuleVersion,
+} from '../Device/deviceLibWrapper';
 import logger from '../logging';
 import { Device } from '../state';
 import { getAppDataDir } from './appDirs';
@@ -52,9 +55,6 @@ const generalInfoReport = async () => {
         getDeviceLibContext()
     );
 
-    const nrfjprog = versions.find(v => v.moduleName === 'nrfjprog_dll');
-    const jlink = versions.find(v => v.moduleName === 'jlink_dll');
-
     return [
         `- System:     ${manufacturer} ${model}`,
         `- BIOS:       ${vendor} ${version}`,
@@ -73,8 +73,16 @@ const generalInfoReport = async () => {
         `    - node: ${node}`,
         `    - python: ${python}`,
         `    - python3: ${python3}`,
-        nrfjprog ? `    - nrfjprog: ${describeVersion(nrfjprog)}` : '',
-        jlink ? `    - jlink: ${describeVersion(jlink)}` : '',
+        `    - nrf-device-lib-js: ${describeVersion(
+            getModuleVersion('nrfdl-js', versions)
+        )}`,
+        `    - nrf-device-lib: ${describeVersion(
+            getModuleVersion('nrfdl', versions)
+        )}`,
+        `    - nrfjprog DLL: ${describeVersion(
+            getModuleVersion('jprog', versions)
+        )}`,
+        `    - JLink: ${describeVersion(getModuleVersion('jlink', versions))}`,
         '',
     ];
 };

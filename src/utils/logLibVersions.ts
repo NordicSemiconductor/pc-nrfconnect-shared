@@ -4,55 +4,36 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import nrfDeviceLib, {
+import {
+    getModuleVersions,
     ModuleVersion,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
-import { getDeviceLibContext } from '../Device/deviceLister';
+import {
+    getDeviceLibContext,
+    getModuleVersion,
+} from '../Device/deviceLibWrapper';
 import logger from '../logging';
 import describeVersion from './describeVersion';
 
-const logVersion = (
-    versions: ModuleVersion[],
-    moduleName: string,
-    description: string
-) => {
-    versions.forEach(version => {
-        findDependency(version, description, moduleName);
-    });
-};
-
-const findDependency = (
-    version: ModuleVersion,
-    description: string,
-    name: string
-) => {
-    if (version.moduleName === name) {
+const log = (description: string, moduleVersion?: ModuleVersion) => {
+    if (moduleVersion == null) {
+        logger.warn(`Unable to detect version of ${description}.`);
+    } else {
         logger.info(
-            `Using ${description} version: ${describeVersion(version)}`
+            `Using ${description} version: ${describeVersion(moduleVersion)}`
         );
-        return;
     }
-
-    version.dependencies?.forEach(dep =>
-        findDependency(dep, description, name)
-    );
 };
 
 export default async () => {
     try {
-        const versions = await nrfDeviceLib.getModuleVersions(
-            getDeviceLibContext()
-        );
-        const log = (moduleName: string, description: string) =>
-            logVersion(versions, moduleName, description);
+        const versions = await getModuleVersions(getDeviceLibContext());
 
-        log('nrfdl-js', '@nordicsemiconductor/nrf-device-lib-js');
-        log('nrfdl', 'nrf-device-lib');
-        log('jprog', 'nrfjprog dll');
-        log('jlink', 'JLink');
-
-        return versions;
+        log('nrf-device-lib-js', getModuleVersion('nrfdl-js', versions));
+        log('nrf-device-lib', getModuleVersion('nrfdl', versions));
+        log('nrfjprog DLL', getModuleVersion('jprog', versions));
+        log('JLink', getModuleVersion('jlink', versions));
     } catch (error) {
         logger.logError('Failed to get the library versions', error);
     }

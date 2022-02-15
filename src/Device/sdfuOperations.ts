@@ -13,7 +13,8 @@ import SerialPort from 'serialport';
 
 import logger from '../logging';
 import { Device } from '../state';
-import { getDeviceLibContext, waitForDevice } from './deviceLister';
+import { getDeviceLibContext } from './deviceLibWrapper';
+import { waitForDevice } from './deviceLister';
 import { DeviceSetupConfig, DfuEntry } from './deviceSetup';
 import {
     createInitPacketBuffer,
