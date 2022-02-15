@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Card from '../Card/Card';
-import { setDeviceLibLogLevel } from '../Device/deviceLibWrapper';
+import { setVerboseDeviceLibLogging } from '../Device/deviceLibWrapper';
 import {
     deviceInfo,
     selectedSerialNumber,
@@ -41,7 +41,7 @@ export default () => {
     }, []);
 
     useEffect(() => {
-        setDeviceLibLogLevel(verboseLogging);
+        setVerboseDeviceLibLogging(verboseLogging);
     }, [verboseLogging]);
 
     return (

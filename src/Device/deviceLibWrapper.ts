@@ -67,7 +67,7 @@ export const forwardLogEventsFromDeviceLib = (dispatch: TDispatch) => {
     };
 };
 
-export const setDeviceLibLogLevel = (verboseLogging: boolean) =>
+export const setVerboseDeviceLibLogging = (verboseLogging: boolean) =>
     setLogLevel(
         getDeviceLibContext(),
         verboseLogging ? 'NRFDL_LOG_TRACE' : 'NRFDL_LOG_ERROR'
@@ -91,7 +91,7 @@ export const getModuleVersion = (
     findTopLevel(module, versions) ?? findInDependencies(module, versions);
 
 setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
-setDeviceLibLogLevel(getVerboseLoggingEnabled());
+setVerboseDeviceLibLogging(getVerboseLoggingEnabled());
 setTimeoutConfig(deviceLibContext, {
     enumerateMs: 3 * 60 * 1000,
 });
