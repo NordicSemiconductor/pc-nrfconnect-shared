@@ -5,7 +5,6 @@
  */
 
 import React, { FC } from 'react';
-import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 import { bool } from 'prop-types';
 
@@ -15,6 +14,7 @@ import {
     toggleAutoScroll,
 } from '../Log/logSlice';
 import logger from '../logging';
+import { Toggle } from '../Toggle/Toggle';
 import {
     isLogVisible as isLogVisibleSelector,
     isSidePanelVisible as isSidePanelVisibleSelector,
@@ -23,6 +23,7 @@ import {
 } from './appLayout';
 
 import './visibility-bar.scss';
+import colors from '../utils/colors.icss.scss';
 
 const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
     isSidePanelEnabled,
@@ -36,11 +37,14 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
         <div className="core19-visibility-bar">
             {isSidePanelEnabled && (
                 <div className="core19-visibility-bar-show-side-panel">
-                    <Form.Switch
+                    <Toggle
                         id="visibility-bar-show-side-panel"
-                        label="Show side panel"
-                        checked={isSidePanelVisible}
-                        onChange={() => dispatch(toggleSidePanelVisible())}
+                        label="Show menu"
+                        onToggle={() => dispatch(toggleSidePanelVisible())}
+                        isToggled={isSidePanelVisible}
+                        variant="primary"
+                        handleColor={colors.gray300}
+                        barColor={colors.gray700}
                     />
                 </div>
             )}
@@ -60,19 +64,21 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
                     Open log file
                 </button>
                 <div className="flex-grow-1" />
-                <Form.Switch
-                    className="log-switch"
+                <Toggle
                     id="autoscroll-log"
                     label="Autoscroll log"
-                    checked={autoScroll}
-                    onChange={() => dispatch(toggleAutoScroll())}
+                    onToggle={() => dispatch(toggleAutoScroll())}
+                    isToggled={autoScroll}
+                    variant="primary"
+                    barColor={colors.gray300}
                 />
-                <Form.Switch
-                    className="log-switch"
+                <Toggle
                     id="visibility-bar-show-log"
                     label="Show log"
-                    checked={isLogVisible}
-                    onChange={() => dispatch(toggleLogVisible())}
+                    onToggle={() => dispatch(toggleLogVisible())}
+                    isToggled={isLogVisible}
+                    variant="primary"
+                    barColor={colors.gray300}
                 />
             </div>
         </div>

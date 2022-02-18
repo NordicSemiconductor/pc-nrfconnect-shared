@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-@import "../variables";
+@import '../variables';
 
 .core19-visibility-bar {
     display: flex;
@@ -14,22 +14,31 @@
     line-height: 1.9;
     z-index: 1;
 
+    .toggle-label {
+        font-size: 10px;
+    }
+
     .core19-visibility-bar-show-side-panel {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
         width: $side-panel-width;
         color: $gray-700;
         background-color: $gray-200;
-        padding: 5px 10px;
+        padding-left: 16px;
     }
 
     .core19-visibility-bar-show-log {
         flex-grow: 1;
         color: $gray-100;
         background-color: $gray-800;
-        padding: 5px 15px;
+        padding-left: 15px;
+        padding-right: 15px;
         text-align: right;
 
         display: flex;
         flex-direction: row;
+        align-items: center;
 
         .log-button {
             margin-right: 1em;
@@ -39,7 +48,9 @@
             text-transform: inherit;
         }
 
-        .log-switch { margin-left: 3em; }
+        .toggle {
+            margin-left: 20px;
+        }
 
         .custom-control-label::before {
             border: 0;
