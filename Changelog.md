@@ -8,6 +8,10 @@ and this project adheres to
 
 ## Unreleased
 
+### Changed
+
+-   Updated toggle design in footer.
+
 ### Removed
 
 -   Support for `nrfconnect/core` as mocked or external module.
