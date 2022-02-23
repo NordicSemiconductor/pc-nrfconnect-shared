@@ -6,7 +6,7 @@
 
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { DeviceListing } from 'pc-nrfconnect-shared';
+import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import { Device } from '../../state';
 import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
@@ -23,7 +23,7 @@ import SelectedDevice from './SelectedDevice';
 import useAutoselectDevice from './useAutoselectDevice';
 
 interface Props {
-    deviceListing: DeviceListing;
+    deviceListing: DeviceTraits;
     deviceSetup?: DeviceSetupShared;
     releaseCurrentDevice?: () => void;
     onDeviceSelected?: (device: Device) => void;
