@@ -10,6 +10,7 @@ declare module 'pc-nrfconnect-shared' {
     import { Logger, LogEntry } from 'winston';
     import Store from 'electron-store';
     import { RenderResult } from '@testing-library/react';
+    import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
     type RootState = import('./src/state').RootState;
     type Device = import('./src/state').Device;
@@ -188,21 +189,6 @@ declare module 'pc-nrfconnect-shared' {
 
     // DeviceSelector.jsx
 
-    export interface DeviceListing {
-        usb?: boolean;
-        nordicUsb?: boolean;
-        seggerUsb?: boolean;
-        nordicDfu?: boolean;
-        serialPort?: boolean;
-        /**
-         * @deprecated Using the property `serialport` has been
-         * deprecated. You should now use `serialPort`. The property
-         * will be removed in the next major release.
-         */
-        serialport?: boolean;
-        jlink?: boolean;
-    }
-
     export interface DeviceSetup {
         jprog?: Record<string, unknown>;
         dfu?: Record<string, unknown>;
@@ -219,7 +205,7 @@ declare module 'pc-nrfconnect-shared' {
          * e.g. whether to show only J-Link devices or also those
          * just connected through a normal serial port.
          */
-        deviceListing: DeviceListing;
+        deviceListing: DeviceTraits;
         /**
          * If your app requires devices to be set up with a certain
          * firmware, use this property to specify how they are to be
