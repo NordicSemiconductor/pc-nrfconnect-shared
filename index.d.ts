@@ -194,6 +194,9 @@ declare module 'pc-nrfconnect-shared' {
         seggerUsb?: boolean;
         nordicDfu?: boolean;
         serialPort?: boolean;
+        modem?: boolean;
+        broken?: boolean;
+        mcuboot?: boolean;
         /**
          * @deprecated Using the property `serialport` has been
          * deprecated. You should now use `serialPort`. The property
