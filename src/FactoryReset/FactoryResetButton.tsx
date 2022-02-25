@@ -5,9 +5,9 @@
  */
 
 import React, { FC, useState } from 'react';
-import { Button, ButtonProps } from 'react-bootstrap';
-import { func, oneOf, string } from 'prop-types';
+import { func, string } from 'prop-types';
 
+import Button from '../Button/Button';
 import ConfirmationDialog from '../Dialog/ConfirmationDialog';
 import logger from '../logging';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
@@ -18,7 +18,6 @@ interface Props {
     resetFn?: () => void;
     label: string;
     modalText?: string;
-    variant?: ButtonProps['variant'];
     classNames?: string;
 }
 
@@ -29,7 +28,6 @@ const FactoryResetButton: FC<Props> = ({
     resetFn,
     label,
     modalText,
-    variant,
     classNames,
 }) => {
     const [isFactoryResetting, setIsFactoryResetting] = useState(false);
@@ -43,7 +41,6 @@ const FactoryResetButton: FC<Props> = ({
     return (
         <>
             <Button
-                variant={variant || 'secondary'}
                 onClick={() => setIsFactoryResetting(true)}
                 className={classNames}
             >
@@ -66,25 +63,6 @@ FactoryResetButton.propTypes = {
     resetFn: func,
     label: string.isRequired,
     modalText: string,
-    variant: oneOf([
-        'primary',
-        'secondary',
-        'success',
-        'danger',
-        'warning',
-        'info',
-        'dark',
-        'light',
-        'link',
-        'outline-primary',
-        'outline-secondary',
-        'outline-success',
-        'outline-danger',
-        'outline-warning',
-        'outline-info',
-        'outline-dark',
-        'outline-light',
-    ]),
     classNames: string,
 };
 

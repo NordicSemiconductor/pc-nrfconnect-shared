@@ -5,9 +5,9 @@
  */
 
 import React, { useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
 
+import Button from '../Button/Button';
 import Card from '../Card/Card';
 import { setVerboseDeviceLibLogging } from '../Device/deviceLibWrapper';
 import {
@@ -86,8 +86,6 @@ export default () => {
                 />
                 <Section>
                     <Button
-                        className="w-100"
-                        variant="secondary"
                         onClick={() => {
                             persistVerboseLoggingEnabled(true);
                             getCurrentWindow().reload();

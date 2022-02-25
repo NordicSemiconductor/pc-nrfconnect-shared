@@ -72,11 +72,7 @@ export default () => {
                 />
             </Section>
             <Section>
-                <FactoryResetButton
-                    label="Restore defaults..."
-                    classNames="w-100"
-                    variant="secondary"
-                />
+                <FactoryResetButton label="Restore defaults..." />
             </Section>
         </Card>
     );
