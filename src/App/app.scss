@@ -33,7 +33,7 @@
 
             .carousel-inner {
                 height: 100%;
-                padding: 1em;
+                padding: 16px;
 
                 overflow-y: overlay;
                 @include scrollbars($gray-100);
