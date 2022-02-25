@@ -25,8 +25,6 @@ import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
 import Section from './Section';
 
-import colors from '../utils/colors.icss.scss';
-
 const { getCurrentWindow } = require('@electron/remote');
 
 export default () => {
@@ -85,9 +83,6 @@ export default () => {
                     onToggle={() => dispatch(toggleNrflVerboseLogging())}
                     isToggled={verboseLogging}
                     variant="primary"
-                    handleColor={colors.white}
-                    barColor={colors.gray700}
-                    barColorToggled={colors.nordicBlue}
                 />
                 <Section>
                     <Button

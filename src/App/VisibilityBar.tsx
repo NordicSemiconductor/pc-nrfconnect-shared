@@ -23,7 +23,6 @@ import {
 } from './appLayout';
 
 import './visibility-bar.scss';
-import colors from '../utils/colors.icss.scss';
 
 const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
     isSidePanelEnabled,
@@ -43,8 +42,6 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
                         onToggle={() => dispatch(toggleSidePanelVisible())}
                         isToggled={isSidePanelVisible}
                         variant="primary"
-                        handleColor={colors.gray300}
-                        barColor={colors.gray700}
                     />
                 </div>
             )}
@@ -69,16 +66,14 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
                     label="Autoscroll log"
                     onToggle={() => dispatch(toggleAutoScroll())}
                     isToggled={autoScroll}
-                    variant="primary"
-                    barColor={colors.gray300}
+                    variant="secondary"
                 />
                 <Toggle
                     id="visibility-bar-show-log"
                     label="Show log"
                     onToggle={() => dispatch(toggleLogVisible())}
                     isToggled={isLogVisible}
-                    variant="primary"
-                    barColor={colors.gray300}
+                    variant="secondary"
                 />
             </div>
         </div>
