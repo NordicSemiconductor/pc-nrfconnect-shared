@@ -8,9 +8,15 @@ and this project adheres to
 
 ## Unreleased
 
+### Added
+
+-   `Button` component
+
 ### Changed
 
+-   Standardise toggle colours.
 -   Updated toggle design in footer.
+-   Center `About` pane vertically
 
 ### Removed
 
