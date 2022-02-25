@@ -181,6 +181,16 @@ declare module 'pc-nrfconnect-shared' {
         title?: string;
     }> {}
 
+    // Button.tsx
+
+    export class Button extends React.Component<{
+        id?: string;
+        className?: string;
+        onClick: () => void;
+        variant?: 'primary' | 'secondary';
+        disabled?: boolean;
+    }> {}
+
     // Card.tsx
 
     export class Card extends React.Component<{
