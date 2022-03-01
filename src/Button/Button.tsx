@@ -14,7 +14,7 @@ import styles from './button.module.scss';
 type NrfButtonProps = {
     id?: string;
     className?: string;
-    onClick: () => void;
+    onClick: React.MouseEventHandler<HTMLButtonElement>;
     disabled?: boolean;
     title?: string;
 };

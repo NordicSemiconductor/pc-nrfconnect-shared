@@ -186,7 +186,7 @@ declare module 'pc-nrfconnect-shared' {
     export class Button extends React.Component<{
         id?: string;
         className?: string;
-        onClick: () => void;
+        onClick: React.MouseEventHandler<HTMLButtonElement>;
         variant?: 'primary' | 'secondary';
         disabled?: boolean;
     }> {}
