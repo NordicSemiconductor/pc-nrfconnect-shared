@@ -10,7 +10,7 @@ and this project adheres to
 
 ### Removed
 
--   Mock for `nrfconnect/core`.
+-   Support for `nrfconnect/core` as mocked or external module.
 
 ## 5.17.0 - 2022-02-15
 

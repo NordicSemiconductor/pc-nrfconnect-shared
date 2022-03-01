@@ -28,7 +28,6 @@ function createExternals() {
         'serialport',
         'nrf-device-lib-js',
         'pc-ble-driver-js',
-        'nrfconnect/core',
         'pc-nrfconnect-shared',
         '@nordicsemiconductor/nrf-device-lib-js',
     ];
