@@ -5,9 +5,9 @@
  */
 
 import React, { useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
 
+import Button from '../Button/Button';
 import Card from '../Card/Card';
 import { setVerboseDeviceLibLogging } from '../Device/deviceLibWrapper';
 import {
@@ -24,8 +24,6 @@ import { persistVerboseLoggingEnabled } from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
 import Section from './Section';
-
-import colors from '../utils/colors.icss.scss';
 
 const { getCurrentWindow } = require('@electron/remote');
 
@@ -85,14 +83,9 @@ export default () => {
                     onToggle={() => dispatch(toggleNrflVerboseLogging())}
                     isToggled={verboseLogging}
                     variant="primary"
-                    handleColor={colors.white}
-                    barColor={colors.gray700}
-                    barColorToggled={colors.nordicBlue}
                 />
                 <Section>
                     <Button
-                        className="w-100"
-                        variant="secondary"
                         onClick={() => {
                             persistVerboseLoggingEnabled(true);
                             getCurrentWindow().reload();

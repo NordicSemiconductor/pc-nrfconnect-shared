@@ -4,32 +4,36 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+@import '../variables';
+
 .start-stop {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-top: 24px;
+    height: 34px;
+    width: 100%;
 
     img {
         height: 20px;
         width: 20px;
         margin-right: 8px;
     }
-}
 
-.btn.active-animation {
-    overflow: hidden;
-    position: relative;
+    &.active-animation {
+        overflow: hidden;
+        position: relative;
 
-    &::after {
-        content: '';
-        background: $gray-700;
-        height: 2px;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        animation: snake 4s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        &::after {
+            content: '';
+            background: $gray-700;
+            height: 2px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            animation: snake 4s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
     }
 }
 

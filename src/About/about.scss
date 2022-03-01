@@ -8,12 +8,28 @@
 
 .about {
     display: flex;
-    justify-content: center;
-    .card {
-        max-width: 20em;
-        margin-left: 0.25em;
+    align-items: center;
+    height: 100%;
+
+    .about-inner {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 100%;
+        margin: auto;
+        padding-bottom: 16px;
+        padding-right: 16px;
+        .card {
+            min-width: 230px;
+            max-width: 20em;
+            margin-left: 0.25em;
+        }
+        .card-body {
+            margin-bottom: 1em;
+        }
     }
-    .card-body {
-        margin-bottom: 1em;
+    button {
+        width: 100%;
     }
 }

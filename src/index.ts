@@ -22,6 +22,7 @@ export { default as Slider } from './Slider/Slider';
 export { Toggle } from './Toggle/Toggle';
 export { Alert } from './Alert/Alert';
 export { default as Main } from './Main/Main';
+export { default as Button } from './Button/Button';
 export { default as Card } from './Card/Card';
 export { default as ErrorBoundary } from './ErrorBoundary/ErrorBoundary';
 export { default as StateSelector } from './StateSelector/StateSelector';

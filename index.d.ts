@@ -181,6 +181,16 @@ declare module 'pc-nrfconnect-shared' {
         title?: string;
     }> {}
 
+    // Button.tsx
+
+    export class Button extends React.Component<{
+        id?: string;
+        className?: string;
+        onClick: React.MouseEventHandler<HTMLButtonElement>;
+        disabled?: boolean;
+        title?: string;
+    }> {}
+
     // Card.tsx
 
     export class Card extends React.Component<{

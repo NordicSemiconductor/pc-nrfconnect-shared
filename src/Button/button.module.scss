@@ -1,0 +1,16 @@
+/*
+ * Copyright (c) 2022 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
+@import '../variables.scss';
+
+.button {
+    height: 24px;
+    color: $gray-700;
+    background-color: $white;
+    border: 1px;
+    border-style: solid;
+    border-color: $gray-700;
+}
