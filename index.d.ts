@@ -187,8 +187,8 @@ declare module 'pc-nrfconnect-shared' {
         id?: string;
         className?: string;
         onClick: React.MouseEventHandler<HTMLButtonElement>;
-        variant?: 'primary' | 'secondary';
         disabled?: boolean;
+        title?: string;
     }> {}
 
     // Card.tsx
