@@ -11,7 +11,7 @@ import classNames from '../utils/classNames';
 
 import styles from './button.module.scss';
 
-type NrfButtonProps = {
+type ButtonProps = {
     id?: string;
     className?: string;
     onClick: React.MouseEventHandler<HTMLButtonElement>;
@@ -19,7 +19,7 @@ type NrfButtonProps = {
     title?: string;
 };
 
-const NrfButton: React.FC<NrfButtonProps> = ({
+const Button: React.FC<ButtonProps> = ({
     children,
     id,
     className,
@@ -39,7 +39,7 @@ const NrfButton: React.FC<NrfButtonProps> = ({
     </button>
 );
 
-NrfButton.propTypes = {
+Button.propTypes = {
     id: string,
     className: string,
     onClick: func.isRequired,
@@ -47,4 +47,4 @@ NrfButton.propTypes = {
     title: string,
 };
 
-export default NrfButton;
+export default Button;
