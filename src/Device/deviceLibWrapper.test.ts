@@ -57,7 +57,6 @@ const exampleModuleVersions = [
 
 describe('finding module versions', () => {
     test('in the top level modules', () => {
-        // @ts-expect-error -- The type ModuleVersion is wrong, this is fixed in https://github.com/NordicPlayground/nrf-device-lib-js/pull/100, which just needs to trickle down here
         expect(getModuleVersion('nrfdl-js', exampleModuleVersions)).toEqual({
             moduleName: 'nrfdl-js',
             version: {
@@ -72,7 +71,6 @@ describe('finding module versions', () => {
     });
 
     test('in nested dependencies', () => {
-        // @ts-expect-error -- The type ModuleVersion is wrong, this is fixed in https://github.com/NordicPlayground/nrf-device-lib-js/pull/100, which just needs to trickle down here
         expect(getModuleVersion('jlink', exampleModuleVersions)).toEqual({
             expectedVersion: {
                 version: 'JLink_V7.58b',
