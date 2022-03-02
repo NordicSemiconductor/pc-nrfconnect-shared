@@ -10,6 +10,7 @@ import { func, oneOf, string } from 'prop-types';
 
 import ConfirmationDialog from '../Dialog/ConfirmationDialog';
 import logger from '../logging';
+import combineClassNames from '../utils/classNames';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
 
 import './factory-reset-button.scss';
@@ -45,7 +46,10 @@ const FactoryResetButton: FC<Props> = ({
             <Button
                 variant={variant || 'secondary'}
                 onClick={() => setIsFactoryResetting(true)}
-                className={classNames}
+                className={combineClassNames(
+                    'factory-reset-button',
+                    classNames
+                )}
             >
                 {label}
             </Button>
