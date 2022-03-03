@@ -7,7 +7,11 @@
 import { readFileSync } from 'fs';
 import { PackageJson } from 'pc-nrfconnect-shared';
 
-let packageJson: PackageJson | undefined;
+// @ts-expect-error This will be available when the app uses it.
+// eslint-disable-next-line import/no-unresolved
+import packageJsons from '../../../../package.json';
+
+let packageJson: PackageJson = packageJsons;
 
 export const loadPackageJson = (packageJsonPath: string) => {
     try {

@@ -11,18 +11,14 @@ import { loadPackageJson } from './packageJson';
 
 const getUserDataDir = () => getGlobal('userDataDir');
 
-let appDir: string;
-let appDataDir: string;
-let appLogDir: string;
-
 function setAppDirs(
     newAppDir: string,
     newAppDataDir: string,
     newAppLogDir: string
 ) {
-    appDir = newAppDir;
-    appDataDir = newAppDataDir;
-    appLogDir = newAppLogDir;
+    window.appDir = newAppDir;
+    window.appDataDir = newAppDataDir;
+    window.appLogDir = newAppLogDir;
 
     loadPackageJson(getAppFile('package.json'));
 }
@@ -33,7 +29,7 @@ function setAppDirs(
  * @returns {string|undefined} Absolute path of current app.
  */
 function getAppDir() {
-    return appDir;
+    return window.appDir;
 }
 
 /**
@@ -52,7 +48,7 @@ function getAppFile(filename: string) {
  * @returns {string|undefined} Absolute path of data directory of the current app.
  */
 function getAppDataDir() {
-    return appDataDir;
+    return window.appDataDir;
 }
 
 /**
@@ -61,7 +57,7 @@ function getAppDataDir() {
  * @returns {string|undefined} Absolute path of data directory of the current app.
  */
 function getAppLogDir() {
-    return appLogDir;
+    return window.appLogDir;
 }
 
 export {
