@@ -618,7 +618,9 @@ declare module 'pc-nrfconnect-shared' {
      * Return a persistent store, specific for the app.
      * The app name from package.json is used to identify the app.
      */
-    export function getPersistentStore<StoreSchema>(): Store<StoreSchema>;
+    export function getPersistentStore<
+        StoreSchema extends Record<string, any>
+    >(): Store<StoreSchema>;
 
     export const deviceInfo: (device: Device) => DeviceInfo;
 

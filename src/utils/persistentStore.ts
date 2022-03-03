@@ -8,7 +8,12 @@ import Store from 'electron-store';
 
 import packageJson from './packageJson';
 
-const sharedStore = new Store({ name: 'pc-nrfconnect-shared' });
+const sharedStore = new Store<{
+    verboseLogging: boolean;
+    isSendingUsageData: boolean | undefined;
+}>({
+    name: 'pc-nrfconnect-shared',
+});
 
 export const persistNickname = (serialNumber: string, nickname: string) =>
     sharedStore.set(`${serialNumber}.name`, nickname);
@@ -32,27 +37,31 @@ export const persistVerboseLoggingEnabled = (value: boolean) =>
 export const getVerboseLoggingEnabled = () =>
     sharedStore.get('verboseLogging', false);
 
-// This one must be initialised lazily, because the package.json is not read yet when this module is initialised
+// This one must be initialised lazily, because the package.json is not read yet when this module is initialised.
+// This can probably be changed when we bundle shared with the apps.
 let appSpecificStore: Store | undefined;
 
-interface sharedAppSpecificStoreSchema {
+interface SharedAppSpecificStoreSchema {
     currentPane?: number;
 }
 
-export const getAppSpecificStore = <StoreSchema>() => {
+export const getAppSpecificStore = <
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    StoreSchema extends Record<string, any>
+>() => {
     if (appSpecificStore == null) {
         appSpecificStore = new Store({ name: packageJson().name });
     }
 
     return appSpecificStore as Store<
-        StoreSchema | sharedAppSpecificStoreSchema
+        StoreSchema | SharedAppSpecificStoreSchema
     >;
 };
 
 export const persistCurrentPane = (currentPane: number) =>
-    getAppSpecificStore<sharedAppSpecificStoreSchema>().set(
+    getAppSpecificStore<SharedAppSpecificStoreSchema>().set(
         `currentPane`,
         currentPane
     );
 export const getPersistedCurrentPane = () =>
-    getAppSpecificStore<sharedAppSpecificStoreSchema>().get(`currentPane`);
+    getAppSpecificStore<SharedAppSpecificStoreSchema>().get(`currentPane`);
