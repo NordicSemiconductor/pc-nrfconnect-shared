@@ -26,10 +26,9 @@ function createExternals() {
         'electron',
         '@electron/remote',
         'serialport',
-        'nrf-device-lib-js',
         'pc-ble-driver-js',
-        'pc-nrfconnect-shared',
         '@nordicsemiconductor/nrf-device-lib-js',
+        'osx-temperature-sensor',
     ];
 
     // Libs provided by the app at runtime

@@ -16,9 +16,10 @@ and this project adheres to
 
 -   Standardise toggle colours.
 -   Updated toggle design in footer.
--   Center `About` pane vertically
+-   Center `About` pane vertically.
 -   Type of `getPersistentStore` was changed to match more that from
     electron-store.
+-   Bundle shared with the apps.
 
 ### Removed
 
