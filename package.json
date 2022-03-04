@@ -15,7 +15,7 @@
     "main": "src",
     "scripts": {
         "lint": "ts-node --swc ./bin/nrfconnect-scripts.ts lint .",
-        "test": "jest --testResultsProcessor jest-bamboo-formatter src",
+        "test": "jest src",
         "test-watch": "jest --watch src"
     },
     "dependencies": {
@@ -79,7 +79,6 @@
         "ftp": "0.3.10",
         "husky": "4.3.8",
         "jest": "26.6.3",
-        "jest-bamboo-formatter": "1.0.1",
         "klaw": "3.0.0",
         "lodash.range": "3.2.0",
         "mousetrap": "1.6.5",
