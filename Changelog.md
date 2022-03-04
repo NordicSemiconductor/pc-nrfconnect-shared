@@ -24,6 +24,7 @@ and this project adheres to
 ### Removed
 
 -   Support for `nrfconnect/core` as mocked or external module.
+-   Obsolete `lint-init`.
 
 ## 5.18.0 - 2022-03-24
 
