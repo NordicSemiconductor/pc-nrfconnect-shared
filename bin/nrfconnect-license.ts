@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S ts-node --swc
 
 /*
  * Copyright (c) 2021 Nordic Semiconductor ASA
@@ -93,12 +93,12 @@ const outdatedLicense = `/* Copyright (c) __YEARS__, Nordic Semiconductor ASA
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */`;
 
-const fail = message => {
+const fail = (message: string) => {
     console.error(message);
     process.exit(1);
 };
 
-const asRegexp = string =>
+const asRegexp = (string: string) =>
     RegExp(
         `^${string
             .replace(SPECIAL_REGEXP_CHARACTERS, '\\$1')
@@ -120,10 +120,10 @@ const checkLicense = () => {
     }
 };
 
-const removeTrailingSlashes = entry => entry.replace(/\/$/, '');
+const removeTrailingSlashes = (entry: string) => entry.replace(/\/$/, '');
 
 // Replace entries like '/node_modules' with something like 'node_modules/**'
-const replaceRootEntries = entry => entry.replace(/^\/(.*)/, '$1/**');
+const replaceRootEntries = (entry: string) => entry.replace(/^\/(.*)/, '$1/**');
 
 const entriesInGitignore = readFileSync('.gitignore', { encoding: 'utf8' })
     .trim()
@@ -149,7 +149,7 @@ const allSourceFiles = () =>
         }
     );
 
-const missesCorrectHeader = file =>
+const missesCorrectHeader = (file: string) =>
     !readFileSync(file, { encoding: 'utf8' })
         .replace(SHEBANG_LINE, '')
         .trim()
@@ -160,9 +160,9 @@ const checkHeaders = () => {
         allSourceFiles().filter(missesCorrectHeader);
 
     if (filesWithoutCorrectHeader.length > 0) {
-        const runningInShared = existsSync('./bin/nrfconnect-license.mjs');
+        const runningInShared = existsSync('./bin/nrfconnect-license.ts');
         const nrfconnectLicenseScript = runningInShared
-            ? './bin/nrfconnect-license.mjs update'
+            ? './bin/nrfconnect-license.ts update'
             : 'nrfconnect-license update';
 
         const listOfFiles = filesWithoutCorrectHeader
@@ -181,16 +181,16 @@ const check = () => {
     checkHeaders();
 };
 
-const firstLineEnding = content => {
-    if (content.match(LINE_ENDINGS)) {
-        return content.match(LINE_ENDINGS)[0];
-    }
-    return '\n';
+const firstLineEnding = (content: string) => {
+    const lineEndingMatch = content.match(LINE_ENDINGS);
+
+    return lineEndingMatch?.[0] ?? '\n';
 };
 
-const splitOffShebangLine = content => {
-    if (content.match(SHEBANG_LINE)) {
-        const shebangLine = content.match(SHEBANG_LINE)[0];
+const splitOffShebangLine = (content: string) => {
+    const shebangLineMatch = content.match(SHEBANG_LINE);
+    if (shebangLineMatch) {
+        const shebangLine = shebangLineMatch[0];
         return {
             shebangLine,
             contentWithoutShebang: content.replace(SHEBANG_LINE, ''),
@@ -203,7 +203,7 @@ const splitOffShebangLine = content => {
     };
 };
 
-const removeOutdatedLicense = content => {
+const removeOutdatedLicense = (content: string) => {
     const hadOutdatedLicense = content.match(asRegexp(outdatedLicense)) != null;
     const oldStartYear = content.match(asRegexp(outdatedLicense))?.groups
         ?.oldStartingYear;
@@ -218,7 +218,7 @@ const removeOutdatedLicense = content => {
     };
 };
 
-const updateHeader = file => {
+const updateHeader = (file: string) => {
     if (!missesCorrectHeader(file)) {
         return;
     }
@@ -240,7 +240,7 @@ const updateHeader = file => {
         return;
     }
 
-    const currentYear = new Date().getFullYear();
+    const currentYear = String(new Date().getFullYear());
     const newHeader = correctHeader
         .replace(/\r?\n/g, lineEnding)
         .replace('__YEAR__', oldStartYear ?? currentYear);

@@ -76,9 +76,9 @@ const checkLicenses = () => {
         return Promise.resolve();
     }
 
-    const runningInShared = existsSync('./bin/nrfconnect-license.mjs');
+    const runningInShared = existsSync('./bin/nrfconnect-license.ts');
     const args = runningInShared
-        ? ['node', ['./bin/nrfconnect-license.mjs', 'check']]
+        ? ['ts-node', ['--swc', './bin/nrfconnect-license.ts', 'check']]
         : ['nrfconnect-license', ['check']];
 
     return spawnInPromise(...args);
