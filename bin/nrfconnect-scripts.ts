@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S ts-node --swc
 
 /*
  * Copyright (c) 2015 Nordic Semiconductor ASA
@@ -6,16 +6,14 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-'use strict';
-
-const path = require('path');
-const { spawnSync } = require('child_process');
+import { spawnSync } from 'child_process';
+import path from 'path';
 
 const args = process.argv.slice(2);
 const script = args[0];
 const extraArgs = args.slice(1);
 
-const SCRIPTS = {
+const SCRIPTS: Record<string, string[]> = {
     'build-watch': [require.resolve('../scripts/build.js'), '--watch'],
     'build-dev': [require.resolve('../scripts/build.js'), '--dev'],
     'build-prod': [require.resolve('../scripts/build.js'), '--prod'],
@@ -33,4 +31,4 @@ const env = {
 };
 
 const result = spawnSync('node', SCRIPTS[script], { stdio: 'inherit', env });
-process.exit(result.status);
+process.exit(result.status ?? undefined);

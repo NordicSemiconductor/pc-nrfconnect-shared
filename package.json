@@ -10,11 +10,11 @@
     "license": "ISC",
     "bin": {
         "nrfconnect-license": "./bin/nrfconnect-license.ts",
-        "nrfconnect-scripts": "./bin/nrfconnect-scripts.js"
+        "nrfconnect-scripts": "./bin/nrfconnect-scripts.ts"
     },
     "main": "src",
     "scripts": {
-        "lint": "node ./bin/nrfconnect-scripts.js lint .",
+        "lint": "ts-node --swc ./bin/nrfconnect-scripts.ts lint .",
         "test": "jest --testResultsProcessor jest-bamboo-formatter src",
         "test-watch": "jest --watch src"
     },
