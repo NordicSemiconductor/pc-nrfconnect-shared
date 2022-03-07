@@ -6,9 +6,7 @@
 
 // Allows jest to test files that import the electron package.
 
-module.exports = {
-    require: jest.fn(),
-    getCurrentWindow: () => ({
-        reload: jest.fn(),
-    }),
-};
+export const require = jest.fn();
+export const getCurrentWindow = () => ({
+    reload: jest.fn(),
+});

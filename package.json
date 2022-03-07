@@ -125,15 +125,14 @@
     },
     "jest": {
         "moduleNameMapper": {
-            "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$": "<rootDir>/mocks/fileMock.js",
-            "\\.(css|scss)$": "<rootDir>/mocks/emptyMock.js",
-            "packageJson$": "<rootDir>/mocks/packageJsonMock.js",
-            "^electron$": "<rootDir>/mocks/electronMock.js",
-            "^electron-store$": "<rootDir>/mocks/electronStoreMock.js",
-            "pc-nrfjprog-js|nrf-device-setup": "<rootDir>/mocks/emptyMock.js",
-            "@nordicsemiconductor/nrf-device-lib-js": "<rootDir>/mocks/deviceLibMock.js",
-            "serialport": "<rootDir>/mocks/serialportMock.js",
-            "@electron/remote": "<rootDir>/mocks/remoteMock.js"
+            "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$": "<rootDir>/mocks/fileMock.ts",
+            "\\.(css|scss)$": "<rootDir>/mocks/emptyMock.ts",
+            "packageJson$": "<rootDir>/mocks/packageJsonMock.ts",
+            "^electron$": "<rootDir>/mocks/electronMock.ts",
+            "^electron-store$": "<rootDir>/mocks/electronStoreMock.ts",
+            "pc-nrfjprog-js|nrf-device-setup|serialport": "<rootDir>/mocks/emptyMock.ts",
+            "@nordicsemiconductor/nrf-device-lib-js": "<rootDir>/mocks/deviceLibMock.ts",
+            "@electron/remote": "<rootDir>/mocks/remoteMock.ts"
         },
         "transform": {
             "^.+\\.[jt]sx?$": [
