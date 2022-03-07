@@ -11,7 +11,7 @@ import { arrayOf, bool, func, node, oneOfType, string } from 'prop-types';
 
 import Spinner from './Spinner';
 
-interface Props {
+export interface Props {
     isVisible: boolean;
     title?: string;
     text?: string;

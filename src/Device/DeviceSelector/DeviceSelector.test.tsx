@@ -12,17 +12,13 @@ import {
 } from '@testing-library/react';
 
 import render from '../../../test/testrenderer';
+import { Device } from '../../state';
 import { devicesDetected } from '../deviceSlice';
 import DeviceSelector from './DeviceSelector';
 
-jest.mock('../jprogOperations', () => ({
-    ...jest.requireActual('../jprogOperations'),
-    validateFirmware: jest.fn(false),
-}));
-
 jest.mock('../sdfuOperations', () => ({}));
 
-const testDevice = {
+const testDevice: Device = {
     serialNumber: '000000001',
     serialPorts: [
         {
@@ -32,6 +28,10 @@ const testDevice = {
             serialNumber: '000000001',
             vendorId: 'testVendor',
             comName: 'COM1',
+            boardVersion: 'testBoardVersion',
+            pnpId: 'testPnpId',
+            locationId: 'testLocationId',
+            vcom: 1,
         },
         {
             path: 'COM2',
@@ -40,10 +40,13 @@ const testDevice = {
             serialNumber: '000000001',
             vendorId: 'testVendor',
             comName: 'COM2',
+            boardVersion: 'testBoardVersion',
+            pnpId: 'testPnpId',
+            locationId: 'testLocationId',
+            vcom: 2,
         },
     ],
     boardVersion: 'PCATest',
-    nickname: null,
     serialport: {
         path: 'COM1',
         manufacturer: 'testManufacturer',
@@ -53,11 +56,16 @@ const testDevice = {
         comName: 'COM1',
     },
     favorite: false,
+    // @ts-expect-error The DeviceTraits type was wrong, but will be fixed by https://github.com/NordicPlayground/nrf-device-lib-js/pull/104
     traits: {
         jlink: true,
     },
     jlink: {
         boardVersion: 'PCATest',
+        serialNumber: 'PCATest',
+        jlinkObFirmwareVersion: 'PCATest',
+        deviceFamily: 'PCATest',
+        deviceVersion: 'PCATest',
     },
 };
 
@@ -75,13 +83,13 @@ describe('DeviceSelector', () => {
     it('should have no device selected by default', () => {
         const { getByText } = render(
             <DeviceSelector
+                // @ts-expect-error The DeviceTraits type was wrong, but will be fixed by https://github.com/NordicPlayground/nrf-device-lib-js/pull/104
                 deviceListing={{
                     nordicUsb: true,
-                    serialport: true,
+                    serialPort: true,
                     jlink: true,
                     mcuboot: true,
                 }}
-                deviceSetup={{}}
             />
         );
         expect(getByText('Select device')).toBeInTheDocument();
@@ -90,13 +98,13 @@ describe('DeviceSelector', () => {
     it('should show no connected devices', () => {
         const { getByText } = render(
             <DeviceSelector
+                // @ts-expect-error The DeviceTraits type was wrong, but will be fixed by https://github.com/NordicPlayground/nrf-device-lib-js/pull/104
                 deviceListing={{
                     nordicUsb: true,
-                    serialport: true,
+                    serialPort: true,
                     jlink: true,
                     mcuboot: true,
                 }}
-                deviceSetup={{}}
             />
         );
         fireEvent.click(getByText('Select device'));
@@ -106,13 +114,13 @@ describe('DeviceSelector', () => {
     it('should list connected devices', () => {
         const { getByText } = render(
             <DeviceSelector
+                // @ts-expect-error The DeviceTraits type was wrong, but will be fixed by https://github.com/NordicPlayground/nrf-device-lib-js/pull/104
                 deviceListing={{
                     nordicUsb: true,
-                    serialport: true,
+                    serialPort: true,
                     jlink: true,
                     mcuboot: true,
                 }}
-                deviceSetup={{}}
             />,
             [devicesDetected([testDevice])]
         );
@@ -122,13 +130,13 @@ describe('DeviceSelector', () => {
     it('should unlist disconnected devices', () => {
         const { queryByText } = render(
             <DeviceSelector
+                // @ts-expect-error The DeviceTraits type was wrong, but will be fixed by https://github.com/NordicPlayground/nrf-device-lib-js/pull/104
                 deviceListing={{
                     nordicUsb: true,
-                    serialport: true,
+                    serialPort: true,
                     jlink: true,
                     mcuboot: true,
                 }}
-                deviceSetup={{}}
             />,
             [devicesDetected([testDevice]), devicesDetected([])]
         );
@@ -138,13 +146,13 @@ describe('DeviceSelector', () => {
     it('should show more device info when selecting the expand button', () => {
         const { getByText, getByTestId, getAllByText } = render(
             <DeviceSelector
+                // @ts-expect-error The DeviceTraits type was wrong, but will be fixed by https://github.com/NordicPlayground/nrf-device-lib-js/pull/104
                 deviceListing={{
                     nordicUsb: true,
-                    serialport: true,
+                    serialPort: true,
                     jlink: true,
                     mcuboot: true,
                 }}
-                deviceSetup={{}}
             />,
             [devicesDetected([testDevice])]
         );
@@ -156,13 +164,13 @@ describe('DeviceSelector', () => {
     it('can select connected devices', () => {
         const { getAllByText, getByText } = render(
             <DeviceSelector
+                // @ts-expect-error The DeviceTraits type was wrong, but will be fixed by https://github.com/NordicPlayground/nrf-device-lib-js/pull/104
                 deviceListing={{
                     nordicUsb: true,
-                    serialport: true,
+                    serialPort: true,
                     jlink: true,
                     mcuboot: true,
                 }}
-                deviceSetup={{}}
             />,
             [devicesDetected([testDevice])]
         );
@@ -175,13 +183,13 @@ describe('DeviceSelector', () => {
     it('can deselect selected devices', async () => {
         const { getAllByText, getByText, findByTestId, getByTestId } = render(
             <DeviceSelector
+                // @ts-expect-error The DeviceTraits type was wrong, but will be fixed by https://github.com/NordicPlayground/nrf-device-lib-js/pull/104
                 deviceListing={{
                     nordicUsb: true,
-                    serialport: true,
+                    serialPort: true,
                     jlink: true,
                     mcuboot: true,
                 }}
-                deviceSetup={{}}
             />,
             [devicesDetected([testDevice])]
         );
@@ -196,9 +204,10 @@ describe('DeviceSelector', () => {
     it('should allow device selection when custom devices are enabled and no valid firmware is defined', () => {
         const { queryByText, getAllByText, getByText } = render(
             <DeviceSelector
+                // @ts-expect-error The DeviceTraits type was wrong, but will be fixed by https://github.com/NordicPlayground/nrf-device-lib-js/pull/104
                 deviceListing={{
                     nordicUsb: true,
-                    serialport: true,
+                    serialPort: true,
                     jlink: true,
                     mcuboot: true,
                 }}
@@ -225,9 +234,10 @@ describe('DeviceSelector', () => {
     it('should deselect device when custom devices are disabled and no valid firmware is defined', async () => {
         const { getByText, getAllByText, queryByText } = render(
             <DeviceSelector
+                // @ts-expect-error The DeviceTraits type was wrong, but will be fixed by https://github.com/NordicPlayground/nrf-device-lib-js/pull/104
                 deviceListing={{
                     nordicUsb: true,
-                    serialport: true,
+                    serialPort: true,
                     jlink: true,
                     mcuboot: true,
                 }}
@@ -260,9 +270,10 @@ describe('DeviceSelector', () => {
     it('should show firmware prompt when a valid firmware is defined', async () => {
         const { getByText } = render(
             <DeviceSelector
+                // @ts-expect-error The DeviceTraits type was wrong, but will be fixed by https://github.com/NordicPlayground/nrf-device-lib-js/pull/104
                 deviceListing={{
                     nordicUsb: true,
-                    serialport: true,
+                    serialPort: true,
                     jlink: true,
                     mcuboot: true,
                 }}
@@ -284,9 +295,10 @@ describe('DeviceSelector', () => {
     it('should select device when cancelling firmware prompt', async () => {
         const { getByText, getAllByText, findByText } = render(
             <DeviceSelector
+                // @ts-expect-error The DeviceTraits type was wrong, but will be fixed by https://github.com/NordicPlayground/nrf-device-lib-js/pull/104
                 deviceListing={{
                     nordicUsb: true,
-                    serialport: true,
+                    serialPort: true,
                     jlink: true,
                     mcuboot: true,
                 }}

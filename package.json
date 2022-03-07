@@ -110,6 +110,8 @@
         "winston": "3.6.0"
     },
     "devDependencies": {
+        "@types/enzyme": "3.10.11",
+        "@types/enzyme-adapter-react-16": "1.0.6",
         "@types/ftp": "0.3.33",
         "@types/klaw": "3.0.3",
         "@types/lodash.range": "3.2.6",
@@ -148,7 +150,7 @@
             ]
         },
         "setupFilesAfterEnv": [
-            "<rootDir>/test/setupTests.js"
+            "<rootDir>/test/setupTests.ts"
         ]
     },
     "typings": "./index.d.ts",

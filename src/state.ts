@@ -36,7 +36,7 @@ export interface AppReloadDialog {
 export interface ErrorDialog {
     isVisible: boolean;
     messages: string[];
-    errorResolutions?: { [key: string]: () => void };
+    errorResolutions?: ErrorResolutions;
 }
 
 export interface ErrorResolutions {

@@ -22,14 +22,17 @@ const slice = createSlice({
     initialState,
     reducers: {
         showDialog: {
-            prepare: (message: string, errorResolutions: ErrorResolutions) => ({
+            prepare: (
+                message: string,
+                errorResolutions?: ErrorResolutions
+            ) => ({
                 payload: { message, errorResolutions },
             }),
             reducer: (
                 state,
                 action: PayloadAction<{
                     message: string;
-                    errorResolutions: ErrorResolutions;
+                    errorResolutions?: ErrorResolutions;
                 }>
             ) => {
                 state.isVisible = true;

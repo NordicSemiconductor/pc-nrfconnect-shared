@@ -23,6 +23,6 @@
     },
     "transformIgnorePatterns": ["node_modules/(?!(pc-nrfconnect-shared)/)"],
     "setupFilesAfterEnv": [
-        "<rootDir>/node_modules/pc-nrfconnect-shared/test/setupTests.js"
+        "<rootDir>/node_modules/pc-nrfconnect-shared/test/setupTests.ts"
     ]
 }

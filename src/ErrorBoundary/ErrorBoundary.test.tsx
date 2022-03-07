@@ -26,7 +26,11 @@ jest.mock('systeminformation', () => ({
 const SYSTEM_REPORT = 'system report';
 const OKBUTTONTEXT = 'Restore';
 
-generateSystemReport.mockImplementation(
+const mockedGenerateSystemReport = generateSystemReport as jest.MockedFunction<
+    typeof generateSystemReport
+>;
+
+mockedGenerateSystemReport.mockImplementation(
     () => new Promise(res => res(SYSTEM_REPORT))
 );
 

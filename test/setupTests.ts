@@ -17,5 +17,5 @@ import { configure } from '@testing-library/dom';
 enzyme.configure({ adapter: new Adapter() });
 
 if (process.env.TESTING_ASYNC_TIMEOUT != null) {
-    configure({ asyncUtilTimeout: process.env.TESTING_ASYNC_TIMEOUT });
+    configure({ asyncUtilTimeout: Number(process.env.TESTING_ASYNC_TIMEOUT) });
 }

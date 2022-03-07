@@ -33,17 +33,20 @@ export interface DfuEntry {
     params: Partial<InitPacket>;
 }
 export interface DeviceSetup {
-    dfu: {
+    dfu?: {
         [key: string]: DfuEntry;
     };
-    jprog: {
+    jprog?: {
         [key: string]: {
             fw: string;
             fwIdAddress: number;
             fwVersion: string;
         };
     };
-    needSerialport: boolean;
+    needSerialport?: boolean;
+    allowCustomDevice?: boolean;
+    promiseChoice?: PromiseChoice;
+    promiseConfirm?: PromiseConfirm;
 }
 
 // Defined when user input is required during device setup. When input is
@@ -98,15 +101,9 @@ export const receiveDeviceSetupInput =
         }
     };
 
-export interface DeviceSetupConfig extends DeviceSetup {
-    allowCustomDevice: boolean;
-    promiseChoice: PromiseChoice;
-    promiseConfirm: PromiseConfirm;
-}
-
 export const prepareDevice = async (
     device: Device,
-    deviceSetupConfig: DeviceSetupConfig
+    deviceSetupConfig: DeviceSetup
 ): Promise<Device> => {
     const { jprog, dfu, needSerialport } = deviceSetupConfig;
 
@@ -209,7 +206,7 @@ export const setupDevice =
         stopWatchingDevices();
 
         await releaseCurrentDevice();
-        const deviceSetupConfig: DeviceSetupConfig = {
+        const deviceSetupConfig = {
             promiseConfirm: getDeviceSetupUserInput(dispatch) as PromiseConfirm,
             promiseChoice: getDeviceSetupUserInput(dispatch) as PromiseChoice,
             allowCustomDevice: false,
