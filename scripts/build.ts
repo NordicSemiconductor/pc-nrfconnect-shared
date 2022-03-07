@@ -4,19 +4,17 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-/* eslint-disable global-require -- to enable conditional loading of the webpack config */
-
+import fs from 'fs';
 import path from 'path';
 import webpack from 'webpack';
 
-const getConfig = () => {
-    try {
-        // Using custom webpack.config.js if it exists in project
-        return require(path.join(process.cwd(), './webpack.config.js'));
-    } catch (err) {
-        return require('../config/webpack.config.js');
-    }
-};
+const configFile =
+    [
+        path.join(process.cwd(), './webpack.config.js'),
+        path.join(process.cwd(), './webpack.config.ts'),
+    ].find(fs.existsSync) ?? '../config/webpack.config.ts';
+const configFileContent = require(configFile);
+const config = configFileContent.default ?? configFileContent;
 
 type WebpackError = Error & {
     details?: unknown;
@@ -65,13 +63,13 @@ const handleOutput = (err?: null | WebpackError, stats?: WebpackStats) => {
 
 const args = process.argv.slice(2);
 if (args[0] === '--watch') {
-    webpack(getConfig()).watch({}, handleOutput);
+    webpack(config).watch({}, handleOutput);
 } else if (args[0] === '--dev') {
     process.env.NODE_ENV = 'development';
-    webpack(getConfig()).run(handleOutput);
+    webpack(config).run(handleOutput);
 } else if (args[0] === '--prod') {
     process.env.NODE_ENV = 'production';
-    webpack(getConfig()).run(handleOutput);
+    webpack(config).run(handleOutput);
 } else {
     console.error('Please specify one of --watch, --dev, or --prod');
     process.exit(1);

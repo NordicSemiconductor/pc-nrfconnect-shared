@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-const webpack = require('webpack');
-const path = require('path');
-const fs = require('fs');
-const ESLintPlugin = require('eslint-webpack-plugin');
+import ESLintPlugin from 'eslint-webpack-plugin';
+import fs from 'fs';
+import path from 'path';
+import webpack from 'webpack';
 
 const { dependencies } = require(path.join(process.cwd(), 'package.json'));
 
@@ -15,8 +15,7 @@ const appDirectory = fs.realpathSync(process.cwd());
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isProd = nodeEnv === 'production';
 
-function createExternals() {
-    // Libs provided by nRF Connect at runtime
+const createExternals = () => {
     const coreLibs = [
         'react',
         'react-dom',
@@ -37,36 +36,21 @@ function createExternals() {
     return coreLibs
         .concat(appLibs)
         .reduce((prev, lib) => Object.assign(prev, { [lib]: lib }), {});
-}
-
-const eslintConfig = () => {
-    try {
-        return require.resolve('../../../.eslintrc');
-    } catch (err) {
-        return require.resolve('./eslintrc.json');
-    }
 };
 
-function findEntryPoint() {
-    const files = [
-        './src/index.jsx',
-        './lib/index.jsx',
-        './index.jsx',
-        './src/index.tsx',
-    ];
-    while (files.length) {
-        const file = files.shift();
-        if (fs.existsSync(file)) {
-            return file;
-        }
-    }
-    return undefined;
-}
+const eslintConfig = require.resolve('./eslintrc.json');
 
-module.exports = {
+const entry = [
+    './src/index.jsx',
+    './lib/index.jsx',
+    './index.jsx',
+    './src/index.tsx',
+].find(fs.existsSync);
+
+export default {
     mode: nodeEnv,
     devtool: isProd ? 'source-map' : 'inline-cheap-source-map',
-    entry: findEntryPoint(),
+    entry,
     output: {
         path: path.join(appDirectory, 'dist'),
         publicPath: './dist/',
@@ -118,7 +102,7 @@ module.exports = {
         }),
         new ESLintPlugin({
             extensions: ['ts', 'tsx', 'js', 'jsx'],
-            overrideConfigFile: eslintConfig(),
+            overrideConfigFile: eslintConfig,
         }),
     ],
     target: 'electron-renderer',
