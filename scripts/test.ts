@@ -4,9 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-'use strict';
-
-const jest = require('jest');
+import { run } from 'jest';
 
 let configFile;
 try {
@@ -19,4 +17,4 @@ try {
 const argv = process.argv.slice(2);
 argv.unshift('--config', configFile);
 
-jest.run(argv);
+run(argv);

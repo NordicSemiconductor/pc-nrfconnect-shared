@@ -4,24 +4,27 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-'use strict';
-
-const { join } = require('path');
-const { spawn } = require('child_process');
-const { existsSync } = require('fs');
-const klaw = require('klaw');
+import { spawn, SpawnOptions } from 'child_process';
+import { existsSync } from 'fs';
+import klaw from 'klaw';
+import { join } from 'path';
 
 const packageJson = require(`${process.cwd()}/package.json`);
 
-const spawnInPromise = (command, argv) => {
-    const options = {
+const uncancellable = <T>(promise: Promise<T>) => ({
+    promise,
+    cancel: () => {},
+});
+
+const spawnInPromise = (command: string, argv: string[]) => {
+    const options: SpawnOptions = {
         env: process.env,
         shell: true,
         stdio: 'inherit',
     };
 
     const childProcess = spawn(command, argv, options);
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
         childProcess.on('exit', code => {
             if (code !== 0) {
                 reject(code);
@@ -31,7 +34,7 @@ const spawnInPromise = (command, argv) => {
         });
     });
 
-    return { promise, terminator: () => childProcess.kill() };
+    return { promise, cancel: () => childProcess.kill() };
 };
 
 const runESLint = () => {
@@ -43,41 +46,42 @@ const errorForMissingTsconfigJson = 2;
 const messageForMissingTsconfigJson =
     'Your project contains TypeScript files (with the file ending .ts ' +
     "or .tsx), so it also must contain a file 'tsconfig.json'.\n";
-const checkForTsconfigJson = () => ({
-    terminator: () => {},
-    promise: new Promise((resolve, reject) => {
-        if (existsSync('tsconfig.json')) {
-            resolve();
-        } else {
-            const excludeNodeModules = path => !path.endsWith('node_modules');
-            klaw('.', { filter: excludeNodeModules })
-                .on('data', ({ path }) => {
-                    if (path.endsWith('.ts') || path.endsWith('.tsx')) {
-                        console.log(messageForMissingTsconfigJson);
-                        reject(errorForMissingTsconfigJson);
-                    }
-                })
-                .on('end', () => {
-                    resolve();
-                });
-        }
-    }),
-});
+const checkForTsconfigJson = () =>
+    uncancellable(
+        new Promise<void>((resolve, reject) => {
+            if (existsSync('tsconfig.json')) {
+                resolve();
+            } else {
+                const excludeNodeModules = (path: string) =>
+                    !path.endsWith('node_modules');
+                klaw('.', { filter: excludeNodeModules })
+                    .on('data', ({ path }) => {
+                        if (path.endsWith('.ts') || path.endsWith('.tsx')) {
+                            console.log(messageForMissingTsconfigJson);
+                            reject(errorForMissingTsconfigJson);
+                        }
+                    })
+                    .on('end', () => {
+                        resolve();
+                    });
+            }
+        })
+    );
 
 const checkTypeScriptTypes = () => {
     if (existsSync('tsconfig.json')) {
         return spawnInPromise('tsc', ['--noEmit']);
     }
-    return { promise: undefined, terminator: () => {} };
+    return uncancellable(Promise.resolve());
 };
 
 const checkLicenses = () => {
     if (packageJson.disableLicenseCheck) {
-        return Promise.resolve();
+        return uncancellable(Promise.resolve());
     }
 
     const runningInShared = existsSync('./bin/nrfconnect-license.ts');
-    const args = runningInShared
+    const args: [string, string[]] = runningInShared
         ? ['ts-node', ['--swc', './bin/nrfconnect-license.ts', 'check']]
         : ['nrfconnect-license', ['check']];
 
@@ -92,6 +96,6 @@ const checks = [
 ];
 
 Promise.all(checks.map(check => check.promise)).catch(error => {
-    checks.forEach(check => check.terminator());
+    checks.forEach(check => check.cancel());
     process.exit(error);
 });

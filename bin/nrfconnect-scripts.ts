@@ -14,12 +14,12 @@ const script = args[0];
 const extraArgs = args.slice(1);
 
 const SCRIPTS: Record<string, string[]> = {
-    'build-watch': [require.resolve('../scripts/build.js'), '--watch'],
-    'build-dev': [require.resolve('../scripts/build.js'), '--dev'],
-    'build-prod': [require.resolve('../scripts/build.js'), '--prod'],
-    lint: [require.resolve('../scripts/lint.js')].concat(extraArgs),
-    test: [require.resolve('../scripts/test.js')].concat(extraArgs),
-    'nordic-publish': [require.resolve('../scripts/nordic-publish.js')].concat(
+    'build-watch': [require.resolve('../scripts/build.ts'), '--watch'],
+    'build-dev': [require.resolve('../scripts/build.ts'), '--dev'],
+    'build-prod': [require.resolve('../scripts/build.ts'), '--prod'],
+    lint: [require.resolve('../scripts/lint.ts')].concat(extraArgs),
+    test: [require.resolve('../scripts/test.ts')].concat(extraArgs),
+    'nordic-publish': [require.resolve('../scripts/nordic-publish.ts')].concat(
         extraArgs
     ),
 };
@@ -29,5 +29,8 @@ const env = {
     NODE_PATH: path.join(__dirname, '..', 'node_modules'),
 };
 
-const result = spawnSync('node', SCRIPTS[script], { stdio: 'inherit', env });
+const result = spawnSync('ts-node', ['--swc', ...SCRIPTS[script]], {
+    stdio: 'inherit',
+    env,
+});
 process.exit(result.status ?? undefined);

@@ -78,7 +78,7 @@
         "focus-visible": "5.2.0",
         "ftp": "0.3.10",
         "husky": "4.3.8",
-        "jest": "26.6.3",
+        "jest": "27.5.1",
         "klaw": "3.0.0",
         "lodash.range": "3.2.0",
         "mousetrap": "1.6.5",
@@ -110,8 +110,12 @@
         "winston": "3.6.0"
     },
     "devDependencies": {
+        "@types/ftp": "0.3.33",
+        "@types/klaw": "3.0.3",
         "@types/lodash.range": "3.2.6",
         "@types/react": "17.0.39",
+        "@types/semver": "7.3.9",
+        "@types/webpack": "5.28.0",
         "electron": "13.6.9",
         "electron-store": "8.0.1",
         "react": "16.14.0",
@@ -124,6 +128,7 @@
         "react-redux": "^7.2"
     },
     "jest": {
+        "testEnvironment": "jsdom",
         "moduleNameMapper": {
             "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$": "<rootDir>/mocks/fileMock.ts",
             "\\.(css|scss)$": "<rootDir>/mocks/emptyMock.ts",

@@ -6,10 +6,8 @@
 
 /* eslint-disable global-require -- to enable conditional loading of the webpack config */
 
-'use strict';
-
-const path = require('path');
-const webpack = require('webpack');
+import path from 'path';
+import webpack from 'webpack';
 
 const getConfig = () => {
     try {
@@ -20,7 +18,18 @@ const getConfig = () => {
     }
 };
 
-const handleOutput = (err, stats) => {
+type WebpackError = Error & {
+    details?: unknown;
+};
+
+type WebpackStats = {
+    hasWarnings(): boolean;
+    hasErrors(): boolean;
+    toJson(options?: string): unknown;
+    toString(options?: unknown): string;
+};
+
+const handleOutput = (err?: null | WebpackError, stats?: WebpackStats) => {
     if (err) {
         console.error(err.stack || err);
         if (err.details) {
@@ -29,7 +38,12 @@ const handleOutput = (err, stats) => {
         return;
     }
 
-    const info = stats.toJson();
+    if (stats == null) {
+        console.error('Stats must be set if err is unset.');
+        return;
+    }
+
+    const info = stats.toJson() as { errors: unknown; warnings: unknown };
 
     if (stats.hasErrors()) {
         console.error(info.errors);

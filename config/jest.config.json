@@ -1,5 +1,6 @@
 {
     "rootDir": "../../../",
+    "testEnvironment": "jsdom",
     "moduleNameMapper": {
         "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/fileMock.ts",
         "\\.(css|scss)$": "<rootDir>/node_modules/pc-nrfconnect-shared/mocks/emptyMock.ts",
