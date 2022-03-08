@@ -14,9 +14,6 @@ const script = args[0];
 const extraArgs = args.slice(1);
 
 const SCRIPTS: Record<string, string[]> = {
-    'build-watch': [require.resolve('../scripts/build.ts'), '--watch'],
-    'build-dev': [require.resolve('../scripts/build.ts'), '--dev'],
-    'build-prod': [require.resolve('../scripts/build.ts'), '--prod'],
     lint: [require.resolve('../scripts/lint.ts')].concat(extraArgs),
     test: [require.resolve('../scripts/test.ts')].concat(extraArgs),
     'nordic-publish': [require.resolve('../scripts/nordic-publish.ts')].concat(

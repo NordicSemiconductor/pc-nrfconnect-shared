@@ -25,6 +25,30 @@ and this project adheres to
 
 -   Support for `nrfconnect/core` as mocked or external module.
 -   Obsolete `lint-init`.
+-   `nrfconnect-scripts` for building.
+
+### Steps to upgrade when using this package
+
+Because this version removed `nrfconnect-scripts` for building, all invocations
+of it have to be replaced with direct invocations of `webpack`. So, in
+`package.json`, these entries in the `scripts` property should replace the
+previous entries:
+
+```json
+{
+    "scripts": {
+    "dev": "webpack watch --mode development",
+    "webpack": "webpack build --mode development",
+    "build": "webpack build",
+    }
+}
+```
+
+Also, a file `webpack.config.js` must be added with this content:
+
+```js
+module.exports = require('pc-nrfconnect-shared/config/webpack.config');
+```
 
 ## 5.18.0 - 2022-03-24
 
