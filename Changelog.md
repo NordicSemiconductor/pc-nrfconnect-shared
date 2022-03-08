@@ -25,14 +25,14 @@ and this project adheres to
 
 -   Support for `nrfconnect/core` as mocked or external module.
 -   Obsolete `lint-init`.
--   `nrfconnect-scripts` for building and linting.
+-   `nrfconnect-scripts` for building, linting, and testing.
 
 ### Steps to upgrade when using this package
 
-Because this version removed `nrfconnect-scripts` for building and linting, all
-invocations of it have to be replaced with direct invocations of `webpack` or
-`static-checks`. So in `package.json` these entries in the `scripts` property
-should replace the previous entries:
+Because this version removed `nrfconnect-scripts` for building, linting, and
+testing, all invocations of it have to be replaced with direct invocations of
+`webpack`, `static-checks`, or `jest`. So in `package.json` these entries in the
+`scripts` property should replace the previous entries:
 
 ```json
 {
@@ -41,7 +41,8 @@ should replace the previous entries:
         "webpack": "webpack build --mode development",
         "build": "webpack build",
         "lint": "static-checks .",
-        "lintfix": "static-checks --fix ."
+        "lintfix": "static-checks --fix .",
+        "test": "jest"
     }
 }
 ```
@@ -50,6 +51,13 @@ Also, a file `webpack.config.js` must be added with this content:
 
 ```js
 module.exports = require('pc-nrfconnect-shared/config/webpack.config');
+```
+
+Also, a file `jest.config.js` must be added with this content, unless you want
+to have a special jest configuration:
+
+```js
+module.exports = require('pc-nrfconnect-shared/config/jest.config')();
 ```
 
 ## 5.18.0 - 2022-03-24
