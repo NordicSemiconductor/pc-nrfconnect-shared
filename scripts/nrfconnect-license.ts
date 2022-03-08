@@ -160,9 +160,9 @@ const checkHeaders = () => {
         allSourceFiles().filter(missesCorrectHeader);
 
     if (filesWithoutCorrectHeader.length > 0) {
-        const runningInShared = existsSync('./bin/nrfconnect-license.ts');
+        const runningInShared = existsSync('./scripts/nrfconnect-license.ts');
         const nrfconnectLicenseScript = runningInShared
-            ? './bin/nrfconnect-license.ts update'
+            ? './scripts/nrfconnect-license.ts update'
             : 'nrfconnect-license update';
 
         const listOfFiles = filesWithoutCorrectHeader
