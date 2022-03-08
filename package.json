@@ -16,8 +16,7 @@
     "main": "src",
     "scripts": {
         "lint": "ts-node --swc ./scripts/static-checks.ts .",
-        "test": "jest src",
-        "test-watch": "jest --watch src"
+        "test": "jest"
     },
     "dependencies": {
         "@babel/core": "7.17.5",
@@ -130,30 +129,6 @@
         "electron-store": "^8.0.0",
         "react": "^16.13",
         "react-redux": "^7.2"
-    },
-    "jest": {
-        "testEnvironment": "jsdom",
-        "moduleNameMapper": {
-            "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$": "<rootDir>/mocks/fileMock.ts",
-            "\\.(css|scss)$": "<rootDir>/mocks/emptyMock.ts",
-            "packageJson$": "<rootDir>/mocks/packageJsonMock.ts",
-            "^electron$": "<rootDir>/mocks/electronMock.ts",
-            "^electron-store$": "<rootDir>/mocks/electronStoreMock.ts",
-            "pc-nrfjprog-js|nrf-device-setup|serialport": "<rootDir>/mocks/emptyMock.ts",
-            "@nordicsemiconductor/nrf-device-lib-js": "<rootDir>/mocks/deviceLibMock.ts",
-            "@electron/remote": "<rootDir>/mocks/remoteMock.ts"
-        },
-        "transform": {
-            "^.+\\.[jt]sx?$": [
-                "babel-jest",
-                {
-                    "configFile": "./config/babel.config.js"
-                }
-            ]
-        },
-        "setupFilesAfterEnv": [
-            "<rootDir>/test/setupTests.ts"
-        ]
     },
     "typings": "./index.d.ts",
     "eslintConfig": {
