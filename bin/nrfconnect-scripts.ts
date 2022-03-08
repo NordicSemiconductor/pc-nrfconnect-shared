@@ -14,7 +14,6 @@ const script = args[0];
 const extraArgs = args.slice(1);
 
 const SCRIPTS: Record<string, string[]> = {
-    lint: [require.resolve('../scripts/lint.ts')].concat(extraArgs),
     test: [require.resolve('../scripts/test.ts')].concat(extraArgs),
     'nordic-publish': [require.resolve('../scripts/nordic-publish.ts')].concat(
         extraArgs

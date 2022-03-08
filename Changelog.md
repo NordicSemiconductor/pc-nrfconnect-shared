@@ -25,21 +25,23 @@ and this project adheres to
 
 -   Support for `nrfconnect/core` as mocked or external module.
 -   Obsolete `lint-init`.
--   `nrfconnect-scripts` for building.
+-   `nrfconnect-scripts` for building and linting.
 
 ### Steps to upgrade when using this package
 
-Because this version removed `nrfconnect-scripts` for building, all invocations
-of it have to be replaced with direct invocations of `webpack`. So, in
-`package.json`, these entries in the `scripts` property should replace the
-previous entries:
+Because this version removed `nrfconnect-scripts` for building and linting, all
+invocations of it have to be replaced with direct invocations of `webpack` or
+`static-checks`. So in `package.json` these entries in the `scripts` property
+should replace the previous entries:
 
 ```json
 {
     "scripts": {
-    "dev": "webpack watch --mode development",
-    "webpack": "webpack build --mode development",
-    "build": "webpack build",
+        "dev": "webpack watch --mode development",
+        "webpack": "webpack build --mode development",
+        "build": "webpack build",
+        "lint": "static-checks .",
+        "lintfix": "static-checks --fix ."
     }
 }
 ```

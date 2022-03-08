@@ -10,11 +10,12 @@
     "license": "ISC",
     "bin": {
         "nrfconnect-license": "./bin/nrfconnect-license.ts",
-        "nrfconnect-scripts": "./bin/nrfconnect-scripts.ts"
+        "nrfconnect-scripts": "./bin/nrfconnect-scripts.ts",
+        "static-checks": "./scripts/static-checks.ts"
     },
     "main": "src",
     "scripts": {
-        "lint": "ts-node --swc ./bin/nrfconnect-scripts.ts lint .",
+        "lint": "ts-node --swc ./scripts/static-checks.ts .",
         "test": "jest src",
         "test-watch": "jest --watch src"
     },
