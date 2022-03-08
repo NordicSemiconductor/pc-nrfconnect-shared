@@ -25,14 +25,14 @@ and this project adheres to
 
 -   Support for `nrfconnect/core` as mocked or external module.
 -   Obsolete `lint-init`.
--   `nrfconnect-scripts` for building, linting, and testing.
+-   `nrfconnect-scripts`.
 
 ### Steps to upgrade when using this package
 
-Because this version removed `nrfconnect-scripts` for building, linting, and
-testing, all invocations of it have to be replaced with direct invocations of
-`webpack`, `static-checks`, or `jest`. So in `package.json` these entries in the
-`scripts` property should replace the previous entries:
+Because this version removed `nrfconnect-scripts`, all invocations of it have to
+be replaced with direct invocations of the corresponding tools. So in
+`package.json` these entries in the `scripts` property should replace the
+previous entries:
 
 ```json
 {
@@ -42,7 +42,8 @@ testing, all invocations of it have to be replaced with direct invocations of
         "build": "webpack build",
         "lint": "static-checks .",
         "lintfix": "static-checks --fix .",
-        "test": "jest"
+        "test": "jest",
+        "nordic-publish": "nordic-publish"
     }
 }
 ```

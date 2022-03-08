@@ -1,3 +1,5 @@
+#!/usr/bin/env -S ts-node --swc
+
 /*
  * Copyright (c) 2015 Nordic Semiconductor ASA
  *

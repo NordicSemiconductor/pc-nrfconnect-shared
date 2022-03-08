@@ -10,8 +10,8 @@
     "license": "ISC",
     "bin": {
         "nrfconnect-license": "./bin/nrfconnect-license.ts",
-        "nrfconnect-scripts": "./bin/nrfconnect-scripts.ts",
-        "static-checks": "./scripts/static-checks.ts"
+        "static-checks": "./scripts/static-checks.ts",
+        "nordic-publish": "./scripts/nordic-publish.ts"
     },
     "main": "src",
     "scripts": {
