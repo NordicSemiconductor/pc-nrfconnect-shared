@@ -42,9 +42,11 @@ and this project adheres to
         "dev": "webpack watch --mode development",
         "webpack": "webpack build --mode development",
         "build": "webpack build",
-        "lint": "static-checks .",
-        "lintfix": "static-checks --fix .",
         "test": "jest",
+        "check": "run-p --silent --continue-on-error --print-label 'check:*'",
+        "check:lint": "eslint --color .",
+        "check:types": "check-for-typescript tsc --noEmit --pretty",
+        "check:license": "nrfconnect-license check",
         "nordic-publish": "nordic-publish"
     }
 }
@@ -74,6 +76,16 @@ module.exports = require('pc-nrfconnect-shared/config/jest.config')();
     }
 }
 ```
+
+-   The above change renames the script `lint` to `check` (because it does not
+    only linting but runs multiple static checks). In `azure-pipelines.yml`
+    there are probably still invocations like `npm run lint` and these need to
+    be updated to `npm run check`. If there are other references to `lint`, they
+    need to be updated too.
+
+-   The scripts require at least Ubuntu 20 in the Azure pipelines. So check
+    which image is configured in `azure-pipelines.yml` and if it is still
+    `ubuntu-18.04` update that, best to `ubuntu-latest`.
 
 ## 5.18.0 - 2022-03-24
 
