@@ -69,7 +69,6 @@ module.exports = {
             'error',
             {
                 ignore: [
-                    'nrfconnect/.*',
                     'pc-ble-driver-js',
                     'serialport',
                     'electron',
