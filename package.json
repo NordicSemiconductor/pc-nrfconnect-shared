@@ -132,7 +132,7 @@
     },
     "typings": "./index.d.ts",
     "eslintConfig": {
-        "extends": "./config/eslintrc.json"
+        "extends": "./config/eslintrc"
     },
     "prettier": "./config/prettier.config.js"
 }

@@ -35,7 +35,7 @@ const createExternals = () => {
         .reduce((prev, lib) => Object.assign(prev, { [lib]: lib }), {});
 };
 
-const eslintConfig = require.resolve('./eslintrc.json');
+const eslintConfig = require.resolve('./eslintrc');
 
 const entry = [
     './src/index.jsx',

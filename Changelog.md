@@ -20,6 +20,8 @@ and this project adheres to
 -   Type of `getPersistentStore` was changed to match more that from
     electron-store.
 -   Bundle shared with the apps.
+-   ESlint config file changed to `config/eslintrc.js`.
+-   Ignore all entries from `.gitignore` in linting.
 
 ### Removed
 
@@ -29,10 +31,10 @@ and this project adheres to
 
 ### Steps to upgrade when using this package
 
-Because this version removed `nrfconnect-scripts`, all invocations of it have to
-be replaced with direct invocations of the corresponding tools. So in
-`package.json` these entries in the `scripts` property should replace the
-previous entries:
+-   Because this version removed `nrfconnect-scripts`, all invocations of it
+    have to be replaced with direct invocations of the corresponding tools. So
+    in `package.json` these entries in the `scripts` property should replace the
+    previous entries:
 
 ```json
 {
@@ -48,17 +50,29 @@ previous entries:
 }
 ```
 
-Also, a file `webpack.config.js` must be added with this content:
+-   A file `webpack.config.js` must be added with this content:
 
 ```js
 module.exports = require('pc-nrfconnect-shared/config/webpack.config');
 ```
 
-Also, a file `jest.config.js` must be added with this content, unless you want
-to have a special jest configuration:
+-   A file `jest.config.js` must be added with this content, unless you want to
+    have a special jest configuration:
 
 ```js
 module.exports = require('pc-nrfconnect-shared/config/jest.config')();
+```
+
+-   Because the name of the ESLint config file was changed from `eslintrc.json`
+    to `eslintrc.js`, the reference to it needs to be changed in `package.json`
+    (The correct extension will be chosen automatically, so you can omit that):
+
+```json
+{
+    "eslintConfig": {
+        "extends": "./node_modules/pc-nrfconnect-shared/config/eslintrc"
+    }
+}
 ```
 
 ## 5.18.0 - 2022-03-24
