@@ -22,7 +22,7 @@ module.exports = {
         'prettier/react',
         'prettier/@typescript-eslint',
     ],
-    ignorePatterns: entriesInGitignore,
+    ignorePatterns: ['package-lock.json', ...entriesInGitignore],
     rules: {
         'no-shadow': 'off',
         '@typescript-eslint/no-shadow': ['error'],
