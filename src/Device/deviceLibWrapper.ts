@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { app } from '@electron/remote';
 import {
     createContext,
     Error,
@@ -27,7 +26,11 @@ export const getDeviceLibContext = () => deviceLibContext;
 
 export const logNrfdlLogs =
     (evt: LogEvent) => (_: unknown, getState: () => RootState) => {
-        if (app.isPackaged && !nrfdlVerboseLoggingEnabled(getState())) return;
+        if (
+            process.env.NODE_ENV === 'production' &&
+            !nrfdlVerboseLoggingEnabled(getState())
+        )
+            return;
         switch (evt.level) {
             case 'NRFDL_LOG_TRACE':
                 logger.verbose(evt.message);
