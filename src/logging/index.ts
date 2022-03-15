@@ -12,7 +12,6 @@ import Transport from 'winston-transport';
 
 import { openFile } from '../utils/open';
 import AppTransport from './appTransport';
-import ConsoleTransport from './consoleTransport';
 import describeError from './describeError';
 import createLogBuffer from './logBuffer';
 
@@ -37,13 +36,9 @@ const logTransports: Transport[] = [
         onLogEntry: logBuffer.addEntry,
     }),
 ];
-transports.Console;
+
 if (isDevelopment && isConsoleAvailable) {
-    logTransports.push(
-        new ConsoleTransport({
-            level: 'silly',
-        })
-    );
+    logTransports.push(new transports.Console({ level: 'silly' }));
 }
 
 interface SharedLogger extends Logger {

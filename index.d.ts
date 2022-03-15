@@ -598,6 +598,12 @@ declare module 'pc-nrfconnect-shared' {
         clipEnd?: number
     ) => string;
 
+    // environment.ts
+    /**
+     * Determine if environment is in development mode.
+     */
+    export const isDevelopment: boolean;
+
     // appLayout.js
 
     /**

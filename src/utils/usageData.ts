@@ -10,6 +10,7 @@ import shasum from 'shasum';
 import si from 'systeminformation';
 
 import logger from '../logging';
+import { isDevelopment } from './environment';
 import {
     deleteIsSendingUsageData,
     getIsSendingUsageData,
@@ -17,6 +18,8 @@ import {
 } from './persistentStore';
 
 const trackId = 'UA-22498474-5';
+const categoryName = () =>
+    isDevelopment ? `${appJson.name}-dev` : appJson.name;
 
 interface EventAction {
     action: string;
@@ -78,7 +81,7 @@ export const init = async (packageJson: PackageJson) => {
 
     initialized = true;
     logger.debug(
-        `Google Analytics for category ${appJson.name} has initialized`
+        `Google Analytics for category ${categoryName()} has initialized`
     );
 };
 
@@ -144,20 +147,13 @@ export const reset = () => {
  */
 const sendEvent = ({ action, label }: EventAction) => {
     const isSendingUsageData = getIsSendingUsageData();
-    const category = appJson.name;
-    logger.debug('Sending usage data...');
-    logger.debug(`Category: ${category}`);
-    logger.debug(`Action: ${action}`);
-    logger.debug(`Label: ${label}`);
-    if (!isSendingUsageData) {
-        logger.debug(
-            `Usage data has not been sent. isSendingUsageData is set to ${isSendingUsageData}.`
-        );
-        return;
-    }
+    const category = categoryName();
 
-    reactGA.event({ category, action, label });
-    logger.debug(`Usage data has been sent`);
+    if (isSendingUsageData) {
+        const data = JSON.stringify({ category, action, label });
+        logger.debug(`Sending usage data ${data}`);
+        reactGA.event({ category, action, label });
+    }
 };
 
 /**

@@ -59,6 +59,7 @@ export { default as classNames } from './utils/classNames';
 export { truncateMiddle } from './utils/truncateMiddle';
 
 export { default as useHotKey } from './utils/useHotKey';
+export { isDevelopment } from './utils/environment';
 
 export { currentPane, setCurrentPane } from './App/appLayout';
 
