@@ -4,36 +4,37 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-module.exports = (
-    subDir = '/node_modules/pc-nrfconnect-shared',
-    disabledMocks = []
-) => ({
+const path = require('path');
+
+const mockDir = path.join(__dirname, '..', 'mocks');
+
+module.exports = (disabledMocks = []) => ({
     testEnvironment: 'jsdom',
     moduleNameMapper: {
-        '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$': `<rootDir>${subDir}/mocks/fileMock.ts`,
-        '\\.(css|scss)$': `<rootDir>${subDir}/mocks/emptyMock.ts`,
-        packageJson$: `<rootDir>${subDir}/mocks/packageJsonMock.ts`,
-        'pc-ble-driver-js': `<rootDir>${subDir}/mocks/bleDriverMock.ts`,
-        'pc-nrfjprog-js|nrf-device-setup|usb': `<rootDir>${subDir}/mocks/emptyMock.ts`,
-        '^electron$': `<rootDir>${subDir}/mocks/electronMock.ts`,
-        '^electron-store$': `<rootDir>${subDir}/mocks/electronStoreMock.ts`,
-        '@nordicsemiconductor/nrf-device-lib-js': `<rootDir>${subDir}/mocks/deviceLibMock.ts`,
-        '@electron/remote': `<rootDir>${subDir}/mocks/remoteMock.ts`,
+        '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$': `${mockDir}/fileMock.ts`,
+        '\\.(css|scss)$': `${mockDir}/emptyMock.ts`,
+        packageJson$: `${mockDir}/packageJsonMock.ts`,
+        'pc-ble-driver-js': `${mockDir}/bleDriverMock.ts`,
+        'pc-nrfjprog-js|nrf-device-setup|usb': `${mockDir}/emptyMock.ts`,
+        '^electron$': `${mockDir}/electronMock.ts`,
+        '^electron-store$': `${mockDir}/electronStoreMock.ts`,
+        '@nordicsemiconductor/nrf-device-lib-js': `${mockDir}/deviceLibMock.ts`,
+        '@electron/remote': `${mockDir}/remoteMock.ts`,
         ...(disabledMocks.includes('react-ga')
             ? {}
-            : { '^react-ga$': `<rootDir>${subDir}/mocks/gaMock.ts` }),
+            : { '^react-ga$': `${mockDir}/gaMock.ts` }),
         ...(disabledMocks.includes('serialport')
             ? {}
-            : { serialport: `<rootDir>${subDir}/mocks/emptyMock.ts` }),
+            : { serialport: `${mockDir}/emptyMock.ts` }),
     },
     transform: {
         '^.+\\.[jt]sx?$': [
             'babel-jest',
             {
-                configFile: `.${subDir}/config/babel.config.js`,
+                configFile: `${__dirname}/babel.config.js`,
             },
         ],
     },
     transformIgnorePatterns: ['node_modules/(?!(pc-nrfconnect-shared)/)'],
-    setupFilesAfterEnv: [`<rootDir>${subDir}/test/setupTests.ts`],
+    setupFilesAfterEnv: [`${__dirname}/../test/setupTests.ts`],
 });

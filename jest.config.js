@@ -4,4 +4,4 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-module.exports = require('./config/jest.config')('', ['react-ga']);
+module.exports = require('./config/jest.config')(['react-ga']);
