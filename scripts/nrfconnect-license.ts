@@ -171,7 +171,7 @@ const checkHeaders = () => {
 
         fail(
             `These files do not contain the correct license, try fixing this` +
-                ` with running '${nrfconnectLicenseScript}':\n${listOfFiles}`
+                ` with running 'npx ${nrfconnectLicenseScript}':\n${listOfFiles}`
         );
     }
 };
