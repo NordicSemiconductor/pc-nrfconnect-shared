@@ -134,9 +134,6 @@ module.exports = {
             },
         },
         {
-            files: ['*.js', '*.jsx', '*.json'],
-        },
-        {
             files: ['*.ts', '*.tsx'],
             rules: {
                 'default-case': 'off',
@@ -155,6 +152,12 @@ module.exports = {
             files: ['*.test.*'],
             rules: {
                 '@typescript-eslint/no-non-null-assertion': 'off',
+            },
+        },
+        {
+            files: ['*.json'],
+            rules: {
+                'no-template-curly-in-string': 'off',
             },
         },
     ],
