@@ -12,8 +12,8 @@ const { dependencies } = require(path.join(process.cwd(), 'package.json'));
 
 const appDirectory = fs.realpathSync(process.cwd());
 
-const createExternals = () => {
-    const coreLibs = [
+const externals = Object.fromEntries(
+    [
         'react',
         'react-dom',
         'react-redux',
@@ -25,15 +25,9 @@ const createExternals = () => {
         'pc-ble-driver-js',
         '@nordicsemiconductor/nrf-device-lib-js',
         'osx-temperature-sensor',
-    ];
-
-    // Libs provided by the app at runtime
-    const appLibs = Object.keys(dependencies);
-
-    return coreLibs
-        .concat(appLibs)
-        .reduce((prev, lib) => Object.assign(prev, { [lib]: lib }), {});
-};
+        ...Object.keys(dependencies),
+    ].map(lib => [lib, lib])
+);
 
 const eslintConfig = require.resolve('./eslintrc');
 
@@ -104,6 +98,6 @@ module.exports = (_, argv) => {
             }),
         ],
         target: 'electron-renderer',
-        externals: createExternals(),
+        externals,
     };
 };
