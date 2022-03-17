@@ -9,7 +9,6 @@ module.exports = api => {
     return {
         presets: ['@babel/preset-react', '@babel/preset-typescript'],
         plugins: [
-            'add-module-exports',
             '@babel/plugin-proposal-class-properties',
             '@babel/plugin-transform-destructuring',
             '@babel/plugin-transform-modules-commonjs',

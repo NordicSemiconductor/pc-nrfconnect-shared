@@ -28,6 +28,9 @@ and this project adheres to
 -   Support for `nrfconnect/core` as mocked or external module.
 -   Obsolete `lint-init`.
 -   `nrfconnect-scripts`.
+-   Plugin `add-module-exports` from babel config because it caused problems
+    with the latest version of `electron-store` (or, more concrete, with the
+    dependency `atomically` which that pulled in.)
 
 ### Steps to upgrade when using this package
 
