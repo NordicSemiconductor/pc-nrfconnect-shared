@@ -90,6 +90,10 @@ module.exports = require('pc-nrfconnect-shared/config/jest.config')();
     which image is configured in `azure-pipelines.yml` and if it is still
     `ubuntu-18.04` update that, best to `ubuntu-latest`.
 
+-   The enzyme-to-json serializer was added to the jest config which might
+    change some jest snapshots. You might have to run `jest --updateSnapshot` to
+    update them.
+
 ## 5.18.0 - 2022-03-24
 
 ### Removed
