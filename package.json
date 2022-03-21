@@ -74,7 +74,6 @@
         "eslint-plugin-react": "7.29.3",
         "eslint-plugin-react-hooks": "4.3.0",
         "eslint-plugin-simple-import-sort": "7.0.0",
-        "eslint-webpack-plugin": "2.6.0",
         "fast-glob": "3.2.11",
         "file-loader": "6.2.0",
         "focus-visible": "5.2.0",

@@ -31,6 +31,7 @@ and this project adheres to
 -   Plugin `add-module-exports` from babel config because it caused problems
     with the latest version of `electron-store` (or, more concrete, with the
     dependency `atomically` which that pulled in.)
+-   Running ESLint during build.
 
 ### Steps to upgrade when using this package
 

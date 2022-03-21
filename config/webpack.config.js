@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-const ESLintPlugin = require('eslint-webpack-plugin');
 const fs = require('fs');
 const path = require('path');
 
@@ -28,8 +27,6 @@ const externals = Object.fromEntries(
         ...Object.keys(dependencies),
     ].map(lib => [lib, lib])
 );
-
-const eslintConfig = require.resolve('./eslintrc');
 
 const entry = [
     './src/index.jsx',
@@ -91,12 +88,6 @@ module.exports = (_, argv) => {
         resolve: {
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
-        plugins: [
-            new ESLintPlugin({
-                extensions: ['ts', 'tsx', 'js', 'jsx'],
-                overrideConfigFile: eslintConfig,
-            }),
-        ],
         target: 'electron-renderer',
         externals,
     };
