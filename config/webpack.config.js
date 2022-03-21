@@ -41,7 +41,7 @@ module.exports = (_, argv) => {
 
     return {
         mode,
-        devtool: isProd ? 'source-map' : 'inline-cheap-source-map',
+        devtool: isProd ? 'source-map' : 'cheap-eval-source-map',
         entry,
         output: {
             path: path.join(appDirectory, 'dist'),
