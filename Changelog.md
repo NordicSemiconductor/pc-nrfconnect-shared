@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 5.18.0 - 2022-03-24
+
+### Removed
+
+-   Automatically selecting a specified device through the environment variable
+    `AUTOSELECT_DEVICE`.
+
+### Added
+
+-   Automatically selecting a specified device when it is detected in an app
+    through the command line argument `--deviceSerial`. To use this, specify the
+    argument behind an additional `--` e.g. by running the launcher with
+
+    ```cli
+    npm run app -- --deviceSerial 000680407810
+    ```
+
+    the device with the serial number 000680407810 is automatically selected
+    when apps see it for the first time. When one deselects the device it is not
+    automatically selected again. After restarting the app, the device is
+    automatically selected again.
+
 ## 5.17.0 - 2022-02-15
 
 ### Fixed
