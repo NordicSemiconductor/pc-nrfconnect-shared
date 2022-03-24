@@ -7,14 +7,18 @@
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
-import { Device } from '../../state';
+import { Device, RootState } from '../../state';
 import { getDevice } from '../deviceSlice';
 
 export default (doSelectDevice: (device: Device) => void) => {
     const alreadyTriedToAutoselect = useRef(false);
 
-    const autoselectDevice = useSelector(
-        getDevice(process.env.AUTOSELECT_DEVICE as string)
+    const { argv } = process;
+    const serialIndex = argv.findIndex(arg => arg === '--deviceSerial');
+    const serialNumber = serialIndex > -1 ? argv[serialIndex + 1] : undefined;
+
+    const autoselectDevice = useSelector<RootState, Device | undefined>(state =>
+        serialNumber != null ? getDevice(serialNumber)(state) : undefined
     );
 
     useEffect(() => {
