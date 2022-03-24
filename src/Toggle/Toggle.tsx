@@ -78,8 +78,10 @@ export const Toggle: FC<Props> = ({
                 <div
                     className={classNames(
                         'toggle-bar',
-                        isPrimary && 'toggle-bar-primary',
-                        isSecondary && 'toggle-bar-secondary'
+                        isPrimary &&
+                            `toggle-bar-primary${toggled ? '-toggled' : ''}`,
+                        isSecondary &&
+                            `toggle-bar-secondary${toggled ? '-toggled' : ''}`
                     )}
                     style={{
                         backgroundColor: toggled ? barColorToggled : barColor,
@@ -96,15 +98,15 @@ export const Toggle: FC<Props> = ({
                     <span
                         className={classNames(
                             'toggle-handle',
-                            isPrimary && 'toggle-handle-primary',
-                            isSecondary && 'toggle-handle-secondary',
                             toggled && 'toggle-handle-toggled',
-                            toggled &&
-                                isPrimary &&
-                                'toggle-handle-primary-toggled',
-                            toggled &&
-                                isSecondary &&
-                                'toggle-handle-secondary-toggled'
+                            isPrimary &&
+                                `toggle-handle-primary${
+                                    toggled ? '-toggled' : ''
+                                }`,
+                            isSecondary &&
+                                `toggle-handle-secondary${
+                                    toggled ? '-toggled' : ''
+                                }`
                         )}
                         style={{
                             backgroundColor: toggled

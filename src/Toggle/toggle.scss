@@ -12,14 +12,12 @@
 }
 
 .toggle.disabled .toggle-handle {
-    cursor: default;
+  cursor: default;
 }
 
 .toggle-bar {
   position: relative;
   font-family: sans-serif;
-  text-align: center;
-  background: $primary;
   display: flex;
   flex-direction: row;
   min-width: 28px;
@@ -28,11 +26,19 @@
 }
 
 .toggle-bar-primary {
+  background: $gray-700;
+}
+
+.toggle-bar-primary-toggled {
   background: $primary;
 }
 
 .toggle-bar-secondary {
-  background: $input-color;
+  background: $gray-300;
+}
+
+.toggle-bar-secondary-toggled {
+  background: $primary;
 }
 
 .toggle-handle {
@@ -42,7 +48,6 @@
   left: 2px;
   height: 12px;
   width: 12px;
-  background: $custom-control-indicator-checked-bg;
   transition: all 0.2s ease;
   border-radius: 50%;
   cursor: pointer;
@@ -52,34 +57,32 @@
 
 .toggle-handle-toggled {
   transform: translate3d(12px, 0, 0);
-  background: $custom-control-indicator-bg;
   transition: all 0.1s ease;
   transition-property: transform;
 }
 
 .toggle-handle-primary {
-  background: $gray-700;
-}
-
-.toggle-handle-primary-toggled {
-  background: $custom-control-indicator-bg;
-}
-
-.toggle-handle-secondary {
   background: $gray-300;
 }
 
+.toggle-handle-primary-toggled {
+  background: $white;
+}
+
+.toggle-handle-secondary {
+  background: $gray-700;
+}
+
 .toggle-handle-secondary-toggled {
-  background: $custom-control-indicator-bg;
+  background: $white;
 }
 
 .toggle label {
   display: flex;
   flex: 1;
   flex-direction: row;
-  align-items: end;
+  align-items: center;
   justify-content: space-between;
-  line-height: 1rem;
   margin-bottom: 0;
   margin-right: -0.5rem;
 }

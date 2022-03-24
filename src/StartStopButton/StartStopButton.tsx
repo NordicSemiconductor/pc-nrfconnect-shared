@@ -5,11 +5,13 @@
  */
 
 import React, { FC, useState } from 'react';
-import Button from 'react-bootstrap/Button';
 import { bool, func, string } from 'prop-types';
 
+import Button from '../Button/Button';
 import playSvg from './play-circle.svg';
 import stopSvg from './stop-circle.svg';
+
+import './start-stop-button.scss';
 
 interface Props {
     startText?: string;
@@ -30,10 +32,7 @@ const StartStopButton: FC<Props> = ({
 
     return (
         <Button
-            className={`w-100 secondary-btn start-stop  ${
-                showStart ? '' : 'active-animation'
-            }`}
-            variant="secondary"
+            className={`start-stop  ${showStart ? '' : 'active-animation'}`}
             disabled={disabled}
             onClick={() => {
                 setShowStart(!showStart);

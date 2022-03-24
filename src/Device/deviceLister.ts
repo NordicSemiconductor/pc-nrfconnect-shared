@@ -12,7 +12,7 @@ import nrfDeviceLib, {
     HotplugEvent,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import camelcaseKeys from 'camelcase-keys';
-import { Device, DeviceListing, Serialport } from 'pc-nrfconnect-shared';
+import { Device, Serialport } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';
 import { Devices } from '../state';
@@ -70,7 +70,7 @@ export const wrapDevicesFromNrfdl = (devices: NrfdlDevice[]): Device[] =>
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
 export const startWatchingDevices =
-    (deviceListing: DeviceListing, doDeselectDevice: Function) =>
+    (deviceListing: DeviceTraits, doDeselectDevice: Function) =>
     async (dispatch: Function, getState: Function): Promise<void> => {
         const updateDeviceList = async () => {
             const { selectedSerialNumber, devices: devicesFromState } =
@@ -78,7 +78,7 @@ export const startWatchingDevices =
             await waitForModeSwitch(devicesFromState, selectedSerialNumber);
             const nrfdlDevices = await nrfDeviceLib.enumerate(
                 getDeviceLibContext(),
-                deviceListing as unknown as DeviceTraits
+                deviceListing
             );
             const devices = wrapDevicesFromNrfdl(nrfdlDevices);
             const hasSerialNumber = (d: Device) => {

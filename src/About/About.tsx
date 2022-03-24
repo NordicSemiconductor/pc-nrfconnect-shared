@@ -15,9 +15,11 @@ import './about.scss';
 
 export default () => (
     <div className="about">
-        <ApplicationCard />
-        <DeviceCard />
-        <DocumentationCard />
-        <SupportCard />
+        <div className="about-inner">
+            <ApplicationCard />
+            <DeviceCard />
+            <DocumentationCard />
+            <SupportCard />
+        </div>
     </div>
 );

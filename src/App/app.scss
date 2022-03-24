@@ -33,7 +33,7 @@
 
             .carousel-inner {
                 height: 100%;
-                padding: 1em;
+                padding: 16px;
 
                 overflow-y: overlay;
                 @include scrollbars($gray-100);
@@ -67,7 +67,7 @@
 
     .core19-side-panel-container {
         width: $side-panel-width;
-        padding: 0 23px;
+        padding: 0 24px;
         background-color: $gray-50;
         height: 100%;
         margin-left: 0;

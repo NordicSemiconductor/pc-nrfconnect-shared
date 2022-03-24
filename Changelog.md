@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+-   `Button` component
+
+### Changed
+
+-   Standardise toggle colours.
+-   Updated toggle design in footer.
+-   Center `About` pane vertically.
+-   Type of `getPersistentStore` was changed to match more that from
+    electron-store.
+-   Bundle shared with the apps.
+
+### Removed
+
+-   Support for `nrfconnect/core` as mocked or external module.
+
 ## 5.18.0 - 2022-03-24
 
 ### Removed
@@ -35,7 +54,7 @@ and this project adheres to
 -   The system report did not contain the version numbers for the nrfjprog DLL
     and JLink.
 -   The error reporter UI didn't handle content overflow when the available
-    options were expanded
+    options were expanded.
 -   When the app crashed and the error reporter was displayed, users can
     generate a system report. In that report, the current device was not
     displayed correctly. E.g. with a nRF52 Dongle with the RSSI app on this was
@@ -64,12 +83,12 @@ and this project adheres to
     `eslint-disable-next-line`) are used, even though they are not necessary
     (anymore).
 -   Inform user if installed JLink version and the provided one do not match.
--   Added `@electron/remote` to replace electron.remote
+-   Added `@electron/remote` to replace electron.remote.
 
 ### Changed
 
 -   Updated a lot of dependencies.
--   Forbid use of @ts-ignore.
+-   Forbid use of `@ts-ignore`.
 -   Use source map in apps in production.
 -   Lint also JSON files.
 -   Initial `Application data folder` is now logged only at debug level, no
@@ -86,13 +105,13 @@ and this project adheres to
 -   A lot of dependencies were updated, including linting and testing tools. So
     there can be some new warnings or errors when linting, testing, or building.
     Check that after updating to this version.
--   If your project currently uses @ts-ignore you have to change something. In
-    most cases @ts-ignore is used to correct a glitch from another library. At
-    least in these cases @ts-expect-error should be used instead. If the library
-    is corrected, we will then see that we can remove the directive. If it is
-    one of the rare cases that you _really_ want to use @ts-ignore, you can
-    disable the rule @typescript-eslint/ban-ts-comment in that spot, but please
-    think twice about this.
+-   If your project currently uses `@ts-ignore` you have to change something. In
+    most cases `@ts-ignore` is used to correct a glitch from another library. At
+    least in these cases `@ts-expect-error` should be used instead. If the
+    library is corrected, we will then see that we can remove the directive. If
+    it is one of the rare cases that you _really_ want to use `@ts-ignore`, you
+    can disable the rule `@typescript-eslint/ban-ts-comment` in that spot, but
+    please think twice about this.
 -   If you still use `immutable` in your project and do not want to change that
     now, then you need to add it to the direct dependencies of your project.
 

@@ -10,6 +10,7 @@ declare module 'pc-nrfconnect-shared' {
     import { Logger, LogEntry } from 'winston';
     import Store from 'electron-store';
     import { RenderResult } from '@testing-library/react';
+    import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
     type RootState = import('./src/state').RootState;
     type Device = import('./src/state').Device;
@@ -180,6 +181,16 @@ declare module 'pc-nrfconnect-shared' {
         title?: string;
     }> {}
 
+    // Button.tsx
+
+    export class Button extends React.Component<{
+        id?: string;
+        className?: string;
+        onClick: React.MouseEventHandler<HTMLButtonElement>;
+        disabled?: boolean;
+        title?: string;
+    }> {}
+
     // Card.tsx
 
     export class Card extends React.Component<{
@@ -187,21 +198,6 @@ declare module 'pc-nrfconnect-shared' {
     }> {}
 
     // DeviceSelector.jsx
-
-    export interface DeviceListing {
-        usb?: boolean;
-        nordicUsb?: boolean;
-        seggerUsb?: boolean;
-        nordicDfu?: boolean;
-        serialPort?: boolean;
-        /**
-         * @deprecated Using the property `serialport` has been
-         * deprecated. You should now use `serialPort`. The property
-         * will be removed in the next major release.
-         */
-        serialport?: boolean;
-        jlink?: boolean;
-    }
 
     export interface DeviceSetup {
         jprog?: Record<string, unknown>;
@@ -219,7 +215,7 @@ declare module 'pc-nrfconnect-shared' {
          * e.g. whether to show only J-Link devices or also those
          * just connected through a normal serial port.
          */
-        deviceListing: DeviceListing;
+        deviceListing: DeviceTraits;
         /**
          * If your app requires devices to be set up with a certain
          * firmware, use this property to specify how they are to be
@@ -602,6 +598,12 @@ declare module 'pc-nrfconnect-shared' {
         clipEnd?: number
     ) => string;
 
+    // environment.ts
+    /**
+     * Determine if environment is in development mode.
+     */
+    export const isDevelopment: boolean;
+
     // appLayout.js
 
     /**
@@ -622,7 +624,9 @@ declare module 'pc-nrfconnect-shared' {
      * Return a persistent store, specific for the app.
      * The app name from package.json is used to identify the app.
      */
-    export function getPersistentStore<StoreSchema>(): Store<StoreSchema>;
+    export function getPersistentStore<
+        StoreSchema extends Record<string, any>
+    >(): Store<StoreSchema>;
 
     export const deviceInfo: (device: Device) => DeviceInfo;
 
@@ -677,6 +681,12 @@ declare module '*.module.scss' {
         [property: string]: string;
     };
     export = properties;
+}
+
+interface Window {
+    appDir: string;
+    appDataDir: string;
+    appLogDir: string;
 }
 
 // Let typescript compiler in `npm run lint` resolve css modules
