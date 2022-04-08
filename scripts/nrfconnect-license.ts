@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-'use strict';
-
 import glob from 'fast-glob';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 
