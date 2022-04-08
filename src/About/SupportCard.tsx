@@ -6,6 +6,7 @@
 
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { getCurrentWindow } from '@electron/remote';
 
 import Button from '../Button/Button';
 import Card from '../Card/Card';
@@ -24,8 +25,6 @@ import { persistVerboseLoggingEnabled } from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
 import Section from './Section';
-
-const { getCurrentWindow } = require('@electron/remote');
 
 export default () => {
     const dispatch = useDispatch();

@@ -7,6 +7,7 @@
 import React, { ReactNode } from 'react';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import { getCurrentWindow } from '@electron/remote';
 import { Device } from 'pc-nrfconnect-shared';
 
 import Spinner from '../Dialog/Spinner';
@@ -26,8 +27,6 @@ import {
 import bugIcon from './bug.svg';
 
 import './error-boundary.scss';
-
-const { getCurrentWindow } = require('@electron/remote');
 
 const sendGAEvent = (error: string) => {
     if (!isEnabled()) {
