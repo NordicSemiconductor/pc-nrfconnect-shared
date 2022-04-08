@@ -18,12 +18,16 @@ module.exports = {
         'eslint:recommended',
         'airbnb',
         'plugin:@typescript-eslint/recommended',
+        'plugin:import/recommended',
+        'plugin:import/typescript',
         'prettier',
         'prettier/react',
         'prettier/@typescript-eslint',
     ],
     ignorePatterns: ['package-lock.json', ...entriesInGitignore],
     rules: {
+        'import/named': 'error',
+        'import/default': 'error',
         'no-shadow': 'off',
         '@typescript-eslint/no-shadow': ['error'],
         'react/jsx-indent': ['error', 4],
@@ -179,12 +183,5 @@ module.exports = {
     globals: {
         NodeJS: true,
         React: true,
-    },
-    settings: {
-        'import/resolver': {
-            node: {
-                extensions: ['.jsx', '.tsx', '.js', '.ts'],
-            },
-        },
     },
 };
