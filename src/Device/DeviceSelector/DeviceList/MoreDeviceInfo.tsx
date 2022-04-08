@@ -52,7 +52,7 @@ const Serialports: FC<{ ports: SerialPort[] }> = ({ ports }) => (
     </ul>
 );
 
-export const MoreDeviceInfo: FC<{ device: Device }> = ({ device }) => (
+const MoreDeviceInfo: FC<{ device: Device }> = ({ device }) => (
     <div className="more-infos">
         <Row>
             <PcaNumber device={device} />

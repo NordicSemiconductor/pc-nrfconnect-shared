@@ -17,7 +17,7 @@ interface Props {
     toggleDeviceListVisible: () => void;
 }
 
-export const SelectDevice: FC<Props> = ({
+const SelectDevice: FC<Props> = ({
     deviceListVisible,
     toggleDeviceListVisible,
 }) => (

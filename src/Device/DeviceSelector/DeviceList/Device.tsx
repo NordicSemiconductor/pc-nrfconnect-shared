@@ -39,7 +39,7 @@ interface Props {
     allowMoreInfoVisible: boolean;
 }
 
-export const Device: FC<Props> = ({
+const Device: FC<Props> = ({
     device,
     doSelectDevice,
     allowMoreInfoVisible,
