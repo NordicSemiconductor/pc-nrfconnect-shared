@@ -15,7 +15,7 @@ import logger from '../logging';
 import { Device } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import { waitForDevice } from './deviceLister';
-import { DeviceSetup, DfuEntry } from './deviceSetup';
+import type { DeviceSetup, DfuEntry } from './deviceSetup';
 import {
     createInitPacketBuffer,
     defaultInitPacket,
