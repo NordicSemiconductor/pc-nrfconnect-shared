@@ -40,7 +40,7 @@ module.exports = {
         'import/extensions': 'off',
         'import/named': 'error',
         'import/no-dynamic-require': 'off',
-        'import/no-extraneous-dependencies': 0,
+        'import/no-extraneous-dependencies': 'off',
         'import/no-unresolved': [
             'error',
             {
@@ -75,14 +75,17 @@ module.exports = {
         'no-console': 'off',
         'no-param-reassign': 'off',
         'no-shadow': 'off',
-        'no-undef': 1,
+        'no-undef': 'warn',
         'no-unused-expressions': 'off',
         'no-unused-vars': 'off',
         'no-use-before-define': 'off',
         'prettier/prettier': 'error',
         'react-hooks/exhaustive-deps': 'error',
         'react-hooks/rules-of-hooks': 'error',
-        'react/jsx-filename-extension': [1, { extensions: ['.jsx', '.tsx'] }],
+        'react/jsx-filename-extension': [
+            'warn',
+            { extensions: ['.jsx', '.tsx'] },
+        ],
         'react/jsx-indent-props': ['error', 4],
         'react/jsx-indent': ['error', 4],
         'react/jsx-key': ['error', { checkFragmentShorthand: true }],
@@ -117,7 +120,7 @@ module.exports = {
             },
         ],
         strict: 'off',
-        'valid-jsdoc': [2, { prefer: { return: 'returns' } }],
+        'valid-jsdoc': ['error', { prefer: { return: 'returns' } }],
     },
     overrides: [
         {
