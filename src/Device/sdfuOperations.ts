@@ -272,8 +272,8 @@ const createDfuDataFromImages = (dfuImages: DfuImage[]): DfuData => {
 };
 
 interface Manifest {
-    application?: { bin_file: string; dat_file: string };
-    softdevice?: { bin_file: string; dat_file: string };
+    application?: { bin_file: string; dat_file: string }; // eslint-disable-line camelcase
+    softdevice?: { bin_file: string; dat_file: string }; // eslint-disable-line camelcase
 }
 
 /**

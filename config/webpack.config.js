@@ -7,6 +7,7 @@
 const fs = require('fs');
 const path = require('path');
 
+// eslint-disable-next-line import/no-dynamic-require
 const { dependencies } = require(path.join(process.cwd(), 'package.json'));
 
 const appDirectory = fs.realpathSync(process.cwd());
