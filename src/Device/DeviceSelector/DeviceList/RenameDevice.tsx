@@ -11,7 +11,7 @@ import PseudoButton from '../../../PseudoButton/PseudoButton';
 
 import './rename-device.scss';
 
-export const RenameDevice: FC<{ startEditingDeviceName: () => void }> = ({
+const RenameDevice: FC<{ startEditingDeviceName: () => void }> = ({
     startEditingDeviceName,
 }) => (
     <PseudoButton className="rename-button" onClick={startEditingDeviceName}>

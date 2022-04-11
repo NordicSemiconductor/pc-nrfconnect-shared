@@ -1,5 +1,5 @@
 pool:
-  vmImage: 'Ubuntu-18.04'
+  vmImage: 'ubuntu-latest'
 steps:
 - task: NodeTool@0
   inputs:
@@ -7,7 +7,7 @@ steps:
 - bash: |
     set -o errexit -o pipefail
     npm ci
-    npm run lint
+    npm run check
     npm test -- --coverage --coverageReporters=cobertura
   displayName: "Lint & test"
 - task: PublishCodeCoverageResults@1

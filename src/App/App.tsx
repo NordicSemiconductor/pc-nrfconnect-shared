@@ -74,7 +74,7 @@ const initialiseUsageData = async () => {
     }
 };
 
-interface Pane {
+export interface Pane {
     name: string;
     Main: FC<{ active: boolean }>;
     SidePanel?: FC;

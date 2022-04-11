@@ -49,7 +49,7 @@ describe('ErrorDialog', () => {
             expect(buttons[1]).toHaveTextContent('Close');
         });
 
-        const dialogAfterClickingButton = buttonNumber => {
+        const dialogAfterClickingButton = (buttonNumber: number) => {
             const { getAllByRole, getByRole } = render(<ErrorDialog />, [
                 showDialog('An error occured'),
             ]);

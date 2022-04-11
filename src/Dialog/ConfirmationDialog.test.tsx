@@ -8,7 +8,9 @@ import React from 'react';
 import { fireEvent } from '@testing-library/react';
 
 import render from '../../test/testrenderer';
-import ConfirmationDialog from './ConfirmationDialog';
+import ConfirmationDialog, {
+    Props as ConfirmationDialogProps,
+} from './ConfirmationDialog';
 
 const noop = () => {};
 const defaultProps = {
@@ -81,7 +83,7 @@ describe('ConfirmationDialog', () => {
             expect(onOkMock).toHaveBeenCalled();
         });
         describe('can be disabled, when it', () => {
-            const isDisabledFor = props => {
+            const isDisabledFor = (props: Partial<ConfirmationDialogProps>) => {
                 const { getByText } = render(
                     <ConfirmationDialog {...defaultProps} {...props} />
                 );

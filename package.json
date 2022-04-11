@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "5.18.0",
+    "version": "6.0.0",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -9,14 +9,17 @@
     "author": "Nordic Semiconductor ASA",
     "license": "ISC",
     "bin": {
-        "nrfconnect-license": "./bin/nrfconnect-license.mjs",
-        "nrfconnect-scripts": "./bin/nrfconnect-scripts.js"
+        "nrfconnect-license": "./scripts/nrfconnect-license.ts",
+        "check-for-typescript": "./scripts/check-for-typescript.ts",
+        "nordic-publish": "./scripts/nordic-publish.ts"
     },
     "main": "src",
     "scripts": {
-        "lint": "node ./bin/nrfconnect-scripts.js lint .",
-        "test": "jest --testResultsProcessor jest-bamboo-formatter src",
-        "test-watch": "jest --watch src"
+        "test": "jest",
+        "check": "run-p --silent --continue-on-error --print-label 'check:*'",
+        "check:lint": "eslint --color .",
+        "check:types": "scripts/check-for-typescript.ts tsc --noEmit --pretty",
+        "check:license": "./scripts/nrfconnect-license.ts check"
     },
     "dependencies": {
         "@babel/core": "7.17.5",
@@ -32,9 +35,11 @@
         "@babel/preset-react": "7.16.7",
         "@babel/preset-typescript": "7.16.7",
         "@electron/remote": "^2.0.4",
+        "@mdi/font": "3.9.97",
         "@nordicsemiconductor/nrf-device-lib-js": "0.4.4",
         "@reduxjs/toolkit": "1.8.0",
         "@svgr/webpack": "5.5.0",
+        "@swc/core": "1.2.148",
         "@testing-library/jest-dom": "5.16.2",
         "@testing-library/react": "10.4.9",
         "@types/adm-zip": "^0.4.34",
@@ -50,7 +55,7 @@
         "adm-zip": "^0.5.5",
         "babel-eslint": "10.1.0",
         "babel-loader": "8.2.3",
-        "babel-plugin-add-module-exports": "1.0.4",
+        "bootstrap": "4.6.1",
         "camelcase-keys": "6.2.2",
         "commander": "5.1.0",
         "cross-env": "7.0.3",
@@ -62,6 +67,7 @@
         "eslint": "7.32.0",
         "eslint-config-airbnb": "18.2.1",
         "eslint-config-prettier": "^6.11.0",
+        "eslint-import-resolver-typescript": "2.7.1",
         "eslint-plugin-import": "2.25.4",
         "eslint-plugin-jsx-a11y": "6.5.1",
         "eslint-plugin-md": "^1.0.19",
@@ -69,17 +75,16 @@
         "eslint-plugin-react": "7.29.3",
         "eslint-plugin-react-hooks": "4.3.0",
         "eslint-plugin-simple-import-sort": "7.0.0",
-        "eslint-webpack-plugin": "2.6.0",
         "fast-glob": "3.2.11",
         "file-loader": "6.2.0",
         "focus-visible": "5.2.0",
         "ftp": "0.3.10",
         "husky": "4.3.8",
-        "jest": "26.6.3",
-        "jest-bamboo-formatter": "1.0.1",
+        "jest": "27.5.1",
         "klaw": "3.0.0",
         "lodash.range": "3.2.0",
         "mousetrap": "1.6.5",
+        "npm-run-all2": "5.0.2",
         "nrf-intel-hex": "^1.3.0",
         "prettier": "2.5.1",
         "prettysize": "2.0.0",
@@ -94,23 +99,29 @@
         "redux-devtools-extension": "2.13.9",
         "redux-thunk": "2.4.1",
         "rimraf": "3.0.2",
+        "roboto-fontface": "0.10.0",
         "sass": "1.49.9",
         "sass-loader": "10.2.1",
         "semver": "7.3.5",
         "shasum": "1.0.2",
         "style-loader": "2.0.0",
         "systeminformation": "5.11.6",
+        "ts-node": "10.6.0",
         "typescript": "4.6.2",
         "url-loader": "4.1.1",
         "webpack": "4.46.0",
-        "@mdi/font": "3.9.97",
-        "bootstrap": "4.6.1",
-        "roboto-fontface": "0.10.0",
+        "webpack-cli": "4.9.2",
         "winston": "3.6.0"
     },
     "devDependencies": {
+        "@types/enzyme": "3.10.11",
+        "@types/enzyme-adapter-react-16": "1.0.6",
+        "@types/ftp": "0.3.33",
+        "@types/klaw": "3.0.3",
         "@types/lodash.range": "3.2.6",
         "@types/react": "17.0.39",
+        "@types/semver": "7.3.9",
+        "@types/webpack": "5.28.0",
         "electron": "13.6.9",
         "electron-store": "8.0.1",
         "react": "16.14.0",
@@ -122,33 +133,9 @@
         "react": "^16.13",
         "react-redux": "^7.2"
     },
-    "jest": {
-        "moduleNameMapper": {
-            "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$": "<rootDir>/mocks/fileMock.js",
-            "\\.(css|scss)$": "<rootDir>/mocks/emptyMock.js",
-            "packageJson$": "<rootDir>/mocks/packageJsonMock.js",
-            "^electron$": "<rootDir>/mocks/electronMock.js",
-            "^electron-store$": "<rootDir>/mocks/electronStoreMock.js",
-            "pc-nrfjprog-js|nrf-device-setup": "<rootDir>/mocks/emptyMock.js",
-            "@nordicsemiconductor/nrf-device-lib-js": "<rootDir>/mocks/deviceLibMock.js",
-            "serialport": "<rootDir>/mocks/serialportMock.js",
-            "@electron/remote": "<rootDir>/mocks/remoteMock.js"
-        },
-        "transform": {
-            "^.+\\.[jt]sx?$": [
-                "babel-jest",
-                {
-                    "configFile": "./config/babel.config.js"
-                }
-            ]
-        },
-        "setupFilesAfterEnv": [
-            "<rootDir>/test/setupTests.js"
-        ]
-    },
     "typings": "./index.d.ts",
     "eslintConfig": {
-        "extends": "./config/eslintrc.json"
+        "extends": "./config/eslintrc"
     },
     "prettier": "./config/prettier.config.js"
 }

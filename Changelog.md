@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 6.0.0 - 2022-04-11
 
 ### Added
 
@@ -20,10 +20,80 @@ and this project adheres to
 -   Type of `getPersistentStore` was changed to match more that from
     electron-store.
 -   Bundle shared with the apps.
+-   ESlint config file changed to `config/eslintrc.js`.
+-   Ignore all entries from `.gitignore` in linting.
 
 ### Removed
 
 -   Support for `nrfconnect/core` as mocked or external module.
+-   Obsolete `lint-init`.
+-   `nrfconnect-scripts`.
+-   Plugin `add-module-exports` from babel config because it caused problems
+    with the latest version of `electron-store` (or, more concrete, with the
+    dependency `atomically` which that pulled in.)
+-   Running ESLint during build.
+
+### Steps to upgrade when using this package
+
+-   Because this version removed `nrfconnect-scripts`, all invocations of it
+    have to be replaced with direct invocations of the corresponding tools. So
+    in `package.json` these entries in the `scripts` property should replace the
+    previous entries:
+
+```json
+{
+    "scripts": {
+        "dev": "webpack watch --mode development",
+        "webpack": "webpack build --mode development",
+        "build": "webpack build",
+        "test": "jest",
+        "check": "run-p --silent --continue-on-error --print-label 'check:*'",
+        "check:lint": "eslint --color .",
+        "check:types": "check-for-typescript tsc --noEmit --pretty",
+        "check:license": "nrfconnect-license check",
+        "nordic-publish": "nordic-publish"
+    }
+}
+```
+
+-   A file `webpack.config.js` must be added with this content:
+
+```js
+module.exports = require('pc-nrfconnect-shared/config/webpack.config');
+```
+
+-   A file `jest.config.js` must be added with this content, unless you want to
+    have a special jest configuration:
+
+```js
+module.exports = require('pc-nrfconnect-shared/config/jest.config')();
+```
+
+-   Because the name of the ESLint config file was changed from `eslintrc.json`
+    to `eslintrc.js`, the reference to it needs to be changed in `package.json`
+    (The correct extension will be chosen automatically, so you can omit that):
+
+```json
+{
+    "eslintConfig": {
+        "extends": "./node_modules/pc-nrfconnect-shared/config/eslintrc"
+    }
+}
+```
+
+-   The above change renames the script `lint` to `check` (because it does not
+    only linting but runs multiple static checks). In `azure-pipelines.yml`
+    there are probably still invocations like `npm run lint` and these need to
+    be updated to `npm run check`. If there are other references to `lint`, they
+    need to be updated too.
+
+-   The scripts require at least Ubuntu 20 in the Azure pipelines. So check
+    which image is configured in `azure-pipelines.yml` and if it is still
+    `ubuntu-18.04` update that, best to `ubuntu-latest`.
+
+-   The enzyme-to-json serializer was added to the jest config which might
+    change some jest snapshots. You might have to run `jest --updateSnapshot` to
+    update them.
 
 ## 5.18.0 - 2022-03-24
 

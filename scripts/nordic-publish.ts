@@ -1,17 +1,17 @@
+#!/usr/bin/env -S ts-node --swc
+
 /*
  * Copyright (c) 2015 Nordic Semiconductor ASA
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-'use strict';
-
-const { execSync } = require('child_process');
-const fs = require('fs');
-const semver = require('semver');
-const shasum = require('shasum');
-const FtpClient = require('ftp');
-const args = require('commander');
+import { execSync } from 'child_process';
+import args from 'commander';
+import fs from 'fs';
+import FtpClient from 'ftp';
+import semver from 'semver';
+import shasum from 'shasum';
 
 args.description('Publish to nordic repository')
     .requiredOption(
@@ -38,7 +38,7 @@ const nonOffcialSource = args.source !== 'official' ? args.source : undefined;
  */
 const config = {
     host: process.env.REPO_HOST || 'localhost',
-    port: process.env.REPO_PORT || 21,
+    port: Number(process.env.REPO_PORT) || 21,
     user: process.env.REPO_USER || 'anonymous',
     password: process.env.REPO_PASS || 'anonymous@',
 };
@@ -66,7 +66,7 @@ const client = new FtpClient();
  * @param {string} filename of package
  * @returns {object} parsed package info: { name, version, filename }
  */
-function parsePackageName(filename) {
+function parsePackageName(filename: string) {
     const rx = /(.*?)-(\d+\.\d+.*?)(.tgz)/;
     const match = rx.exec(filename);
     if (!match) {
@@ -84,7 +84,7 @@ function parsePackageName(filename) {
  * @returns {Promise<undefined>} resolves upon success
  */
 function connect() {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         console.log(
             `Connecting to ftp://${config.user}@${config.host}:${config.port}`
         );
@@ -106,8 +106,8 @@ function connect() {
  * @param {string} dir the directory to change to
  * @returns {Promise<undefined>} resolves upon success
  */
-function changeWorkingDirectory(dir) {
-    return new Promise((resolve, reject) => {
+function changeWorkingDirectory(dir: string) {
+    return new Promise<void>((resolve, reject) => {
         console.log(`Changing to directory ${dir}`);
         client.cwd(dir, err => (err ? reject(err) : resolve()));
     });
@@ -119,8 +119,8 @@ function changeWorkingDirectory(dir) {
  * @param {string} filename the file to download
  * @returns {Promise<string>} resolves with content of file
  */
-function getFile(filename) {
-    return new Promise((resolve, reject) => {
+function getFile(filename: string) {
+    return new Promise<string>((resolve, reject) => {
         console.log(`Downloading file ${filename}`);
         let data = '';
         client.get(filename, (err, stream) => {
@@ -141,8 +141,8 @@ function getFile(filename) {
  * @param {string} remote filename
  * @returns {Promise<undefined>} resolves upon success
  */
-function putFile(local, remote) {
-    return new Promise((resolve, reject) => {
+function putFile(local: string | Buffer, remote: string) {
+    return new Promise<void>((resolve, reject) => {
         console.log(`Uploading file ${remote}`);
         client.put(local, remote, err => (err ? reject(err) : resolve()));
     });
@@ -154,8 +154,8 @@ function putFile(local, remote) {
  * @param {string} filePath of package
  * @returns {Promise<string>} resolves with SHASUM
  */
-function getShasum(filePath) {
-    return new Promise((resolve, reject) => {
+function getShasum(filePath: string) {
+    return new Promise<string>((resolve, reject) => {
         fs.readFile(filePath, (err, buffer) => {
             if (err) {
                 reject(
@@ -170,7 +170,7 @@ function getShasum(filePath) {
     });
 }
 
-function uploadChangelog(packageName) {
+function uploadChangelog(packageName: string) {
     const changelogFilename = 'Changelog.md';
     if (!fs.existsSync(changelogFilename)) {
         const errorMsg = `There should be a changelog called "${changelogFilename}". Please provide it!`;
@@ -181,7 +181,12 @@ function uploadChangelog(packageName) {
     return putFile(changelogFilename, `${packageName}-${changelogFilename}`);
 }
 
-let thisPackage;
+let thisPackage: {
+    name: string;
+    version: string;
+    filename: string;
+    shasum?: string;
+};
 
 Promise.resolve()
     .then(() => {

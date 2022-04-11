@@ -7,9 +7,9 @@
 import React from 'react';
 
 import render from '../../test/testrenderer';
-import App from './App';
+import App, { Pane } from './App';
 
-const renderApp = panes => {
+const renderApp = (panes: Pane[]) => {
     const dummyReducer = (s = null) => s;
     const dummyNode = <div />;
 

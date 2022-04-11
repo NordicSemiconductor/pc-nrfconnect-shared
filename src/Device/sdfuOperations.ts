@@ -15,7 +15,7 @@ import logger from '../logging';
 import { Device } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import { waitForDevice } from './deviceLister';
-import { DeviceSetupConfig, DfuEntry } from './deviceSetup';
+import type { DeviceSetup, DfuEntry } from './deviceSetup';
 import {
     createInitPacketBuffer,
     defaultInitPacket,
@@ -96,7 +96,7 @@ export const ensureBootloaderMode = /* async */ (device: Device) => {
  */
 const checkConfirmUpdateBootloader = /* async */ (
     device: Device,
-    promiseConfirm: PromiseConfirm
+    promiseConfirm?: PromiseConfirm
 ) => {
     if (!promiseConfirm) {
         // without explicit consent bootloader will not be updated
@@ -121,7 +121,7 @@ const checkConfirmUpdateBootloader = /* async */ (
  * @param {function} promiseConfirm Promise returning function
  * @returns {Promise} resolves to boolean
  */
-const confirmHelper = async (promiseConfirm: PromiseConfirm) => {
+const confirmHelper = async (promiseConfirm?: PromiseConfirm) => {
     if (!promiseConfirm) return true;
     try {
         return await promiseConfirm(
@@ -141,7 +141,7 @@ const confirmHelper = async (promiseConfirm: PromiseConfirm) => {
  */
 const choiceHelper = /* async */ (
     choices: string[],
-    promiseChoice: PromiseChoice
+    promiseChoice?: PromiseChoice
 ) => {
     if (choices.length > 1 && promiseChoice) {
         return promiseChoice('Which firmware do you want to program?', choices);
@@ -188,7 +188,7 @@ const sleep = (ms: number) => {
  * @param {boolean} needSerialport indicates if the device is expected to have a serialport
  * @returns {Promise} resolved to device
  */
-const validateSerialPort = async (device: Device, needSerialport: boolean) => {
+const validateSerialPort = async (device: Device, needSerialport?: boolean) => {
     if (!needSerialport) {
         logger.debug('device does not need serialport');
         return device;
@@ -272,8 +272,8 @@ const createDfuDataFromImages = (dfuImages: DfuImage[]): DfuData => {
 };
 
 interface Manifest {
-    application?: { bin_file: string; dat_file: string };
-    softdevice?: { bin_file: string; dat_file: string };
+    application?: { bin_file: string; dat_file: string }; // eslint-disable-line camelcase
+    softdevice?: { bin_file: string; dat_file: string }; // eslint-disable-line camelcase
 }
 
 /**
@@ -451,13 +451,18 @@ const prepareInDFUBootloader = async (
  */
 export const performDFU = async (
     selectedDevice: Device,
-    options: DeviceSetupConfig
+    options: DeviceSetup
 ): Promise<Device> => {
     const { dfu, needSerialport, promiseConfirm, promiseChoice } = options;
     const isConfirmed = await confirmHelper(promiseConfirm);
 
     if (!isConfirmed) {
         // go on without DFU
+        return selectedDevice;
+    }
+
+    if (dfu == null) {
+        logger.error('Must never be called without DFU options.');
         return selectedDevice;
     }
 

@@ -18,7 +18,7 @@ import SerialPort from 'serialport';
 import logger from '../logging';
 import { Device } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import { DeviceSetupConfig } from './deviceSetup';
+import type { DeviceSetup } from './deviceSetup';
 
 const deviceLibContext = getDeviceLibContext();
 
@@ -156,7 +156,7 @@ export async function validateFirmware(
  * @returns {Promise} resolves to boolean
  */
 const confirmHelper = async (
-    promiseConfirm: (message: string) => Promise<boolean>
+    promiseConfirm?: (message: string) => Promise<boolean>
 ) => {
     if (!promiseConfirm) return true;
     try {
@@ -179,7 +179,7 @@ const confirmHelper = async (
 export async function programFirmware(
     device: Device,
     fw: string | Buffer,
-    deviceSetupConfig: DeviceSetupConfig
+    deviceSetupConfig: DeviceSetup
 ) {
     try {
         const confirmed = await confirmHelper(deviceSetupConfig.promiseConfirm);

@@ -18,10 +18,7 @@ interface Props {
     startEditingDeviceName: () => void;
 }
 
-export const EditDeviceButtons: FC<Props> = ({
-    device,
-    startEditingDeviceName,
-}) => (
+const EditDeviceButtons: FC<Props> = ({ device, startEditingDeviceName }) => (
     <ButtonGroup className="edit-device-buttons">
         <MakeDeviceFavorite device={device} />
         <RenameDevice startEditingDeviceName={startEditingDeviceName} />
