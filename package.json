@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "6.0.0",
+    "version": "6.0.1",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -45,6 +45,7 @@
         "@types/adm-zip": "^0.4.34",
         "@types/date-fns": "^2.6.0",
         "@types/mousetrap": "1.6.9",
+        "@types/react": "17.0.44",
         "@types/react-dom": "17.0.13",
         "@types/react-redux": "7.1.23",
         "@types/serialport": "^8.0.2",
@@ -119,7 +120,6 @@
         "@types/ftp": "0.3.33",
         "@types/klaw": "3.0.3",
         "@types/lodash.range": "3.2.6",
-        "@types/react": "17.0.39",
         "@types/semver": "7.3.9",
         "@types/webpack": "5.28.0",
         "electron": "13.6.9",
