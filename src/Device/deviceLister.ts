@@ -126,17 +126,8 @@ export const stopWatchingDevices = () => {
     }
 };
 
-// @ts-expect-error This is how the nrfdl-js api works at the moment.
 const DEFAULT_TRAITS: DeviceTraits = {
     serialPort: true,
-    // usb: false,
-    // nordicUsb: false,
-    // nordicDfu: false,
-    // seggerUsb: false,
-    // jlink: false,
-    // broken: false,
-    // mcuboot: false,
-    // modem: false,
 };
 
 /**
