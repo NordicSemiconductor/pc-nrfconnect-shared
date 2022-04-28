@@ -427,17 +427,9 @@ const prepareInDFUBootloader = async (
         )
     );
 
-    // @ts-expect-error This is how the nrfdl-js api works at the moment.
     return waitForDevice(device.serialNumber, DEFAULT_DEVICE_WAIT_TIME, {
         serialPort: true,
         nordicUsb: true,
-        // broken: false,
-        // jlink: false,
-        // mcuboot: false,
-        // modem: false,
-        // nordicDfu: false,
-        // seggerUsb: false,
-        // usb: false,
     });
 };
 
