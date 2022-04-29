@@ -47,6 +47,10 @@ and this project adheres to
 
 ### Steps to upgrade when using this package
 
+-   The device-lib in launcher 3.11 crashes with shared@6, so you must bump the
+    `engines` field in `package.json` to require at least version `3.12` of the
+    launcher.
+
 -   Because this version removed `nrfconnect-scripts`, all invocations of it
     have to be replaced with direct invocations of the corresponding tools. So
     in `package.json` these entries in the `scripts` property should replace the
