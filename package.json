@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "6.0.2",
+    "version": "6.0.3",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -9,17 +9,17 @@
     "author": "Nordic Semiconductor ASA",
     "license": "ISC",
     "bin": {
-        "nrfconnect-license": "./scripts/nrfconnect-license.ts",
-        "check-for-typescript": "./scripts/check-for-typescript.ts",
-        "nordic-publish": "./scripts/nordic-publish.ts"
+        "nrfconnect-license": "./scripts/nrfconnect-license.sh",
+        "check-for-typescript": "./scripts/check-for-typescript.sh",
+        "nordic-publish": "./scripts/nordic-publish.sh"
     },
     "main": "src",
     "scripts": {
         "test": "jest",
-        "check": "run-p --silent --continue-on-error --print-label 'check:*'",
+        "check": "run-p --silent --continue-on-error --print-label check:*",
         "check:lint": "eslint --color .",
-        "check:types": "scripts/check-for-typescript.ts tsc --noEmit --pretty",
-        "check:license": "./scripts/nrfconnect-license.ts check"
+        "check:types": "ts-node --swc scripts/check-for-typescript.ts tsc --noEmit --pretty",
+        "check:license": "ts-node --swc scripts/nrfconnect-license.ts check"
     },
     "dependencies": {
         "@babel/core": "7.17.5",
