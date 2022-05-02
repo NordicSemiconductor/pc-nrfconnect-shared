@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-ts-node --swc "$(dirname $0)/nordic-publish.ts" "$@"
+SCRIPT_FOLDER="$(dirname $(readlink $0))"
+
+ts-node --swc "$SCRIPT_FOLDER/nordic-publish.ts" "$@"
