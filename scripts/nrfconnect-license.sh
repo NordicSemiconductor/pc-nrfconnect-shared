@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-ts-node --swc "$(dirname $0)/nrfconnect-license.ts" "$@"
+SCRIPT_FOLDER="$(dirname $(readlink $0))"
+
+ts-node --swc "$SCRIPT_FOLDER/nrfconnect-license.ts" "$@"

@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-ts-node --swc "$(dirname $0)/check-for-typescript.ts" "$@"
+SCRIPT_FOLDER="$(dirname $(readlink $0))"
+
+ts-node --swc "$SCRIPT_FOLDER/check-for-typescript.ts" "$@"
