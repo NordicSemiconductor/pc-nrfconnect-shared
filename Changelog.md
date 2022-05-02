@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 6.0.3 - 2022-05-02
+
+### Fixed
+
+-   Problems with new scripts under Windows.
+
 ## 6.0.2 - 2022-04-28
 
 ### Changed
@@ -48,8 +54,8 @@ and this project adheres to
 ### Steps to upgrade when using this package
 
 -   The device-lib in launcher 3.11 crashes with shared@6, so you must bump the
-    `engines` field in `package.json` to require at least version `3.12` of the
-    launcher.
+    `engines` field in `package.json` to require at least version `3.11.1` of
+    the launcher.
 
 -   Because this version removed `nrfconnect-scripts`, all invocations of it
     have to be replaced with direct invocations of the corresponding tools. So
@@ -63,7 +69,7 @@ and this project adheres to
         "webpack": "webpack build --mode development",
         "build": "webpack build",
         "test": "jest",
-        "check": "run-p --silent --continue-on-error --print-label 'check:*'",
+        "check": "run-p --silent --continue-on-error --print-label check:*",
         "check:lint": "eslint --color .",
         "check:types": "check-for-typescript tsc --noEmit --pretty",
         "check:license": "nrfconnect-license check",
