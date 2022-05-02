@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-SCRIPT_FOLDER="$(dirname $(readlink $0))"
+set -o errexit -o pipefail
 
-ts-node --swc "$SCRIPT_FOLDER/nrfconnect-license.ts" "$@"
+ts-node --swc ./node_modules/pc-nrfconnect-shared/scripts/nrfconnect-license.ts "$@"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-SCRIPT_FOLDER="$(dirname $(readlink $0))"
+set -o errexit -o pipefail
 
-ts-node --swc "$SCRIPT_FOLDER/nordic-publish.ts" "$@"
+ts-node --swc ./node_modules/pc-nrfconnect-shared/scripts/nordic-publish.ts "$@"
