@@ -1,3 +1,10 @@
 {
-    "extends": ["config:base", "group:allNonMajor"]
+    "extends": ["config:base", "group:allNonMajor"],
+    "packageRules": [
+        {
+            "groupName": "Prettier",
+            "matchPackageNames": ["prettier"],
+            "matchUpdateTypes": ["minor", "patch"]
+        }
+    ]
 }
