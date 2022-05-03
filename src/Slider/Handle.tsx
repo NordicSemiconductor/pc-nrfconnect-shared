@@ -44,8 +44,10 @@ const Handle: FC<Props> = ({
     const [currentlyDragged, setCurrentlyDragged] = useState(false);
     const percentage = toPercentage(value, range);
 
-    const onMouseDragStart =
-        useRef<{ mousePosition: number; percentage: number }>();
+    const onMouseDragStart = useRef<{
+        mousePosition: number;
+        percentage: number;
+    }>();
 
     // We have to put the callbacks into refs, so that we do not call outdated references later
     const onChangeRef = useAutoupdatingRef(onChange);
