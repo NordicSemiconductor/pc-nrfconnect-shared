@@ -31,7 +31,10 @@ const mockedGenerateSystemReport = generateSystemReport as jest.MockedFunction<
 >;
 
 mockedGenerateSystemReport.mockImplementation(
-    () => new Promise(res => res(SYSTEM_REPORT))
+    () =>
+        new Promise(res => {
+            res(SYSTEM_REPORT);
+        })
 );
 
 const Child = () => {

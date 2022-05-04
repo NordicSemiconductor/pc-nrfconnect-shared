@@ -30,6 +30,8 @@ export const Alert: React.FC<AlertProps> = ({
         onClose={onClose}
         className={`${styles.container} ${styles[variant]}`}
     >
-        {label && <strong>{label}</strong>} <>{children}</>
+        {label && <strong>{label}</strong>}
+        {/* eslint-disable-next-line react/jsx-no-useless-fragment -- I think we need a fragment because children could also be an array of components */}
+        <>{children}</>
     </BootstrapAlert>
 );

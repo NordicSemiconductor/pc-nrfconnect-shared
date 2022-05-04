@@ -35,6 +35,6 @@ export const testRendererForApps =
 
 export default (
     element: React.ReactElement,
-    actions: Action[] = [],
+    actions: Action[] = [], // eslint-disable-line default-param-last -- Because we want to allow people to specify actions but no specifix reducer
     appReducer?: Reducer
 ) => render(element, { wrapper: PreparedProvider(actions, appReducer) });

@@ -21,4 +21,4 @@ class LogBuffer {
 
 const createLogBuffer = () => new LogBuffer();
 
-export { createLogBuffer as default };
+export default createLogBuffer;
