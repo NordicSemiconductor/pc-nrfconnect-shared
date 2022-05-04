@@ -48,6 +48,11 @@ interface Props {
     sendUsageData?: (message: string) => void;
 }
 
+const genericRestoreDefaults = () => {
+    store().clear();
+    getCurrentWindow().reload();
+};
+
 class ErrorBoundary extends React.Component<
     Props,
     { hasError: boolean; error: Error | null; systemReport: string | null }
@@ -89,11 +94,6 @@ class ErrorBoundary extends React.Component<
         });
     }
 
-    restoreDefaults = () => {
-        store().clear();
-        getCurrentWindow().reload();
-    };
-
     render() {
         const { hasError, error, systemReport } = this.state;
 
@@ -132,7 +132,7 @@ class ErrorBoundary extends React.Component<
                             restoring to default values.
                         </p>
                         <FactoryResetButton
-                            resetFn={restoreDefaults || this.restoreDefaults}
+                            resetFn={restoreDefaults || genericRestoreDefaults}
                             label="Restore default settings"
                             variant="primary"
                         />
