@@ -90,7 +90,10 @@ export const verifySerialPortAvailable = (device: Device) => {
         );
     }
     return new Promise<void>((resolve, reject) => {
-        if (!device.serialport?.comName) return reject();
+        if (!device.serialport?.comName) {
+            reject();
+            return;
+        }
         const serialPort = new SerialPort(device.serialport?.comName, {
             autoOpen: false,
         });

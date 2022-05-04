@@ -178,9 +178,10 @@ function parseFirmwareImage(firmware: Buffer | string) {
  * @param {number} ms Time, in milliseconds, to wait until promise resolution
  * @returns {Promise<undefined>} Promise that resolves after a time
  */
-const sleep = (ms: number) => {
-    return new Promise(resolve => setTimeout(resolve, ms));
-};
+const sleep = (ms: number) =>
+    new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
 
 /**
  * Ensures that device has a serialport that is ready to be opened
@@ -393,7 +394,7 @@ const prepareInDFUBootloader = async (
     let prevPercentage: number;
 
     logger.debug('Starting DFU');
-    await new Promise<void>(resolve =>
+    await new Promise<void>(resolve => {
         nrfDeviceLib.firmwareProgram(
             getDeviceLibContext(),
             device.id,
@@ -424,8 +425,8 @@ const prepareInDFUBootloader = async (
                     prevPercentage = progress.progressPercentage;
                 }
             }
-        )
-    );
+        );
+    });
 
     return waitForDevice(device.serialNumber, DEFAULT_DEVICE_WAIT_TIME, {
         serialPort: true,
