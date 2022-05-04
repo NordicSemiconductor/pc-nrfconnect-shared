@@ -62,11 +62,11 @@ const convertLegacy = (pane: Pane | LegacyPane): Pane => {
 };
 
 let usageDataAlreadyInitialised = false;
-const initialiseUsageData = async () => {
+const initialiseUsageData = () => {
     if (!usageDataAlreadyInitialised) {
         usageDataAlreadyInitialised = true;
         try {
-            await usageDataInit(packageJson());
+            usageDataInit(packageJson());
         } catch (error) {
             // No need to display the error message for the user
             console.log(error);

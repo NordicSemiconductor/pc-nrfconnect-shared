@@ -13,10 +13,16 @@ import { getAppSpecificStore as store } from '../utils/persistentStore';
 import { generateSystemReport } from '../utils/systemReport';
 import ErrorBoundary from './ErrorBoundary';
 
+const mockReactGA = reactGA;
+
 jest.mock('../utils/systemReport');
 jest.mock('react-ga');
 jest.mock('../utils/usageData', () => ({
     ...jest.requireActual('../utils/usageData'),
+    init: jest.fn(() => {
+        mockReactGA.initialize('');
+    }),
+    sendErrorReport: jest.fn(),
     isEnabled: () => true,
 }));
 jest.mock('systeminformation', () => ({
@@ -57,11 +63,13 @@ describe('ErrorBoundary', () => {
                 <Child />
             </ErrorBoundary>
         );
+
         await waitFor(() => expect(reactGA.initialize).toHaveBeenCalled());
     });
 
     it('can take custom reporting functions', () => {
         const sendUsageData = jest.fn();
+
         render(
             <ErrorBoundary sendUsageData={sendUsageData}>
                 <Child />

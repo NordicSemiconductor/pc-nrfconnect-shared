@@ -7,7 +7,6 @@
 import reactGA from 'react-ga';
 import { PackageJson } from 'pc-nrfconnect-shared';
 import shasum from 'shasum';
-import si from 'systeminformation';
 
 import logger from '../logging';
 import { isDevelopment } from './environment';
@@ -36,53 +35,68 @@ let eventQueue: EventAction[] = [];
  *
  * @returns {Promise<void>} void
  */
-export const init = async (packageJson: PackageJson) => {
+export const init = (packageJson: PackageJson) => {
     appJson = packageJson;
 
-    const networkInterfaces = await si.networkInterfaces();
-    let networkInterface = networkInterfaces.find(i => i.iface === 'eth0'); // for most Debian
-    networkInterface =
-        networkInterface || networkInterfaces.find(i => i.iface === 'en0'); // for most macOS
-    networkInterface =
-        networkInterface || networkInterfaces.find(i => i.iface === 'Ethernet'); // for most Windows
-    networkInterface =
-        networkInterface || networkInterfaces.find(i => i.mac && !i.internal); // for good luck
-    logger.debug(`iface: ${networkInterface?.iface}`);
-    logger.debug(`IP4: ${networkInterface?.ip4}`);
-    logger.debug(`IP6: ${networkInterface?.ip6}`);
-    logger.debug(`MAC: ${networkInterface?.mac}`);
-    const clientId = networkInterface
-        ? shasum(
-              networkInterface.ip4 ||
-                  networkInterface.ip6 + networkInterface.mac
-          )
-        : 'unknown';
-    logger.debug(`Client Id: ${clientId}`);
-    reactGA.initialize(trackId, {
-        debug: false,
-        titleCase: false,
-        gaOptions: {
-            storage: 'none',
-            storeGac: false,
-            clientId,
-        },
-    });
+    if (!getIsSendingUsageData()) return;
 
-    reactGA.set({
-        checkProtocolTask: null,
-        // According to Nordic Personal Data Processing Protocol for nRF Connect for Desktop
-        // https://projecttools.nordicsemi.no/confluence/display/ISMS/nRF+Connect+for+Desktop
-        // we set ip as anonymized in Google Analytics as described on page
-        // https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#anonymizeIp
-        anonymizeIp: true,
-    });
+    setTimeout(async () => {
+        // eslint-disable-next-line global-require
+        const si = require('systeminformation');
+        const networkInterfaces: {
+            // Lost the type doing lazy require
+            iface: string;
+            mac: boolean;
+            ip4: string;
+            ip6: string;
+            internal: boolean;
+        }[] = await si.networkInterfaces();
+        const networkInterface =
+            networkInterfaces.find(i => i.iface === 'eth0') ?? // for most Debian
+            networkInterfaces.find(i => i.iface === 'en0') ?? // for most macOS
+            networkInterfaces.find(i => i.iface === 'Ethernet') ?? // for most Windows
+            networkInterfaces.find(i => i.mac && !i.internal); // for good luck
 
-    reactGA.pageview(appJson.name);
+        logger.debug(`iface: ${networkInterface?.iface}`);
+        logger.debug(`IP4: ${networkInterface?.ip4}`);
+        logger.debug(`IP6: ${networkInterface?.ip6}`);
+        logger.debug(`MAC: ${networkInterface?.mac}`);
 
-    initialized = true;
-    logger.debug(
-        `Google Analytics for category ${categoryName()} has initialized`
-    );
+        const clientId = networkInterface
+            ? shasum(
+                  networkInterface.ip4 ||
+                      networkInterface.ip6 + networkInterface.mac
+              )
+            : 'unknown';
+
+        logger.debug(`Client Id: ${clientId}`);
+
+        reactGA.initialize(trackId, {
+            debug: false,
+            titleCase: false,
+            gaOptions: {
+                storage: 'none',
+                storeGac: false,
+                clientId,
+            },
+        });
+
+        reactGA.set({
+            checkProtocolTask: null,
+            // According to Nordic Personal Data Processing Protocol for nRF Connect for Desktop
+            // https://projecttools.nordicsemi.no/confluence/display/ISMS/nRF+Connect+for+Desktop
+            // we set ip as anonymized in Google Analytics as described on page
+            // https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#anonymizeIp
+            anonymizeIp: true,
+        });
+
+        reactGA.pageview(appJson.name);
+
+        initialized = true;
+        logger.debug(
+            `Google Analytics for category ${categoryName()} has initialized`
+        );
+    }, 5000); // Add 5 second delay to prevent inital rendering from beeing frozen.
 };
 
 /**

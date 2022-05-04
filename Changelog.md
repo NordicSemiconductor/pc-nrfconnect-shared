@@ -12,6 +12,7 @@ and this project adheres to
 
 -   Updated several dependencies, including `prettier` and `ESLint`, which may
     require some updates to projects using shared.
+-   Reduced startup time of windows apps.
 
 ## 6.0.5 - 2022-05-02
 
