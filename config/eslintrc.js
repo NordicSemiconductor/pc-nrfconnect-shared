@@ -21,8 +21,6 @@ module.exports = {
         'plugin:import/recommended',
         'plugin:import/typescript',
         'prettier',
-        'prettier/react',
-        'prettier/@typescript-eslint',
     ],
     ignorePatterns: ['package-lock.json', ...entriesInGitignore],
     rules: {
