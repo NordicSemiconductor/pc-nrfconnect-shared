@@ -78,6 +78,13 @@ module.exports = {
         'prettier/prettier': 'error',
         'react-hooks/exhaustive-deps': 'error',
         'react-hooks/rules-of-hooks': 'error',
+        'react/function-component-definition': [
+            'error',
+            {
+                namedComponents: 'arrow-function',
+                unnamedComponents: 'arrow-function',
+            },
+        ],
         'react/jsx-filename-extension': [
             'error',
             { extensions: ['.jsx', '.tsx'] },
