@@ -84,9 +84,11 @@ const slice = createSlice({
          *
          * @param {Object} device Device object as given by nrf-device-lib.
          */
-        deviceSetupComplete: (state, action: PayloadAction<Device>) => {
-            return { ...state, ...noDialogShown, deviceInfo: action.payload };
-        },
+        deviceSetupComplete: (state, action: PayloadAction<Device>) => ({
+            ...state,
+            ...noDialogShown,
+            deviceInfo: action.payload,
+        }),
 
         // /**
         //  * Indicates that device setup failed.
@@ -94,12 +96,10 @@ const slice = createSlice({
         //  * @param {Object} device Device object as given by nrf-device-lib.
         //  * @param {Object} error Error object describing the error.
         //  */
-        deviceSetupError: state => {
-            return {
-                ...state,
-                ...noDialogShown,
-            };
-        },
+        deviceSetupError: state => ({
+            ...state,
+            ...noDialogShown,
+        }),
 
         // /**
         //  * Indicates that some part of the device setup operation requires input
@@ -113,18 +113,16 @@ const slice = createSlice({
             reducer: (
                 state,
                 action: PayloadAction<{ message: string; choices: string[] }>
-            ) => {
-                return {
-                    ...state,
-                    isSetupDialogVisible: true,
-                    isSetupWaitingForUserInput: true,
-                    setupDialogText: action.payload.message,
-                    setupDialogChoices:
-                        action.payload.choices == null
-                            ? []
-                            : [...action.payload.choices],
-                };
-            },
+            ) => ({
+                ...state,
+                isSetupDialogVisible: true,
+                isSetupWaitingForUserInput: true,
+                setupDialogText: action.payload.message,
+                setupDialogChoices:
+                    action.payload.choices == null
+                        ? []
+                        : [...action.payload.choices],
+            }),
             prepare: (message: string, choices: string[]) => ({
                 payload: {
                     message,

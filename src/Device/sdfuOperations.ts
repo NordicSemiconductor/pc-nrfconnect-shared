@@ -283,8 +283,8 @@ interface Manifest {
  * @param {Array} dfuImages to be created
  * @returns {Object} zip
  */
-const createDfuZip = (dfuImages: DfuImage[]) => {
-    return new Promise<AdmZip>(resolve => {
+const createDfuZip = (dfuImages: DfuImage[]) =>
+    new Promise<AdmZip>(resolve => {
         const data = createDfuDataFromImages(dfuImages);
         const zip = new AdmZip();
         const manifest: Manifest = {};
@@ -313,7 +313,6 @@ const createDfuZip = (dfuImages: DfuImage[]) => {
 
         resolve(zip);
     });
-};
 
 /**
  * Create DFU zip buffer from prepared DFU images
