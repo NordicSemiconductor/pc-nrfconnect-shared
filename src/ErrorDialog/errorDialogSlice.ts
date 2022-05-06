@@ -43,9 +43,7 @@ const slice = createSlice({
                 );
             },
         },
-        hideDialog: () => {
-            return initialState;
-        },
+        hideDialog: () => initialState,
     },
 });
 

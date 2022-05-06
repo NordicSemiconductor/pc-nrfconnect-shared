@@ -13,6 +13,13 @@ and this project adheres to
 -   Updated several dependencies, including `prettier` and `ESLint`, which may
     require some updates to projects using shared.
 -   Reduced startup time of windows apps.
+-   Updated several dependencies.
+
+### Steps to upgrade when using this package
+
+-   Some of the updated dependencies (like `prettier`, `ESLint`, and
+    `eslint-config-airbnb`) might lead to failing checks, which would require
+    some minor updates.
 
 ## 6.0.5 - 2022-05-02
 

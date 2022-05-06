@@ -81,9 +81,8 @@ export const startWatchingDevices =
                 deviceListing
             );
             const devices = wrapDevicesFromNrfdl(nrfdlDevices);
-            const hasSerialNumber = (d: Device) => {
-                return d.serialNumber === selectedSerialNumber;
-            };
+            const hasSerialNumber = (d: Device) =>
+                d.serialNumber === selectedSerialNumber;
 
             if (
                 selectedSerialNumber !== null &&
