@@ -6,23 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 6.0.6 - 2022-05-06
 
 ### Added
 
--   Export `ErrorDialogActions` type
+-   Support the nRF5340 Audio DK (PCA10121).
+-   Export `ErrorDialogActions` type.
 
 ### Changed
 
--   Updated several dependencies, including `prettier` and `ESLint`, which may
-    require some updates to projects using shared.
 -   Reduced startup time of windows apps.
 -   Updated several dependencies.
 
 ### Removed
 
--   Obsolete `ErrorDialogAction` type
--   Obsolete `NrfConnectAction` and other related types
+-   Obsolete `ErrorDialogAction` type.
+-   Obsolete `NrfConnectAction` and other related types.
 
 ### Steps to upgrade when using this package
 
