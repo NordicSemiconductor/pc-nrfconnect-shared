@@ -44,8 +44,9 @@ type DevicePCA =
     | 'PCA10056'
     | 'PCA10059'
     | 'PCA10090'
-    | 'PCA10100'
     | 'PCA10095'
+    | 'PCA10100'
+    | 'PCA10121'
     | 'PCA20020'
     | 'PCA20035';
 
@@ -106,6 +107,15 @@ const devicesByPca: { [P in DevicePCA]: DeviceInfo } = {
             buyOnlineParams: 'search_token=nrf9160-DK&series_token=nRF9160',
         },
     },
+    PCA10095: {
+        name: 'nRF5340 DK',
+        cores: 2,
+        icon: nrf53logo,
+        website: {
+            productPagePath: 'Software-and-tools/Development-Kits/nRF5340-DK',
+            buyOnlineParams: 'search_token=nRF5340-DK&series_token=nRF5340',
+        },
+    },
     PCA10100: {
         name: 'nRF52833 DK',
         cores: 1,
@@ -115,13 +125,13 @@ const devicesByPca: { [P in DevicePCA]: DeviceInfo } = {
             buyOnlineParams: 'search_token=nRF52833-DK&series_token=nRF52833',
         },
     },
-    PCA10095: {
-        name: 'nRF5340 DK',
+    PCA10121: {
+        name: 'nRF5340 Audio DK',
         cores: 2,
         icon: nrf53logo,
         website: {
-            productPagePath: 'Software-and-tools/Development-Kits/nRF5340-DK',
-            buyOnlineParams: 'search_token=nRF5340-DK&series_token=nRF5340',
+            // productPagePath: 'TBD',
+            // buyOnlineParams: 'TBD',
         },
     },
     PCA20020: {
