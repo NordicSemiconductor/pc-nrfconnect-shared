@@ -33,8 +33,7 @@ const sendGAEvent = (error: string) => {
         return;
     }
     if (!isGAInitialized()) {
-        initGA(packageJson()).then(() => sendErrorReport(error));
-        return;
+        initGA(packageJson());
     }
     sendErrorReport(error);
 };
