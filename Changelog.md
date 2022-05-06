@@ -8,9 +8,18 @@ and this project adheres to
 
 ## Unreleased
 
+### Added
+
+-   Export `ErrorDialogActions` type
+
 ### Changed
 
 -   Updated several dependencies.
+
+### Removed
+
+-   Obsolete `ErrorDialogAction` type
+-   Obsolete `NrfConnectAction` and other related types
 
 ### Steps to upgrade when using this package
 
