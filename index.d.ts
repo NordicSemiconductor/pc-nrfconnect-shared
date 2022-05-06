@@ -23,32 +23,6 @@ declare module 'pc-nrfconnect-shared' {
         app: AppState;
     }
 
-    // Actions
-
-    enum NrfConnectActionType {
-        LOG_ADD_ENTRIES = 'LOG_ADD_ENTRIES',
-        LOG_CLEAR_ENTRIES = 'LOG_CLEAR_ENTRIES',
-        LOG_TOGGLE_AUTOSCROLL = 'LOG_TOGGLE_AUTOSCROLL',
-    }
-
-    interface LogAddEntries {
-        type: NrfConnectActionType.LOG_ADD_ENTRIES;
-        entries: readonly any[];
-    }
-
-    interface LogClearEntries {
-        type: NrfConnectActionType.LOG_CLEAR_ENTRIES;
-    }
-
-    interface LogToggleAutoscroll {
-        type: NrfConnectActionType.LOG_TOGGLE_AUTOSCROLL;
-    }
-
-    export type NrfConnectAction =
-        | LogAddEntries
-        | LogClearEntries
-        | LogToggleAutoscroll;
-
     // Logging
 
     interface SharedLogger extends Logger {
@@ -335,22 +309,10 @@ declare module 'pc-nrfconnect-shared' {
         errorResolutions: any;
     }
 
-    interface ErrorDialogShow {
-        type: 'ERROR_DIALOG_SHOW';
-        message: string;
-        errorResolutions: any;
-    }
-
-    interface ErrorDialogHide {
-        type: 'ERROR_DIALOG_HIDE';
-    }
-
-    type ErrorDialogAction = ErrorDialogShow | ErrorDialogHide;
-
-    export function errorLineReducer(
-        state: ErrorDialogState | undefined,
-        action: ErrorDialogAction
-    ): ErrorDialogState;
+    export const ErrorDialogActions: {
+        showDialog: typeof import('./src/ErrorDialog/errorDialogSlice').showDialog;
+        hideDialog: typeof import('./src/ErrorDialog/errorDialogSlice').hideDialog;
+    };
 
     export class ErrorDialog extends React.Component {}
 
