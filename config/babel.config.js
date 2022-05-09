@@ -11,7 +11,12 @@ module.exports = api => {
         plugins: [
             '@babel/plugin-proposal-class-properties',
             '@babel/plugin-transform-destructuring',
-            '@babel/plugin-transform-modules-commonjs',
+            [
+                '@babel/plugin-transform-modules-commonjs',
+                {
+                    allowTopLevelThis: true,
+                },
+            ],
             '@babel/plugin-transform-parameters',
             '@babel/plugin-transform-spread',
             '@babel/plugin-proposal-object-rest-spread',
