@@ -59,8 +59,8 @@ const DeviceSelector: FC<Props> = ({
 
     const doStartWatchingDevices = useCallback(() => {
         const patchedDeviceListing = {
-            ...deviceListing,
             serialPorts: deviceListing.serialPort || deviceListing.serialport,
+            ...deviceListing,
         };
         dispatch(startWatchingDevices(patchedDeviceListing, doDeselectDevice));
     }, [deviceListing, dispatch, doDeselectDevice]);
