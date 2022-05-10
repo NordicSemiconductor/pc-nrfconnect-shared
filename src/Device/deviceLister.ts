@@ -126,7 +126,7 @@ export const stopWatchingDevices = () => {
 };
 
 const DEFAULT_TRAITS: DeviceTraits = {
-    serialPort: true,
+    serialPorts: true,
 };
 
 /**

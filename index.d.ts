@@ -598,8 +598,6 @@ declare module 'pc-nrfconnect-shared' {
     }
 
     // deviceLister.ts
-    export function startWatchingDevices(): void;
-    export function stopWatchingDevices(): void;
     export function waitForDevice(serialNumber: string): Device;
 
     // initPacket.ts
