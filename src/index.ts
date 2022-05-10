@@ -67,11 +67,7 @@ export { getAppSpecificStore as getPersistentStore } from './utils/persistentSto
 
 export { selectedDevice } from './Device/deviceSlice';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
-export {
-    stopWatchingDevices,
-    startWatchingDevices,
-    waitForDevice,
-} from './Device/deviceLister';
+export { waitForDevice } from './Device/deviceLister';
 export { getDeviceLibContext } from './Device/deviceLibWrapper';
 export { default as sdfuOperations } from './Device/sdfuOperations';
 export { defaultInitPacket, HashType, FwType } from './Device/initPacket';
