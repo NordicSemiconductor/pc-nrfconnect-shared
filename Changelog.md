@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 6.2.0 - 2022-05-10
+
+### Added
+
+-   Website links for the nRF5340 Audio DK (PCA10121).
+
+### Changed
+
+-   Updated nrf-device-lib-js to 0.4.8.
+
 ## 6.1.0 - 2022-05-06
 
 ### Added

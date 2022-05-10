@@ -130,8 +130,9 @@ const devicesByPca: { [P in DevicePCA]: DeviceInfo } = {
         cores: 2,
         icon: nrf53logo,
         website: {
-            // productPagePath: 'TBD',
-            // buyOnlineParams: 'TBD',
+            productPagePath: 'Products/Development-hardware/nRF5340-Audio-DK',
+            buyOnlineParams:
+                'search_token=nRF5340-Audio-DK&series_token=nRF5340',
         },
     },
     PCA20020: {
