@@ -22,8 +22,13 @@ import SelectDevice from './SelectDevice';
 import SelectedDevice from './SelectedDevice';
 import useAutoselectDevice from './useAutoselectDevice';
 
+interface OutdatedDeviceTraits {
+    serialPort?: boolean;
+    serialport?: boolean;
+}
+
 interface Props {
-    deviceListing: DeviceTraits;
+    deviceListing: DeviceTraits & OutdatedDeviceTraits;
     deviceSetup?: DeviceSetupShared;
     releaseCurrentDevice?: () => void;
     onDeviceSelected?: (device: Device) => void;
@@ -52,10 +57,13 @@ const DeviceSelector: FC<Props> = ({
         dispatch(deselectDevice());
     }, [dispatch, onDeviceDeselected]);
 
-    const doStartWatchingDevices = useCallback(
-        () => dispatch(startWatchingDevices(deviceListing, doDeselectDevice)),
-        [deviceListing, dispatch, doDeselectDevice]
-    );
+    const doStartWatchingDevices = useCallback(() => {
+        const patchedDeviceListing = {
+            ...deviceListing,
+            serialPorts: deviceListing.serialPort || deviceListing.serialport,
+        };
+        dispatch(startWatchingDevices(patchedDeviceListing, doDeselectDevice));
+    }, [deviceListing, dispatch, doDeselectDevice]);
 
     const doSelectDevice = (device: Device) => {
         setDeviceListVisible(false);

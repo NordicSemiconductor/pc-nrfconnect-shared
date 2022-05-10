@@ -428,7 +428,7 @@ const prepareInDFUBootloader = async (
     });
 
     return waitForDevice(device.serialNumber, DEFAULT_DEVICE_WAIT_TIME, {
-        serialPort: true,
+        serialPorts: true,
         nordicUsb: true,
     });
 };
