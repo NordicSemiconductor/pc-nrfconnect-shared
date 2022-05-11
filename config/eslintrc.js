@@ -90,6 +90,7 @@ module.exports = {
         'react/jsx-indent-props': ['error', 4],
         'react/jsx-indent': ['error', 4],
         'react/jsx-key': ['error', { checkFragmentShorthand: true }],
+        'react/jsx-no-useless-fragment': ['error', { allowExpression: true }],
         'react/jsx-one-expression-per-line': 'off',
         'react/jsx-props-no-spreading': 'off',
         'react/require-default-props': 'off',
