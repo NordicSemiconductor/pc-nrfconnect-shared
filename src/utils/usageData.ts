@@ -92,6 +92,8 @@ export const init = (packageJson: PackageJson) => {
 
         reactGA.pageview(appJson.name);
 
+        sendUsageData('architecture', (await si.osInfo()).arch);
+
         initialized = true;
         logger.debug(
             `Google Analytics for category ${categoryName()} has initialized`
