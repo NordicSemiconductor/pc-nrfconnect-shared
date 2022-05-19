@@ -612,24 +612,6 @@ declare module 'pc-nrfconnect-shared' {
 
     // describeError.ts
     export const describeError: (error: unknown) => string;
-
-    export const testUtils: {
-        // dispatchTo.tsx
-        dispatchTo: <State>(
-            aReducer: Reducer<State>,
-            actions: [Action, ...Action[]]
-        ) => State;
-
-        // testrenderer.tsx
-        render: (
-            appReducer?: Reducer
-        ) => (element: React.ReactElement, actions?: Action[]) => RenderResult;
-
-        // rootReducer.ts
-        rootReducer: <AppState>(
-            appReducer?: Reducer<AppState>
-        ) => Reducer<NrfConnectState<AppState>>;
-    };
 }
 
 declare module 'prettysize' {
