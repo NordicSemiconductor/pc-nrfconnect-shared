@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+-   Collect telemetry on cpu architecture to help determine usefulness of 32-bit
+    builds.
+
 ## 6.2.3 - 2022-05-11
 
 ### Changed
