@@ -6,12 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 6.3.0 - 2022-05-23
+
+### Fixed
+
+-   Log file was always empty and could not be opened through “Open log file”
+    for apps bundling shared.
 
 ### Added
 
 -   Collect telemetry on cpu architecture to help determine usefulness of 32-bit
     builds.
+
+### Removed
+
+-   `addFileTransport` from the exported interface of the logger, because it
+    should not be called by the launcher any longer.
 
 ## 6.2.3 - 2022-05-11
 

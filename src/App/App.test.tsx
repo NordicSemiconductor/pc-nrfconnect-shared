@@ -9,6 +9,11 @@ import React from 'react';
 import render from '../../test/testrenderer';
 import App, { Pane } from './App';
 
+jest.mock('../Log/LogViewer', () => ({
+    __esModule: true,
+    default: () => null,
+}));
+
 const renderApp = (panes: Pane[]) => {
     const dummyReducer = (s = null) => s;
     const dummyNode = <div />;

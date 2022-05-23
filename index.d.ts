@@ -5,11 +5,10 @@
  */
 
 declare module 'pc-nrfconnect-shared' {
-    import { Reducer, Action, AnyAction } from 'redux';
+    import { Reducer, AnyAction } from 'redux';
     import React from 'react';
     import { Logger, LogEntry } from 'winston';
     import Store from 'electron-store';
-    import { RenderResult } from '@testing-library/react';
     import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
     type RootState = import('./src/state').RootState;
@@ -26,7 +25,6 @@ declare module 'pc-nrfconnect-shared' {
     // Logging
 
     interface SharedLogger extends Logger {
-        addFileTransport: (appLogDir: string) => void;
         getAndClearEntries: () => LogEntry[];
         openLogFile: () => void;
         logError: (message: string, error: unknown) => void;
