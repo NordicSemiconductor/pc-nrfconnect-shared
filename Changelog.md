@@ -18,6 +18,11 @@ and this project adheres to
 -   Collect telemetry on cpu architecture to help determine usefulness of 32-bit
     builds.
 
+### Removed
+
+-   `addFileTransport` from the exported interface of the logger, because it
+    should not be called by the launcher any longer.
+
 ## 6.2.3 - 2022-05-11
 
 ### Changed

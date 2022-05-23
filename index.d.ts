@@ -25,7 +25,6 @@ declare module 'pc-nrfconnect-shared' {
     // Logging
 
     interface SharedLogger extends Logger {
-        addFileTransport: (appLogDir: string) => void;
         getAndClearEntries: () => LogEntry[];
         openLogFile: () => void;
         logError: (message: string, error: unknown) => void;
