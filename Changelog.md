@@ -29,6 +29,10 @@ and this project adheres to
 -   `addFileTransport` from the exported interface of the logger, because it
     should not be called by the launcher any longer.
 
+### Changed
+
+-   Faster startup of apps as less code is loaded on startup.
+
 ## 6.2.3 - 2022-05-11
 
 ### Changed
