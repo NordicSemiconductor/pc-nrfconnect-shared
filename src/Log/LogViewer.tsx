@@ -7,18 +7,26 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import logger from '../logging';
+import sendInitialLogMessages from '../logging/sendInitialLogMessages';
 import LogEntry from './LogEntry';
-import { startListening } from './logListener';
 import {
     autoScroll as autoScrollSelector,
     logEntries as logEntriesSelector,
 } from './logSlice';
+import startSyncLogToStore from './syncLogToStore';
 
 import './log-viewer.scss';
 
 export const useInitialisedLog = () => {
     const dispatch = useDispatch();
-    useEffect(() => startListening(dispatch), [dispatch]);
+    useEffect(() => {
+        logger.initialise();
+        sendInitialLogMessages();
+        const stopSyncLogToStore = startSyncLogToStore(dispatch);
+
+        return stopSyncLogToStore;
+    }, [dispatch]);
 };
 
 export default () => {

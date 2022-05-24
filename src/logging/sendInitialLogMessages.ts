@@ -11,18 +11,16 @@ import {
     getDeviceLibContext,
     getModuleVersion,
 } from '../Device/deviceLibWrapper';
-import logger from '../logging';
-import { TDispatch } from '../state';
 import { getAppDataDir } from '../utils/appDirs';
 import describeVersion from '../utils/describeVersion';
 import logLibVersions from '../utils/logLibVersions';
-import { addEntries } from './logSlice';
+import logger from '.';
 
-let initialMessageSent = false;
-const sendInitialMessage = () => {
-    if (initialMessageSent) return;
+let initialMessagesSent = false;
+export default () => {
+    if (initialMessagesSent) return;
+    initialMessagesSent = true;
 
-    initialMessageSent = true;
     logLibVersions();
     logger.debug(`Application data folder: ${getAppDataDir()}`);
 
@@ -61,35 +59,4 @@ const sendInitialMessage = () => {
         }
     });
     ipcRenderer.send('get-app-details');
-};
-
-const addLogEntriesToStore = (dispatch: TDispatch) => () => {
-    const entries = logger.getAndClearEntries();
-    if (entries.length > 0) {
-        dispatch(addEntries(entries));
-    }
-};
-
-/**
- * Starts listening to new log entries from the application's log buffer.
- * Incoming entries are added to the state, so that they can be displayed
- * in the UI.
- *
- * @param {function} dispatch The redux dispatch function.
- * @returns {function(*)} Function that stops the listener.
- */
-export const startListening = (dispatch: TDispatch) => {
-    logger.initialise();
-
-    sendInitialMessage();
-
-    const LOG_UPDATE_INTERVAL = 400;
-    const logListener = setInterval(
-        addLogEntriesToStore(dispatch),
-        LOG_UPDATE_INTERVAL
-    );
-
-    return () => {
-        clearInterval(logListener);
-    };
 };
