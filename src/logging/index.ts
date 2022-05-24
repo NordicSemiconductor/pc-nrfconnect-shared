@@ -10,6 +10,7 @@ import { SPLAT } from 'triple-beam';
 import { createLogger, format, LogEntry, Logger, transports } from 'winston';
 import Transport from 'winston-transport';
 
+import { getAppLogDir } from '../utils/appDirs';
 import { openFile } from '../utils/open';
 import AppTransport from './appTransport';
 import describeError from './describeError';
@@ -42,7 +43,7 @@ if (isDevelopment && isConsoleAvailable) {
 }
 
 interface SharedLogger extends Logger {
-    initialise: (appLogDir: string) => void;
+    initialise: () => void;
     getAndClearEntries: () => LogEntry[];
     openLogFile: () => void;
     logError: (message: string, error: unknown) => void;
@@ -72,13 +73,15 @@ const logger = createLogger({
     transports: logTransports,
 }) as SharedLogger;
 
-logger.initialise = (appLogDir: string) => {
-    logFilePath = path.join(appLogDir, `${filePrefix}-log.txt`);
-    const fileTransport = new transports.File({
-        filename: logFilePath,
-        level: 'debug',
-    });
-    logger.add(fileTransport);
+logger.initialise = () => {
+    logFilePath = path.join(getAppLogDir(), `${filePrefix}-log.txt`);
+
+    logger.add(
+        new transports.File({
+            filename: logFilePath,
+            level: 'debug',
+        })
+    );
 };
 
 logger.getAndClearEntries = () => logBuffer.clear();

@@ -13,7 +13,7 @@ import {
 } from '../Device/deviceLibWrapper';
 import logger from '../logging';
 import { TDispatch } from '../state';
-import { getAppDataDir, getAppLogDir } from '../utils/appDirs';
+import { getAppDataDir } from '../utils/appDirs';
 import describeVersion from '../utils/describeVersion';
 import logLibVersions from '../utils/logLibVersions';
 import { addEntries } from './logSlice';
@@ -79,7 +79,7 @@ const addLogEntriesToStore = (dispatch: TDispatch) => () => {
  * @returns {function(*)} Function that stops the listener.
  */
 export const startListening = (dispatch: TDispatch) => {
-    logger.initialise(getAppLogDir());
+    logger.initialise();
 
     sendInitialMessage();
 
