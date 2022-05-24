@@ -51,7 +51,7 @@ const DeviceSerialNumber: FC<{ device: Device }> = ({ device }) => (
 interface BasicDeviceProps {
     device: Device;
     deviceNameInputRef?: React.Ref<HTMLInputElement>;
-    toggles: ReactNode;
+    toggles?: ReactNode;
 }
 
 const BasicDeviceInfo: FC<BasicDeviceProps> = ({
