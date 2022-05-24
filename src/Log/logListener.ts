@@ -79,7 +79,7 @@ const addLogEntriesToStore = (dispatch: TDispatch) => () => {
  * @returns {function(*)} Function that stops the listener.
  */
 export const startListening = (dispatch: TDispatch) => {
-    logger.addFileTransport(getAppLogDir());
+    logger.initialise(getAppLogDir());
 
     sendInitialMessage();
 

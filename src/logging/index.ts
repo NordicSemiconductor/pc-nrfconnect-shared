@@ -42,7 +42,7 @@ if (isDevelopment && isConsoleAvailable) {
 }
 
 interface SharedLogger extends Logger {
-    addFileTransport: (appLogDir: string) => void;
+    initialise: (appLogDir: string) => void;
     getAndClearEntries: () => LogEntry[];
     openLogFile: () => void;
     logError: (message: string, error: unknown) => void;
@@ -72,7 +72,7 @@ const logger = createLogger({
     transports: logTransports,
 }) as SharedLogger;
 
-logger.addFileTransport = (appLogDir: string) => {
+logger.initialise = (appLogDir: string) => {
     logFilePath = path.join(appLogDir, `${filePrefix}-log.txt`);
     const fileTransport = new transports.File({
         filename: logFilePath,
