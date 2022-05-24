@@ -5,10 +5,10 @@
  */
 
 import React, { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import LogEntry from './LogEntry';
-import { useLogListener } from './logListener';
+import { startListening } from './logListener';
 import {
     autoScroll as autoScrollSelector,
     logEntries as logEntriesSelector,
@@ -16,8 +16,13 @@ import {
 
 import './log-viewer.scss';
 
+export const useInitialisedLog = () => {
+    const dispatch = useDispatch();
+    useEffect(() => startListening(dispatch), [dispatch]);
+};
+
 export default () => {
-    useLogListener();
+    useInitialisedLog();
 
     const autoScroll = useSelector(autoScrollSelector);
     const logEntries = useSelector(logEntriesSelector);

@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { getModuleVersions } from '@nordicsemiconductor/nrf-device-lib-js';
 import { ipcRenderer } from 'electron';
 
@@ -80,7 +78,7 @@ const addLogEntriesToStore = (dispatch: TDispatch) => () => {
  * @param {function} dispatch The redux dispatch function.
  * @returns {function(*)} Function that stops the listener.
  */
-const startListening = (dispatch: TDispatch) => {
+export const startListening = (dispatch: TDispatch) => {
     logger.addFileTransport(getAppLogDir());
 
     sendInitialMessage();
@@ -94,9 +92,4 @@ const startListening = (dispatch: TDispatch) => {
     return () => {
         clearInterval(logListener);
     };
-};
-
-export const useLogListener = () => {
-    const dispatch = useDispatch();
-    useEffect(() => startListening(dispatch), [dispatch]);
 };
