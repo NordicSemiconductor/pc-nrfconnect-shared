@@ -6,12 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 6.4.0 - 2022-06-30
 
 ### Added
 
--   Export verbose log state selector,
 -   Add shortcut menu and implement shortcuts
+-   `BrokenDeviceDialog` component that shows more info when selecting a device
+    with broken traits.
+-   Devices with broken trait are listed as unsupported in `DeviceLister`.
+-   Export verbose log state selector.
 
 ## 6.3.4 - 2022-06-29
 
