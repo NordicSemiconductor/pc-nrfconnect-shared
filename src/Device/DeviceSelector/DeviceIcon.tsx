@@ -15,7 +15,11 @@ const DeviceIcon: FC<{ device: Device }> = ({ device }) => {
     const Icon = deviceInfo(device).icon;
     return (
         <div className="icon">
-            <Icon />
+            {device.traits.broken ? (
+                <span className="mdi mdi-alert" />
+            ) : (
+                <Icon />
+            )}
         </div>
     );
 };

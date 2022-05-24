@@ -13,6 +13,12 @@
         padding-left: 27px;
 
         fill: $gray-700;
+
+        .mdi {
+            display: flex;
+            flex-direction: column;
+            font-size: 27px;
+        }
     }
 
     .selected-device:hover .icon {

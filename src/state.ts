@@ -19,6 +19,7 @@ export interface RootState {
     log: Log;
     device: DeviceState;
     documentation: DocumentationState;
+    brokenDeviceDialog: BrokenDeviceDialog;
 }
 
 export interface AppLayout {
@@ -97,4 +98,10 @@ export interface Device extends NrfdlDevice {
     nickname?: string;
     serialport?: Serialport;
     favorite?: boolean;
+}
+
+export interface BrokenDeviceDialog {
+    isVisible: boolean;
+    description: string;
+    url: string;
 }
