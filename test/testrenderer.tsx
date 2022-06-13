@@ -19,8 +19,8 @@ const createPreparedStore = (actions: Action[], appReducer?: Reducer) => {
     return store;
 };
 
-const PreparedProvider =
-    (actions: Action[], appReducer?: Reducer) => (props: unknown) =>
+const preparedProvider =
+    (actions: Action[], appReducer?: Reducer) => (props: object) =>
         (
             <Provider
                 store={createPreparedStore(actions, appReducer)}
@@ -31,10 +31,10 @@ const PreparedProvider =
 export const testRendererForApps =
     (appReducer?: Reducer) =>
     (element: React.ReactElement, actions: Action[] = []) =>
-        render(element, { wrapper: PreparedProvider(actions, appReducer) });
+        render(element, { wrapper: preparedProvider(actions, appReducer) });
 
 export default (
     element: React.ReactElement,
     actions: Action[] = [], // eslint-disable-line default-param-last -- Because we want to allow people to specify actions but no specifix reducer
     appReducer?: Reducer
-) => render(element, { wrapper: PreparedProvider(actions, appReducer) });
+) => render(element, { wrapper: preparedProvider(actions, appReducer) });
