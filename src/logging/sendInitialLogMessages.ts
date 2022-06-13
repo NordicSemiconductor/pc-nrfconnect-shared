@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { getModuleVersions } from '@nordicsemiconductor/nrf-device-lib-js';
 import { ipcRenderer } from 'electron';
 
@@ -13,18 +11,16 @@ import {
     getDeviceLibContext,
     getModuleVersion,
 } from '../Device/deviceLibWrapper';
-import logger from '../logging';
-import { TDispatch } from '../state';
-import { getAppDataDir, getAppLogDir } from '../utils/appDirs';
+import { getAppDataDir } from '../utils/appDirs';
 import describeVersion from '../utils/describeVersion';
 import logLibVersions from '../utils/logLibVersions';
-import { addEntries } from './logSlice';
+import logger from '.';
 
-let initialMessageSent = false;
-const sendInitialMessage = () => {
-    if (initialMessageSent) return;
+let initialMessagesSent = false;
+export default () => {
+    if (initialMessagesSent) return;
+    initialMessagesSent = true;
 
-    initialMessageSent = true;
     logLibVersions();
     logger.debug(`Application data folder: ${getAppDataDir()}`);
 
@@ -63,40 +59,4 @@ const sendInitialMessage = () => {
         }
     });
     ipcRenderer.send('get-app-details');
-};
-
-const addLogEntriesToStore = (dispatch: TDispatch) => () => {
-    const entries = logger.getAndClearEntries();
-    if (entries.length > 0) {
-        dispatch(addEntries(entries));
-    }
-};
-
-/**
- * Starts listening to new log entries from the application's log buffer.
- * Incoming entries are added to the state, so that they can be displayed
- * in the UI.
- *
- * @param {function} dispatch The redux dispatch function.
- * @returns {function(*)} Function that stops the listener.
- */
-const startListening = (dispatch: TDispatch) => {
-    logger.addFileTransport(getAppLogDir());
-
-    sendInitialMessage();
-
-    const LOG_UPDATE_INTERVAL = 400;
-    const logListener = setInterval(
-        addLogEntriesToStore(dispatch),
-        LOG_UPDATE_INTERVAL
-    );
-
-    return () => {
-        clearInterval(logListener);
-    };
-};
-
-export const useLogListener = () => {
-    const dispatch = useDispatch();
-    useEffect(() => startListening(dispatch), [dispatch]);
 };
