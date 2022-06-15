@@ -5,12 +5,14 @@
  */
 
 import Store from 'electron-store';
+import { v4 as uuid } from 'uuid';
 
 import packageJson from './packageJson';
 
 const sharedStore = new Store<{
     verboseLogging: boolean;
     isSendingUsageData: boolean | undefined;
+    clientId?: string;
 }>({
     name: 'pc-nrfconnect-shared',
 });
@@ -31,6 +33,16 @@ export const getIsSendingUsageData = () =>
     sharedStore.get('isSendingUsageData', undefined) as boolean | undefined;
 export const deleteIsSendingUsageData = () =>
     sharedStore.delete('isSendingUsageData');
+
+const existingUsageDataClientId = () => sharedStore.get('clientId');
+const newUsageDataClientId = () => {
+    const clientId = uuid();
+    sharedStore.set('clientId', clientId);
+
+    return clientId;
+};
+export const getUsageDataClientId = () =>
+    existingUsageDataClientId() ?? newUsageDataClientId();
 
 export const persistVerboseLoggingEnabled = (value: boolean) =>
     sharedStore.set('verboseLogging', value);

@@ -25,9 +25,6 @@ jest.mock('../utils/usageData', () => ({
     sendErrorReport: jest.fn(),
     isEnabled: () => true,
 }));
-jest.mock('systeminformation', () => ({
-    networkInterfaces: () => [],
-}));
 
 const SYSTEM_REPORT = 'system report';
 const OKBUTTONTEXT = 'Restore';
