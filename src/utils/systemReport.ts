@@ -9,6 +9,7 @@ import fs from 'fs';
 import { EOL } from 'os';
 import path from 'path';
 import pretty from 'prettysize';
+import type Systeminformation from 'systeminformation';
 
 import {
     deviceInfo as getDeviceInfo,
@@ -26,7 +27,7 @@ import { openFile } from './open';
 
 const generalInfoReport = async () => {
     // eslint-disable-next-line global-require
-    const si = require('systeminformation');
+    const si = require('systeminformation') as typeof Systeminformation;
     const [
         { manufacturer, model },
         { vendor, version },

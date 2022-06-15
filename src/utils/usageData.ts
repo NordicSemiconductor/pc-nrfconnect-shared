@@ -6,6 +6,7 @@
 
 import reactGA from 'react-ga';
 import { PackageJson } from 'pc-nrfconnect-shared';
+import type Systeminformation from 'systeminformation';
 
 import logger from '../logging';
 import { isDevelopment } from './environment';
@@ -41,8 +42,6 @@ export const init = (packageJson: PackageJson) => {
     if (!getIsSendingUsageData()) return;
 
     setTimeout(async () => {
-        // eslint-disable-next-line global-require
-        const si = require('systeminformation');
         const clientId = getUsageDataClientId();
 
         logger.debug(`Client Id: ${clientId}`);
@@ -68,6 +67,8 @@ export const init = (packageJson: PackageJson) => {
 
         reactGA.pageview(appJson.name);
 
+        // eslint-disable-next-line global-require
+        const si = require('systeminformation') as typeof Systeminformation;
         sendUsageData('architecture', (await si.osInfo()).arch);
 
         initialized = true;
@@ -95,7 +96,7 @@ export const isInitialized = () => {
  * @returns {Boolean | undefined} returns whether the setting is on, off or undefined
  */
 export const isEnabled = () => {
-    const isSendingUsageData = getIsSendingUsageData() as boolean | undefined;
+    const isSendingUsageData = getIsSendingUsageData();
     logger.debug(`Usage data is ${isSendingUsageData}`);
     return isSendingUsageData;
 };
