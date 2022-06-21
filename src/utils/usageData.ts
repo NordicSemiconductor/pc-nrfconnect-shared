@@ -6,13 +6,14 @@
 
 import reactGA from 'react-ga';
 import { PackageJson } from 'pc-nrfconnect-shared';
-import shasum from 'shasum';
+import type Systeminformation from 'systeminformation';
 
 import logger from '../logging';
 import { isDevelopment } from './environment';
 import {
     deleteIsSendingUsageData,
     getIsSendingUsageData,
+    getUsageDataClientId,
     persistIsSendingUsageData,
 } from './persistentStore';
 
@@ -41,33 +42,7 @@ export const init = (packageJson: PackageJson) => {
     if (!getIsSendingUsageData()) return;
 
     setTimeout(async () => {
-        // eslint-disable-next-line global-require
-        const si = require('systeminformation');
-        const networkInterfaces: {
-            // Lost the type doing lazy require
-            iface: string;
-            mac: boolean;
-            ip4: string;
-            ip6: string;
-            internal: boolean;
-        }[] = await si.networkInterfaces();
-        const networkInterface =
-            networkInterfaces.find(i => i.iface === 'eth0') ?? // for most Debian
-            networkInterfaces.find(i => i.iface === 'en0') ?? // for most macOS
-            networkInterfaces.find(i => i.iface === 'Ethernet') ?? // for most Windows
-            networkInterfaces.find(i => i.mac && !i.internal); // for good luck
-
-        logger.debug(`iface: ${networkInterface?.iface}`);
-        logger.debug(`IP4: ${networkInterface?.ip4}`);
-        logger.debug(`IP6: ${networkInterface?.ip6}`);
-        logger.debug(`MAC: ${networkInterface?.mac}`);
-
-        const clientId = networkInterface
-            ? shasum(
-                  networkInterface.ip4 ||
-                      networkInterface.ip6 + networkInterface.mac
-              )
-            : 'unknown';
+        const clientId = getUsageDataClientId();
 
         logger.debug(`Client Id: ${clientId}`);
 
@@ -92,6 +67,8 @@ export const init = (packageJson: PackageJson) => {
 
         reactGA.pageview(appJson.name);
 
+        // eslint-disable-next-line global-require
+        const si = require('systeminformation') as typeof Systeminformation;
         sendUsageData('architecture', (await si.osInfo()).arch);
 
         initialized = true;
@@ -119,7 +96,7 @@ export const isInitialized = () => {
  * @returns {Boolean | undefined} returns whether the setting is on, off or undefined
  */
 export const isEnabled = () => {
-    const isSendingUsageData = getIsSendingUsageData() as boolean | undefined;
+    const isSendingUsageData = getIsSendingUsageData();
     logger.debug(`Usage data is ${isSendingUsageData}`);
     return isSendingUsageData;
 };
