@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 6.3.3 - 2022-06-23
+
+### Changed
+
+-   Move all devDependencies into dependencies and remove peer dependencies. The
+    peer ependencies were use by all apps anyways, so moving them all into
+    dependencies will let the apps remove their own version of them.
+
 ## 6.3.2 - 2022-06-21
 
 ### Fixed
