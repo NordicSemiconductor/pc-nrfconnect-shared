@@ -5,10 +5,13 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { Button } from 'react-bootstrap';
 import { ipcRenderer } from 'electron';
 
 import Card from '../Card/Card';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
+import ShortcutModal from '../Shortcuts/ShortcutModal';
+import { Shortcut, shortcuts, useHotKey2 } from '../Shortcuts/useHotkey';
 import AboutButton from './AboutButton';
 import Section from './Section';
 
@@ -43,6 +46,28 @@ type DetailsFromLauncher = AppDetails & LauncerApp;
 
 export default () => {
     const [appInfo, setAppInfo] = useState<DetailsFromLauncher>();
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const toggleModalVisible = () => setIsModalVisible(!isModalVisible);
+
+    const localshortcuts: Shortcut[] = [];
+
+    // Global hotkey for bringing up the hotkey menu
+    useHotKey2({
+        hotKey: '?',
+        title: 'Shortcuts',
+        description: 'Opens/closes this hotkey menu',
+        action: () => toggleModalVisible(),
+    });
+
+    // Test shortcut only to show UI
+    const sc2 = {
+        hotKey: 'alt+i',
+        title: 'Test title',
+        description: 'test description',
+        action: () => console.log('test'), // Unbound, won't fire
+    };
+
+    localshortcuts.push(sc2);
 
     useEffect(() => {
         ipcRenderer.once('app-details', (_, details: DetailsFromLauncher) => {
@@ -74,6 +99,15 @@ export default () => {
             <Section>
                 <FactoryResetButton label="Restore defaults..." />
             </Section>
+            <Section>
+                <Button onClick={toggleModalVisible}>Show shortcuts</Button>
+            </Section>
+            <ShortcutModal
+                globalShortcutList={shortcuts}
+                localShortcutList={localshortcuts}
+                isVisible={isModalVisible}
+                onCancel={toggleModalVisible}
+            />
         </Card>
     );
 };
