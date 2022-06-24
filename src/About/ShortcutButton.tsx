@@ -9,7 +9,7 @@ import { string } from 'prop-types';
 
 import Button from '../Button/Button';
 import ShortcutModal from '../Shortcuts/ShortcutModal';
-import { Shortcut, shortcuts, useHotKey } from '../Shortcuts/useHotkey';
+import { Shortcut, shortcuts, useHotkey } from '../Shortcuts/useHotkey';
 
 interface Props {
     label: string;
@@ -22,10 +22,11 @@ const ShortcutButton: FC<Props> = ({ label }) => {
     const localshortcuts: Shortcut[] = [];
 
     // Global hotkey for bringing up the hotkey menu
-    useHotKey({
+    useHotkey({
         hotKey: '?',
         title: 'Shortcuts',
         description: 'Opens/closes this hotkey menu',
+        isGlobal: true, // True, as this hotkey is defined in shared
         action: () => toggleModalVisible(),
     });
 
@@ -34,6 +35,7 @@ const ShortcutButton: FC<Props> = ({ label }) => {
         hotKey: 'alt+i',
         title: 'Test title',
         description: 'test description',
+        isGlobal: true,
         action: () => console.log('test'), // Unbound, won't fire
     };
 
@@ -42,8 +44,8 @@ const ShortcutButton: FC<Props> = ({ label }) => {
         <>
             <Button onClick={toggleModalVisible}>{label}</Button>
             <ShortcutModal
-                globalShortcutList={shortcuts}
-                localShortcutList={localshortcuts}
+                globalShortcutList={shortcuts.filter(s => s.isGlobal === true)}
+                localShortcutList={shortcuts.filter(s => s.isGlobal === false)}
                 isVisible={isModalVisible}
                 onCancel={toggleModalVisible}
             />

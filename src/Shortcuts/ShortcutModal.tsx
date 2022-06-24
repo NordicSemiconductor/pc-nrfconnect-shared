@@ -67,6 +67,7 @@ ShortcutModal.propTypes = {
             hotKey: string.isRequired,
             title: string.isRequired,
             description: string.isRequired,
+            isGlobal: bool.isRequired,
             action: func.isRequired,
         }).isRequired
     ).isRequired,
@@ -75,6 +76,7 @@ ShortcutModal.propTypes = {
             hotKey: string.isRequired,
             title: string.isRequired,
             description: string.isRequired,
+            isGlobal: bool.isRequired,
             action: func.isRequired,
         }).isRequired
     ).isRequired,
