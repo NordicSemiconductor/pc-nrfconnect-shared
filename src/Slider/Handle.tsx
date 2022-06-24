@@ -96,7 +96,9 @@ const Handle: FC<Props> = ({
             style={{ left: `${percentage}%` }}
             onMouseDown={disabled ? noop : grabHandle}
             role="slider"
-            tabIndex={disabled ? -1 : 0}
+            tabIndex={-1}
+            //tabIndex={disabled ? -1 : 0}
+            // Always -1 as handles shouldn't be tab-able
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={value}
