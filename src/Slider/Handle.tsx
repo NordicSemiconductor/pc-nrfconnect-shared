@@ -97,7 +97,7 @@ const Handle: FC<Props> = ({
             onMouseDown={disabled ? noop : grabHandle}
             role="slider"
             tabIndex={-1}
-            //tabIndex={disabled ? -1 : 0}
+            // tabIndex={disabled ? -1 : 0}
             // Always -1 as handles shouldn't be tab-able
             aria-valuemin={0}
             aria-valuemax={100}
