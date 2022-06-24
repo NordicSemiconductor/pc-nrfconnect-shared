@@ -11,20 +11,18 @@ export interface Shortcut {
     hotKey: string;
     title: string;
     description: string;
+    isGlobal: boolean;
     action: () => void;
 }
 
 export const shortcuts: Shortcut[] = [];
 
-// Don't worry, we'll fix this name :)
-export const useHotKey2 = (shortcut: Shortcut, deps?: DependencyList) => {
-    // useEffect is only run once, unless dependencies are changed
+export const useHotkey = (shortcut: Shortcut, deps?: DependencyList) => {
     useEffect(() => {
         shortcuts.push(shortcut);
 
         Mousetrap.bind(shortcut.hotKey, shortcut.action);
 
-        // Cleanup function removes item from shortcuts-array
         return () => {
             shortcuts.splice(
                 shortcuts.findIndex(
