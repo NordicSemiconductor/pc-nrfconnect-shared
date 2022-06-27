@@ -27,9 +27,9 @@ const ShortcutItem: FC<Props> = ({ title, hotKey, description }) => {
                         <span key={shortcutKey}>
                             <span className="shortcut-span">{shortcutKey}</span>
                             {shortcutKey !==
-                            shortcutKeys[shortcutKeys.length - 1] ? (
+                                shortcutKeys[shortcutKeys.length - 1] && (
                                 <span className="separator-span">+</span>
-                            ) : null}
+                            )}
                         </span>
                     ))}
                 </Card.Text>

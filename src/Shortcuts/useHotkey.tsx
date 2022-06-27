@@ -33,5 +33,6 @@ export const useHotkey = (shortcut: Shortcut, deps?: DependencyList) => {
 
             Mousetrap.unbind(shortcut.hotKey);
         };
-    }, [deps, shortcut]); // Sould this not just be "}, deps);"?
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, deps);
 };
