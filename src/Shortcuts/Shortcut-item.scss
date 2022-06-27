@@ -4,15 +4,17 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+@import '../variables.scss';
+
 .shortcut-item {
     margin-top: 10px;
     .shortcut-span {
-        background-color: #cfd8dc;
+        background-color: $gray-100;
         padding: 8px;
         border-radius: 5px;
     }
     .separator-span {
-        background-color: #ffffff;
+        background-color: $white;
         padding: 8px;
     }
 }

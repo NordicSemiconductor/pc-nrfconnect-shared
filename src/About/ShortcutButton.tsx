@@ -9,7 +9,7 @@ import { string } from 'prop-types';
 
 import Button from '../Button/Button';
 import ShortcutModal from '../Shortcuts/ShortcutModal';
-import { shortcuts, useHotkey } from '../Shortcuts/useHotkey';
+import { useHotkey } from '../Shortcuts/useHotkey';
 
 interface Props {
     label: string;
@@ -31,8 +31,6 @@ const ShortcutButton: FC<Props> = ({ label }) => {
         <>
             <Button onClick={toggleModalVisible}>{label}</Button>
             <ShortcutModal
-                globalShortcutList={shortcuts.filter(s => s.isGlobal === true)}
-                localShortcutList={shortcuts.filter(s => s.isGlobal === false)}
                 isVisible={isModalVisible}
                 onCancel={toggleModalVisible}
             />

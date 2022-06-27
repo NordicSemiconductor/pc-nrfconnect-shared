@@ -4,8 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+@import '../variables.scss';
+
 .shortcut-modal {
-    color: #263238;
+    color: $gray-900;
     .shortcut-lists {
         display: grid;
         grid-template-columns: 1fr 1fr;
