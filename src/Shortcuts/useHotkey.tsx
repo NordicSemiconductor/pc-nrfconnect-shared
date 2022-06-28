@@ -7,6 +7,8 @@
 import { DependencyList, useEffect } from 'react';
 import Mousetrap from 'mousetrap';
 
+import { sendUsageData } from '../utils/usageData';
+
 export interface Shortcut {
     hotKey: string;
     title: string;
@@ -21,7 +23,10 @@ export const useHotkey = (shortcut: Shortcut, deps?: DependencyList) => {
     useEffect(() => {
         shortcuts.push(shortcut);
 
-        Mousetrap.bind(shortcut.hotKey, shortcut.action);
+        Mousetrap.bind(shortcut.hotKey, () => {
+            shortcut.action();
+            sendUsageData('Pressed hotkey', shortcut.hotKey);
+        });
 
         return () => {
             shortcuts.splice(
