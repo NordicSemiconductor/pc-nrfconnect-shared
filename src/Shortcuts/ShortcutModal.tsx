@@ -27,7 +27,7 @@ const ShortcutModal: FC<Props> = ({ isVisible, onCancel }) => (
         </Modal.Header>
         <Modal.Body className="shortcut-lists">
             <div>
-                <h4>In this app</h4>
+                <h4 className="list-header">In this app</h4>
                 {shortcuts
                     .filter(shortcut => shortcut.isGlobal === false)
                     .map(shortcut => (
@@ -40,7 +40,7 @@ const ShortcutModal: FC<Props> = ({ isVisible, onCancel }) => (
                     ))}
             </div>
             <div>
-                <h4>In all apps</h4>
+                <h4 className="list-header">In all apps</h4>
                 {shortcuts
                     .filter(shortcut => shortcut.isGlobal === true)
                     .map(shortcut => (

@@ -7,14 +7,20 @@
 @import '../variables.scss';
 
 .shortcut-item {
-    margin-top: 10px;
-    .shortcut-span {
-        background-color: $gray-100;
-        padding: 8px;
-        border-radius: 5px;
-    }
-    .separator-span {
-        background-color: $white;
-        padding: 8px;
+    border-top: 1px solid $gray-100;
+    padding-top: 20px;
+    overflow-wrap: break-word;
+    height: 150px;
+    .shortcut {
+        margin: 20px 0;
+        .shortcut-span {
+            background-color: $gray-100;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .separator-span {
+            background-color: $white;
+            padding: 8px;
+        }
     }
 }
