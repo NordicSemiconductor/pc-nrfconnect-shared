@@ -5,7 +5,6 @@
  */
 
 import React, { FC } from 'react';
-import Card from 'react-bootstrap/Card';
 import { string } from 'prop-types';
 
 import './Shortcut-item.scss';
@@ -19,23 +18,21 @@ export interface Props {
 const ShortcutItem: FC<Props> = ({ title, hotKey, description }) => {
     const shortcutKeys: string[] = hotKey.split('+');
     return (
-        <Card className="shortcut-item">
-            <Card.Body>
-                <Card.Title>{title}</Card.Title>
-                <Card.Text>
-                    {shortcutKeys.map(shortcutKey => (
-                        <span key={shortcutKey}>
-                            <span className="shortcut-span">{shortcutKey}</span>
-                            {shortcutKey !==
-                                shortcutKeys[shortcutKeys.length - 1] && (
-                                <span className="separator-span">+</span>
-                            )}
-                        </span>
-                    ))}
-                </Card.Text>
-                <Card.Text>{description}</Card.Text>
-            </Card.Body>
-        </Card>
+        <div className="shortcut-item">
+            <h5>{title}</h5>
+            <div className="shortcut">
+                {shortcutKeys.map(shortcutKey => (
+                    <span key={shortcutKey}>
+                        <span className="shortcut-span">{shortcutKey}</span>
+                        {shortcutKey !==
+                            shortcutKeys[shortcutKeys.length - 1] && (
+                            <span className="separator-span">+</span>
+                        )}
+                    </span>
+                ))}
+            </div>
+            <p>{description}</p>
+        </div>
     );
 };
 

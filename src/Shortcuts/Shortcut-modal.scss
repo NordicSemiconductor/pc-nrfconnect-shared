@@ -8,7 +8,11 @@
 
 .shortcut-modal {
     color: $gray-900;
+    .list-header {
+        margin-bottom: 20px;
+    }
     .shortcut-lists {
+        margin: 20px;
         display: grid;
         grid-template-columns: 1fr 1fr;
         column-gap: 6ex;
