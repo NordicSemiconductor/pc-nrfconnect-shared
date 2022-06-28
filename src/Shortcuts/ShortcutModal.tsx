@@ -19,7 +19,12 @@ export interface Props {
 }
 
 const ShortcutModal: FC<Props> = ({ isVisible, onCancel }) => (
-    <Modal show={isVisible} onHide={onCancel} className="shortcut-modal">
+    <Modal
+        show={isVisible}
+        onHide={onCancel}
+        size="lg"
+        className="shortcut-modal"
+    >
         <Modal.Header closeButton>
             <Modal.Title>
                 <h3>Shortcuts</h3>
@@ -36,7 +41,6 @@ const ShortcutModal: FC<Props> = ({ isVisible, onCancel }) => (
                             key={shortcut.hotKey}
                             title={shortcut.title}
                             hotKey={shortcut.hotKey}
-                            description={shortcut.description}
                         />
                     ))}
             </div>
@@ -50,7 +54,6 @@ const ShortcutModal: FC<Props> = ({ isVisible, onCancel }) => (
                             key={shortcut.hotKey}
                             title={shortcut.title}
                             hotKey={shortcut.hotKey}
-                            description={shortcut.description}
                         />
                     ))}
             </div>

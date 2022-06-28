@@ -12,7 +12,6 @@ import { sendUsageData } from '../utils/usageData';
 export interface Shortcut {
     hotKey: string;
     title: string;
-    description: string;
     isGlobal: boolean;
     action: () => void;
 }

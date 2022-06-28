@@ -36,7 +36,6 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
     useHotkey({
         hotKey: 'shift+m',
         title: 'Show/Hide menu',
-        description: 'Shows/Hides the menu',
         isGlobal: true,
         action: () => dispatch(toggleSidePanelVisible()),
     });
@@ -44,7 +43,6 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
     useHotkey({
         hotKey: 'shift+r',
         title: 'Clear log',
-        description: 'Clears the log',
         isGlobal: true,
         action: () => dispatch(clear()),
     });
@@ -52,7 +50,6 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
     useHotkey({
         hotKey: 'shift+o',
         title: 'Open log file',
-        description: 'Opens the log file',
         isGlobal: true,
         action: () => logger.openLogFile(),
     });
@@ -60,7 +57,6 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
     useHotkey({
         hotKey: 'shift+a',
         title: 'Autoscroll log',
-        description: 'Autoscroll log',
         isGlobal: true,
         action: () => dispatch(toggleAutoScroll()),
     });
@@ -68,7 +64,6 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
     useHotkey({
         hotKey: 'shift+s',
         title: 'Show log',
-        description: 'Show log',
         isGlobal: true,
         action: () => dispatch(toggleLogVisible()),
     });

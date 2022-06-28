@@ -107,8 +107,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
 
     useHotkey({
         hotKey: 'alt+l',
-        title: 'Launcher',
-        description: 'Focus on the launcher window',
+        title: 'Open launcher',
         isGlobal: true,
         action: () => ipcRenderer.send('open-app-launcher'),
     });
