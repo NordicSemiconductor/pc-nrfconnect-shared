@@ -8,15 +8,19 @@
 
 .shortcut-item {
     border-top: 1px solid $gray-100;
-    padding-top: 20px;
+    padding: 20px 0;
     overflow-wrap: break-word;
-    height: 150px;
+    .shortcut-title {
+        display: inline;
+    }
     .shortcut {
-        margin: 20px 0;
+        display: inline;
+        float: right;
         .shortcut-span {
             background-color: $gray-100;
             padding: 8px;
             border-radius: 5px;
+            box-shadow: 0 2px $gray-200;
         }
         .separator-span {
             background-color: $white;

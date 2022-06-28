@@ -21,8 +21,7 @@ const ShortcutButton: FC<Props> = ({ label }) => {
 
     useHotkey({
         hotKey: '?',
-        title: 'Shortcuts',
-        description: 'Opens/closes this hotkey menu',
+        title: 'Open/close this hotkey menu',
         isGlobal: true,
         action: () => toggleModalVisible(),
     });

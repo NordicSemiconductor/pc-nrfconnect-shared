@@ -12,14 +12,13 @@ import './Shortcut-item.scss';
 export interface Props {
     title: string;
     hotKey: string;
-    description: string;
 }
 
-const ShortcutItem: FC<Props> = ({ title, hotKey, description }) => {
+const ShortcutItem: FC<Props> = ({ title, hotKey }) => {
     const shortcutKeys: string[] = hotKey.split('+');
     return (
         <div className="shortcut-item">
-            <h5>{title}</h5>
+            <h5 className="shortcut-title">{title}</h5>
             <div className="shortcut">
                 {shortcutKeys.map(shortcutKey => (
                     <span key={shortcutKey}>
@@ -31,7 +30,6 @@ const ShortcutItem: FC<Props> = ({ title, hotKey, description }) => {
                     </span>
                 ))}
             </div>
-            <p>{description}</p>
         </div>
     );
 };
@@ -39,7 +37,6 @@ const ShortcutItem: FC<Props> = ({ title, hotKey, description }) => {
 ShortcutItem.propTypes = {
     title: string.isRequired,
     hotKey: string.isRequired,
-    description: string.isRequired,
 };
 
 export default ShortcutItem;

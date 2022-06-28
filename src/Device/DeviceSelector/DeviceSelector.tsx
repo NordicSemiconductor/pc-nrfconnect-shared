@@ -97,7 +97,6 @@ const DeviceSelector: FC<Props> = ({
     useHotkey({
         hotKey: 'alt+s',
         title: 'Select device',
-        description: 'Shows the list of devices',
         isGlobal: true,
         action: () => toggleDeviceListVisible(),
     });
