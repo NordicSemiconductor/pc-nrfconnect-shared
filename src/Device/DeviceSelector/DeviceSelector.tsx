@@ -8,6 +8,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
+import { useHotkey } from '../../Shortcuts/useHotkey';
 import { Device } from '../../state';
 import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
 import { DeviceSetup as DeviceSetupShared, setupDevice } from '../deviceSetup';
@@ -92,6 +93,14 @@ const DeviceSelector: FC<Props> = ({
     }, [doStartWatchingDevices]);
 
     useAutoselectDevice(doSelectDevice);
+
+    useHotkey({
+        hotKey: 'alt+s',
+        title: 'Select device',
+        description: 'Shows the list of devices',
+        isGlobal: true,
+        action: () => toggleDeviceListVisible(),
+    });
 
     return (
         <div className="core19-device-selector">
