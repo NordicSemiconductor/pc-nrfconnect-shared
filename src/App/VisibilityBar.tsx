@@ -14,6 +14,7 @@ import {
     toggleAutoScroll,
 } from '../Log/logSlice';
 import logger from '../logging';
+import { useHotkey } from '../Shortcuts/useHotkey';
 import { Toggle } from '../Toggle/Toggle';
 import {
     isLogVisible as isLogVisibleSelector,
@@ -31,6 +32,46 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
     const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);
     const autoScroll = useSelector(autoScrollSelector);
+
+    useHotkey({
+        hotKey: 'shift+m',
+        title: 'Show/Hide menu',
+        description: 'Shows/Hides the menu',
+        isGlobal: true,
+        action: () => dispatch(toggleSidePanelVisible()),
+    });
+
+    useHotkey({
+        hotKey: 'shift+r',
+        title: 'Clear log',
+        description: 'Clears the log',
+        isGlobal: true,
+        action: () => dispatch(clear()),
+    });
+
+    useHotkey({
+        hotKey: 'shift+o',
+        title: 'Open log file',
+        description: 'Opens the log file',
+        isGlobal: true,
+        action: () => logger.openLogFile(),
+    });
+
+    useHotkey({
+        hotKey: 'shift+a',
+        title: 'Autoscroll log',
+        description: 'Autoscroll log',
+        isGlobal: true,
+        action: () => dispatch(toggleAutoScroll()),
+    });
+
+    useHotkey({
+        hotKey: 'shift+s',
+        title: 'Show log',
+        description: 'Show log',
+        isGlobal: true,
+        action: () => dispatch(toggleLogVisible()),
+    });
 
     return (
         <div className="core19-visibility-bar">
