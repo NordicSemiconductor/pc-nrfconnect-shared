@@ -62,7 +62,10 @@ export const getAppSpecificStore = <
     StoreSchema extends Record<string, any>
 >() => {
     if (appSpecificStore == null) {
-        appSpecificStore = new Store({ name: packageJson().name });
+        appSpecificStore = new Store({
+            name: packageJson().name,
+            clearInvalidConfig: true,
+        });
     }
 
     return appSpecificStore as Store<
