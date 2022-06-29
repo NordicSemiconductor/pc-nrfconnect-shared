@@ -7,15 +7,10 @@
 @import '../variables.scss';
 
 .button {
-    height: 32px;
-
-    display: block;
-    width: 100%;
+    height: 24px;
     color: $gray-700;
     background-color: $white;
     border: 1px;
     border-style: solid;
     border-color: $gray-700;
 }
-
-
