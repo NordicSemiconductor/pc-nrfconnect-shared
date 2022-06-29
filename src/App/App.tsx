@@ -21,11 +21,11 @@ import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import LogViewer from '../Log/LogViewer';
 import NavBar from '../NavBar/NavBar';
-import { useHotkey } from '../Shortcuts/useHotkey';
 import classNames from '../utils/classNames';
 import packageJson from '../utils/packageJson';
 import { getPersistedCurrentPane } from '../utils/persistentStore';
 import { init as usageDataInit } from '../utils/usageData';
+import useHotKey from '../utils/useHotKey';
 import {
     currentPane as currentPaneSelector,
     isLogVisible as isLogVisibleSelector,
@@ -105,7 +105,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     const allPanes = useAllPanes(panes);
     const dispatch = useDispatch();
 
-    useHotkey({
+    useHotKey({
         hotKey: 'alt+l',
         title: 'Open launcher',
         isGlobal: true,

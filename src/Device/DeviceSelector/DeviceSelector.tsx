@@ -8,8 +8,8 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
-import { useHotkey } from '../../Shortcuts/useHotkey';
 import { Device } from '../../state';
+import useHotKey from '../../utils/useHotKey';
 import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
 import { DeviceSetup as DeviceSetupShared, setupDevice } from '../deviceSetup';
 import DeviceSetup from '../DeviceSetup/DeviceSetup';
@@ -94,7 +94,7 @@ const DeviceSelector: FC<Props> = ({
 
     useAutoselectDevice(doSelectDevice);
 
-    useHotkey({
+    useHotKey({
         hotKey: 'alt+s',
         title: 'Select device',
         isGlobal: true,
