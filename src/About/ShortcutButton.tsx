@@ -9,7 +9,7 @@ import { string } from 'prop-types';
 
 import Button from '../Button/Button';
 import ShortcutModal from '../Shortcuts/ShortcutModal';
-import { useHotkey } from '../Shortcuts/useHotkey';
+import useHotKey from '../utils/useHotKey';
 
 interface Props {
     label: string;
@@ -19,7 +19,7 @@ const ShortcutButton: FC<Props> = ({ label }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const toggleModalVisible = () => setIsModalVisible(!isModalVisible);
 
-    useHotkey({
+    useHotKey({
         hotKey: '?',
         title: 'Open/close this hotkey menu',
         isGlobal: true,

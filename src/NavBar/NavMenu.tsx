@@ -12,7 +12,7 @@ import {
     paneNames as paneNamesSelector,
     setCurrentPane,
 } from '../App/appLayout';
-import { useHotkey } from '../Shortcuts/useHotkey';
+import useHotKey from '../utils/useHotKey';
 import NavMenuItem from './NavMenuItem';
 
 const NavMenu = () => {
@@ -20,7 +20,7 @@ const NavMenu = () => {
     const paneNames = useSelector(paneNamesSelector);
     const dispatch = useDispatch();
 
-    useHotkey({
+    useHotKey({
         hotKey: 'ctrl+tab',
         title: 'Switch pane',
         isGlobal: true,

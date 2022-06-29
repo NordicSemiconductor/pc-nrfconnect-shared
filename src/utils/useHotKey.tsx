@@ -4,16 +4,39 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { useEffect } from 'react';
+import { DependencyList, useEffect } from 'react';
 import Mousetrap from 'mousetrap';
 
-export default (key: string | string[], onKeypress: () => void) => {
+import { sendUsageData } from './usageData';
+
+export interface Shortcut {
+    hotKey: string;
+    title: string;
+    isGlobal: boolean;
+    action: () => void;
+}
+
+export const shortcuts: Shortcut[] = [];
+
+export default (shortcut: Shortcut, deps?: DependencyList) => {
     useEffect(() => {
-        Mousetrap.bind(key, onKeypress);
+        shortcuts.push(shortcut);
+
+        Mousetrap.bind(shortcut.hotKey, () => {
+            shortcut.action();
+            sendUsageData('Pressed hotkey', shortcut.hotKey);
+        });
 
         return () => {
-            Mousetrap.unbind(key);
+            shortcuts.splice(
+                shortcuts.findIndex(
+                    shortcutItem => shortcutItem.hotKey === shortcut.hotKey
+                ),
+                1
+            );
+
+            Mousetrap.unbind(shortcut.hotKey);
         };
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps -- Only run this on
-    // mount/unmount, currently we do not want to support changing keybindings inbetween
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, deps);
 };

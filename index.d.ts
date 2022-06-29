@@ -11,6 +11,7 @@ declare module 'pc-nrfconnect-shared' {
     import Store from 'electron-store';
     import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
+    type Shortcut = import('./src/utils/useHotKey').Shortcut;
     type RootState = import('./src/state').RootState;
     type Device = import('./src/state').Device;
     type DeviceInfo = import('./src/state').DeviceInfo;
@@ -528,8 +529,8 @@ declare module 'pc-nrfconnect-shared' {
     // useHotKey.js
 
     export function useHotKey(
-        key: string | string[],
-        onKeypress: () => void
+        shortcut: Shortcut,
+        deps?: React.DependencyList
     ): void;
 
     // classNames.js

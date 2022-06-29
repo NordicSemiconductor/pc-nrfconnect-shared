@@ -8,8 +8,8 @@ import React, { FC } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { bool, func } from 'prop-types';
 
+import { shortcuts } from '../utils/useHotKey';
 import ShortcutItem from './ShortcutItem';
-import { shortcuts } from './useHotkey';
 
 import './Shortcut-modal.scss';
 
