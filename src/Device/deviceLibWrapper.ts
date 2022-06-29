@@ -16,7 +16,7 @@ import {
     stopLogEvents,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
-import { nrfdlVerboseLoggingEnabled } from '../Log/logSlice';
+import { verboseLoggingEnabled } from '../Log/logSlice';
 import logger from '../logging';
 import { RootState, TDispatch } from '../state';
 import { getVerboseLoggingEnabled } from '../utils/persistentStore';
@@ -28,7 +28,7 @@ export const logNrfdlLogs =
     (evt: LogEvent) => (_: unknown, getState: () => RootState) => {
         if (
             process.env.NODE_ENV === 'production' &&
-            !nrfdlVerboseLoggingEnabled(getState())
+            !verboseLoggingEnabled(getState())
         )
             return;
         switch (evt.level) {

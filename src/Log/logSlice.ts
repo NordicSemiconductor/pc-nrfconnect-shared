@@ -15,7 +15,7 @@ const MAX_ENTRIES = 1000;
 const initialState: Log = {
     autoScroll: true,
     logEntries: [],
-    nrfdlVerboseLogging: getVerboseLoggingEnabled(),
+    verboseLoggingEnabled: getVerboseLoggingEnabled(),
 };
 
 const infoEntry = () => ({
@@ -33,8 +33,8 @@ const limitedToMaxSize = (entries: LogEntry[]) =>
 
 export const autoScroll = (state: RootState) => state.log.autoScroll;
 export const logEntries = (state: RootState) => state.log.logEntries;
-export const nrfdlVerboseLoggingEnabled = (state: RootState) =>
-    state.log.nrfdlVerboseLogging;
+export const verboseLoggingEnabled = (state: RootState) =>
+    state.log.verboseLoggingEnabled;
 
 const slice = createSlice({
     name: 'log',
@@ -52,13 +52,13 @@ const slice = createSlice({
         toggleAutoScroll: state => {
             state.autoScroll = !state.autoScroll;
         },
-        toggleNrflVerboseLogging: state => {
-            state.nrfdlVerboseLogging = !state.nrfdlVerboseLogging;
+        toggleVerboseLogging: state => {
+            state.verboseLoggingEnabled = !state.verboseLoggingEnabled;
         },
     },
 });
 
 export const {
     reducer,
-    actions: { addEntries, clear, toggleAutoScroll, toggleNrflVerboseLogging },
+    actions: { addEntries, clear, toggleAutoScroll, toggleVerboseLogging },
 } = slice;
