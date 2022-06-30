@@ -25,7 +25,7 @@ and this project adheres to
 ### Fixed
 
 -   macOS: Froze a few seconds after launch (happened in the launcher and apps
-    that bundle shared is usage data was enabled).
+    that bundle shared when usage data was enabled).
 
 ## 6.3.1 - 2022-05-23
 
