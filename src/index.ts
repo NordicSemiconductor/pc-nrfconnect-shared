@@ -60,7 +60,7 @@ export { isDevelopment } from './utils/environment';
 
 export { currentPane, setCurrentPane } from './App/appLayout';
 
-export { verboseLoggingEnabled } from './Log/logSlice';
+export { isLoggingVerbose } from './Log/logSlice';
 
 export { getAppSpecificStore as getPersistentStore } from './utils/persistentStore';
 

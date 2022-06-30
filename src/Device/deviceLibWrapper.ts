@@ -16,10 +16,10 @@ import {
     stopLogEvents,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
-import { verboseLoggingEnabled } from '../Log/logSlice';
+import { isLoggingVerbose } from '../Log/logSlice';
 import logger from '../logging';
 import { RootState, TDispatch } from '../state';
-import { getVerboseLoggingEnabled } from '../utils/persistentStore';
+import { getIsLoggingVerbose } from '../utils/persistentStore';
 
 const deviceLibContext = createContext();
 export const getDeviceLibContext = () => deviceLibContext;
@@ -28,7 +28,7 @@ export const logNrfdlLogs =
     (evt: LogEvent) => (_: unknown, getState: () => RootState) => {
         if (
             process.env.NODE_ENV === 'production' &&
-            !verboseLoggingEnabled(getState())
+            !isLoggingVerbose(getState())
         )
             return;
         switch (evt.level) {
@@ -94,7 +94,7 @@ export const getModuleVersion = (
     findTopLevel(module, versions) ?? findInDependencies(module, versions);
 
 setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
-setVerboseDeviceLibLogging(getVerboseLoggingEnabled());
+setVerboseDeviceLibLogging(getIsLoggingVerbose());
 setTimeoutConfig(deviceLibContext, {
     enumerateMs: 3 * 60 * 1000,
 });
