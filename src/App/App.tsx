@@ -105,7 +105,12 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     const allPanes = useAllPanes(panes);
     const dispatch = useDispatch();
 
-    useHotKey('alt+l', () => ipcRenderer.send('open-app-launcher'));
+    useHotKey({
+        hotKey: 'alt+l',
+        title: 'Open launcher',
+        isGlobal: true,
+        action: () => ipcRenderer.send('open-app-launcher'),
+    });
 
     useEffect(() => {
         if (!showLogByDefault) {

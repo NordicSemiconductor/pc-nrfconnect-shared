@@ -15,6 +15,7 @@ import {
 } from '../Log/logSlice';
 import logger from '../logging';
 import { Toggle } from '../Toggle/Toggle';
+import useHotKey from '../utils/useHotKey';
 import {
     isLogVisible as isLogVisibleSelector,
     isSidePanelVisible as isSidePanelVisibleSelector,
@@ -32,6 +33,41 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
     const isLogVisible = useSelector(isLogVisibleSelector);
     const autoScroll = useSelector(autoScrollSelector);
 
+    useHotKey({
+        hotKey: 'shift+m',
+        title: 'Show/Hide menu',
+        isGlobal: true,
+        action: () => dispatch(toggleSidePanelVisible()),
+    });
+
+    useHotKey({
+        hotKey: 'shift+r',
+        title: 'Clear log',
+        isGlobal: true,
+        action: () => dispatch(clear()),
+    });
+
+    useHotKey({
+        hotKey: 'shift+o',
+        title: 'Open log file',
+        isGlobal: true,
+        action: () => logger.openLogFile(),
+    });
+
+    useHotKey({
+        hotKey: 'shift+a',
+        title: 'Autoscroll log',
+        isGlobal: true,
+        action: () => dispatch(toggleAutoScroll()),
+    });
+
+    useHotKey({
+        hotKey: 'shift+l',
+        title: 'Show log',
+        isGlobal: true,
+        action: () => dispatch(toggleLogVisible()),
+    });
+
     return (
         <div className="core19-visibility-bar">
             {isSidePanelEnabled && (
@@ -39,6 +75,7 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
                     <Toggle
                         id="visibility-bar-show-side-panel"
                         label="Show menu"
+                        title="shift+m"
                         onToggle={() => dispatch(toggleSidePanelVisible())}
                         isToggled={isSidePanelVisible}
                         variant="primary"
@@ -48,6 +85,7 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
             <div className="core19-visibility-bar-show-log">
                 <button
                     type="button"
+                    title="shift+l"
                     className="log-button"
                     onClick={() => dispatch(clear())}
                 >
@@ -55,6 +93,7 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
                 </button>
                 <button
                     type="button"
+                    title="shift+o"
                     className="log-button"
                     onClick={logger.openLogFile}
                 >
@@ -64,6 +103,7 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
                 <Toggle
                     id="autoscroll-log"
                     label="Autoscroll log"
+                    title="shift+a"
                     onToggle={() => dispatch(toggleAutoScroll())}
                     isToggled={autoScroll}
                     variant="secondary"
@@ -71,6 +111,7 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
                 <Toggle
                     id="visibility-bar-show-log"
                     label="Show log"
+                    title="shift+l"
                     onToggle={() => dispatch(toggleLogVisible())}
                     isToggled={isLogVisible}
                     variant="secondary"

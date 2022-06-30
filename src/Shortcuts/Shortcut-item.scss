@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 2021 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
+@import '../variables.scss';
+
+.shortcut-item {
+    border-top: 1px solid $gray-100;
+    padding: 20px 0;
+    overflow-wrap: break-word;
+    .shortcut-title {
+        display: inline;
+    }
+    .shortcut {
+        display: inline;
+        float: right;
+        .shortcut-span {
+            background-color: $gray-100;
+            padding: 8px;
+            border-radius: 5px;
+            box-shadow: 0 2px $gray-200;
+        }
+        .separator-span {
+            background-color: $white;
+            padding: 8px;
+        }
+    }
+}

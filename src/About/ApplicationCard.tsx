@@ -11,6 +11,7 @@ import Card from '../Card/Card';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import AboutButton from './AboutButton';
 import Section from './Section';
+import ShortcutButton from './ShortcutButton';
 
 interface AppDetails {
     coreVersion: string;
@@ -73,6 +74,9 @@ export default () => {
             </Section>
             <Section>
                 <FactoryResetButton label="Restore defaults..." />
+            </Section>
+            <Section>
+                <ShortcutButton label="Show shortcuts" />
             </Section>
         </Card>
     );

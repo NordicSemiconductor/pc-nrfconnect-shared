@@ -22,6 +22,7 @@ const SelectDevice: FC<Props> = ({
     toggleDeviceListVisible,
 }) => (
     <PseudoButton
+        title="alt+s"
         className={classNames(
             'select-device',
             deviceListVisible && 'device-list-visible'
@@ -36,5 +37,4 @@ const SelectDevice: FC<Props> = ({
         />
     </PseudoButton>
 );
-
 export default SelectDevice;
