@@ -44,10 +44,10 @@ const newUsageDataClientId = () => {
 export const getUsageDataClientId = () =>
     existingUsageDataClientId() ?? newUsageDataClientId();
 
-export const persistVerboseLoggingEnabled = (value: boolean) =>
-    sharedStore.set('verboseLogging', value);
-export const getVerboseLoggingEnabled = () =>
-    sharedStore.get('verboseLogging', false);
+export const persistIsLoggingVerbose = (value: boolean) =>
+    sharedStore.set('isLoggingVerbose', value);
+export const getIsLoggingVerbose = () =>
+    sharedStore.get('isLoggingVerbose', false);
 
 // This one must be initialised lazily, because the package.json is not read yet when this module is initialised.
 // This can probably be changed when we bundle shared with the apps.

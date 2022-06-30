@@ -60,6 +60,8 @@ export { isDevelopment } from './utils/environment';
 
 export { currentPane, setCurrentPane } from './App/appLayout';
 
+export { isLoggingVerbose } from './Log/logSlice';
+
 export { getAppSpecificStore as getPersistentStore } from './utils/persistentStore';
 
 export { selectedDevice } from './Device/deviceSlice';

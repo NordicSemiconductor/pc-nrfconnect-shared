@@ -16,12 +16,9 @@ import {
     selectedSerialNumber,
     sortedDevices,
 } from '../Device/deviceSlice';
-import {
-    nrfdlVerboseLoggingEnabled,
-    toggleNrflVerboseLogging,
-} from '../Log/logSlice';
+import { isLoggingVerbose, toggleIsLoggingVerbose } from '../Log/logSlice';
 import { Toggle } from '../Toggle/Toggle';
-import { persistVerboseLoggingEnabled } from '../utils/persistentStore';
+import { persistIsLoggingVerbose } from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
 import Section from './Section';
@@ -30,11 +27,11 @@ export default () => {
     const dispatch = useDispatch();
     const devices = useSelector(sortedDevices);
     const currentSerialNumber = useSelector(selectedSerialNumber);
-    const verboseLogging = useSelector(nrfdlVerboseLoggingEnabled);
+    const verboseLogging = useSelector(isLoggingVerbose);
     const currentDevice = useSelector(deviceInfo);
 
     useEffect(() => {
-        persistVerboseLoggingEnabled(false);
+        persistIsLoggingVerbose(false);
     }, []);
 
     useEffect(() => {
@@ -79,14 +76,14 @@ export default () => {
                 <Toggle
                     id="enableVerboseLoggin"
                     label="VERBOSE LOGGING"
-                    onToggle={() => dispatch(toggleNrflVerboseLogging())}
+                    onToggle={() => dispatch(toggleIsLoggingVerbose())}
                     isToggled={verboseLogging}
                     variant="primary"
                 />
                 <Section>
                     <Button
                         onClick={() => {
-                            persistVerboseLoggingEnabled(true);
+                            persistIsLoggingVerbose(true);
                             getCurrentWindow().reload();
                         }}
                         title="Restart application with verbose logging turned on to get log messages from initial enumeration"

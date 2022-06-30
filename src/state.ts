@@ -46,7 +46,7 @@ export interface ErrorResolutions {
 export interface Log {
     autoScroll: boolean;
     logEntries: LogEntry[];
-    nrfdlVerboseLogging: boolean;
+    isLoggingVerbose: boolean;
 }
 
 export type Devices = { [key: string]: Device | undefined };
