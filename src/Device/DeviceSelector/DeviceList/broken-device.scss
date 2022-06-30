@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2021 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
+@import '../../../variables';
+
+.core19-device-selector {
+    .broken-device {
+        display: flex;
+        flex-direction: column;
+
+        padding: 12px 0;
+        font-weight: $font-weight-light;
+
+        .icon {
+            transform: translateY(0);
+        }
+
+        .broken-device-info {
+            margin: 8px 0 8px 68px;
+            font-size: 12px;
+            p {
+                margin: 0;
+            }
+            p + p {
+                margin-top: 1em;
+            }
+        }
+    }
+}

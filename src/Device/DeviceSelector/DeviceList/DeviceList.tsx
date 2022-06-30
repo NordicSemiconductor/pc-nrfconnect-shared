@@ -12,6 +12,7 @@ import { Device as DeviceProps } from '../../../state';
 import classNames from '../../../utils/classNames';
 import { sortedDevices } from '../../deviceSlice';
 import { AnimatedItem, AnimatedList } from './AnimatedList';
+import BrokenDevice from './BrokenDevice';
 import Device from './Device';
 
 import './device-list.scss';
@@ -62,11 +63,15 @@ const DeviceList: FC<Props> = ({
                             key={device.serialNumber}
                             itemKey={device.serialNumber}
                         >
-                            <Device
-                                device={device}
-                                doSelectDevice={doSelectDevice}
-                                allowMoreInfoVisible={isVisible}
-                            />
+                            {device.traits.broken ? (
+                                <BrokenDevice device={device} />
+                            ) : (
+                                <Device
+                                    device={device}
+                                    doSelectDevice={doSelectDevice}
+                                    allowMoreInfoVisible={isVisible}
+                                />
+                            )}
                         </AnimatedItem>
                     ))}
                 </AnimatedList>
