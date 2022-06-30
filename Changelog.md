@@ -11,6 +11,7 @@ and this project adheres to
 ### Added
 
 -   Export verbose log state selector,
+-   Add shortcut menu and implement shortcuts
 
 ## 6.3.4 - 2022-06-29
 
