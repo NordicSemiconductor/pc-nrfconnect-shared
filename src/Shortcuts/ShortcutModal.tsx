@@ -34,11 +34,11 @@ const ShortcutModal: FC<Props> = ({ isVisible, onCancel }) => (
             <div>
                 <h4 className="list-header">In this app</h4>
                 {shortcuts
-                    .filter(shortcut => shortcut.isGlobal === false)
+                    .filter(shortcut => !shortcut.isGlobal)
                     .sort((s1, s2) => s1.title.localeCompare(s2.title))
                     .map(shortcut => (
                         <ShortcutItem
-                            key={shortcut.hotKey}
+                            key={shortcut.title}
                             title={shortcut.title}
                             hotKey={shortcut.hotKey}
                         />
@@ -47,11 +47,11 @@ const ShortcutModal: FC<Props> = ({ isVisible, onCancel }) => (
             <div>
                 <h4 className="list-header">In all apps</h4>
                 {shortcuts
-                    .filter(shortcut => shortcut.isGlobal === true)
+                    .filter(shortcut => shortcut.isGlobal)
                     .sort((s1, s2) => s1.title.localeCompare(s2.title))
                     .map(shortcut => (
                         <ShortcutItem
-                            key={shortcut.hotKey}
+                            key={shortcut.title}
                             title={shortcut.title}
                             hotKey={shortcut.hotKey}
                         />

@@ -10,7 +10,7 @@ import Mousetrap from 'mousetrap';
 import { sendUsageData } from './usageData';
 
 export interface Shortcut {
-    hotKey: string;
+    hotKey: string[] | string;
     title: string;
     isGlobal: boolean;
     action: () => void;
@@ -22,9 +22,9 @@ export default (shortcut: Shortcut, deps?: DependencyList) => {
     useEffect(() => {
         shortcuts.push(shortcut);
 
-        Mousetrap.bind(shortcut.hotKey, () => {
+        Mousetrap.bind(shortcut.hotKey, (_e, combo) => {
             shortcut.action();
-            sendUsageData('Pressed hotkey', shortcut.hotKey);
+            sendUsageData('Pressed hotkey', combo);
         });
 
         return () => {
