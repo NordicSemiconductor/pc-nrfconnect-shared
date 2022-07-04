@@ -7,6 +7,7 @@
 import { combineReducers, Reducer } from 'redux';
 
 import { reducer as documentation } from './About/documentationSlice';
+import { reducer as shortcuts } from './About/shortcutSlice';
 import { reducer as appLayout } from './App/appLayout';
 import { reducer as appReloadDialog } from './AppReload/appReloadDialogSlice';
 import { reducer as brokenDeviceDialog } from './Device/BrokenDeviceDialog/brokenDeviceDialogSlice';
@@ -22,6 +23,7 @@ const coreReducers = {
     errorDialog,
     log,
     documentation,
+    shortcuts,
 };
 
 const noopReducer: Reducer = (state = null) => state;

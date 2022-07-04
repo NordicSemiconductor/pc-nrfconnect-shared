@@ -5,22 +5,16 @@
  */
 
 import { DependencyList, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import Mousetrap from 'mousetrap';
 
+import { addShortcut, removeShortcut, Shortcut } from '../About/shortcutSlice';
 import { sendUsageData } from './usageData';
 
-export interface Shortcut {
-    hotKey: string[] | string;
-    title: string;
-    isGlobal: boolean;
-    action: () => void;
-}
-
-export const shortcuts: Shortcut[] = [];
-
 export default (shortcut: Shortcut, deps?: DependencyList) => {
+    const dispatch = useDispatch();
     useEffect(() => {
-        shortcuts.push(shortcut);
+        dispatch(addShortcut(shortcut));
 
         Mousetrap.bind(shortcut.hotKey, (_e, combo) => {
             shortcut.action();
@@ -28,12 +22,7 @@ export default (shortcut: Shortcut, deps?: DependencyList) => {
         });
 
         return () => {
-            shortcuts.splice(
-                shortcuts.findIndex(
-                    shortcutItem => shortcutItem.hotKey === shortcut.hotKey
-                ),
-                1
-            );
+            dispatch(removeShortcut(shortcut));
 
             Mousetrap.unbind(shortcut.hotKey);
         };

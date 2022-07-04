@@ -9,6 +9,7 @@ import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { LogEntry } from 'winston';
 
 import type { DocumentationState } from './About/documentationSlice';
+import type { ShortcutState } from './About/shortcutSlice';
 
 export type TDispatch = ThunkDispatch<RootState, null, AnyAction>;
 
@@ -20,6 +21,7 @@ export interface RootState {
     device: DeviceState;
     documentation: DocumentationState;
     brokenDeviceDialog: BrokenDeviceDialog;
+    shortcuts: ShortcutState;
 }
 
 export interface AppLayout {
