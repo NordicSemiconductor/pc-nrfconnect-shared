@@ -533,6 +533,12 @@ declare module 'pc-nrfconnect-shared' {
         deps?: React.DependencyList
     ): void;
 
+    // Legacy API for the same function
+    export function useHotKey(
+        hotKey: string | string[],
+        action: () => void
+    ): void;
+
     // classNames.js
 
     /**
