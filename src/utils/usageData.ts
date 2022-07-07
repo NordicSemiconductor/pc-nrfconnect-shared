@@ -173,7 +173,7 @@ export const sendErrorReport = (error: string) => {
     logger.error(error);
     sendUsageData(
         'Report error',
-        `${process.platform}; ${process.arch}; v${appJson.version}; ${error}`
+        `${process.platform}; ${process.arch}; v${appJson?.version}; ${error}`
     );
 };
 
