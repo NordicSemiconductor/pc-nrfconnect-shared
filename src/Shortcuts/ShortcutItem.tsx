@@ -5,7 +5,7 @@
  */
 
 import React, { FC } from 'react';
-import { string } from 'prop-types';
+import { arrayOf, oneOfType, string } from 'prop-types';
 
 import './Shortcut-item.scss';
 
@@ -48,7 +48,7 @@ const ShortcutItem: FC<Props> = ({ title, hotKey }) => {
 
 ShortcutItem.propTypes = {
     title: string.isRequired,
-    hotKey: string.isRequired,
+    hotKey: oneOfType([arrayOf(string.isRequired), string]).isRequired,
 };
 
 export default ShortcutItem;
