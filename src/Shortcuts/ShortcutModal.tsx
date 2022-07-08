@@ -6,9 +6,10 @@
 
 import React, { FC } from 'react';
 import Modal from 'react-bootstrap/Modal';
+import { useSelector } from 'react-redux';
 import { bool, func } from 'prop-types';
 
-import { shortcuts } from '../utils/useHotKey';
+import { globalShortcuts, localShortcuts } from '../About/shortcutSlice';
 import ShortcutItem from './ShortcutItem';
 
 import './Shortcut-modal.scss';
@@ -18,48 +19,47 @@ export interface Props {
     onCancel: () => void;
 }
 
-const ShortcutModal: FC<Props> = ({ isVisible, onCancel }) => (
-    <Modal
-        show={isVisible}
-        onHide={onCancel}
-        size="lg"
-        className="shortcut-modal"
-    >
-        <Modal.Header closeButton>
-            <Modal.Title>
-                <h3>Shortcuts</h3>
-            </Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="shortcut-lists">
-            <div>
-                <h4 className="list-header">In this app</h4>
-                {shortcuts
-                    .filter(shortcut => shortcut.isGlobal === false)
-                    .sort((s1, s2) => s1.title.localeCompare(s2.title))
-                    .map(shortcut => (
+const ShortcutModal: FC<Props> = ({ isVisible, onCancel }) => {
+    const local = useSelector(localShortcuts);
+    const global = useSelector(globalShortcuts);
+
+    return (
+        <Modal
+            show={isVisible}
+            onHide={onCancel}
+            size="lg"
+            className="shortcut-modal"
+        >
+            <Modal.Header closeButton>
+                <Modal.Title>
+                    <h3>Shortcuts</h3>
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="shortcut-lists">
+                <div>
+                    <h4 className="list-header">In this app</h4>
+                    {local.map(shortcut => (
                         <ShortcutItem
-                            key={shortcut.hotKey}
+                            key={shortcut.title}
                             title={shortcut.title}
                             hotKey={shortcut.hotKey}
                         />
                     ))}
-            </div>
-            <div>
-                <h4 className="list-header">In all apps</h4>
-                {shortcuts
-                    .filter(shortcut => shortcut.isGlobal === true)
-                    .sort((s1, s2) => s1.title.localeCompare(s2.title))
-                    .map(shortcut => (
+                </div>
+                <div>
+                    <h4 className="list-header">In all apps</h4>
+                    {global.map(shortcut => (
                         <ShortcutItem
-                            key={shortcut.hotKey}
+                            key={shortcut.title}
                             title={shortcut.title}
                             hotKey={shortcut.hotKey}
                         />
                     ))}
-            </div>
-        </Modal.Body>
-    </Modal>
-);
+                </div>
+            </Modal.Body>
+        </Modal>
+    );
+};
 
 ShortcutModal.propTypes = {
     isVisible: bool.isRequired,

@@ -11,7 +11,7 @@ declare module 'pc-nrfconnect-shared' {
     import Store from 'electron-store';
     import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
-    type Shortcut = import('./src/utils/useHotKey').Shortcut;
+    type Shortcut = import('./src/About/shortcutSlice').Shortcut;
     type RootState = import('./src/state').RootState;
     type Device = import('./src/state').Device;
     type DeviceInfo = import('./src/state').DeviceInfo;

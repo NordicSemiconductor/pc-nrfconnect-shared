@@ -24,11 +24,8 @@ const NavMenu = () => {
         hotKey: 'ctrl+tab',
         title: 'Switch pane',
         isGlobal: true,
-        action: () => {
-            currentPane === paneNames.length - 1
-                ? dispatch(setCurrentPane(0))
-                : dispatch(setCurrentPane(currentPane + 1));
-        },
+        action: () =>
+            dispatch(setCurrentPane((currentPane + 1) % paneNames.length)),
     });
 
     return (
