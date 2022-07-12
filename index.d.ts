@@ -587,9 +587,7 @@ declare module 'pc-nrfconnect-shared' {
 
     // logSlice.js
 
-    export function isLoggingVerbose<AppState>(
-        state: NrfConnectState<AppState>
-    ): boolean;
+    export function isLoggingVerbose(): boolean;
 
     // persistentStore.ts
 

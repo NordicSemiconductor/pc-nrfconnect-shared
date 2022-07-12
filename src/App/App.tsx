@@ -205,9 +205,7 @@ App.propTypes = {
 export default App;
 
 const useNrfdlLogging = () => {
-    const dispatch = useDispatch();
-
-    useEffect(() => forwardLogEventsFromDeviceLib(dispatch), [dispatch]);
+    useEffect(() => forwardLogEventsFromDeviceLib(), []);
 };
 
 const usePersistedPane = () => {

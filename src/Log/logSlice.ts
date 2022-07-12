@@ -33,7 +33,9 @@ const limitedToMaxSize = (entries: LogEntry[]) =>
 
 export const autoScroll = (state: RootState) => state.log.autoScroll;
 export const logEntries = (state: RootState) => state.log.logEntries;
-export const isLoggingVerbose = (state: RootState) =>
+let isLoggingVerboseLocal = initialState.isLoggingVerbose;
+export const isLoggingVerbose = () => isLoggingVerboseLocal;
+export const isLoggingVerboseSelector = (state: RootState) =>
     state.log.isLoggingVerbose;
 
 const slice = createSlice({
@@ -54,6 +56,7 @@ const slice = createSlice({
         },
         toggleIsLoggingVerbose: state => {
             state.isLoggingVerbose = !state.isLoggingVerbose;
+            isLoggingVerboseLocal = state.isLoggingVerbose;
         },
     },
 });
