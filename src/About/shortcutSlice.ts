@@ -5,8 +5,11 @@
  */
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { enableMapSet } from 'immer';
 
 import { RootState } from '../state';
+
+enableMapSet();
 
 export interface Shortcut {
     hotKey: string[] | string;
@@ -15,27 +18,19 @@ export interface Shortcut {
     action: () => void;
 }
 
-export interface ShortcutState {
-    shortcuts: Shortcut[];
-}
+export type ShortcutState = Set<Shortcut>;
 
-const initialState = (): ShortcutState => ({
-    shortcuts: [],
-});
+const initialState: ShortcutState = new Set();
 
 const slice = createSlice({
     name: 'shortcuts',
-    initialState: initialState(),
+    initialState,
     reducers: {
         addShortcut: (state, action: PayloadAction<Shortcut>) => {
-            state.shortcuts.push(action.payload);
+            state.add(action.payload);
         },
         removeShortcut: (state, action: PayloadAction<Shortcut>) => {
-            const shortcutToRemove = state.shortcuts.findIndex(
-                shortcutElement =>
-                    shortcutElement.title === action.payload.title
-            );
-            state.shortcuts.splice(shortcutToRemove, 1);
+            state.delete(action.payload);
         },
     },
 });
@@ -45,16 +40,12 @@ export const {
     actions: { addShortcut, removeShortcut },
 } = slice;
 
-export const shortcuts = (state: RootState) => state.shortcuts.shortcuts;
-export const localShortcuts = (state: RootState) => {
-    const local: Shortcut[] = state.shortcuts.shortcuts
+export const localShortcuts = (state: RootState) =>
+    Array.from(state.shortcuts)
         .filter(shortcut => !shortcut.isGlobal)
         .sort((s1, s2) => s1.title.localeCompare(s2.title));
-    return local;
-};
-export const globalShortcuts = (state: RootState) => {
-    const global: Shortcut[] = state.shortcuts.shortcuts
+
+export const globalShortcuts = (state: RootState) =>
+    Array.from(state.shortcuts)
         .filter(shortcut => shortcut.isGlobal)
         .sort((s1, s2) => s1.title.localeCompare(s2.title));
-    return global;
-};
