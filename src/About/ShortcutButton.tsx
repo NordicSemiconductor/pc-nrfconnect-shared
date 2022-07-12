@@ -5,7 +5,6 @@
  */
 
 import React, { FC, useState } from 'react';
-import { string } from 'prop-types';
 
 import Button from '../Button/Button';
 import ShortcutModal from '../Shortcuts/ShortcutModal';
@@ -35,10 +34,6 @@ const ShortcutButton: FC<Props> = ({ label }) => {
             />
         </>
     );
-};
-
-ShortcutButton.propTypes = {
-    label: string.isRequired,
 };
 
 export default ShortcutButton;

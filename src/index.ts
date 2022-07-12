@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
-
 import { hideDialog, showDialog } from './ErrorDialog/errorDialogSlice';
 
 const ErrorDialogActions = { hideDialog, showDialog };
