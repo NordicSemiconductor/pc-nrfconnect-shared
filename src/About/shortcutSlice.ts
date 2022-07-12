@@ -40,12 +40,13 @@ export const {
     actions: { addShortcut, removeShortcut },
 } = slice;
 
-export const localShortcuts = (state: RootState) =>
-    Array.from(state.shortcuts)
-        .filter(shortcut => !shortcut.isGlobal)
+const sortedShortcuts = (shortcuts: Iterable<Shortcut>, global: boolean) =>
+    Array.from(shortcuts)
+        .filter(shortcut => shortcut.isGlobal === global)
         .sort((s1, s2) => s1.title.localeCompare(s2.title));
 
 export const globalShortcuts = (state: RootState) =>
-    Array.from(state.shortcuts)
-        .filter(shortcut => shortcut.isGlobal)
-        .sort((s1, s2) => s1.title.localeCompare(s2.title));
+    sortedShortcuts(state.shortcuts, true);
+
+export const localShortcuts = (state: RootState) =>
+    sortedShortcuts(state.shortcuts, false);
