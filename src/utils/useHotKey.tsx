@@ -11,7 +11,7 @@ import Mousetrap from 'mousetrap';
 import { addShortcut, removeShortcut, Shortcut } from '../About/shortcutSlice';
 import { sendUsageData } from './usageData';
 
-export default (shortcut: Shortcut, deps?: DependencyList) => {
+const useNewHotKey = (shortcut: Shortcut, deps: DependencyList = []) => {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(addShortcut(shortcut));
@@ -28,4 +28,35 @@ export default (shortcut: Shortcut, deps?: DependencyList) => {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, deps);
+};
+const useLegacyHotKey = (hotKey: string | string[], action: () => void) => {
+    console.warn(
+        `Defining a hot key for '${hotKey}' using a legacy API. ` +
+            'Please update the app (or tell the app author to update it to ' +
+            'the latest API).'
+    );
+
+    useNewHotKey({
+        hotKey,
+        title: 'Legacy shortcut',
+        isGlobal: false,
+        action,
+    });
+};
+
+const isUsingLegacyHotkey = (
+    args: unknown[]
+): args is Parameters<typeof useLegacyHotKey> =>
+    args.length === 2 && typeof args[1] === 'function';
+
+export default (
+    ...args:
+        | Parameters<typeof useNewHotKey>
+        | Parameters<typeof useLegacyHotKey>
+) => {
+    if (isUsingLegacyHotkey(args)) {
+        useLegacyHotKey(...args);
+    } else {
+        useNewHotKey(...args);
+    }
 };
