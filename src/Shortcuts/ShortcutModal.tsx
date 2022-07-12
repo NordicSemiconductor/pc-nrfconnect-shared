@@ -35,26 +35,30 @@ const ShortcutModal: FC<Props> = ({ isVisible, onCancel }) => {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="shortcut-lists">
-                <div>
-                    <h4 className="list-header">In this app</h4>
-                    {local.map(shortcut => (
-                        <ShortcutItem
-                            key={shortcut.title}
-                            title={shortcut.title}
-                            hotKey={shortcut.hotKey}
-                        />
-                    ))}
-                </div>
-                <div>
-                    <h4 className="list-header">In all apps</h4>
-                    {global.map(shortcut => (
-                        <ShortcutItem
-                            key={shortcut.title}
-                            title={shortcut.title}
-                            hotKey={shortcut.hotKey}
-                        />
-                    ))}
-                </div>
+                <>
+                    {local.length > 0 && (
+                        <div>
+                            <h4 className="list-header">In this app</h4>
+                            {local.map(shortcut => (
+                                <ShortcutItem
+                                    key={shortcut.title}
+                                    title={shortcut.title}
+                                    hotKey={shortcut.hotKey}
+                                />
+                            ))}
+                        </div>
+                    )}
+                    <div>
+                        <h4 className="list-header">In all apps</h4>
+                        {global.map(shortcut => (
+                            <ShortcutItem
+                                key={shortcut.title}
+                                title={shortcut.title}
+                                hotKey={shortcut.hotKey}
+                            />
+                        ))}
+                    </div>
+                </>
             </Modal.Body>
         </Modal>
     );
