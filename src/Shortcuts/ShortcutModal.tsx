@@ -7,7 +7,6 @@
 import React, { FC } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { useSelector } from 'react-redux';
-import { bool, func } from 'prop-types';
 
 import { globalShortcuts, localShortcuts } from '../About/shortcutSlice';
 import ShortcutItem from './ShortcutItem';
@@ -59,11 +58,6 @@ const ShortcutModal: FC<Props> = ({ isVisible, onCancel }) => {
             </Modal.Body>
         </Modal>
     );
-};
-
-ShortcutModal.propTypes = {
-    isVisible: bool.isRequired,
-    onCancel: func.isRequired,
 };
 
 export default ShortcutModal;
