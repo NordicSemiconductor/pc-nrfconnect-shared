@@ -13,6 +13,11 @@ and this project adheres to
 -   The old API of `useHotKey()` was broken. Now the old and the new API are
     supported. Using the old API just triggers a warning on the console.
 
+### Changed
+
+-   `isLoggingVerbose` is now exported as a normal function instead of a
+    selector.
+
 ## 6.4.1 - 2022-07-07
 
 ### Fixed

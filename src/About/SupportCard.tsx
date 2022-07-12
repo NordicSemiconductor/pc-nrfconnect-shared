@@ -16,7 +16,10 @@ import {
     selectedSerialNumber,
     sortedDevices,
 } from '../Device/deviceSlice';
-import { isLoggingVerbose, toggleIsLoggingVerbose } from '../Log/logSlice';
+import {
+    isLoggingVerboseSelector,
+    toggleIsLoggingVerbose,
+} from '../Log/logSlice';
 import { Toggle } from '../Toggle/Toggle';
 import { persistIsLoggingVerbose } from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
@@ -27,7 +30,7 @@ export default () => {
     const dispatch = useDispatch();
     const devices = useSelector(sortedDevices);
     const currentSerialNumber = useSelector(selectedSerialNumber);
-    const verboseLogging = useSelector(isLoggingVerbose);
+    const verboseLogging = useSelector(isLoggingVerboseSelector);
     const currentDevice = useSelector(deviceInfo);
 
     useEffect(() => {

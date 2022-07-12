@@ -18,42 +18,36 @@ import {
 
 import { isLoggingVerbose } from '../Log/logSlice';
 import logger from '../logging';
-import { RootState, TDispatch } from '../state';
 import { getIsLoggingVerbose } from '../utils/persistentStore';
 
 const deviceLibContext = createContext();
 export const getDeviceLibContext = () => deviceLibContext;
 
-export const logNrfdlLogs =
-    (evt: LogEvent) => (_: unknown, getState: () => RootState) => {
-        if (
-            process.env.NODE_ENV === 'production' &&
-            !isLoggingVerbose(getState())
-        )
-            return;
-        switch (evt.level) {
-            case 'NRFDL_LOG_TRACE':
-                logger.verbose(evt.message);
-                break;
-            case 'NRFDL_LOG_DEBUG':
-                logger.debug(evt.message);
-                break;
-            case 'NRFDL_LOG_INFO':
-                logger.info(evt.message);
-                break;
-            case 'NRFDL_LOG_WARNING':
-                logger.warn(evt.message);
-                break;
-            case 'NRFDL_LOG_ERROR':
-                logger.error(evt.message);
-                break;
-            case 'NRFDL_LOG_CRITICAL':
-                logger.error(evt.message);
-                break;
-        }
-    };
+export const logNrfdlLogs = (evt: LogEvent) => {
+    if (process.env.NODE_ENV === 'production' && !isLoggingVerbose()) return;
+    switch (evt.level) {
+        case 'NRFDL_LOG_TRACE':
+            logger.verbose(evt.message);
+            break;
+        case 'NRFDL_LOG_DEBUG':
+            logger.debug(evt.message);
+            break;
+        case 'NRFDL_LOG_INFO':
+            logger.info(evt.message);
+            break;
+        case 'NRFDL_LOG_WARNING':
+            logger.warn(evt.message);
+            break;
+        case 'NRFDL_LOG_ERROR':
+            logger.error(evt.message);
+            break;
+        case 'NRFDL_LOG_CRITICAL':
+            logger.error(evt.message);
+            break;
+    }
+};
 
-export const forwardLogEventsFromDeviceLib = (dispatch: TDispatch) => {
+export const forwardLogEventsFromDeviceLib = () => {
     const taskId = startLogEvents(
         getDeviceLibContext(),
         (err?: Error) => {
@@ -63,7 +57,7 @@ export const forwardLogEventsFromDeviceLib = (dispatch: TDispatch) => {
                     err
                 );
         },
-        (evt: LogEvent) => dispatch(logNrfdlLogs(evt))
+        (evt: LogEvent) => logNrfdlLogs(evt)
     );
     return () => {
         stopLogEvents(taskId);
