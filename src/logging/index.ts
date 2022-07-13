@@ -16,10 +16,8 @@ import AppTransport from './appTransport';
 import describeError from './describeError';
 import createLogBuffer from './logBuffer';
 
-const filePrefix = new Date().toISOString().replace(/:/gi, '_');
-let logFilePath: string;
-
 const isDevelopment = process.env.NODE_ENV === 'development';
+const isTest = process.env.NODE_ENV === 'test';
 const isConsoleAvailable = (() => {
     try {
         process.stdout.write('');
@@ -29,6 +27,9 @@ const isConsoleAvailable = (() => {
     return true;
 })();
 
+const filePrefix = new Date().toISOString().replace(/:/gi, '_');
+const logFilePath = () => path.join(getAppLogDir(), `${filePrefix}-log.txt`);
+
 const logBuffer = createLogBuffer();
 
 const logTransports: Transport[] = [
@@ -37,6 +38,15 @@ const logTransports: Transport[] = [
         onLogEntry: logBuffer.addEntry,
     }),
 ];
+
+if (!isTest) {
+    logTransports.push(
+        new transports.File({
+            filename: logFilePath(),
+            level: 'debug',
+        })
+    );
+}
 
 if (isDevelopment && isConsoleAvailable) {
     logTransports.push(new transports.Console({ level: 'silly' }));
@@ -73,22 +83,11 @@ const logger = createLogger({
     transports: logTransports,
 }) as SharedLogger;
 
-logger.initialise = () => {
-    logFilePath = path.join(getAppLogDir(), `${filePrefix}-log.txt`);
-
-    logger.add(
-        new transports.File({
-            filename: logFilePath,
-            level: 'debug',
-        })
-    );
-};
-
 logger.getAndClearEntries = () => logBuffer.clear();
 
 logger.openLogFile = () => {
     try {
-        openFile(logFilePath);
+        openFile(logFilePath());
     } catch (error) {
         logger.logError('Unable to open log file', error);
     }
