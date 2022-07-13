@@ -39,7 +39,9 @@ const logTransports: Transport[] = [
     }),
 ];
 
-if (!isTest) {
+const inLauncher = getAppLogDir() == null;
+
+if (!isTest && !inLauncher) {
     logTransports.push(
         new transports.File({
             filename: logFilePath(),
