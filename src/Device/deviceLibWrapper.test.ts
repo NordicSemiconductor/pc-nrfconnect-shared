@@ -8,46 +8,59 @@ import { getModuleVersion } from './deviceLibWrapper';
 
 const exampleModuleVersions = [
     {
-        dependencies: [
+        name: 'nrfdl',
+        plugins: [
             {
                 dependencies: [
                     {
-                        expectedVersion: {
-                            version: 'JLink_V7.58b',
-                            versionFormat: 'string' as const,
+                        dependencies: [
+                            {
+                                expectedVersion: {
+                                    version: 'JLink_V7.66a',
+                                    versionFormat: 'string' as const,
+                                },
+                                name: 'JlinkARM',
+                                version: 'JLink_V7.66a',
+                                versionFormat: 'string' as const,
+                            },
+                        ],
+                        name: 'jprog',
+                        version: {
+                            major: 10,
+                            metadata: '0',
+                            minor: 16,
+                            patch: 0,
+                            pre: '0',
                         },
-                        moduleName: 'jlink',
-                        version: 'JLink_V7.56a',
-                        versionFormat: 'string' as const,
+                        versionFormat: 'semantic' as const,
                     },
                 ],
-                moduleName: 'jprog',
+                name: 'jlink',
                 version: {
-                    major: 10,
+                    major: 0,
                     metadata: '0',
-                    minor: 15,
-                    patch: 1,
+                    minor: 12,
+                    patch: 5,
                     pre: '0',
                 },
                 versionFormat: 'semantic' as const,
             },
         ],
-        moduleName: 'nrfdl',
         version: {
             major: 0,
             metadata: '0',
-            minor: 10,
-            patch: 3,
+            minor: 12,
+            patch: 5,
             pre: '0',
         },
         versionFormat: 'semantic' as const,
     },
     {
-        moduleName: 'nrfdl-js',
+        name: 'nrfdl-js',
         version: {
             major: 0,
             minor: 4,
-            patch: 3,
+            patch: 12,
             metadata: '0',
             pre: '0',
         },
@@ -58,11 +71,11 @@ const exampleModuleVersions = [
 describe('finding module versions', () => {
     test('in the top level modules', () => {
         expect(getModuleVersion('nrfdl-js', exampleModuleVersions)).toEqual({
-            moduleName: 'nrfdl-js',
+            name: 'nrfdl-js',
             version: {
                 major: 0,
                 minor: 4,
-                patch: 3,
+                patch: 12,
                 metadata: '0',
                 pre: '0',
             },
@@ -71,13 +84,13 @@ describe('finding module versions', () => {
     });
 
     test('in nested dependencies', () => {
-        expect(getModuleVersion('jlink', exampleModuleVersions)).toEqual({
+        expect(getModuleVersion('JlinkARM', exampleModuleVersions)).toEqual({
             expectedVersion: {
-                version: 'JLink_V7.58b',
+                version: 'JLink_V7.66a',
                 versionFormat: 'string' as const,
             },
-            moduleName: 'jlink',
-            version: 'JLink_V7.56a',
+            name: 'JlinkARM',
+            version: 'JLink_V7.66a',
             versionFormat: 'string' as const,
         });
     });

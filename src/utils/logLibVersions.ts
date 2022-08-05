@@ -33,7 +33,7 @@ export default async () => {
         log('nrf-device-lib-js', getModuleVersion('nrfdl-js', versions));
         log('nrf-device-lib', getModuleVersion('nrfdl', versions));
         log('nrfjprog DLL', getModuleVersion('jprog', versions));
-        log('JLink', getModuleVersion('jlink', versions));
+        log('JLink', getModuleVersion('JlinkARM', versions));
     } catch (error) {
         logger.logError('Failed to get the library versions', error);
     }

@@ -111,7 +111,7 @@ describe('DeviceSelector', () => {
                     nordicUsb: true,
                     serialPort: true,
                     jlink: true,
-                    mcuboot: true,
+                    mcuBoot: true,
                 }}
             />
         );
@@ -125,7 +125,7 @@ describe('DeviceSelector', () => {
                     nordicUsb: true,
                     serialPort: true,
                     jlink: true,
-                    mcuboot: true,
+                    mcuBoot: true,
                 }}
             />
         );
@@ -140,7 +140,7 @@ describe('DeviceSelector', () => {
                     nordicUsb: true,
                     serialPort: true,
                     jlink: true,
-                    mcuboot: true,
+                    mcuBoot: true,
                 }}
             />,
             [devicesDetected([testDevice])]
@@ -155,7 +155,7 @@ describe('DeviceSelector', () => {
                     nordicUsb: true,
                     serialPort: true,
                     jlink: true,
-                    mcuboot: true,
+                    mcuBoot: true,
                 }}
             />,
             [devicesDetected([testDevice]), devicesDetected([])]
@@ -170,7 +170,7 @@ describe('DeviceSelector', () => {
                     nordicUsb: true,
                     serialPort: true,
                     jlink: true,
-                    mcuboot: true,
+                    mcuBoot: true,
                 }}
             />,
             [devicesDetected([testDevice])]
@@ -187,7 +187,7 @@ describe('DeviceSelector', () => {
                     nordicUsb: true,
                     serialPort: true,
                     jlink: true,
-                    mcuboot: true,
+                    mcuBoot: true,
                 }}
             />,
             [devicesDetected([testDevice])]
@@ -205,7 +205,7 @@ describe('DeviceSelector', () => {
                     nordicUsb: true,
                     serialPort: true,
                     jlink: true,
-                    mcuboot: true,
+                    mcuBoot: true,
                 }}
             />,
             [devicesDetected([testDevice])]
@@ -225,7 +225,7 @@ describe('DeviceSelector', () => {
                     nordicUsb: true,
                     serialPort: true,
                     jlink: true,
-                    mcuboot: true,
+                    mcuBoot: true,
                 }}
                 deviceSetup={{
                     jprog: {
@@ -254,7 +254,7 @@ describe('DeviceSelector', () => {
                     nordicUsb: true,
                     serialPort: true,
                     jlink: true,
-                    mcuboot: true,
+                    mcuBoot: true,
                 }}
                 deviceSetup={{
                     jprog: {
@@ -289,7 +289,7 @@ describe('DeviceSelector', () => {
                     nordicUsb: true,
                     serialPort: true,
                     jlink: true,
-                    mcuboot: true,
+                    mcuBoot: true,
                 }}
                 deviceSetup={validFirmware}
             />,
@@ -311,7 +311,7 @@ describe('DeviceSelector', () => {
                     nordicUsb: true,
                     serialPort: true,
                     jlink: true,
-                    mcuboot: true,
+                    mcuBoot: true,
                 }}
                 deviceSetup={validFirmware}
             />,

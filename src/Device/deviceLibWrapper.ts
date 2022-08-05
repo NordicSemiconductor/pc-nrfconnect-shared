@@ -70,15 +70,18 @@ export const setVerboseDeviceLibLogging = (verboseLogging: boolean) =>
         verboseLogging ? 'NRFDL_LOG_TRACE' : 'NRFDL_LOG_ERROR'
     );
 
-type KnownModule = 'nrfdl' | 'nrfdl-js' | 'jprog' | 'jlink';
+type KnownModule = 'nrfdl' | 'nrfdl-js' | 'jprog' | 'JlinkARM';
 
 const findTopLevel = (module: KnownModule, versions: ModuleVersion[]) =>
-    versions.find(version => version.moduleName === module);
+    versions.find(version => version.name === module);
 
 const findInDependencies = (module: KnownModule, versions: ModuleVersion[]) =>
     getModuleVersion(
         module,
-        versions.flatMap(version => version.dependencies ?? [])
+        versions.flatMap(version => [
+            ...(version.dependencies ?? []),
+            ...((version.plugins as ModuleVersion[]) ?? []),
+        ])
     );
 
 export const getModuleVersion = (

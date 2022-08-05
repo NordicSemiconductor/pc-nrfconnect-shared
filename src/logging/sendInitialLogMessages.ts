@@ -49,7 +49,7 @@ export default () => {
 
         if (bundledJlink) {
             const versions = await getModuleVersions(getDeviceLibContext());
-            const jlinkVersion = getModuleVersion('jlink', versions);
+            const jlinkVersion = getModuleVersion('JlinkARM', versions);
 
             if (!describeVersion(jlinkVersion).includes(bundledJlink)) {
                 logger.info(

@@ -84,7 +84,9 @@ const generalInfoReport = async () => {
         `    - nrfjprog DLL: ${describeVersion(
             getModuleVersion('jprog', versions)
         )}`,
-        `    - JLink: ${describeVersion(getModuleVersion('jlink', versions))}`,
+        `    - JLink: ${describeVersion(
+            getModuleVersion('JlinkARM', versions)
+        )}`,
         '',
     ];
 };
