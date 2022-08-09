@@ -6,7 +6,7 @@
 
 import React from 'react';
 import reactGA from 'react-ga';
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import render from '../../test/testrenderer';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
@@ -76,34 +76,34 @@ describe('ErrorBoundary', () => {
     });
 
     it('should render error boundary component when there is an error', () => {
-        const { getByText } = render(
+        render(
             <ErrorBoundary>
                 <Child />
             </ErrorBoundary>
         );
-        const errorMessage = getByText('Oops! There was a problem');
+        const errorMessage = screen.getByText('Oops! There was a problem');
         expect(errorMessage).toBeDefined();
     });
 
     it('should clear store if factory reset', async () => {
-        const { getByText, findByText } = render(
+        render(
             <ErrorBoundary>
                 <Child />
             </ErrorBoundary>
         );
-        fireEvent.click(getByText('Restore default settings'));
-        await findByText(OKBUTTONTEXT);
-        fireEvent.click(getByText(OKBUTTONTEXT));
+        fireEvent.click(screen.getByText('Restore default settings'));
+        await screen.findByText(OKBUTTONTEXT);
+        fireEvent.click(screen.getByText(OKBUTTONTEXT));
         expect(store().clear).toHaveBeenCalled();
     });
 
     it('should present system information', async () => {
-        const { findByText } = render(
+        render(
             <ErrorBoundary>
                 <Child />
             </ErrorBoundary>
         );
-        const report = await findByText(SYSTEM_REPORT);
+        const report = await screen.findByText(SYSTEM_REPORT);
         expect(report).toBeDefined();
     });
 });

@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 
 import render from '../../test/testrenderer';
 import Dropdown from './Dropdown';
@@ -23,20 +23,16 @@ const items = [
 
 describe('Dropdown', () => {
     it('renders a list of items', () => {
-        const { getByText, getAllByText } = render(
-            <Dropdown items={items} onSelect={jest.fn()} />
-        );
-        expect(getAllByText('Foo').length).toBe(2); // default selected + item
-        expect(getByText('Bar')).toBeInTheDocument();
+        render(<Dropdown items={items} onSelect={jest.fn()} />);
+        expect(screen.getAllByText('Foo').length).toBe(2); // default selected + item
+        expect(screen.getByText('Bar')).toBeInTheDocument();
     });
 
     it('calls onSelect when item is clicked', () => {
         const onSelect = jest.fn();
         const item = items[1];
-        const { getByText } = render(
-            <Dropdown items={items} onSelect={onSelect} />
-        );
-        const dropdownItem = getByText(item.label);
+        render(<Dropdown items={items} onSelect={onSelect} />);
+        const dropdownItem = screen.getByText(item.label);
         fireEvent.click(dropdownItem);
         expect(onSelect).toHaveBeenCalledWith(item);
     });

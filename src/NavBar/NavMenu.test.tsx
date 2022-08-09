@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { screen } from '@testing-library/react';
 
 import render from '../../test/testrenderer';
 import { setPanes } from '../App/appLayout';
@@ -32,11 +33,9 @@ expect.extend({
 
 describe('NavMenu', () => {
     it('displays multiple items', () => {
-        const { getByText } = render(<NavMenu />, [
-            setPanes([aPane, anotherPane]),
-        ]);
+        render(<NavMenu />, [setPanes([aPane, anotherPane])]);
 
-        expect(getByText('an menu item')).toBeInTheDocument();
-        expect(getByText('another menu item')).toBeInTheDocument();
+        expect(screen.getByText('an menu item')).toBeInTheDocument();
+        expect(screen.getByText('another menu item')).toBeInTheDocument();
     });
 });

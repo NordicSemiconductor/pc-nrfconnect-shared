@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { screen } from '@testing-library/react';
 
 import render from '../../test/testrenderer';
 import App, { Pane } from './App';
@@ -39,8 +40,8 @@ const anotherPane = {
 
 describe('App', () => {
     it('automatically gets an About pane attached', () => {
-        const { getByText } = renderApp([aPane, anotherPane]);
+        renderApp([aPane, anotherPane]);
 
-        expect(getByText('About')).toBeInTheDocument();
+        expect(screen.getByText('About')).toBeInTheDocument();
     });
 });

@@ -7,6 +7,7 @@
 import React from 'react';
 import {
     fireEvent,
+    screen,
     waitFor,
     waitForElementToBeRemoved,
 } from '@testing-library/react';
@@ -104,7 +105,7 @@ const validFirmware = {
 
 describe('DeviceSelector', () => {
     it('should have no device selected by default', () => {
-        const { getByText } = render(
+        render(
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
@@ -114,11 +115,11 @@ describe('DeviceSelector', () => {
                 }}
             />
         );
-        expect(getByText('Select device')).toBeInTheDocument();
+        expect(screen.getByText('Select device')).toBeInTheDocument();
     });
 
     it('should show no connected devices', () => {
-        const { getByText } = render(
+        render(
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
@@ -128,12 +129,12 @@ describe('DeviceSelector', () => {
                 }}
             />
         );
-        fireEvent.click(getByText('Select device'));
-        expect(getByText('Nordic development kit')).toBeInTheDocument();
+        fireEvent.click(screen.getByText('Select device'));
+        expect(screen.getByText('Nordic development kit')).toBeInTheDocument();
     });
 
     it('should list connected devices', () => {
-        const { getByText } = render(
+        render(
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
@@ -144,11 +145,11 @@ describe('DeviceSelector', () => {
             />,
             [devicesDetected([testDevice])]
         );
-        expect(getByText(testDevice.serialNumber)).toBeInTheDocument();
+        expect(screen.getByText(testDevice.serialNumber)).toBeInTheDocument();
     });
 
     it('should unlist disconnected devices', () => {
-        const { queryByText } = render(
+        render(
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
@@ -159,11 +160,11 @@ describe('DeviceSelector', () => {
             />,
             [devicesDetected([testDevice]), devicesDetected([])]
         );
-        expect(queryByText(testDevice.serialNumber)).toBeNull();
+        expect(screen.queryByText(testDevice.serialNumber)).toBeNull();
     });
 
     it('should show more device info when selecting the expand button', () => {
-        const { getByText, getByTestId, getAllByText } = render(
+        render(
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
@@ -174,13 +175,13 @@ describe('DeviceSelector', () => {
             />,
             [devicesDetected([testDevice])]
         );
-        fireEvent.click(getByText('Select device'));
-        fireEvent.click(getByTestId('show-more-device-info'));
-        expect(getAllByText(/COM/)).toHaveLength(2);
+        fireEvent.click(screen.getByText('Select device'));
+        fireEvent.click(screen.getByTestId('show-more-device-info'));
+        expect(screen.getAllByText(/COM/)).toHaveLength(2);
     });
 
     it('can select connected devices', () => {
-        const { getAllByText, getByText } = render(
+        render(
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
@@ -192,13 +193,13 @@ describe('DeviceSelector', () => {
             [devicesDetected([testDevice])]
         );
 
-        fireEvent.click(getByText('Select device'));
-        fireEvent.click(getByText(testDevice.serialNumber));
-        expect(getAllByText(testDevice.serialNumber)).toHaveLength(2);
+        fireEvent.click(screen.getByText('Select device'));
+        fireEvent.click(screen.getByText(testDevice.serialNumber));
+        expect(screen.getAllByText(testDevice.serialNumber)).toHaveLength(2);
     });
 
     it('can deselect selected devices', async () => {
-        const { getAllByText, getByText, findByTestId, getByTestId } = render(
+        render(
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
@@ -209,16 +210,16 @@ describe('DeviceSelector', () => {
             />,
             [devicesDetected([testDevice])]
         );
-        fireEvent.click(getByText('Select device'));
-        fireEvent.click(getByText(testDevice.serialNumber));
-        await findByTestId('disconnect-device');
-        fireEvent.click(getByTestId('disconnect-device'));
-        expect(getAllByText(testDevice.serialNumber)).toHaveLength(1);
-        expect(getByText('Select device')).toBeInTheDocument();
+        fireEvent.click(screen.getByText('Select device'));
+        fireEvent.click(screen.getByText(testDevice.serialNumber));
+        await screen.findByTestId('disconnect-device');
+        fireEvent.click(screen.getByTestId('disconnect-device'));
+        expect(screen.getAllByText(testDevice.serialNumber)).toHaveLength(1);
+        expect(screen.getByText('Select device')).toBeInTheDocument();
     });
 
     it('should allow device selection when custom devices are enabled and no valid firmware is defined', () => {
-        const { queryByText, getAllByText, getByText } = render(
+        render(
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
@@ -239,15 +240,15 @@ describe('DeviceSelector', () => {
             />,
             [devicesDetected([testDevice])]
         );
-        fireEvent.click(getByText('Select device'));
-        fireEvent.click(getByText(testDevice.serialNumber));
+        fireEvent.click(screen.getByText('Select device'));
+        fireEvent.click(screen.getByText(testDevice.serialNumber));
 
-        expect(queryByText('OK')).toBeNull();
-        expect(getAllByText(testDevice.serialNumber)).toHaveLength(2);
+        expect(screen.queryByText('OK')).toBeNull();
+        expect(screen.getAllByText(testDevice.serialNumber)).toHaveLength(2);
     });
 
     it('should deselect device when custom devices are disabled and no valid firmware is defined', async () => {
-        const { getByText, getAllByText, queryByText } = render(
+        render(
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
@@ -269,20 +270,20 @@ describe('DeviceSelector', () => {
             [devicesDetected([testDevice])]
         );
 
-        fireEvent.click(getByText('Select device'));
-        fireEvent.click(getByText(testDevice.serialNumber));
+        fireEvent.click(screen.getByText('Select device'));
+        fireEvent.click(screen.getByText(testDevice.serialNumber));
 
-        expect(queryByText('OK')).toBeNull();
+        expect(screen.queryByText('OK')).toBeNull();
         await waitFor(() => {
-            expect(getAllByText(testDevice.serialNumber)).toHaveLength(1);
+            expect(screen.getAllByText(testDevice.serialNumber)).toHaveLength(
+                1
+            );
         });
-        await waitFor(() =>
-            expect(getByText('Select device')).toBeInTheDocument()
-        );
+        await screen.findByText('Select device');
     });
 
     it('should show firmware prompt when a valid firmware is defined', async () => {
-        const { getByText } = render(
+        render(
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
@@ -295,18 +296,16 @@ describe('DeviceSelector', () => {
             [devicesDetected([testDevice])]
         );
 
-        fireEvent.click(getByText('Select device'));
-        fireEvent.click(getByText(testDevice.serialNumber));
+        fireEvent.click(screen.getByText('Select device'));
+        fireEvent.click(screen.getByText(testDevice.serialNumber));
 
-        await waitFor(() =>
-            expect(
-                getByText('Device must be programmed, do you want to proceed?')
-            ).toBeInTheDocument()
+        await screen.findByText(
+            'Device must be programmed, do you want to proceed?'
         );
     });
 
     it('should select device when cancelling firmware prompt', async () => {
-        const { getByText, getAllByText, findByText } = render(
+        render(
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
@@ -319,14 +318,16 @@ describe('DeviceSelector', () => {
             [devicesDetected([testDevice])]
         );
 
-        fireEvent.click(getByText('Select device'));
-        fireEvent.click(getByText(testDevice.serialNumber));
-        await findByText('No');
-        fireEvent.click(getByText('No'));
+        fireEvent.click(screen.getByText('Select device'));
+        fireEvent.click(screen.getByText(testDevice.serialNumber));
+        await screen.findByText('No');
+        fireEvent.click(screen.getByText('No'));
 
         await waitForElementToBeRemoved(() =>
-            getByText('Device must be programmed, do you want to proceed?')
+            screen.queryByText(
+                'Device must be programmed, do you want to proceed?'
+            )
         );
-        expect(getAllByText(testDevice.serialNumber)).toHaveLength(2);
+        expect(screen.getAllByText(testDevice.serialNumber)).toHaveLength(2);
     });
 });
