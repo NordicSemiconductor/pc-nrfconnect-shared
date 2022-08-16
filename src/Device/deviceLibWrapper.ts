@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import { app, getCurrentWindow } from '@electron/remote';
 import {
     createContext,
     Error,
@@ -15,13 +16,34 @@ import {
     startLogEvents,
     stopLogEvents,
 } from '@nordicsemiconductor/nrf-device-lib-js';
+import path from 'path';
 
 import { isLoggingVerbose } from '../Log/logSlice';
 import logger from '../logging';
 import { getIsLoggingVerbose } from '../utils/persistentStore';
 
-const deviceLibContext = createContext();
-export const getDeviceLibContext = () => deviceLibContext;
+const deviceLibContext = () => {
+    if (getCurrentWindow().getTitle().includes('nRF Connect for Desktop'))
+        return 0;
+
+    if (process.platform !== 'win32') {
+        const binariesPath = app.getAppPath().endsWith('app.asar')
+            ? `${app.getAppPath()}.unpacked`
+            : app.getAppPath();
+        return createContext({
+            plugins_dir: path.join(
+                binariesPath,
+                'node_modules',
+                '@nordicsemiconductor',
+                'nrf-device-lib-js',
+                'Release'
+            ),
+        });
+    }
+
+    return createContext();
+};
+export const getDeviceLibContext = () => deviceLibContext();
 
 export const logNrfdlLogs = (evt: LogEvent) => {
     if (process.env.NODE_ENV === 'production' && !isLoggingVerbose()) return;
@@ -90,8 +112,10 @@ export const getModuleVersion = (
 ): ModuleVersion | undefined =>
     findTopLevel(module, versions) ?? findInDependencies(module, versions);
 
-setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
-setVerboseDeviceLibLogging(getIsLoggingVerbose());
-setTimeoutConfig(deviceLibContext, {
-    enumerateMs: 3 * 60 * 1000,
-});
+if (getCurrentWindow().getTitle().includes('nRF Connect for Desktop')) {
+    setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
+    setVerboseDeviceLibLogging(getIsLoggingVerbose());
+    setTimeoutConfig(getDeviceLibContext(), {
+        enumerateMs: 3 * 60 * 1000,
+    });
+}
