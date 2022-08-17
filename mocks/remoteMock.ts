@@ -10,4 +10,9 @@ export const require = jest.fn();
 export const dialog = jest.fn();
 export const getCurrentWindow = () => ({
     reload: jest.fn(),
+
+    getTitle: () => 'Not launcher',
 });
+export const app = {
+    getAppPath: () => process.cwd(),
+};

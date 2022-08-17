@@ -22,12 +22,11 @@ import { isLoggingVerbose } from '../Log/logSlice';
 import logger from '../logging';
 import { getIsLoggingVerbose } from '../utils/persistentStore';
 
-const isLauncher = getCurrentWindow()
-    .getTitle()
-    .includes('nRF Connect for Desktop');
+const isLauncher = () =>
+    getCurrentWindow().getTitle().includes('nRF Connect for Desktop');
 
 let deviceLibContext = 0;
-if (!deviceLibContext && !isLauncher) {
+if (!deviceLibContext && !isLauncher()) {
     if (process.platform === 'win32') {
         const binariesPath = app.getAppPath().endsWith('app.asar')
             ? `${app.getAppPath()}.unpacked`
@@ -116,7 +115,7 @@ export const getModuleVersion = (
 ): ModuleVersion | undefined =>
     findTopLevel(module, versions) ?? findInDependencies(module, versions);
 
-if (!isLauncher) {
+if (!isLauncher()) {
     setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
     setVerboseDeviceLibLogging(getIsLoggingVerbose());
     setTimeoutConfig(getDeviceLibContext(), {
