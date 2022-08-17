@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import { app, getCurrentWindow } from '@electron/remote';
 import {
     createContext,
     Error,
@@ -15,12 +16,36 @@ import {
     startLogEvents,
     stopLogEvents,
 } from '@nordicsemiconductor/nrf-device-lib-js';
+import path from 'path';
 
 import { isLoggingVerbose } from '../Log/logSlice';
 import logger from '../logging';
 import { getIsLoggingVerbose } from '../utils/persistentStore';
 
-const deviceLibContext = createContext();
+const isLauncher = () =>
+    getCurrentWindow().getTitle().includes('nRF Connect for Desktop');
+
+let deviceLibContext = 0;
+if (!deviceLibContext && !isLauncher()) {
+    if (process.platform === 'win32') {
+        const binariesPath = app.getAppPath().endsWith('app.asar')
+            ? `${app.getAppPath()}.unpacked`
+            : app.getAppPath();
+        // @ts-expect-error Types will be fixed in next device-lib bindings
+        deviceLibContext = createContext({
+            plugins_dir: path.join(
+                binariesPath,
+                'node_modules',
+                '@nordicsemiconductor',
+                'nrf-device-lib-js',
+                'Release'
+            ),
+        });
+    } else {
+        deviceLibContext = createContext();
+    }
+}
+
 export const getDeviceLibContext = () => deviceLibContext;
 
 export const logNrfdlLogs = (evt: LogEvent) => {
@@ -70,15 +95,18 @@ export const setVerboseDeviceLibLogging = (verboseLogging: boolean) =>
         verboseLogging ? 'NRFDL_LOG_TRACE' : 'NRFDL_LOG_ERROR'
     );
 
-type KnownModule = 'nrfdl' | 'nrfdl-js' | 'jprog' | 'jlink';
+type KnownModule = 'nrfdl' | 'nrfdl-js' | 'jprog' | 'JlinkARM';
 
 const findTopLevel = (module: KnownModule, versions: ModuleVersion[]) =>
-    versions.find(version => version.moduleName === module);
+    versions.find(version => version.name === module);
 
 const findInDependencies = (module: KnownModule, versions: ModuleVersion[]) =>
     getModuleVersion(
         module,
-        versions.flatMap(version => version.dependencies ?? [])
+        versions.flatMap(version => [
+            ...(version.dependencies ?? []),
+            ...((version.plugins as ModuleVersion[]) ?? []),
+        ])
     );
 
 export const getModuleVersion = (
@@ -87,8 +115,10 @@ export const getModuleVersion = (
 ): ModuleVersion | undefined =>
     findTopLevel(module, versions) ?? findInDependencies(module, versions);
 
-setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
-setVerboseDeviceLibLogging(getIsLoggingVerbose());
-setTimeoutConfig(deviceLibContext, {
-    enumerateMs: 3 * 60 * 1000,
-});
+if (!isLauncher()) {
+    setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
+    setVerboseDeviceLibLogging(getIsLoggingVerbose());
+    setTimeoutConfig(getDeviceLibContext(), {
+        enumerateMs: 3 * 60 * 1000,
+    });
+}
