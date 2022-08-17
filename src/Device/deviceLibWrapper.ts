@@ -22,15 +22,18 @@ import { isLoggingVerbose } from '../Log/logSlice';
 import logger from '../logging';
 import { getIsLoggingVerbose } from '../utils/persistentStore';
 
-const deviceLibContext = () => {
-    if (getCurrentWindow().getTitle().includes('nRF Connect for Desktop'))
-        return 0;
+const isLauncher = getCurrentWindow()
+    .getTitle()
+    .includes('nRF Connect for Desktop');
 
-    if (process.platform !== 'win32') {
+let deviceLibContext = 0;
+if (!deviceLibContext && !isLauncher) {
+    if (process.platform === 'win32') {
         const binariesPath = app.getAppPath().endsWith('app.asar')
             ? `${app.getAppPath()}.unpacked`
             : app.getAppPath();
-        return createContext({
+        // @ts-expect-error Types will be fixed in next device-lib bindings
+        deviceLibContext = createContext({
             plugins_dir: path.join(
                 binariesPath,
                 'node_modules',
@@ -39,11 +42,12 @@ const deviceLibContext = () => {
                 'Release'
             ),
         });
+    } else {
+        deviceLibContext = createContext();
     }
+}
 
-    return createContext();
-};
-export const getDeviceLibContext = () => deviceLibContext();
+export const getDeviceLibContext = () => deviceLibContext;
 
 export const logNrfdlLogs = (evt: LogEvent) => {
     if (process.env.NODE_ENV === 'production' && !isLoggingVerbose()) return;
@@ -112,7 +116,7 @@ export const getModuleVersion = (
 ): ModuleVersion | undefined =>
     findTopLevel(module, versions) ?? findInDependencies(module, versions);
 
-if (getCurrentWindow().getTitle().includes('nRF Connect for Desktop')) {
+if (!isLauncher) {
     setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
     setVerboseDeviceLibLogging(getIsLoggingVerbose());
     setTimeoutConfig(getDeviceLibContext(), {
