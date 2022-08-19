@@ -9,9 +9,9 @@
     "author": "Nordic Semiconductor ASA",
     "license": "ISC",
     "bin": {
-        "nrfconnect-license": "./scripts/nrfconnect-license.sh",
-        "check-for-typescript": "./scripts/check-for-typescript.sh",
-        "nordic-publish": "./scripts/nordic-publish.sh"
+        "nrfconnect-license": "./scripts/nrfconnect-license.ts",
+        "check-for-typescript": "./scripts/check-for-typescript.ts",
+        "nordic-publish": "./scripts/nordic-publish.ts"
     },
     "main": "src",
     "scripts": {
