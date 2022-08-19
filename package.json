@@ -18,8 +18,8 @@
         "test": "jest",
         "check": "run-p --silent --continue-on-error --print-label check:*",
         "check:lint": "eslint --color .",
-        "check:types": "ts-node --swc scripts/check-for-typescript.ts tsc --noEmit --pretty",
-        "check:license": "ts-node --swc scripts/nrfconnect-license.ts check"
+        "check:types": "ts-node scripts/check-for-typescript.ts tsc --noEmit --pretty",
+        "check:license": "ts-node scripts/nrfconnect-license.ts check"
     },
     "dependencies": {
         "@babel/core": "7.18.9",
