@@ -4,13 +4,14 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import { getCurrentWindow } from '@electron/remote';
 import { TransformableInfo } from 'logform';
 import path from 'path';
 import { SPLAT } from 'triple-beam';
 import { createLogger, format, LogEntry, Logger, transports } from 'winston';
 import Transport from 'winston-transport';
 
-import { getAppLogDir } from '../utils/appDirs';
+import { getUserDataDir } from '../utils/appDirs';
 import { openFile } from '../utils/open';
 import AppTransport from './appTransport';
 import describeError from './describeError';
@@ -27,8 +28,17 @@ const isConsoleAvailable = (() => {
     return true;
 })();
 
+const params = new URL(window.location.toString()).searchParams;
+const appPath = path.basename(params.get('appPath') || '');
+
 const filePrefix = new Date().toISOString().replace(/:/gi, '_');
-const logFilePath = () => path.join(getAppLogDir(), `${filePrefix}-log.txt`);
+const logFilePath = () =>
+    path.join(
+        getUserDataDir(),
+        appPath as string,
+        'logs',
+        `${filePrefix}-log.txt`
+    );
 
 const logBuffer = createLogBuffer();
 
@@ -39,7 +49,9 @@ const logTransports: Transport[] = [
     }),
 ];
 
-const inLauncher = getAppLogDir() == null;
+const inLauncher = getCurrentWindow()
+    .getTitle()
+    .includes('nRF Connect for Desktop');
 
 if (!isTest && !inLauncher) {
     logTransports.push(
