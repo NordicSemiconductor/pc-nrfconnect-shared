@@ -1,5 +1,5 @@
 {
-  "hooks": {
-    "pre-push": "bash scripts/pre-push.sh"
-  }
+    "hooks": {
+        "pre-push": "npm run check && npm t"
+    }
 }
