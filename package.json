@@ -19,7 +19,8 @@
         "check": "run-p --silent --continue-on-error --print-label check:*",
         "check:lint": "eslint --color .",
         "check:types": "ts-node scripts/check-for-typescript.ts tsc --noEmit --pretty",
-        "check:license": "ts-node scripts/nrfconnect-license.ts check"
+        "check:license": "ts-node scripts/nrfconnect-license.ts check",
+        "prepare": "husky install"
     },
     "dependencies": {
         "@babel/core": "7.18.9",
@@ -91,7 +92,7 @@
         "file-loader": "6.2.0",
         "focus-visible": "5.2.0",
         "ftp": "0.3.10",
-        "husky": "4.3.8",
+        "husky": "8.0.1",
         "jest": "27.5.1",
         "klaw": "3.0.0",
         "lodash.range": "3.2.0",
