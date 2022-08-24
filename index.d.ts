@@ -15,7 +15,6 @@ declare module 'pc-nrfconnect-shared' {
     type RootState = import('./src/state').RootState;
     type Device = import('./src/state').Device;
     type DeviceInfo = import('./src/state').DeviceInfo;
-    type Serialport = import('./src/state').Serialport;
 
     // State
 
