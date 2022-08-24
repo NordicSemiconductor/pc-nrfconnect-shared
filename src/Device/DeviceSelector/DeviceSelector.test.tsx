@@ -79,6 +79,10 @@ const testDevice: Device = {
         serialNumber: '000000001',
         vendorId: 'testVendor',
         comName: 'COM1',
+        boardVersion: null,
+        pnpId: null,
+        locationId: null,
+        vcom: null,
     },
     favorite: false,
     traits: {

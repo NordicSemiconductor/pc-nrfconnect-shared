@@ -4,7 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { Device as NrfdlDevice } from '@nordicsemiconductor/nrf-device-lib-js';
+import {
+    Device as NrfdlDevice,
+    SerialPort,
+} from '@nordicsemiconductor/nrf-device-lib-js';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { LogEntry } from 'winston';
 
@@ -73,32 +76,10 @@ export interface DeviceInfo {
     };
 }
 
-export interface Serialport {
-    path: string;
-    manufacturer: string;
-    productId: string;
-    serialNumber: string;
-    vendorId: string;
-    comName: string;
-}
-
 export interface Device extends NrfdlDevice {
-    /**
-     * @deprecated Using the property `serialnumber` has been
-     * deprecated. You should now use `serialNumber`. The property
-     * will be removed in the next major release.
-     */
-    serialnumber?: string; // from nrf-device-lib
-    /**
-     * @deprecated Using the property `serialports` has been
-     * deprecated. You should now use `serialPorts`. The property
-     * will be removed in the next major release.
-     */
-    serialports?: Serialport[]; // from nrf-device-lib
-    // traits: DeviceTraits; // from nrf-device-lib
     boardVersion?: string;
     nickname?: string;
-    serialport?: Serialport;
+    serialport?: SerialPort;
     favorite?: boolean;
 }
 

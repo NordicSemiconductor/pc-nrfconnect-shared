@@ -48,7 +48,7 @@ export const isDeviceInDFUBootloader = (device: Device) => {
     }
     if (device.serialport) {
         const { vendorId, productId } = device.serialport;
-        return vendorId === '1915' && productId.toUpperCase() === '521F';
+        return vendorId === '1915' && productId?.toUpperCase() === '521F';
     }
     return false;
 };

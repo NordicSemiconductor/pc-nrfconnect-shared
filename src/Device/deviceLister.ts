@@ -11,8 +11,7 @@ import nrfDeviceLib, {
     DeviceTraits,
     HotplugEvent,
 } from '@nordicsemiconductor/nrf-device-lib-js';
-import camelcaseKeys from 'camelcase-keys';
-import { Device, Serialport } from 'pc-nrfconnect-shared';
+import { Device } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';
 import { Devices } from '../state';
@@ -29,27 +28,11 @@ let hotplugTaskId: number;
  * @param {Device} device The input device from nrf-device-lib
  * @returns {Device} The updated device
  */
-export const wrapDeviceFromNrfdl = (device: NrfdlDevice): Device => {
-    let outputDevice: Device = camelcaseKeys(device, { deep: true }) as Device;
-    let serialport: Serialport | undefined = outputDevice.serialports
-        ? (outputDevice.serialports[0] as unknown as Serialport)
-        : undefined;
-    serialport = outputDevice.serialPorts
-        ? (outputDevice.serialPorts[0] as unknown as Serialport)
-        : serialport;
-    outputDevice = {
-        ...outputDevice,
-        boardVersion: outputDevice.jlink
-            ? outputDevice.jlink.boardVersion
-            : undefined,
-        serialNumber: outputDevice.serialnumber
-            ? outputDevice.serialnumber
-            : outputDevice.serialNumber,
-        serialport,
-    };
-    delete outputDevice.serialnumber;
-    return outputDevice;
-};
+export const wrapDeviceFromNrfdl = (device: NrfdlDevice): Device => ({
+    ...device,
+    boardVersion: device.jlink?.boardVersion ?? undefined,
+    serialport: device.serialPorts?.[0] ?? undefined,
+});
 
 /**
  * Wrap the device form nrf-device-lib to make the Device type consistent
