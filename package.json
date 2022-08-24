@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "6.5.5",
+    "version": "6.6.0",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -9,17 +9,18 @@
     "author": "Nordic Semiconductor ASA",
     "license": "ISC",
     "bin": {
-        "nrfconnect-license": "./scripts/nrfconnect-license.sh",
-        "check-for-typescript": "./scripts/check-for-typescript.sh",
-        "nordic-publish": "./scripts/nordic-publish.sh"
+        "nrfconnect-license": "./scripts/nrfconnect-license.ts",
+        "check-for-typescript": "./scripts/check-for-typescript.ts",
+        "nordic-publish": "./scripts/nordic-publish.ts"
     },
     "main": "src",
     "scripts": {
         "test": "jest",
         "check": "run-p --silent --continue-on-error --print-label check:*",
         "check:lint": "eslint --color .",
-        "check:types": "ts-node --swc scripts/check-for-typescript.ts tsc --noEmit --pretty",
-        "check:license": "ts-node --swc scripts/nrfconnect-license.ts check"
+        "check:types": "ts-node scripts/check-for-typescript.ts tsc --noEmit --pretty",
+        "check:license": "ts-node scripts/nrfconnect-license.ts check",
+        "prepare": "husky install"
     },
     "dependencies": {
         "@babel/core": "7.18.9",
@@ -67,7 +68,6 @@
         "bootstrap": "4.6.1",
         "camelcase-keys": "6.2.2",
         "commander": "5.1.0",
-        "cross-env": "7.0.3",
         "css-loader": "5.2.7",
         "date-fns": "2.28.0",
         "electron": "^14.2.9",
@@ -91,7 +91,7 @@
         "file-loader": "6.2.0",
         "focus-visible": "5.2.0",
         "ftp": "0.3.10",
-        "husky": "4.3.8",
+        "husky": "8.0.1",
         "jest": "27.5.1",
         "klaw": "3.0.0",
         "lodash.range": "3.2.0",

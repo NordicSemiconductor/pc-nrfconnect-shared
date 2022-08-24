@@ -6,6 +6,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 6.6.0 - 2022-08-24
+
+### Fixed
+
+-   Windows: Some development scripts were broken if no bash was installed.
+
+### Changed
+
+-   Upgraded husky from
+    [4 to 8](https://typicode.github.io/husky/#/?id=migrate-from-v4-to-v8),
+    which changes how it is configured.
+
+### Removed
+
+-   Script `scripts/pre-push.sh` to be used by husky.
+
+### Steps to upgrade when using this package
+
+-   Remove `.huskyrc.json`.
+-   Add an entry `"prepare": "husky install"` to the `scripts` section of
+    `package.json`.
+-   After the steps above run
+    `npm ci && npx husky add .husky/pre-push 'npm run check && npm t'` to create
+    an appropriate pre-push hook.
+
 ## 6.5.5 - 2022-08-19
 
 ### Fixed

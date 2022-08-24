@@ -1,4 +1,6 @@
 {
+    "ts-node": { "swc": true },
+
     "compilerOptions": {
         "target": "ES2019",
         "moduleResolution": "node",
