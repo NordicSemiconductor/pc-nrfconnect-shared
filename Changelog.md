@@ -22,6 +22,7 @@ and this project adheres to
 ### Removed
 
 -   Script `scripts/pre-push.sh` to be used by husky.
+-   `nrf-device-lib` error logs enabled by default.
 
 ### Steps to upgrade when using this package
 
