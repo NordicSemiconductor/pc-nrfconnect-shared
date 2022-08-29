@@ -95,13 +95,10 @@ export const setVerboseDeviceLibLogging = (verboseLogging: boolean) =>
         verboseLogging ? 'NRFDL_LOG_TRACE' : 'NRFDL_LOG_OFF'
     );
 
-type KnownModule = 'nrfdl' | 'nrfdl-js' | 'jprog' | 'JlinkARM' | 'jlink';
+type KnownModule = 'nrfdl' | 'nrfdl-js' | 'jprog' | 'JlinkARM';
 
 const findTopLevel = (module: KnownModule, versions: ModuleVersion[]) =>
-    versions.find(
-        // @ts-expect-error moduleName added for backwards compatibility
-        version => version.name === module || version.moduleName === module
-    );
+    versions.find(version => version.name === module);
 
 const findInDependencies = (module: KnownModule, versions: ModuleVersion[]) =>
     getModuleVersion(

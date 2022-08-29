@@ -11,7 +11,6 @@ and this project adheres to
 ### Fixed
 
 -   Windows: Some development scripts were broken if no bash was installed.
--   Backwards comatibility for older nrf-device-lib-js.
 
 ### Changed
 
