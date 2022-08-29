@@ -49,12 +49,8 @@ export default () => {
 
         if (bundledJlink) {
             const versions = await getModuleVersions(getDeviceLibContext());
-            let jlinkVersion;
-            try {
-                jlinkVersion = getModuleVersion('JlinkARM', versions);
-            } catch {
-                jlinkVersion = getModuleVersion('jlink', versions);
-            }
+            const jlinkVersion = getModuleVersion('JlinkARM', versions);
+
             if (!describeVersion(jlinkVersion).includes(bundledJlink)) {
                 logger.info(
                     `Installed JLink version does not match the provided version (${bundledJlink})`

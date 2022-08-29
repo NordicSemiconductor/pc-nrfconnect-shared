@@ -57,13 +57,6 @@ const generalInfoReport = async () => {
         getDeviceLibContext()
     );
 
-    let jlinkVersion;
-    try {
-        jlinkVersion = getModuleVersion('JlinkARM', versions);
-    } catch {
-        jlinkVersion = getModuleVersion('jlink', versions);
-    }
-
     return [
         `- System:     ${manufacturer} ${model}`,
         `- BIOS:       ${vendor} ${version}`,
@@ -91,7 +84,9 @@ const generalInfoReport = async () => {
         `    - nrfjprog DLL: ${describeVersion(
             getModuleVersion('jprog', versions)
         )}`,
-        `    - JLink: ${describeVersion(jlinkVersion)}`,
+        `    - JLink: ${describeVersion(
+            getModuleVersion('JlinkARM', versions)
+        )}`,
         '',
     ];
 };
