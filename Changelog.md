@@ -8,6 +8,10 @@ and this project adheres to
 
 ## 6.6.0 - 2022-08-24
 
+### Added
+
+-   macOS: Warning for M1 users who does not have JLink Universal version.
+
 ### Fixed
 
 -   Windows: Some development scripts were broken if no bash was installed.
