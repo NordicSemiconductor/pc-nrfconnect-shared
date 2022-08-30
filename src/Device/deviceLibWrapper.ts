@@ -92,7 +92,7 @@ export const forwardLogEventsFromDeviceLib = () => {
 export const setVerboseDeviceLibLogging = (verboseLogging: boolean) =>
     setLogLevel(
         getDeviceLibContext(),
-        verboseLogging ? 'NRFDL_LOG_TRACE' : 'NRFDL_LOG_OFF'
+        verboseLogging ? 'NRFDL_LOG_TRACE' : 'NRFDL_LOG_ERROR'
     );
 
 type KnownModule = 'nrfdl' | 'nrfdl-js' | 'jprog' | 'JlinkARM';
