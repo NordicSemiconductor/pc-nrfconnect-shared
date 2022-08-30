@@ -100,14 +100,17 @@ type KnownModule = 'nrfdl' | 'nrfdl-js' | 'jprog' | 'JlinkARM';
 const findTopLevel = (module: KnownModule, versions: ModuleVersion[]) =>
     versions.find(version => version.name === module);
 
-const findInDependencies = (module: KnownModule, versions: ModuleVersion[]) =>
-    getModuleVersion(
-        module,
-        versions.flatMap(version => [
-            ...(version.dependencies ?? []),
-            ...((version.plugins as ModuleVersion[]) ?? []),
-        ])
-    );
+const findInDependencies = (module: KnownModule, versions: ModuleVersion[]) => {
+    if (versions.length > 0) {
+        return getModuleVersion(
+            module,
+            versions.flatMap(version => [
+                ...(version.dependencies ?? []),
+                ...((version.plugins as ModuleVersion[]) ?? []),
+            ])
+        );
+    }
+};
 
 export const getModuleVersion = (
     module: KnownModule,
