@@ -33,7 +33,7 @@ const pathEnvVariable = () => {
 
     return {
         ...process.env,
-        PATH: `/usr/local/bin:${process.env.PATH}`,
+        PATH: `/bin:/usr/bin:/usr/local/bin:${process.env.PATH}`,
     };
 };
 
@@ -87,12 +87,12 @@ export default async () => {
                 JLinkArch === 'arm'
                     ? '64-bit Apple M1 Installer'
                     : '64-bit Installer';
-
-            logger.warn(`
-                We detected that you have installed JLink using Segger's ${JLinkInstallerVersion},
-                but recommend you install JLink using their Universal Installer:
-                https://www.segger.com/downloads/jlink/JLink_MacOSX_V766a_universal.pkg
-                `);
+            logger.warn(
+                `It looks like you have installed JLink using ${JLinkInstallerVersion}, but currently we only support their Universal Installer for your system.`
+            );
+            logger.warn(
+                `Please install JLink: https://www.segger.com/downloads/jlink/JLink_MacOSX_V766a_universal.pkg`
+            );
         }
     } catch (error) {
         logger.logError('Failed to get the library versions', error);
