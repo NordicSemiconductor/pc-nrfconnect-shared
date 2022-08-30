@@ -73,26 +73,29 @@ const checkJLinkArchitectureOnDarwin = async () => {
 export default async () => {
     try {
         const versions = await getModuleVersions(getDeviceLibContext());
-        const JLinkArch =
-            process.platform === 'darwin' &&
-            os.cpus()[0].model.includes('Apple') &&
-            (await checkJLinkArchitectureOnDarwin());
 
         log('nrf-device-lib-js', getModuleVersion('nrfdl-js', versions));
         log('nrf-device-lib', getModuleVersion('nrfdl', versions));
         log('nrfjprog DLL', getModuleVersion('jprog', versions));
         log('JLink', getModuleVersion('JlinkARM', versions));
-        if (JLinkArch && JLinkArch !== 'universal') {
-            const JLinkInstallerVersion =
-                JLinkArch === 'arm'
-                    ? '64-bit Apple M1 Installer'
-                    : '64-bit Installer';
-            logger.warn(
-                `It looks like you have installed JLink using ${JLinkInstallerVersion}, but currently we only support their Universal Installer for your system.`
-            );
-            logger.warn(
-                `Please install JLink: https://www.segger.com/downloads/jlink/JLink_MacOSX_V766a_universal.pkg`
-            );
+        if (
+            process.platform === 'darwin' &&
+            os.cpus()[0].model.includes('Apple')
+        ) {
+            const JLinkArchOnDarwin = await checkJLinkArchitectureOnDarwin();
+
+            if (JLinkArchOnDarwin && JLinkArchOnDarwin !== 'universal') {
+                const JLinkInstallerVersion =
+                    JLinkArchOnDarwin === 'arm'
+                        ? '64-bit Apple M1 Installer'
+                        : '64-bit Intel Installer';
+                logger.warn(
+                    `It looks like you have installed JLink using ${JLinkInstallerVersion}, but currently we only support their Universal Installer for your system.`
+                );
+                logger.warn(
+                    `Please install JLink: https://www.segger.com/downloads/jlink/JLink_MacOSX_V766a_universal.pkg`
+                );
+            }
         }
     } catch (error) {
         logger.logError('Failed to get the library versions', error);
