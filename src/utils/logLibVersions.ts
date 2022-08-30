@@ -9,6 +9,7 @@ import {
     ModuleVersion,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import { spawn } from 'child_process';
+import os from 'os';
 
 import {
     getDeviceLibContext,
@@ -74,6 +75,7 @@ export default async () => {
         const versions = await getModuleVersions(getDeviceLibContext());
         const JLinkArch =
             process.platform === 'darwin' &&
+            os.cpus()[0].model.includes('Apple') &&
             (await checkJLinkArchitectureOnDarwin());
 
         log('nrf-device-lib-js', getModuleVersion('nrfdl-js', versions));
