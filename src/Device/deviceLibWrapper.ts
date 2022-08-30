@@ -31,7 +31,6 @@ if (!deviceLibContext && !isLauncher()) {
         const binariesPath = app.getAppPath().endsWith('app.asar')
             ? `${app.getAppPath()}.unpacked`
             : app.getAppPath();
-        // @ts-expect-error Types will be fixed in next device-lib bindings
         deviceLibContext = createContext({
             plugins_dir: path.join(
                 binariesPath,
