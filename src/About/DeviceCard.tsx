@@ -13,24 +13,20 @@ import {
     deviceInfo,
     productPageUrl,
 } from '../Device/deviceInfo/deviceInfo';
-import {
-    // deviceInfo as deviceInfoSelector,
-    selectedDevice,
-} from '../Device/deviceSlice';
+import { selectedDevice } from '../Device/deviceSlice';
 import AboutButton from './AboutButton';
 import Section from './Section';
 
-// const memorySize = (memoryInBytes: number) => {
-//     if (memoryInBytes == null) {
-//         return 'Unknown';
-//     }
+const memorySize = (memoryInBytes: number) => {
+    if (memoryInBytes == null) {
+        return 'Unknown';
+    }
 
-//     return `${memoryInBytes / 1024}KiB`;
-// };
+    return `${memoryInBytes / 1024}KiB`;
+};
 
 export default () => {
     const device = useSelector(selectedDevice);
-    // const extendedDeviceInfo = useSelector(deviceInfoSelector);
 
     if (device == null) {
         return (
@@ -49,13 +45,18 @@ export default () => {
             <Section title="ID">{device.serialNumber}</Section>
             <Section title="PCA">{pca || 'Unknown'}</Section>
             <Section title="Cores">{cores || 'Unknown'}</Section>
-            {/* 
-            <Section title="RAM">
-                {memorySize(extendedDeviceInfo?.ramSize)}
-            </Section>
-            <Section title="Flash">
-                {memorySize(extendedDeviceInfo?.codeSize)}
-            </Section> */}
+
+            {device.hwInfo && (
+                <>
+                    <Section title="RAM">
+                        {memorySize(device.hwInfo.ramSize)}
+                    </Section>
+                    <Section title="Flash">
+                        {memorySize(device.hwInfo.romSize)}
+                    </Section>
+                </>
+            )}
+
             <Section>
                 <AboutButton
                     url={buyOnlineUrl(device)}
