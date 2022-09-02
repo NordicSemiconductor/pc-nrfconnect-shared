@@ -15,7 +15,6 @@ import { Reducer } from 'redux';
 
 import About from '../About/About';
 import { setDocumentationSections } from '../About/documentationSlice';
-import AppReloadDialog from '../AppReload/AppReloadDialog';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
 import { forwardLogEventsFromDeviceLib } from '../Device/deviceLibWrapper';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
@@ -179,7 +178,6 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
             </div>
             <VisibilityBar isSidePanelEnabled={sidePanel !== null} />
 
-            <AppReloadDialog />
             <ErrorDialog />
             <BrokenDeviceDialog />
             {children}
