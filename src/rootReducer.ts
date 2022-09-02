@@ -9,7 +9,6 @@ import { combineReducers, Reducer } from 'redux';
 import { reducer as documentation } from './About/documentationSlice';
 import { reducer as shortcuts } from './About/shortcutSlice';
 import { reducer as appLayout } from './App/appLayout';
-import { reducer as appReloadDialog } from './AppReload/appReloadDialogSlice';
 import { reducer as brokenDeviceDialog } from './Device/BrokenDeviceDialog/brokenDeviceDialogSlice';
 import { reducer as device } from './Device/deviceSlice';
 import { reducer as errorDialog } from './ErrorDialog/errorDialogSlice';
@@ -17,7 +16,6 @@ import { reducer as log } from './Log/logSlice';
 
 const coreReducers = {
     appLayout,
-    appReloadDialog,
     device,
     brokenDeviceDialog,
     errorDialog,
