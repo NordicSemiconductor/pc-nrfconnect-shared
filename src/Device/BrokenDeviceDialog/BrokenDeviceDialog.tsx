@@ -17,7 +17,7 @@ import {
 
 import './broken-device-dialog.scss';
 
-const AppReloadDialog = () => {
+const BrokenDeviceDialog = () => {
     const dispatch = useDispatch();
 
     const isVisible = useSelector(isVisibleSelector);
@@ -56,4 +56,4 @@ const AppReloadDialog = () => {
     );
 };
 
-export default AppReloadDialog;
+export default BrokenDeviceDialog;
