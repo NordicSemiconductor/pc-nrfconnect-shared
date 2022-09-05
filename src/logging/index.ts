@@ -4,21 +4,20 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { getCurrentWindow } from '@electron/remote';
 import { TransformableInfo } from 'logform';
 import path from 'path';
 import { SPLAT } from 'triple-beam';
 import { createLogger, format, LogEntry, Logger, transports } from 'winston';
 import Transport from 'winston-transport';
 
-import { getUserDataDir } from '../utils/appDirs';
+import { getAppLogDir } from '../utils/appDirs';
 import { openFile } from '../utils/open';
 import AppTransport from './appTransport';
 import describeError from './describeError';
 import createLogBuffer from './logBuffer';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
-const isTest = process.env.NODE_ENV === 'test';
+
 const isConsoleAvailable = (() => {
     try {
         process.stdout.write('');
@@ -28,17 +27,8 @@ const isConsoleAvailable = (() => {
     return true;
 })();
 
-const params = new URL(window.location.toString()).searchParams;
-const appPath = path.basename(params.get('appPath') || '');
-
 const filePrefix = new Date().toISOString().replace(/:/gi, '_');
-const logFilePath = () =>
-    path.join(
-        getUserDataDir(),
-        appPath as string,
-        'logs',
-        `${filePrefix}-log.txt`
-    );
+const logFilePath = () => path.join(getAppLogDir(), `${filePrefix}-log.txt`);
 
 const logBuffer = createLogBuffer();
 
@@ -48,19 +38,6 @@ const logTransports: Transport[] = [
         onLogEntry: logBuffer.addEntry,
     }),
 ];
-
-const inLauncher = getCurrentWindow()
-    .getTitle()
-    .includes('nRF Connect for Desktop');
-
-if (!isTest && !inLauncher) {
-    logTransports.push(
-        new transports.File({
-            filename: logFilePath(),
-            level: 'debug',
-        })
-    );
-}
 
 if (isDevelopment && isConsoleAvailable) {
     logTransports.push(new transports.Console({ level: 'silly' }));
@@ -96,6 +73,15 @@ const logger = createLogger({
     ),
     transports: logTransports,
 }) as SharedLogger;
+
+logger.initialise = () => {
+    logger.add(
+        new transports.File({
+            filename: logFilePath(),
+            level: 'debug',
+        })
+    );
+};
 
 logger.getAndClearEntries = () => logBuffer.clear();
 
