@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { app, getCurrentWindow } from '@electron/remote';
+import { app } from '@electron/remote';
 import {
     createContext,
     Error,
@@ -22,11 +22,14 @@ import { isLoggingVerbose } from '../Log/logSlice';
 import logger from '../logging';
 import { getIsLoggingVerbose } from '../utils/persistentStore';
 
-const isLauncher = () =>
-    getCurrentWindow().getTitle().includes('nRF Connect for Desktop');
-
 let deviceLibContext = 0;
-if (!deviceLibContext && !isLauncher()) {
+export const getDeviceLibContext = () => {
+    if (deviceLibContext === 0) initDeviceLib();
+
+    return deviceLibContext;
+};
+
+const initDeviceLib = () => {
     if (process.platform === 'win32') {
         const binariesPath = app.getAppPath().endsWith('app.asar')
             ? `${app.getAppPath()}.unpacked`
@@ -43,9 +46,11 @@ if (!deviceLibContext && !isLauncher()) {
     } else {
         deviceLibContext = createContext();
     }
-}
 
-export const getDeviceLibContext = () => deviceLibContext;
+    setTimeoutConfig(getDeviceLibContext(), {
+        enumerateMs: 3 * 60 * 1000,
+    });
+};
 
 export const logNrfdlLogs = (evt: LogEvent) => {
     if (process.env.NODE_ENV === 'production' && !isLoggingVerbose()) return;
@@ -72,6 +77,9 @@ export const logNrfdlLogs = (evt: LogEvent) => {
 };
 
 export const forwardLogEventsFromDeviceLib = () => {
+    setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
+    setVerboseDeviceLibLogging(getIsLoggingVerbose());
+
     const taskId = startLogEvents(
         getDeviceLibContext(),
         (err?: Error) => {
@@ -116,11 +124,3 @@ export const getModuleVersion = (
     versions: ModuleVersion[] = []
 ): ModuleVersion | undefined =>
     findTopLevel(module, versions) ?? findInDependencies(module, versions);
-
-if (!isLauncher()) {
-    setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
-    setVerboseDeviceLibLogging(getIsLoggingVerbose());
-    setTimeoutConfig(getDeviceLibContext(), {
-        enumerateMs: 3 * 60 * 1000,
-    });
-}
