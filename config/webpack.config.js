@@ -22,7 +22,6 @@ const externals = Object.fromEntries(
         'electron',
         '@electron/remote',
         'serialport',
-        'pc-ble-driver-js',
         '@nordicsemiconductor/nrf-device-lib-js',
         'osx-temperature-sensor',
         ...Object.keys(dependencies),
