@@ -16,7 +16,6 @@ import { Reducer } from 'redux';
 import About from '../About/About';
 import { setDocumentationSections } from '../About/documentationSlice';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
-import { forwardLogEventsFromDeviceLib } from '../Device/deviceLibWrapper';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import LogViewer from '../Log/LogViewer';
@@ -122,8 +121,6 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
         if (documentation) dispatch(setDocumentationSections(documentation));
     }, [dispatch, documentation]);
 
-    useNrfdlLogging();
-
     const SidePanelComponent = allPanes[currentPane].SidePanel;
     const currentSidePanel =
         SidePanelComponent != null ? <SidePanelComponent /> : sidePanel;
@@ -201,10 +198,6 @@ App.propTypes = {
 };
 
 export default App;
-
-const useNrfdlLogging = () => {
-    useEffect(() => forwardLogEventsFromDeviceLib(), []);
-};
 
 const usePersistedPane = () => {
     const dispatch = useDispatch();
