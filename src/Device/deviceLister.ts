@@ -162,6 +162,7 @@ export const waitForDevice = (
             logger.debug(
                 `Timeout when waiting for attachment of device with serial number ${serialNumber}`
             );
+            nrfDeviceLib.stopHotplugEvents(hotplugEventsId);
             reject(
                 new Error(
                     `Timeout while waiting for device  ${serialNumber} to be attached and enumerated`
