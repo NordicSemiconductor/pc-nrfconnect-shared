@@ -6,6 +6,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 
 // eslint-disable-next-line import/no-dynamic-require
 const { dependencies } = require(path.join(process.cwd(), 'package.json'));
@@ -85,6 +86,16 @@ module.exports = (_, argv) => {
                 },
             ],
         },
+        plugins: [
+            new CopyPlugin({
+                patterns: [
+                    {
+                        from: './node_modules/pc-nrfconnect-shared/scripts/nordic-publish.js',
+                        to: '.',
+                    },
+                ],
+            }),
+        ],
         resolve: {
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
