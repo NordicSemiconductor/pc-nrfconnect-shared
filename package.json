@@ -11,7 +11,7 @@
     "bin": {
         "nrfconnect-license": "./scripts/nrfconnect-license.ts",
         "check-for-typescript": "./scripts/check-for-typescript.ts",
-        "nordic-publish": "./scripts/nordic-publish.ts"
+        "nordic-publish": "./scripts/nordic-publish.js"
     },
     "main": "src",
     "scripts": {
@@ -20,7 +20,8 @@
         "check:lint": "eslint --color .",
         "check:types": "ts-node scripts/check-for-typescript.ts tsc --noEmit --pretty",
         "check:license": "ts-node scripts/nrfconnect-license.ts check",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "update-publish-script": "tsc scripts/nordic-publish.ts -t es2015 -m node16"
     },
     "dependencies": {
         "@babel/core": "7.18.9",
