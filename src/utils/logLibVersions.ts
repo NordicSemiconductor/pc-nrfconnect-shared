@@ -33,7 +33,7 @@ const pathEnvVariable = () => {
 
     return {
         ...process.env,
-        PATH: `/bin:/usr/bin:/usr/local/bin:${process.env.PATH}`,
+        PATH: `/usr/local/bin:${process.env.PATH}`,
     };
 };
 
