@@ -37,7 +37,7 @@
         "@babel/preset-typescript": "7.18.6",
         "@electron/remote": "^2.0.4",
         "@mdi/font": "6.9.96",
-        "@nordicsemiconductor/nrf-device-lib-js": "^0.4.13",
+        "@nordicsemiconductor/nrf-device-lib-js": "^0.4.15",
         "@reduxjs/toolkit": "1.8.3",
         "@svgr/webpack": "5.5.0",
         "@swc/core": "1.2.218",
