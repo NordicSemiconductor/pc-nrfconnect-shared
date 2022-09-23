@@ -12,6 +12,14 @@ and this project adheres to
 
 -   Babel plugin `@babel/plugin-transform-classes`.
 
+### Steps to upgrade when using this package
+
+-   Change the entry `"nordic-publish"` in the `scripts` section of
+    `package.json` to be `"nordic-publish": "./dist/nordic-publish.js"`.
+-   Update the release tasks in azure to add the executable bit to the script by
+    adding the line `chmod +x ./dist/nordic-publish.js`.
+-   Remove the line `npm install` from the release ci task.
+
 ### Removed
 
 -   Support for `pc-ble-driver-js`.
