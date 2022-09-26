@@ -6,11 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 6.6.2 - 2022-09-14
-
-### Added
-
--   Babel plugin `@babel/plugin-transform-classes`.
+## 6.6.3 - 2022-09-26
 
 ### Steps to upgrade when using this package
 
@@ -19,6 +15,12 @@ and this project adheres to
 -   Update the release tasks in azure to add the executable bit to the script by
     adding the line `chmod +x ./dist/nordic-publish.js`.
 -   Remove the line `npm install` from the release ci task.
+
+## 6.6.2 - 2022-09-14
+
+### Added
+
+-   Babel plugin `@babel/plugin-transform-classes`.
 
 ### Removed
 
