@@ -22,7 +22,11 @@ module.exports = {
         'plugin:import/typescript',
         'prettier',
     ],
-    ignorePatterns: ['package-lock.json', ...entriesInGitignore],
+    ignorePatterns: [
+        'package-lock.json',
+        'scripts/nordic-publish.js',
+        ...entriesInGitignore,
+    ],
     rules: {
         '@typescript-eslint/ban-ts-comment': [
             'error',
