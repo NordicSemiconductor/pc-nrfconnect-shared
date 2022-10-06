@@ -12,7 +12,7 @@ const anotherErrorMessage = 'Another error occurred';
 
 describe('errorDialogReducer', () => {
     it('should be hidden by default', () => {
-        const initialState = dispatchTo(reducer, [{ type: '@INIT' }]);
+        const initialState = dispatchTo(reducer);
 
         expect(initialState.isVisible).toEqual(false);
     });

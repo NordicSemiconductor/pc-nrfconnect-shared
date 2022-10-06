@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2015 Nordic Semiconductor ASA
+ * Copyright (c) 2022 Nordic Semiconductor ASA
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
 import { Action, Reducer } from 'redux';
 
-export default <State>(
-    aReducer: Reducer<State>,
-    actions: [Action, ...Action[]]
-) => {
-    const state = actions.reduce(aReducer, undefined);
+const initAction = {
+    type: '@@INIT',
+};
+
+export default <State>(aReducer: Reducer<State>, actions: Action[] = []) => {
+    const state = [initAction, ...actions].reduce(aReducer, undefined);
 
     if (state === undefined) {
         throw new Error(
