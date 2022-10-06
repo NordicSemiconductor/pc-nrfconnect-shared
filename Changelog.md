@@ -14,6 +14,10 @@ and this project adheres to
 
 ## 6.6.3 - 2022-09-26
 
+### Changed
+
+-   Speed up releasing apps a _lot_.
+
 ### Steps to upgrade when using this package
 
 -   Change the entry `"nordic-publish"` in the `scripts` section of
