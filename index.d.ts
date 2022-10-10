@@ -314,6 +314,10 @@ declare module 'pc-nrfconnect-shared' {
 
     export class ErrorDialog extends React.Component {}
 
+    // errorDialogSlice.ts
+
+    export const errorDialogReducer: typeof import('./src/ErrorDialog/errorDialogSlice').reducer;
+
     // ErrorBoundary.jsx
 
     export class ErrorBoundary extends React.Component {}
