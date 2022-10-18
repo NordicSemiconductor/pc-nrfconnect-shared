@@ -20,16 +20,21 @@ interface Props {
 
 const Ticks: FC<Props> = ({
     valueRange,
-    range: { min, max, decimals = 0 },
+    range: { min, max, decimals = 0, step = null, explicitRange = [] },
 }) => {
-    const step = 0.1 ** (decimals as number);
+
+    const computedStep = (step === null? 0.1 ** (decimals as number): step);
 
     const isSelected = (value: number) =>
         value >= valueRange.min && value <= valueRange.max;
 
+    if (explicitRange.length > 0) {
+        console.error("Explicit Range is set but this functionality has not been impliment yet for Ticks. Expect the spacing between Ticks to be incorrect");
+    }
+
     return (
         <div className="ticks">
-            {lodashRange(min, max + step, step).map(value => (
+            {lodashRange(min, max + computedStep, computedStep).map(value => (
                 <div
                     key={String(value)}
                     className={classNames(
