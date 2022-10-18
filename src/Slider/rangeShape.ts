@@ -10,6 +10,8 @@ export interface RangeProp {
     min: number;
     max: number;
     decimals?: number | null;
+    step?: number | null;
+    explicitRange?: number[];
 }
 
 const rangeShape = shape({
