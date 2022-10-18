@@ -24,8 +24,21 @@ interface Props {
     values: number[];
     range: RangeProp;
     ticks?: boolean;
-    onChange: (() => void)[];
+    onChange: ((v: number) => void)[];
     onChangeComplete?: () => void;
+}
+
+export const isFactor = (dividend: number, divisor: number): boolean => {
+    let exp = 0;
+    while (divisor !== Number(divisor.toFixed(0))) {
+        exp++,
+        divisor *= 10;
+    }
+
+    divisor = Number(divisor.toFixed(0));
+    dividend =  Number((dividend * (10 ** exp)).toFixed(0));
+
+    return dividend % divisor === 0;
 }
 
 const Slider: FC<Props> = ({
@@ -50,6 +63,20 @@ const Slider: FC<Props> = ({
                 range
             )}`
         );
+    if (range.step && typeof range.step !== 'undefined') {
+        if (!isFactor(range.min, range.step))
+            console.error(
+                `range.step must be a factor of range.min: ${JSON.stringify(
+                    range
+                )}`
+        );
+        if (!isFactor(range.max, range.step))
+            console.error(
+                `range.step must be a factor of range.max: ${JSON.stringify(
+                    range
+                )}`
+        );
+    }
 
     const { width, ref } = useResizeDetector();
 
