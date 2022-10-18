@@ -284,6 +284,8 @@ declare module 'pc-nrfconnect-shared' {
         min: number;
         max: number;
         decimals?: number;
+        step?: number | null;
+        explicitRange?: number[];
     }
 
     export class SliderProps {
