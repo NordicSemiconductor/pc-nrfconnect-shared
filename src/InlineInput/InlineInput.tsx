@@ -55,11 +55,10 @@ interface Props {
     isValid?: (value: string) => boolean;
     onChange: (value: string) => void;
     onChangeComplete?: (value: string) => void;
-    onKeyboardIncrementAction?: () => void,
-    onKeyboardDecrementAction?: () => void,
+    onKeyboardIncrementAction?: () => void;
+    onKeyboardDecrementAction?: () => void;
     className?: string;
 }
-
 
 const InlineInput = React.forwardRef<HTMLInputElement, Props>(
     (
@@ -77,8 +76,6 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
     ) => {
         const [internalValue, setInternalValue] = useState(externalValue);
         useSynchronisationIfChangedFromOutside(externalValue, setInternalValue);
-
-
         const onChangeIfValid = (
             event: React.ChangeEvent<HTMLInputElement>
         ) => {
@@ -113,10 +110,9 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
             event.stopPropagation();
 
             if (event.key === 'Enter' && isValid(internalValue)) {
-                    onChangeComplete(internalValue);
+                onChangeComplete(internalValue);
             }
         };
-
 
         const startKeyboardEvents = (event: React.KeyboardEvent) => {
             if (disabled) {
@@ -126,10 +122,10 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
             event.stopPropagation();
 
             switch (event.key) {
-                case "ArrowUp":
+                case 'ArrowUp':
                     onKeyboardIncrementAction();
                     break;
-                case "ArrowDown":
+                case 'ArrowDown':
                     onKeyboardDecrementAction();
                     break;
             }
@@ -155,8 +151,8 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
                 value={internalValue}
                 onChange={onChangeIfValid}
                 onBlur={resetToExternalValueOrOnChangeCompleteIfValid}
-                onKeyUp={onChangeCompleteIfValid}   
-                onKeyDown={startKeyboardEvents}                
+                onKeyUp={onChangeCompleteIfValid}
+                onKeyDown={startKeyboardEvents}
                 onClick={stopPropagation}
             />
         );

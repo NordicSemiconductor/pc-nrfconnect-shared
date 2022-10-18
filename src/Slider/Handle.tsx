@@ -82,11 +82,19 @@ const Handle: FC<Props> = ({
             oldPercentage - percentageChange
         );
 
-        const lastValue = onMouseDragStart.current
-        ?.lastValue as number;
+        const lastValue = onMouseDragStart.current?.lastValue as number;
 
-        const newValue = fromPercentage(lastValue, newPercentage, range, event.movementX > 0);
-        onMouseDragStart.current = { mousePosition: oldMousePosition, percentage: oldPercentage, lastValue: newValue };
+        const newValue = fromPercentage(
+            lastValue,
+            newPercentage,
+            range,
+            event.movementX > 0
+        );
+        onMouseDragStart.current = {
+            mousePosition: oldMousePosition,
+            percentage: oldPercentage,
+            lastValue: newValue,
+        };
         onChangeRef.current(newValue);
     };
 

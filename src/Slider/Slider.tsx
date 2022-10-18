@@ -10,6 +10,7 @@ import { arrayOf, bool, func, number, string } from 'prop-types';
 
 import classNames from '../utils/classNames';
 import Bar from './Bar';
+import { isFactor } from './factor';
 import Handle from './Handle';
 import { toPercentage } from './percentage';
 import rangeShape, { RangeProp } from './rangeShape';
@@ -26,19 +27,6 @@ interface Props {
     ticks?: boolean;
     onChange: ((v: number) => void)[];
     onChangeComplete?: () => void;
-}
-
-export const isFactor = (dividend: number, divisor: number): boolean => {
-    let exp = 0;
-    while (divisor !== Number(divisor.toFixed(0))) {
-        exp++,
-        divisor *= 10;
-    }
-
-    divisor = Number(divisor.toFixed(0));
-    dividend =  Number((dividend * (10 ** exp)).toFixed(0));
-
-    return dividend % divisor === 0;
 }
 
 const Slider: FC<Props> = ({
@@ -69,13 +57,13 @@ const Slider: FC<Props> = ({
                 `range.step must be a factor of range.min: ${JSON.stringify(
                     range
                 )}`
-        );
+            );
         if (!isFactor(range.max, range.step))
             console.error(
                 `range.step must be a factor of range.max: ${JSON.stringify(
                     range
                 )}`
-        );
+            );
     }
 
     const { width, ref } = useResizeDetector();
