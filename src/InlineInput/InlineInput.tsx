@@ -55,8 +55,11 @@ interface Props {
     isValid?: (value: string) => boolean;
     onChange: (value: string) => void;
     onChangeComplete?: (value: string) => void;
+    onKeyboardIncrementAction?: () => void,
+    onKeyboardDecrementAction?: () => void,
     className?: string;
 }
+
 
 const InlineInput = React.forwardRef<HTMLInputElement, Props>(
     (
@@ -66,12 +69,15 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
             isValid = () => true,
             onChange,
             onChangeComplete = () => {},
+            onKeyboardIncrementAction = () => {},
+            onKeyboardDecrementAction = () => {},
             className = '',
         },
         ref
     ) => {
         const [internalValue, setInternalValue] = useState(externalValue);
         useSynchronisationIfChangedFromOutside(externalValue, setInternalValue);
+
 
         const onChangeIfValid = (
             event: React.ChangeEvent<HTMLInputElement>
@@ -107,10 +113,27 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
             event.stopPropagation();
 
             if (event.key === 'Enter' && isValid(internalValue)) {
-                onChangeComplete(internalValue);
+                    onChangeComplete(internalValue);
             }
         };
 
+
+        const startKeyboardEvents = (event: React.KeyboardEvent) => {
+            if (disabled) {
+                return;
+            }
+
+            event.stopPropagation();
+
+            switch (event.key) {
+                case "ArrowUp":
+                    onKeyboardIncrementAction();
+                    break;
+                case "ArrowDown":
+                    onKeyboardDecrementAction();
+                    break;
+            }
+        };
         const stopPropagation = (event: React.MouseEvent) =>
             event.stopPropagation();
 
@@ -132,7 +155,8 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
                 value={internalValue}
                 onChange={onChangeIfValid}
                 onBlur={resetToExternalValueOrOnChangeCompleteIfValid}
-                onKeyUp={onChangeCompleteIfValid}
+                onKeyUp={onChangeCompleteIfValid}   
+                onKeyDown={startKeyboardEvents}                
                 onClick={stopPropagation}
             />
         );
