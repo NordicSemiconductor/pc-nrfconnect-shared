@@ -47,6 +47,7 @@ const Handle: FC<Props> = ({
     const onMouseDragStart = useRef<{
         mousePosition: number;
         percentage: number;
+        lastValue: number;
     }>();
 
     // We have to put the callbacks into refs, so that we do not call outdated references later
@@ -60,7 +61,8 @@ const Handle: FC<Props> = ({
         if (sliderWidthStillUnknown) return;
 
         const mousePosition = event.clientX;
-        onMouseDragStart.current = { mousePosition, percentage };
+        const lastValue = value;
+        onMouseDragStart.current = { mousePosition, percentage, lastValue };
         setCurrentlyDragged(true);
 
         window.addEventListener('mousemove', dragHandle);
@@ -80,7 +82,12 @@ const Handle: FC<Props> = ({
             oldPercentage - percentageChange
         );
 
-        onChangeRef.current(fromPercentage(newPercentage, range));
+        const lastValue = onMouseDragStart.current
+        ?.lastValue as number;
+
+        const newValue = fromPercentage(lastValue, newPercentage, range, event.movementX > 0);
+        onMouseDragStart.current = { mousePosition: oldMousePosition, percentage: oldPercentage, lastValue: newValue };
+        onChangeRef.current(newValue);
     };
 
     const releaseHandle = () => {

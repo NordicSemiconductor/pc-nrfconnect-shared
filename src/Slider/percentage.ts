@@ -14,10 +14,40 @@ export const constrainedToPercentage = (percentage: number) => {
 
 export const toPercentage = (
     value: number,
-    { min, max }: { min: number; max: number }
+    { min, max }: RangeProp
 ) => ((value - min) * 100) / (max - min);
 
+
 export const fromPercentage = (
+    lastValue: number,
     value: number,
-    { min, max, decimals = 0 }: RangeProp
-) => Number(((value * (max - min)) / 100 + min).toFixed(decimals as number));
+    { min, max, decimals = 0, step = null, explicitRange = []}: RangeProp,
+    directionForward: boolean = false
+) => {
+
+    if (explicitRange.length > 0) {
+        const noOfIndexes = explicitRange.length - 1;
+        const computedValue = Number(((value * (max - min)) / 100 + min).toFixed(decimals as number));
+        
+        const lastValueIndex = explicitRange.indexOf(lastValue);
+        const closestPrevIndex = lastValueIndex === 0? 0 : lastValueIndex - 1;
+        const closestNextIndex = lastValueIndex === noOfIndexes? noOfIndexes : lastValueIndex + 1;
+
+        let closestIndex = -1;
+
+        if (directionForward) {
+            closestIndex =  explicitRange[closestNextIndex] > computedValue ? lastValueIndex: closestNextIndex;
+        } else {
+            closestIndex =  explicitRange[closestPrevIndex] < computedValue ? lastValueIndex: closestPrevIndex;
+        }
+
+        return Number((explicitRange[closestIndex]).toFixed(decimals as number));
+    } else if (step != null) {
+        const noOfSteps = (max - min) / step;
+        const closestStep = Math.round(((value) / 100 ) * noOfSteps);
+
+        return Number((min + (closestStep * step)).toFixed(decimals as number));
+    } else {
+        return Number(((value * (max - min)) / 100 + min).toFixed(decimals as number));
+    }
+};
