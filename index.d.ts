@@ -10,13 +10,6 @@ declare module 'pc-nrfconnect-shared' {
     import { Logger, LogEntry } from 'winston';
     import Store from 'electron-store';
     import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
-    import {
-        PlaywrightTestArgs,
-        PlaywrightTestOptions,
-        PlaywrightWorkerArgs,
-        PlaywrightWorkerOptions,
-        TestType,
-    } from '@playwright/test';
 
     type Shortcut = import('./src/About/shortcutSlice').Shortcut;
     type RootState = import('./src/state').RootState;
@@ -631,14 +624,6 @@ declare module 'pc-nrfconnect-shared' {
 
     // describeError.ts
     export const describeError: (error: unknown) => string;
-
-    // utils/tests-e2e/e2eFixtures.ts
-    // export const test: TestType<
-    //     PlaywrightTestArgs & PlaywrightTestOptions,
-    //     PlaywrightWorkerArgs & PlaywrightWorkerOptions
-    // >;
-    // export type expect =
-    //     typeof import('./src/utils/tests-e2e/e2eFixtures').expect;
 }
 
 declare module 'prettysize' {

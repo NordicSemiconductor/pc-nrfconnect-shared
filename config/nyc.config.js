@@ -5,16 +5,16 @@
  */
 
 module.exports = {
-  all: true,
-  'check-coverage': true,
-  'temp-dir': 'coverage/playwright/.nyc_output',
-  'report-dir': 'coverage/playwright-coverage',
-  reporter: 'json',
-  // must be overwritten by projects that do not  have src dir
-  include: '/src',
-  exclude: ['test-e2e'],
-  branches: 30,
-  lines: 30,
-  functions: 20,
-  statements: 30,
+    all: true,
+    'check-coverage': true,
+    'temp-dir': 'coverage/playwright/.nyc_output',
+    'report-dir': 'coverage/playwright-coverage',
+    reporter: 'json',
+    // must be overwritten by projects that do not  have src dir
+    include: '/src',
+    exclude: ['test-e2e'],
+    branches: 30,
+    lines: 30,
+    functions: 20,
+    statements: 30,
 };
