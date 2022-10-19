@@ -5,16 +5,16 @@
  */
 
 import {
+    Expect,
     PlaywrightTestArgs,
     PlaywrightTestOptions,
     PlaywrightWorkerArgs,
     PlaywrightWorkerOptions,
     TestType,
-    Expect,
-} from "@playwright/test";
+} from '@playwright/test';
 
 export const test: TestType<
-  PlaywrightTestArgs & PlaywrightTestOptions,
-  PlaywrightWorkerArgs & PlaywrightWorkerOptions
-  >;
+    PlaywrightTestArgs & PlaywrightTestOptions,
+    PlaywrightWorkerArgs & PlaywrightWorkerOptions
+>;
 export type expect = Expect;

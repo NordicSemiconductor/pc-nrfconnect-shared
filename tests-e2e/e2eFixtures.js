@@ -22,11 +22,9 @@ const test = baseTest.extend({
     context: async ({ context }, use) => {
         await context.addInitScript(() =>
             window.addEventListener('beforeunload', () => {
-                if (! (window).hasOwnProperty('collectIstanbulCoverage')) return;
-
-                return (window).collectIstanbulCoverage(
-                  JSON.stringify((window).__coverage__)
-                )
+                window.collectIstanbulCoverage(
+                    JSON.stringify(window.__coverage__)
+                );
             })
         );
 
@@ -34,15 +32,15 @@ const test = baseTest.extend({
 
         await context.exposeFunction(
             'collectIstanbulCoverage',
-            (coverageJSON) => {
-                if ( ! coverageJSON) return;
+            coverageJSON => {
+                if (!coverageJSON) return;
 
                 fs.writeFileSync(
-                  path.join(
-                    istanbulCLIOutput,
-                    `playwright_coverage_${generateUUID()}.json`
-                  ),
-                  coverageJSON
+                    path.join(
+                        istanbulCLIOutput,
+                        `playwright_coverage_${generateUUID()}.json`
+                    ),
+                    coverageJSON
                 );
             }
         );
@@ -53,8 +51,8 @@ const test = baseTest.extend({
         for (const page of context.pages()) {
             // eslint-disable-next-line no-await-in-loop
             await page.evaluate(() =>
-                (window).collectIstanbulCoverage(
-                    JSON.stringify((window).__coverage__)
+                window.collectIstanbulCoverage(
+                    JSON.stringify(window.__coverage__)
                 )
             );
         }
@@ -64,4 +62,4 @@ const test = baseTest.extend({
 module.exports = {
     expect: test.expect,
     test,
-}
+};
