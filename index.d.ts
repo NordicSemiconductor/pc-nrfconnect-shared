@@ -633,12 +633,12 @@ declare module 'pc-nrfconnect-shared' {
     export const describeError: (error: unknown) => string;
 
     // utils/tests-e2e/e2eFixtures.ts
-    export const test: TestType<
-        PlaywrightTestArgs & PlaywrightTestOptions,
-        PlaywrightWorkerArgs & PlaywrightWorkerOptions
-    >;
-    export type expect =
-        typeof import('./src/utils/tests-e2e/e2eFixtures').expect;
+    // export const test: TestType<
+    //     PlaywrightTestArgs & PlaywrightTestOptions,
+    //     PlaywrightWorkerArgs & PlaywrightWorkerOptions
+    // >;
+    // export type expect =
+    //     typeof import('./src/utils/tests-e2e/e2eFixtures').expect;
 }
 
 declare module 'prettysize' {
@@ -656,6 +656,9 @@ interface Window {
     appDir: string;
     appDataDir: string;
     appLogDir: string;
+
+    collectIstanbulCoverage?: (str: string) => void;
+    __coverage__?: string;
 }
 
 // Let typescript compiler in `npm run lint` resolve css modules

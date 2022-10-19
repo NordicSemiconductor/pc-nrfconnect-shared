@@ -144,5 +144,7 @@
         "extends": "./config/eslintrc"
     },
     "prettier": "./config/prettier.config.js",
-    "nyc": "./config/nyc.config.js"
+    "nyc": {
+        "extends": "./config/nyc.config.js"
+    }
 }
