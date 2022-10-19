@@ -6,6 +6,7 @@
 
 const fs = require('fs');
 
+// TODO: go through directories recursively and look for gitignore inside
 const entriesInGitignore = fs
     .readFileSync('.gitignore', 'utf8')
     .split('\n')

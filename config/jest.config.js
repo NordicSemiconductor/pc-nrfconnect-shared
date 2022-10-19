@@ -43,4 +43,8 @@ module.exports = (disabledMocks = []) => ({
     transformIgnorePatterns: ['node_modules/(?!(pc-nrfconnect-shared)/)'],
     setupFilesAfterEnv: [`${__dirname}/../test/setupTests.ts`],
     snapshotSerializers: ['enzyme-to-json/serializer'],
+
+    coverageDirectory: 'coverage/jest-coverage',
+    collectCoverage: true,
+    coverageReporters: ['json', 'text'],
 });

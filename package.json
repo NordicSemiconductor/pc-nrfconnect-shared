@@ -11,6 +11,7 @@
     "bin": {
         "nrfconnect-license": "./scripts/nrfconnect-license.ts",
         "check-for-typescript": "./scripts/check-for-typescript.ts",
+        "merge-coverage": "./scripts/merge-coverage-reports.ts",
         "nordic-publish": "./scripts/nordic-publish.js"
     },
     "main": "src",
@@ -40,6 +41,7 @@
         "@electron/remote": "^2.0.4",
         "@mdi/font": "6.9.96",
         "@nordicsemiconductor/nrf-device-lib-js": "^0.4.13",
+        "@playwright/test": "^1.27.1",
         "@reduxjs/toolkit": "1.8.3",
         "@svgr/webpack": "5.5.0",
         "@swc/core": "1.2.218",
@@ -49,6 +51,7 @@
         "@types/date-fns": "^2.6.0",
         "@types/enzyme": "3.10.12",
         "@types/enzyme-adapter-react-16": "1.0.6",
+        "@types/fs-extra": "^9.0.13",
         "@types/ftp": "0.3.33",
         "@types/klaw": "3.0.3",
         "@types/lodash.range": "3.2.7",
@@ -67,6 +70,7 @@
         "adm-zip": "^0.5.5",
         "babel-eslint": "10.1.0",
         "babel-loader": "8.2.5",
+        "babel-plugin-istanbul": "^6.1.1",
         "bootstrap": "4.6.1",
         "camelcase-keys": "6.2.2",
         "commander": "5.1.0",
@@ -102,6 +106,7 @@
         "mousetrap": "1.6.5",
         "npm-run-all2": "5.0.2",
         "nrf-intel-hex": "^1.3.0",
+        "nyc": "^15.1.0",
         "prettier": "2.6.2",
         "prettysize": "2.0.0",
         "protobufjs": "^6.11.2",
@@ -119,6 +124,7 @@
         "redux-thunk": "2.4.1",
         "rimraf": "3.0.2",
         "roboto-fontface": "0.10.0",
+        "playwright-core": "^1.27.1",
         "sass": "1.53.0",
         "sass-loader": "10.3.1",
         "semver": "7.3.7",
@@ -137,5 +143,6 @@
     "eslintConfig": {
         "extends": "./config/eslintrc"
     },
-    "prettier": "./config/prettier.config.js"
+    "prettier": "./config/prettier.config.js",
+    "nyc": "./config/nyc.config.js"
 }

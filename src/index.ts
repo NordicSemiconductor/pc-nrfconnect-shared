@@ -57,6 +57,8 @@ export { truncateMiddle } from './utils/truncateMiddle';
 export { default as useHotKey } from './utils/useHotKey';
 export { isDevelopment } from './utils/environment';
 
+export { test, expect } from './utils/tests-e2e/e2eFixtures';
+
 export { currentPane, setCurrentPane } from './App/appLayout';
 
 export { isLoggingVerbose } from './Log/logSlice';
