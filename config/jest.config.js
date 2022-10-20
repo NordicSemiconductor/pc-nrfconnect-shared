@@ -29,6 +29,8 @@ module.exports = (disabledMocks = []) => ({
         ...(disabledMocks.includes('serialport')
             ? {}
             : { serialport: `${mockDir}/emptyMock.ts` }),
+        // Force module uuid to resolve with the CJS entry point, because Jest does not support package.json.exports. See https://github.com/uuidjs/uuid/issues/451
+        uuid: require.resolve('uuid'),
     },
     transform: {
         '^.+\\.[jt]sx?$': [
@@ -41,4 +43,8 @@ module.exports = (disabledMocks = []) => ({
     transformIgnorePatterns: ['node_modules/(?!(pc-nrfconnect-shared)/)'],
     setupFilesAfterEnv: [`${__dirname}/../test/setupTests.ts`],
     snapshotSerializers: ['enzyme-to-json/serializer'],
+
+    coverageDirectory: 'coverage/jest-coverage',
+    collectCoverage: true,
+    coverageReporters: ['json', 'text'],
 });

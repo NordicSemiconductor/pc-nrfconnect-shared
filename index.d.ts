@@ -641,6 +641,9 @@ interface Window {
     appDir: string;
     appDataDir: string;
     appLogDir: string;
+
+    collectIstanbulCoverage?: (str: string) => void;
+    __coverage__?: string;
 }
 
 // Let typescript compiler in `npm run lint` resolve css modules
