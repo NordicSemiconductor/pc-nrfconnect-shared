@@ -11,8 +11,10 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
-// todo: change pass / move to conf
-const istanbulCLIOutput = path.join(process.cwd(), 'test-e2e/.nyc_output');
+const istanbulCLIOutput = path.join(
+    process.cwd(),
+    'coverage/playwright/.nyc_output'
+);
 
 function generateUUID() {
     return crypto.randomBytes(16).toString('hex');
