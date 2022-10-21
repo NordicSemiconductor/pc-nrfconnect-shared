@@ -89,7 +89,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                 disabled={disabled}
             >
                 <span>
-                    {items.indexOf(selected) === -1 ? '' : selected.value}
+                    {items.indexOf(selected) === -1 ? '' : selected.label}
                 </span>
                 <img className={styles.image} src={chevron} alt="" />
             </button>
