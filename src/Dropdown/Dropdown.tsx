@@ -37,7 +37,8 @@ export interface DropdownProps {
     onSelect: (item: DropdownItem) => void;
     disabled?: boolean;
     defaultIndex?: number;
-    selectedItem?: DropdownItem;
+    selectedItem?: DropdownItem;    
+    maxHeight: string,
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -46,7 +47,8 @@ const Dropdown: React.FC<DropdownProps> = ({
     onSelect,
     disabled = false,
     defaultIndex = 0,
-    selectedItem = items[defaultIndex],
+    selectedItem = items[defaultIndex],    
+    maxHeight = ''
 }) => {
     const [selected, setSelected] = useState(items[defaultIndex]);
     const [isActive, setIsActive] = useState(false);
@@ -87,6 +89,8 @@ const Dropdown: React.FC<DropdownProps> = ({
                 <img className={styles.image} src={chevron} alt="" />
             </button>
             <div
+                style={ {maxHeight: maxHeight} } 
+                data-height={maxHeight.length > 0}
                 className={`${styles.content} ${
                     isActive ? styles.itemsActive : styles.itemsInactive
                 }`}
