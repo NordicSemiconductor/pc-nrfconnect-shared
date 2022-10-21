@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import FormLabel from 'react-bootstrap/FormLabel';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 
@@ -12,10 +12,10 @@ import chevron from './chevron.svg';
 
 import styles from './Dropdown.module.scss';
 
-const useSynchronisationIfChangedFromOutside: <T>(v: T, set: (value: T) => void ) => T = (
-    externalValue,
-    setInternalValue
-) => {
+const useSynchronisationIfChangedFromOutside: <T>(
+    v: T,
+    set: (value: T) => void
+) => T = (externalValue, setInternalValue) => {
     const previousExternalValue = useRef(externalValue);
     useEffect(() => {
         if (previousExternalValue.current !== externalValue) {
@@ -37,8 +37,8 @@ export interface DropdownProps {
     onSelect: (item: DropdownItem) => void;
     disabled?: boolean;
     defaultIndex?: number;
-    selectedItem?: DropdownItem;    
-    maxHeight: string,
+    selectedItem?: DropdownItem;
+    maxHeight?: string;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -47,13 +47,16 @@ const Dropdown: React.FC<DropdownProps> = ({
     onSelect,
     disabled = false,
     defaultIndex = 0,
-    selectedItem = items[defaultIndex],    
-    maxHeight = ''
+    selectedItem = items[defaultIndex],
+    maxHeight = '',
 }) => {
     const [selected, setSelected] = useState(items[defaultIndex]);
     const [isActive, setIsActive] = useState(false);
 
-    useSynchronisationIfChangedFromOutside<DropdownItem>(selectedItem, setSelected);
+    useSynchronisationIfChangedFromOutside<DropdownItem>(
+        selectedItem,
+        setSelected
+    );
 
     useEffect(() => {
         const clickEvent = () => setIsActive(!isActive);
@@ -85,11 +88,13 @@ const Dropdown: React.FC<DropdownProps> = ({
                 onClick={onClick}
                 disabled={disabled}
             >
-                <span>{items.indexOf(selected) === -1? '' : selected.value}</span>
+                <span>
+                    {items.indexOf(selected) === -1 ? '' : selected.value}
+                </span>
                 <img className={styles.image} src={chevron} alt="" />
             </button>
             <div
-                style={ {maxHeight: maxHeight} } 
+                style={{ maxHeight }}
                 data-height={maxHeight.length > 0}
                 className={`${styles.content} ${
                     isActive ? styles.itemsActive : styles.itemsInactive
