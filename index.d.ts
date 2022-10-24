@@ -279,25 +279,7 @@ declare module 'pc-nrfconnect-shared' {
     export class Spinner extends React.Component {}
 
     // Slider.jsx
-
-    interface rangeShape {
-        min: number;
-        max: number;
-        decimals?: number;
-        step?: number | null;
-        explicitRange?: number[];
-    }
-
-    export class SliderProps {
-        id?: string;
-        title?: string;
-        disabled?: boolean;
-        values: readonly number[];
-        range: rangeShape;
-        ticks?: boolean;
-        onChange: readonly ((value: number) => void)[];
-        onChangeComplete?: () => void;
-    }
+    export type SliderProps = import('./src/Slider/Slider').Props;
 
     export class Slider extends React.Component<SliderProps> {}
 

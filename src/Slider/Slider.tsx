@@ -18,7 +18,7 @@ import Ticks from './Ticks';
 
 import './slider.scss';
 
-interface Props {
+export interface Props {
     id?: string;
     title?: string;
     disabled?: boolean;
