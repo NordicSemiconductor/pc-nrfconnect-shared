@@ -279,6 +279,8 @@ declare module 'pc-nrfconnect-shared' {
     export class Spinner extends React.Component {}
 
     // Slider.jsx
+
+    export type RangeProp = import('./src/Slider/rangeShape').RangeProp;
     export type SliderProps = import('./src/Slider/Slider').Props;
 
     export class Slider extends React.Component<SliderProps> {}
@@ -323,7 +325,7 @@ declare module 'pc-nrfconnect-shared' {
     interface NumberInlineInputProps {
         disabled?: boolean;
         value: number;
-        range: rangeShape;
+        range: RangeProp;
         onChange: (value: number) => void;
         onChangeComplete?: (value: number) => void;
     }
