@@ -38,7 +38,7 @@ export interface DropdownProps {
     disabled?: boolean;
     defaultIndex?: number;
     selectedItem?: DropdownItem;
-    maxHeight?: string;
+    noItemsBeforeScroll?: number;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -48,7 +48,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     disabled = false,
     defaultIndex = 0,
     selectedItem = items[defaultIndex],
-    maxHeight = '',
+    noItemsBeforeScroll = 0,
 }) => {
     const [selected, setSelected] = useState(items[defaultIndex]);
     const [isActive, setIsActive] = useState(false);
@@ -94,8 +94,15 @@ const Dropdown: React.FC<DropdownProps> = ({
                 <img className={styles.image} src={chevron} alt="" />
             </button>
             <div
-                style={{ maxHeight }}
-                data-height={maxHeight.length > 0}
+                style={
+                    noItemsBeforeScroll > 0
+                        ? { maxHeight: `${noItemsBeforeScroll * 24}px` }
+                        : {}
+                } // 24px from Dropdown.module.scss .item height
+                data-height={
+                    noItemsBeforeScroll > 0 &&
+                    items.length > noItemsBeforeScroll
+                }
                 className={`${styles.content} ${
                     isActive ? styles.itemsActive : styles.itemsInactive
                 }`}
