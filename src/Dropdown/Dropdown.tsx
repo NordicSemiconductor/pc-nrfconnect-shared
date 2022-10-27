@@ -50,7 +50,9 @@ const Dropdown: React.FC<DropdownProps> = ({
     selectedItem = items[defaultIndex],
     noItemsBeforeScroll = 0,
 }) => {
-    const [selected, setSelected] = useState(items[defaultIndex]);
+    const [selected, setSelected] = useState(
+        items[items.findIndex(e => e.value === selectedItem.value)]
+    );
     const [isActive, setIsActive] = useState(false);
 
     useSynchronisationIfChangedFromOutside<DropdownItem>(
