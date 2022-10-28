@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "6.6.4",
+    "version": "6.7.0",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -94,7 +94,8 @@
         "focus-visible": "5.2.0",
         "ftp": "0.3.10",
         "husky": "8.0.1",
-        "jest": "27.5.1",
+        "jest": "29.2.2",
+        "jest-environment-jsdom": "29.2.2",
         "klaw": "3.0.0",
         "lodash.range": "3.2.0",
         "mousetrap": "1.6.5",
