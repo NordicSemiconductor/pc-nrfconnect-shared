@@ -8,6 +8,8 @@ import React, { FC, useState } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import { arrayOf, bool, func, number, string } from 'prop-types';
 
+import './state-selector.scss';
+
 interface Props {
     items: string[];
     defaultIndex: number;
