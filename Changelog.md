@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 6.7.0 - 2022-10-28
+
+### Changed
+
+-   Updated Jest from 27 to 29.
+
+### Steps to upgrade when using this package
+
+-   The new version of Jest might require some changes, check
+    https://jestjs.io/docs/28.x/upgrading-to-jest28 and
+    https://jestjs.io/docs/upgrading-to-jest29 for this.
+-   The new version of Jest simplifies typing mocks, so you might want to update
+    code. E.g.
+    `(someFunction as jest.MockedFunction<typeof someFunction>).mockReturnValue(42)`
+    can be simplified to `jest.mocked(someFunction).mockReturnValue(42)`.
+
 ## 6.6.4 - 2022-10-10
 
 ### Changed
