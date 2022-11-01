@@ -18,7 +18,6 @@ export type TDispatch = ThunkDispatch<RootState, null, AnyAction>;
 
 export interface RootState {
     appLayout: AppLayout;
-    appReloadDialog: AppReloadDialog;
     errorDialog: ErrorDialog;
     log: Log;
     device: DeviceState;
@@ -32,11 +31,6 @@ export interface AppLayout {
     isLogVisible: boolean;
     currentPane: number;
     paneNames: string[];
-}
-
-export interface AppReloadDialog {
-    isVisible: boolean;
-    message: string;
 }
 
 export interface ErrorDialog {
