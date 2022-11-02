@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import FormLabel from 'react-bootstrap/FormLabel';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 
@@ -12,17 +12,32 @@ import chevron from './chevron.svg';
 
 import styles from './Dropdown.module.scss';
 
-interface DropdownItem {
+const useSynchronisationIfChangedFromOutside: <T>(
+    v: T,
+    set: (value: T) => void
+) => void = (externalValue, setInternalValue) => {
+    const previousExternalValue = useRef(externalValue);
+    useEffect(() => {
+        if (previousExternalValue.current !== externalValue) {
+            setInternalValue(externalValue);
+            previousExternalValue.current = externalValue;
+        }
+    });
+};
+
+export interface DropdownItem {
     label: string;
     value: string;
 }
 
-interface DropdownProps {
+export interface DropdownProps {
     label?: string;
     items: DropdownItem[];
     onSelect: (item: DropdownItem) => void;
     disabled?: boolean;
     defaultIndex?: number;
+    selectedItem?: DropdownItem;
+    numItemsBeforeScroll?: number;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -31,9 +46,22 @@ const Dropdown: React.FC<DropdownProps> = ({
     onSelect,
     disabled = false,
     defaultIndex = 0,
+    selectedItem = items[defaultIndex],
+    numItemsBeforeScroll = 0,
 }) => {
-    const [selected, setSelected] = useState(items[defaultIndex]);
+    const selectedDropdownItem = items.find(
+        e => e.value === selectedItem.value
+    );
+
+    const [selected, setSelected] = useState(
+        selectedDropdownItem as DropdownItem
+    );
     const [isActive, setIsActive] = useState(false);
+
+    useSynchronisationIfChangedFromOutside<DropdownItem>(
+        selectedItem,
+        setSelected
+    );
 
     useEffect(() => {
         const clickEvent = () => setIsActive(!isActive);
@@ -65,10 +93,28 @@ const Dropdown: React.FC<DropdownProps> = ({
                 onClick={onClick}
                 disabled={disabled}
             >
-                <span>{selected?.label}</span>
+                <span>
+                    {items.findIndex(e => e.value === selected.value) === -1
+                        ? ''
+                        : selected.label}
+                </span>
                 <img className={styles.image} src={chevron} alt="" />
             </button>
             <div
+                style={
+                    numItemsBeforeScroll > 0
+                        ? {
+                              maxHeight: `${
+                                  numItemsBeforeScroll *
+                                  Number.parseInt(styles.dropdownItemHeight, 10)
+                              }px`,
+                          }
+                        : {}
+                }
+                data-height={
+                    numItemsBeforeScroll > 0 &&
+                    items.length > numItemsBeforeScroll
+                }
                 className={`${styles.content} ${
                     isActive ? styles.itemsActive : styles.itemsInactive
                 }`}
