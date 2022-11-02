@@ -14,12 +14,12 @@ and this project adheres to
     X items in the list.
 -   Currently selected `DropdownItem` can now be passed using the `selectedItem`
     property
--   `selectedItem` can be externaly updated and dropdown UI will react
+-   `selectedItem` can be externally updated and dropdown UI will react
     accordingly
 
 ### Fixed
 
--   Z-Index issue with dropdown select list when it is verticaly above a toggle
+-   Z-Index issue with dropdown select list when it is vertically above a toggle
     component and list is opened
 
 ## 6.7.2 - 2022-11-01
