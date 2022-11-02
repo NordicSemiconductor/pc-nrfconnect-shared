@@ -6,7 +6,7 @@
 
 @import '../../styles';
 
-$dropdown-item-height: 24; //px
+$dropdown-item-height: 24px; //px unit dependency in dropdown.tsx
 
 :export {
     dropdownItemHeight: $dropdown-item-height;
@@ -79,7 +79,7 @@ $dropdown-item-height: 24; //px
 .item {
     color: $white;
     padding: 4px 8px;
-    height: calc($dropdown-item-height * 1px);
+    height: $dropdown-item-height;
     background-color: transparent;
     border: 0;
     width: 100%;

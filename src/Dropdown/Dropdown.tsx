@@ -106,7 +106,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                         ? {
                               maxHeight: `${
                                   numItemsBeforeScroll *
-                                  Number(styles.dropdownItemHeight)
+                                  Number.parseInt(styles.dropdownItemHeight, 10)
                               }px`,
                           }
                         : {}
