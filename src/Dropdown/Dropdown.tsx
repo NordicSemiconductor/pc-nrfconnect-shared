@@ -15,7 +15,7 @@ import styles from './Dropdown.module.scss';
 const useSynchronisationIfChangedFromOutside: <T>(
     v: T,
     set: (value: T) => void
-) => T = (externalValue, setInternalValue) => {
+) => void = (externalValue, setInternalValue) => {
     const previousExternalValue = useRef(externalValue);
     useEffect(() => {
         if (previousExternalValue.current !== externalValue) {
@@ -23,7 +23,6 @@ const useSynchronisationIfChangedFromOutside: <T>(
             previousExternalValue.current = externalValue;
         }
     });
-    return previousExternalValue.current;
 };
 
 export interface DropdownItem {
@@ -38,7 +37,7 @@ export interface DropdownProps {
     disabled?: boolean;
     defaultIndex?: number;
     selectedItem?: DropdownItem;
-    noItemsBeforeScroll?: number;
+    numItemsBeforeScroll?: number;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -48,10 +47,14 @@ const Dropdown: React.FC<DropdownProps> = ({
     disabled = false,
     defaultIndex = 0,
     selectedItem = items[defaultIndex],
-    noItemsBeforeScroll = 0,
+    numItemsBeforeScroll = 0,
 }) => {
+    const selectedDropdownItem = items.find(
+        e => e.value === selectedItem.value
+    );
+
     const [selected, setSelected] = useState(
-        items[items.findIndex(e => e.value === selectedItem.value)]
+        selectedDropdownItem as DropdownItem
     );
     const [isActive, setIsActive] = useState(false);
 
@@ -99,13 +102,18 @@ const Dropdown: React.FC<DropdownProps> = ({
             </button>
             <div
                 style={
-                    noItemsBeforeScroll > 0
-                        ? { maxHeight: `${noItemsBeforeScroll * 24}px` }
+                    numItemsBeforeScroll > 0
+                        ? {
+                              maxHeight: `${
+                                  numItemsBeforeScroll *
+                                  Number(styles.dropdownItemHeight)
+                              }px`,
+                          }
                         : {}
-                } // 24px from Dropdown.module.scss .item height
+                }
                 data-height={
-                    noItemsBeforeScroll > 0 &&
-                    items.length > noItemsBeforeScroll
+                    numItemsBeforeScroll > 0 &&
+                    items.length > numItemsBeforeScroll
                 }
                 className={`${styles.content} ${
                     isActive ? styles.itemsActive : styles.itemsInactive

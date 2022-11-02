@@ -6,6 +6,12 @@
 
 @import '../../styles';
 
+$dropdown-item-height: 24; //px
+
+:export {
+    dropdownItemHeight: $dropdown-item-height;
+}
+
 .container {
     position: relative;
     width: 100%;
@@ -73,7 +79,7 @@
 .item {
     color: $white;
     padding: 4px 8px;
-    height: 24px;
+    height: calc($dropdown-item-height * 1px);
     background-color: transparent;
     border: 0;
     width: 100%;
