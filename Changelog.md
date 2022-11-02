@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 6.7.3 - UNRELEASED
+
+### Added
+
+-   Opt-in scroll functionality to the dropdown component if there are more the X items in the list.
+-   Currently selected `DropdownItem` can now be passed using the `selectedItem` property
+-   `selectedItem` can be externaly updated and dropdown UI will react accordingly
+
+### Fixed
+
+-   Z-Index issue with dropdown select list when it is verticaly above a toggle component and list is opened
+
 ## 6.7.2 - 2022-11-01
 
 ### Fixed
