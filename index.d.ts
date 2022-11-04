@@ -372,12 +372,7 @@ declare module 'pc-nrfconnect-shared' {
 
     // StateSelector.jsx
 
-    interface StateSelectorProps {
-        items: string[];
-        defaultIndex?: number;
-        onSelect: (item: number) => void;
-        disabled?: boolean;
-    }
+    type StateSelectorProps = import('./src/StateSelector/StateSelector').Props;
 
     export class StateSelector extends React.Component<StateSelectorProps> {}
 
