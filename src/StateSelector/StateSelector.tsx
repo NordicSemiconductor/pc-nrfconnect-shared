@@ -6,7 +6,6 @@
 
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
-import { arrayOf, bool, func, number, string } from 'prop-types';
 
 import './state-selector.scss';
 
@@ -62,13 +61,6 @@ const StateSelector: FC<Props> = ({
             {items.map((item, index) => selectionButton(item, index))}
         </ButtonGroup>
     );
-};
-
-StateSelector.propTypes = {
-    items: arrayOf(string.isRequired).isRequired,
-    defaultIndex: number.isRequired,
-    onSelect: func.isRequired,
-    disabled: bool,
 };
 
 export default StateSelector;
