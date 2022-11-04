@@ -16,6 +16,10 @@ and this project adheres to
     property
 -   `selectedItem` can be externally updated and dropdown UI will react
     accordingly
+-   Currently selected `StateSelector` can now be passed using the
+    `selectedItem` property
+-   `selectedItem` can be externally updated and State Selector UI will react
+    accordingly
 
 ### Fixed
 
