@@ -68,7 +68,7 @@
         "babel-loader": "8.2.5",
         "bootstrap": "4.6.1",
         "camelcase-keys": "6.2.2",
-        "commander": "5.1.0",
+        "commander": "9.4.1",
         "copy-webpack-plugin": "^6.4.1",
         "css-loader": "5.2.7",
         "date-fns": "2.28.0",

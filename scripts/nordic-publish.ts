@@ -7,31 +7,28 @@
  */
 
 import { execSync } from 'child_process';
-import args from 'commander';
+import { program } from 'commander';
 import fs from 'fs';
 import FtpClient from 'ftp';
 import semver from 'semver';
 import shasum from 'shasum';
 
-args.description('Publish to nordic repository')
+program
+    .description('Publish to nordic repository')
     .requiredOption(
-        '-s, --source [source]',
+        '-s, --source <source>',
         'Specify the source to publish (e.g. official).'
     )
     .option(
         '-n, --no-pack',
         'Publish existing .tgz file at the root directory without npm pack.'
     )
-    .parse(process.argv);
+    .parse();
 
-/*
- * To specify the source to publish to
- */
-if (!args.source) {
-    console.error('Source to publish to is not specified.');
-    process.exit(1);
-}
-const nonOffcialSource = args.source !== 'official' ? args.source : undefined;
+const options = program.opts();
+
+const nonOffcialSource =
+    options.source !== 'official' ? options.source : undefined;
 
 /*
  * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
@@ -191,7 +188,7 @@ let thisPackage: {
 Promise.resolve()
     .then(() => {
         let filename;
-        if (args.pack) {
+        if (options.pack) {
             console.log('Packing current package');
             filename = execSync('npm pack').toString().trim();
         } else {
