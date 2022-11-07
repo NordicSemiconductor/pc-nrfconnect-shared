@@ -28,6 +28,7 @@ module.exports = {
         ...entriesInGitignore,
     ],
     rules: {
+        'prefer-destructuring': 'off',
         '@typescript-eslint/ban-ts-comment': [
             'error',
             { 'ts-expect-error': 'allow-with-description' },
