@@ -10,23 +10,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const child_process_1 = require("child_process");
-const commander_1 = __importDefault(require("commander"));
+const commander_1 = require("commander");
 const fs_1 = __importDefault(require("fs"));
 const ftp_1 = __importDefault(require("ftp"));
 const semver_1 = __importDefault(require("semver"));
 const shasum_1 = __importDefault(require("shasum"));
-commander_1.default.description('Publish to nordic repository')
-    .requiredOption('-s, --source [source]', 'Specify the source to publish (e.g. official).')
+commander_1.program
+    .description('Publish to nordic repository')
+    .requiredOption('-s, --source <source>', 'Specify the source to publish (e.g. official).')
     .option('-n, --no-pack', 'Publish existing .tgz file at the root directory without npm pack.')
-    .parse(process.argv);
-/*
- * To specify the source to publish to
- */
-if (!commander_1.default.source) {
-    console.error('Source to publish to is not specified.');
-    process.exit(1);
-}
-const nonOffcialSource = commander_1.default.source !== 'official' ? commander_1.default.source : undefined;
+    .parse();
+const options = commander_1.program.opts();
+const nonOffcialSource = options.source !== 'official' ? options.source : undefined;
 /*
  * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
  */
@@ -158,7 +153,7 @@ let thisPackage;
 Promise.resolve()
     .then(() => {
     let filename;
-    if (commander_1.default.pack) {
+    if (options.pack) {
         console.log('Packing current package');
         filename = (0, child_process_1.execSync)('npm pack').toString().trim();
     }
