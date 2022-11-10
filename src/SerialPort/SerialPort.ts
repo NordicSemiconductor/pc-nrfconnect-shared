@@ -21,8 +21,16 @@ import { logger } from 'pc-nrfconnect-shared';
 import type { SerialPortOpenOptions } from 'serialport';
 import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 
+export const SERIALPORT_CHANNEL = {
+    OPEN_PORT: 'serialport:new',
+    DO_CLOSE: 'serialport:close',
+    HAVE_CLOSED: 'serialport:on-close',
+    RECEIVED_DATA: 'serialport:data',
+    WRITE: 'serialport:write',
+    IS_OPEN: 'serialport:isOpen',
+};
+
 export const SerialPort = (options: SerialPortOpenOptions<AutoDetectTypes>) => {
-    console.log(options);
     const { path } = options;
     const events = ['open', 'close', 'data'] as const;
 
@@ -31,39 +39,30 @@ export const SerialPort = (options: SerialPortOpenOptions<AutoDetectTypes>) => {
         callback: (data?: any) => void
     ) => {
         if (event === 'close') {
-            ipcRenderer.invoke('serialport:on-close').then(error => {
-                if (error) {
-                    logger.error(error);
-                } else {
-                    logger.info(
-                        `Successfully closed port with options: ${JSON.stringify(
-                            options
-                        )}`
-                    );
-                }
+            ipcRenderer.on(SERIALPORT_CHANNEL.HAVE_CLOSED, () => {
+                logger.info(
+                    `I GOT THE EVENT: Successfully closed serialport with options: ${JSON.stringify(
+                        options
+                    )}`
+                );
             });
         }
         if (event === 'data') {
-            // ipcRenderer.invoke('serialport:data');
-            ipcRenderer.on('serialport:data', (_event, data) => callback(data));
+            ipcRenderer.on(SERIALPORT_CHANNEL.RECEIVED_DATA, (_event, data) =>
+                callback(data)
+            );
         }
     };
-
-    const write = async (
-        data: string | number[] | Buffer,
-        callback?:
-            | ((error: Error | null | undefined, bytesWritten: number) => void)
-            | undefined
-    ): any => {
-        ipcRenderer.invoke('serialport:write', path, data).then(callback);
+    const write = (data: string | number[] | Buffer): void => {
+        ipcRenderer.invoke(SERIALPORT_CHANNEL.WRITE, path, data);
     };
 
     const isOpen = (): Promise<boolean> =>
-        ipcRenderer.invoke('serialport:isOpen', path);
+        ipcRenderer.invoke(SERIALPORT_CHANNEL.IS_OPEN, path);
 
     const close = () =>
         ipcRenderer
-            .invoke('serialport:close', path)
+            .invoke(SERIALPORT_CHANNEL.DO_CLOSE, path)
             .then(([error, wasClosed]) => {
                 if (error) {
                     logger.error(error);
@@ -84,7 +83,7 @@ export const SerialPort = (options: SerialPortOpenOptions<AutoDetectTypes>) => {
                 }
             });
 
-    ipcRenderer.invoke('serialport:new', options).then(error => {
+    ipcRenderer.invoke(SERIALPORT_CHANNEL.OPEN_PORT, options).then(error => {
         if (error) {
             logger.error(error);
         } else {
