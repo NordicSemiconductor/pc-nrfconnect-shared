@@ -13,7 +13,7 @@ import {
     Progress,
     readFwInfo,
 } from '@nordicsemiconductor/nrf-device-lib-js';
-import SerialPort from 'serialport';
+import { SerialPort } from 'serialport';
 
 import logger from '../logging';
 import { Device } from '../state';
@@ -94,7 +94,12 @@ export const verifySerialPortAvailable = (device: Device) => {
             reject();
             return;
         }
-        const serialPort = new SerialPort(device.serialport?.comName, {
+        const serialPort = new SerialPort({
+            path: device.serialport?.comName,
+            // NOTE: v8 of serialport had default baudRate 9600, but most of our devices
+            // defaults to 115200. Is there any please where the baudRate was set before,
+            // or did it only use the default?
+            baudRate: 115200,
             autoOpen: false,
         });
         serialPort.open(openErr => {

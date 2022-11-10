@@ -4,22 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-/* Should work as a wrapper to the SerialPort library 
-
-E.g. should support the same features that is needed from the SerialPort
-
-port.on('open', () => void);
-port.on('close', () => void);
-port.on('data', () => void);
-
-port.write(data);
-
-*/
-
+import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 import { ipcRenderer } from 'electron';
 import { logger } from 'pc-nrfconnect-shared';
 import type { SerialPortOpenOptions } from 'serialport';
-import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 
 export const SERIALPORT_CHANNEL = {
     OPEN_PORT: 'serialport:new',
@@ -36,7 +24,7 @@ export const SerialPort = (options: SerialPortOpenOptions<AutoDetectTypes>) => {
 
     const on = (
         event: typeof events[number],
-        callback: (data?: any) => void
+        callback: (data?: unknown) => void
     ) => {
         if (event === 'close') {
             ipcRenderer.on(SERIALPORT_CHANNEL.HAVE_CLOSED, () => {
@@ -66,20 +54,18 @@ export const SerialPort = (options: SerialPortOpenOptions<AutoDetectTypes>) => {
             .then(([error, wasClosed]) => {
                 if (error) {
                     logger.error(error);
+                } else if (wasClosed) {
+                    logger.info(
+                        `Successfully closed port with options: ${JSON.stringify(
+                            options
+                        )}`
+                    );
                 } else {
-                    if (wasClosed) {
-                        logger.info(
-                            `Successfully closed port with options: ${JSON.stringify(
-                                options
-                            )}`
-                        );
-                    } else {
-                        logger.info(
-                            `Process no longer subscribing to port with options: ${JSON.stringify(
-                                options
-                            )}, but port is still open.`
-                        );
-                    }
+                    logger.info(
+                        `Process no longer subscribing to port with options: ${JSON.stringify(
+                            options
+                        )}, but port is still open.`
+                    );
                 }
             });
 
