@@ -71,3 +71,5 @@ export { default as sdfuOperations } from './Device/sdfuOperations';
 export { defaultInitPacket, HashType, FwType } from './Device/initPacket';
 
 export { default as describeError } from './logging/describeError';
+
+export { SerialPort } from 'serialport';
