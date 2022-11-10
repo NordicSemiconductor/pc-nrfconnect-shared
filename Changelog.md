@@ -17,6 +17,9 @@ and this project adheres to
 
 -   SerialPort wrapper to be used by renderers in order to open and interact
     with port in the main process.
+-   Script `check-app-properties` to check that certain static properties of the
+    app are given, which we expect from it (e.g. certain fields in
+    `package.json` are filled out).
 
 ### Steps to upgrade when using this package
 
@@ -27,6 +30,16 @@ and this project adheres to
     `package.json` to be `"nordic-publish": "node ./dist/nordic-publish.js"`.
 -   Optional housekeeping, because it is not needed anymore: Update the release
     tasks in azure and remove the line `chmod +x ./dist/nordic-publish.js`.
+-   For an app, add an entry `"check:app"` to the `scripts` section of
+    `package.json`:
+
+```json
+{
+    "scripts": {
+        "check:app": "check-app-properties"
+    }
+}
+```
 
 ## 6.8.0 - 2022-11-04
 
