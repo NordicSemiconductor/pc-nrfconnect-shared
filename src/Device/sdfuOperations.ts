@@ -197,7 +197,7 @@ const validateSerialPort = async (device: Device, needSerialport?: boolean) => {
 
     const checkOpen = (path: string) =>
         new Promise(resolve => {
-            const port = new SerialPort({ path, baudRate: 115200 }, err => {
+            const port = new SerialPort({ path, baudRate: 9600 }, err => {
                 if (!err) port.close();
                 resolve(!err);
             });

@@ -96,10 +96,10 @@ export const verifySerialPortAvailable = (device: Device) => {
         }
         const serialPort = new SerialPort({
             path: device.serialport?.comName,
-            // NOTE: v8 of serialport had default baudRate 9600, but most of our devices
-            // defaults to 115200. Is there any please where the baudRate was set before,
-            // or did it only use the default?
-            baudRate: 115200,
+            // The BaudRate should not matter in this case, but as of serialport v10 it is required.
+            // To be sure to keep the code as similar as possible, baudRate is set to the same as the
+            // default baudRate in serialport v8.
+            baudRate: 9600,
             autoOpen: false,
         });
         serialPort.open(openErr => {
