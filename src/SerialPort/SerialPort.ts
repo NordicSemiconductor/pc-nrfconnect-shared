@@ -10,35 +10,29 @@ import { logger } from 'pc-nrfconnect-shared';
 import type { SerialPortOpenOptions } from 'serialport';
 
 export const SERIALPORT_CHANNEL = {
-    OPEN_PORT: 'serialport:new',
-    DO_CLOSE: 'serialport:close',
-    HAVE_CLOSED: 'serialport:on-close',
-    RECEIVED_DATA: 'serialport:data',
+    OPEN: 'serialport:open',
+    CLOSE: 'serialport:close',
     WRITE: 'serialport:write',
-    IS_OPEN: 'serialport:isOpen',
+
+    ON_CLOSED: 'serialport:on-close',
+    ON_DATA: 'serialport:on-data',
+
+    IS_OPEN: 'serialport:is-open',
 };
 
-export const SerialPort = (options: SerialPortOpenOptions<AutoDetectTypes>) => {
+export const SerialPort = async (
+    options: SerialPortOpenOptions<AutoDetectTypes>
+) => {
     const { path } = options;
-    const events = ['open', 'close', 'data'] as const;
 
-    const on = (
-        event: typeof events[number],
-        callback: (data?: unknown) => void
-    ) => {
+    const on = (event: 'close' | 'data', callback: (data: Buffer) => void) => {
         if (event === 'close') {
-            ipcRenderer.on(SERIALPORT_CHANNEL.HAVE_CLOSED, () => {
-                logger.info(
-                    `I GOT THE EVENT: Successfully closed serialport with options: ${JSON.stringify(
-                        options
-                    )}`
-                );
-            });
+            ipcRenderer.on(SERIALPORT_CHANNEL.ON_CLOSED, () => {});
         }
         if (event === 'data') {
-            ipcRenderer.on(SERIALPORT_CHANNEL.RECEIVED_DATA, (_event, data) =>
-                callback(data)
-            );
+            ipcRenderer.on(SERIALPORT_CHANNEL.ON_DATA, (_event, data) => {
+                callback(data);
+            });
         }
     };
     const write = (data: string | number[] | Buffer): void => {
@@ -48,38 +42,31 @@ export const SerialPort = (options: SerialPortOpenOptions<AutoDetectTypes>) => {
     const isOpen = (): Promise<boolean> =>
         ipcRenderer.invoke(SERIALPORT_CHANNEL.IS_OPEN, path);
 
-    const close = () =>
-        ipcRenderer
-            .invoke(SERIALPORT_CHANNEL.DO_CLOSE, path)
-            .then(([error, wasClosed]) => {
-                if (error) {
-                    logger.error(error);
-                } else if (wasClosed) {
-                    logger.info(
-                        `Successfully closed port with options: ${JSON.stringify(
-                            options
-                        )}`
-                    );
-                } else {
-                    logger.info(
-                        `Process no longer subscribing to port with options: ${JSON.stringify(
-                            options
-                        )}, but port is still open.`
-                    );
-                }
-            });
-
-    ipcRenderer.invoke(SERIALPORT_CHANNEL.OPEN_PORT, options).then(error => {
+    const close = async () => {
+        const [error, wasClosed] = await ipcRenderer.invoke(
+            SERIALPORT_CHANNEL.CLOSE,
+            path
+        );
         if (error) {
-            logger.error(error);
-        } else {
-            logger.info(
-                `Successfully opened port with options: ${JSON.stringify(
-                    options
-                )}`
-            );
+            throw new Error(error);
         }
-    });
+
+        if (wasClosed) {
+            logger.info(`Closed port: ${options.path}`);
+        } else {
+            logger.info(`Port ${options.path} still in use by other window(s)`);
+        }
+        return wasClosed;
+    };
+
+    const error = await ipcRenderer.invoke(SERIALPORT_CHANNEL.OPEN, options);
+
+    if (error) {
+        logger.error(error);
+        throw new Error(error);
+    } else {
+        logger.info(`Opened port with options: ${JSON.stringify(options)}`);
+    }
 
     return { path, on, write, close, isOpen };
 };
