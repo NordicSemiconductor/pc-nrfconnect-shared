@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+-   SerialPort wrapper to be used by renderers in order to open and interact
+    with port in the main process.
+
+### Steps to upgrade when using this package
+
+-   If the application uses the SerialPort wrapper, you must bump the `engines`
+    field in `package.json` to require at least version `3.13.0` of the
+    launcher.
+
 ## 6.8.0 - 2022-11-04
 
 ### Added
