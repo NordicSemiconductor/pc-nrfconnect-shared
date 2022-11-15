@@ -21,20 +21,15 @@ export const SERIALPORT_CHANNEL = {
 };
 
 export const SerialPort = async (
-    options: SerialPortOpenOptions<AutoDetectTypes>
+    options: SerialPortOpenOptions<AutoDetectTypes>,
+    onData: (data: Uint8Array) => void = () => {},
+    onClosed: () => void = () => {}
 ) => {
     const { path } = options;
 
-    const on = (event: 'close' | 'data', callback: (data: Buffer) => void) => {
-        if (event === 'close') {
-            ipcRenderer.on(SERIALPORT_CHANNEL.ON_CLOSED, () => {});
-        }
-        if (event === 'data') {
-            ipcRenderer.on(SERIALPORT_CHANNEL.ON_DATA, (_event, data) => {
-                callback(data);
-            });
-        }
-    };
+    ipcRenderer.on(SERIALPORT_CHANNEL.ON_DATA, (_event, data) => onData(data));
+    ipcRenderer.on(SERIALPORT_CHANNEL.ON_CLOSED, onClosed);
+
     const write = (data: string | number[] | Buffer): void => {
         ipcRenderer.invoke(SERIALPORT_CHANNEL.WRITE, path, data);
     };
@@ -68,5 +63,5 @@ export const SerialPort = async (
         logger.info(`Opened port with options: ${JSON.stringify(options)}`);
     }
 
-    return { path, on, write, close, isOpen };
+    return { path, write, close, isOpen };
 };
