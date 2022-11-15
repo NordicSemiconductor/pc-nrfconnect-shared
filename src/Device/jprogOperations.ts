@@ -95,7 +95,7 @@ export const verifySerialPortAvailable = (device: Device) => {
             return;
         }
         const serialPort = new SerialPort({
-            path: device.serialport?.comName,
+            path: device.serialport.comName,
             // The BaudRate should not matter in this case, but as of serialport v10 it is required.
             // To be sure to keep the code as similar as possible, baudRate is set to the same as the
             // default baudRate in serialport v8.
