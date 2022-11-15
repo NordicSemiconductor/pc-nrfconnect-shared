@@ -94,6 +94,7 @@
         "react-flip-toolkit": "7.0.14",
         "react-ga": "2.7.0",
         "react-markdown": "4.3.1",
+        "react-pdfobject": "^1.2.0",
         "react-resize-detector": "6.7.8",
         "react-test-renderer": "16.14.0",
         "redux": "4.2.0",
