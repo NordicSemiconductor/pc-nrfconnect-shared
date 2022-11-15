@@ -13,7 +13,7 @@ import {
     Progress,
     readFwInfo,
 } from '@nordicsemiconductor/nrf-device-lib-js';
-import SerialPort from 'serialport';
+import { SerialPort } from 'serialport';
 
 import logger from '../logging';
 import { Device } from '../state';
@@ -94,7 +94,12 @@ export const verifySerialPortAvailable = (device: Device) => {
             reject();
             return;
         }
-        const serialPort = new SerialPort(device.serialport?.comName, {
+        const serialPort = new SerialPort({
+            path: device.serialport.comName,
+            // The BaudRate should not matter in this case, but as of serialport v10 it is required.
+            // To be sure to keep the code as similar as possible, baudRate is set to the same as the
+            // default baudRate in serialport v8.
+            baudRate: 9600,
             autoOpen: false,
         });
         serialPort.open(openErr => {

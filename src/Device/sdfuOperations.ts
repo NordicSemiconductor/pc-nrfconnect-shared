@@ -9,7 +9,7 @@ import AdmZip from 'adm-zip';
 import { createHash } from 'crypto';
 import fs from 'fs';
 import MemoryMap from 'nrf-intel-hex';
-import SerialPort from 'serialport';
+import { SerialPort } from 'serialport';
 
 import logger from '../logging';
 import { Device } from '../state';
@@ -195,16 +195,12 @@ const validateSerialPort = async (device: Device, needSerialport?: boolean) => {
         return device;
     }
 
-    const checkOpen = (serialPath: string) =>
+    const checkOpen = (path: string) =>
         new Promise(resolve => {
-            const port = new SerialPort(
-                serialPath,
-                { baudRate: 115200 },
-                err => {
-                    if (!err) port.close();
-                    resolve(!err);
-                }
-            );
+            const port = new SerialPort({ path, baudRate: 9600 }, err => {
+                if (!err) port.close();
+                resolve(!err);
+            });
         });
 
     for (let i = 10; i > 1; i -= 1) {
