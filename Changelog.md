@@ -8,6 +8,11 @@ and this project adheres to
 
 ## Unreleased
 
+### Changed
+
+-   `scripts/nordic-publish.js` is now transpiled and bundled on install, so we
+    do not need to commit a transpiled version any longer.
+
 ### Added
 
 -   SerialPort wrapper to be used by renderers in order to open and interact
