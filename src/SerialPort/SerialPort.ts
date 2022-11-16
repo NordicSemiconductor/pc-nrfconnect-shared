@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import type { AutoDetectTypes } from '@serialport/bindings-cpp';
+import type { AutoDetectTypes, UpdateOptions } from '@serialport/bindings-cpp';
 import { ipcRenderer } from 'electron';
 import { logger } from 'pc-nrfconnect-shared';
 import type { SerialPortOpenOptions } from 'serialport';
@@ -13,9 +13,11 @@ export const SERIALPORT_CHANNEL = {
     OPEN: 'serialport:open',
     CLOSE: 'serialport:close',
     WRITE: 'serialport:write',
+    UPDATE: 'serialport:update',
 
     ON_CLOSED: 'serialport:on-close',
     ON_DATA: 'serialport:on-data',
+    ON_UPDATE: 'serialport:on-update',
 
     IS_OPEN: 'serialport:is-open',
 };
@@ -23,12 +25,16 @@ export const SERIALPORT_CHANNEL = {
 export const SerialPort = async (
     options: SerialPortOpenOptions<AutoDetectTypes>,
     onData: (data: Uint8Array) => void = () => {},
-    onClosed: () => void = () => {}
+    onClosed: () => void = () => {},
+    onUpdate: (newOptions: UpdateOptions) => void = () => {},
 ) => {
-    const { path } = options;
+    let { path } = options;
 
     ipcRenderer.on(SERIALPORT_CHANNEL.ON_DATA, (_event, data) => onData(data));
     ipcRenderer.on(SERIALPORT_CHANNEL.ON_CLOSED, onClosed);
+    ipcRenderer.on(SERIALPORT_CHANNEL.ON_UPDATE, (_event, newOptions) =>
+        onUpdate(newOptions)
+    );
 
     const write = (data: string | number[] | Buffer): void => {
         ipcRenderer.invoke(SERIALPORT_CHANNEL.WRITE, path, data);
@@ -54,6 +60,11 @@ export const SerialPort = async (
         return wasClosed;
     };
 
+    // Only supports baudRate, same as serialport.io
+    const update = (newOptions: UpdateOptions) => {
+        ipcRenderer.invoke(SERIALPORT_CHANNEL.UPDATE, path, newOptions);
+    };
+
     const error = await ipcRenderer.invoke(SERIALPORT_CHANNEL.OPEN, options);
 
     if (error) {
@@ -63,5 +74,5 @@ export const SerialPort = async (
         logger.info(`Opened port with options: ${JSON.stringify(options)}`);
     }
 
-    return { path, write, close, isOpen };
+    return { path, write, close, isOpen, update };
 };
