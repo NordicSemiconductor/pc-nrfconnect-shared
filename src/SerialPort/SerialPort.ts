@@ -4,7 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import type { AutoDetectTypes, UpdateOptions } from '@serialport/bindings-cpp';
+import type {
+    AutoDetectTypes,
+    SetOptions,
+    UpdateOptions,
+} from '@serialport/bindings-cpp';
 import { ipcRenderer } from 'electron';
 import { logger } from 'pc-nrfconnect-shared';
 import type { SerialPortOpenOptions } from 'serialport';
@@ -14,10 +18,12 @@ export const SERIALPORT_CHANNEL = {
     CLOSE: 'serialport:close',
     WRITE: 'serialport:write',
     UPDATE: 'serialport:update',
+    SET: 'serialport:set',
 
     ON_CLOSED: 'serialport:on-close',
     ON_DATA: 'serialport:on-data',
     ON_UPDATE: 'serialport:on-update',
+    ON_SET: 'serialport:on-set',
 
     IS_OPEN: 'serialport:is-open',
 };
@@ -27,6 +33,7 @@ export const SerialPort = async (
     onData: (data: Uint8Array) => void = () => {},
     onClosed: () => void = () => {},
     onUpdate: (newOptions: UpdateOptions) => void = () => {},
+    onSet: (newOptions: SetOptions) => void = () => {},
 ) => {
     let { path } = options;
 
@@ -34,6 +41,9 @@ export const SerialPort = async (
     ipcRenderer.on(SERIALPORT_CHANNEL.ON_CLOSED, onClosed);
     ipcRenderer.on(SERIALPORT_CHANNEL.ON_UPDATE, (_event, newOptions) =>
         onUpdate(newOptions)
+    );
+    ipcRenderer.on(SERIALPORT_CHANNEL.ON_SET, (_event, newOptions) =>
+        onSet(newOptions)
     );
 
     const write = (data: string | number[] | Buffer): void => {
@@ -65,6 +75,10 @@ export const SerialPort = async (
         ipcRenderer.invoke(SERIALPORT_CHANNEL.UPDATE, path, newOptions);
     };
 
+    const set = (newOptions: SetOptions) => {
+        ipcRenderer.invoke(SERIALPORT_CHANNEL.SET, path, newOptions);
+    };
+
     const error = await ipcRenderer.invoke(SERIALPORT_CHANNEL.OPEN, options);
 
     if (error) {
@@ -74,5 +88,5 @@ export const SerialPort = async (
         logger.info(`Opened port with options: ${JSON.stringify(options)}`);
     }
 
-    return { path, write, close, isOpen, update };
+    return { path, write, close, isOpen, update, set };
 };
