@@ -11,6 +11,7 @@ import { existsSync, readdirSync, readFileSync } from 'fs';
 import property from 'lodash/property';
 
 export interface PackageJson {
+    version?: string;
     files?: string[];
     repository?: {
         type: string;
@@ -124,9 +125,32 @@ const checkFileProperty = (packageJson: PackageJson) => {
     );
 };
 
-const checkChangelog = () => {
+const changelogEntryRegexp = (version?: string) =>
+    new RegExp(`^## ${version}`, 'mi');
+
+const checkChangelog = (
+    packageJson: PackageJson,
+    checkChangelogHasCurrentEntry: boolean
+) => {
     if (!existsSync('./Changelog.md')) {
         fail('The mandatory file `Changelog.md` is missing.');
+    }
+
+    if (checkChangelogHasCurrentEntry) {
+        if (packageJson.version == null) {
+            fail('package.json must specify a `version`.');
+        }
+
+        const changelog = readFileSync('./Changelog.md', 'utf8');
+        if (!changelog.match(changelogEntryRegexp(packageJson.version))) {
+            fail(
+                `Found no entry for the current version packageJson.version ${packageJson.version} in \`Changelog.md\`.`
+            );
+        }
+
+        if (changelog.match(changelogEntryRegexp('unreleased'))) {
+            fail('There must not be an entry `unreleased` in `Changelog.md`.');
+        }
     }
 };
 
@@ -148,7 +172,11 @@ const checkMandatoryResources = () => {
     );
 };
 
-const runChecks = () => {
+const runChecks = ({
+    checkChangelogHasCurrentEntry,
+}: {
+    checkChangelogHasCurrentEntry: boolean;
+}) => {
     const packageJson = <PackageJson>(
         JSON.parse(readFileSync('./package.json', 'utf8'))
     );
@@ -156,13 +184,13 @@ const runChecks = () => {
     checkMandatoryProperties(packageJson);
     checkOptionalProperties(packageJson);
     checkFileProperty(packageJson);
-    checkChangelog();
+    checkChangelog(packageJson, checkChangelogHasCurrentEntry);
     checkMandatoryResources();
 };
 
 const isRanAsAScript = require.main === module; // https://nodejs.org/docs/latest/api/modules.html#accessing-the-main-module
 if (isRanAsAScript) {
-    runChecks();
+    runChecks({ checkChangelogHasCurrentEntry: false });
 }
 
 export default runChecks;

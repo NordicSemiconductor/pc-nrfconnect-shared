@@ -29,6 +29,7 @@ program
 
 const options = program.opts();
 
+const deployOfficial = options.source === 'official';
 const nonOffcialSource =
     options.source !== 'official' ? options.source : undefined;
 
@@ -42,20 +43,20 @@ const config = {
     password: process.env.REPO_PASS || 'anonymous@',
 };
 
-const repoDirOfficial = '.pc-tools/nrfconnect-apps';
-const repoDirNonOfficial = nonOffcialSource
-    ? `${repoDirOfficial}/${nonOffcialSource}`
-    : undefined;
-const repoDir = `/${
-    process.env.REPO_DIR || repoDirNonOfficial || repoDirOfficial
-}`;
+const repoDirOfficial = '/.pc-tools/nrfconnect-apps';
+const repoDir =
+    process.env.REPO_DIR ||
+    (deployOfficial
+        ? repoDirOfficial
+        : `${repoDirOfficial}/${nonOffcialSource}`);
 
 const repoUrlOfficial =
     'https://developer.nordicsemi.com/.pc-tools/nrfconnect-apps';
-const repoUrlNonOfficial = nonOffcialSource
-    ? `${repoUrlOfficial}/${nonOffcialSource}`
-    : undefined;
-const repoUrl = process.env.REPO_URL || repoUrlNonOfficial || repoUrlOfficial;
+const repoUrl =
+    process.env.REPO_URL ||
+    (deployOfficial
+        ? repoUrlOfficial
+        : `${repoUrlOfficial}/${nonOffcialSource}`);
 
 const client = new FtpClient();
 
@@ -189,7 +190,9 @@ let thisPackage: {
 
 Promise.resolve()
     .then(() => {
-        checkAppProperties();
+        checkAppProperties({
+            checkChangelogHasCurrentEntry: deployOfficial,
+        });
     })
     .then(() => {
         let filename;
