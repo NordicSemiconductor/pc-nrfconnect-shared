@@ -29,6 +29,13 @@ interface AppInfo {
     };
 }
 
+interface App {
+    filename: string;
+    name: string;
+    version: string;
+    shasum: string;
+}
+
 program
     .description('Publish to nordic repository')
     .requiredOption(
@@ -102,15 +109,6 @@ const readPackage = () => {
     return filename;
 };
 
-const packOrReadPackage = () => {
-    const filename = options.pack ? packPackage() : readPackage();
-    const { name, version } = parsePackageFileName(filename);
-
-    console.log(`Package name: ${name} version: ${version}`);
-
-    return { filename, name, version };
-};
-
 const getShasum = (filePath: string) =>
     new Promise<string>((resolve, reject) => {
         fs.readFile(filePath, (err, buffer) => {
@@ -125,6 +123,16 @@ const getShasum = (filePath: string) =>
             }
         });
     });
+
+const packOrReadPackage = async () => {
+    const filename = options.pack ? packPackage() : readPackage();
+    const { name, version } = parsePackageFileName(filename);
+    const shasum = await getShasum(filename);
+
+    console.log(`Package name: ${name} version: ${version}`);
+
+    return { filename, name, version, shasum };
+};
 
 const connect = () =>
     new Promise<void>((resolve, reject) => {
@@ -213,12 +221,7 @@ const updateLocalAppInfo = (
     };
 };
 
-const updateAppInfoOnServer = async (app: {
-    name: string;
-    filename: string;
-    version: string;
-    shasum: string;
-}) => {
+const updateAppInfoOnServer = async (app: App) => {
     const appInfo = await downloadAppInfo(app.name);
     const updatedAppInfo = updateLocalAppInfo(appInfo, app);
 
@@ -253,21 +256,15 @@ const main = async () => {
         checkChangelogHasCurrentEntry: deployOfficial,
     });
 
-    const { filename, name, version } = packOrReadPackage();
-    const shasum = await getShasum(filename);
+    const app = await packOrReadPackage();
 
     await connect();
     await changeWorkingDirectory(repoDir);
 
     try {
-        await updateAppInfoOnServer({
-            name,
-            filename,
-            version,
-            shasum,
-        });
-        await uploadFile(filename, filename);
-        await uploadChangelog(name);
+        await updateAppInfoOnServer(app);
+        await uploadFile(app.filename, app.filename);
+        await uploadChangelog(app.name);
 
         console.log('Done');
     } catch (error) {
