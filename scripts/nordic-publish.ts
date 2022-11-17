@@ -74,13 +74,7 @@ const repoUrl =
 
 const client = new FtpClient();
 
-/**
- * Parse npm package name and version from filename
- *
- * @param {string} filename of package
- * @returns {object} parsed package info: { name, version, filename }
- */
-const parsePackageName = (filename: string) => {
+const parsePackageFileName = (filename: string) => {
     const rx = /(.*?)-(\d+\.\d+.*?)(.tgz)/;
     const match = rx.exec(filename);
     if (!match) {
@@ -91,72 +85,6 @@ const parsePackageName = (filename: string) => {
     const [, name, version] = match;
     return { name, version };
 };
-
-/**
- * Connect to ftp server
- *
- * @returns {Promise<undefined>} resolves upon success
- */
-const connect = () =>
-    new Promise<void>((resolve, reject) => {
-        console.log(
-            `Connecting to ftp://${config.user}@${config.host}:${config.port}`
-        );
-        client.once('error', err => {
-            client.removeAllListeners('ready');
-            reject(err);
-        });
-        client.once('ready', () => {
-            client.removeAllListeners('error');
-            resolve();
-        });
-        client.connect(config);
-    });
-
-/**
- * Change working directory on ftp server
- *
- * @param {string} dir the directory to change to
- * @returns {Promise<undefined>} resolves upon success
- */
-const changeWorkingDirectory = (dir: string) =>
-    new Promise<void>((resolve, reject) => {
-        console.log(`Changing to directory ${dir}`);
-        client.cwd(dir, err => (err ? reject(err) : resolve()));
-    });
-
-/**
- * Download file _filename_ from ftp server current working directory
- *
- * @param {string} filename the file to download
- * @returns {Promise<string>} resolves with content of file
- */
-const getFile = (filename: string) =>
-    new Promise<string>((resolve, reject) => {
-        console.log(`Downloading file ${filename}`);
-        let data = '';
-        client.get(filename, (err, stream) => {
-            if (err) return reject(err);
-            stream.once('close', () => resolve(data));
-            stream.on('data', chunk => {
-                data += chunk;
-            });
-            return undefined;
-        });
-    });
-
-/**
- * Upload file to ftp server current working directory
- *
- * @param {string|buffer} local filename or content of file to be uploaded
- * @param {string} remote filename
- * @returns {Promise<undefined>} resolves upon success
- */
-const putFile = (local: string | Buffer, remote: string) =>
-    new Promise<void>((resolve, reject) => {
-        console.log(`Uploading file ${remote}`);
-        client.put(local, remote, err => (err ? reject(err) : resolve()));
-    });
 
 const packPackage = () => {
     console.log('Packing current package');
@@ -176,19 +104,13 @@ const readPackage = () => {
 
 const packOrReadPackage = () => {
     const filename = options.pack ? packPackage() : readPackage();
-    const { name, version } = parsePackageName(filename);
+    const { name, version } = parsePackageFileName(filename);
 
     console.log(`Package name: ${name} version: ${version}`);
 
     return { filename, name, version };
 };
 
-/**
- * Calculate SHASUM checksum of file
- *
- * @param {string} filePath of package
- * @returns {Promise<string>} resolves with SHASUM
- */
 const getShasum = (filePath: string) =>
     new Promise<string>((resolve, reject) => {
         fs.readFile(filePath, (err, buffer) => {
@@ -204,6 +126,54 @@ const getShasum = (filePath: string) =>
         });
     });
 
+const connect = () =>
+    new Promise<void>((resolve, reject) => {
+        console.log(
+            `Connecting to ftp://${config.user}@${config.host}:${config.port}`
+        );
+        client.once('error', err => {
+            client.removeAllListeners('ready');
+            reject(err);
+        });
+        client.once('ready', () => {
+            client.removeAllListeners('error');
+            resolve();
+        });
+        client.connect(config);
+    });
+
+const changeWorkingDirectory = (dir: string) =>
+    new Promise<void>((resolve, reject) => {
+        console.log(`Changing to directory ${dir}`);
+        client.cwd(dir, err => (err ? reject(err) : resolve()));
+    });
+
+const downloadFileContent = (filename: string) =>
+    new Promise<string>((resolve, reject) => {
+        console.log(`Downloading file ${filename}`);
+        let data = '';
+        client.get(filename, (err, stream) => {
+            if (err) return reject(err);
+            stream.once('close', () => resolve(data));
+            stream.on('data', chunk => {
+                data += chunk;
+            });
+            return undefined;
+        });
+    });
+
+type UploadLocalFile = (localFileName: string, remote: string) => Promise<void>;
+type UploadBufferContent = (content: Buffer, remote: string) => Promise<void>;
+
+const uploadFile: UploadLocalFile & UploadBufferContent = (
+    local: string | Buffer,
+    remote: string
+) =>
+    new Promise<void>((resolve, reject) => {
+        console.log(`Uploading file ${remote}`);
+        client.put(local, remote, err => (err ? reject(err) : resolve()));
+    });
+
 const uploadChangelog = (packageName: string) => {
     const changelogFilename = 'Changelog.md';
     if (!fs.existsSync(changelogFilename)) {
@@ -212,7 +182,7 @@ const uploadChangelog = (packageName: string) => {
         return Promise.reject(new Error(errorMsg));
     }
 
-    return putFile(changelogFilename, `${packageName}-${changelogFilename}`);
+    return uploadFile(changelogFilename, `${packageName}-${changelogFilename}`);
 };
 
 const main = async () => {
@@ -229,7 +199,7 @@ const main = async () => {
     // get App info
     let meta: AppInfo = {};
     try {
-        const content = await getFile(name);
+        const content = await downloadFileContent(name);
         meta = JSON.parse(content);
     } catch (error) {
         console.log(
@@ -264,8 +234,8 @@ const main = async () => {
         };
 
         // upload
-        await putFile(Buffer.from(JSON.stringify(meta)), name);
-        await putFile(filename, filename);
+        await uploadFile(Buffer.from(JSON.stringify(meta)), name);
+        await uploadFile(filename, filename);
         await uploadChangelog(name);
 
         console.log('Done');
