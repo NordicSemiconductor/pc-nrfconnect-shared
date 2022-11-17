@@ -158,6 +158,31 @@ const putFile = (local: string | Buffer, remote: string) =>
         client.put(local, remote, err => (err ? reject(err) : resolve()));
     });
 
+const packPackage = () => {
+    console.log('Packing current package');
+    return execSync('npm pack').toString().trim();
+};
+
+const readPackage = () => {
+    const files = fs.readdirSync('.');
+    const filename = files.find(f => f.includes('.tgz'));
+    if (!filename) {
+        console.error('Package to publish is not found');
+        process.exit(1);
+    }
+
+    return filename;
+};
+
+const packOrReadPackage = () => {
+    const filename = options.pack ? packPackage() : readPackage();
+    const { name, version } = parsePackageName(filename);
+
+    console.log(`Package name: ${name} version: ${version}`);
+
+    return { filename, name, version };
+};
+
 /**
  * Calculate SHASUM checksum of file
  *
@@ -195,27 +220,9 @@ const main = async () => {
         checkChangelogHasCurrentEntry: deployOfficial,
     });
 
-    // Pack
-    let filename;
-    if (options.pack) {
-        console.log('Packing current package');
-        filename = execSync('npm pack').toString().trim();
-    } else {
-        const files = fs.readdirSync('.');
-        filename = files.find(f => f.includes('.tgz'));
-        if (!filename) {
-            console.error('Package to publish is not found');
-            process.exit(1);
-        }
-    }
-
-    const { name, version } = parsePackageName(filename);
-    console.log(`Package name: ${name} version: ${version}`);
-
-    // checksum
+    const { filename, name, version } = packOrReadPackage();
     const shasum = await getShasum(filename);
 
-    // connect
     await connect();
     await changeWorkingDirectory(repoDir);
 
