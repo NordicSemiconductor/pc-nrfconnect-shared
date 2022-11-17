@@ -221,13 +221,6 @@ const updateLocalAppInfo = (
     };
 };
 
-const updateAppInfoOnServer = async (app: App) => {
-    const appInfo = await downloadAppInfo(app.name);
-    const updatedAppInfo = updateLocalAppInfo(appInfo, app);
-
-    await uploadFile(Buffer.from(JSON.stringify(updatedAppInfo)), app.name);
-};
-
 type UploadLocalFile = (localFileName: string, remote: string) => Promise<void>;
 type UploadBufferContent = (content: Buffer, remote: string) => Promise<void>;
 
@@ -240,7 +233,16 @@ const uploadFile: UploadLocalFile & UploadBufferContent = (
         client.put(local, remote, err => (err ? reject(err) : resolve()));
     });
 
-const uploadChangelog = (packageName: string) => {
+const updateAppInfoOnServer = async (app: App) => {
+    const appInfo = await downloadAppInfo(app.name);
+    const updatedAppInfo = updateLocalAppInfo(appInfo, app);
+
+    await uploadFile(Buffer.from(JSON.stringify(updatedAppInfo)), app.name);
+};
+
+const uploadPackage = (app: App) => uploadFile(app.filename, app.filename);
+
+const uploadChangelog = (app: App) => {
     const changelogFilename = 'Changelog.md';
     if (!fs.existsSync(changelogFilename)) {
         const errorMsg = `There should be a changelog called "${changelogFilename}". Please provide it!`;
@@ -248,7 +250,7 @@ const uploadChangelog = (packageName: string) => {
         return Promise.reject(new Error(errorMsg));
     }
 
-    return uploadFile(changelogFilename, `${packageName}-${changelogFilename}`);
+    return uploadFile(changelogFilename, `${app.name}-${changelogFilename}`);
 };
 
 const main = async () => {
@@ -263,8 +265,8 @@ const main = async () => {
 
     try {
         await updateAppInfoOnServer(app);
-        await uploadFile(app.filename, app.filename);
-        await uploadChangelog(app.name);
+        await uploadPackage(app);
+        await uploadChangelog(app);
 
         console.log('Done');
     } catch (error) {
