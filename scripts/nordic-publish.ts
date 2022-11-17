@@ -162,6 +162,69 @@ const downloadFileContent = (filename: string) =>
         });
     });
 
+const downloadAppInfo = async (name: string): Promise<AppInfo> => {
+    try {
+        const content = await downloadFileContent(name);
+        return JSON.parse(content);
+    } catch (error) {
+        console.log(
+            `App info file will be created from scratch due to: ${
+                (error as any).message // eslint-disable-line @typescript-eslint/no-explicit-any
+            }`
+        );
+        return {};
+    }
+};
+
+const updateLocalAppInfo = (
+    appInfo: AppInfo,
+    app: {
+        filename: string;
+        version: string;
+        shasum: string;
+    }
+) => {
+    const latest = appInfo['dist-tags']?.latest;
+    if (latest != null) {
+        console.log(`Latest published version ${latest}`);
+
+        if (semver.lte(app.version, latest) && !nonOffcialSource) {
+            throw new Error(
+                'Current package version cannot be published, bump it higher'
+            );
+        }
+    }
+
+    return {
+        ...appInfo,
+        'dist-tags': {
+            ...appInfo['dist-tags'],
+            latest: app.version,
+        },
+        versions: {
+            ...appInfo.versions,
+            [app.version]: {
+                dist: {
+                    tarball: `${repoUrl}/${app.filename}`,
+                    shasum: app.shasum,
+                },
+            },
+        },
+    };
+};
+
+const updateAppInfoOnServer = async (app: {
+    name: string;
+    filename: string;
+    version: string;
+    shasum: string;
+}) => {
+    const appInfo = await downloadAppInfo(app.name);
+    const updatedAppInfo = updateLocalAppInfo(appInfo, app);
+
+    await uploadFile(Buffer.from(JSON.stringify(updatedAppInfo)), app.name);
+};
+
 type UploadLocalFile = (localFileName: string, remote: string) => Promise<void>;
 type UploadBufferContent = (content: Buffer, remote: string) => Promise<void>;
 
@@ -196,45 +259,13 @@ const main = async () => {
     await connect();
     await changeWorkingDirectory(repoDir);
 
-    // get App info
-    let appInfo: AppInfo = {};
     try {
-        const content = await downloadFileContent(name);
-        appInfo = JSON.parse(content);
-    } catch (error) {
-        console.log(
-            `App info file will be created from scratch due to: ${
-                (error as any).message // eslint-disable-line @typescript-eslint/no-explicit-any
-            }`
-        );
-    }
-
-    try {
-        // update App info file
-        appInfo['dist-tags'] = appInfo['dist-tags'] || {};
-        const { latest } = appInfo['dist-tags'];
-
-        if (latest) {
-            console.log(`Latest published version ${latest}`);
-
-            if (semver.lte(version, latest) && !nonOffcialSource) {
-                throw new Error(
-                    'Current package version cannot be published, bump it higher'
-                );
-            }
-        }
-
-        appInfo['dist-tags'].latest = version;
-        appInfo.versions = appInfo.versions || {};
-        appInfo.versions[version] = {
-            dist: {
-                tarball: `${repoUrl}/${filename}`,
-                shasum,
-            },
-        };
-
-        // upload
-        await uploadFile(Buffer.from(JSON.stringify(appInfo)), name);
+        await updateAppInfoOnServer({
+            name,
+            filename,
+            version,
+            shasum,
+        });
         await uploadFile(filename, filename);
         await uploadChangelog(name);
 
