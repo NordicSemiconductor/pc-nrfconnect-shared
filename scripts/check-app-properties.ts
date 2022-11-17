@@ -160,4 +160,9 @@ const runChecks = () => {
     checkMandatoryResources();
 };
 
-runChecks();
+const isRanAsAScript = require.main === module; // https://nodejs.org/docs/latest/api/modules.html#accessing-the-main-module
+if (isRanAsAScript) {
+    runChecks();
+}
+
+export default runChecks;

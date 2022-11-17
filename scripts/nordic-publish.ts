@@ -13,6 +13,8 @@ import FtpClient from 'ftp';
 import semver from 'semver';
 import shasum from 'shasum';
 
+import checkAppProperties from './check-app-properties';
+
 program
     .description('Publish to nordic repository')
     .requiredOption(
@@ -186,6 +188,9 @@ let thisPackage: {
 };
 
 Promise.resolve()
+    .then(() => {
+        checkAppProperties();
+    })
     .then(() => {
         let filename;
         if (options.pack) {
