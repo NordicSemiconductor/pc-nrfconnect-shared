@@ -11,7 +11,7 @@ import { program } from 'commander';
 import fs from 'fs';
 import FtpClient from 'ftp';
 import semver from 'semver';
-import shasum from 'shasum';
+import calculateShasum from 'shasum';
 
 import checkAppProperties from './check-app-properties';
 
@@ -89,7 +89,7 @@ const parsePackageName = (filename: string) => {
         );
     }
     const [, name, version] = match;
-    return { name, version, filename };
+    return { name, version };
 };
 
 /**
@@ -174,7 +174,7 @@ const getShasum = (filePath: string) =>
                     )
                 );
             } else {
-                resolve(shasum(buffer));
+                resolve(calculateShasum(buffer));
             }
         });
     });
@@ -188,13 +188,6 @@ const uploadChangelog = (packageName: string) => {
     }
 
     return putFile(changelogFilename, `${packageName}-${changelogFilename}`);
-};
-
-let thisPackage: {
-    name: string;
-    version: string;
-    filename: string;
-    shasum?: string;
 };
 
 const main = async () => {
@@ -216,14 +209,11 @@ const main = async () => {
         }
     }
 
-    thisPackage = parsePackageName(filename);
-    console.log(
-        `Package name: ${thisPackage.name} version: ${thisPackage.version}`
-    );
+    const { name, version } = parsePackageName(filename);
+    console.log(`Package name: ${name} version: ${version}`);
 
     // checksum
-    const checksum = await getShasum(thisPackage.filename);
-    thisPackage.shasum = checksum;
+    const shasum = await getShasum(filename);
 
     // connect
     await connect();
@@ -232,7 +222,7 @@ const main = async () => {
     // get App info
     let meta: AppInfo = {};
     try {
-        const content = await getFile(thisPackage.name);
+        const content = await getFile(name);
         meta = JSON.parse(content);
     } catch (error) {
         console.log(
@@ -250,26 +240,26 @@ const main = async () => {
         if (latest) {
             console.log(`Latest published version ${latest}`);
 
-            if (semver.lte(thisPackage.version, latest) && !nonOffcialSource) {
+            if (semver.lte(version, latest) && !nonOffcialSource) {
                 throw new Error(
                     'Current package version cannot be published, bump it higher'
                 );
             }
         }
 
-        meta['dist-tags'].latest = thisPackage.version;
+        meta['dist-tags'].latest = version;
         meta.versions = meta.versions || {};
-        meta.versions[thisPackage.version] = {
+        meta.versions[version] = {
             dist: {
-                tarball: `${repoUrl}/${thisPackage.filename}`,
-                shasum: thisPackage.shasum,
+                tarball: `${repoUrl}/${filename}`,
+                shasum,
             },
         };
 
         // upload
-        await putFile(Buffer.from(JSON.stringify(meta)), thisPackage.name);
-        await putFile(thisPackage.filename, thisPackage.filename);
-        await uploadChangelog(thisPackage.name);
+        await putFile(Buffer.from(JSON.stringify(meta)), name);
+        await putFile(filename, filename);
+        await uploadChangelog(name);
 
         console.log('Done');
     } catch (error) {
