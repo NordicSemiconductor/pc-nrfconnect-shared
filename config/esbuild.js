@@ -36,6 +36,7 @@ esbuild.build({
         'path',
         'https',
         'net',
+        'stream',
 
         // launcher includes
         'electron',
