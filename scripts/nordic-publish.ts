@@ -197,13 +197,13 @@ const main = async () => {
     await changeWorkingDirectory(repoDir);
 
     // get App info
-    let meta: AppInfo = {};
+    let appInfo: AppInfo = {};
     try {
         const content = await downloadFileContent(name);
-        meta = JSON.parse(content);
+        appInfo = JSON.parse(content);
     } catch (error) {
         console.log(
-            `Meta file will be created from scratch due to: ${
+            `App info file will be created from scratch due to: ${
                 (error as any).message // eslint-disable-line @typescript-eslint/no-explicit-any
             }`
         );
@@ -211,8 +211,8 @@ const main = async () => {
 
     try {
         // update App info file
-        meta['dist-tags'] = meta['dist-tags'] || {};
-        const { latest } = meta['dist-tags'];
+        appInfo['dist-tags'] = appInfo['dist-tags'] || {};
+        const { latest } = appInfo['dist-tags'];
 
         if (latest) {
             console.log(`Latest published version ${latest}`);
@@ -224,9 +224,9 @@ const main = async () => {
             }
         }
 
-        meta['dist-tags'].latest = version;
-        meta.versions = meta.versions || {};
-        meta.versions[version] = {
+        appInfo['dist-tags'].latest = version;
+        appInfo.versions = appInfo.versions || {};
+        appInfo.versions[version] = {
             dist: {
                 tarball: `${repoUrl}/${filename}`,
                 shasum,
@@ -234,7 +234,7 @@ const main = async () => {
         };
 
         // upload
-        await uploadFile(Buffer.from(JSON.stringify(meta)), name);
+        await uploadFile(Buffer.from(JSON.stringify(appInfo)), name);
         await uploadFile(filename, filename);
         await uploadChangelog(name);
 
