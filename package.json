@@ -11,7 +11,7 @@
     "bin": {
         "nrfconnect-license": "./scripts/nrfconnect-license.ts",
         "check-for-typescript": "./scripts/check-for-typescript.ts",
-        "nordic-publish": "./scripts/nordic-publish.js"
+        "nordic-publish": "./scripts/nordic-publish.ts"
     },
     "main": "src",
     "scripts": {
@@ -21,7 +21,7 @@
         "check:types": "ts-node scripts/check-for-typescript.ts tsc --noEmit --pretty",
         "check:license": "ts-node scripts/nrfconnect-license.ts check",
         "prepare": "husky install",
-        "update-publish-script": "tsc scripts/nordic-publish.ts -t es2015 -m node16"
+        "postinstall": "esbuild scripts/nordic-publish.ts --bundle --outfile=scripts/nordic-publish.js --platform=node --log-level=warning"
     },
     "dependencies": {
         "@babel/core": "7.18.9",
@@ -76,6 +76,7 @@
         "enzyme": "3.11.0",
         "enzyme-adapter-react-16": "1.15.6",
         "enzyme-to-json": "3.6.2",
+        "esbuild": "0.15.14",
         "eslint": "8.20.0",
         "eslint-config-airbnb": "19.0.4",
         "eslint-config-prettier": "8.5.0",

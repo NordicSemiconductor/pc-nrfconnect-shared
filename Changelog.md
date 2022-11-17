@@ -8,6 +8,11 @@ and this project adheres to
 
 ## Unreleased
 
+### Changed
+
+-   `scripts/nordic-publish.js` is now transpiled and bundled on install, so we
+    do not need to commit a transpiled version any longer.
+
 ### Added
 
 -   SerialPort wrapper to be used by renderers in order to open and interact
@@ -18,6 +23,10 @@ and this project adheres to
 -   If the application uses the SerialPort wrapper, you must bump the `engines`
     field in `package.json` to require at least version `3.13.0` of the
     launcher.
+-   Change the entry `"nordic-publish"` in the `scripts` section of
+    `package.json` to be `"nordic-publish": "node ./dist/nordic-publish.js"`.
+-   Optional housekeeping, because it is not needed anymore: Update the release
+    tasks in azure and remove the line `chmod +x ./dist/nordic-publish.js`.
 
 ## 6.8.0 - 2022-11-04
 
