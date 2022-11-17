@@ -36,50 +36,51 @@ interface App {
     shasum: string;
 }
 
-program
-    .description('Publish to nordic repository')
-    .requiredOption(
-        '-s, --source <source>',
-        'Specify the source to publish (e.g. official).'
-    )
-    .option(
-        '-n, --no-pack',
-        'Publish existing .tgz file at the root directory without npm pack.'
-    )
-    .parse();
+const client = new FtpClient();
 
-const options = program.opts();
+const repoDir = (deployOfficial: boolean, sourceName: string) => {
+    const repoDirOfficial = '/.pc-tools/nrfconnect-apps';
 
-const deployOfficial = options.source === 'official';
-const nonOffcialSource =
-    options.source !== 'official' ? options.source : undefined;
+    if (process.env.REPO_DIR) return process.env.REPO_DIR;
+    if (deployOfficial) return repoDirOfficial;
 
-/*
- * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
- */
-const config = {
-    host: process.env.REPO_HOST || 'localhost',
-    port: Number(process.env.REPO_PORT) || 21,
-    user: process.env.REPO_USER || 'anonymous',
-    password: process.env.REPO_PASS || 'anonymous@',
+    return `${repoDirOfficial}/${sourceName}`;
 };
 
-const repoDirOfficial = '/.pc-tools/nrfconnect-apps';
-const repoDir =
-    process.env.REPO_DIR ||
-    (deployOfficial
-        ? repoDirOfficial
-        : `${repoDirOfficial}/${nonOffcialSource}`);
+const repoUrl = (deployOfficial: boolean, sourceName: string) => {
+    const repoUrlOfficial =
+        'https://developer.nordicsemi.com/.pc-tools/nrfconnect-apps';
 
-const repoUrlOfficial =
-    'https://developer.nordicsemi.com/.pc-tools/nrfconnect-apps';
-const repoUrl =
-    process.env.REPO_URL ||
-    (deployOfficial
-        ? repoUrlOfficial
-        : `${repoUrlOfficial}/${nonOffcialSource}`);
+    if (process.env.REPO_URL) return process.env.REPO_URL;
+    if (deployOfficial) return repoUrlOfficial;
 
-const client = new FtpClient();
+    return `${repoUrlOfficial}/${sourceName}`;
+};
+
+const parseOptions = () => {
+    program
+        .description('Publish to nordic repository')
+        .requiredOption(
+            '-s, --source <source>',
+            'Specify the source to publish (e.g. official).'
+        )
+        .option(
+            '-n, --no-pack',
+            'Publish existing .tgz file at the root directory without npm pack.'
+        )
+        .parse();
+
+    const options = program.opts();
+
+    const deployOfficial = options.source === 'official';
+
+    return {
+        doPack: options.pack,
+        deployOfficial,
+        repoDir: repoDir(deployOfficial, options.source),
+        repoUrl: repoUrl(deployOfficial, options.source),
+    };
+};
 
 const parsePackageFileName = (filename: string) => {
     const rx = /(.*?)-(\d+\.\d+.*?)(.tgz)/;
@@ -124,8 +125,8 @@ const getShasum = (filePath: string) =>
         });
     });
 
-const packOrReadPackage = async () => {
-    const filename = options.pack ? packPackage() : readPackage();
+const packOrReadPackage = async (doPack: boolean) => {
+    const filename = doPack ? packPackage() : readPackage();
     const { name, version } = parsePackageFileName(filename);
     const shasum = await getShasum(filename);
 
@@ -134,7 +135,12 @@ const packOrReadPackage = async () => {
     return { filename, name, version, shasum };
 };
 
-const connect = () =>
+const connect = (config: {
+    host: string;
+    port: number;
+    user: string;
+    password: string;
+}) =>
     new Promise<void>((resolve, reject) => {
         console.log(
             `Connecting to ftp://${config.user}@${config.host}:${config.port}`
@@ -190,13 +196,14 @@ const updateLocalAppInfo = (
         filename: string;
         version: string;
         shasum: string;
-    }
+    },
+    deployOfficial: boolean
 ) => {
     const latest = appInfo['dist-tags']?.latest;
     if (latest != null) {
         console.log(`Latest published version ${latest}`);
 
-        if (semver.lte(app.version, latest) && !nonOffcialSource) {
+        if (semver.lte(app.version, latest) && deployOfficial) {
             throw new Error(
                 'Current package version cannot be published, bump it higher'
             );
@@ -233,9 +240,9 @@ const uploadFile: UploadLocalFile & UploadBufferContent = (
         client.put(local, remote, err => (err ? reject(err) : resolve()));
     });
 
-const updateAppInfoOnServer = async (app: App) => {
+const updateAppInfoOnServer = async (app: App, deployOfficial: boolean) => {
     const appInfo = await downloadAppInfo(app.name);
-    const updatedAppInfo = updateLocalAppInfo(appInfo, app);
+    const updatedAppInfo = updateLocalAppInfo(appInfo, app, deployOfficial);
 
     await uploadFile(Buffer.from(JSON.stringify(updatedAppInfo)), app.name);
 };
@@ -254,17 +261,29 @@ const uploadChangelog = (app: App) => {
 };
 
 const main = async () => {
+    /*
+     * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
+     */
+    const config = {
+        host: process.env.REPO_HOST || 'localhost',
+        port: Number(process.env.REPO_PORT) || 21,
+        user: process.env.REPO_USER || 'anonymous',
+        password: process.env.REPO_PASS || 'anonymous@',
+    };
+
+    const options = parseOptions();
+
     checkAppProperties({
-        checkChangelogHasCurrentEntry: deployOfficial,
+        checkChangelogHasCurrentEntry: options.deployOfficial,
     });
 
-    const app = await packOrReadPackage();
+    const app = await packOrReadPackage(options.doPack);
 
-    await connect();
-    await changeWorkingDirectory(repoDir);
+    await connect(config);
+    await changeWorkingDirectory(options.repoDir);
 
     try {
-        await updateAppInfoOnServer(app);
+        await updateAppInfoOnServer(app, options.deployOfficial);
         await uploadPackage(app);
         await uploadChangelog(app);
 
