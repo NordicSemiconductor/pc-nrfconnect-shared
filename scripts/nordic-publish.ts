@@ -66,7 +66,7 @@ const client = new FtpClient();
  * @param {string} filename of package
  * @returns {object} parsed package info: { name, version, filename }
  */
-function parsePackageName(filename: string) {
+const parsePackageName = (filename: string) => {
     const rx = /(.*?)-(\d+\.\d+.*?)(.tgz)/;
     const match = rx.exec(filename);
     if (!match) {
@@ -76,15 +76,15 @@ function parsePackageName(filename: string) {
     }
     const [, name, version] = match;
     return { name, version, filename };
-}
+};
 
 /**
  * Connect to ftp server
  *
  * @returns {Promise<undefined>} resolves upon success
  */
-function connect() {
-    return new Promise<void>((resolve, reject) => {
+const connect = () =>
+    new Promise<void>((resolve, reject) => {
         console.log(
             `Connecting to ftp://${config.user}@${config.host}:${config.port}`
         );
@@ -98,7 +98,6 @@ function connect() {
         });
         client.connect(config);
     });
-}
 
 /**
  * Change working directory on ftp server
@@ -106,12 +105,11 @@ function connect() {
  * @param {string} dir the directory to change to
  * @returns {Promise<undefined>} resolves upon success
  */
-function changeWorkingDirectory(dir: string) {
-    return new Promise<void>((resolve, reject) => {
+const changeWorkingDirectory = (dir: string) =>
+    new Promise<void>((resolve, reject) => {
         console.log(`Changing to directory ${dir}`);
         client.cwd(dir, err => (err ? reject(err) : resolve()));
     });
-}
 
 /**
  * Download file _filename_ from ftp server current working directory
@@ -119,8 +117,8 @@ function changeWorkingDirectory(dir: string) {
  * @param {string} filename the file to download
  * @returns {Promise<string>} resolves with content of file
  */
-function getFile(filename: string) {
-    return new Promise<string>((resolve, reject) => {
+const getFile = (filename: string) =>
+    new Promise<string>((resolve, reject) => {
         console.log(`Downloading file ${filename}`);
         let data = '';
         client.get(filename, (err, stream) => {
@@ -132,7 +130,6 @@ function getFile(filename: string) {
             return undefined;
         });
     });
-}
 
 /**
  * Upload file to ftp server current working directory
@@ -141,12 +138,11 @@ function getFile(filename: string) {
  * @param {string} remote filename
  * @returns {Promise<undefined>} resolves upon success
  */
-function putFile(local: string | Buffer, remote: string) {
-    return new Promise<void>((resolve, reject) => {
+const putFile = (local: string | Buffer, remote: string) =>
+    new Promise<void>((resolve, reject) => {
         console.log(`Uploading file ${remote}`);
         client.put(local, remote, err => (err ? reject(err) : resolve()));
     });
-}
 
 /**
  * Calculate SHASUM checksum of file
@@ -154,8 +150,8 @@ function putFile(local: string | Buffer, remote: string) {
  * @param {string} filePath of package
  * @returns {Promise<string>} resolves with SHASUM
  */
-function getShasum(filePath: string) {
-    return new Promise<string>((resolve, reject) => {
+const getShasum = (filePath: string) =>
+    new Promise<string>((resolve, reject) => {
         fs.readFile(filePath, (err, buffer) => {
             if (err) {
                 reject(
@@ -168,9 +164,8 @@ function getShasum(filePath: string) {
             }
         });
     });
-}
 
-function uploadChangelog(packageName: string) {
+const uploadChangelog = (packageName: string) => {
     const changelogFilename = 'Changelog.md';
     if (!fs.existsSync(changelogFilename)) {
         const errorMsg = `There should be a changelog called "${changelogFilename}". Please provide it!`;
@@ -179,7 +174,7 @@ function uploadChangelog(packageName: string) {
     }
 
     return putFile(changelogFilename, `${packageName}-${changelogFilename}`);
-}
+};
 
 let thisPackage: {
     name: string;
