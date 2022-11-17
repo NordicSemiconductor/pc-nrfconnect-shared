@@ -110,25 +110,20 @@ const readPackage = () => {
     return filename;
 };
 
-const getShasum = (filePath: string) =>
-    new Promise<string>((resolve, reject) => {
-        fs.readFile(filePath, (err, buffer) => {
-            if (err) {
-                reject(
-                    new Error(
-                        `Unable to read file when verifying shasum: ${filePath}`
-                    )
-                );
-            } else {
-                resolve(calculateShasum(buffer));
-            }
-        });
-    });
+const getShasum = (filePath: string) => {
+    try {
+        return calculateShasum(fs.readFileSync(filePath));
+    } catch (error) {
+        throw new Error(
+            `Unable to read file when verifying shasum: ${filePath}`
+        );
+    }
+};
 
-const packOrReadPackage = async (doPack: boolean) => {
+const packOrReadPackage = (doPack: boolean) => {
     const filename = doPack ? packPackage() : readPackage();
     const { name, version } = parsePackageFileName(filename);
-    const shasum = await getShasum(filename);
+    const shasum = getShasum(filename);
 
     console.log(`Package name: ${name} version: ${version}`);
 
@@ -277,7 +272,7 @@ const main = async () => {
         checkChangelogHasCurrentEntry: options.deployOfficial,
     });
 
-    const app = await packOrReadPackage(options.doPack);
+    const app = packOrReadPackage(options.doPack);
 
     await connect(config);
     await changeWorkingDirectory(options.repoDir);
