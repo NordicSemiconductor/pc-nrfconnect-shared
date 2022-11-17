@@ -15,6 +15,20 @@ import shasum from 'shasum';
 
 import checkAppProperties from './check-app-properties';
 
+interface AppInfo {
+    ['dist-tags']?: {
+        latest?: string;
+    };
+    versions?: {
+        [version: string]: {
+            dist: {
+                tarball: string;
+                shasum: string;
+            };
+        };
+    };
+}
+
 program
     .description('Publish to nordic repository')
     .requiredOption(
@@ -183,46 +197,53 @@ let thisPackage: {
     shasum?: string;
 };
 
-Promise.resolve()
-    .then(() => {
-        checkAppProperties({
-            checkChangelogHasCurrentEntry: deployOfficial,
-        });
-    })
-    .then(() => {
-        let filename;
-        if (options.pack) {
-            console.log('Packing current package');
-            filename = execSync('npm pack').toString().trim();
-        } else {
-            const files = fs.readdirSync('.');
-            filename = files.find(f => f.includes('.tgz'));
-            if (!filename) {
-                console.error('Package to publish is not found');
-                process.exit(1);
-            }
-        }
+const main = async () => {
+    checkAppProperties({
+        checkChangelogHasCurrentEntry: deployOfficial,
+    });
 
-        thisPackage = parsePackageName(filename);
+    // Pack
+    let filename;
+    if (options.pack) {
+        console.log('Packing current package');
+        filename = execSync('npm pack').toString().trim();
+    } else {
+        const files = fs.readdirSync('.');
+        filename = files.find(f => f.includes('.tgz'));
+        if (!filename) {
+            console.error('Package to publish is not found');
+            process.exit(1);
+        }
+    }
+
+    thisPackage = parsePackageName(filename);
+    console.log(
+        `Package name: ${thisPackage.name} version: ${thisPackage.version}`
+    );
+
+    // checksum
+    const checksum = await getShasum(thisPackage.filename);
+    thisPackage.shasum = checksum;
+
+    // connect
+    await connect();
+    await changeWorkingDirectory(repoDir);
+
+    // get App info
+    let meta: AppInfo = {};
+    try {
+        const content = await getFile(thisPackage.name);
+        meta = JSON.parse(content);
+    } catch (error) {
         console.log(
-            `Package name: ${thisPackage.name} version: ${thisPackage.version}`
+            `Meta file will be created from scratch due to: ${
+                (error as any).message // eslint-disable-line @typescript-eslint/no-explicit-any
+            }`
         );
-    })
-    .then(() => getShasum(thisPackage.filename))
-    .then(checksum => {
-        thisPackage.shasum = checksum;
-    })
-    .then(() => connect())
-    .then(() => changeWorkingDirectory(repoDir))
-    .then(() => getFile(thisPackage.name))
-    .catch(err => {
-        console.log(
-            `Meta file will be created from scratch due to: ${err.message}`
-        );
-        return '{}';
-    })
-    .then(content => JSON.parse(content))
-    .then(meta => {
+    }
+
+    try {
+        // update App info file
         meta['dist-tags'] = meta['dist-tags'] || {};
         const { latest } = meta['dist-tags'];
 
@@ -245,14 +266,18 @@ Promise.resolve()
             },
         };
 
-        return meta;
-    })
-    .then(meta => putFile(Buffer.from(JSON.stringify(meta)), thisPackage.name))
-    .then(() => putFile(thisPackage.filename, thisPackage.filename))
-    .then(() => uploadChangelog(thisPackage.name))
-    .then(() => console.log('Done'))
-    .catch(err => {
-        console.error(err.message);
+        // upload
+        await putFile(Buffer.from(JSON.stringify(meta)), thisPackage.name);
+        await putFile(thisPackage.filename, thisPackage.filename);
+        await uploadChangelog(thisPackage.name);
+
+        console.log('Done');
+    } catch (error) {
+        console.error((error as any).message); // eslint-disable-line @typescript-eslint/no-explicit-any
         process.exit(1);
-    })
-    .then(() => client.end());
+    }
+
+    client.end();
+};
+
+main();
