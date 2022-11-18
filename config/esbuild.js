@@ -10,6 +10,9 @@ const { sassPlugin, postcssModules } = require('esbuild-sass-plugin');
 const esbuild = require('esbuild');
 const svgr = require('@svgr/core').transform;
 
+// eslint-disable-next-line import/no-dynamic-require
+const { dependencies } = require(join(process.cwd(), 'package.json'));
+
 const entry = [
     './src/index.jsx',
     './lib/index.jsx',
@@ -37,6 +40,7 @@ esbuild.build({
         'https',
         'net',
         'stream',
+        'url',
 
         // launcher includes
         'electron',
@@ -44,6 +48,9 @@ esbuild.build({
         '@electron/remote',
         'react',
         '@nordicsemiconductor/nrf-device-lib-js',
+
+        // App dependencies
+        ...Object.keys(dependencies),
     ],
     loader: {
         '.json': 'json',
@@ -106,3 +113,11 @@ esbuild.build({
         },
     ],
 });
+
+fs.copyFileSync(
+    join(
+        process.cwd(),
+        './node_modules/pc-nrfconnect-shared/scripts/nordic-publish.js'
+    ),
+    join(process.cwd(), 'dist', 'nordic-publish.js')
+);
