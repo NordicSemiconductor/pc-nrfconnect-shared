@@ -24,18 +24,23 @@ export const SERIALPORT_CHANNEL = {
     ON_DATA: 'serialport:on-data',
     ON_UPDATE: 'serialport:on-update',
     ON_SET: 'serialport:on-set',
+    ON_CHANGED: 'serialport:on-changed',
 
     IS_OPEN: 'serialport:is-open',
 };
 
 export const SerialPort = async (
     options: SerialPortOpenOptions<AutoDetectTypes>,
+    overwrite: boolean,
     onData: (data: Uint8Array) => void = () => {},
     onClosed: () => void = () => {},
     onUpdate: (newOptions: UpdateOptions) => void = () => {},
     onSet: (newOptions: SetOptions) => void = () => {},
+    onChange: (
+        newOptions: SerialPortOpenOptions<AutoDetectTypes>
+    ) => void = () => {}
 ) => {
-    let { path } = options;
+    const { path } = options;
 
     ipcRenderer.on(SERIALPORT_CHANNEL.ON_DATA, (_event, data) => onData(data));
     ipcRenderer.on(SERIALPORT_CHANNEL.ON_CLOSED, onClosed);
@@ -44,6 +49,9 @@ export const SerialPort = async (
     );
     ipcRenderer.on(SERIALPORT_CHANNEL.ON_SET, (_event, newOptions) =>
         onSet(newOptions)
+    );
+    ipcRenderer.on(SERIALPORT_CHANNEL.ON_CHANGED, (_event, newOptions) =>
+        onChange(newOptions)
     );
 
     const write = (data: string | number[] | Buffer): void => {
@@ -79,14 +87,27 @@ export const SerialPort = async (
         ipcRenderer.invoke(SERIALPORT_CHANNEL.SET, path, newOptions);
     };
 
-    const error = await ipcRenderer.invoke(SERIALPORT_CHANNEL.OPEN, options);
+    const response = await ipcRenderer.invoke(
+        SERIALPORT_CHANNEL.OPEN,
+        options,
+        overwrite
+    );
 
-    if (error) {
-        logger.error(error);
-        throw new Error(error);
+    if (response !== 'SUCCESS') {
+        logger.error(
+            `Failed to connect to port: ${path}. Make sure the port is not already taken, if you are not sure, try to power cycle the device and try to connect again. ${response}`
+        );
+        throw new Error(response);
     } else {
         logger.info(`Opened port with options: ${JSON.stringify(options)}`);
     }
 
-    return { path, write, close, isOpen, update, set };
+    return {
+        path,
+        write,
+        close,
+        isOpen,
+        update,
+        set,
+    };
 };
