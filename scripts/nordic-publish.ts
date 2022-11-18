@@ -11,62 +11,78 @@ import { program } from 'commander';
 import fs from 'fs';
 import FtpClient from 'ftp';
 import semver from 'semver';
-import shasum from 'shasum';
+import calculateShasum from 'shasum';
 
 import checkAppProperties from './check-app-properties';
 
-program
-    .description('Publish to nordic repository')
-    .requiredOption(
-        '-s, --source <source>',
-        'Specify the source to publish (e.g. official).'
-    )
-    .option(
-        '-n, --no-pack',
-        'Publish existing .tgz file at the root directory without npm pack.'
-    )
-    .parse();
+interface AppInfo {
+    ['dist-tags']?: {
+        latest?: string;
+    };
+    versions?: {
+        [version: string]: {
+            dist: {
+                tarball: string;
+                shasum: string;
+            };
+        };
+    };
+}
 
-const options = program.opts();
-
-const deployOfficial = options.source === 'official';
-const nonOffcialSource =
-    options.source !== 'official' ? options.source : undefined;
-
-/*
- * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
- */
-const config = {
-    host: process.env.REPO_HOST || 'localhost',
-    port: Number(process.env.REPO_PORT) || 21,
-    user: process.env.REPO_USER || 'anonymous',
-    password: process.env.REPO_PASS || 'anonymous@',
-};
-
-const repoDirOfficial = '/.pc-tools/nrfconnect-apps';
-const repoDir =
-    process.env.REPO_DIR ||
-    (deployOfficial
-        ? repoDirOfficial
-        : `${repoDirOfficial}/${nonOffcialSource}`);
-
-const repoUrlOfficial =
-    'https://developer.nordicsemi.com/.pc-tools/nrfconnect-apps';
-const repoUrl =
-    process.env.REPO_URL ||
-    (deployOfficial
-        ? repoUrlOfficial
-        : `${repoUrlOfficial}/${nonOffcialSource}`);
+interface App {
+    filename: string;
+    name: string;
+    version: string;
+    shasum: string;
+}
 
 const client = new FtpClient();
 
-/**
- * Parse npm package name and version from filename
- *
- * @param {string} filename of package
- * @returns {object} parsed package info: { name, version, filename }
- */
-function parsePackageName(filename: string) {
+const repoDir = (deployOfficial: boolean, sourceName: string) => {
+    const repoDirOfficial = '/.pc-tools/nrfconnect-apps';
+
+    if (process.env.REPO_DIR) return process.env.REPO_DIR;
+    if (deployOfficial) return repoDirOfficial;
+
+    return `${repoDirOfficial}/${sourceName}`;
+};
+
+const repoUrl = (deployOfficial: boolean, sourceName: string) => {
+    const repoUrlOfficial =
+        'https://developer.nordicsemi.com/.pc-tools/nrfconnect-apps';
+
+    if (process.env.REPO_URL) return process.env.REPO_URL;
+    if (deployOfficial) return repoUrlOfficial;
+
+    return `${repoUrlOfficial}/${sourceName}`;
+};
+
+const parseOptions = () => {
+    program
+        .description('Publish to nordic repository')
+        .requiredOption(
+            '-s, --source <source>',
+            'Specify the source to publish (e.g. official).'
+        )
+        .option(
+            '-n, --no-pack',
+            'Publish existing .tgz file at the root directory without npm pack.'
+        )
+        .parse();
+
+    const options = program.opts();
+
+    const deployOfficial = options.source === 'official';
+
+    return {
+        doPack: options.pack,
+        deployOfficial,
+        repoDir: repoDir(deployOfficial, options.source),
+        repoUrl: repoUrl(deployOfficial, options.source),
+    };
+};
+
+const parsePackageFileName = (filename: string) => {
     const rx = /(.*?)-(\d+\.\d+.*?)(.tgz)/;
     const match = rx.exec(filename);
     if (!match) {
@@ -75,16 +91,52 @@ function parsePackageName(filename: string) {
         );
     }
     const [, name, version] = match;
-    return { name, version, filename };
-}
+    return { name, version };
+};
 
-/**
- * Connect to ftp server
- *
- * @returns {Promise<undefined>} resolves upon success
- */
-function connect() {
-    return new Promise<void>((resolve, reject) => {
+const packPackage = () => {
+    console.log('Packing current package');
+    return execSync('npm pack').toString().trim();
+};
+
+const readPackage = () => {
+    const files = fs.readdirSync('.');
+    const filename = files.find(f => f.includes('.tgz'));
+    if (!filename) {
+        console.error('Package to publish is not found');
+        process.exit(1);
+    }
+
+    return filename;
+};
+
+const getShasum = (filePath: string) => {
+    try {
+        return calculateShasum(fs.readFileSync(filePath));
+    } catch (error) {
+        throw new Error(
+            `Unable to read file when verifying shasum: ${filePath}`
+        );
+    }
+};
+
+const packOrReadPackage = (doPack: boolean) => {
+    const filename = doPack ? packPackage() : readPackage();
+    const { name, version } = parsePackageFileName(filename);
+    const shasum = getShasum(filename);
+
+    console.log(`Package name: ${name} version: ${version}`);
+
+    return { filename, name, version, shasum };
+};
+
+const connect = (config: {
+    host: string;
+    port: number;
+    user: string;
+    password: string;
+}) =>
+    new Promise<void>((resolve, reject) => {
         console.log(
             `Connecting to ftp://${config.user}@${config.host}:${config.port}`
         );
@@ -98,29 +150,15 @@ function connect() {
         });
         client.connect(config);
     });
-}
 
-/**
- * Change working directory on ftp server
- *
- * @param {string} dir the directory to change to
- * @returns {Promise<undefined>} resolves upon success
- */
-function changeWorkingDirectory(dir: string) {
-    return new Promise<void>((resolve, reject) => {
+const changeWorkingDirectory = (dir: string) =>
+    new Promise<void>((resolve, reject) => {
         console.log(`Changing to directory ${dir}`);
         client.cwd(dir, err => (err ? reject(err) : resolve()));
     });
-}
 
-/**
- * Download file _filename_ from ftp server current working directory
- *
- * @param {string} filename the file to download
- * @returns {Promise<string>} resolves with content of file
- */
-function getFile(filename: string) {
-    return new Promise<string>((resolve, reject) => {
+const downloadFileContent = (filename: string) =>
+    new Promise<string>((resolve, reject) => {
         console.log(`Downloading file ${filename}`);
         let data = '';
         client.get(filename, (err, stream) => {
@@ -132,45 +170,81 @@ function getFile(filename: string) {
             return undefined;
         });
     });
-}
 
-/**
- * Upload file to ftp server current working directory
- *
- * @param {string|buffer} local filename or content of file to be uploaded
- * @param {string} remote filename
- * @returns {Promise<undefined>} resolves upon success
- */
-function putFile(local: string | Buffer, remote: string) {
-    return new Promise<void>((resolve, reject) => {
+const downloadAppInfo = async (name: string): Promise<AppInfo> => {
+    try {
+        const content = await downloadFileContent(name);
+        return JSON.parse(content);
+    } catch (error) {
+        console.log(
+            `App info file will be created from scratch due to: ${
+                (error as any).message // eslint-disable-line @typescript-eslint/no-explicit-any
+            }`
+        );
+        return {};
+    }
+};
+
+const updateLocalAppInfo = (
+    appInfo: AppInfo,
+    app: {
+        filename: string;
+        version: string;
+        shasum: string;
+    },
+    deployOfficial: boolean
+) => {
+    const latest = appInfo['dist-tags']?.latest;
+    if (latest != null) {
+        console.log(`Latest published version ${latest}`);
+
+        if (semver.lte(app.version, latest) && deployOfficial) {
+            throw new Error(
+                'Current package version cannot be published, bump it higher'
+            );
+        }
+    }
+
+    return {
+        ...appInfo,
+        'dist-tags': {
+            ...appInfo['dist-tags'],
+            latest: app.version,
+        },
+        versions: {
+            ...appInfo.versions,
+            [app.version]: {
+                dist: {
+                    tarball: `${repoUrl}/${app.filename}`,
+                    shasum: app.shasum,
+                },
+            },
+        },
+    };
+};
+
+type UploadLocalFile = (localFileName: string, remote: string) => Promise<void>;
+type UploadBufferContent = (content: Buffer, remote: string) => Promise<void>;
+
+const uploadFile: UploadLocalFile & UploadBufferContent = (
+    local: string | Buffer,
+    remote: string
+) =>
+    new Promise<void>((resolve, reject) => {
         console.log(`Uploading file ${remote}`);
         client.put(local, remote, err => (err ? reject(err) : resolve()));
     });
-}
 
-/**
- * Calculate SHASUM checksum of file
- *
- * @param {string} filePath of package
- * @returns {Promise<string>} resolves with SHASUM
- */
-function getShasum(filePath: string) {
-    return new Promise<string>((resolve, reject) => {
-        fs.readFile(filePath, (err, buffer) => {
-            if (err) {
-                reject(
-                    new Error(
-                        `Unable to read file when verifying shasum: ${filePath}`
-                    )
-                );
-            } else {
-                resolve(shasum(buffer));
-            }
-        });
-    });
-}
+const updateAppInfoOnServer = async (app: App, deployOfficial: boolean) => {
+    const appInfo = await downloadAppInfo(app.name);
+    const updatedAppInfo = updateLocalAppInfo(appInfo, app, deployOfficial);
 
-function uploadChangelog(packageName: string) {
+    await uploadFile(Buffer.from(JSON.stringify(updatedAppInfo)), app.name);
+};
+
+const uploadPackage = (app: App) => uploadFile(app.filename, app.filename);
+
+const uploadChangelog = (app: App) => {
     const changelogFilename = 'Changelog.md';
     if (!fs.existsSync(changelogFilename)) {
         const errorMsg = `There should be a changelog called "${changelogFilename}". Please provide it!`;
@@ -178,86 +252,43 @@ function uploadChangelog(packageName: string) {
         return Promise.reject(new Error(errorMsg));
     }
 
-    return putFile(changelogFilename, `${packageName}-${changelogFilename}`);
-}
-
-let thisPackage: {
-    name: string;
-    version: string;
-    filename: string;
-    shasum?: string;
+    return uploadFile(changelogFilename, `${app.name}-${changelogFilename}`);
 };
 
-Promise.resolve()
-    .then(() => {
-        checkAppProperties({
-            checkChangelogHasCurrentEntry: deployOfficial,
-        });
-    })
-    .then(() => {
-        let filename;
-        if (options.pack) {
-            console.log('Packing current package');
-            filename = execSync('npm pack').toString().trim();
-        } else {
-            const files = fs.readdirSync('.');
-            filename = files.find(f => f.includes('.tgz'));
-            if (!filename) {
-                console.error('Package to publish is not found');
-                process.exit(1);
-            }
-        }
+const main = async () => {
+    /*
+     * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
+     */
+    const config = {
+        host: process.env.REPO_HOST || 'localhost',
+        port: Number(process.env.REPO_PORT) || 21,
+        user: process.env.REPO_USER || 'anonymous',
+        password: process.env.REPO_PASS || 'anonymous@',
+    };
 
-        thisPackage = parsePackageName(filename);
-        console.log(
-            `Package name: ${thisPackage.name} version: ${thisPackage.version}`
-        );
-    })
-    .then(() => getShasum(thisPackage.filename))
-    .then(checksum => {
-        thisPackage.shasum = checksum;
-    })
-    .then(() => connect())
-    .then(() => changeWorkingDirectory(repoDir))
-    .then(() => getFile(thisPackage.name))
-    .catch(err => {
-        console.log(
-            `Meta file will be created from scratch due to: ${err.message}`
-        );
-        return '{}';
-    })
-    .then(content => JSON.parse(content))
-    .then(meta => {
-        meta['dist-tags'] = meta['dist-tags'] || {};
-        const { latest } = meta['dist-tags'];
+    const options = parseOptions();
 
-        if (latest) {
-            console.log(`Latest published version ${latest}`);
+    checkAppProperties({
+        checkChangelogHasCurrentEntry: options.deployOfficial,
+    });
 
-            if (semver.lte(thisPackage.version, latest) && !nonOffcialSource) {
-                throw new Error(
-                    'Current package version cannot be published, bump it higher'
-                );
-            }
-        }
+    const app = packOrReadPackage(options.doPack);
 
-        meta['dist-tags'].latest = thisPackage.version;
-        meta.versions = meta.versions || {};
-        meta.versions[thisPackage.version] = {
-            dist: {
-                tarball: `${repoUrl}/${thisPackage.filename}`,
-                shasum: thisPackage.shasum,
-            },
-        };
+    await connect(config);
+    await changeWorkingDirectory(options.repoDir);
 
-        return meta;
-    })
-    .then(meta => putFile(Buffer.from(JSON.stringify(meta)), thisPackage.name))
-    .then(() => putFile(thisPackage.filename, thisPackage.filename))
-    .then(() => uploadChangelog(thisPackage.name))
-    .then(() => console.log('Done'))
-    .catch(err => {
-        console.error(err.message);
+    try {
+        await updateAppInfoOnServer(app, options.deployOfficial);
+        await uploadPackage(app);
+        await uploadChangelog(app);
+
+        console.log('Done');
+    } catch (error) {
+        console.error((error as any).message); // eslint-disable-line @typescript-eslint/no-explicit-any
         process.exit(1);
-    })
-    .then(() => client.end());
+    }
+
+    client.end();
+};
+
+main();
