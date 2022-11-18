@@ -32,13 +32,19 @@ export const SERIALPORT_CHANNEL = {
 export const SerialPort = async (
     options: SerialPortOpenOptions<AutoDetectTypes>,
     overwrite: boolean,
-    onData: (data: Uint8Array) => void = () => {},
-    onClosed: () => void = () => {},
-    onUpdate: (newOptions: UpdateOptions) => void = () => {},
-    onSet: (newOptions: SetOptions) => void = () => {},
-    onChange: (
-        newOptions: SerialPortOpenOptions<AutoDetectTypes>
-    ) => void = () => {}
+    {
+        onData = () => {},
+        onClosed = () => {},
+        onUpdate = () => {},
+        onSet = () => {},
+        onChange = () => {},
+    }: {
+        onData?: (data: Uint8Array) => void;
+        onClosed?: () => void;
+        onUpdate?: (newOptions: UpdateOptions) => void;
+        onSet?: (newOptions: SetOptions) => void;
+        onChange?: (newOptions: SerialPortOpenOptions<AutoDetectTypes>) => void;
+    } = {}
 ) => {
     const { path } = options;
 
