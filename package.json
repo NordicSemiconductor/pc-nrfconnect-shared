@@ -11,7 +11,8 @@
     "bin": {
         "nrfconnect-license": "./scripts/nrfconnect-license.ts",
         "check-for-typescript": "./scripts/check-for-typescript.ts",
-        "nordic-publish": "./scripts/nordic-publish.js"
+        "nordic-publish": "./scripts/nordic-publish.js",
+        "run-esbuild": "./scripts/esbuild.js"
     },
     "main": "src",
     "scripts": {

@@ -5,7 +5,7 @@
  */
 
 import reactGA from 'react-ga';
-import { PackageJson } from 'pc-nrfconnect-shared';
+import type { PackageJson } from 'pc-nrfconnect-shared';
 import type Systeminformation from 'systeminformation';
 
 import logger from '../logging';
