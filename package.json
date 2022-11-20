@@ -12,7 +12,8 @@
         "check-for-typescript": "./scripts/check-for-typescript.ts",
         "check-app-properties": "./scripts/check-app-properties.ts",
         "nordic-publish": "./scripts/nordic-publish.ts",
-        "nrfconnect-license": "./scripts/nrfconnect-license.ts"
+        "nrfconnect-license": "./scripts/nrfconnect-license.ts",
+        "run-esbuild": "./scripts/esbuild.js"
     },
     "main": "src",
     "scripts": {
