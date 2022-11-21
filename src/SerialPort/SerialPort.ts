@@ -13,21 +13,7 @@ import { ipcRenderer } from 'electron';
 import { logger } from 'pc-nrfconnect-shared';
 import type { SerialPortOpenOptions } from 'serialport';
 
-export const SERIALPORT_CHANNEL = {
-    OPEN: 'serialport:open',
-    CLOSE: 'serialport:close',
-    WRITE: 'serialport:write',
-    UPDATE: 'serialport:update',
-    SET: 'serialport:set',
-
-    ON_CLOSED: 'serialport:on-close',
-    ON_DATA: 'serialport:on-data',
-    ON_UPDATE: 'serialport:on-update',
-    ON_SET: 'serialport:on-set',
-    ON_CHANGED: 'serialport:on-changed',
-
-    IS_OPEN: 'serialport:is-open',
-};
+import { SERIALPORT_CHANNEL } from '../../main';
 
 export const SerialPort = async (
     options: SerialPortOpenOptions<AutoDetectTypes>,
