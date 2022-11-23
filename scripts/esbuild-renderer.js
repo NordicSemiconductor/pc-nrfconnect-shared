@@ -12,7 +12,7 @@ const svgr = require('@svgr/core').transform;
 module.exports.build = (entries, format = 'cjs') => {
     // eslint-disable-next-line import/no-dynamic-require, global-require
     const { dependencies } = require(join(process.cwd(), 'package.json'));
-    const outfile = entries.length === 1 && './dist.bundle.js';
+    const outfile = entries.length === 1 ? './dist.bundle.js' : undefined;
     const outdir = !outfile && './dist';
 
     esbuild.build({
