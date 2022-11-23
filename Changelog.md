@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 6.9.0
 
 ### Changed
 
@@ -20,6 +20,14 @@ and this project adheres to
 -   Script `check-app-properties` to check that certain static properties of the
     app are given, which we expect from it (e.g. certain fields in
     `package.json` are filled out).
+
+### Changed
+
+-   Replaced webpack with esbuild as a build system. Webpack will be removed
+    from shared soon. This change also moves building of fonts and the bootstrap
+    framework to the launcher for now. Also, the apps can now load assets and
+    other assets locally as the base path of the application is set to the
+    application directory.
 
 ### Steps to upgrade when using this package
 
@@ -37,6 +45,32 @@ and this project adheres to
 {
     "scripts": {
         "check:app": "check-app-properties"
+    }
+}
+```
+
+-   Do the following changes to the scripts section to start using esbuild.
+
+```json
+{
+    "scripts": {
+        "watch": "run-p --silent --continue-on-error watch:*",
+        "watch:build": "run-esbuild --watch",
+        "watch:types": "tsc --noEmit --pretty --watch --preserveWatchOutput",
+        "build:dev": "run-esbuild",
+        "build:prod": "run-esbuild --prod"
+    }
+}
+```
+
+-   And remove the following parts.
+
+```json
+{
+    "scripts": {
+        "dev": "webpack watch --mode development",
+        "webpack": "webpack build --mode development",
+        "build": "webpack build"
     }
 }
 ```
