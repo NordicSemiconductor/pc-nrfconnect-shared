@@ -86,17 +86,17 @@ export const SerialPort = async (
         ipcRenderer.invoke(SERIALPORT_CHANNEL.SET, path, newOptions);
     };
 
-    const response = await ipcRenderer.invoke(
+    const error = await ipcRenderer.invoke(
         SERIALPORT_CHANNEL.OPEN,
         options,
         overwrite
     );
 
-    if (response !== 'SUCCESS') {
+    if (error) {
         logger.error(
             `Failed to connect to port: ${path}. Make sure the port is not already taken, if you are not sure, try to power cycle the device and try to connect again. ${response}`
         );
-        throw new Error(response);
+        throw new Error(error);
     } else {
         logger.info(`Opened port with options: ${JSON.stringify(options)}`);
     }
