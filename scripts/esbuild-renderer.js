@@ -6,9 +6,10 @@ const svgr = require('@svgr/core').transform;
 
 /**
  * @param {string[]} entries Relative to the base of the app
+ * @param {'iife'|'cjs'|'esm'} format Cjs for require() renderers
  * @returns {void}
  */
-module.exports.build = entries => {
+module.exports.build = (entries, format = 'cjs') => {
     // eslint-disable-next-line import/no-dynamic-require, global-require
     const { dependencies } = require(join(process.cwd(), 'package.json'));
     esbuild.build({
@@ -21,6 +22,7 @@ module.exports.build = entries => {
         minify: process.argv.includes('--prod'),
         bundle: true,
         logLevel: 'info',
+        format,
         external: [
             // node
             'fs',
