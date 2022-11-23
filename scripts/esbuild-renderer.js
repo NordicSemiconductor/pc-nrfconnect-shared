@@ -20,7 +20,7 @@ module.exports.build = entries => {
         watch: process.argv.includes('--watch'),
         minify: process.argv.includes('--prod'),
         bundle: true,
-
+        logLevel: 'info',
         external: [
             // node
             'fs',
