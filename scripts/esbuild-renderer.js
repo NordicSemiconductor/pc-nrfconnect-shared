@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2022 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
 const fs = require('fs');
 const join = require('path').join;
 const { sassPlugin, postcssModules } = require('esbuild-sass-plugin');
