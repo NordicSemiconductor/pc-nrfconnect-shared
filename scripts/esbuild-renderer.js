@@ -40,6 +40,8 @@ module.exports.build = (entries, format = 'cjs') => {
             'net',
             'stream',
             'url',
+            'module',
+            'constants',
 
             // launcher includes
             'electron',
