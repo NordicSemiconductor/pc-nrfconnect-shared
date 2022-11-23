@@ -24,12 +24,14 @@ export const SerialPort = async (
         onUpdate = () => {},
         onSet = () => {},
         onChange = () => {},
+        onSeparateWrite = () => {},
     }: {
         onData?: (data: Uint8Array) => void;
         onClosed?: () => void;
         onUpdate?: (newOptions: UpdateOptions) => void;
         onSet?: (newOptions: SetOptions) => void;
         onChange?: (newOptions: SerialPortOpenOptions<AutoDetectTypes>) => void;
+        onSeparateWrite?: (data: Uint8Array) => void;
     } = {}
 ) => {
     const { path } = options;
@@ -49,9 +51,9 @@ export const SerialPort = async (
     // The origin of this event is emitted when a renderer writes to the port,
     // and is sent to all renderers expect for the writer, in order for all
     // terminals to display the same terminal input and output.
-    // Hence, the current assumption is that onData may be used, because we assume
-    // the renderer will handle it exactly like other terminal input/output.
-    ipcRenderer.on(SERIALPORT_CHANNEL.ON_WRITE, (_event, data) => onData(data));
+    ipcRenderer.on(SERIALPORT_CHANNEL.ON_WRITE, (_event, data) =>
+        onSeparateWrite(data)
+    );
 
     const write = (data: string | number[] | Buffer): void => {
         ipcRenderer.invoke(SERIALPORT_CHANNEL.WRITE, path, data);
@@ -94,7 +96,7 @@ export const SerialPort = async (
 
     if (error) {
         logger.error(
-            `Failed to connect to port: ${path}. Make sure the port is not already taken, if you are not sure, try to power cycle the device and try to connect again. ${response}`
+            `Failed to connect to port: ${path}. Make sure the port is not already taken, if you are not sure, try to power cycle the device and try to connect again.`
         );
         throw new Error(error);
     } else {
