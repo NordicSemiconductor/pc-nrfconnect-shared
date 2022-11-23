@@ -16,6 +16,7 @@ export const SERIALPORT_CHANNEL = {
     ON_UPDATE: 'serialport:on-update',
     ON_SET: 'serialport:on-set',
     ON_CHANGED: 'serialport:on-changed',
+    ON_WRITE: 'serialport:on-write',
 
     IS_OPEN: 'serialport:is-open',
 };

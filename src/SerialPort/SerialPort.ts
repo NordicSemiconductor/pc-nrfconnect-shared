@@ -46,6 +46,13 @@ export const SerialPort = async (
         onChange(newOptions)
     );
 
+    // The origin of this event is emitted when a renderer writes to the port,
+    // and is sent to all renderers expect for the writer, in order for all
+    // terminals to display the same terminal input and output.
+    // Hence, the current assumption is that onData may be used, because we assume
+    // the renderer will handle it exactly like other terminal input/output.
+    ipcRenderer.on(SERIALPORT_CHANNEL.ON_WRITE, (_event, data) => onData(data));
+
     const write = (data: string | number[] | Buffer): void => {
         ipcRenderer.invoke(SERIALPORT_CHANNEL.WRITE, path, data);
     };
