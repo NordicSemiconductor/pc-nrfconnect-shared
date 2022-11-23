@@ -12,9 +12,13 @@ const svgr = require('@svgr/core').transform;
 module.exports.build = (entries, format = 'cjs') => {
     // eslint-disable-next-line import/no-dynamic-require, global-require
     const { dependencies } = require(join(process.cwd(), 'package.json'));
+    const outfile = entries.length === 1 && './dist.bundle.js';
+    const outdir = !outfile && './dist';
+
     esbuild.build({
         entryPoints: entries,
-        outfile: './dist/bundle.js',
+        outfile,
+        outdir,
         target: 'chrome89',
         sourcemap: true,
         metafile: false,
