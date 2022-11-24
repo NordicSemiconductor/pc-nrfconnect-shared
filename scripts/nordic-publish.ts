@@ -10,6 +10,7 @@ import { execSync } from 'child_process';
 import { program } from 'commander';
 import fs from 'fs';
 import FtpClient from 'ftp';
+import { PackageJson } from 'pc-nrfconnect-shared';
 import semver from 'semver';
 import calculateShasum from 'shasum';
 
@@ -35,12 +36,32 @@ interface App {
     version: string;
     shasum: string;
     sourceUrl: string;
+    appJsonName: string;
+    releaseNotesFilename: string;
+    iconFilename: string;
     isOfficial: boolean;
+    packageJson: PackageJson;
 }
 
 interface SourceJson {
     name: string;
     apps?: string[];
+}
+
+interface AppJson {
+    name: string;
+    displayName: string;
+    description: string;
+    homepage?: string;
+    iconUrl: string;
+    releaseNotesUrl: string;
+    latest: string;
+    versions: {
+        [version: string]: {
+            shasum: string;
+            tarball: string;
+        };
+    };
 }
 
 const client = new FtpClient();
@@ -102,16 +123,8 @@ const parseOptions = (): Options => {
     };
 };
 
-const readPackageJson = () => {
-    const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
-    const { name, version } = packageJson;
-
-    return {
-        name,
-        version,
-        filename: `${name}-${version}.tgz`,
-    };
-};
+const readPackageJson = (): PackageJson =>
+    JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
 
 const packPackage = () => {
     console.log('Packing current package');
@@ -136,7 +149,10 @@ const getShasum = (filePath: string) => {
 };
 
 const packOrReadPackage = (options: Options): App => {
-    const { name, version, filename } = readPackageJson();
+    const packageJson = readPackageJson();
+    const { name, version } = packageJson;
+    const filename = `${name}-${version}.tgz`;
+
     if (options.doPack) {
         packPackage();
     } else {
@@ -147,12 +163,16 @@ const packOrReadPackage = (options: Options): App => {
     console.log(`Package name: ${name} version: ${version}`);
 
     return {
-        filename,
         name,
         version,
+        filename,
         shasum,
         sourceUrl: options.sourceUrl,
         isOfficial: options.deployOfficial,
+        appJsonName: `${name}.json`,
+        releaseNotesFilename: `${name}-Changelog.md`,
+        iconFilename: `${name}.svg`,
+        packageJson,
     };
 };
 
@@ -295,9 +315,50 @@ const getUpdatedSourceJson = async (app: App): Promise<SourceJson> => {
         name: sourceJson.name,
         apps: [
             ...new Set(sourceJson.apps).add(
-                `${app.sourceUrl}/${app.name}.json`
+                `${app.sourceUrl}/${app.appJsonName}`
             ),
         ].sort(),
+    };
+};
+
+const downloadExistingVersions = async (app: App) => {
+    try {
+        const appJson = <AppJson>(
+            JSON.parse(await downloadFileContent(app.appJsonName))
+        );
+        return appJson.versions;
+    } catch (error) {
+        return {};
+    }
+};
+
+const failBecauseOfMissingProperty = () => {
+    throw new Error(
+        'This must never happen, because the properties were already checked before'
+    );
+};
+
+const getUpdatedAppJson = async (app: App): Promise<AppJson> => {
+    const versions = await downloadExistingVersions(app);
+
+    const { name, displayName, description, homepage, version } =
+        app.packageJson;
+
+    return {
+        name,
+        displayName: displayName ?? failBecauseOfMissingProperty(),
+        description: description ?? failBecauseOfMissingProperty(),
+        homepage,
+        iconUrl: `${app.sourceUrl}/${app.iconFilename}`,
+        releaseNotesUrl: `${app.sourceUrl}/${app.releaseNotesFilename}`,
+        latest: version,
+        versions: {
+            ...versions,
+            [version]: {
+                tarball: `${app.sourceUrl}/${app.filename}`,
+                shasum: app.shasum,
+            },
+        },
     };
 };
 
@@ -313,6 +374,12 @@ const uploadSourceJson = (sourceJson: SourceJson) =>
         'source.json'
     );
 
+const uploadAppJson = (app: App, appJson: AppJson) =>
+    uploadFile(
+        Buffer.from(JSON.stringify(appJson, undefined, 2)),
+        app.appJsonName
+    );
+
 const uploadPackage = (app: App) => uploadFile(app.filename, app.filename);
 
 const uploadChangelog = (app: App) => {
@@ -323,7 +390,7 @@ const uploadChangelog = (app: App) => {
         return Promise.reject(new Error(errorMsg));
     }
 
-    return uploadFile(changelogFilename, `${app.name}-${changelogFilename}`);
+    return uploadFile(changelogFilename, app.releaseNotesFilename);
 };
 
 const main = async () => {
@@ -351,10 +418,12 @@ const main = async () => {
     try {
         const appInfo = await getUpdatedAppInfo(app);
         const sourceJson = await getUpdatedSourceJson(app);
+        const appJson = await getUpdatedAppJson(app);
 
         await uploadChangelog(app);
         await uploadPackage(app);
         await uploadAppInfo(app, appInfo);
+        await uploadAppJson(app, appJson);
         await uploadSourceJson(sourceJson);
 
         console.log('Done');
