@@ -8,8 +8,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import FormLabel from 'react-bootstrap/FormLabel';
 import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 
-import chevron from './chevron.svg';
-
 import styles from './Dropdown.module.scss';
 
 const useSynchronisationIfChangedFromOutside: <T>(
@@ -98,7 +96,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                         ? ''
                         : selected.label}
                 </span>
-                <img className={styles.image} src={chevron} alt="" />
+                <span className={`mdi mdi-chevron-down ${styles.mdi}`} />
             </button>
             <div
                 style={
