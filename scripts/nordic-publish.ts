@@ -38,6 +38,12 @@ interface App {
 
 const client = new FtpClient();
 
+const hasMessage = (error: unknown): error is { message: unknown } =>
+    error != null && typeof error === 'object' && 'message' in error;
+
+const errorAsString = (error: unknown) =>
+    hasMessage(error) ? error.message : String(error);
+
 const repoDir = (deployOfficial: boolean, sourceName: string) => {
     const repoDirOfficial = '/.pc-tools/nrfconnect-apps';
 
@@ -177,9 +183,9 @@ const downloadAppInfo = async (name: string): Promise<AppInfo> => {
         return JSON.parse(content);
     } catch (error) {
         console.log(
-            `App info file will be created from scratch due to: ${
-                (error as any).message // eslint-disable-line @typescript-eslint/no-explicit-any
-            }`
+            `App info file will be created from scratch due to: ${errorAsString(
+                error
+            )}`
         );
         return {};
     }
@@ -287,7 +293,7 @@ const main = async () => {
 
         console.log('Done');
     } catch (error) {
-        console.error((error as any).message); // eslint-disable-line @typescript-eslint/no-explicit-any
+        console.error(errorAsString(error));
         process.exit(1);
     }
 
