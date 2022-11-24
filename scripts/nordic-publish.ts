@@ -38,6 +38,11 @@ interface App {
     isOfficial: boolean;
 }
 
+interface SourceJson {
+    name: string;
+    apps?: string[];
+}
+
 const client = new FtpClient();
 
 const hasMessage = (error: unknown): error is { message: unknown } =>
@@ -262,10 +267,50 @@ const getUpdatedAppInfo = async (app: App) => {
     return updateLocalAppInfo(appInfo, app);
 };
 
+const downloadSourceJson = async () => {
+    try {
+        const sourceJson = <SourceJson>(
+            JSON.parse(await downloadFileContent('source.json'))
+        );
+        if (
+            sourceJson == null ||
+            typeof sourceJson !== 'object' ||
+            sourceJson.name == null ||
+            (sourceJson.apps !== undefined && !Array.isArray(sourceJson.apps))
+        ) {
+            throw new Error(
+                `\`source.json\` does not have the expected content: ${sourceJson}`
+            );
+        }
+
+        return sourceJson;
+    } catch (error) {
+        throw new Error('Unable to read `source.json` on the server.');
+    }
+};
+
+const getUpdatedSourceJson = async (app: App): Promise<SourceJson> => {
+    const sourceJson = await downloadSourceJson();
+    return {
+        name: sourceJson.name,
+        apps: [
+            ...new Set(sourceJson.apps).add(
+                `${app.sourceUrl}/${app.name}.json`
+            ),
+        ].sort(),
+    };
+};
+
 const uploadAppInfo = (app: App, updatedAppInfo: AppInfo) =>
     uploadFile(
         Buffer.from(JSON.stringify(updatedAppInfo, undefined, 2)),
         app.name
+    );
+
+const uploadSourceJson = (sourceJson: SourceJson) =>
+    uploadFile(
+        Buffer.from(JSON.stringify(sourceJson, undefined, 2)),
+        'source.json'
     );
 
 const uploadPackage = (app: App) => uploadFile(app.filename, app.filename);
@@ -305,10 +350,12 @@ const main = async () => {
 
     try {
         const appInfo = await getUpdatedAppInfo(app);
+        const sourceJson = await getUpdatedSourceJson(app);
 
         await uploadChangelog(app);
         await uploadPackage(app);
         await uploadAppInfo(app, appInfo);
+        await uploadSourceJson(sourceJson);
 
         console.log('Done');
     } catch (error) {
