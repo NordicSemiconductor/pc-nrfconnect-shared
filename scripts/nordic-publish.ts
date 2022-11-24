@@ -386,11 +386,20 @@ const uploadChangelog = (app: App) => {
     const changelogFilename = 'Changelog.md';
     if (!fs.existsSync(changelogFilename)) {
         const errorMsg = `There should be a changelog called "${changelogFilename}". Please provide it!`;
-        console.error(errorMsg);
         return Promise.reject(new Error(errorMsg));
     }
 
     return uploadFile(changelogFilename, app.releaseNotesFilename);
+};
+
+const uploadIcon = (app: App) => {
+    const localIconFilename = 'resources/icon.svg';
+    if (!fs.existsSync(localIconFilename)) {
+        const errorMsg = `There must be an icon called "${localIconFilename}". Please provide it!`;
+        return Promise.reject(new Error(errorMsg));
+    }
+
+    return uploadFile(localIconFilename, app.iconFilename);
 };
 
 const main = async () => {
@@ -421,6 +430,7 @@ const main = async () => {
         const appJson = await getUpdatedAppJson(app);
 
         await uploadChangelog(app);
+        await uploadIcon(app);
         await uploadPackage(app);
         await uploadAppInfo(app, appInfo);
         await uploadAppJson(app, appJson);
