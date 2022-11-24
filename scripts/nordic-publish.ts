@@ -235,12 +235,13 @@ const uploadFile: UploadLocalFile & UploadBufferContent = (
         client.put(local, remote, err => (err ? reject(err) : resolve()));
     });
 
-const updateAppInfoOnServer = async (app: App, deployOfficial: boolean) => {
+const getUpdatedAppInfo = async (app: App, deployOfficial: boolean) => {
     const appInfo = await downloadAppInfo(app.name);
-    const updatedAppInfo = updateLocalAppInfo(appInfo, app, deployOfficial);
-
-    await uploadFile(Buffer.from(JSON.stringify(updatedAppInfo)), app.name);
+    return updateLocalAppInfo(appInfo, app, deployOfficial);
 };
+
+const uploadAppInfo = (app: App, updatedAppInfo: AppInfo) =>
+    uploadFile(Buffer.from(JSON.stringify(updatedAppInfo)), app.name);
 
 const uploadPackage = (app: App) => uploadFile(app.filename, app.filename);
 
@@ -278,9 +279,11 @@ const main = async () => {
     await changeWorkingDirectory(options.repoDir);
 
     try {
-        await updateAppInfoOnServer(app, options.deployOfficial);
-        await uploadPackage(app);
+        const appInfo = await getUpdatedAppInfo(app, options.deployOfficial);
+
         await uploadChangelog(app);
+        await uploadPackage(app);
+        await uploadAppInfo(app, appInfo);
 
         console.log('Done');
     } catch (error) {
