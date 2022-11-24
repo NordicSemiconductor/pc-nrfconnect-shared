@@ -88,32 +88,27 @@ const parseOptions = () => {
     };
 };
 
-const parsePackageFileName = (filename: string) => {
-    const rx = /(.*?)-(\d+\.\d+.*?)(.tgz)/;
-    const match = rx.exec(filename);
-    if (!match) {
-        throw new Error(
-            `Couldn't parse filename ${filename}, expected [package-name]-[x.y...].tgz`
-        );
-    }
-    const [, name, version] = match;
-    return { name, version };
+const readPackageJson = () => {
+    const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
+    const { name, version } = packageJson;
+
+    return {
+        name,
+        version,
+        filename: `${name}-${version}.tgz`,
+    };
 };
 
 const packPackage = () => {
     console.log('Packing current package');
-    return execSync('npm pack').toString().trim();
+    execSync('npm pack');
 };
 
-const readPackage = () => {
-    const files = fs.readdirSync('.');
-    const filename = files.find(f => f.includes('.tgz'));
-    if (!filename) {
-        console.error('Package to publish is not found');
+const ensurePackageExists = (filename: string) => {
+    if (!fs.existsSync(filename)) {
+        console.error(`Package \`${filename}\` to publish is not found`);
         process.exit(1);
     }
-
-    return filename;
 };
 
 const getShasum = (filePath: string) => {
@@ -127,8 +122,12 @@ const getShasum = (filePath: string) => {
 };
 
 const packOrReadPackage = (doPack: boolean) => {
-    const filename = doPack ? packPackage() : readPackage();
-    const { name, version } = parsePackageFileName(filename);
+    const { name, version, filename } = readPackageJson();
+    if (doPack) {
+        packPackage();
+    } else {
+        ensurePackageExists(filename);
+    }
     const shasum = getShasum(filename);
 
     console.log(`Package name: ${name} version: ${version}`);
