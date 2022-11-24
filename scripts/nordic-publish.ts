@@ -157,9 +157,18 @@ const connect = (config: {
     });
 
 const changeWorkingDirectory = (dir: string) =>
-    new Promise<void>((resolve, reject) => {
+    new Promise<void>(resolve => {
         console.log(`Changing to directory ${dir}`);
-        client.cwd(dir, err => (err ? reject(err) : resolve()));
+        client.cwd(dir, err => {
+            if (err) {
+                console.error(
+                    `Failed to change to directory. Check whether it exists on the FTP server.`
+                );
+                process.exit(1);
+            }
+
+            resolve();
+        });
     });
 
 const downloadFileContent = (filename: string) =>
