@@ -4,52 +4,32 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
 
 import './state-selector.scss';
 
-const useSynchronisationIfChangedFromOutside: <T>(
-    v: T,
-    set: (value: T) => void
-) => void = (externalValue, setInternalValue) => {
-    const previousExternalValue = useRef(externalValue);
-    useEffect(() => {
-        if (previousExternalValue.current !== externalValue) {
-            setInternalValue(externalValue);
-            previousExternalValue.current = externalValue;
-        }
-    });
-};
-
 export interface Props {
     items: string[];
-    defaultIndex: number;
     onSelect: (index: number) => void;
     disabled?: boolean;
-    selectedItem?: string;
+    selectedItem: string;
 }
 
 const StateSelector: FC<Props> = ({
     items,
-    defaultIndex = 0,
     onSelect,
     disabled = false,
-    selectedItem = items[defaultIndex],
+    selectedItem,
 }) => {
-    const [selected, setSelected] = useState(selectedItem);
-
-    useSynchronisationIfChangedFromOutside<string>(selectedItem, setSelected);
-
     const selectionButton = (item: string, index: number) => (
         <Button
             key={item}
-            variant={selected === item ? 'set' : 'unset'}
+            variant={selectedItem === item ? 'set' : 'unset'}
             onClick={() => {
-                setSelected(item);
                 onSelect(index);
             }}
-            active={selected === item}
+            active={selectedItem === item}
             disabled={disabled}
         >
             {item}

@@ -4,17 +4,16 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, ReactNode, useState } from 'react';
-import { bool, func, node, oneOf, string } from 'prop-types';
+import React, { FC, ReactNode } from 'react';
 
 import classNames from '../utils/classNames';
 
 import './toggle.scss';
 
-interface Props {
+export interface Props {
     id?: string;
     title?: string;
-    isToggled?: boolean;
+    isToggled: boolean;
     onToggle?: (isToggled: boolean) => void;
     label?: string;
     labelRight?: boolean;
@@ -44,18 +43,12 @@ export const Toggle: FC<Props> = ({
     disabled = false,
     children,
 }) => {
-    const isControlled = isToggled !== undefined;
-    const [internalToggled, setInternalToggled] = useState(!!isToggled);
-    const toggled = isControlled ? isToggled : internalToggled;
     const isPrimary = variant === 'primary';
     const isSecondary = variant === 'secondary';
 
     const handleToggle = () => {
         if (onToggle) {
-            onToggle(!toggled);
-        }
-        if (!isControlled) {
-            setInternalToggled(!internalToggled);
+            onToggle(!isToggled);
         }
     };
 
@@ -79,37 +72,37 @@ export const Toggle: FC<Props> = ({
                     className={classNames(
                         'toggle-bar',
                         isPrimary &&
-                            `toggle-bar-primary${toggled ? '-toggled' : ''}`,
+                            `toggle-bar-primary${isToggled ? '-toggled' : ''}`,
                         isSecondary &&
-                            `toggle-bar-secondary${toggled ? '-toggled' : ''}`
+                            `toggle-bar-secondary${isToggled ? '-toggled' : ''}`
                     )}
                     style={{
-                        backgroundColor: toggled ? barColorToggled : barColor,
+                        backgroundColor: isToggled ? barColorToggled : barColor,
                     }}
                 >
                     <input
                         id={id}
                         type="checkbox"
-                        checked={toggled}
+                        checked={isToggled}
                         onChange={disabled ? undefined : handleToggle}
-                        aria-checked={toggled}
+                        aria-checked={isToggled}
                         disabled={disabled}
                     />
                     <span
                         className={classNames(
                             'toggle-handle',
-                            toggled && 'toggle-handle-toggled',
+                            isToggled && 'toggle-handle-toggled',
                             isPrimary &&
                                 `toggle-handle-primary${
-                                    toggled ? '-toggled' : ''
+                                    isToggled ? '-toggled' : ''
                                 }`,
                             isSecondary &&
                                 `toggle-handle-secondary${
-                                    toggled ? '-toggled' : ''
+                                    isToggled ? '-toggled' : ''
                                 }`
                         )}
                         style={{
-                            backgroundColor: toggled
+                            backgroundColor: isToggled
                                 ? handleColorToggled
                                 : handleColor,
                         }}
@@ -124,21 +117,4 @@ export const Toggle: FC<Props> = ({
             )}
         </div>
     );
-};
-
-Toggle.propTypes = {
-    id: string,
-    title: string,
-    isToggled: bool,
-    onToggle: func,
-    variant: oneOf(['primary', 'secondary']),
-    barColor: string,
-    barColorToggled: string,
-    handleColor: string,
-    handleColorToggled: string,
-    label: string,
-    labelRight: bool,
-    width: string,
-    disabled: bool,
-    children: node,
 };

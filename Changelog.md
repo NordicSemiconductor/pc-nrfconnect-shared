@@ -6,10 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## ## 6.10.0 - 2022-11-24
+
+### Breaking
+
+-   `Toggle`, `Dropdown` and `StateSelector` are now controlled components only.
+    Apps that did not use the `isToggled` or `selectedItem` arguments will have
+    to implement this.
 
 ### Changed
 
+-   `Toggle` component requires the `isToggled` argument.
+-   `Dropdown` component requires `selectedItem` and removed defaultIndex.
+-   `StateSelector` component requires `selectedItem` and removed defaultIndex.
 -   The active button of the `StateSelector` component is now white.
 
 ## 6.9.0 - 2022-11-24
