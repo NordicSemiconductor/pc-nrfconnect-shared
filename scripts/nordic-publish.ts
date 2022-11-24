@@ -34,6 +34,8 @@ interface App {
     name: string;
     version: string;
     shasum: string;
+    sourceUrl: string;
+    isOfficial: boolean;
 }
 
 const client = new FtpClient();
@@ -44,7 +46,7 @@ const hasMessage = (error: unknown): error is { message: unknown } =>
 const errorAsString = (error: unknown) =>
     hasMessage(error) ? error.message : String(error);
 
-const repoDir = (deployOfficial: boolean, sourceName: string) => {
+const getSourceDir = (deployOfficial: boolean, sourceName: string) => {
     const repoDirOfficial = '/.pc-tools/nrfconnect-apps';
 
     if (process.env.REPO_DIR) return process.env.REPO_DIR;
@@ -53,7 +55,7 @@ const repoDir = (deployOfficial: boolean, sourceName: string) => {
     return `${repoDirOfficial}/${sourceName}`;
 };
 
-const repoUrl = (deployOfficial: boolean, sourceName: string) => {
+const getSourceUrl = (deployOfficial: boolean, sourceName: string) => {
     const repoUrlOfficial =
         'https://developer.nordicsemi.com/.pc-tools/nrfconnect-apps';
 
@@ -63,7 +65,14 @@ const repoUrl = (deployOfficial: boolean, sourceName: string) => {
     return `${repoUrlOfficial}/${sourceName}`;
 };
 
-const parseOptions = () => {
+interface Options {
+    doPack: boolean;
+    deployOfficial: boolean;
+    sourceDir: string;
+    sourceUrl: string;
+}
+
+const parseOptions = (): Options => {
     program
         .description('Publish to nordic repository')
         .requiredOption(
@@ -83,8 +92,8 @@ const parseOptions = () => {
     return {
         doPack: options.pack,
         deployOfficial,
-        repoDir: repoDir(deployOfficial, options.source),
-        repoUrl: repoUrl(deployOfficial, options.source),
+        sourceDir: getSourceDir(deployOfficial, options.source),
+        sourceUrl: getSourceUrl(deployOfficial, options.source),
     };
 };
 
@@ -121,9 +130,9 @@ const getShasum = (filePath: string) => {
     }
 };
 
-const packOrReadPackage = (doPack: boolean) => {
+const packOrReadPackage = (options: Options): App => {
     const { name, version, filename } = readPackageJson();
-    if (doPack) {
+    if (options.doPack) {
         packPackage();
     } else {
         ensurePackageExists(filename);
@@ -132,7 +141,14 @@ const packOrReadPackage = (doPack: boolean) => {
 
     console.log(`Package name: ${name} version: ${version}`);
 
-    return { filename, name, version, shasum };
+    return {
+        filename,
+        name,
+        version,
+        shasum,
+        sourceUrl: options.sourceUrl,
+        isOfficial: options.deployOfficial,
+    };
 };
 
 const connect = (config: {
@@ -199,20 +215,12 @@ const downloadAppInfo = async (name: string): Promise<AppInfo> => {
     }
 };
 
-const updateLocalAppInfo = (
-    appInfo: AppInfo,
-    app: {
-        filename: string;
-        version: string;
-        shasum: string;
-    },
-    deployOfficial: boolean
-) => {
+const updateLocalAppInfo = (appInfo: AppInfo, app: App) => {
     const latest = appInfo['dist-tags']?.latest;
     if (latest != null) {
         console.log(`Latest published version ${latest}`);
 
-        if (semver.lte(app.version, latest) && deployOfficial) {
+        if (semver.lte(app.version, latest) && app.isOfficial) {
             throw new Error(
                 'Current package version cannot be published, bump it higher'
             );
@@ -229,7 +237,7 @@ const updateLocalAppInfo = (
             ...appInfo.versions,
             [app.version]: {
                 dist: {
-                    tarball: `${repoUrl}/${app.filename}`,
+                    tarball: `${app.sourceUrl}/${app.filename}`,
                     shasum: app.shasum,
                 },
             },
@@ -249,13 +257,16 @@ const uploadFile: UploadLocalFile & UploadBufferContent = (
         client.put(local, remote, err => (err ? reject(err) : resolve()));
     });
 
-const getUpdatedAppInfo = async (app: App, deployOfficial: boolean) => {
+const getUpdatedAppInfo = async (app: App) => {
     const appInfo = await downloadAppInfo(app.name);
-    return updateLocalAppInfo(appInfo, app, deployOfficial);
+    return updateLocalAppInfo(appInfo, app);
 };
 
 const uploadAppInfo = (app: App, updatedAppInfo: AppInfo) =>
-    uploadFile(Buffer.from(JSON.stringify(updatedAppInfo)), app.name);
+    uploadFile(
+        Buffer.from(JSON.stringify(updatedAppInfo, undefined, 2)),
+        app.name
+    );
 
 const uploadPackage = (app: App) => uploadFile(app.filename, app.filename);
 
@@ -287,13 +298,13 @@ const main = async () => {
         checkChangelogHasCurrentEntry: options.deployOfficial,
     });
 
-    const app = packOrReadPackage(options.doPack);
+    const app = packOrReadPackage(options);
 
     await connect(config);
-    await changeWorkingDirectory(options.repoDir);
+    await changeWorkingDirectory(options.sourceDir);
 
     try {
-        const appInfo = await getUpdatedAppInfo(app, options.deployOfficial);
+        const appInfo = await getUpdatedAppInfo(app);
 
         await uploadChangelog(app);
         await uploadPackage(app);
