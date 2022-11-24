@@ -6,9 +6,9 @@
 
 import React, { FC, ReactNode } from 'react';
 import { Provider } from 'react-redux';
+import { composeWithDevTools } from '@redux-devtools/extension';
 import { func, node } from 'prop-types';
 import { applyMiddleware, createStore, Reducer } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 
 import rootReducer from '../rootReducer';
