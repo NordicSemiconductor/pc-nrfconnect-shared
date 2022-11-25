@@ -6,13 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 6.10.0 - 2022-11-25
 
 ### Changed
 
 -   The active button of the `StateSelector` component is now white.
 -   `scripts/nordic-publish.js` now also uploads the SVG icon and updates the
     new meta files. Using this will be mandatory for the next launcher release.
+
+### Fixed
+
+-   Esbuild for apps now also works, (only worked on the launcher renderers).
 
 ## 6.9.0 - 2022-11-24
 
