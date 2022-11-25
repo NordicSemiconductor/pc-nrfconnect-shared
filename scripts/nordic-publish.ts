@@ -10,6 +10,7 @@ import { execSync } from 'child_process';
 import { program } from 'commander';
 import fs from 'fs';
 import FtpClient from 'ftp';
+import { PackageJson } from 'pc-nrfconnect-shared';
 import semver from 'semver';
 import calculateShasum from 'shasum';
 
@@ -34,11 +35,44 @@ interface App {
     name: string;
     version: string;
     shasum: string;
+    sourceUrl: string;
+    appJsonName: string;
+    releaseNotesFilename: string;
+    iconFilename: string;
+    isOfficial: boolean;
+    packageJson: PackageJson;
+}
+
+interface SourceJson {
+    name: string;
+    apps?: string[];
+}
+
+interface AppJson {
+    name: string;
+    displayName: string;
+    description: string;
+    homepage?: string;
+    iconUrl: string;
+    releaseNotesUrl: string;
+    latest: string;
+    versions: {
+        [version: string]: {
+            shasum: string;
+            tarball: string;
+        };
+    };
 }
 
 const client = new FtpClient();
 
-const repoDir = (deployOfficial: boolean, sourceName: string) => {
+const hasMessage = (error: unknown): error is { message: unknown } =>
+    error != null && typeof error === 'object' && 'message' in error;
+
+const errorAsString = (error: unknown) =>
+    hasMessage(error) ? error.message : String(error);
+
+const getSourceDir = (deployOfficial: boolean, sourceName: string) => {
     const repoDirOfficial = '/.pc-tools/nrfconnect-apps';
 
     if (process.env.REPO_DIR) return process.env.REPO_DIR;
@@ -47,7 +81,7 @@ const repoDir = (deployOfficial: boolean, sourceName: string) => {
     return `${repoDirOfficial}/${sourceName}`;
 };
 
-const repoUrl = (deployOfficial: boolean, sourceName: string) => {
+const getSourceUrl = (deployOfficial: boolean, sourceName: string) => {
     const repoUrlOfficial =
         'https://developer.nordicsemi.com/.pc-tools/nrfconnect-apps';
 
@@ -57,7 +91,14 @@ const repoUrl = (deployOfficial: boolean, sourceName: string) => {
     return `${repoUrlOfficial}/${sourceName}`;
 };
 
-const parseOptions = () => {
+interface Options {
+    doPack: boolean;
+    deployOfficial: boolean;
+    sourceDir: string;
+    sourceUrl: string;
+}
+
+const parseOptions = (): Options => {
     program
         .description('Publish to nordic repository')
         .requiredOption(
@@ -77,37 +118,23 @@ const parseOptions = () => {
     return {
         doPack: options.pack,
         deployOfficial,
-        repoDir: repoDir(deployOfficial, options.source),
-        repoUrl: repoUrl(deployOfficial, options.source),
+        sourceDir: getSourceDir(deployOfficial, options.source),
+        sourceUrl: getSourceUrl(deployOfficial, options.source),
     };
 };
 
-const parsePackageFileName = (filename: string) => {
-    const rx = /(.*?)-(\d+\.\d+.*?)(.tgz)/;
-    const match = rx.exec(filename);
-    if (!match) {
-        throw new Error(
-            `Couldn't parse filename ${filename}, expected [package-name]-[x.y...].tgz`
-        );
-    }
-    const [, name, version] = match;
-    return { name, version };
-};
+const readPackageJson = (): PackageJson =>
+    JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
 
 const packPackage = () => {
     console.log('Packing current package');
-    return execSync('npm pack').toString().trim();
+    execSync('npm pack');
 };
 
-const readPackage = () => {
-    const files = fs.readdirSync('.');
-    const filename = files.find(f => f.includes('.tgz'));
-    if (!filename) {
-        console.error('Package to publish is not found');
-        process.exit(1);
+const ensurePackageExists = (filename: string) => {
+    if (!fs.existsSync(filename)) {
+        throw new Error(`Package \`${filename}\` to publish is not found`);
     }
-
-    return filename;
 };
 
 const getShasum = (filePath: string) => {
@@ -120,14 +147,32 @@ const getShasum = (filePath: string) => {
     }
 };
 
-const packOrReadPackage = (doPack: boolean) => {
-    const filename = doPack ? packPackage() : readPackage();
-    const { name, version } = parsePackageFileName(filename);
+const packOrReadPackage = (options: Options): App => {
+    const packageJson = readPackageJson();
+    const { name, version } = packageJson;
+    const filename = `${name}-${version}.tgz`;
+
+    if (options.doPack) {
+        packPackage();
+    } else {
+        ensurePackageExists(filename);
+    }
     const shasum = getShasum(filename);
 
     console.log(`Package name: ${name} version: ${version}`);
 
-    return { filename, name, version, shasum };
+    return {
+        name,
+        version,
+        filename,
+        shasum,
+        sourceUrl: options.sourceUrl,
+        isOfficial: options.deployOfficial,
+        appJsonName: `${name}.json`,
+        releaseNotesFilename: `${name}-Changelog.md`,
+        iconFilename: `${name}.svg`,
+        packageJson,
+    };
 };
 
 const connect = (config: {
@@ -154,7 +199,17 @@ const connect = (config: {
 const changeWorkingDirectory = (dir: string) =>
     new Promise<void>((resolve, reject) => {
         console.log(`Changing to directory ${dir}`);
-        client.cwd(dir, err => (err ? reject(err) : resolve()));
+        client.cwd(dir, err => {
+            if (err) {
+                reject(
+                    new Error(
+                        `Failed to change to directory. Check whether it exists on the FTP server.`
+                    )
+                );
+            } else {
+                resolve();
+            }
+        });
     });
 
 const downloadFileContent = (filename: string) =>
@@ -177,28 +232,20 @@ const downloadAppInfo = async (name: string): Promise<AppInfo> => {
         return JSON.parse(content);
     } catch (error) {
         console.log(
-            `App info file will be created from scratch due to: ${
-                (error as any).message // eslint-disable-line @typescript-eslint/no-explicit-any
-            }`
+            `App info file will be created from scratch due to: ${errorAsString(
+                error
+            )}`
         );
         return {};
     }
 };
 
-const updateLocalAppInfo = (
-    appInfo: AppInfo,
-    app: {
-        filename: string;
-        version: string;
-        shasum: string;
-    },
-    deployOfficial: boolean
-) => {
+const updateLocalAppInfo = (appInfo: AppInfo, app: App) => {
     const latest = appInfo['dist-tags']?.latest;
     if (latest != null) {
         console.log(`Latest published version ${latest}`);
 
-        if (semver.lte(app.version, latest) && deployOfficial) {
+        if (semver.lte(app.version, latest) && app.isOfficial) {
             throw new Error(
                 'Current package version cannot be published, bump it higher'
             );
@@ -215,7 +262,7 @@ const updateLocalAppInfo = (
             ...appInfo.versions,
             [app.version]: {
                 dist: {
-                    tarball: `${repoUrl}/${app.filename}`,
+                    tarball: `${app.sourceUrl}/${app.filename}`,
                     shasum: app.shasum,
                 },
             },
@@ -235,12 +282,103 @@ const uploadFile: UploadLocalFile & UploadBufferContent = (
         client.put(local, remote, err => (err ? reject(err) : resolve()));
     });
 
-const updateAppInfoOnServer = async (app: App, deployOfficial: boolean) => {
+const getUpdatedAppInfo = async (app: App) => {
     const appInfo = await downloadAppInfo(app.name);
-    const updatedAppInfo = updateLocalAppInfo(appInfo, app, deployOfficial);
-
-    await uploadFile(Buffer.from(JSON.stringify(updatedAppInfo)), app.name);
+    return updateLocalAppInfo(appInfo, app);
 };
+
+const downloadSourceJson = async () => {
+    try {
+        const sourceJson = <SourceJson>(
+            JSON.parse(await downloadFileContent('source.json'))
+        );
+        if (
+            sourceJson == null ||
+            typeof sourceJson !== 'object' ||
+            sourceJson.name == null ||
+            (sourceJson.apps !== undefined && !Array.isArray(sourceJson.apps))
+        ) {
+            throw new Error(
+                `\`source.json\` does not have the expected content: ${sourceJson}`
+            );
+        }
+
+        return sourceJson;
+    } catch (error) {
+        throw new Error('Unable to read `source.json` on the server.');
+    }
+};
+
+const getUpdatedSourceJson = async (app: App): Promise<SourceJson> => {
+    const sourceJson = await downloadSourceJson();
+    return {
+        name: sourceJson.name,
+        apps: [
+            ...new Set(sourceJson.apps).add(
+                `${app.sourceUrl}/${app.appJsonName}`
+            ),
+        ].sort(),
+    };
+};
+
+const downloadExistingVersions = async (app: App) => {
+    try {
+        const appJson = <AppJson>(
+            JSON.parse(await downloadFileContent(app.appJsonName))
+        );
+        return appJson.versions;
+    } catch (error) {
+        return {};
+    }
+};
+
+const failBecauseOfMissingProperty = () => {
+    throw new Error(
+        'This must never happen, because the properties were already checked before'
+    );
+};
+
+const getUpdatedAppJson = async (app: App): Promise<AppJson> => {
+    const versions = await downloadExistingVersions(app);
+
+    const { name, displayName, description, homepage, version } =
+        app.packageJson;
+
+    return {
+        name,
+        displayName: displayName ?? failBecauseOfMissingProperty(),
+        description: description ?? failBecauseOfMissingProperty(),
+        homepage,
+        iconUrl: `${app.sourceUrl}/${app.iconFilename}`,
+        releaseNotesUrl: `${app.sourceUrl}/${app.releaseNotesFilename}`,
+        latest: version,
+        versions: {
+            ...versions,
+            [version]: {
+                tarball: `${app.sourceUrl}/${app.filename}`,
+                shasum: app.shasum,
+            },
+        },
+    };
+};
+
+const uploadAppInfo = (app: App, updatedAppInfo: AppInfo) =>
+    uploadFile(
+        Buffer.from(JSON.stringify(updatedAppInfo, undefined, 2)),
+        app.name
+    );
+
+const uploadSourceJson = (sourceJson: SourceJson) =>
+    uploadFile(
+        Buffer.from(JSON.stringify(sourceJson, undefined, 2)),
+        'source.json'
+    );
+
+const uploadAppJson = (app: App, appJson: AppJson) =>
+    uploadFile(
+        Buffer.from(JSON.stringify(appJson, undefined, 2)),
+        app.appJsonName
+    );
 
 const uploadPackage = (app: App) => uploadFile(app.filename, app.filename);
 
@@ -248,44 +386,60 @@ const uploadChangelog = (app: App) => {
     const changelogFilename = 'Changelog.md';
     if (!fs.existsSync(changelogFilename)) {
         const errorMsg = `There should be a changelog called "${changelogFilename}". Please provide it!`;
-        console.error(errorMsg);
         return Promise.reject(new Error(errorMsg));
     }
 
-    return uploadFile(changelogFilename, `${app.name}-${changelogFilename}`);
+    return uploadFile(changelogFilename, app.releaseNotesFilename);
+};
+
+const uploadIcon = (app: App) => {
+    const localIconFilename = 'resources/icon.svg';
+    if (!fs.existsSync(localIconFilename)) {
+        const errorMsg = `There must be an icon called "${localIconFilename}". Please provide it!`;
+        return Promise.reject(new Error(errorMsg));
+    }
+
+    return uploadFile(localIconFilename, app.iconFilename);
 };
 
 const main = async () => {
-    /*
-     * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
-     */
-    const config = {
-        host: process.env.REPO_HOST || 'localhost',
-        port: Number(process.env.REPO_PORT) || 21,
-        user: process.env.REPO_USER || 'anonymous',
-        password: process.env.REPO_PASS || 'anonymous@',
-    };
-
-    const options = parseOptions();
-
-    checkAppProperties({
-        checkChangelogHasCurrentEntry: options.deployOfficial,
-    });
-
-    const app = packOrReadPackage(options.doPack);
-
-    await connect(config);
-    await changeWorkingDirectory(options.repoDir);
-
     try {
-        await updateAppInfoOnServer(app, options.deployOfficial);
-        await uploadPackage(app);
+        /*
+         * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
+         */
+        const config = {
+            host: process.env.REPO_HOST || 'localhost',
+            port: Number(process.env.REPO_PORT) || 21,
+            user: process.env.REPO_USER || 'anonymous',
+            password: process.env.REPO_PASS || 'anonymous@',
+        };
+
+        const options = parseOptions();
+
+        checkAppProperties({
+            checkChangelogHasCurrentEntry: options.deployOfficial,
+        });
+
+        const app = packOrReadPackage(options);
+
+        await connect(config);
+        await changeWorkingDirectory(options.sourceDir);
+
+        const appInfo = await getUpdatedAppInfo(app);
+        const sourceJson = await getUpdatedSourceJson(app);
+        const appJson = await getUpdatedAppJson(app);
+
         await uploadChangelog(app);
+        await uploadIcon(app);
+        await uploadPackage(app);
+        await uploadAppInfo(app, appInfo);
+        await uploadAppJson(app, appJson);
+        await uploadSourceJson(sourceJson);
 
         console.log('Done');
     } catch (error) {
-        console.error((error as any).message); // eslint-disable-line @typescript-eslint/no-explicit-any
-        process.exit(1);
+        console.error(errorAsString(error));
+        process.exitCode = 1;
     }
 
     client.end();

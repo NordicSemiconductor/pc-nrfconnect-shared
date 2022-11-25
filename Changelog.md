@@ -11,6 +11,8 @@ and this project adheres to
 ### Changed
 
 -   The active button of the `StateSelector` component is now white.
+-   `scripts/nordic-publish.js` now also uploads the SVG icon and updates the
+    new meta files. Using this will be mandatory for the next launcher release.
 
 ## 6.9.0 - 2022-11-24
 
