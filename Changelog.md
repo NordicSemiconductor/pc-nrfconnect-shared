@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 6.11.0
 
 ### Added
 
@@ -21,6 +21,10 @@ and this project adheres to
 -   `Slider` can opt to have explict ranges allowing for split ranges. Ticks are
     not yest supported on this mode
 -   Warn in console if Min and Max are not factors of the optional step size
+
+### Fixed
+
+-   Esbuild problem when dist folder was missing.
 
 ## 6.10.0 - 2022-11-25
 
