@@ -18,10 +18,15 @@ const entry = [
 
 build([entry]);
 
+const distFolder = join(process.cwd(), 'dist');
+if (!fs.existsSync(distFolder)) {
+    fs.mkdirSync(distFolder);
+}
+
 fs.copyFileSync(
     join(
         process.cwd(),
         './node_modules/pc-nrfconnect-shared/scripts/nordic-publish.js'
     ),
-    join(process.cwd(), 'dist', 'nordic-publish.js')
+    join(distFolder, 'nordic-publish.js')
 );
