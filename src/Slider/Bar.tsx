@@ -5,7 +5,6 @@
  */
 
 import React, { FC } from 'react';
-import { number } from 'prop-types';
 
 import './bar.scss';
 
@@ -21,9 +20,5 @@ const Bar: FC<{ start: number; end: number }> = ({ start, end }) => (
         />
     </>
 );
-Bar.propTypes = {
-    start: number.isRequired,
-    end: number.isRequired,
-};
 
 export default Bar;

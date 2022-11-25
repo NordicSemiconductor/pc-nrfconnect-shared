@@ -6,25 +6,25 @@
 
 import React, { FC } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
-import { arrayOf, bool, func, number, string } from 'prop-types';
 
 import classNames from '../utils/classNames';
 import Bar from './Bar';
+import { isFactor } from './factor';
 import Handle from './Handle';
 import { toPercentage } from './percentage';
-import rangeShape, { RangeProp } from './rangeShape';
+import { RangeProp } from './rangeShape';
 import Ticks from './Ticks';
 
 import './slider.scss';
 
-interface Props {
+export interface Props {
     id?: string;
     title?: string;
     disabled?: boolean;
     values: number[];
     range: RangeProp;
     ticks?: boolean;
-    onChange: (() => void)[];
+    onChange: ((v: number) => void)[];
     onChangeComplete?: () => void;
 }
 
@@ -38,18 +38,38 @@ const Slider: FC<Props> = ({
     onChange,
     onChangeComplete,
 }) => {
+    const rangeNoOptional = {
+        ...range,
+        decimals: range.decimals ?? 0,
+        step: range.step ?? 0,
+    };
+
     if (values.length === 0)
         console.error('"values" must contain at least on element');
     if (values.length !== onChange.length)
         console.error(
             `Props 'values' and 'onChange' must have the same size but were ${values} and ${onChange}`
         );
-    if (range.min > range.max)
+    if (rangeNoOptional.min > rangeNoOptional.max)
         console.error(
             `range.min must not be higher than range.max: ${JSON.stringify(
                 range
             )}`
         );
+    if (rangeNoOptional.step > 0) {
+        if (!isFactor(range.min, rangeNoOptional.step))
+            console.error(
+                `range.step must be a factor of range.min: ${JSON.stringify(
+                    range
+                )}`
+            );
+        if (!isFactor(range.max, rangeNoOptional.step))
+            console.error(
+                `range.step must be a factor of range.max: ${JSON.stringify(
+                    range
+                )}`
+            );
+    }
 
     const { width, ref } = useResizeDetector();
 
@@ -66,15 +86,15 @@ const Slider: FC<Props> = ({
             ref={ref as React.MutableRefObject<HTMLDivElement>}
         >
             <Bar
-                start={toPercentage(valueRange.min, range)}
-                end={toPercentage(valueRange.max, range)}
+                start={toPercentage(valueRange.min, rangeNoOptional)}
+                end={toPercentage(valueRange.max, rangeNoOptional)}
             />
-            {ticks && <Ticks valueRange={valueRange} range={range} />}
+            {ticks && <Ticks valueRange={valueRange} range={rangeNoOptional} />}
             {values.map((value, index) => (
                 <Handle
                     key={index} // eslint-disable-line react/no-array-index-key
                     value={value}
-                    range={range}
+                    range={rangeNoOptional}
                     disabled={disabled}
                     onChange={onChange[index]}
                     onChangeComplete={onChangeComplete}
@@ -83,17 +103,6 @@ const Slider: FC<Props> = ({
             ))}
         </div>
     );
-};
-
-Slider.propTypes = {
-    id: string,
-    title: string,
-    disabled: bool,
-    values: arrayOf(number.isRequired).isRequired,
-    range: rangeShape.isRequired,
-    ticks: bool,
-    onChange: arrayOf(func.isRequired).isRequired,
-    onChangeComplete: func,
 };
 
 export default Slider;
