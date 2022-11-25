@@ -6,9 +6,12 @@
 
 export const isFactor = (dividend: number, divisor: number): boolean => {
     let exp = 0;
+    const originalDivisor = divisor;
+
     while (divisor !== Number(divisor.toFixed(0))) {
+        divisor = originalDivisor;
         exp += 1;
-        divisor *= 10;
+        divisor *= 10 ** exp;
     }
 
     divisor = Number(divisor.toFixed(0));

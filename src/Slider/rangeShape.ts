@@ -3,21 +3,10 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
-
-import { number, shape } from 'prop-types';
-
 export interface RangeProp {
     min: number;
     max: number;
-    decimals?: number | null;
-    step?: number | null;
+    decimals?: number;
+    step?: number; // positive number
     explicitRange?: number[];
 }
-
-const rangeShape = shape({
-    min: number.isRequired,
-    max: number.isRequired,
-    decimals: number,
-});
-
-export default rangeShape;

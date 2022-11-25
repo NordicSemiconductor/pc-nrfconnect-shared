@@ -5,7 +5,6 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { bool, func, string } from 'prop-types';
 
 import classNames from '../utils/classNames';
 
@@ -158,14 +157,5 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
         );
     }
 );
-
-InlineInput.propTypes = {
-    disabled: bool,
-    value: string.isRequired,
-    isValid: func,
-    onChange: func.isRequired,
-    onChangeComplete: func,
-    className: string,
-};
 
 export default InlineInput;

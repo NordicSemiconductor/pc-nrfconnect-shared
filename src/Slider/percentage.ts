@@ -18,13 +18,13 @@ export const toPercentage = (value: number, { min, max }: RangeProp) =>
 export const fromPercentage = (
     lastValue: number,
     value: number,
-    { min, max, decimals = 0, step = null, explicitRange = [] }: RangeProp,
+    { min, max, decimals = 0, step = 0, explicitRange = [] }: RangeProp,
     directionForward: boolean
 ) => {
     if (explicitRange.length > 0) {
         const noOfIndexes = explicitRange.length - 1;
         const computedValue = Number(
-            ((value * (max - min)) / 100 + min).toFixed(decimals as number)
+            ((value * (max - min)) / 100 + min).toFixed(decimals)
         );
 
         const lastValueIndex = explicitRange.indexOf(lastValue);
@@ -46,17 +46,15 @@ export const fromPercentage = (
                     : closestPrevIndex;
         }
 
-        return Number(explicitRange[closestIndex].toFixed(decimals as number));
+        return Number(explicitRange[closestIndex].toFixed(decimals));
     }
 
-    if (step != null) {
+    if (step > 0) {
         const noOfSteps = (max - min) / step;
         const closestStep = Math.round((value / 100) * noOfSteps);
 
-        return Number((min + closestStep * step).toFixed(decimals as number));
+        return Number((min + closestStep * step).toFixed(decimals));
     }
 
-    return Number(
-        ((value * (max - min)) / 100 + min).toFixed(decimals as number)
-    );
+    return Number(((value * (max - min)) / 100 + min).toFixed(decimals));
 };

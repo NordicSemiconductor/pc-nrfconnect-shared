@@ -5,22 +5,21 @@
  */
 
 import React, { FC } from 'react';
-import { bool, func, number } from 'prop-types';
 
 import { isFactor } from '../Slider/factor';
-import rangeShape, { RangeProp } from '../Slider/rangeShape';
+import { RangeProp } from '../Slider/rangeShape';
 import InlineInput from './InlineInput';
 
 import './number-inline-input.scss';
 
 const isInRange = (
     value: number,
-    { min, max, decimals = 0, step = null, explicitRange = [] }: RangeProp
+    { min, max, decimals = 0, step = 0, explicitRange = [] }: RangeProp
 ) =>
     value >= min &&
     value <= max &&
-    value === Number(value.toFixed(decimals as number)) &&
-    (step != null ? isFactor(value, step) : true) &&
+    value === Number(value.toFixed(decimals)) &&
+    (step > 0 ? isFactor(value, step) : true) &&
     (explicitRange.length > 0 ? explicitRange.indexOf(value) !== -1 : true);
 
 interface Props {
@@ -90,13 +89,5 @@ const NumberInlineInput: FC<Props> = ({
         }
     />
 );
-
-NumberInlineInput.propTypes = {
-    disabled: bool,
-    value: number.isRequired,
-    range: rangeShape.isRequired,
-    onChange: func.isRequired,
-    onChangeComplete: func,
-};
 
 export default NumberInlineInput;

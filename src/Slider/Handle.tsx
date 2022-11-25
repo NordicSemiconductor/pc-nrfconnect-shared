@@ -5,7 +5,6 @@
  */
 
 import React, { FC, MouseEventHandler, useRef, useState } from 'react';
-import { bool, func, number } from 'prop-types';
 
 import classNames from '../utils/classNames';
 import {
@@ -13,7 +12,7 @@ import {
     fromPercentage,
     toPercentage,
 } from './percentage';
-import rangeShape, { RangeProp } from './rangeShape';
+import { RangeProp } from './rangeShape';
 
 import './handle.scss';
 
@@ -117,14 +116,6 @@ const Handle: FC<Props> = ({
             aria-valuenow={value}
         />
     );
-};
-Handle.propTypes = {
-    value: number.isRequired,
-    disabled: bool.isRequired,
-    range: rangeShape.isRequired,
-    onChange: func.isRequired,
-    onChangeComplete: func,
-    sliderWidth: number,
 };
 
 export default Handle;
