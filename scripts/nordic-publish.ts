@@ -133,8 +133,7 @@ const packPackage = () => {
 
 const ensurePackageExists = (filename: string) => {
     if (!fs.existsSync(filename)) {
-        console.error(`Package \`${filename}\` to publish is not found`);
-        process.exit(1);
+        throw new Error(`Package \`${filename}\` to publish is not found`);
     }
 };
 
@@ -198,17 +197,18 @@ const connect = (config: {
     });
 
 const changeWorkingDirectory = (dir: string) =>
-    new Promise<void>(resolve => {
+    new Promise<void>((resolve, reject) => {
         console.log(`Changing to directory ${dir}`);
         client.cwd(dir, err => {
             if (err) {
-                console.error(
-                    `Failed to change to directory. Check whether it exists on the FTP server.`
+                reject(
+                    new Error(
+                        `Failed to change to directory. Check whether it exists on the FTP server.`
+                    )
                 );
-                process.exit(1);
+            } else {
+                resolve();
             }
-
-            resolve();
         });
     });
 
@@ -403,28 +403,28 @@ const uploadIcon = (app: App) => {
 };
 
 const main = async () => {
-    /*
-     * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
-     */
-    const config = {
-        host: process.env.REPO_HOST || 'localhost',
-        port: Number(process.env.REPO_PORT) || 21,
-        user: process.env.REPO_USER || 'anonymous',
-        password: process.env.REPO_PASS || 'anonymous@',
-    };
-
-    const options = parseOptions();
-
-    checkAppProperties({
-        checkChangelogHasCurrentEntry: options.deployOfficial,
-    });
-
-    const app = packOrReadPackage(options);
-
-    await connect(config);
-    await changeWorkingDirectory(options.sourceDir);
-
     try {
+        /*
+         * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
+         */
+        const config = {
+            host: process.env.REPO_HOST || 'localhost',
+            port: Number(process.env.REPO_PORT) || 21,
+            user: process.env.REPO_USER || 'anonymous',
+            password: process.env.REPO_PASS || 'anonymous@',
+        };
+
+        const options = parseOptions();
+
+        checkAppProperties({
+            checkChangelogHasCurrentEntry: options.deployOfficial,
+        });
+
+        const app = packOrReadPackage(options);
+
+        await connect(config);
+        await changeWorkingDirectory(options.sourceDir);
+
         const appInfo = await getUpdatedAppInfo(app);
         const sourceJson = await getUpdatedSourceJson(app);
         const appJson = await getUpdatedAppJson(app);
@@ -439,7 +439,7 @@ const main = async () => {
         console.log('Done');
     } catch (error) {
         console.error(errorAsString(error));
-        process.exit(1);
+        process.exitCode = 1;
     }
 
     client.end();
