@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+-   `NumberInlineInput` can opt to have step defined allowing only values that
+    are a factor of this step size
+-   `NumberInlineInput` can opt to have explict ranges allowing for split ranges
+-   `InlineInput` can opt to have support for up/down keyboard events to control
+    the value
+-   `NumberInlineInput` support for up/down keyboard events to control the value
+-   `Slider` can opt to have steps defined allowing allowing to inciment the
+    value with the step size
+-   `Slider` can opt to have explict ranges allowing for split ranges. Ticks are
+    not yest supported on this mode
+-   Warn in console if Min and Max are not factors of the optional step size
+
 ## 6.8.0 - 2022-11-04
 
 ### Added
