@@ -7,84 +7,181 @@
  */
 
 import { execSync } from 'child_process';
-import args from 'commander';
+import { program } from 'commander';
 import fs from 'fs';
 import FtpClient from 'ftp';
+import { PackageJson } from 'pc-nrfconnect-shared';
 import semver from 'semver';
-import shasum from 'shasum';
+import calculateShasum from 'shasum';
 
-args.description('Publish to nordic repository')
-    .requiredOption(
-        '-s, --source [source]',
-        'Specify the source to publish (e.g. official).'
-    )
-    .option(
-        '-n, --no-pack',
-        'Publish existing .tgz file at the root directory without npm pack.'
-    )
-    .parse(process.argv);
+import checkAppProperties from './check-app-properties';
 
-/*
- * To specify the source to publish to
- */
-if (!args.source) {
-    console.error('Source to publish to is not specified.');
-    process.exit(1);
+interface AppInfo {
+    ['dist-tags']?: {
+        latest?: string;
+    };
+    versions?: {
+        [version: string]: {
+            dist: {
+                tarball: string;
+                shasum: string;
+            };
+        };
+    };
 }
-const nonOffcialSource = args.source !== 'official' ? args.source : undefined;
 
-/*
- * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
- */
-const config = {
-    host: process.env.REPO_HOST || 'localhost',
-    port: Number(process.env.REPO_PORT) || 21,
-    user: process.env.REPO_USER || 'anonymous',
-    password: process.env.REPO_PASS || 'anonymous@',
-};
+interface App {
+    filename: string;
+    name: string;
+    version: string;
+    shasum: string;
+    sourceUrl: string;
+    appJsonName: string;
+    releaseNotesFilename: string;
+    iconFilename: string;
+    isOfficial: boolean;
+    packageJson: PackageJson;
+}
 
-const repoDirOfficial = '.pc-tools/nrfconnect-apps';
-const repoDirNonOfficial = nonOffcialSource
-    ? `${repoDirOfficial}/${nonOffcialSource}`
-    : undefined;
-const repoDir = `/${
-    process.env.REPO_DIR || repoDirNonOfficial || repoDirOfficial
-}`;
+interface SourceJson {
+    name: string;
+    apps?: string[];
+}
 
-const repoUrlOfficial =
-    'https://developer.nordicsemi.com/.pc-tools/nrfconnect-apps';
-const repoUrlNonOfficial = nonOffcialSource
-    ? `${repoUrlOfficial}/${nonOffcialSource}`
-    : undefined;
-const repoUrl = process.env.REPO_URL || repoUrlNonOfficial || repoUrlOfficial;
+interface AppJson {
+    name: string;
+    displayName: string;
+    description: string;
+    homepage?: string;
+    iconUrl: string;
+    releaseNotesUrl: string;
+    latest: string;
+    versions: {
+        [version: string]: {
+            shasum: string;
+            tarball: string;
+        };
+    };
+}
 
 const client = new FtpClient();
 
-/**
- * Parse npm package name and version from filename
- *
- * @param {string} filename of package
- * @returns {object} parsed package info: { name, version, filename }
- */
-function parsePackageName(filename: string) {
-    const rx = /(.*?)-(\d+\.\d+.*?)(.tgz)/;
-    const match = rx.exec(filename);
-    if (!match) {
-        throw new Error(
-            `Couldn't parse filename ${filename}, expected [package-name]-[x.y...].tgz`
-        );
-    }
-    const [, name, version] = match;
-    return { name, version, filename };
+const hasMessage = (error: unknown): error is { message: unknown } =>
+    error != null && typeof error === 'object' && 'message' in error;
+
+const errorAsString = (error: unknown) =>
+    hasMessage(error) ? error.message : String(error);
+
+const getSourceDir = (deployOfficial: boolean, sourceName: string) => {
+    const repoDirOfficial = '/.pc-tools/nrfconnect-apps';
+
+    if (process.env.REPO_DIR) return process.env.REPO_DIR;
+    if (deployOfficial) return repoDirOfficial;
+
+    return `${repoDirOfficial}/${sourceName}`;
+};
+
+const getSourceUrl = (deployOfficial: boolean, sourceName: string) => {
+    const repoUrlOfficial =
+        'https://developer.nordicsemi.com/.pc-tools/nrfconnect-apps';
+
+    if (process.env.REPO_URL) return process.env.REPO_URL;
+    if (deployOfficial) return repoUrlOfficial;
+
+    return `${repoUrlOfficial}/${sourceName}`;
+};
+
+interface Options {
+    doPack: boolean;
+    deployOfficial: boolean;
+    sourceDir: string;
+    sourceUrl: string;
 }
 
-/**
- * Connect to ftp server
- *
- * @returns {Promise<undefined>} resolves upon success
- */
-function connect() {
-    return new Promise<void>((resolve, reject) => {
+const parseOptions = (): Options => {
+    program
+        .description('Publish to nordic repository')
+        .requiredOption(
+            '-s, --source <source>',
+            'Specify the source to publish (e.g. official).'
+        )
+        .option(
+            '-n, --no-pack',
+            'Publish existing .tgz file at the root directory without npm pack.'
+        )
+        .parse();
+
+    const options = program.opts();
+
+    const deployOfficial = options.source === 'official';
+
+    return {
+        doPack: options.pack,
+        deployOfficial,
+        sourceDir: getSourceDir(deployOfficial, options.source),
+        sourceUrl: getSourceUrl(deployOfficial, options.source),
+    };
+};
+
+const readPackageJson = (): PackageJson =>
+    JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
+
+const packPackage = () => {
+    console.log('Packing current package');
+    execSync('npm pack');
+};
+
+const ensurePackageExists = (filename: string) => {
+    if (!fs.existsSync(filename)) {
+        throw new Error(`Package \`${filename}\` to publish is not found`);
+    }
+};
+
+const getShasum = (filePath: string) => {
+    try {
+        return calculateShasum(fs.readFileSync(filePath));
+    } catch (error) {
+        throw new Error(
+            `Unable to read file when verifying shasum: ${filePath}`
+        );
+    }
+};
+
+const packOrReadPackage = (options: Options): App => {
+    const packageJson = readPackageJson();
+    const { name, version } = packageJson;
+    const filename = `${name}-${version}.tgz`;
+
+    if (options.doPack) {
+        packPackage();
+    } else {
+        ensurePackageExists(filename);
+    }
+    const shasum = getShasum(filename);
+
+    console.log(`Package name: ${name} version: ${version}`);
+
+    return {
+        name,
+        version,
+        filename,
+        shasum,
+        sourceUrl: options.sourceUrl,
+        isOfficial: options.deployOfficial,
+        appJsonName: `${name}.json`,
+        releaseNotesFilename: `${name}-Changelog.md`,
+        iconFilename: `${name}.svg`,
+        packageJson,
+    };
+};
+
+const connect = (config: {
+    host: string;
+    port: number;
+    user: string;
+    password: string;
+}) =>
+    new Promise<void>((resolve, reject) => {
         console.log(
             `Connecting to ftp://${config.user}@${config.host}:${config.port}`
         );
@@ -98,29 +195,25 @@ function connect() {
         });
         client.connect(config);
     });
-}
 
-/**
- * Change working directory on ftp server
- *
- * @param {string} dir the directory to change to
- * @returns {Promise<undefined>} resolves upon success
- */
-function changeWorkingDirectory(dir: string) {
-    return new Promise<void>((resolve, reject) => {
+const changeWorkingDirectory = (dir: string) =>
+    new Promise<void>((resolve, reject) => {
         console.log(`Changing to directory ${dir}`);
-        client.cwd(dir, err => (err ? reject(err) : resolve()));
+        client.cwd(dir, err => {
+            if (err) {
+                reject(
+                    new Error(
+                        `Failed to change to directory. Check whether it exists on the FTP server.`
+                    )
+                );
+            } else {
+                resolve();
+            }
+        });
     });
-}
 
-/**
- * Download file _filename_ from ftp server current working directory
- *
- * @param {string} filename the file to download
- * @returns {Promise<string>} resolves with content of file
- */
-function getFile(filename: string) {
-    return new Promise<string>((resolve, reject) => {
+const downloadFileContent = (filename: string) =>
+    new Promise<string>((resolve, reject) => {
         console.log(`Downloading file ${filename}`);
         let data = '';
         client.get(filename, (err, stream) => {
@@ -132,127 +225,224 @@ function getFile(filename: string) {
             return undefined;
         });
     });
-}
 
-/**
- * Upload file to ftp server current working directory
- *
- * @param {string|buffer} local filename or content of file to be uploaded
- * @param {string} remote filename
- * @returns {Promise<undefined>} resolves upon success
- */
-function putFile(local: string | Buffer, remote: string) {
-    return new Promise<void>((resolve, reject) => {
+const downloadAppInfo = async (name: string): Promise<AppInfo> => {
+    try {
+        const content = await downloadFileContent(name);
+        return JSON.parse(content);
+    } catch (error) {
+        console.log(
+            `App info file will be created from scratch due to: ${errorAsString(
+                error
+            )}`
+        );
+        return {};
+    }
+};
+
+const updateLocalAppInfo = (appInfo: AppInfo, app: App) => {
+    const latest = appInfo['dist-tags']?.latest;
+    if (latest != null) {
+        console.log(`Latest published version ${latest}`);
+
+        if (semver.lte(app.version, latest) && app.isOfficial) {
+            throw new Error(
+                'Current package version cannot be published, bump it higher'
+            );
+        }
+    }
+
+    return {
+        ...appInfo,
+        'dist-tags': {
+            ...appInfo['dist-tags'],
+            latest: app.version,
+        },
+        versions: {
+            ...appInfo.versions,
+            [app.version]: {
+                dist: {
+                    tarball: `${app.sourceUrl}/${app.filename}`,
+                    shasum: app.shasum,
+                },
+            },
+        },
+    };
+};
+
+type UploadLocalFile = (localFileName: string, remote: string) => Promise<void>;
+type UploadBufferContent = (content: Buffer, remote: string) => Promise<void>;
+
+const uploadFile: UploadLocalFile & UploadBufferContent = (
+    local: string | Buffer,
+    remote: string
+) =>
+    new Promise<void>((resolve, reject) => {
         console.log(`Uploading file ${remote}`);
         client.put(local, remote, err => (err ? reject(err) : resolve()));
     });
-}
 
-/**
- * Calculate SHASUM checksum of file
- *
- * @param {string} filePath of package
- * @returns {Promise<string>} resolves with SHASUM
- */
-function getShasum(filePath: string) {
-    return new Promise<string>((resolve, reject) => {
-        fs.readFile(filePath, (err, buffer) => {
-            if (err) {
-                reject(
-                    new Error(
-                        `Unable to read file when verifying shasum: ${filePath}`
-                    )
-                );
-            } else {
-                resolve(shasum(buffer));
-            }
-        });
-    });
-}
+const getUpdatedAppInfo = async (app: App) => {
+    const appInfo = await downloadAppInfo(app.name);
+    return updateLocalAppInfo(appInfo, app);
+};
 
-function uploadChangelog(packageName: string) {
+const downloadSourceJson = async () => {
+    try {
+        const sourceJson = <SourceJson>(
+            JSON.parse(await downloadFileContent('source.json'))
+        );
+        if (
+            sourceJson == null ||
+            typeof sourceJson !== 'object' ||
+            sourceJson.name == null ||
+            (sourceJson.apps !== undefined && !Array.isArray(sourceJson.apps))
+        ) {
+            throw new Error(
+                `\`source.json\` does not have the expected content: ${sourceJson}`
+            );
+        }
+
+        return sourceJson;
+    } catch (error) {
+        throw new Error('Unable to read `source.json` on the server.');
+    }
+};
+
+const getUpdatedSourceJson = async (app: App): Promise<SourceJson> => {
+    const sourceJson = await downloadSourceJson();
+    return {
+        name: sourceJson.name,
+        apps: [
+            ...new Set(sourceJson.apps).add(
+                `${app.sourceUrl}/${app.appJsonName}`
+            ),
+        ].sort(),
+    };
+};
+
+const downloadExistingVersions = async (app: App) => {
+    try {
+        const appJson = <AppJson>(
+            JSON.parse(await downloadFileContent(app.appJsonName))
+        );
+        return appJson.versions;
+    } catch (error) {
+        return {};
+    }
+};
+
+const failBecauseOfMissingProperty = () => {
+    throw new Error(
+        'This must never happen, because the properties were already checked before'
+    );
+};
+
+const getUpdatedAppJson = async (app: App): Promise<AppJson> => {
+    const versions = await downloadExistingVersions(app);
+
+    const { name, displayName, description, homepage, version } =
+        app.packageJson;
+
+    return {
+        name,
+        displayName: displayName ?? failBecauseOfMissingProperty(),
+        description: description ?? failBecauseOfMissingProperty(),
+        homepage,
+        iconUrl: `${app.sourceUrl}/${app.iconFilename}`,
+        releaseNotesUrl: `${app.sourceUrl}/${app.releaseNotesFilename}`,
+        latest: version,
+        versions: {
+            ...versions,
+            [version]: {
+                tarball: `${app.sourceUrl}/${app.filename}`,
+                shasum: app.shasum,
+            },
+        },
+    };
+};
+
+const uploadAppInfo = (app: App, updatedAppInfo: AppInfo) =>
+    uploadFile(
+        Buffer.from(JSON.stringify(updatedAppInfo, undefined, 2)),
+        app.name
+    );
+
+const uploadSourceJson = (sourceJson: SourceJson) =>
+    uploadFile(
+        Buffer.from(JSON.stringify(sourceJson, undefined, 2)),
+        'source.json'
+    );
+
+const uploadAppJson = (app: App, appJson: AppJson) =>
+    uploadFile(
+        Buffer.from(JSON.stringify(appJson, undefined, 2)),
+        app.appJsonName
+    );
+
+const uploadPackage = (app: App) => uploadFile(app.filename, app.filename);
+
+const uploadChangelog = (app: App) => {
     const changelogFilename = 'Changelog.md';
     if (!fs.existsSync(changelogFilename)) {
         const errorMsg = `There should be a changelog called "${changelogFilename}". Please provide it!`;
-        console.error(errorMsg);
         return Promise.reject(new Error(errorMsg));
     }
 
-    return putFile(changelogFilename, `${packageName}-${changelogFilename}`);
-}
-
-let thisPackage: {
-    name: string;
-    version: string;
-    filename: string;
-    shasum?: string;
+    return uploadFile(changelogFilename, app.releaseNotesFilename);
 };
 
-Promise.resolve()
-    .then(() => {
-        let filename;
-        if (args.pack) {
-            console.log('Packing current package');
-            filename = execSync('npm pack').toString().trim();
-        } else {
-            const files = fs.readdirSync('.');
-            filename = files.find(f => f.includes('.tgz'));
-            if (!filename) {
-                console.error('Package to publish is not found');
-                process.exit(1);
-            }
-        }
+const uploadIcon = (app: App) => {
+    const localIconFilename = 'resources/icon.svg';
+    if (!fs.existsSync(localIconFilename)) {
+        const errorMsg = `There must be an icon called "${localIconFilename}". Please provide it!`;
+        return Promise.reject(new Error(errorMsg));
+    }
 
-        thisPackage = parsePackageName(filename);
-        console.log(
-            `Package name: ${thisPackage.name} version: ${thisPackage.version}`
-        );
-    })
-    .then(() => getShasum(thisPackage.filename))
-    .then(checksum => {
-        thisPackage.shasum = checksum;
-    })
-    .then(() => connect())
-    .then(() => changeWorkingDirectory(repoDir))
-    .then(() => getFile(thisPackage.name))
-    .catch(err => {
-        console.log(
-            `Meta file will be created from scratch due to: ${err.message}`
-        );
-        return '{}';
-    })
-    .then(content => JSON.parse(content))
-    .then(meta => {
-        meta['dist-tags'] = meta['dist-tags'] || {};
-        const { latest } = meta['dist-tags'];
+    return uploadFile(localIconFilename, app.iconFilename);
+};
 
-        if (latest) {
-            console.log(`Latest published version ${latest}`);
-
-            if (semver.lte(thisPackage.version, latest) && !nonOffcialSource) {
-                throw new Error(
-                    'Current package version cannot be published, bump it higher'
-                );
-            }
-        }
-
-        meta['dist-tags'].latest = thisPackage.version;
-        meta.versions = meta.versions || {};
-        meta.versions[thisPackage.version] = {
-            dist: {
-                tarball: `${repoUrl}/${thisPackage.filename}`,
-                shasum: thisPackage.shasum,
-            },
+const main = async () => {
+    try {
+        /*
+         * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
+         */
+        const config = {
+            host: process.env.REPO_HOST || 'localhost',
+            port: Number(process.env.REPO_PORT) || 21,
+            user: process.env.REPO_USER || 'anonymous',
+            password: process.env.REPO_PASS || 'anonymous@',
         };
 
-        return meta;
-    })
-    .then(meta => putFile(Buffer.from(JSON.stringify(meta)), thisPackage.name))
-    .then(() => putFile(thisPackage.filename, thisPackage.filename))
-    .then(() => uploadChangelog(thisPackage.name))
-    .then(() => console.log('Done'))
-    .catch(err => {
-        console.error(err.message);
-        process.exit(1);
-    })
-    .then(() => client.end());
+        const options = parseOptions();
+
+        checkAppProperties({
+            checkChangelogHasCurrentEntry: options.deployOfficial,
+        });
+
+        const app = packOrReadPackage(options);
+
+        await connect(config);
+        await changeWorkingDirectory(options.sourceDir);
+
+        const appInfo = await getUpdatedAppInfo(app);
+        const sourceJson = await getUpdatedSourceJson(app);
+        const appJson = await getUpdatedAppJson(app);
+
+        await uploadChangelog(app);
+        await uploadIcon(app);
+        await uploadPackage(app);
+        await uploadAppInfo(app, appInfo);
+        await uploadAppJson(app, appJson);
+        await uploadSourceJson(sourceJson);
+
+        console.log('Done');
+    } catch (error) {
+        console.error(errorAsString(error));
+        process.exitCode = 1;
+    }
+
+    client.end();
+};
+
+main();

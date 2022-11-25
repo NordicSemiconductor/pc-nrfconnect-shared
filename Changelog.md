@@ -22,6 +22,87 @@ and this project adheres to
     not yest supported on this mode
 -   Warn in console if Min and Max are not factors of the optional step size
 
+## 6.10.0 - 2022-11-25
+
+### Changed
+
+-   The active button of the `StateSelector` component is now white.
+-   `scripts/nordic-publish.js` now also uploads the SVG icon and updates the
+    new meta files. Using this will be mandatory for the next launcher release.
+
+### Fixed
+
+-   Esbuild for apps now also works, (only worked on the launcher renderers).
+
+## 6.9.0 - 2022-11-24
+
+### Changed
+
+-   `scripts/nordic-publish.js` is now transpiled and bundled on install, so we
+    do not need to commit a transpiled version any longer.
+
+### Added
+
+-   SerialPort wrapper to be used by renderers in order to open and interact
+    with port in the main process.
+-   Script `check-app-properties` to check that certain static properties of the
+    app are given, which we expect from it (e.g. certain fields in
+    `package.json` are filled out).
+
+### Changed
+
+-   Replaced webpack with esbuild as a build system. Webpack will be removed
+    from shared soon. This change also moves building of fonts and the bootstrap
+    framework to the launcher for now. Also, the apps can now load assets and
+    other assets locally as the base path of the application is set to the
+    application directory.
+
+### Steps to upgrade when using this package
+
+-   If the application uses the SerialPort wrapper, you must bump the `engines`
+    field in `package.json` to require at least version `3.13.0` of the
+    launcher.
+-   Change the entry `"nordic-publish"` in the `scripts` section of
+    `package.json` to be `"nordic-publish": "node ./dist/nordic-publish.js"`.
+-   Optional housekeeping, because it is not needed anymore: Update the release
+    tasks in azure and remove the line `chmod +x ./dist/nordic-publish.js`.
+-   For an app, add an entry `"check:app"` to the `scripts` section of
+    `package.json`:
+
+```json
+{
+    "scripts": {
+        "check:app": "check-app-properties"
+    }
+}
+```
+
+-   Do the following changes to the scripts section to start using esbuild.
+
+```json
+{
+    "scripts": {
+        "watch": "run-p --silent --continue-on-error watch:*",
+        "watch:build": "run-esbuild --watch",
+        "watch:types": "tsc --noEmit --pretty --watch --preserveWatchOutput",
+        "build:dev": "run-esbuild",
+        "build:prod": "run-esbuild --prod"
+    }
+}
+```
+
+-   And remove the following parts.
+
+```json
+{
+    "scripts": {
+        "dev": "webpack watch --mode development",
+        "webpack": "webpack build --mode development",
+        "build": "webpack build"
+    }
+}
+```
+
 ## 6.8.0 - 2022-11-04
 
 ### Added

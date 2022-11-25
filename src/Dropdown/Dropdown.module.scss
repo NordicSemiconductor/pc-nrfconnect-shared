@@ -34,7 +34,11 @@ $dropdown-item-height: 24px; //px unit dependency in dropdown.tsx
     border: none;
 }
 
-.btnActive img {
+.mdi {
+    font-size: 18px;
+}
+
+.btnActive .mdi {
     transform: rotate(180deg);
 }
 
@@ -68,9 +72,6 @@ $dropdown-item-height: 24px; //px unit dependency in dropdown.tsx
     }
 }
 
-.itemsActive image {
-    transform: rotate(90deg);
-}
 
 .itemsInactive {
     display: none;

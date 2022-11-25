@@ -44,7 +44,7 @@ const StateSelector: FC<Props> = ({
     const selectionButton = (item: string, index: number) => (
         <Button
             key={item}
-            className={selected === item ? 'btn-set' : 'btn-unset'}
+            variant={selected === item ? 'set' : 'unset'}
             onClick={() => {
                 setSelected(item);
                 onSelect(index);

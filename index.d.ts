@@ -595,6 +595,10 @@ declare module 'pc-nrfconnect-shared' {
 
     // describeError.ts
     export const describeError: (error: unknown) => string;
+
+    // SerialPort.ts
+    export const SerialPort: typeof import('./src/SerialPort/SerialPort').SerialPort;
+    export const SERIALPORT_CHANNEL: typeof import('./src/SerialPort/SerialPort').SERIALPORT_CHANNEL;
 }
 
 declare module 'prettysize' {
