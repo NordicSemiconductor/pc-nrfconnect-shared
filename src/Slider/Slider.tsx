@@ -21,7 +21,7 @@ export interface Props {
     id?: string;
     title?: string;
     disabled?: boolean;
-    values: number[];
+    values: readonly number[];
     range: RangeProp;
     ticks?: boolean;
     onChange: ((v: number) => void)[];
