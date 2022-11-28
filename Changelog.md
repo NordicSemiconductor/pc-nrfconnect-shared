@@ -11,6 +11,8 @@ and this project adheres to
 ### Fixed
 
 -   `scripts/nordic-publish.ts` failed when ran in the release pipeline.
+-   Weakened type of `values` property of `Slider` from `number[]` to
+    `readonly number[]`.
 
 ## 6.11.0 - 2022-11-25
 
