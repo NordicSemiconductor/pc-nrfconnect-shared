@@ -30,7 +30,7 @@ interface Props {
     onChangeComplete?: (number: number) => void;
 }
 
-const incrementValue = (
+const changeValueStepwise = (
     current: number,
     range: RangeProp,
     steps: number,
@@ -38,10 +38,7 @@ const incrementValue = (
 ) => {
     if (steps === 0) return;
 
-    if (
-        typeof range.explicitRange !== 'undefined' &&
-        range.explicitRange.length > 0
-    ) {
+    if (range.explicitRange != null && range.explicitRange.length > 0) {
         const currentIndex = range.explicitRange.indexOf(current);
         const newIndex = currentIndex + steps;
 
@@ -52,14 +49,9 @@ const incrementValue = (
         return;
     }
 
-    const decimal =
-        range.decimals && typeof range.decimals !== 'undefined'
-            ? range.decimals
-            : 0;
+    const decimal = range.decimals ?? 0;
     const stepValue =
-        range.step && typeof range.step !== 'undefined'
-            ? range.step
-            : 0.1 ** decimal;
+        range.step && range.step != null ? range.step : 0.1 ** decimal;
     const newValue = Number((current + steps * stepValue).toFixed(decimal));
 
     if (newValue >= range.min && newValue <= range.max) {
@@ -82,10 +74,10 @@ const NumberInlineInput: FC<Props> = ({
         onChange={newValue => onChange(Number(newValue))}
         onChangeComplete={newValue => onChangeComplete(Number(newValue))}
         onKeyboardIncrementAction={() =>
-            incrementValue(value, range, 1, onChange)
+            changeValueStepwise(value, range, 1, onChange)
         }
         onKeyboardDecrementAction={() =>
-            incrementValue(value, range, -1, onChange)
+            changeValueStepwise(value, range, -1, onChange)
         }
     />
 );
