@@ -12,21 +12,23 @@ and this project adheres to
 
 -   `scripts/nordic-publish.ts` failed when ran in the release pipeline.
 
-## 6.11.0
+## 6.11.0 - 2022-11-25
 
 ### Added
 
 -   `NumberInlineInput` can opt to have step defined allowing only values that
-    are a factor of this step size
--   `NumberInlineInput` can opt to have explict ranges allowing for split ranges
+    are a factor of this step size.
+-   `NumberInlineInput` can opt to have explict ranges allowing for split
+    ranges.
 -   `InlineInput` can opt to have support for up/down keyboard events to control
-    the value
--   `NumberInlineInput` support for up/down keyboard events to control the value
--   `Slider` can opt to have steps defined allowing allowing to inciment the
-    value with the step size
+    the value.
+-   `NumberInlineInput` support for up/down keyboard events to control the
+    value.
+-   `Slider` can opt to have steps defined allowing allowing to increment the
+    value with the step size.
 -   `Slider` can opt to have explict ranges allowing for split ranges. Ticks are
-    not yest supported on this mode
--   Warn in console if Min and Max are not factors of the optional step size
+    not yet supported on this mode.
+-   Warn in console if Min and Max are not factors of the optional step size.
 
 ### Fixed
 
@@ -120,14 +122,14 @@ and this project adheres to
 -   Opt-in scroll functionality to the dropdown component if there are more then
     X items in the list.
 -   In Dropdown component currently selected `DropdownItem` can now be passed
-    using the `selectedItem` property
+    using the `selectedItem` property.
 -   In StateSelector component can now be passed using the `selectedItem`
-    property
+    property.
 
 ### Fixed
 
 -   Z-Index issue with dropdown select list when it is vertically above a toggle
-    component and list is opened
+    component and list is opened.
 
 ## 6.7.2 - 2022-11-01
 
