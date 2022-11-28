@@ -598,7 +598,6 @@ declare module 'pc-nrfconnect-shared' {
 
     // SerialPort.ts
     export const SerialPort: typeof import('./src/SerialPort/SerialPort').SerialPort;
-    export const SERIALPORT_CHANNEL: typeof import('./src/SerialPort/SerialPort').SERIALPORT_CHANNEL;
 }
 
 declare module 'prettysize' {
