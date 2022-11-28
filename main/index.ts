@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-module.exports.SERIALPORT_CHANNEL = {
+export const SERIALPORT_CHANNEL = {
     OPEN: 'serialport:open',
     CLOSE: 'serialport:close',
     WRITE: 'serialport:write',
