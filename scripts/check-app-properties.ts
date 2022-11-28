@@ -94,7 +94,7 @@ const checkOptionalProperties = (packageJson: PackageJson) => {
 
     if (propertyIsMissing(packageJson)('repository.url')) {
         warn('Please provide a property `repository.url` in package.json.');
-    } else {
+    } else if (existsSync('./.git')) {
         const realGitUrl = execSync('git remote get-url origin', {
             encoding: 'utf-8',
         }).trimEnd();
