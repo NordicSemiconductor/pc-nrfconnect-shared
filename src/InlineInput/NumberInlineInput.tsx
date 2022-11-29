@@ -7,55 +7,74 @@
 import React, { FC } from 'react';
 
 import { isFactor } from '../Slider/factor';
-import { RangeProp } from '../Slider/rangeShape';
+import {
+    isValues,
+    NewRange,
+    RangeOrValues,
+    Values,
+} from '../Slider/rangeShape';
 import InlineInput from './InlineInput';
 
 import './number-inline-input.scss';
 
+export interface Props {
+    disabled?: boolean;
+    value: number;
+    range: RangeOrValues;
+    onChange: (value: number) => void;
+    onChangeComplete?: (value: number) => void;
+}
+
+const isInValues = (value: number, values: Values) => values.includes(value);
+
 const isInRange = (
     value: number,
-    { min, max, decimals = 0, step = 0, explicitRange = [] }: RangeProp
+    { min, max, decimals = 0, step = 0 }: NewRange
 ) =>
     value >= min &&
     value <= max &&
     value === Number(value.toFixed(decimals)) &&
-    (step > 0 ? isFactor(value, step) : true) &&
-    (explicitRange.length > 0 ? explicitRange.indexOf(value) !== -1 : true);
+    (step > 0 ? isFactor(value, step) : true);
 
-interface Props {
-    disabled?: boolean;
-    value: number;
-    range: RangeProp;
-    onChange: (number: number) => void;
-    onChangeComplete?: (number: number) => void;
-}
+const isValid = (value: number, rangeOrValues: RangeOrValues) =>
+    isValues(rangeOrValues)
+        ? isInValues(value, rangeOrValues)
+        : isInRange(value, rangeOrValues);
 
-const changeValueStepwise = (
+const nextInValues = (
     current: number,
-    range: RangeProp,
-    steps: number,
-    action: (v: number) => void
-) => {
-    if (steps === 0) return;
+    values: Values,
+    steps: number
+): number | undefined => {
+    const currentIndex = values.indexOf(current);
+    const newIndex = currentIndex + steps;
 
-    if (range.explicitRange != null && range.explicitRange.length > 0) {
-        const currentIndex = range.explicitRange.indexOf(current);
-        const newIndex = currentIndex + steps;
+    return values[newIndex];
+};
 
-        if (newIndex >= 0 && newIndex < range.explicitRange.length) {
-            action(range.explicitRange[newIndex]);
-        }
-
-        return;
-    }
-
+const nextInRange = (current: number, range: NewRange, steps: number) => {
     const decimal = range.decimals ?? 0;
     const stepValue =
         range.step && range.step != null ? range.step : 0.1 ** decimal;
     const newValue = Number((current + steps * stepValue).toFixed(decimal));
 
     if (newValue >= range.min && newValue <= range.max) {
-        action(newValue);
+        return newValue;
+    }
+};
+
+const changeValueStepwise = (
+    current: number,
+    rangeOrValues: RangeOrValues,
+    steps: number,
+    action: (v: number) => void
+) => {
+    const nextValue = isValues(rangeOrValues)
+        ? nextInValues(current, rangeOrValues, steps)
+        : nextInRange(current, rangeOrValues, steps);
+
+    if (nextValue != null) {
+        action(nextValue);
     }
 };
 
@@ -70,7 +89,7 @@ const NumberInlineInput: FC<Props> = ({
         className="number-inline-input"
         disabled={disabled}
         value={String(value)}
-        isValid={newValue => isInRange(Number(newValue), range)}
+        isValid={newValue => isValid(Number(newValue), range)}
         onChange={newValue => onChange(Number(newValue))}
         onChangeComplete={newValue => onChangeComplete(Number(newValue))}
         onKeyboardIncrementAction={() =>

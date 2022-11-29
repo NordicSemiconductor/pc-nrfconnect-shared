@@ -10,3 +10,12 @@ export interface RangeProp {
     step?: number; // positive number
     explicitRange?: number[];
 }
+
+export type Values = readonly number[];
+export type NewRange = Omit<RangeProp, 'explicitRange'>;
+
+export type RangeOrValues = NewRange | Values;
+
+export const isValues = (
+    rangeOrValues: RangeOrValues
+): rangeOrValues is Values => Array.isArray(rangeOrValues);

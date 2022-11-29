@@ -6,6 +6,43 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+-   Specifying a range with explicit values for a `NumberInlineInput` was
+    changed. When you before wrote an `NumberInlineInput` element like this:
+
+```jsx
+<NumberInlineInput
+    values={[4]}
+    range={{ min: 3, max: 7, explicitRange: [3, 4, 6, 7] }}
+    onChange={[() => {}]}
+/>
+```
+
+Instead you now have to replace the whole range object with the array and write
+it like this:
+
+```jsx
+<NumberInlineInput
+    values={[4]}
+    range={[3, 4, 6, 7]}
+    onChange={[() => {}]}
+/>
+```
+
+It is of course still possible to specify a range without explicit values like
+this:
+
+```jsx
+<NumberInlineInput
+    values={[4]}
+    range={{ min: 3, max: 7 }}
+    onChange={[() => {}]}
+/>
+```
+
 ## 6.12.1 - 2022-11-29
 
 ### Fixed

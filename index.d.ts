@@ -322,13 +322,8 @@ declare module 'pc-nrfconnect-shared' {
 
     // NumberInlineInput.jsx
 
-    interface NumberInlineInputProps {
-        disabled?: boolean;
-        value: number;
-        range: RangeProp;
-        onChange: (value: number) => void;
-        onChangeComplete?: (value: number) => void;
-    }
+    export type NumberInlineInputProps =
+        import('./src/InlineInput/NumberInlineInput').Props;
 
     export class NumberInlineInput extends React.Component<NumberInlineInputProps> {}
 
