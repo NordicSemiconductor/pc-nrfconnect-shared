@@ -2,3 +2,4 @@
 /pc-nrfconnect-shared-*.tgz
 /coverage
 /scripts/nordic-publish.js
+/dist
