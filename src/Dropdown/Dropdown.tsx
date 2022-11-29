@@ -4,24 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FormLabel from 'react-bootstrap/FormLabel';
-import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 
 import styles from './Dropdown.module.scss';
-
-const useSynchronisationIfChangedFromOutside: <T>(
-    v: T,
-    set: (value: T) => void
-) => void = (externalValue, setInternalValue) => {
-    const previousExternalValue = useRef(externalValue);
-    useEffect(() => {
-        if (previousExternalValue.current !== externalValue) {
-            setInternalValue(externalValue);
-            previousExternalValue.current = externalValue;
-        }
-    });
-};
 
 export interface DropdownItem {
     label: string;
@@ -33,8 +19,7 @@ export interface DropdownProps {
     items: DropdownItem[];
     onSelect: (item: DropdownItem) => void;
     disabled?: boolean;
-    defaultIndex?: number;
-    selectedItem?: DropdownItem;
+    selectedItem: DropdownItem;
     numItemsBeforeScroll?: number;
 }
 
@@ -43,23 +28,10 @@ const Dropdown: React.FC<DropdownProps> = ({
     items,
     onSelect,
     disabled = false,
-    defaultIndex = 0,
-    selectedItem = items[defaultIndex],
+    selectedItem,
     numItemsBeforeScroll = 0,
 }) => {
-    const selectedDropdownItem = items.find(
-        e => e.value === selectedItem.value
-    );
-
-    const [selected, setSelected] = useState(
-        selectedDropdownItem as DropdownItem
-    );
     const [isActive, setIsActive] = useState(false);
-
-    useSynchronisationIfChangedFromOutside<DropdownItem>(
-        selectedItem,
-        setSelected
-    );
 
     useEffect(() => {
         const clickEvent = () => setIsActive(!isActive);
@@ -76,7 +48,6 @@ const Dropdown: React.FC<DropdownProps> = ({
     const onClick = () => setIsActive(!isActive);
 
     const onClickItem = (item: DropdownItem) => {
-        setSelected(item);
         onSelect(item);
     };
 
@@ -92,9 +63,9 @@ const Dropdown: React.FC<DropdownProps> = ({
                 disabled={disabled}
             >
                 <span>
-                    {items.findIndex(e => e.value === selected.value) === -1
+                    {items.findIndex(e => e.value === selectedItem.value) === -1
                         ? ''
-                        : selected.label}
+                        : selectedItem.label}
                 </span>
                 <span className={`mdi mdi-chevron-down ${styles.mdi}`} />
             </button>
@@ -130,19 +101,6 @@ const Dropdown: React.FC<DropdownProps> = ({
             </div>
         </div>
     );
-};
-
-Dropdown.propTypes = {
-    label: string,
-    items: arrayOf(
-        shape({
-            label: string.isRequired,
-            value: string.isRequired,
-        }).isRequired
-    ).isRequired,
-    onSelect: func.isRequired,
-    disabled: bool,
-    defaultIndex: number,
 };
 
 export default Dropdown;

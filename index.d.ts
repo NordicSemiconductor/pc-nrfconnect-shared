@@ -334,21 +334,7 @@ declare module 'pc-nrfconnect-shared' {
 
     // Toggle.jsx
 
-    interface ToggleProps {
-        id?: string;
-        title?: string;
-        isToggled?: boolean;
-        onToggle?: (isToggled: boolean) => void;
-        variant?: 'primary' | 'secondary';
-        barColor?: string;
-        barColorToggled?: string;
-        handleColor?: string;
-        handleColorToggled?: string;
-        label?: string;
-        labelRight?: boolean;
-        width?: string;
-        disabled?: boolean;
-    }
+    type ToggleProps = import('./src/Toggle/Toggle').Props;
 
     export class Toggle extends React.Component<ToggleProps> {}
 
