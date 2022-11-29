@@ -14,7 +14,7 @@ and this project adheres to
     Apps that did not use the `isToggled` or `selectedItem` arguments will have
     to implement this.
 
-### Changed 
+### Changed
 
 -   `Toggle` component requires the `isToggled` argument.
 -   `Dropdown` component requires `selectedItem` and removed defaultIndex.
