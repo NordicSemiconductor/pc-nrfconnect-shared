@@ -11,4 +11,5 @@ build({
     logLevel: 'warning',
     entryPoints: ['./src/bootstrap.scss'],
     outfile: 'dist/bootstrap.css',
+    sourcemap: false,
 });
