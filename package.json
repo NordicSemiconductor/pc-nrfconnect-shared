@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "6.11.2",
+    "version": "6.11.3",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -23,7 +23,9 @@
         "check:types": "ts-node scripts/check-for-typescript.ts tsc --noEmit --pretty",
         "check:license": "ts-node scripts/nrfconnect-license.ts check",
         "prepare": "husky install",
-        "postinstall": "esbuild scripts/nordic-publish.ts --bundle --outfile=scripts/nordic-publish.js --platform=node --log-level=warning --minify"
+        "compile:publish": "esbuild scripts/nordic-publish.ts --bundle --outfile=scripts/nordic-publish.js --platform=node --log-level=warning --minify",
+        "compile:bootstrap": "node scripts/esbuild-bootstrap.js",
+        "postinstall": "run-p compile:*"
     },
     "dependencies": {
         "@babel/core": "7.18.9",

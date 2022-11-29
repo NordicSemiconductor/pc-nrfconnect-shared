@@ -30,3 +30,11 @@ fs.copyFileSync(
     ),
     join(distFolder, 'nordic-publish.js')
 );
+
+fs.copyFileSync(
+    join(
+        process.cwd(),
+        './node_modules/pc-nrfconnect-shared/dist/bootstrap.css'
+    ),
+    join(distFolder, 'bootstrap.css')
+);
