@@ -16,7 +16,7 @@ const entry = [
     './src/index.tsx',
 ].find(fs.existsSync);
 
-build([entry]);
+build({ entryPoints: [entry] });
 
 const distFolder = join(process.cwd(), 'dist');
 if (!fs.existsSync(distFolder)) {
