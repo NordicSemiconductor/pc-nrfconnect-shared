@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## ## 6.10.0 - 2022-11-24
+## ## 6.12.0 - 2022-11-29
 
 ### Breaking
 
@@ -14,12 +14,70 @@ and this project adheres to
     Apps that did not use the `isToggled` or `selectedItem` arguments will have
     to implement this.
 
-### Changed
+### Changed 
 
 -   `Toggle` component requires the `isToggled` argument.
 -   `Dropdown` component requires `selectedItem` and removed defaultIndex.
 -   `StateSelector` component requires `selectedItem` and removed defaultIndex.
+
+## 6.11.3 - 2022-11-29
+
+### Added
+
+-   Building bootstrap on postinstall, letting app bundler pick it up at will.
+
+## 6.11.2 - 2022-11-28
+
+### Added
+
+-   Serialport `on_update`, `on_set`, `on_changed`, `on_write` callbacks.
+
+### Changed
+
+-   Folder structure to have separate `pc-nrfconnect-shared/main`, in order to
+    share code with pc-nrfconnect-launcher.
+
+## 6.11.1 - 2022-11-28
+
+### Fixed
+
+-   `scripts/nordic-publish.ts` failed when ran in the release pipeline.
+-   Weakened type of `values` property of `Slider` from `number[]` to
+    `readonly number[]`.
+
+## 6.11.0 - 2022-11-25
+
+### Added
+
+-   `NumberInlineInput` can opt to have step defined allowing only values that
+    are a factor of this step size.
+-   `NumberInlineInput` can opt to have explict ranges allowing for split
+    ranges.
+-   `InlineInput` can opt to have support for up/down keyboard events to control
+    the value.
+-   `NumberInlineInput` support for up/down keyboard events to control the
+    value.
+-   `Slider` can opt to have steps defined allowing allowing to increment the
+    value with the step size.
+-   `Slider` can opt to have explict ranges allowing for split ranges. Ticks are
+    not yet supported on this mode.
+-   Warn in console if Min and Max are not factors of the optional step size.
+
+### Fixed
+
+-   Esbuild problem when dist folder was missing.
+
+## 6.10.0 - 2022-11-25
+
+### Changed
+
 -   The active button of the `StateSelector` component is now white.
+-   `scripts/nordic-publish.js` now also uploads the SVG icon and updates the
+    new meta files. Using this will be mandatory for the next launcher release.
+
+### Fixed
+
+-   Esbuild for apps now also works, (only worked on the launcher renderers).
 
 ## 6.9.0 - 2022-11-24
 
@@ -97,14 +155,14 @@ and this project adheres to
 -   Opt-in scroll functionality to the dropdown component if there are more then
     X items in the list.
 -   In Dropdown component currently selected `DropdownItem` can now be passed
-    using the `selectedItem` property
+    using the `selectedItem` property.
 -   In StateSelector component can now be passed using the `selectedItem`
-    property
+    property.
 
 ### Fixed
 
 -   Z-Index issue with dropdown select list when it is vertically above a toggle
-    component and list is opened
+    component and list is opened.
 
 ## 6.7.2 - 2022-11-01
 

@@ -4,31 +4,56 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import type { AutoDetectTypes } from '@serialport/bindings-cpp';
+import type {
+    AutoDetectTypes,
+    SetOptions,
+    UpdateOptions,
+} from '@serialport/bindings-cpp';
 import { ipcRenderer } from 'electron';
 import { logger } from 'pc-nrfconnect-shared';
 import type { SerialPortOpenOptions } from 'serialport';
 
-export const SERIALPORT_CHANNEL = {
-    OPEN: 'serialport:open',
-    CLOSE: 'serialport:close',
-    WRITE: 'serialport:write',
-
-    ON_CLOSED: 'serialport:on-close',
-    ON_DATA: 'serialport:on-data',
-
-    IS_OPEN: 'serialport:is-open',
-};
+import { SERIALPORT_CHANNEL } from '../../main';
 
 export const SerialPort = async (
     options: SerialPortOpenOptions<AutoDetectTypes>,
-    onData: (data: Uint8Array) => void = () => {},
-    onClosed: () => void = () => {}
+    overwrite: boolean,
+    {
+        onData = () => {},
+        onClosed = () => {},
+        onUpdate = () => {},
+        onSet = () => {},
+        onChange = () => {},
+        onSeparateWrite = () => {},
+    }: {
+        onData?: (data: Uint8Array) => void;
+        onClosed?: () => void;
+        onUpdate?: (newOptions: UpdateOptions) => void;
+        onSet?: (newOptions: SetOptions) => void;
+        onChange?: (newOptions: SerialPortOpenOptions<AutoDetectTypes>) => void;
+        onSeparateWrite?: (data: Uint8Array) => void;
+    } = {}
 ) => {
     const { path } = options;
 
     ipcRenderer.on(SERIALPORT_CHANNEL.ON_DATA, (_event, data) => onData(data));
     ipcRenderer.on(SERIALPORT_CHANNEL.ON_CLOSED, onClosed);
+    ipcRenderer.on(SERIALPORT_CHANNEL.ON_UPDATE, (_event, newOptions) =>
+        onUpdate(newOptions)
+    );
+    ipcRenderer.on(SERIALPORT_CHANNEL.ON_SET, (_event, newOptions) =>
+        onSet(newOptions)
+    );
+    ipcRenderer.on(SERIALPORT_CHANNEL.ON_CHANGED, (_event, newOptions) =>
+        onChange(newOptions)
+    );
+
+    // The origin of this event is emitted when a renderer writes to the port,
+    // and is sent to all renderers expect for the writer, in order for all
+    // terminals to display the same terminal input and output.
+    ipcRenderer.on(SERIALPORT_CHANNEL.ON_WRITE, (_event, data) =>
+        onSeparateWrite(data)
+    );
 
     const write = (data: string | number[] | Buffer): void => {
         ipcRenderer.invoke(SERIALPORT_CHANNEL.WRITE, path, data);
@@ -54,14 +79,36 @@ export const SerialPort = async (
         return wasClosed;
     };
 
-    const error = await ipcRenderer.invoke(SERIALPORT_CHANNEL.OPEN, options);
+    // Only supports baudRate, same as serialport.io
+    const update = (newOptions: UpdateOptions) => {
+        ipcRenderer.invoke(SERIALPORT_CHANNEL.UPDATE, path, newOptions);
+    };
+
+    const set = (newOptions: SetOptions) => {
+        ipcRenderer.invoke(SERIALPORT_CHANNEL.SET, path, newOptions);
+    };
+
+    const error = await ipcRenderer.invoke(
+        SERIALPORT_CHANNEL.OPEN,
+        options,
+        overwrite
+    );
 
     if (error) {
-        logger.error(error);
+        logger.error(
+            `Failed to connect to port: ${path}. Make sure the port is not already taken, if you are not sure, try to power cycle the device and try to connect again.`
+        );
         throw new Error(error);
     } else {
         logger.info(`Opened port with options: ${JSON.stringify(options)}`);
     }
 
-    return { path, write, close, isOpen };
+    return {
+        path,
+        write,
+        close,
+        isOpen,
+        update,
+        set,
+    };
 };

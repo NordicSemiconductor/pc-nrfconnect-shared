@@ -11,18 +11,19 @@ const esbuild = require('esbuild');
 const svgr = require('@svgr/core').transform;
 
 /**
- * @param {string[]} entries Relative to the base of the app
+ * @param {esbuild.BuildOptions} options Esbuild options
  * @param {'iife'|'cjs'|'esm'} format Cjs for require() renderers
  * @returns {void}
  */
-module.exports.build = (entries, format = 'cjs') => {
+module.exports.build = options => {
     // eslint-disable-next-line import/no-dynamic-require, global-require
     const { dependencies } = require(join(process.cwd(), 'package.json'));
-    const outfile = entries.length === 1 ? './dist.bundle.js' : undefined;
-    const outdir = !outfile && './dist';
+    const outfile =
+        options.entryPoints.length === 1 ? './dist/bundle.js' : undefined;
+    const outdir = outfile ? undefined : './dist';
 
     esbuild.build({
-        entryPoints: entries,
+        format: 'cjs',
         outfile,
         outdir,
         target: 'chrome89',
@@ -32,7 +33,6 @@ module.exports.build = (entries, format = 'cjs') => {
         minify: process.argv.includes('--prod'),
         bundle: true,
         logLevel: 'info',
-        format,
         external: [
             // node
             'fs',
@@ -109,5 +109,6 @@ module.exports.build = (entries, format = 'cjs') => {
                 },
             },
         ],
+        ...options,
     });
 };
