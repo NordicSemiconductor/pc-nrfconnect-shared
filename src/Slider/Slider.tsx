@@ -17,6 +17,42 @@ import Ticks from './Ticks';
 
 import './slider.scss';
 
+const validateArraySizes = (
+    values: readonly number[],
+    onChange: ((v: number) => void)[]
+) => {
+    if (values.length === 0)
+        console.error('"values" must contain at least on element');
+    if (values.length !== onChange.length)
+        console.error(
+            `Props 'values' and 'onChange' must have the same size but were ${values} and ${onChange}`
+        );
+};
+
+const validateRange = (range: RangeProp) => {
+    if (range.min > range.max)
+        console.error(
+            `range.min must not be higher than range.max: ${JSON.stringify(
+                range
+            )}`
+        );
+
+    if (range.step != null) {
+        if (!isFactor(range.min, range.step))
+            console.error(
+                `range.step must be a factor of range.min: ${JSON.stringify(
+                    range
+                )}`
+            );
+        if (!isFactor(range.max, range.step))
+            console.error(
+                `range.step must be a factor of range.max: ${JSON.stringify(
+                    range
+                )}`
+            );
+    }
+};
+
 export interface Props {
     id?: string;
     title?: string;
@@ -44,32 +80,8 @@ const Slider: FC<Props> = ({
         step: range.step ?? 0,
     };
 
-    if (values.length === 0)
-        console.error('"values" must contain at least on element');
-    if (values.length !== onChange.length)
-        console.error(
-            `Props 'values' and 'onChange' must have the same size but were ${values} and ${onChange}`
-        );
-    if (rangeNoOptional.min > rangeNoOptional.max)
-        console.error(
-            `range.min must not be higher than range.max: ${JSON.stringify(
-                range
-            )}`
-        );
-    if (rangeNoOptional.step > 0) {
-        if (!isFactor(range.min, rangeNoOptional.step))
-            console.error(
-                `range.step must be a factor of range.min: ${JSON.stringify(
-                    range
-                )}`
-            );
-        if (!isFactor(range.max, rangeNoOptional.step))
-            console.error(
-                `range.step must be a factor of range.max: ${JSON.stringify(
-                    range
-                )}`
-            );
-    }
+    validateArraySizes(values, onChange);
+    validateRange(range);
 
     const { width, ref } = useResizeDetector();
 
