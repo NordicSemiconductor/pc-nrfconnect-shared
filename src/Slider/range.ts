@@ -5,14 +5,14 @@
  */
 
 export type Values = readonly number[];
-export type NewRange = {
+export type Range = {
     min: number;
     max: number;
     decimals?: number;
     step?: number; // positive number
 };
 
-export type RangeOrValues = NewRange | Values;
+export type RangeOrValues = Range | Values;
 
 export const isValues = (
     rangeOrValues: RangeOrValues

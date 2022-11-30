@@ -12,7 +12,7 @@ import {
     fromPercentage,
     toPercentage,
 } from './percentage';
-import { RangeOrValues } from './rangeShape';
+import { RangeOrValues } from './range';
 
 import './handle.scss';
 

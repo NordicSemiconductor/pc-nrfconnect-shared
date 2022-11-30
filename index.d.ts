@@ -280,7 +280,7 @@ declare module 'pc-nrfconnect-shared' {
 
     // Slider.jsx
 
-    export type RangeProp = import('./src/Slider/rangeShape').RangeProp;
+    export type Range = import('./src/Slider/range').Range;
     export type SliderProps = import('./src/Slider/Slider').Props;
 
     export class Slider extends React.Component<SliderProps> {}

@@ -12,13 +12,7 @@ import Bar from './Bar';
 import { isFactor } from './factor';
 import Handle from './Handle';
 import { toPercentage } from './percentage';
-import {
-    getMin,
-    isValues,
-    NewRange,
-    RangeOrValues,
-    Values,
-} from './rangeShape';
+import { getMin, isValues, Range, RangeOrValues, Values } from './range';
 import Ticks from './Ticks';
 
 import './slider.scss';
@@ -47,7 +41,7 @@ const validateValues = (values: Values) => {
     }
 };
 
-const validateRange = (range: NewRange) => {
+const validateRange = (range: Range) => {
     if (range.min > range.max)
         console.error(
             `range.min must not be higher than range.max: ${JSON.stringify(

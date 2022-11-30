@@ -7,12 +7,7 @@
 import React, { FC } from 'react';
 
 import { isFactor } from '../Slider/factor';
-import {
-    isValues,
-    NewRange,
-    RangeOrValues,
-    Values,
-} from '../Slider/rangeShape';
+import { isValues, Range, RangeOrValues, Values } from '../Slider/range';
 import InlineInput from './InlineInput';
 
 import './number-inline-input.scss';
@@ -29,7 +24,7 @@ const isInValues = (value: number, values: Values) => values.includes(value);
 
 const isInRange = (
     value: number,
-    { min, max, decimals = 0, step = 0 }: NewRange
+    { min, max, decimals = 0, step = 0 }: Range
 ) =>
     value >= min &&
     value <= max &&
@@ -52,7 +47,7 @@ const nextInValues = (
     return values[newIndex];
 };
 
-const nextInRange = (current: number, range: NewRange, steps: number) => {
+const nextInRange = (current: number, range: Range, steps: number) => {
     const decimal = range.decimals ?? 0;
     const stepValue =
         range.step && range.step != null ? range.step : 0.1 ** decimal;

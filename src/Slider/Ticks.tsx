@@ -8,7 +8,7 @@ import React, { FC } from 'react';
 import lodashRange from 'lodash.range';
 
 import classNames from '../utils/classNames';
-import { isValues, RangeOrValues } from './rangeShape';
+import { isValues, RangeOrValues } from './range';
 
 import './ticks.scss';
 
