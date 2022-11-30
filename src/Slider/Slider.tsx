@@ -12,7 +12,13 @@ import Bar from './Bar';
 import { isFactor } from './factor';
 import Handle from './Handle';
 import { toPercentage } from './percentage';
-import { RangeProp } from './rangeShape';
+import {
+    getMin,
+    isValues,
+    NewRange,
+    RangeOrValues,
+    Values,
+} from './rangeShape';
 import Ticks from './Ticks';
 
 import './slider.scss';
@@ -29,7 +35,19 @@ const validateArraySizes = (
         );
 };
 
-const validateRange = (range: RangeProp) => {
+const validateValues = (values: Values) => {
+    for (let i = 0; i < values.length - 1; i += 1) {
+        if (values[i] > values[i + 1]) {
+            console.error(
+                `The values of the range must be sorted correctly, but ${
+                    values[i]
+                } is larger then ${values[i + 1]} in ${values}`
+            );
+        }
+    }
+};
+
+const validateRange = (range: NewRange) => {
     if (range.min > range.max)
         console.error(
             `range.min must not be higher than range.max: ${JSON.stringify(
@@ -53,12 +71,20 @@ const validateRange = (range: RangeProp) => {
     }
 };
 
+const validateRangeOrValues = (rangeOrValues: RangeOrValues) => {
+    if (isValues(rangeOrValues)) {
+        validateValues(rangeOrValues);
+    } else {
+        validateRange(rangeOrValues);
+    }
+};
+
 export interface Props {
     id?: string;
     title?: string;
     disabled?: boolean;
     values: readonly number[];
-    range: RangeProp;
+    range: RangeOrValues;
     ticks?: boolean;
     onChange: ((v: number) => void)[];
     onChangeComplete?: () => void;
@@ -69,18 +95,18 @@ const Slider: FC<Props> = ({
     title,
     disabled = false,
     values,
-    range,
+    range: rangeOrValues,
     ticks,
     onChange,
     onChangeComplete,
 }) => {
     validateArraySizes(values, onChange);
-    validateRange(range);
+    validateRangeOrValues(rangeOrValues);
 
     const { width, ref } = useResizeDetector();
 
     const valueRange = {
-        min: values.length === 1 ? range.min : Math.min(...values),
+        min: values.length === 1 ? getMin(rangeOrValues) : Math.min(...values),
         max: Math.max(...values),
     };
 
@@ -92,15 +118,15 @@ const Slider: FC<Props> = ({
             ref={ref as React.MutableRefObject<HTMLDivElement>}
         >
             <Bar
-                start={toPercentage(valueRange.min, range)}
-                end={toPercentage(valueRange.max, range)}
+                start={toPercentage(valueRange.min, rangeOrValues)}
+                end={toPercentage(valueRange.max, rangeOrValues)}
             />
-            {ticks && <Ticks valueRange={valueRange} range={range} />}
+            {ticks && <Ticks valueRange={valueRange} range={rangeOrValues} />}
             {values.map((value, index) => (
                 <Handle
                     key={index} // eslint-disable-line react/no-array-index-key
                     value={value}
-                    range={range}
+                    range={rangeOrValues}
                     disabled={disabled}
                     onChange={onChange[index]}
                     onChangeComplete={onChangeComplete}

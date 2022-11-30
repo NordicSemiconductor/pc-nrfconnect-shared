@@ -3,19 +3,25 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
-export interface RangeProp {
+
+export type Values = readonly number[];
+export type NewRange = {
     min: number;
     max: number;
     decimals?: number;
     step?: number; // positive number
-    explicitRange?: number[];
-}
-
-export type Values = readonly number[];
-export type NewRange = Omit<RangeProp, 'explicitRange'>;
+};
 
 export type RangeOrValues = NewRange | Values;
 
 export const isValues = (
     rangeOrValues: RangeOrValues
 ): rangeOrValues is Values => Array.isArray(rangeOrValues);
+
+export const getMin = (rangeOrValues: RangeOrValues) =>
+    isValues(rangeOrValues) ? rangeOrValues[0] : rangeOrValues.min;
+
+export const getMax = (rangeOrValues: RangeOrValues) =>
+    isValues(rangeOrValues)
+        ? rangeOrValues[rangeOrValues.length - 1]
+        : rangeOrValues.max;

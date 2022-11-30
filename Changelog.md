@@ -10,8 +10,9 @@ and this project adheres to
 
 ### Changed
 
--   Specifying a range with explicit values for a `NumberInlineInput` was
-    changed. When you before wrote an `NumberInlineInput` element like this:
+-   Specifying a range with explicit values for a `NumberInlineInput` or a
+    `Slider` was changed. When you before wrote an `NumberInlineInput` element
+    (same applies to a `Slider`) like this:
 
 ```jsx
 <NumberInlineInput

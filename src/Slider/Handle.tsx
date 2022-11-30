@@ -12,7 +12,7 @@ import {
     fromPercentage,
     toPercentage,
 } from './percentage';
-import { RangeProp } from './rangeShape';
+import { RangeOrValues } from './rangeShape';
 
 import './handle.scss';
 
@@ -25,7 +25,7 @@ const useAutoupdatingRef = (value: (number: number) => void) => {
 interface Props {
     value: number;
     disabled: boolean;
-    range: RangeProp;
+    range: RangeOrValues;
     onChange: (number: number) => void;
     onChangeComplete?: () => void;
     sliderWidth?: number;

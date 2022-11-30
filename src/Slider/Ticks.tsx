@@ -8,29 +8,29 @@ import React, { FC } from 'react';
 import lodashRange from 'lodash.range';
 
 import classNames from '../utils/classNames';
-import { RangeProp } from './rangeShape';
+import { isValues, RangeOrValues } from './rangeShape';
 
 import './ticks.scss';
 
 interface Props {
-    range: RangeProp;
+    range: RangeOrValues;
     valueRange: { min: number; max: number };
 }
 
-const Ticks: FC<Props> = ({
-    valueRange,
-    range: { min, max, decimals = 0, step, explicitRange = [] },
-}) => {
+const Ticks: FC<Props> = ({ valueRange, range: rangeOrValues }) => {
+    if (isValues(rangeOrValues)) {
+        console.error(
+            'Ticks are not yet implemented for explicit values. Not showing ticks.'
+        );
+        return null;
+    }
+
+    const { min, max, decimals = 0, step } = rangeOrValues;
+
     const computedStep = step == null ? 0.1 ** decimals : step;
 
     const isSelected = (value: number) =>
         value >= valueRange.min && value <= valueRange.max;
-
-    if (explicitRange.length > 0) {
-        console.error(
-            'Explicit Range is set but this functionality has not been impliment yet for Ticks. Expect the spacing between Ticks to be incorrect'
-        );
-    }
 
     return (
         <div className="ticks">
