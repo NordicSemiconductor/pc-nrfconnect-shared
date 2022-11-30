@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 
 import classNames from '../utils/classNames';
@@ -17,16 +17,18 @@ import Ticks from './Ticks';
 
 import './slider.scss';
 
-const validateArraySizes = (
+const useValidatedArraySizes = (
     values: readonly number[],
     onChange: ((v: number) => void)[]
 ) => {
-    if (values.length === 0)
-        console.error('"values" must contain at least on element');
-    if (values.length !== onChange.length)
-        console.error(
-            `Props 'values' and 'onChange' must have the same size but were ${values} and ${onChange}`
-        );
+    useEffect(() => {
+        if (values.length === 0)
+            console.error('"values" must contain at least on element');
+        if (values.length !== onChange.length)
+            console.error(
+                `Props 'values' and 'onChange' must have the same size but were ${values} and ${onChange}`
+            );
+    }, [onChange, values]);
 };
 
 const validateValues = (values: Values) => {
@@ -65,12 +67,14 @@ const validateRange = (range: Range) => {
     }
 };
 
-const validateRangeOrValues = (rangeOrValues: RangeOrValues) => {
-    if (isValues(rangeOrValues)) {
-        validateValues(rangeOrValues);
-    } else {
-        validateRange(rangeOrValues);
-    }
+const useValidatedRangeOrValues = (rangeOrValues: RangeOrValues) => {
+    useEffect(() => {
+        if (isValues(rangeOrValues)) {
+            validateValues(rangeOrValues);
+        } else {
+            validateRange(rangeOrValues);
+        }
+    }, [rangeOrValues]);
 };
 
 export interface Props {
@@ -94,8 +98,8 @@ const Slider: FC<Props> = ({
     onChange,
     onChangeComplete,
 }) => {
-    validateArraySizes(values, onChange);
-    validateRangeOrValues(rangeOrValues);
+    useValidatedArraySizes(values, onChange);
+    useValidatedRangeOrValues(rangeOrValues);
 
     const { width, ref } = useResizeDetector();
 
