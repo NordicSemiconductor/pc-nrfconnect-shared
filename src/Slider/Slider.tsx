@@ -9,10 +9,9 @@ import { useResizeDetector } from 'react-resize-detector';
 
 import classNames from '../utils/classNames';
 import Bar from './Bar';
-import { isFactor } from './factor';
 import Handle from './Handle';
 import { toPercentage } from './percentage';
-import { getMin, isValues, Range, RangeOrValues, Values } from './range';
+import { getMin, RangeOrValues, useValidatedRangeOrValues } from './range';
 import Ticks from './Ticks';
 
 import './slider.scss';
@@ -29,52 +28,6 @@ const useValidatedArraySizes = (
                 `Props 'values' and 'onChange' must have the same size but were ${values} and ${onChange}`
             );
     }, [onChange, values]);
-};
-
-const validateValues = (values: Values) => {
-    for (let i = 0; i < values.length - 1; i += 1) {
-        if (values[i] > values[i + 1]) {
-            console.error(
-                `The values of the range must be sorted correctly, but ${
-                    values[i]
-                } is larger then ${values[i + 1]} in ${values}`
-            );
-        }
-    }
-};
-
-const validateRange = (range: Range) => {
-    if (range.min > range.max)
-        console.error(
-            `range.min must not be higher than range.max: ${JSON.stringify(
-                range
-            )}`
-        );
-
-    if (range.step != null) {
-        if (!isFactor(range.min, range.step))
-            console.error(
-                `range.step must be a factor of range.min: ${JSON.stringify(
-                    range
-                )}`
-            );
-        if (!isFactor(range.max, range.step))
-            console.error(
-                `range.step must be a factor of range.max: ${JSON.stringify(
-                    range
-                )}`
-            );
-    }
-};
-
-const useValidatedRangeOrValues = (rangeOrValues: RangeOrValues) => {
-    useEffect(() => {
-        if (isValues(rangeOrValues)) {
-            validateValues(rangeOrValues);
-        } else {
-            validateRange(rangeOrValues);
-        }
-    }, [rangeOrValues]);
 };
 
 export interface Props {

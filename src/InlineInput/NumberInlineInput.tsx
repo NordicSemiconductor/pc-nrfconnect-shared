@@ -7,7 +7,13 @@
 import React, { FC } from 'react';
 
 import { isFactor } from '../Slider/factor';
-import { isValues, Range, RangeOrValues, Values } from '../Slider/range';
+import {
+    isValues,
+    Range,
+    RangeOrValues,
+    useValidatedRangeOrValues,
+    Values,
+} from '../Slider/range';
 import InlineInput from './InlineInput';
 
 import './number-inline-input.scss';
@@ -79,21 +85,25 @@ const NumberInlineInput: FC<Props> = ({
     range,
     onChange,
     onChangeComplete = () => {},
-}) => (
-    <InlineInput
-        className="number-inline-input"
-        disabled={disabled}
-        value={String(value)}
-        isValid={newValue => isValid(Number(newValue), range)}
-        onChange={newValue => onChange(Number(newValue))}
-        onChangeComplete={newValue => onChangeComplete(Number(newValue))}
-        onKeyboardIncrementAction={() =>
-            changeValueStepwise(value, range, 1, onChange)
-        }
-        onKeyboardDecrementAction={() =>
-            changeValueStepwise(value, range, -1, onChange)
-        }
-    />
-);
+}) => {
+    useValidatedRangeOrValues(range);
+
+    return (
+        <InlineInput
+            className="number-inline-input"
+            disabled={disabled}
+            value={String(value)}
+            isValid={newValue => isValid(Number(newValue), range)}
+            onChange={newValue => onChange(Number(newValue))}
+            onChangeComplete={newValue => onChangeComplete(Number(newValue))}
+            onKeyboardIncrementAction={() =>
+                changeValueStepwise(value, range, 1, onChange)
+            }
+            onKeyboardDecrementAction={() =>
+                changeValueStepwise(value, range, -1, onChange)
+            }
+        />
+    );
+};
 
 export default NumberInlineInput;
