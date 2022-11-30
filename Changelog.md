@@ -49,6 +49,12 @@ this:
 -   A `Slider` with ticks but without a defined step displayed the ticks
     wrongly.
 
+### Steps to upgrade when using this package
+
+-   If you are using a `NumberInlineInput` or `Slider` with a range with the
+    `explicitRange` property, then you have to replace the whole range with the
+    array of the `explicitRange` property, as shown above.
+
 ## 6.12.1 - 2022-11-29
 
 ### Fixed
