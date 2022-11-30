@@ -74,12 +74,6 @@ const Slider: FC<Props> = ({
     onChange,
     onChangeComplete,
 }) => {
-    const rangeNoOptional = {
-        ...range,
-        decimals: range.decimals ?? 0,
-        step: range.step ?? 0,
-    };
-
     validateArraySizes(values, onChange);
     validateRange(range);
 
@@ -98,15 +92,15 @@ const Slider: FC<Props> = ({
             ref={ref as React.MutableRefObject<HTMLDivElement>}
         >
             <Bar
-                start={toPercentage(valueRange.min, rangeNoOptional)}
-                end={toPercentage(valueRange.max, rangeNoOptional)}
+                start={toPercentage(valueRange.min, range)}
+                end={toPercentage(valueRange.max, range)}
             />
             {ticks && <Ticks valueRange={valueRange} range={range} />}
             {values.map((value, index) => (
                 <Handle
                     key={index} // eslint-disable-line react/no-array-index-key
                     value={value}
-                    range={rangeNoOptional}
+                    range={range}
                     disabled={disabled}
                     onChange={onChange[index]}
                     onChangeComplete={onChangeComplete}
