@@ -43,6 +43,11 @@ this:
 />
 ```
 
+### Fixed
+
+-   A `Slider` with ticks but without a defined step displayed the ticks
+    wrongly.
+
 ## 6.12.1 - 2022-11-29
 
 ### Fixed

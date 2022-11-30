@@ -19,9 +19,9 @@ interface Props {
 
 const Ticks: FC<Props> = ({
     valueRange,
-    range: { min, max, decimals = 0, step = null, explicitRange = [] },
+    range: { min, max, decimals = 0, step, explicitRange = [] },
 }) => {
-    const computedStep = step === null ? 0.1 ** (decimals as number) : step;
+    const computedStep = step == null ? 0.1 ** decimals : step;
 
     const isSelected = (value: number) =>
         value >= valueRange.min && value <= valueRange.max;

@@ -89,7 +89,7 @@ const Slider: FC<Props> = ({
                 start={toPercentage(valueRange.min, rangeNoOptional)}
                 end={toPercentage(valueRange.max, rangeNoOptional)}
             />
-            {ticks && <Ticks valueRange={valueRange} range={rangeNoOptional} />}
+            {ticks && <Ticks valueRange={valueRange} range={range} />}
             {values.map((value, index) => (
                 <Handle
                     key={index} // eslint-disable-line react/no-array-index-key
