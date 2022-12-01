@@ -56,7 +56,17 @@ const validateRange = (range: Range) => {
         `range.min must not be higher than range.max: ${JSON.stringify(range)}`
     );
 
+    if (range.decimals != null)
+        assert(
+            range.decimals >= 0 && Number.isInteger(range.decimals),
+            `range.decimals must be non-negative integer but is ${range.decimals}`
+        );
+
     if (range.step != null) {
+        assert(
+            range.step > 0,
+            `range.step must be larger than zero but is ${range.step}`
+        );
         assert(
             isFactor(range.min, range.step),
             `range.step must be a factor of range.min: ${JSON.stringify(range)}`
