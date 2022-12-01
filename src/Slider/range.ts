@@ -30,6 +30,9 @@ export const getMax = (rangeOrValues: RangeOrValues) =>
         ? rangeOrValues[rangeOrValues.length - 1]
         : rangeOrValues.max;
 
+export const getStep = (range: Range) =>
+    range.step != null ? range.step : 0.1 ** (range.decimals ?? 0);
+
 const validateValues = (values: Values) => {
     for (let i = 0; i < values.length - 1; i += 1) {
         if (values[i] > values[i + 1]) {

@@ -8,7 +8,7 @@ import React, { FC, useEffect } from 'react';
 import lodashRange from 'lodash.range';
 
 import classNames from '../utils/classNames';
-import { isValues, RangeOrValues } from './range';
+import { getStep, isValues, RangeOrValues } from './range';
 
 import './ticks.scss';
 
@@ -30,16 +30,15 @@ const Ticks: FC<Props> = ({ valueRange, range: rangeOrValues }) => {
         return null;
     }
 
-    const { min, max, decimals = 0, step } = rangeOrValues;
+    const range = rangeOrValues;
 
-    const computedStep = step == null ? 0.1 ** decimals : step;
-
+    const step = getStep(range);
     const isSelected = (value: number) =>
         value >= valueRange.min && value <= valueRange.max;
 
     return (
         <div className="ticks">
-            {lodashRange(min, max + computedStep, computedStep).map(value => (
+            {lodashRange(range.min, range.max + step, step).map(value => (
                 <div
                     key={String(value)}
                     className={classNames(

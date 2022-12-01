@@ -8,6 +8,7 @@ import React, { FC } from 'react';
 
 import { isFactor } from '../Slider/factor';
 import {
+    getStep,
     isValues,
     Range,
     RangeOrValues,
@@ -54,10 +55,9 @@ const nextInValues = (
 };
 
 const nextInRange = (current: number, range: Range, steps: number) => {
-    const decimal = range.decimals ?? 0;
-    const stepValue =
-        range.step && range.step != null ? range.step : 0.1 ** decimal;
-    const newValue = Number((current + steps * stepValue).toFixed(decimal));
+    const newValue = Number(
+        (current + steps * getStep(range)).toFixed(range.decimals)
+    );
 
     if (newValue >= range.min && newValue <= range.max) {
         return newValue;
