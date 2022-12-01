@@ -33,39 +33,38 @@ export const getMax = (rangeOrValues: RangeOrValues) =>
 export const getStep = (range: Range) =>
     range.step != null ? range.step : 0.1 ** (range.decimals ?? 0);
 
+const assert = (expectedToBeTrue: boolean, warning: string) => {
+    if (!expectedToBeTrue) {
+        console.error(warning);
+    }
+};
+
 const validateValues = (values: Values) => {
     for (let i = 0; i < values.length - 1; i += 1) {
-        if (values[i] > values[i + 1]) {
-            console.error(
-                `The values of the range must be sorted correctly, but ${
-                    values[i]
-                } is larger then ${values[i + 1]} in ${values}`
-            );
-        }
+        assert(
+            values[i] < values[i + 1],
+            `The values of the range must be sorted correctly, but ${
+                values[i]
+            } is larger then ${values[i + 1]} in ${values}`
+        );
     }
 };
 
 const validateRange = (range: Range) => {
-    if (range.min > range.max)
-        console.error(
-            `range.min must not be higher than range.max: ${JSON.stringify(
-                range
-            )}`
-        );
+    assert(
+        range.min < range.max,
+        `range.min must not be higher than range.max: ${JSON.stringify(range)}`
+    );
 
     if (range.step != null) {
-        if (!isFactor(range.min, range.step))
-            console.error(
-                `range.step must be a factor of range.min: ${JSON.stringify(
-                    range
-                )}`
-            );
-        if (!isFactor(range.max, range.step))
-            console.error(
-                `range.step must be a factor of range.max: ${JSON.stringify(
-                    range
-                )}`
-            );
+        assert(
+            isFactor(range.min, range.step),
+            `range.step must be a factor of range.min: ${JSON.stringify(range)}`
+        );
+        assert(
+            isFactor(range.max, range.step),
+            `range.step must be a factor of range.max: ${JSON.stringify(range)}`
+        );
     }
 };
 
