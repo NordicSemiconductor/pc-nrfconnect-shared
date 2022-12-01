@@ -29,14 +29,11 @@ export interface Props {
 
 const isInValues = (value: number, values: Values) => values.includes(value);
 
-const isInRange = (
-    value: number,
-    { min, max, decimals = 0, step = 0 }: Range
-) =>
+const isInRange = (value: number, { min, max, decimals, step }: Range) =>
     value >= min &&
     value <= max &&
     value === Number(value.toFixed(decimals)) &&
-    (step > 0 ? isFactor(value, step) : true);
+    (step == null ? true : isFactor(value, step));
 
 const isValid = (value: number, rangeOrValues: RangeOrValues) =>
     isValues(rangeOrValues)
