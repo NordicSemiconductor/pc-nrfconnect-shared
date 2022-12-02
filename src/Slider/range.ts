@@ -52,6 +52,11 @@ const validateValues = (values: Values) => {
 
 const validateRange = (range: Range) => {
     assert(
+        !(`explicitRange` in range),
+        'Using `explicitRange` is not supported anymore, use only an array instead of a range object.'
+    );
+
+    assert(
         range.min < range.max,
         `range.min must not be higher than range.max: ${JSON.stringify(range)}`
     );
