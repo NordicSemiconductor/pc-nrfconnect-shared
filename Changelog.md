@@ -22,7 +22,7 @@ and this project adheres to
 ```jsx
 <NumberInlineInput
     values={[4]}
-    range={{ min: 3, max: 7, explicitRange: [3, 4, 6, 7] }}
+    range={{ min: 3, max: 9, explicitRange: [3, 5, 6, 7, 8, 9] }}
     onChange={[() => {}]}
 />
 ```
@@ -33,7 +33,7 @@ it like this:
 ```jsx
 <NumberInlineInput
     values={[4]}
-    range={[3, 4, 6, 7]}
+    range={[3, 5, 6, 7, 8, 9]}
     onChange={[() => {}]}
 />
 ```
@@ -44,7 +44,7 @@ this:
 ```jsx
 <NumberInlineInput
     values={[4]}
-    range={{ min: 3, max: 7 }}
+    range={{ min: 3, max: 9 }}
     onChange={[() => {}]}
 />
 ```
