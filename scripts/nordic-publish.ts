@@ -142,7 +142,9 @@ const getShasum = (filePath: string) => {
         return calculateShasum(fs.readFileSync(filePath));
     } catch (error) {
         throw new Error(
-            `Unable to read file when verifying shasum: ${filePath}`
+            `Unable to read file when verifying shasum: ${filePath}. \nError: ${errorAsString(
+                error
+            )}`
         );
     }
 };
@@ -288,10 +290,10 @@ const getUpdatedAppInfo = async (app: App) => {
 };
 
 const downloadSourceJson = async () => {
+    let sourceJsonContent;
     try {
-        const sourceJson = <SourceJson>(
-            JSON.parse(await downloadFileContent('source.json'))
-        );
+        sourceJsonContent = await downloadFileContent('source.json');
+        const sourceJson = <SourceJson>JSON.parse(sourceJsonContent);
         if (
             sourceJson == null ||
             typeof sourceJson !== 'object' ||
@@ -299,13 +301,20 @@ const downloadSourceJson = async () => {
             (sourceJson.apps !== undefined && !Array.isArray(sourceJson.apps))
         ) {
             throw new Error(
-                `\`source.json\` does not have the expected content: ${sourceJson}`
+                '`source.json` does not have the expected content.'
             );
         }
 
         return sourceJson;
     } catch (error) {
-        throw new Error('Unable to read `source.json` on the server.');
+        const message = 'Unable to read `source.json` on the server.\nError: ';
+        const caughtError = errorAsString(error);
+        const maybeSourceJsonContent =
+            sourceJsonContent == null
+                ? ''
+                : `Content: \`${sourceJsonContent}\``;
+
+        throw new Error(message + caughtError + maybeSourceJsonContent);
     }
 };
 
@@ -328,6 +337,10 @@ const downloadExistingVersions = async (app: App) => {
         );
         return appJson.versions;
     } catch (error) {
+        console.log(
+            `No previous app versions found due to: ${errorAsString(error)}`
+        );
+
         return {};
     }
 };
