@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Slider component renders correct with ticks 1`] = `
+<body>
+  <div>
+    <div
+      class="slider"
+    >
+      <div
+        class="bar background"
+      />
+      <div
+        class="bar foreground"
+        style="left: 0%; width: 40%;"
+      />
+      <div
+        class="ticks"
+      >
+        <div
+          class="tick selected"
+        />
+        <div
+          class="tick selected"
+        />
+        <div
+          class="tick selected"
+        />
+        <div
+          class="tick"
+        />
+        <div
+          class="tick"
+        />
+        <div
+          class="tick"
+        />
+      </div>
+      <div
+        aria-valuemax="100"
+        aria-valuemin="0"
+        aria-valuenow="2"
+        class="handle"
+        role="slider"
+        style="left: 40%;"
+        tabindex="0"
+      />
+    </div>
+  </div>
+</body>
+`;
