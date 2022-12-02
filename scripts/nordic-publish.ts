@@ -13,7 +13,7 @@ import FtpClient from 'ftp';
 import semver from 'semver';
 import calculateShasum from 'shasum';
 
-import { PackageJson } from '../src/utils/AppTypes';
+import { AppJson, PackageJson, SourceJson } from '../src/utils/AppTypes';
 import checkAppProperties from './check-app-properties';
 
 interface AppInfo {
@@ -41,27 +41,6 @@ interface App {
     iconFilename: string;
     isOfficial: boolean;
     packageJson: PackageJson;
-}
-
-interface SourceJson {
-    name: string;
-    apps?: string[];
-}
-
-interface AppJson {
-    name: string;
-    displayName: string;
-    description: string;
-    homepage?: string;
-    iconUrl: string;
-    releaseNotesUrl: string;
-    latest: string;
-    versions: {
-        [version: string]: {
-            shasum: string;
-            tarball: string;
-        };
-    };
 }
 
 const client = new FtpClient();

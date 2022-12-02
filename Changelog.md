@@ -8,6 +8,11 @@ and this project adheres to
 
 ## Unreleased
 
+### Added
+
+-   Export types `SourceJson` and `AppJson`, describing the structure of the new
+    meta data files.
+
 ### Changed
 
 -   Specifying a range with explicit values for a `NumberInlineInput` or a

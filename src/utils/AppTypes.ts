@@ -4,6 +4,31 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+export interface SourceJson {
+    name: string;
+    apps?: string[];
+}
+
+export interface AppJson {
+    name: string;
+    displayName: string;
+    description: string;
+    homepage?: string;
+    iconUrl: string;
+    releaseNotesUrl: string;
+    latest: string;
+    versions: {
+        [version: string]: {
+            shasum: string;
+            tarball: string;
+        };
+    };
+    installed?: {
+        path: string;
+        shasum: string;
+    };
+}
+
 interface ObjectContainingOptionalStrings {
     [index: string]: string | undefined;
 }
