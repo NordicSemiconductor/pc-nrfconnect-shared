@@ -10,10 +10,10 @@ import { execSync } from 'child_process';
 import { program } from 'commander';
 import fs from 'fs';
 import FtpClient from 'ftp';
-import { PackageJson } from 'pc-nrfconnect-shared';
 import semver from 'semver';
 import calculateShasum from 'shasum';
 
+import { PackageJson } from '../src/utils/AppTypes';
 import checkAppProperties from './check-app-properties';
 
 interface AppInfo {
