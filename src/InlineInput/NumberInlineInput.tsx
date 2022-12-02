@@ -33,7 +33,7 @@ const isInRange = (value: number, { min, max, decimals, step }: Range) =>
     value >= min &&
     value <= max &&
     value === Number(value.toFixed(decimals)) &&
-    (step == null ? true : isFactor(value, step));
+    (step == null ? true : isFactor(value - min, step));
 
 const isValid = (value: number, rangeOrValues: RangeOrValues) =>
     isValues(rangeOrValues)

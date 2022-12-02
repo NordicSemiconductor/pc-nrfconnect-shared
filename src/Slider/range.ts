@@ -68,12 +68,10 @@ const validateRange = (range: Range) => {
             `range.step must be larger than zero but is ${range.step}`
         );
         assert(
-            isFactor(range.min, range.step),
-            `range.step must be a factor of range.min: ${JSON.stringify(range)}`
-        );
-        assert(
-            isFactor(range.max, range.step),
-            `range.step must be a factor of range.max: ${JSON.stringify(range)}`
+            isFactor(range.max - range.min, range.step),
+            `range.step must be a factor of range.max - range.min: ${JSON.stringify(
+                range
+            )}`
         );
     }
 };
