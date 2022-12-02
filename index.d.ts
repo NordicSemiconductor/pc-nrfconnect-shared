@@ -451,35 +451,11 @@ declare module 'pc-nrfconnect-shared' {
         sendErrorReport: (error: string) => void;
     };
 
-    interface ObjectContainingOptionalStrings {
-        [index: string]: string | undefined;
-    }
+    // AppTypes.ts
 
-    export interface PackageJson {
-        name: string;
-        version: string;
-
-        // Several optional properties
-        author?: string;
-        bin?: ObjectContainingOptionalStrings | string;
-        dependencies?: ObjectContainingOptionalStrings;
-        description?: string;
-        devDependencies?: ObjectContainingOptionalStrings;
-        displayName?: string;
-        engines?: ObjectContainingOptionalStrings;
-        files?: readonly string[];
-        license?: string;
-        main?: string;
-        peerDependencies?: ObjectContainingOptionalStrings;
-        repository?: {
-            type: string;
-            url: string;
-        };
-        scripts?: ObjectContainingOptionalStrings;
-
-        // Catch all for all remaining properties
-        [index: string]: any;
-    }
+    export type SourceJson = import('./src/utils/AppTypes').SourceJson;
+    export type AppJson = import('./src/utils/AppTypes').AppJson;
+    export type PackageJson = import('./src/utils/AppTypes').PackageJson;
 
     // useHotKey.js
 

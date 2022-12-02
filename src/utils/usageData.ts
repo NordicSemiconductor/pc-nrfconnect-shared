@@ -5,10 +5,10 @@
  */
 
 import reactGA from 'react-ga';
-import type { PackageJson } from 'pc-nrfconnect-shared';
 import type Systeminformation from 'systeminformation';
 
 import logger from '../logging';
+import { PackageJson } from './AppTypes';
 import { isDevelopment } from './environment';
 import {
     deleteIsSendingUsageData,

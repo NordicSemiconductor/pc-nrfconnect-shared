@@ -6,7 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 6.13.0 - 2022-12-02
+
+### Added
+
+-   Export types `SourceJson` and `AppJson`, describing the structure of the new
+    meta data files.
 
 ### Changed
 
@@ -17,7 +22,7 @@ and this project adheres to
 ```jsx
 <NumberInlineInput
     values={[4]}
-    range={{ min: 3, max: 7, explicitRange: [3, 4, 6, 7] }}
+    range={{ min: 3, max: 9, explicitRange: [3, 5, 6, 7, 8, 9] }}
     onChange={[() => {}]}
 />
 ```
@@ -28,7 +33,7 @@ it like this:
 ```jsx
 <NumberInlineInput
     values={[4]}
-    range={[3, 4, 6, 7]}
+    range={[3, 5, 6, 7, 8, 9]}
     onChange={[() => {}]}
 />
 ```
@@ -39,7 +44,7 @@ this:
 ```jsx
 <NumberInlineInput
     values={[4]}
-    range={{ min: 3, max: 7 }}
+    range={{ min: 3, max: 9 }}
     onChange={[() => {}]}
 />
 ```

@@ -10,14 +10,7 @@ import { execSync } from 'child_process';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import property from 'lodash/property';
 
-export interface PackageJson {
-    version?: string;
-    files?: string[];
-    repository?: {
-        type: string;
-        url: string;
-    };
-}
+import { PackageJson } from '../src/utils/AppTypes';
 
 const format = (strings: string[]) =>
     strings.map(string => `\`${string}\``).join(', ');
@@ -43,7 +36,7 @@ const mustBeEmpty = (array: string[], errorMessage: string) => {
 };
 
 const mustContain = (
-    existingEntries: string[],
+    existingEntries: readonly string[],
     mandatoryEntries: string[],
     errorMessage: string
 ) => {
@@ -55,7 +48,7 @@ const mustContain = (
 };
 
 const mustContainOneOf = (
-    existingEntries: string[],
+    existingEntries: readonly string[],
     oneOfTheseEntriesIsMandatory: string[],
     errorMessage: string
 ) => {
