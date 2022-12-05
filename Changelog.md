@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 6.13.1 - 2022-12-05
+
+## Changed
+
+-   SerialPort is initialized with an `OverwriteOption`, consisting of
+    `overwrite` and `settingsLocked`, instead of only `overwrite`. The new
+    `settingsLocked` option lets renderers to lock the settings.
+-   `onSeparateWrite` is changed into `onDataWritten` and will be the
+    recommended way of writing data to any visual terminal. This is because the
+    ipc traffic will provide the correct order of what data to write, so that if
+    two or more renderers write at the same time, they won't display the data
+    differently.
+
 ## 6.13.0 - 2022-12-02
 
 ### Added

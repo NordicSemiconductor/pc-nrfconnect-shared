@@ -13,25 +13,28 @@ import { ipcRenderer } from 'electron';
 import { logger } from 'pc-nrfconnect-shared';
 import type { SerialPortOpenOptions } from 'serialport';
 
-import { SERIALPORT_CHANNEL } from '../../main';
+import { OverwriteOptions, SERIALPORT_CHANNEL } from '../../main';
 
 export const SerialPort = async (
     options: SerialPortOpenOptions<AutoDetectTypes>,
-    overwrite: boolean,
+    overwriteOptions: OverwriteOptions = {
+        overwrite: false,
+        settingsLocked: false,
+    },
     {
         onData = () => {},
         onClosed = () => {},
         onUpdate = () => {},
         onSet = () => {},
         onChange = () => {},
-        onSeparateWrite = () => {},
+        onDataWritten = () => {},
     }: {
         onData?: (data: Uint8Array) => void;
         onClosed?: () => void;
         onUpdate?: (newOptions: UpdateOptions) => void;
         onSet?: (newOptions: SetOptions) => void;
         onChange?: (newOptions: SerialPortOpenOptions<AutoDetectTypes>) => void;
-        onSeparateWrite?: (data: Uint8Array) => void;
+        onDataWritten?: (data: Uint8Array) => void;
     } = {}
 ) => {
     const { path } = options;
@@ -48,11 +51,9 @@ export const SerialPort = async (
         onChange(newOptions)
     );
 
-    // The origin of this event is emitted when a renderer writes to the port,
-    // and is sent to all renderers expect for the writer, in order for all
-    // terminals to display the same terminal input and output.
+    // The origin of this event is emitted when a renderer writes to the port.
     ipcRenderer.on(SERIALPORT_CHANNEL.ON_WRITE, (_event, data) =>
-        onSeparateWrite(data)
+        onDataWritten(data)
     );
 
     const write = (data: string | number[] | Buffer): void => {
@@ -63,20 +64,21 @@ export const SerialPort = async (
         ipcRenderer.invoke(SERIALPORT_CHANNEL.IS_OPEN, path);
 
     const close = async () => {
-        const [error, wasClosed] = await ipcRenderer.invoke(
-            SERIALPORT_CHANNEL.CLOSE,
-            path
-        );
+        const error = await ipcRenderer.invoke(SERIALPORT_CHANNEL.CLOSE, path);
         if (error) {
+            // IPC only carries the error message, that's why we throw new Error.
             throw new Error(error);
         }
 
-        if (wasClosed) {
+        try {
+            if (await isOpen()) {
+                logger.info(
+                    `Port ${options.path} still in use by other window(s)`
+                );
+            }
+        } catch {
             logger.info(`Closed port: ${options.path}`);
-        } else {
-            logger.info(`Port ${options.path} still in use by other window(s)`);
         }
-        return wasClosed;
     };
 
     // Only supports baudRate, same as serialport.io
@@ -91,7 +93,7 @@ export const SerialPort = async (
     const error = await ipcRenderer.invoke(
         SERIALPORT_CHANNEL.OPEN,
         options,
-        overwrite
+        overwriteOptions
     );
 
     if (error) {
