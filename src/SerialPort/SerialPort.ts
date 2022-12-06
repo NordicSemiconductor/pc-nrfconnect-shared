@@ -10,10 +10,10 @@ import type {
     UpdateOptions,
 } from '@serialport/bindings-cpp';
 import { ipcRenderer } from 'electron';
-import { logger } from 'pc-nrfconnect-shared';
 import type { SerialPortOpenOptions } from 'serialport';
 
 import { SERIALPORT_CHANNEL } from '../../main';
+import logger from '../logging';
 
 export const SerialPort = async (
     options: SerialPortOpenOptions<AutoDetectTypes>,

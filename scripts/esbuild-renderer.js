@@ -69,7 +69,9 @@ module.exports.build = options => {
             '.eot': 'file',
             '.ttf': 'file',
         },
+        ...options,
         plugins: [
+            ...options.plugins,
             sassPlugin({
                 filter: /\.(module|icss)\.scss/,
                 quietDeps: false,
@@ -109,6 +111,5 @@ module.exports.build = options => {
                 },
             },
         ],
-        ...options,
     });
 };

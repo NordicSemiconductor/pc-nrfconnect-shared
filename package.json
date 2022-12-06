@@ -16,6 +16,7 @@
         "run-esbuild": "./scripts/esbuild.js"
     },
     "main": "src",
+    "modern": true,
     "scripts": {
         "test": "jest",
         "check": "run-p --silent --continue-on-error --print-label check:*",

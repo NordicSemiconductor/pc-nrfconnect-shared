@@ -18,19 +18,20 @@ export interface Shortcut {
     action: () => void;
 }
 
-export type ShortcutState = Set<Shortcut>;
+export type ShortcutState = Shortcut[];
 
-const initialState: ShortcutState = new Set();
+const initialState: ShortcutState = [];
 
 const slice = createSlice({
     name: 'shortcuts',
     initialState,
     reducers: {
         addShortcut: (state, action: PayloadAction<Shortcut>) => {
-            state.add(action.payload);
+            if (!state.includes(action.payload)) state.push(action.payload);
         },
         removeShortcut: (state, action: PayloadAction<Shortcut>) => {
-            state.delete(action.payload);
+            if (state.includes(action.payload))
+                state.splice(state.indexOf(action.payload), 1);
         },
     },
 });
