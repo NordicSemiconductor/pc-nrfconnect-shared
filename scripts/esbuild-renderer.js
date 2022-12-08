@@ -53,6 +53,7 @@ module.exports.build = options => {
             'electron',
             'serialport',
             '@electron/remote',
+            'react',
             '@nordicsemiconductor/nrf-device-lib-js',
 
             // App dependencies
