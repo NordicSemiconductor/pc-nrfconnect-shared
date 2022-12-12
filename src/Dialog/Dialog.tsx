@@ -10,7 +10,7 @@ import Modal from 'react-bootstrap/Modal';
 
 import Spinner from './Spinner';
 
-import styles from './dialog.module.scss';
+import './dialog.scss';
 
 export const Dialog = ({
     isVisible,
@@ -34,7 +34,7 @@ export const Dialog = ({
             }
         }}
         centered
-        className={`${styles.dialog} ${className}`}
+        className={`dialog ${className}`}
     >
         {children}
     </Modal>
