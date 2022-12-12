@@ -12,7 +12,7 @@ export { ErrorDialogActions };
 export { default as App } from './App/App';
 export { default as Logo } from './Logo/Logo';
 export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
+export { Dialog, DialogButton } from './Dialog/Dialog';
 export { default as Spinner } from './Dialog/Spinner';
 export { default as Slider } from './Slider/Slider';
 export { Toggle } from './Toggle/Toggle';
