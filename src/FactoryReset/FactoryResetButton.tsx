@@ -4,11 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import { Button, ButtonProps } from 'react-bootstrap';
-import { func, oneOf, string } from 'prop-types';
 
-import ConfirmationDialog from '../Dialog/ConfirmationDialog';
+import { Dialog, DialogButton } from '../Dialog/Dialog';
 import logger from '../logging';
 import combineClassNames from '../utils/classNames';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
@@ -33,11 +32,10 @@ const FactoryResetButton: FC<Props> = ({
     variant,
     classNames,
 }) => {
-    const [isFactoryResetting, setIsFactoryResetting] = useState(false);
-
+    const [showDialog, setShowDialog] = useState(false);
+    useRef(); // showdialog
     const defaultResetFn = () => {
         store().clear();
-        setIsFactoryResetting(false);
         logger.info('Successfully restored defaults');
     };
 
@@ -45,7 +43,7 @@ const FactoryResetButton: FC<Props> = ({
         <>
             <Button
                 variant={variant || 'secondary'}
-                onClick={() => setIsFactoryResetting(true)}
+                onClick={() => setShowDialog(true)}
                 className={combineClassNames(
                     'factory-reset-button',
                     classNames
@@ -53,43 +51,31 @@ const FactoryResetButton: FC<Props> = ({
             >
                 {label}
             </Button>
-            <ConfirmationDialog
-                isVisible={isFactoryResetting}
-                okButtonClassName="restore-btn"
-                okButtonText="Restore"
-                onOk={resetFn || defaultResetFn}
-                onCancel={() => setIsFactoryResetting(false)}
+            <Dialog
+                isVisible={showDialog}
+                closeOnUnfocus
+                onHide={() => setShowDialog(false)}
             >
-                {modalText || DEFAULT_MODAL_TEXT}
-            </ConfirmationDialog>
+                <Dialog.Header title="Restore factory settings" />
+                <Dialog.Body>{modalText || DEFAULT_MODAL_TEXT}</Dialog.Body>
+                <Dialog.Footer>
+                    <DialogButton
+                        className="restore-btn"
+                        onClick={() => {
+                            if (resetFn) resetFn();
+                            else defaultResetFn();
+                            setShowDialog(false);
+                        }}
+                    >
+                        Restore
+                    </DialogButton>
+                    <DialogButton onClick={() => setShowDialog(false)}>
+                        Cancel
+                    </DialogButton>
+                </Dialog.Footer>
+            </Dialog>
         </>
     );
-};
-
-FactoryResetButton.propTypes = {
-    resetFn: func,
-    label: string.isRequired,
-    modalText: string,
-    variant: oneOf([
-        'primary',
-        'secondary',
-        'success',
-        'danger',
-        'warning',
-        'info',
-        'dark',
-        'light',
-        'link',
-        'outline-primary',
-        'outline-secondary',
-        'outline-success',
-        'outline-danger',
-        'outline-warning',
-        'outline-info',
-        'outline-dark',
-        'outline-light',
-    ]),
-    classNames: string,
 };
 
 export default FactoryResetButton;

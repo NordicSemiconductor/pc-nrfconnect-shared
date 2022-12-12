@@ -6,8 +6,9 @@
 
 import React from 'react';
 import Form from 'react-bootstrap/Form';
+import ReactMarkdown from 'react-markdown';
 
-import ConfirmationDialog from '../../Dialog/ConfirmationDialog';
+import { Dialog, DialogButton } from '../../Dialog/Dialog';
 
 interface Props {
     isVisible: boolean;
@@ -51,39 +52,64 @@ export default class DeviceSetupDialog extends React.Component<Props, State> {
 
         if (choices && choices.length > 0) {
             return (
-                <ConfirmationDialog
-                    isVisible={isVisible}
-                    isInProgress={isInProgress}
-                    isOkButtonEnabled={!!selectedChoice}
-                    onOk={() => onOk(selectedChoice ?? false)}
-                    onCancel={onCancel}
-                >
-                    <p>{text}</p>
-                    <Form.Group>
-                        {choices.map(choice => (
-                            <Form.Check
-                                key={choice}
-                                name="radioGroup"
-                                type="radio"
-                                disabled={isInProgress}
-                                onClick={() => this.onSelectChoice(choice)}
-                                label={choice}
-                            />
-                        ))}
-                    </Form.Group>
-                </ConfirmationDialog>
+                <Dialog isVisible={isVisible}>
+                    <Dialog.Header title="Confirm" headerIcon="" />
+                    <Dialog.Body>
+                        <p>text</p>
+                        <Form.Group>
+                            {choices.map(choice => (
+                                <Form.Check
+                                    key={choice}
+                                    name="radioGroup"
+                                    type="radio"
+                                    disabled={isInProgress}
+                                    onClick={() => this.onSelectChoice(choice)}
+                                    label={choice}
+                                />
+                            ))}
+                        </Form.Group>
+                    </Dialog.Body>
+                    <Dialog.Footer showSpinner={isInProgress}>
+                        <DialogButton
+                            onClick={() => onOk(selectedChoice ?? false)}
+                            disabled={!selectedChoice || isInProgress}
+                        >
+                            Ok
+                        </DialogButton>
+                        <DialogButton
+                            onClick={onCancel}
+                            disabled={isInProgress}
+                        >
+                            Cancel
+                        </DialogButton>
+                    </Dialog.Footer>
+                </Dialog>
             );
         }
         return (
-            <ConfirmationDialog
-                isVisible={isVisible}
-                isInProgress={isInProgress}
-                okButtonText="Yes"
-                cancelButtonText="No"
-                onOk={() => onOk(true)}
-                onCancel={() => onOk(false)}
-                text={text as string}
-            />
+            <Dialog isVisible={isVisible}>
+                <Dialog.Header title="Confirm" headerIcon="" />
+                <Dialog.Body>
+                    <ReactMarkdown
+                        source={text as string}
+                        linkTarget="_blank"
+                    />
+                </Dialog.Body>
+                <Dialog.Footer showSpinner={isInProgress}>
+                    <DialogButton
+                        onClick={() => onOk(true)}
+                        disabled={isInProgress}
+                    >
+                        Yes
+                    </DialogButton>
+                    <DialogButton
+                        onClick={() => onOk(false)}
+                        disabled={isInProgress}
+                    >
+                        No
+                    </DialogButton>
+                </Dialog.Footer>
+            </Dialog>
         );
     }
 }
