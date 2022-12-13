@@ -454,7 +454,7 @@ declare module 'pc-nrfconnect-shared' {
     // AppTypes.ts
 
     export type SourceJson = import('./src/utils/AppTypes').SourceJson;
-    export type AppJson = import('./src/utils/AppTypes').AppJson;
+    export type AppInfo = import('./src/utils/AppTypes').AppInfo;
     export type PackageJson = import('./src/utils/AppTypes').PackageJson;
 
     // useHotKey.js

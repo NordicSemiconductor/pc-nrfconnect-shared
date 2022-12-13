@@ -11,6 +11,7 @@ and this project adheres to
 ### Changed
 
 -   Property `apps` in type `SourceJson` became mandatory.
+-   Renamed type `AppJson` to `AppInfo`.
 
 ## 6.13.2 - 2022-12-19
 

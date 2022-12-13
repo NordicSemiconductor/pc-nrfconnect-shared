@@ -9,7 +9,7 @@ export interface SourceJson {
     apps: string[];
 }
 
-export interface AppJson {
+export interface AppInfo {
     name: string;
     displayName: string;
     description: string;
