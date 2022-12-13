@@ -19,6 +19,7 @@ export const SERIALPORT_CHANNEL = {
     ON_WRITE: 'serialport:on-write',
 
     IS_OPEN: 'serialport:is-open',
+    GET_OPTIONS: 'serialport:get-options',
 };
 
 export type OverwriteOptions = {

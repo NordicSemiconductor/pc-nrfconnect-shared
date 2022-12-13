@@ -63,6 +63,10 @@ export const SerialPort = async (
     const isOpen = (): Promise<boolean> =>
         ipcRenderer.invoke(SERIALPORT_CHANNEL.IS_OPEN, path);
 
+    const getOptions = (): Promise<
+        SerialPortOpenOptions<AutoDetectTypes> | undefined
+    > => ipcRenderer.invoke(SERIALPORT_CHANNEL.GET_OPTIONS, path);
+
     const close = async () => {
         const error = await ipcRenderer.invoke(SERIALPORT_CHANNEL.CLOSE, path);
         if (error) {
@@ -110,6 +114,7 @@ export const SerialPort = async (
         write,
         close,
         isOpen,
+        getOptions,
         update,
         set,
     };
