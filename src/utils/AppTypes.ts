@@ -6,7 +6,7 @@
 
 export interface SourceJson {
     name: string;
-    apps?: string[];
+    apps: string[];
 }
 
 export interface AppJson {
