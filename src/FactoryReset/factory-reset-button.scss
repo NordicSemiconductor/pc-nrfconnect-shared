@@ -10,6 +10,9 @@
     background-color: $red !important;
     border-color: $red !important;
     color: $white;
+    &:hover {
+        color: $white;
+    }
 }
 
 .factory-reset-button {

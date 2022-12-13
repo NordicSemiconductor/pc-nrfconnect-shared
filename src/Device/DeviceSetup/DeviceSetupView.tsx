@@ -6,7 +6,6 @@
 
 import React from 'react';
 import Form from 'react-bootstrap/Form';
-import ReactMarkdown from 'react-markdown';
 
 import { Dialog, DialogButton } from '../../Dialog/Dialog';
 
@@ -55,7 +54,7 @@ export default class DeviceSetupDialog extends React.Component<Props, State> {
                 <Dialog isVisible={isVisible}>
                     <Dialog.Header title="Confirm" headerIcon="" />
                     <Dialog.Body>
-                        <p>text</p>
+                        <p>{text}</p>
                         <Form.Group>
                             {choices.map(choice => (
                                 <Form.Check
@@ -88,25 +87,21 @@ export default class DeviceSetupDialog extends React.Component<Props, State> {
         }
         return (
             <Dialog isVisible={isVisible}>
-                <Dialog.Header title="Confirm" headerIcon="" />
-                <Dialog.Body>
-                    <ReactMarkdown
-                        source={text as string}
-                        linkTarget="_blank"
-                    />
-                </Dialog.Body>
+                <Dialog.Header title="Program device" headerIcon="" />
+                <Dialog.Body>{text}</Dialog.Body>
                 <Dialog.Footer showSpinner={isInProgress}>
                     <DialogButton
                         onClick={() => onOk(true)}
                         disabled={isInProgress}
+                        variant="primary"
                     >
-                        Yes
+                        Program
                     </DialogButton>
                     <DialogButton
                         onClick={() => onOk(false)}
                         disabled={isInProgress}
                     >
-                        No
+                        Cancel
                     </DialogButton>
                 </Dialog.Footer>
             </Dialog>

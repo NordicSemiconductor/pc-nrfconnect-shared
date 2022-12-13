@@ -8,6 +8,9 @@
 
 .broken-device-dialog {
     .modal-body {
+        p {
+            margin: 0;
+        }
         p + p {
             margin-bottom: 24px;
         }
