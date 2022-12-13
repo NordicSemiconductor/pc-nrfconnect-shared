@@ -16,7 +16,7 @@ import calculateShasum from 'shasum';
 import { AppJson, PackageJson, SourceJson } from '../src/utils/AppTypes';
 import checkAppProperties from './check-app-properties';
 
-interface AppInfo {
+interface LegacyAppInfo {
     ['dist-tags']?: {
         latest?: string;
     };
@@ -207,7 +207,7 @@ const downloadFileContent = (filename: string) =>
         });
     });
 
-const downloadAppInfo = async (name: string): Promise<AppInfo> => {
+const downloadLegacyAppInfo = async (name: string): Promise<LegacyAppInfo> => {
     try {
         const content = await downloadFileContent(name);
         return JSON.parse(content);
@@ -221,7 +221,7 @@ const downloadAppInfo = async (name: string): Promise<AppInfo> => {
     }
 };
 
-const updateLocalAppInfo = (appInfo: AppInfo, app: App) => {
+const updateLegacyAppInfo = (appInfo: LegacyAppInfo, app: App) => {
     const latest = appInfo['dist-tags']?.latest;
     if (latest != null) {
         console.log(`Latest published version ${latest}`);
@@ -263,9 +263,9 @@ const uploadFile: UploadLocalFile & UploadBufferContent = (
         client.put(local, remote, err => (err ? reject(err) : resolve()));
     });
 
-const getUpdatedAppInfo = async (app: App) => {
-    const appInfo = await downloadAppInfo(app.name);
-    return updateLocalAppInfo(appInfo, app);
+const getUpdatedLegacyAppInfo = async (app: App) => {
+    const appInfo = await downloadLegacyAppInfo(app.name);
+    return updateLegacyAppInfo(appInfo, app);
 };
 
 const downloadSourceJson = async () => {
@@ -354,11 +354,8 @@ const getUpdatedAppJson = async (app: App): Promise<AppJson> => {
     };
 };
 
-const uploadAppInfo = (app: App, updatedAppInfo: AppInfo) =>
-    uploadFile(
-        Buffer.from(JSON.stringify(updatedAppInfo, undefined, 2)),
-        app.name
-    );
+const uploadLegacyAppInfo = (app: App, appInfo: LegacyAppInfo) =>
+    uploadFile(Buffer.from(JSON.stringify(appInfo, undefined, 2)), app.name);
 
 const uploadSourceJson = (sourceJson: SourceJson) =>
     uploadFile(
@@ -417,14 +414,14 @@ const main = async () => {
         await connect(config);
         await changeWorkingDirectory(options.sourceDir);
 
-        const appInfo = await getUpdatedAppInfo(app);
+        const legacyAppInfo = await getUpdatedLegacyAppInfo(app);
         const sourceJson = await getUpdatedSourceJson(app);
         const appJson = await getUpdatedAppJson(app);
 
         await uploadChangelog(app);
         await uploadIcon(app);
         await uploadPackage(app);
-        await uploadAppInfo(app, appInfo);
+        await uploadLegacyAppInfo(app, legacyAppInfo);
         await uploadAppJson(app, appJson);
         await uploadSourceJson(sourceJson);
 
