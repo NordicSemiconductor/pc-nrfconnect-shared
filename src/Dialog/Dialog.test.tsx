@@ -28,37 +28,23 @@ describe('Dialog', () => {
         </Dialog>
     );
 
-    describe('is visible when it', () => {
-        it('is rendered when visible', () => {
-            render(dialog());
-            expect(screen.getByRole('dialog')).toBeInTheDocument();
-            test;
-        });
-
-        it('is not rendered when invisible', () => {
-            render(dialog(false));
-            expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-        });
+    test('is rendered when visible', () => {
+        render(dialog());
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
+        test;
     });
 
-    describe('shows the expected content', () => {
-        it('in the title', () => {
-            render(dialog());
+    test('is not rendered when not visible', () => {
+        render(dialog(false));
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
 
-            expect(screen.getByText('Test Title')).toBeInTheDocument();
-        });
+    test('shows the expected content', () => {
+        render(dialog());
 
-        it('in the body', () => {
-            render(dialog());
-
-            expect(screen.getByText('Test Text')).toBeInTheDocument();
-        });
-
-        it('in the footer', () => {
-            render(dialog());
-
-            expect(screen.getByText('Close')).toBeInTheDocument();
-        });
+        expect(screen.getByText('Test Title')).toBeInTheDocument();
+        expect(screen.getByText('Test Text')).toBeInTheDocument();
+        expect(screen.getByText('Close')).toBeInTheDocument();
     });
 });
 
@@ -69,27 +55,15 @@ describe('InfoDialog creator', () => {
         </InfoDialog>
     );
 
-    describe('shows the expected content', () => {
-        it('in the title', () => {
-            render(dialog());
+    test('shows the expected content', () => {
+        render(dialog());
 
-            expect(screen.getByText('Info')).toBeInTheDocument();
-        });
-
-        it('in the body', () => {
-            render(dialog());
-
-            expect(screen.getByText('Test Body')).toBeInTheDocument();
-        });
-
-        it('in the footer', () => {
-            render(dialog());
-
-            expect(screen.getByText('Close')).toBeInTheDocument();
-        });
+        expect(screen.getByText('Info')).toBeInTheDocument();
+        expect(screen.getByText('Test Body')).toBeInTheDocument();
+        expect(screen.getByText('Close')).toBeInTheDocument();
     });
 
-    it('invokes the expected action', () => {
+    test('invokes the expected action', () => {
         render(dialog());
 
         const closeButton = screen.getByText('Close');
@@ -106,27 +80,15 @@ describe('ErrorDialog creator', () => {
         </ErrorDialog>
     );
 
-    describe('shows the expected content', () => {
-        it('in the title', () => {
-            render(dialog());
+    test('shows the expected content', () => {
+        render(dialog());
 
-            expect(screen.getByText('Error')).toBeInTheDocument();
-        });
-
-        it('in the body', () => {
-            render(dialog());
-
-            expect(screen.getByText('Test Body')).toBeInTheDocument();
-        });
-
-        it('in the footer', () => {
-            render(dialog());
-
-            expect(screen.getByText('Close')).toBeInTheDocument();
-        });
+        expect(screen.getByText('Error')).toBeInTheDocument();
+        expect(screen.getByText('Test Body')).toBeInTheDocument();
+        expect(screen.getByText('Close')).toBeInTheDocument();
     });
 
-    it('invokes the expected action', () => {
+    test('invokes the expected action', () => {
         render(dialog());
 
         const closeButton = screen.getByText('Close');
@@ -149,29 +111,17 @@ describe('ConfirmationDialog creator', () => {
         </ConfirmationDialog>
     );
 
-    describe('shows the expected content', () => {
-        it('in the title', () => {
-            render(dialog());
+    test('shows the expected content', () => {
+        render(dialog());
 
-            expect(screen.getByText('Confirm')).toBeInTheDocument();
-        });
-
-        it('in the body', () => {
-            render(dialog());
-
-            expect(screen.getByText('Test Body')).toBeInTheDocument();
-        });
-
-        it('in the footer', () => {
-            render(dialog());
-
-            expect(screen.getByText('Optional')).toBeInTheDocument();
-            expect(screen.getByText('ConfButton')).toBeInTheDocument();
-            expect(screen.getByText('Cancel')).toBeInTheDocument();
-        });
+        expect(screen.getByText('Confirm')).toBeInTheDocument();
+        expect(screen.getByText('Test Body')).toBeInTheDocument();
+        expect(screen.getByText('Optional')).toBeInTheDocument();
+        expect(screen.getByText('ConfButton')).toBeInTheDocument();
+        expect(screen.getByText('Cancel')).toBeInTheDocument();
     });
 
-    it('invokes the expected action', () => {
+    test('invokes the expected action', () => {
         render(dialog());
 
         fireEvent.click(screen.getByText('Optional'));
