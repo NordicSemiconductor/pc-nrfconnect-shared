@@ -56,7 +56,10 @@ const FactoryResetButton: FC<Props> = ({
                 closeOnUnfocus
                 onHide={() => setShowDialog(false)}
             >
-                <Dialog.Header title="Restore factory settings" />
+                <Dialog.Header
+                    title="Restore factory settings"
+                    headerIcon="alert"
+                />
                 <Dialog.Body>{modalText || DEFAULT_MODAL_TEXT}</Dialog.Body>
                 <Dialog.Footer>
                     <DialogButton
