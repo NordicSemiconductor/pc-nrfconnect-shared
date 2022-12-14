@@ -345,7 +345,7 @@ const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
         versions: {
             ...versions,
             [version]: {
-                tarball: `${app.sourceUrl}/${app.filename}`,
+                tarballUrl: `${app.sourceUrl}/${app.filename}`,
                 shasum: app.shasum,
             },
         },

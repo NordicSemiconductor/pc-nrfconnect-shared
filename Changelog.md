@@ -13,6 +13,7 @@ and this project adheres to
 -   Property `apps` in type `SourceJson` became mandatory.
 -   Renamed type `AppJson` to `AppInfo`.
 -   Renamed property `latest` to `latestVersion` in type `AppInfo`.
+-   Exported type `AppVersions` and renamed property `tarball` to `tarballUrl`.
 -   Bumped target for TypeScript to `ES2020`.
 
 ## 6.13.2 - 2022-12-19
