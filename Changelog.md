@@ -12,6 +12,7 @@ and this project adheres to
 
 -   Property `apps` in type `SourceJson` became mandatory.
 -   Renamed type `AppJson` to `AppInfo`.
+-   Renamed property `latest` to `latestVersion` in type `AppInfo`.
 
 ## 6.13.2 - 2022-12-19
 

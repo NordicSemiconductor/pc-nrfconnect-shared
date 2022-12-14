@@ -341,7 +341,7 @@ const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
         homepage,
         iconUrl: `${app.sourceUrl}/${app.iconFilename}`,
         releaseNotesUrl: `${app.sourceUrl}/${app.releaseNotesFilename}`,
-        latest: version,
+        latestVersion: version,
         versions: {
             ...versions,
             [version]: {

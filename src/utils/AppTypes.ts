@@ -16,7 +16,7 @@ export interface AppInfo {
     homepage?: string;
     iconUrl: string;
     releaseNotesUrl: string;
-    latest: string;
+    latestVersion: string;
     versions: {
         [version: string]: {
             shasum: string;
