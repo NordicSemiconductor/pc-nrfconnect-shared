@@ -6,11 +6,13 @@
 
 /* eslint-disable @typescript-eslint/ban-types */
 
+import { webContents } from '@electron/remote';
 import nrfDeviceLib, {
     Device as NrfdlDevice,
     DeviceTraits,
     HotplugEvent,
 } from '@nordicsemiconductor/nrf-device-lib-js';
+import { ipcRenderer } from 'electron';
 import { Device } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';
@@ -21,6 +23,14 @@ import { devicesDetected } from './deviceSlice';
 const DEFAULT_DEVICE_WAIT_TIME = 3000;
 
 let hotplugTaskId: number;
+
+ipcRenderer.on('reload-window', (_event, webContentsId) => {
+    const currentWebContentsId = webContents.getFocusedWebContents().id;
+    if (currentWebContentsId === webContentsId) {
+        stopWatchingDevices();
+        logger.info('Did call stopWatchingDevices');
+    }
+});
 
 /**
  * Wrap the device form nrf-device-lib to make the Device type consistent
@@ -84,6 +94,10 @@ export const startWatchingDevices =
                 () => {},
                 updateDeviceList
             );
+            logger.warn(
+                'Did run startHotplugEvents and got id: ',
+                hotplugTaskId
+            );
         } catch (error) {
             logger.logError(
                 'Error while probing devices, more details in the debug log',
@@ -99,9 +113,10 @@ export const startWatchingDevices =
  */
 export const stopWatchingDevices = () => {
     // Not sure, if this guard clause is really needed
-    if (getDeviceLibContext()) {
+    if (hotplugTaskId) {
         try {
             nrfDeviceLib.stopHotplugEvents(hotplugTaskId);
+            logger.warn(`Did call stopHotplugEvents on id ${hotplugTaskId}`);
         } catch (error) {
             logger.logError('Error while stopping to watch devices', error);
         }

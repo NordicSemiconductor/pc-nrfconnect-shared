@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { app } from '@electron/remote';
+import { app, getCurrentWebContents } from '@electron/remote';
 import {
     createContext,
     Error,
@@ -16,18 +16,35 @@ import {
     startLogEvents,
     stopLogEvents,
 } from '@nordicsemiconductor/nrf-device-lib-js';
+import { ipcRenderer } from 'electron';
 import path from 'path';
 
 import { isLoggingVerbose } from '../Log/logSlice';
 import logger from '../logging';
 import { getIsLoggingVerbose } from '../utils/persistentStore';
 
+let loggerTaskId: number;
 let deviceLibContext = 0;
 export const getDeviceLibContext = () => {
+    logger.info(`getDeviceLibContext: ${deviceLibContext}`);
     if (deviceLibContext === 0) initDeviceLib();
-
+    logger.info(`Will return ctx=${deviceLibContext}`);
     return deviceLibContext;
 };
+
+// STOP NRFDL
+// STOP hotplugevents
+ipcRenderer.on('reload-window', (event, webContentsId) => {
+    const currentWebContentsId = getCurrentWebContents().id;
+    if (currentWebContentsId === webContentsId) {
+        if (loggerTaskId) {
+            stopLogEvents(loggerTaskId);
+            loggerTaskId = undefined;
+            logger.info('Called stopLogEvents and cleared loggerTaskId');
+        }
+        ipcRenderer.send('reload-window-cleaned', webContentsId);
+    }
+});
 
 const initDeviceLib = () => {
     if (process.platform === 'win32') {
@@ -80,7 +97,7 @@ export const forwardLogEventsFromDeviceLib = () => {
     setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
     setVerboseDeviceLibLogging(getIsLoggingVerbose());
 
-    const taskId = startLogEvents(
+    loggerTaskId = startLogEvents(
         getDeviceLibContext(),
         (err?: Error) => {
             if (err)
@@ -92,7 +109,10 @@ export const forwardLogEventsFromDeviceLib = () => {
         (evt: LogEvent) => logNrfdlLogs(evt)
     );
     return () => {
-        stopLogEvents(taskId);
+        if (loggerTaskId) {
+            stopLogEvents(loggerTaskId);
+            loggerTaskId = undefined;
+        }
     };
 };
 
