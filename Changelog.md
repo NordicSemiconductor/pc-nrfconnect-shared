@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 6.13.2 - 2022-12-19
+
+## Changed
+
+-   Fix imports that were a problem for tests in some apps.
+
 ## 6.13.1 - 2022-12-05
 
 ## Changed
