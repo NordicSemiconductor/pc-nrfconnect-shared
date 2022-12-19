@@ -27,7 +27,7 @@
    through CSS, e.g. to change the colours.
 */
 
-import { Device, DeviceInfo } from 'pc-nrfconnect-shared';
+import type { Device, DeviceInfo } from 'pc-nrfconnect-shared';
 
 import nrf51logo from '!!@svgr/webpack!./nRF51-Series-logo.svg';
 import nrf52logo from '!!@svgr/webpack!./nRF52-Series-logo.svg';

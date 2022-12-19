@@ -8,7 +8,7 @@ import React, { ReactNode } from 'react';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
-import { Device } from 'pc-nrfconnect-shared';
+import type { Device } from 'pc-nrfconnect-shared';
 
 import Spinner from '../Dialog/Spinner';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';

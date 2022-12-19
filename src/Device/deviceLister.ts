@@ -11,7 +11,7 @@ import nrfDeviceLib, {
     DeviceTraits,
     HotplugEvent,
 } from '@nordicsemiconductor/nrf-device-lib-js';
-import { Device } from 'pc-nrfconnect-shared';
+import type { Device } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';
 import { Devices } from '../state';
