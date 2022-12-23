@@ -65,6 +65,8 @@ export {
     getAppSpecificStore as getPersistentStore,
     persistSerialPort,
     getPersistedSerialPort,
+    persistTerminalSettings,
+    getTerminalSettings,
 } from './utils/persistentStore';
 
 export { selectedDevice } from './Device/deviceSlice';
