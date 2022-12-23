@@ -12,6 +12,18 @@ import { v4 as uuid } from 'uuid';
 
 import packageJson from './packageJson';
 
+export interface SerialSettings {
+    serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>;
+    terminalSettings?: TerminalSettings;
+}
+
+export interface TerminalSettings {
+    lineMode: boolean;
+    echoOnShell: boolean;
+    lineEnding: string;
+    clearOnSend: boolean;
+}
+
 const sharedStore = new Store<{
     verboseLogging: boolean;
     isSendingUsageData: boolean | undefined;
@@ -43,6 +55,24 @@ export const getPersistedSerialPort = (
         `persistentStore.ts: Will get serialport options from ${serialNumber}.${appName}`
     );
     return sharedStore.get(`${serialNumber}.${appName}`);
+};
+export const persistTerminalSettings = (
+    serialNumber: string,
+    comPort: string,
+    terminalSettings: TerminalSettings
+) =>
+    sharedStore.set(
+        `${serialNumber}.${comPort}.TerminalSettings`,
+        terminalSettings
+    );
+export const getTerminalSettings = (
+    serialNumber: string,
+    comPort: string
+): TerminalSettings | undefined => {
+    logger.info(
+        `persistentStore.ts: Will get terminalSettings options from ${serialNumber}.${comPort}.TerminalSettings`
+    );
+    return sharedStore.get(`${serialNumber}.${comPort}.TerminalSettings`);
 };
 
 export const persistIsSendingUsageData = (value: boolean) =>
