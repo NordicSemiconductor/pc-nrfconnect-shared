@@ -5,6 +5,8 @@
  */
 
 declare module 'pc-nrfconnect-shared' {
+    import type { AutoDetectTypes } from '@serialport/bindings-cpp';
+    import { SerialPortOpenOptions } from 'serialport';
     import { Reducer, AnyAction } from 'redux';
     import React from 'react';
     import { Logger, LogEntry } from 'winston';
@@ -529,6 +531,33 @@ declare module 'pc-nrfconnect-shared' {
     export function getPersistentStore<
         StoreSchema extends Record<string, any>
     >(): Store<StoreSchema>;
+
+    export type TerminalSettings =
+        import('./src/utils/persistentStore').TerminalSettings;
+    export type SerialSettings =
+        import('./src/utils/persistentStore').SerialSettings;
+
+    export const persistSerialPort: (
+        serialNumber: string,
+        appName: string,
+        serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>
+    ) => void;
+
+    export const getPersistedSerialPort: (
+        serialNumber: string,
+        appName: string
+    ) => SerialSettings;
+
+    export const persistTerminalSettings: (
+        serialNumber: string,
+        comPort: string,
+        terminalSettings: TerminalSettings
+    ) => void;
+
+    export const getPersistedTerminalSettings: (
+        serialNumber: string,
+        comPort: string
+    ) => TerminalSettings;
 
     export const deviceInfo: (device: Device) => DeviceInfo;
 

@@ -69,7 +69,7 @@ export const persistTerminalSettings = (
         `${serialNumber}.${comPort}.TerminalSettings`,
         terminalSettings
     );
-export const getTerminalSettings = (
+export const getPersistedTerminalSettings = (
     serialNumber: string,
     comPort: string
 ): TerminalSettings | undefined => {
