@@ -413,9 +413,12 @@ const prepareInDFUBootloader = async (
             },
             ({ progressJson: progress }) => {
                 if (prevPercentage !== progress.progressPercentage) {
-                    const status = `${progress.message.replace('.', ':')} ${
+                    const message = progress.message || '';
+
+                    const status = `${message.replace('.', ':')} ${
                         progress.progressPercentage
                     }%`;
+
                     logger.info(status);
                     prevPercentage = progress.progressPercentage;
                 }
