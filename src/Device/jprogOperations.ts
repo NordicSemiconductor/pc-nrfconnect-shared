@@ -50,7 +50,9 @@ const program = (deviceId: number, firmware: string | Buffer) => {
                 resolve();
             },
             ({ progressJson: progress }: Progress.CallbackParameters) => {
-                const status = `${progress.message.replace('.', ':')} ${
+                const message = progress.message || '';
+
+                const status = `${message.replace('.', ':')} ${
                     progress.progressPercentage
                 }%`;
                 logger.info(status);
