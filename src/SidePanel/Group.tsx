@@ -48,6 +48,7 @@ const ContextAwareToggle: React.FC<{
             className={classNames('group-toggle', isCurrentEventKey && 'show')}
         >
             <Heading label={heading} title={title} />
+            <span className="mdi mdi-chevron-down" />
         </PseudoButton>
     );
 };
