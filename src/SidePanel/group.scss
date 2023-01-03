@@ -4,41 +4,39 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
- @import "../variables";
+@import '../variables';
 
- .sidepanel-group {
-     .body {
-         > * {
-             margin-bottom: 8px;
-         }
- 
-         > *:last-child {
-             margin-bottom: 0px;
-         }
-     }
- 
-     .heading {
-         margin-bottom: 16px;
- 
-         font-size: 10px;
-         font-weight: normal;
-         letter-spacing: 0.5ex;
- 
-         text-transform: uppercase;
-     }
- 
-     .group-toggle {
-         display: flex;
-         justify-content: space-between;
- 
-         .heading {
-             margin-top: 4px;
-         }
- 
-         &.show .mdi-chevron-down::before {
-             transform: rotate(180deg);
-         }
- 
-     }
- }
- 
+.sidepanel-group {
+    .body {
+        > * {
+            margin-bottom: 8px;
+        }
+
+        > *:last-child {
+            margin-bottom: 0px;
+        }
+    }
+
+    .heading {
+        margin-bottom: 16px;
+
+        font-size: 10px;
+        font-weight: normal;
+        letter-spacing: 0.5ex;
+
+        text-transform: uppercase;
+    }
+
+    .group-toggle {
+        display: flex;
+        justify-content: space-between;
+
+        .heading {
+            margin-top: 4px;
+        }
+
+        &.show .mdi-chevron-down::before {
+            transform: rotate(180deg);
+        }
+    }
+}
