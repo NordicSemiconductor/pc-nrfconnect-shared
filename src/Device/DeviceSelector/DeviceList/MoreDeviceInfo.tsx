@@ -60,11 +60,11 @@ const MoreDeviceInfo: FC<{ device: Device }> = ({ device }) => (
         <Row>
             <MaybeDeviceName device={device} />
         </Row>
-        {device.serialPorts ? (
+        {device.serialPorts && (
             <Row>
                 <Serialports ports={device.serialPorts} />
             </Row>
-        ) : null}
+        )}
     </div>
 );
 
