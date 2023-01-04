@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "6.14.2",
+    "version": "6.14.3",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -76,7 +76,7 @@
         "copy-webpack-plugin": "^6.4.1",
         "css-loader": "5.2.7",
         "date-fns": "2.28.0",
-        "electron": "^13.6.9",
+        "electron": "22.0.0",
         "electron-store": "8.0.2",
         "enzyme": "3.11.0",
         "enzyme-adapter-react-16": "1.15.6",
