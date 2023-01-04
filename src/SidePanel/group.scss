@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-@import "../variables";
-
 .sidepanel-group {
     .body {
         > * {
@@ -28,32 +26,17 @@
     }
 
     .group-toggle {
-        .heading {
-            transition: margin-bottom 0.2s ease-in-out;
-            margin-bottom: 0;
+        display: flex;
+        justify-content: space-between;
 
-            line-height: 13px;
+        .mdi-chevron-down::before {
+            font-size: 20px;
             position: relative;
-
-            &::after {
-                content: "\f140";
-                font-family: "Material Design Icons";
-                font-size: 15px;
-                display: inline-block;
-                vertical-align: middle;
-                transition: transform 0.2s ease-in-out;
-                position: absolute;
-                right: 0;
-                transform-origin: 8px 6px;
-                margin-right: -5px;
-            }
+            top: -9px;
         }
 
-        &.show .heading {
-            margin-bottom: 16px;
-            &::after {
-                transform: rotate(-180deg);
-            }
+        &.show .mdi-chevron-down::before {
+            transform: rotate(180deg);
         }
     }
 }
