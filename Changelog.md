@@ -8,7 +8,7 @@ and this project adheres to
 
 ## 6.14.1 - 2023-01-04
 
-## Fixed
+### Fixed
 
 -   Chevron was not visible on a Collapsible Group.
 
@@ -24,13 +24,13 @@ and this project adheres to
 
 ## 6.13.2 - 2022-12-19
 
-## Changed
+### Changed
 
 -   Fix imports that were a problem for tests in some apps.
 
 ## 6.13.1 - 2022-12-05
 
-## Changed
+### Changed
 
 -   SerialPort is initialized with an `OverwriteOption`, consisting of
     `overwrite` and `settingsLocked`, instead of only `overwrite`. The new
