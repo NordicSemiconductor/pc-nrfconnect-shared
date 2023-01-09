@@ -216,6 +216,17 @@ declare module 'pc-nrfconnect-shared' {
          * callback will not be invoked.
          */
         onDeviceIsReady?: (device: Device) => void;
+
+        /**
+         * This callback is invoked when a device is connected
+         */
+        onDeviceConnected?: (device: Device) => void;
+
+        /**
+         * This callback is invoked when a device is disconnected
+         */
+        onDeviceDisconnected?: (device: Device) => void;
+
         /**
          * This callback is invoked when a selected device is again
          * deselected. This may be caused by the user deselecting

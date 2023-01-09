@@ -34,6 +34,8 @@ interface Props {
     releaseCurrentDevice?: () => void;
     onDeviceSelected?: (device: Device) => void;
     onDeviceDeselected?: () => void;
+    onDeviceConnected?: (device: Device) => void;
+    onDeviceDisconnected?: (device: Device) => void;
     onDeviceIsReady?: (device: Device) => void;
     deviceFilter?: (device: Device) => boolean;
 }
@@ -45,6 +47,8 @@ const DeviceSelector: FC<Props> = ({
     releaseCurrentDevice = noop,
     onDeviceSelected = noop,
     onDeviceDeselected = noop,
+    onDeviceConnected = noop,
+    onDeviceDisconnected = noop,
     onDeviceIsReady = noop,
     deviceFilter,
 }) => {
@@ -58,13 +62,27 @@ const DeviceSelector: FC<Props> = ({
         dispatch(deselectDevice());
     }, [dispatch, onDeviceDeselected]);
 
+    const doDeviceConnected = useCallback(
+        (device: Device) => {
+            onDeviceConnected(device);
+        },
+        [onDeviceConnected]
+    );
+
+    const doDeviceDisconnected = useCallback(
+        (device: Device) => {
+            onDeviceDisconnected(device);
+        },
+        [onDeviceDisconnected]
+    );
+
     const doStartWatchingDevices = useCallback(() => {
         const patchedDeviceListing = {
             serialPorts: deviceListing.serialPort || deviceListing.serialport,
             ...deviceListing,
         };
-        dispatch(startWatchingDevices(patchedDeviceListing, doDeselectDevice));
-    }, [deviceListing, dispatch, doDeselectDevice]);
+        dispatch(startWatchingDevices(patchedDeviceListing));
+    }, [deviceListing, dispatch]);
 
     const doSelectDevice = (device: Device) => {
         setDeviceListVisible(false);
