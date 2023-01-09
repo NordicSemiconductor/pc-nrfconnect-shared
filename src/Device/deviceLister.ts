@@ -14,9 +14,8 @@ import nrfDeviceLib, {
 import type { Device } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';
-import { Devices } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import { devicesDetected } from './deviceSlice';
+import { addDevice, removeDevice, setDevices } from './deviceSlice';
 
 const DEFAULT_DEVICE_WAIT_TIME = 3000;
 
@@ -43,6 +42,21 @@ export const wrapDeviceFromNrfdl = (device: NrfdlDevice): Device => ({
 export const wrapDevicesFromNrfdl = (devices: NrfdlDevice[]): Device[] =>
     devices.map(wrapDeviceFromNrfdl);
 
+const filterDeviceTraits = (lhs: DeviceTraits, rhs: DeviceTraits) => {
+    let result = false;
+
+    Object.keys(rhs).every(key => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (!(rhs as any)[key]) return true;
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        result = (lhs as any)[key];
+        return !result;
+    });
+
+    return !result;
+};
+
 /**
  * Starts watching for devices with the given traits. See the nrf-device-lib
  * library for available traits. Whenever devices are attached/detached, this
@@ -50,35 +64,45 @@ export const wrapDevicesFromNrfdl = (devices: NrfdlDevice[]): Device[] =>
  *
  * @param {Object} deviceListing The configuration for the DeviceLister
  * @param {function(device)} doDeselectDevice Invoke to start deselect the current device
+ * @param {function(device)} doDeviceConnected Invoke to start deselect the current device
+ * @param {function(device)} doDeviceDisconnected Invoke to start deselect the current device
  * @returns {function(*)} Function that can be passed to redux dispatch.
  */
 export const startWatchingDevices =
-    (deviceListing: DeviceTraits, doDeselectDevice: Function) =>
-    async (dispatch: Function, getState: Function): Promise<void> => {
-        const updateDeviceList = async () => {
-            const { selectedSerialNumber, devices: devicesFromState } =
-                getState().device;
-            await waitForModeSwitch(devicesFromState, selectedSerialNumber);
+    (deviceListing: DeviceTraits) => async (dispatch: Function) => {
+        const updateDeviceList = (event: HotplugEvent) => {
+            console.log('event', event);
+            console.log('deviceListing', deviceListing);
+            console.log('event.device?.traits', event.device?.traits);
+
+            switch (event.event_type) {
+                case 'NRFDL_DEVICE_EVENT_ARRIVED':
+                    if (!event.device) {
+                        return;
+                    }
+
+                    if (
+                        event.device?.traits &&
+                        filterDeviceTraits(event.device?.traits, deviceListing)
+                    ) {
+                        return;
+                    }
+                    dispatch(addDevice(wrapDeviceFromNrfdl(event.device)));
+                    break;
+                case 'NRFDL_DEVICE_EVENT_LEFT':
+                    dispatch(removeDevice(event.device_id));
+                    break;
+            }
+        };
+
+        try {
             const nrfdlDevices = await nrfDeviceLib.enumerate(
                 getDeviceLibContext(),
                 deviceListing
             );
-            const devices = wrapDevicesFromNrfdl(nrfdlDevices);
-            const hasSerialNumber = (d: Device) =>
-                d.serialNumber === selectedSerialNumber;
+            const currentDevices = wrapDevicesFromNrfdl(nrfdlDevices);
+            dispatch(setDevices(currentDevices));
 
-            if (
-                selectedSerialNumber !== null &&
-                !devices.find(hasSerialNumber)
-            ) {
-                doDeselectDevice();
-            }
-
-            dispatch(devicesDetected(devices));
-        };
-
-        try {
-            await updateDeviceList();
             hotplugTaskId = nrfDeviceLib.startHotplugEvents(
                 getDeviceLibContext(),
                 () => {},
@@ -170,25 +194,4 @@ export const waitForDevice = (
             );
         }, timeout);
     });
-};
-
-const waitForModeSwitch = async (
-    devices: Devices,
-    selectedSerialNumber: string
-) => {
-    const hasDfuTriggerVersion =
-        devices[selectedSerialNumber]?.dfuTriggerVersion != null;
-
-    // Wait some time in case device is being put in either app or bootloader mode
-    if (hasDfuTriggerVersion) {
-        try {
-            await waitForDevice(selectedSerialNumber, DEFAULT_DEVICE_WAIT_TIME);
-        } catch (err) {
-            logger.debug(
-                `Device did not show up after ${
-                    DEFAULT_DEVICE_WAIT_TIME / 1000
-                } seconds`
-            );
-        }
-    }
 };
