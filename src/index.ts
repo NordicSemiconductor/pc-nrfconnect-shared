@@ -67,7 +67,6 @@ export {
     getPersistedSerialPort,
     persistTerminalSettings,
     getPersistedTerminalSettings,
-    getTerminalSettings,
 } from './utils/persistentStore';
 
 export { selectedDevice } from './Device/deviceSlice';
