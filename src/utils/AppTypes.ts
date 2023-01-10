@@ -6,23 +6,25 @@
 
 export interface SourceJson {
     name: string;
-    apps?: string[];
+    apps: string[];
 }
 
-export interface AppJson {
+export type AppVersions = {
+    [version: string]: {
+        shasum: string;
+        tarballUrl: string;
+    };
+};
+
+export interface AppInfo {
     name: string;
     displayName: string;
     description: string;
     homepage?: string;
     iconUrl: string;
     releaseNotesUrl: string;
-    latest: string;
-    versions: {
-        [version: string]: {
-            shasum: string;
-            tarball: string;
-        };
-    };
+    latestVersion: string;
+    versions: AppVersions;
     installed?: {
         path: string;
         shasum: string;

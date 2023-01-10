@@ -6,15 +6,43 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 6.14.3 - 2023-01-04
+
+### Changed
+
+-   Update electron to 22.0.0
+
+## 6.14.2 - 2023-01-04
+
+### Changed
+
+-   Update device lib to 0.5.0
+
+## 6.14.1 - 2023-01-04
+
+### Fixed
+
+-   Chevron was not visible on a Collapsible Group.
+
+## 6.14.0 - 2023-01-02
+
+### Changed
+
+-   Property `apps` in type `SourceJson` became mandatory.
+-   Renamed type `AppJson` to `AppInfo`.
+-   Renamed property `latest` to `latestVersion` in type `AppInfo`.
+-   Exported type `AppVersions` and renamed property `tarball` to `tarballUrl`.
+-   Bumped target for TypeScript to `ES2020`.
+
 ## 6.13.2 - 2022-12-19
 
-## Changed
+### Changed
 
 -   Fix imports that were a problem for tests in some apps.
 
 ## 6.13.1 - 2022-12-05
 
-## Changed
+### Changed
 
 -   SerialPort is initialized with an `OverwriteOption`, consisting of
     `overwrite` and `settingsLocked`, instead of only `overwrite`. The new

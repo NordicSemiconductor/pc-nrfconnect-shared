@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "6.13.2",
+    "version": "6.14.3",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -42,7 +42,7 @@
         "@babel/preset-typescript": "7.18.6",
         "@electron/remote": "^2.0.4",
         "@mdi/font": "7.0.96",
-        "@nordicsemiconductor/nrf-device-lib-js": "^0.4.13",
+        "@nordicsemiconductor/nrf-device-lib-js": "0.5.0-pre1",
         "@reduxjs/toolkit": "1.8.3",
         "@svgr/core": "^6.5.1",
         "@svgr/webpack": "5.5.0",
@@ -76,7 +76,7 @@
         "copy-webpack-plugin": "^6.4.1",
         "css-loader": "5.2.7",
         "date-fns": "2.28.0",
-        "electron": "^13.6.9",
+        "electron": "22.0.0",
         "electron-store": "8.0.2",
         "enzyme": "3.11.0",
         "enzyme-adapter-react-16": "1.15.6",
