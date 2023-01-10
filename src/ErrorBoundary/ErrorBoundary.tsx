@@ -8,12 +8,11 @@ import React, { ReactNode } from 'react';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
-import type { Device } from 'pc-nrfconnect-shared';
 
 import Spinner from '../Dialog/Spinner';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { CollapsibleGroup } from '../SidePanel/Group';
-import { Devices, RootState } from '../state';
+import { Device, RootState } from '../state';
 import { openUrl } from '../utils/open';
 import packageJson from '../utils/packageJson';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
@@ -41,7 +40,7 @@ const sendGAEvent = (error: string) => {
 interface Props {
     children: ReactNode;
     selectedSerialNumber?: string;
-    devices: Devices;
+    devices: Map<string, Device>;
     appName?: string;
     restoreDefaults?: () => void;
     sendUsageData?: (message: string) => void;
@@ -81,7 +80,7 @@ class ErrorBoundary extends React.Component<
         const selectedDevice =
             selectedSerialNumber == null
                 ? undefined
-                : devices[selectedSerialNumber];
+                : devices.get(selectedSerialNumber);
 
         generateSystemReport(
             new Date().toISOString().replace(/:/g, '-'),
@@ -186,7 +185,7 @@ class ErrorBoundary extends React.Component<
 }
 
 const mapStateToProps = (state: RootState) => ({
-    devices: state.device?.devices ?? {},
+    devices: state.device.devices,
     selectedSerialNumber: state.device?.selectedSerialNumber ?? undefined,
 });
 
