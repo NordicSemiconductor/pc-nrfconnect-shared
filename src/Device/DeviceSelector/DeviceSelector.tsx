@@ -81,8 +81,14 @@ const DeviceSelector: FC<Props> = ({
             serialPorts: deviceListing.serialPort || deviceListing.serialport,
             ...deviceListing,
         };
-        dispatch(startWatchingDevices(patchedDeviceListing));
-    }, [deviceListing, dispatch]);
+        dispatch(
+            startWatchingDevices(
+                patchedDeviceListing,
+                doDeviceConnected,
+                doDeviceDisconnected
+            )
+        );
+    }, [deviceListing, dispatch, doDeviceConnected, doDeviceDisconnected]);
 
     const doSelectDevice = (device: Device) => {
         setDeviceListVisible(false);
