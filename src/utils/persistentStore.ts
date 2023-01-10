@@ -6,10 +6,10 @@
 
 import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 import Store from 'electron-store';
-import { logger } from 'pc-nrfconnect-shared';
 import { SerialPortOpenOptions } from 'serialport';
 import { v4 as uuid } from 'uuid';
 
+import logger from '../logging';
 import packageJson from './packageJson';
 
 export interface SerialSettings {

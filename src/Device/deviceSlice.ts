@@ -115,6 +115,7 @@ const slice = createSlice({
         },
 
         setDevices: (state, action: PayloadAction<Device[]>) => {
+            state.devices.clear();
             action.payload.forEach(device => {
                 state.devices.set(device.serialNumber, device);
             });
