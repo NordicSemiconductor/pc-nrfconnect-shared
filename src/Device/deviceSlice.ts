@@ -139,15 +139,8 @@ const slice = createSlice({
             });
         },
 
-        removeDevice: (state, action: PayloadAction<number>) => {
-            let toRemove: string | null = null;
-            state.devices.forEach(device => {
-                if (device.id === action.payload) {
-                    toRemove = device.serialNumber;
-                }
-            });
-
-            if (toRemove) state.devices.delete(toRemove);
+        removeDevice: (state, action: PayloadAction<Device>) => {
+            state.devices.delete(action.payload.serialNumber);
         },
 
         toggleDeviceFavorited: (state, action: PayloadAction<string>) => {
@@ -217,7 +210,7 @@ const sorted = (devices: Device[]) =>
     });
 
 export const getDevice = (serialNumber: string) => (state: RootState) =>
-    state.device?.devices.get(serialNumber);
+    state.device.devices.get(serialNumber);
 
 export const sortedDevices = (state: RootState) =>
     sorted([...state.device.devices.values()]);

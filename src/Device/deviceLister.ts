@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-/* eslint-disable @typescript-eslint/ban-types */
-
 import nrfDeviceLib, {
     Device as NrfdlDevice,
     DeviceTraits,
@@ -14,6 +12,7 @@ import nrfDeviceLib, {
 import type { Device } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';
+import { RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import { addDevice, removeDevice, setDevices } from './deviceSlice';
 
@@ -57,24 +56,19 @@ const filterDeviceTraits = (lhs: DeviceTraits, rhs: DeviceTraits) => {
     return !result;
 };
 
-/**
+/*
  * Starts watching for devices with the given traits. See the nrf-device-lib
  * library for available traits. Whenever devices are attached/detached, this
- * will dispatch DEVICES_DETECTED with a complete list of attached devices.
- *
- * @param {Object} deviceListing The configuration for the DeviceLister
- * @param {function(device)} doDeselectDevice Invoke to start deselect the current device
- * @param {function(device)} doDeviceConnected Invoke to start deselect the current device
- * @param {function(device)} doDeviceDisconnected Invoke to start deselect the current device
- * @returns {function(*)} Function that can be passed to redux dispatch.
+ * will dispatch AddDevice or removeDevice and trigger events.
  */
 export const startWatchingDevices =
-    (deviceListing: DeviceTraits) => async (dispatch: Function) => {
+    (
+        deviceListing: DeviceTraits,
+        doDeviceConnected: (device: Device) => void,
+        doDeviceDisconnected: (device: Device) => void
+    ) =>
+    async (dispatch: TDispatch, getState: () => RootState) => {
         const updateDeviceList = (event: HotplugEvent) => {
-            console.log('event', event);
-            console.log('deviceListing', deviceListing);
-            console.log('event.device?.traits', event.device?.traits);
-
             switch (event.event_type) {
                 case 'NRFDL_DEVICE_EVENT_ARRIVED':
                     if (!event.device) {
@@ -87,10 +81,32 @@ export const startWatchingDevices =
                     ) {
                         return;
                     }
-                    dispatch(addDevice(wrapDeviceFromNrfdl(event.device)));
+                    {
+                        const device = wrapDeviceFromNrfdl(event.device);
+                        if (
+                            !getState().device.devices.has(device.serialNumber)
+                        ) {
+                            doDeviceConnected(device);
+                        }
+                        dispatch(addDevice(device));
+                    }
                     break;
                 case 'NRFDL_DEVICE_EVENT_LEFT':
-                    dispatch(removeDevice(event.device_id));
+                    {
+                        const devices = getState().device.devices;
+
+                        let toRemove: Device | null = null;
+                        devices.forEach(device => {
+                            if (device.id === event.device_id) {
+                                toRemove = device;
+                            }
+                        });
+
+                        if (toRemove) {
+                            dispatch(removeDevice(toRemove));
+                            doDeviceDisconnected(toRemove);
+                        }
+                    }
                     break;
             }
         };
