@@ -17,10 +17,12 @@ import {
     deselectDevice,
     deviceIsSelected as deviceIsSelectedSelector,
     selectDevice,
+    selectedSerialNumber,
 } from '../deviceSlice';
 import DeviceList from './DeviceList/DeviceList';
 import SelectDevice from './SelectDevice';
 import SelectedDevice from './SelectedDevice';
+import useAutoReconnectDevice from './useAutoReconnectDevice';
 import useAutoselectDevice from './useAutoselectDevice';
 
 interface OutdatedDeviceTraits {
@@ -56,6 +58,7 @@ const DeviceSelector: FC<Props> = ({
     const [deviceListVisible, setDeviceListVisible] = useState(false);
 
     const deviceIsSelected = useSelector(deviceIsSelectedSelector);
+    const selectedSN = useSelector(selectedSerialNumber);
 
     const doDeselectDevice = useCallback(() => {
         onDeviceDeselected();
@@ -75,6 +78,12 @@ const DeviceSelector: FC<Props> = ({
         },
         [onDeviceDisconnected]
     );
+
+    useEffect(() => {
+        if (!selectedSN) {
+            onDeviceDeselected();
+        }
+    }, [onDeviceDeselected, selectedSN]);
 
     const doStartWatchingDevices = useCallback(() => {
         const patchedDeviceListing = {
@@ -117,6 +126,7 @@ const DeviceSelector: FC<Props> = ({
     }, [doStartWatchingDevices]);
 
     useAutoselectDevice(doSelectDevice);
+    useAutoReconnectDevice(doSelectDevice);
 
     useHotKey({
         hotKey: 'alt+s',
@@ -143,7 +153,6 @@ const DeviceSelector: FC<Props> = ({
                 doSelectDevice={doSelectDevice}
                 deviceFilter={deviceFilter}
             />
-
             <DeviceSetup />
         </div>
     );

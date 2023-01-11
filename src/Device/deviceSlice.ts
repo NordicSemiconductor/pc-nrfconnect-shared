@@ -37,6 +37,7 @@ const initialState: DeviceState = {
     selectedSerialNumber: null,
     deviceInfo: null,
     isSetupWaitingForUserInput: false,
+    autoReconnect: false,
     ...noDialogShown,
 };
 
@@ -51,6 +52,9 @@ const slice = createSlice({
          */
         selectDevice: (state, action: PayloadAction<Device>) => {
             state.selectedSerialNumber = action.payload.serialNumber;
+            state.autoReconnectDevice = {
+                device: { ...action.payload },
+            };
         },
 
         /*
@@ -59,6 +63,7 @@ const slice = createSlice({
         deselectDevice: state => {
             state.selectedSerialNumber = null;
             state.deviceInfo = null;
+            state.autoReconnectDevice = null;
         },
 
         /*
@@ -141,6 +146,15 @@ const slice = createSlice({
 
         removeDevice: (state, action: PayloadAction<Device>) => {
             state.devices.delete(action.payload.serialNumber);
+
+            if (
+                state.autoReconnectDevice?.device.serialNumber ===
+                action.payload.serialNumber
+            ) {
+                state.autoReconnectDevice.disconnectionTime = Date.now();
+                state.selectedSerialNumber = null;
+                state.deviceInfo = null;
+            }
         },
 
         toggleDeviceFavorited: (state, action: PayloadAction<string>) => {
@@ -179,6 +193,10 @@ const slice = createSlice({
                 nickname: '',
             });
         },
+
+        setGlobalAutoReconnect: (state, action: PayloadAction<boolean>) => {
+            state.autoReconnect = action.payload;
+        },
     },
 });
 
@@ -197,6 +215,7 @@ export const {
         setDevices,
         setDeviceNickname,
         toggleDeviceFavorited,
+        setGlobalAutoReconnect,
     },
 } = slice;
 
@@ -216,7 +235,10 @@ export const sortedDevices = (state: RootState) =>
     sorted([...state.device.devices.values()]);
 
 export const deviceIsSelected = (state: RootState) =>
-    state.device?.selectedSerialNumber != null;
+    state.device.selectedSerialNumber != null;
+
+export const getAutoReconnectDevice = (state: RootState) =>
+    state.device.autoReconnect ? state.device.autoReconnectDevice : null;
 
 export const selectedDevice = (state: RootState) =>
     state.device.selectedSerialNumber
@@ -226,3 +248,6 @@ export const selectedDevice = (state: RootState) =>
 export const deviceInfo = (state: RootState) => state.device.deviceInfo;
 export const selectedSerialNumber = (state: RootState) =>
     state.device.selectedSerialNumber;
+
+export const getGlobalAutoReconnect = (state: RootState) =>
+    state.device.autoReconnect;

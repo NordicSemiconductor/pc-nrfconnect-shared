@@ -57,12 +57,13 @@ export interface DeviceState {
     selectedSerialNumber: string | null;
     setupDialogChoices: readonly string[];
     setupDialogText?: string | null;
-    lastConnectedDevice?: LastConnectedDevice;
+    autoReconnectDevice?: AutoReconnectDevice | null;
+    autoReconnect: boolean;
 }
 
-export interface LastConnectedDevice {
-    serialNumber: string;
-    disconnectionTime: number;
+export interface AutoReconnectDevice {
+    device: Device;
+    disconnectionTime?: number;
 }
 
 export interface DeviceInfo {
