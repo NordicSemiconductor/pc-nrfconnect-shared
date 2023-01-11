@@ -5,12 +5,17 @@
  */
 
 import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { bool, func } from 'prop-types';
 
 import { Device as DeviceProps } from '../../../state';
+import { Toggle } from '../../../Toggle/Toggle';
 import classNames from '../../../utils/classNames';
-import { sortedDevices } from '../../deviceSlice';
+import {
+    getGlobalAutoReconnect,
+    setGlobalAutoReconnect,
+    sortedDevices,
+} from '../../deviceSlice';
 import { AnimatedItem, AnimatedList } from './AnimatedList';
 import BrokenDevice from './BrokenDevice';
 import Device from './Device';
@@ -48,6 +53,8 @@ const DeviceList: FC<Props> = ({
     doSelectDevice,
     deviceFilter = showAllDevices,
 }) => {
+    const dispatch = useDispatch();
+    const autoReconnect = useSelector(getGlobalAutoReconnect);
     const devices = useSelector(sortedDevices);
     const filteredDevices = devices.filter(deviceFilter);
 
@@ -76,6 +83,16 @@ const DeviceList: FC<Props> = ({
                     ))}
                 </AnimatedList>
             )}
+            <div className="global-auto-reconnect">
+                <Toggle
+                    id="toggle-global-auto-reconnect"
+                    label="Auto Reconnect"
+                    isToggled={autoReconnect}
+                    onToggle={value => {
+                        dispatch(setGlobalAutoReconnect(value));
+                    }}
+                />
+            </div>
         </div>
     );
 };
