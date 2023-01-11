@@ -15,6 +15,7 @@ import packageJson from './packageJson';
 export interface SerialSettings {
     serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>;
     lastUpdated: number;
+    vComIndex: number;
 }
 
 export interface TerminalSettings {
@@ -45,11 +46,13 @@ export const getPersistedIsFavorite = (serialNumber: string) =>
 export const persistSerialPort = (
     serialNumber: string,
     appName: string,
-    serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>
+    serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>,
+    vComIndex: number
 ) =>
     sharedStore.set(`${serialNumber}.${appName}`, {
         serialPortOptions,
         lastUpdated: Date.now(),
+        vComIndex,
     } as SerialSettings);
 export const getPersistedSerialPort = (
     serialNumber: string,

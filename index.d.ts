@@ -552,7 +552,8 @@ declare module 'pc-nrfconnect-shared' {
     export const persistSerialPort: (
         serialNumber: string,
         appName: string,
-        serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>
+        serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>,
+        vComIndex: number
     ) => void;
 
     export const getPersistedSerialPort: (
