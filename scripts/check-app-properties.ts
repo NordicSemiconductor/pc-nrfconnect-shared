@@ -96,7 +96,15 @@ const checkOptionalProperties = (packageJson: PackageJson) => {
         const withoutPostfix = (gitUrl?: string) =>
             gitUrl?.replace(/\.git$/, '');
 
-        if (withoutPostfix(realGitUrl) !== withoutPostfix(declaredGitUrl)) {
+        const withoutProtocol = (gitUrl?: string) =>
+            gitUrl
+                ?.replace(/^git@github\.com:/, 'github.com/')
+                .replace(/^https:\/\//, '');
+
+        const stripped = (gitUrl?: string) =>
+            withoutProtocol(withoutPostfix(gitUrl));
+
+        if (stripped(realGitUrl) !== stripped(declaredGitUrl)) {
             fail(
                 `package.json says the repository is located at \`${declaredGitUrl}\` but \`git remote get-url origin\` says it is at \`${realGitUrl}\`.`
             );
