@@ -39,20 +39,25 @@ export const SerialPort = async (
 ) => {
     const { path } = options;
 
-    ipcRenderer.on(SERIALPORT_CHANNEL.ON_DATA, (_event, data) => onData(data));
-    ipcRenderer.on(SERIALPORT_CHANNEL.ON_CLOSED, onClosed);
-    ipcRenderer.on(SERIALPORT_CHANNEL.ON_UPDATE, (_event, newOptions) =>
-        onUpdate(newOptions)
+    ipcRenderer.on(`${SERIALPORT_CHANNEL.ON_DATA}_${path}`, (_event, data) =>
+        onData(data)
     );
-    ipcRenderer.on(SERIALPORT_CHANNEL.ON_SET, (_event, newOptions) =>
-        onSet(newOptions)
+    ipcRenderer.on(`${SERIALPORT_CHANNEL.ON_CLOSED}_${path}`, onClosed);
+    ipcRenderer.on(
+        `${SERIALPORT_CHANNEL.ON_UPDATE}_${path}`,
+        (_event, newOptions) => onUpdate(newOptions)
     );
-    ipcRenderer.on(SERIALPORT_CHANNEL.ON_CHANGED, (_event, newOptions) =>
-        onChange(newOptions)
+    ipcRenderer.on(
+        `${SERIALPORT_CHANNEL.ON_SET}_${path}`,
+        (_event, newOptions) => onSet(newOptions)
+    );
+    ipcRenderer.on(
+        `${SERIALPORT_CHANNEL.ON_CHANGED}_${path}`,
+        (_event, newOptions) => onChange(newOptions)
     );
 
     // The origin of this event is emitted when a renderer writes to the port.
-    ipcRenderer.on(SERIALPORT_CHANNEL.ON_WRITE, (_event, data) =>
+    ipcRenderer.on(`${SERIALPORT_CHANNEL.ON_WRITE}_${path}`, (_event, data) =>
         onDataWritten(data)
     );
 
