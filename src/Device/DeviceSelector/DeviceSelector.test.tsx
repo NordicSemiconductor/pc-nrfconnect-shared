@@ -321,8 +321,8 @@ describe('DeviceSelector', () => {
 
         fireEvent.click(screen.getByText('Select device'));
         fireEvent.click(screen.getByText(testDevice.serialNumber));
-        await screen.findByText('No');
-        fireEvent.click(screen.getByText('No'));
+        await screen.findByText('Cancel');
+        fireEvent.click(screen.getByText('Cancel'));
 
         await waitForElementToBeRemoved(() =>
             screen.queryByText(

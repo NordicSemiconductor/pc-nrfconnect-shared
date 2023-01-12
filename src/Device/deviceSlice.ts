@@ -62,8 +62,6 @@ const slice = createSlice({
     reducers: {
         /*
          * Indicates that a device has been selected.
-         *
-         * @param {Device} device Device object as given by nrf-device-lib.
          */
         selectDevice: (state, action: PayloadAction<Device>) => {
             state.selectedSerialNumber = action.payload.serialNumber;
@@ -81,8 +79,6 @@ const slice = createSlice({
          * Indicates that device setup is complete. This means that the device is
          * ready for use according to the `config.deviceSetup` configuration provided
          * by the app.
-         *
-         * @param {Object} device Device object as given by nrf-device-lib.
          */
         deviceSetupComplete: (state, action: PayloadAction<Device>) => ({
             ...state,
@@ -90,25 +86,19 @@ const slice = createSlice({
             deviceInfo: action.payload,
         }),
 
-        // /**
-        //  * Indicates that device setup failed.
-        //  *
-        //  * @param {Object} device Device object as given by nrf-device-lib.
-        //  * @param {Object} error Error object describing the error.
-        //  */
+        /*
+         * Indicates that device setup failed.
+         */
         deviceSetupError: state => ({
             ...state,
             ...noDialogShown,
         }),
 
-        // /**
-        //  * Indicates that some part of the device setup operation requires input
-        //  * from the user. When the user has provided the required input, then
-        //  * DEVICE_SETUP_INPUT_RECEIVED is dispatched with the given input.
-        //  *
-        //  * @param {String} message The message to display to the user.
-        //  * @param {Array<String>} [choices] Values that the user can choose from (optional).
-        //  */
+        /*
+         * Indicates that some part of the device setup operation requires input
+         * from the user. When the user has provided the required input, then
+         * DEVICE_SETUP_INPUT_RECEIVED is dispatched with the given input.
+         */
         deviceSetupInputRequired: {
             reducer: (
                 state,
@@ -131,22 +121,20 @@ const slice = createSlice({
             }),
         },
 
-        // /**
-        //  * Indicates that the user has provided input to the device setup operation.
-        //  * This action is dispatched after DEVICE_SETUP_INPUT_REQUIRED.
-        //  *
-        //  */
+        /*
+         * Indicates that the user has provided input to the device setup operation.
+         * This action is dispatched after DEVICE_SETUP_INPUT_REQUIRED.
+         *
+         */
         deviceSetupInputReceived: state => {
             state.isSetupWaitingForUserInput = false;
         },
 
-        // /**
-        //  * Indicates that devices have been detected. This is triggered by default at
-        //  * startup, and whenever a device is attached/detached. The app can configure
-        //  * which devices to look for by providing a `config.selectorTraits` property.
-        //  *
-        //  * @param {Array} devices Array of all attached devices, ref. nrf-device-lib.
-        //  */
+        /*
+         * Indicates that devices have been detected. This is triggered by default at
+         * startup, and whenever a device is attached/detached. The app can configure
+         * which devices to look for by providing a `config.selectorTraits` property.
+         */
         devicesDetected: (state, action: PayloadAction<Device[]>) => {
             state.devices = bySerialNumber(withPersistedData(action.payload));
         },

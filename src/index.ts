@@ -12,7 +12,13 @@ export { ErrorDialogActions };
 export { default as App } from './App/App';
 export { default as Logo } from './Logo/Logo';
 export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
-export { default as ConfirmationDialog } from './Dialog/ConfirmationDialog';
+export {
+    Dialog,
+    ConfirmationDialog,
+    InfoDialog,
+    ErrorDialog,
+    DialogButton,
+} from './Dialog/Dialog';
 export { default as Spinner } from './Dialog/Spinner';
 export { default as Slider } from './Slider/Slider';
 export { Toggle } from './Toggle/Toggle';
@@ -29,7 +35,6 @@ export { default as DocumentationSection } from './About/DocumentationSection';
 export { default as SidePanel } from './SidePanel/SidePanel';
 export { Group, CollapsibleGroup } from './SidePanel/Group';
 
-export { default as ErrorDialog } from './ErrorDialog/ErrorDialog';
 export { default as InlineInput } from './InlineInput/InlineInput';
 export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
 

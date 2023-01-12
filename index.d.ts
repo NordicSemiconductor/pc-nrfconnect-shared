@@ -5,10 +5,10 @@
  */
 
 declare module 'pc-nrfconnect-shared' {
-    import { Reducer, AnyAction } from 'redux';
-    import React from 'react';
-    import { Logger, LogEntry } from 'winston';
     import Store from 'electron-store';
+    import React from 'react';
+    import { AnyAction, Reducer } from 'redux';
+    import { LogEntry, Logger } from 'winston';
     import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
     type Shortcut = import('./src/About/shortcutSlice').Shortcut;
@@ -258,22 +258,6 @@ declare module 'pc-nrfconnect-shared' {
 
     export class Logo extends React.Component<LogoProps> {}
 
-    // ConfirmationDialog.jsx
-
-    export interface ConfirmationDialogProps {
-        isVisible: boolean;
-        title?: string;
-        text?: string;
-        onOk: () => void;
-        onCancel: () => void;
-        okButtonText?: string;
-        cancelButtonText?: string;
-        isInProgress?: boolean;
-        isOkButtonEnabled?: boolean;
-    }
-
-    export class ConfirmationDialog extends React.Component<ConfirmationDialogProps> {}
-
     // Spinner.jsx
 
     export class Spinner extends React.Component {}
@@ -297,8 +281,6 @@ declare module 'pc-nrfconnect-shared' {
         showDialog: typeof import('./src/ErrorDialog/errorDialogSlice').showDialog;
         hideDialog: typeof import('./src/ErrorDialog/errorDialogSlice').hideDialog;
     };
-
-    export class ErrorDialog extends React.Component {}
 
     // errorDialogSlice.ts
 
@@ -369,6 +351,14 @@ declare module 'pc-nrfconnect-shared' {
     }
 
     export class DocumentationSection extends React.Component<DocumentationSectionProps> {}
+
+    export type Dialog = typeof import('./src/Dialog/Dialog').Dialog;
+    export type InfoDialog = typeof import('./src/Dialog/Dialog').InfoDialog;
+    export type ConfirmationDialog =
+        typeof import('./src/Dialog/Dialog').ConfirmationDialog;
+    export type ErrorDialog = typeof import('./src/Dialog/Dialog').ErrorDialog;
+    export type DialogButton =
+        typeof import('./src/Dialog/Dialog').DialogButton;
 
     // colors.js
 

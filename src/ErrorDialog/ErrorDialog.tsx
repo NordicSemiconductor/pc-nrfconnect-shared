@@ -5,11 +5,10 @@
  */
 
 import React from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import ReactMarkdown from 'react-markdown';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { Dialog, DialogButton } from '../Dialog/Dialog';
 import {
     errorResolutions as errorResolutionsSelector,
     hideDialog,
@@ -25,16 +24,20 @@ const ErrorDialog = () => {
     const isVisible = useSelector(isVisibleSelector);
     const messages = useSelector(messagesSelector);
 
-    const defaultErrorResolutions = { Close: () => dispatch(hideDialog()) };
+    const defaultErrorResolutions = {
+        Close: () => dispatch(hideDialog()),
+    };
     const errorResolutions =
         useSelector(errorResolutionsSelector) || defaultErrorResolutions;
 
     return (
-        <Modal show={isVisible} onHide={() => dispatch(hideDialog())}>
-            <Modal.Header closeButton>
-                <Modal.Title>Error</Modal.Title>
-            </Modal.Header>
-            <Modal.Body className="core19-error-body">
+        <Dialog
+            isVisible={isVisible}
+            onHide={() => dispatch(hideDialog())}
+            className="core19-error-body"
+        >
+            <Dialog.Header title="Error" headerIcon="alert" />
+            <Dialog.Body>
                 {messages.map(message => (
                     <ReactMarkdown
                         key={message}
@@ -42,23 +45,21 @@ const ErrorDialog = () => {
                         linkTarget="_blank"
                     />
                 ))}
-            </Modal.Body>
-            <Modal.Footer>
+            </Dialog.Body>
+            <Dialog.Footer>
                 {Object.entries(errorResolutions).map(
                     ([label, handler], index) => (
-                        <Button
+                        <DialogButton
                             key={label}
                             onClick={handler}
-                            variant={
-                                index === 0 ? 'primary' : 'outline-secondary'
-                            }
+                            variant={index === 0 ? 'primary' : 'secondary'}
                         >
                             {label}
-                        </Button>
+                        </DialogButton>
                     )
                 )}
-            </Modal.Footer>
-        </Modal>
+            </Dialog.Footer>
+        </Dialog>
     );
 };
 

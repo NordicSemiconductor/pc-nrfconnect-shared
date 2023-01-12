@@ -54,16 +54,11 @@ export interface DeviceSetup {
 // (Boolean) or choice (String) that the user provided as input.
 let deviceSetupCallback: ((choice: string | boolean) => void) | undefined;
 
-/**
+/*
  * Asks the user to provide input during device setup. If a list of choices are
  * given, and the user selects one of them, then then promise will resolve with
  * the selected value. If no choices are given, and the user confirms, then the
  * promise will just resolve with true. Will reject if the user cancels.
- *
- * @param {function} dispatch The redux dispatch function.
- * @param {String} message The message to display to the user.
- * @param {Array<String>} [choices] The choices to display to the user (optional).
- * @returns {Promise<String>} Promise that resolves with the user input.
  */
 const getDeviceSetupUserInput =
     (dispatch: TDispatch) => (message: string, choices: string[]) =>
@@ -81,12 +76,9 @@ const getDeviceSetupUserInput =
             dispatch(deviceSetupInputRequired(message, choices));
         });
 
-/**
+/*
  * Responds to a device setup confirmation request with the given input
  * as provided by the user.
- *
- * @param {Boolean|String} input Input made by the user.
- * @returns {function(*)} Function that can be passed to redux dispatch.
  */
 export const receiveDeviceSetupInput =
     (input: boolean | string) => (dispatch: TDispatch) => {
@@ -175,19 +167,6 @@ const onSuccessfulDeviceSetup = (
     onDeviceIsReady(device);
 };
 
-/**
- * Selects a device and sets it up for use according to the `config.deviceSetup`
- * configuration given by the app.
- *
- * @param {Object} device Device object, ref. nrf-device-lib.
- * @param {Object} deviceSetup The object describing how to do the device setup
- * @param {function()} releaseCurrentDevice Callback invoked after stopping watching for devices
- *                     and before setting up the new device
- * @param {function(device)} onDeviceIsReady Callback invoked with the device when setup is complete
- * @param {function(device)} doStartWatchingDevices Invoke to start watching for new devices
- * @param {function(device)} doDeselectDevice Invoke to start deselect the current device
- * @returns {function(*)} Function that can be passed to redux dispatch.
- */
 export const setupDevice =
     (
         device: Device,

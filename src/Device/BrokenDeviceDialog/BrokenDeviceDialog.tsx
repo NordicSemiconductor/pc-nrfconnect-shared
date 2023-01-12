@@ -38,7 +38,6 @@ const BrokenDeviceDialog = () => {
                 <span className="mdi mdi-alert" />
             </Modal.Header>
             <Modal.Body>
-                {' '}
                 <p>{description}</p>
                 <a target="_blank" rel="noreferrer" href={url}>
                     {url}

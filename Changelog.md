@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 6.15.0 - 2022-01-12
+
+### Added
+
+-   `Dialog` component with new style.
+-   Shorthand creator functions for generic dialog use cases.
+
+### Removed
+
+-   `ConfirmationDialog` component.
+
+### Steps to upgrade when using this package
+
+-   Any use of the `ConfirmationDialog` component has to be replaced with the
+    new `Dialog` component or one of it's creator functions.
+
 ## 6.14.4 - 2023-01-11
 
 ### Changed
