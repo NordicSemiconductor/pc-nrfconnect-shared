@@ -5,9 +5,9 @@
  */
 
 import React, { ReactNode } from 'react';
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
+import Button from '../Button/Button';
 import Spinner from './Spinner';
 
 import './dialog.scss';
@@ -86,9 +86,8 @@ export const DialogButton = ({
     children: ReactNode | string;
 }) => (
     <Button
-        variant={variant}
         onClick={onClick}
-        className={className}
+        className={`${className} btn-${variant}`}
         disabled={disabled}
     >
         {children}

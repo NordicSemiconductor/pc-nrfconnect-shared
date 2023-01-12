@@ -357,6 +357,8 @@ declare module 'pc-nrfconnect-shared' {
     export type ConfirmationDialog =
         typeof import('./src/Dialog/Dialog').ConfirmationDialog;
     export type ErrorDialog = typeof import('./src/Dialog/Dialog').ErrorDialog;
+    export type DialogButton =
+        typeof import('./src/Dialog/Dialog').DialogButton;
 
     // colors.js
 
