@@ -102,6 +102,12 @@ declare module 'pc-nrfconnect-shared' {
          * Each section will have a heading, content and a button which links to the relevant website.
          */
         documentation?: React.ReactElement[] | null;
+        /**
+         * Auto reconnects to the device App setting
+         *
+         * If true a device that has been disconnected will reconnect if no other device was selected in the mean time
+         */
+        autoReconnectByDefault?: boolean;
     }
 
     /**
