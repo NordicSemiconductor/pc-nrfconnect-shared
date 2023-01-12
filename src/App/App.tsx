@@ -16,6 +16,7 @@ import { Reducer } from 'redux';
 import About from '../About/About';
 import { setDocumentationSections } from '../About/documentationSlice';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
+import { setGlobalAutoReconnect } from '../Device/deviceSlice';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import LogViewer from '../Log/LogViewer';
@@ -87,6 +88,7 @@ interface ConnectedAppProps {
     reportUsageData?: boolean;
     documentation?: ReactNode[];
     children?: ReactNode;
+    autoReconnectByDefault?: boolean;
 }
 
 const ConnectedApp: FC<ConnectedAppProps> = ({
@@ -97,6 +99,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     reportUsageData = false,
     documentation,
     children,
+    autoReconnectByDefault = false,
 }) => {
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
@@ -110,6 +113,12 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
         isGlobal: true,
         action: () => ipcRenderer.send('open-app-launcher'),
     });
+
+    useEffect(() => {
+        if (autoReconnectByDefault) {
+            dispatch(setGlobalAutoReconnect(true));
+        }
+    }, [dispatch, autoReconnectByDefault]);
 
     useEffect(() => {
         if (!showLogByDefault) {
