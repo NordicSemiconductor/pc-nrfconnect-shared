@@ -238,7 +238,10 @@ export const deviceIsSelected = (state: RootState) =>
     state.device.selectedSerialNumber != null;
 
 export const getAutoReconnectDevice = (state: RootState) =>
-    state.device.autoReconnect ? state.device.autoReconnectDevice : null;
+    state.device.autoReconnect ||
+    state.device.autoReconnectDevice?.device.dfuTriggerVersion != null
+        ? state.device.autoReconnectDevice
+        : null;
 
 export const selectedDevice = (state: RootState) =>
     state.device.selectedSerialNumber
