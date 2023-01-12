@@ -13,6 +13,7 @@ import {
     getAutoReconnectDevice,
     getDevice,
     getGlobalAutoReconnect,
+    selectedDevice,
 } from '../deviceSlice';
 
 const DEFAULT_DEVICE_WAIT_TIME = 3000;
@@ -25,6 +26,7 @@ export default (doSelectDevice: (device: Device) => void) => {
             ? getDevice(autoReconnectDevice?.device.serialNumber)(state)
             : undefined
     );
+    const currentSelectedDevice = useSelector(selectedDevice);
 
     // Support Switch Mode
     useEffect(() => {
@@ -36,7 +38,7 @@ export default (doSelectDevice: (device: Device) => void) => {
             autoReconnectDevice.device.dfuTriggerVersion != null;
 
         const t = setTimeout(() => {
-            if (hasDfuTriggerVersion) {
+            if (!currentSelectedDevice && hasDfuTriggerVersion) {
                 logger.debug(
                     `Device did not show up after ${
                         DEFAULT_DEVICE_WAIT_TIME / 1000
@@ -48,7 +50,7 @@ export default (doSelectDevice: (device: Device) => void) => {
         return () => {
             clearTimeout(t);
         };
-    }, [autoReconnectDevice]);
+    }, [autoReconnectDevice, currentSelectedDevice]);
 
     useEffect(() => {
         if (!autoReconnectDevice) {
@@ -64,6 +66,13 @@ export default (doSelectDevice: (device: Device) => void) => {
         }
 
         if (!autoReconnectDevice.disconnectionTime) {
+            return;
+        }
+
+        if (
+            autoReconnectDevice.disconnectionTime + DEFAULT_DEVICE_WAIT_TIME <
+            Date.now()
+        ) {
             return;
         }
 
