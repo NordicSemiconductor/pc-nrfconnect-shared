@@ -65,21 +65,21 @@ export const getPersistedSerialPort = (
 };
 export const persistTerminalSettings = (
     serialNumber: string,
-    comPort: string,
+    vComIndex: number,
     terminalSettings: TerminalSettings
 ) =>
     sharedStore.set(
-        `${serialNumber}.${comPort}.TerminalSettings`,
+        `${serialNumber}.${vComIndex}.TerminalSettings`,
         terminalSettings
     );
 export const getPersistedTerminalSettings = (
     serialNumber: string,
-    comPort: string
+    vComIndex: number
 ): TerminalSettings | undefined => {
     logger.info(
-        `persistentStore.ts: Will get terminalSettings options from ${serialNumber}.${comPort}.TerminalSettings`
+        `persistentStore.ts: Will get terminalSettings options from ${serialNumber}.${vComIndex}.TerminalSettings`
     );
-    return sharedStore.get(`${serialNumber}.${comPort}.TerminalSettings`);
+    return sharedStore.get(`${serialNumber}.${vComIndex}.TerminalSettings`);
 };
 
 export const persistIsSendingUsageData = (value: boolean) =>

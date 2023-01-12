@@ -553,13 +553,13 @@ declare module 'pc-nrfconnect-shared' {
 
     export const persistTerminalSettings: (
         serialNumber: string,
-        comPort: string,
+        vComIndex: number,
         terminalSettings: TerminalSettings
     ) => void;
 
     export const getPersistedTerminalSettings: (
         serialNumber: string,
-        comPort: string
+        vComIndex: number
     ) => TerminalSettings;
 
     export const deviceInfo: (device: Device) => DeviceInfo;
