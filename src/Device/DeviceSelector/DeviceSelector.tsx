@@ -100,6 +100,9 @@ const DeviceSelector: FC<Props> = ({
     }, [deviceListing, dispatch, doDeviceConnected, doDeviceDisconnected]);
 
     const doSelectDevice = (device: Device) => {
+        if (deviceIsSelected) {
+            doDeselectDevice();
+        }
         setDeviceListVisible(false);
         dispatch(selectDevice(device));
         onDeviceSelected(device);
