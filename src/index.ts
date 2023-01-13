@@ -41,7 +41,7 @@ export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
 export { reducer as errorDialogReducer } from './ErrorDialog/errorDialogSlice';
 export { default as logger } from './logging';
 export { default as bleChannels } from './utils/bleChannels';
-export { default as colors } from './utils/colors.icss.scss';
+export { colors } from './utils/colors';
 
 export {
     setAppDirs,

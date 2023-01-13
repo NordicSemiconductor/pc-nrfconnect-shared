@@ -5,5 +5,10 @@
         "declaration": true,
         "outDir": "./types"
     },
-    "include": ["./src/**/*.ts", "./main/**/*.ts", "./src/**/*.tsx", "./typings/*.d.ts"]
+    "include": [
+        "./src/**/*.ts",
+        "./main/**/*.ts",
+        "./src/**/*.tsx",
+        "./typings/*.d.ts"
+    ]
 }
