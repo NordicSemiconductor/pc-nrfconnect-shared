@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 6.16.0 - UNRELEASED
+
+### Added
+
+-   Optional auto reconnect to device
+-   Support to persist last Serial settings keyed with device SN and app name
+-   Support to persist terminal settings to keyed with device serial number and
+    vComIndex
+
+### Fix
+
+-   Event `onDeviceDeselected` not emitted when connecting to new device without
+    eject old device
+
 ## 6.15.2 - 2023-01-13
 
 ### Changed
