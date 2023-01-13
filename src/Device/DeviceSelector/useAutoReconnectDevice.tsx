@@ -70,8 +70,10 @@ export default (doSelectDevice: (device: Device) => void) => {
         }
 
         if (
+            hasDfuTriggerVersion &&
+            !autoSelectDevice &&
             autoReconnectDevice.disconnectionTime + DEFAULT_DEVICE_WAIT_TIME <
-            Date.now()
+                Date.now()
         ) {
             return;
         }
