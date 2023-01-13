@@ -25,6 +25,7 @@ module.exports = {
     ignorePatterns: [
         'package-lock.json',
         'scripts/nordic-publish.js',
+        'types/',
         ...entriesInGitignore,
     ],
     rules: {
