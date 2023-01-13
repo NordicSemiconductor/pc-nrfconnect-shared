@@ -60,6 +60,16 @@ const DeviceList: FC<Props> = ({
 
     return (
         <div className={classNames('device-list', isVisible || 'hidden')}>
+            <div className="global-auto-reconnect">
+                <Toggle
+                    id="toggle-global-auto-reconnect"
+                    label="Auto Reconnect"
+                    isToggled={autoReconnect}
+                    onToggle={value => {
+                        dispatch(setGlobalAutoReconnect(value));
+                    }}
+                />
+            </div>
             {devices.length === 0 && <NoDevicesConnected />}
             {devices.length > 0 && filteredDevices.length === 0 ? (
                 <NoSupportedDevicesConnected />
@@ -83,16 +93,6 @@ const DeviceList: FC<Props> = ({
                     ))}
                 </AnimatedList>
             )}
-            <div className="global-auto-reconnect">
-                <Toggle
-                    id="toggle-global-auto-reconnect"
-                    label="Auto Reconnect"
-                    isToggled={autoReconnect}
-                    onToggle={value => {
-                        dispatch(setGlobalAutoReconnect(value));
-                    }}
-                />
-            </div>
         </div>
     );
 };
