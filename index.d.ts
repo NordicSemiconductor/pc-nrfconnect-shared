@@ -352,13 +352,11 @@ declare module 'pc-nrfconnect-shared' {
 
     export class DocumentationSection extends React.Component<DocumentationSectionProps> {}
 
-    export type Dialog = typeof import('./src/Dialog/Dialog').Dialog;
-    export type InfoDialog = typeof import('./src/Dialog/Dialog').InfoDialog;
-    export type ConfirmationDialog =
-        typeof import('./src/Dialog/Dialog').ConfirmationDialog;
-    export type ErrorDialog = typeof import('./src/Dialog/Dialog').ErrorDialog;
-    export type DialogButton =
-        typeof import('./src/Dialog/Dialog').DialogButton;
+    export const Dialog: typeof import('./src/Dialog/Dialog').Dialog;
+    export const InfoDialog: typeof import('./src/Dialog/Dialog').InfoDialog;
+    export const ConfirmationDialog: typeof import('./src/Dialog/Dialog').ConfirmationDialog;
+    export const ErrorDialog: typeof import('./src/Dialog/Dialog').ErrorDialog;
+    export const DialogButton: typeof import('./src/Dialog/Dialog').DialogButton;
 
     // colors.js
 
