@@ -65,12 +65,6 @@ const DeviceSelector: FC<Props> = ({
         dispatch(deselectDevice());
     }, [dispatch, onDeviceDeselected]);
 
-    useEffect(() => {
-        if (!selectedSN) {
-            onDeviceDeselected();
-        }
-    }, [onDeviceDeselected, selectedSN, deviceIsSelected]);
-
     const doStartWatchingDevices = useCallback(() => {
         const patchedDeviceListing = {
             serialPorts: deviceListing.serialPort || deviceListing.serialport,
@@ -93,6 +87,11 @@ const DeviceSelector: FC<Props> = ({
     ]);
 
     const doSelectDevice = (device: Device) => {
+        if (device.serialNumber === selectedSN) {
+            setDeviceListVisible(false);
+            return;
+        }
+
         if (deviceIsSelected) {
             doDeselectDevice();
         }
