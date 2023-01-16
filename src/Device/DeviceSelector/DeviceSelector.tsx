@@ -65,25 +65,11 @@ const DeviceSelector: FC<Props> = ({
         dispatch(deselectDevice());
     }, [dispatch, onDeviceDeselected]);
 
-    const doDeviceConnected = useCallback(
-        (device: Device) => {
-            onDeviceConnected(device);
-        },
-        [onDeviceConnected]
-    );
-
-    const doDeviceDisconnected = useCallback(
-        (device: Device) => {
-            onDeviceDisconnected(device);
-        },
-        [onDeviceDisconnected]
-    );
-
     useEffect(() => {
         if (!selectedSN) {
             onDeviceDeselected();
         }
-    }, [onDeviceDeselected, selectedSN]);
+    }, [onDeviceDeselected, selectedSN, deviceIsSelected]);
 
     const doStartWatchingDevices = useCallback(() => {
         const patchedDeviceListing = {
@@ -93,11 +79,18 @@ const DeviceSelector: FC<Props> = ({
         dispatch(
             startWatchingDevices(
                 patchedDeviceListing,
-                doDeviceConnected,
-                doDeviceDisconnected
+                onDeviceConnected,
+                onDeviceDisconnected,
+                onDeviceDeselected
             )
         );
-    }, [deviceListing, dispatch, doDeviceConnected, doDeviceDisconnected]);
+    }, [
+        deviceListing,
+        dispatch,
+        onDeviceConnected,
+        onDeviceDisconnected,
+        onDeviceDeselected,
+    ]);
 
     const doSelectDevice = (device: Device) => {
         if (deviceIsSelected) {

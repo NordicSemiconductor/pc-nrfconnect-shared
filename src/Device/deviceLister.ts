@@ -41,15 +41,17 @@ export const wrapDeviceFromNrfdl = (device: NrfdlDevice): Device => ({
 export const wrapDevicesFromNrfdl = (devices: NrfdlDevice[]): Device[] =>
     devices.map(wrapDeviceFromNrfdl);
 
-const hasValidDeviceTraits = (
+export const hasValidDeviceTraits = (
     deviceTraits: DeviceTraits,
     requiredTraits: DeviceTraits
 ) =>
-    Object.keys(requiredTraits).every(
+    Object.keys(requiredTraits).some(
         rule =>
-            requiredTraits[rule as keyof DeviceTraits] === false ||
-            (requiredTraits[rule as keyof DeviceTraits] &&
-                deviceTraits[rule as keyof DeviceTraits])
+            deviceTraits[rule as keyof DeviceTraits] &&
+            requiredTraits[rule as keyof DeviceTraits]
+    ) ||
+    Object.keys(requiredTraits).every(
+        rule => requiredTraits[rule as keyof DeviceTraits] === false
     );
 
 /*
@@ -60,8 +62,9 @@ const hasValidDeviceTraits = (
 export const startWatchingDevices =
     (
         deviceListing: DeviceTraits,
-        doDeviceConnected: (device: Device) => void,
-        doDeviceDisconnected: (device: Device) => void
+        onDeviceConnected: (device: Device) => void,
+        onDeviceDisconnected: (device: Device) => void,
+        onDeviceDeselected: () => void
     ) =>
     async (dispatch: TDispatch, getState: () => RootState) => {
         const updateDeviceList = (event: HotplugEvent) => {
@@ -80,7 +83,7 @@ export const startWatchingDevices =
                         if (
                             !getState().device.devices.has(device.serialNumber)
                         ) {
-                            doDeviceConnected(device);
+                            onDeviceConnected(device);
                         }
                         dispatch(addDevice(device));
                     }
@@ -89,7 +92,7 @@ export const startWatchingDevices =
                     {
                         const devices = getState().device.devices;
 
-                        let toRemove: Device | null = null;
+                        let toRemove: Device | undefined;
                         devices.forEach(device => {
                             if (device.id === event.device_id) {
                                 toRemove = device;
@@ -97,8 +100,14 @@ export const startWatchingDevices =
                         });
 
                         if (toRemove) {
+                            if (
+                                toRemove?.serialNumber ===
+                                getState().device.selectedSerialNumber
+                            ) {
+                                onDeviceDeselected();
+                            }
                             dispatch(removeDevice(toRemove));
-                            doDeviceDisconnected(toRemove);
+                            onDeviceDisconnected(toRemove);
                         }
                     }
                     break;
