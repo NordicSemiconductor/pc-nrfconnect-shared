@@ -41,20 +41,16 @@ export const wrapDeviceFromNrfdl = (device: NrfdlDevice): Device => ({
 export const wrapDevicesFromNrfdl = (devices: NrfdlDevice[]): Device[] =>
     devices.map(wrapDeviceFromNrfdl);
 
-const filterDeviceTraits = (lhs: DeviceTraits, rhs: DeviceTraits) => {
-    let result = false;
-
-    Object.keys(rhs).every(key => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if (!(rhs as any)[key]) return true;
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        result = (lhs as any)[key];
-        return !result;
-    });
-
-    return !result;
-};
+const hasValidDeviceTraits = (
+    deviceTraits: DeviceTraits,
+    requiredTraits: DeviceTraits
+) =>
+    Object.keys(requiredTraits).every(
+        rule =>
+            requiredTraits[rule as keyof DeviceTraits] === false ||
+            (requiredTraits[rule as keyof DeviceTraits] &&
+                deviceTraits[rule as keyof DeviceTraits])
+    );
 
 /*
  * Starts watching for devices with the given traits. See the nrf-device-lib
@@ -74,14 +70,12 @@ export const startWatchingDevices =
                     if (!event.device) {
                         return;
                     }
-
                     if (
-                        event.device?.traits &&
-                        filterDeviceTraits(event.device?.traits, deviceListing)
+                        hasValidDeviceTraits(
+                            event.device?.traits,
+                            deviceListing
+                        )
                     ) {
-                        return;
-                    }
-                    {
                         const device = wrapDeviceFromNrfdl(event.device);
                         if (
                             !getState().device.devices.has(device.serialNumber)
