@@ -159,7 +159,9 @@ export const ConfirmationDialog = ({
                     {optionalLabel}
                 </DialogButton>
             )}
-            <DialogButton onClick={onConfirm}>{confirmLabel}</DialogButton>
+            <DialogButton onClick={onConfirm} variant="primary">
+                {confirmLabel}
+            </DialogButton>
             <DialogButton onClick={onCancel}>{cancelLabel}</DialogButton>
         </Dialog.Footer>
     </Dialog>

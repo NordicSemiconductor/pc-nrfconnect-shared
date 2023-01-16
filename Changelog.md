@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 6.16.0 - UNRELEASED
+## 6.16.0 - 2023-01-23
 
 ### Added
 
@@ -18,6 +18,13 @@ and this project adheres to
 
 -   Event `onDeviceDeselected` not emitted when connecting to new device without
     eject old device
+
+## 6.15.3 - 2023-01-13
+
+### Fixed
+
+-   `ConfirmationDialog` confirm button used wrong style.
+-   All `Dialog` related types were exported wrongly.
 
 ## 6.15.2 - 2023-01-13
 
