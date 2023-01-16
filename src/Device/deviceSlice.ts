@@ -6,7 +6,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { Device, Devices, DeviceState, RootState } from '../state';
+import { Device, DeviceState, RootState } from '../state';
 import {
     getPersistedIsFavorite,
     getPersistedNickname,
@@ -15,28 +15,12 @@ import {
 } from '../utils/persistentStore';
 import { displayedDeviceName } from './deviceInfo/deviceInfo';
 
-const withPersistedData = (devices: Device[]) =>
-    devices.map((device: Device) => ({
-        ...device,
-        favorite: getPersistedIsFavorite(device.serialNumber),
-        nickname: getPersistedNickname(device.serialNumber),
-    }));
-
-const bySerialNumber = (devices: Device[]) => {
-    const devicesBySerialNumber: Devices = {};
-    devices.forEach(device => {
-        devicesBySerialNumber[device.serialNumber] = device;
-    });
-
-    return devicesBySerialNumber;
-};
-
 const updateDevice = (
     state: DeviceState,
     serialNumber: string,
     updateToMergeIn: Partial<Device>
 ) => {
-    const device = state.devices[serialNumber];
+    const device = state.devices.get(serialNumber);
     if (device) {
         Object.assign(device, updateToMergeIn);
     }
@@ -49,10 +33,11 @@ const noDialogShown = {
 };
 
 const initialState: DeviceState = {
-    devices: {},
+    devices: new Map(),
     selectedSerialNumber: null,
     deviceInfo: null,
     isSetupWaitingForUserInput: false,
+    autoReconnect: false,
     ...noDialogShown,
 };
 
@@ -65,6 +50,9 @@ const slice = createSlice({
          */
         selectDevice: (state, action: PayloadAction<Device>) => {
             state.selectedSerialNumber = action.payload.serialNumber;
+            state.autoReconnectDevice = {
+                device: { ...action.payload },
+            };
         },
 
         /*
@@ -73,6 +61,7 @@ const slice = createSlice({
         deselectDevice: state => {
             state.selectedSerialNumber = null;
             state.deviceInfo = null;
+            state.autoReconnectDevice = null;
         },
 
         /*
@@ -130,17 +119,37 @@ const slice = createSlice({
             state.isSetupWaitingForUserInput = false;
         },
 
-        /*
-         * Indicates that devices have been detected. This is triggered by default at
-         * startup, and whenever a device is attached/detached. The app can configure
-         * which devices to look for by providing a `config.selectorTraits` property.
-         */
-        devicesDetected: (state, action: PayloadAction<Device[]>) => {
-            state.devices = bySerialNumber(withPersistedData(action.payload));
+        setDevices: (state, action: PayloadAction<Device[]>) => {
+            state.devices.clear();
+            action.payload.forEach(device => {
+                state.devices.set(device.serialNumber, device);
+            });
+        },
+
+        addDevice: (state, action: PayloadAction<Device>) => {
+            state.devices.set(action.payload.serialNumber, {
+                ...action.payload,
+                favorite: getPersistedIsFavorite(action.payload.serialNumber),
+                nickname: getPersistedNickname(action.payload.serialNumber),
+            });
+        },
+
+        removeDevice: (state, action: PayloadAction<Device>) => {
+            state.devices.delete(action.payload.serialNumber);
+
+            if (
+                state.autoReconnectDevice?.device.serialNumber ===
+                action.payload.serialNumber
+            ) {
+                state.autoReconnectDevice.disconnectionTime = Date.now();
+                state.selectedSerialNumber = null;
+                state.deviceInfo = null;
+            }
         },
 
         toggleDeviceFavorited: (state, action: PayloadAction<string>) => {
-            const newFavoriteState = !state.devices[action.payload]?.favorite;
+            const newFavoriteState = !state.devices.get(action.payload)
+                ?.favorite;
             persistIsFavorite(action.payload, newFavoriteState);
             updateDevice(state, action.payload, {
                 favorite: newFavoriteState,
@@ -174,6 +183,10 @@ const slice = createSlice({
                 nickname: '',
             });
         },
+
+        setGlobalAutoReconnect: (state, action: PayloadAction<boolean>) => {
+            state.autoReconnect = action.payload;
+        },
     },
 });
 
@@ -185,11 +198,14 @@ export const {
         deviceSetupError,
         deviceSetupInputReceived,
         deviceSetupInputRequired,
-        devicesDetected,
         resetDeviceNickname,
         selectDevice,
+        addDevice,
+        removeDevice,
+        setDevices,
         setDeviceNickname,
         toggleDeviceFavorited,
+        setGlobalAutoReconnect,
     },
 } = slice;
 
@@ -203,17 +219,28 @@ const sorted = (devices: Device[]) =>
     });
 
 export const getDevice = (serialNumber: string) => (state: RootState) =>
-    state.device?.devices[serialNumber];
+    state.device.devices.get(serialNumber);
 
 export const sortedDevices = (state: RootState) =>
-    sorted(Object.values(<Device[]>(<unknown>state.device.devices)));
+    sorted([...state.device.devices.values()]);
 
 export const deviceIsSelected = (state: RootState) =>
-    state.device?.selectedSerialNumber != null;
+    state.device.selectedSerialNumber != null;
+
+export const getAutoReconnectDevice = (state: RootState) =>
+    state.device.autoReconnect ||
+    state.device.autoReconnectDevice?.device.dfuTriggerVersion != null
+        ? state.device.autoReconnectDevice
+        : null;
 
 export const selectedDevice = (state: RootState) =>
-    state.device.devices[state.device.selectedSerialNumber as string];
+    state.device.selectedSerialNumber
+        ? state.device.devices.get(state.device.selectedSerialNumber)
+        : undefined;
 
 export const deviceInfo = (state: RootState) => state.device.deviceInfo;
 export const selectedSerialNumber = (state: RootState) =>
     state.device.selectedSerialNumber;
+
+export const getGlobalAutoReconnect = (state: RootState) =>
+    state.device.autoReconnect;

@@ -4,10 +4,26 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 import Store from 'electron-store';
+import { SerialPortOpenOptions } from 'serialport';
 import { v4 as uuid } from 'uuid';
 
+import logger from '../logging';
 import packageJson from './packageJson';
+
+export interface SerialSettings {
+    serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>;
+    lastUpdated: number;
+    vComIndex: number;
+}
+
+export interface TerminalSettings {
+    lineMode: boolean;
+    echoOnShell: boolean;
+    lineEnding: string;
+    clearOnSend: boolean;
+}
 
 const sharedStore = new Store<{
     verboseLogging: boolean;
@@ -26,6 +42,45 @@ export const persistIsFavorite = (serialNumber: string, value: boolean) =>
     sharedStore.set(`${serialNumber}.fav`, value);
 export const getPersistedIsFavorite = (serialNumber: string) =>
     sharedStore.get(`${serialNumber}.fav`, false) as boolean;
+
+export const persistSerialPort = (
+    serialNumber: string,
+    appName: string,
+    serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>,
+    vComIndex: number
+) =>
+    sharedStore.set(`${serialNumber}.${appName}`, {
+        serialPortOptions,
+        lastUpdated: Date.now(),
+        vComIndex,
+    } as SerialSettings);
+export const getPersistedSerialPort = (
+    serialNumber: string,
+    appName: string
+): SerialSettings | undefined => {
+    logger.info(
+        `persistentStore.ts: Will get serialport options from ${serialNumber}.${appName}`
+    );
+    return sharedStore.get(`${serialNumber}.${appName}`);
+};
+export const persistTerminalSettings = (
+    serialNumber: string,
+    vComIndex: number,
+    terminalSettings: TerminalSettings
+) =>
+    sharedStore.set(
+        `${serialNumber}.${vComIndex}.TerminalSettings`,
+        terminalSettings
+    );
+export const getPersistedTerminalSettings = (
+    serialNumber: string,
+    vComIndex: number
+): TerminalSettings | undefined => {
+    logger.info(
+        `persistentStore.ts: Will get terminalSettings options from ${serialNumber}.${vComIndex}.TerminalSettings`
+    );
+    return sharedStore.get(`${serialNumber}.${vComIndex}.TerminalSettings`);
+};
 
 export const persistIsSendingUsageData = (value: boolean) =>
     sharedStore.set('isSendingUsageData', value);

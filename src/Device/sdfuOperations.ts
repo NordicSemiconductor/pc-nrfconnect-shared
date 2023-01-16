@@ -69,7 +69,7 @@ export const ensureBootloaderMode = /* async */ (device: Device) => {
     // TODO
     // let usbdev = device.usb;
     // let retry = 0;
-    // while (!usbdev && retry < 3) {
+    // while (!usbdev && retry < 3) {gt
     //     retry += 1;
     //     debug('missing usb, looking for it again');
     //     /* eslint-disable-next-line no-await-in-loop */

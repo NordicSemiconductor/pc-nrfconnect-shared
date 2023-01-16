@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-/* eslint-disable @typescript-eslint/ban-types */
-
 import nrfDeviceLib, {
     Device as NrfdlDevice,
     DeviceTraits,
@@ -14,11 +12,11 @@ import nrfDeviceLib, {
 import type { Device } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';
-import { Devices } from '../state';
+import { RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import { devicesDetected } from './deviceSlice';
+import { addDevice, removeDevice, setDevices } from './deviceSlice';
 
-const DEFAULT_DEVICE_WAIT_TIME = 3000;
+const DEFAULT_DEVICE_WAIT_TIME_MS = 3000;
 
 let hotplugTaskId: number;
 
@@ -43,42 +41,87 @@ export const wrapDeviceFromNrfdl = (device: NrfdlDevice): Device => ({
 export const wrapDevicesFromNrfdl = (devices: NrfdlDevice[]): Device[] =>
     devices.map(wrapDeviceFromNrfdl);
 
-/**
+export const hasValidDeviceTraits = (
+    deviceTraits: DeviceTraits,
+    requiredTraits: DeviceTraits
+) =>
+    Object.keys(requiredTraits).some(
+        rule =>
+            deviceTraits[rule as keyof DeviceTraits] &&
+            requiredTraits[rule as keyof DeviceTraits]
+    ) ||
+    Object.keys(requiredTraits).every(
+        rule => requiredTraits[rule as keyof DeviceTraits] === false
+    );
+
+/*
  * Starts watching for devices with the given traits. See the nrf-device-lib
  * library for available traits. Whenever devices are attached/detached, this
- * will dispatch DEVICES_DETECTED with a complete list of attached devices.
- *
- * @param {Object} deviceListing The configuration for the DeviceLister
- * @param {function(device)} doDeselectDevice Invoke to start deselect the current device
- * @returns {function(*)} Function that can be passed to redux dispatch.
+ * will dispatch AddDevice or removeDevice and trigger events.
  */
 export const startWatchingDevices =
-    (deviceListing: DeviceTraits, doDeselectDevice: Function) =>
-    async (dispatch: Function, getState: Function): Promise<void> => {
-        const updateDeviceList = async () => {
-            const { selectedSerialNumber, devices: devicesFromState } =
-                getState().device;
-            await waitForModeSwitch(devicesFromState, selectedSerialNumber);
+    (
+        deviceListing: DeviceTraits,
+        onDeviceConnected: (device: Device) => void,
+        onDeviceDisconnected: (device: Device) => void,
+        onDeviceDeselected: () => void
+    ) =>
+    async (dispatch: TDispatch, getState: () => RootState) => {
+        const updateDeviceList = (event: HotplugEvent) => {
+            switch (event.event_type) {
+                case 'NRFDL_DEVICE_EVENT_ARRIVED':
+                    if (!event.device) {
+                        return;
+                    }
+                    if (
+                        hasValidDeviceTraits(
+                            event.device?.traits,
+                            deviceListing
+                        )
+                    ) {
+                        const device = wrapDeviceFromNrfdl(event.device);
+                        if (
+                            !getState().device.devices.has(device.serialNumber)
+                        ) {
+                            onDeviceConnected(device);
+                        }
+                        dispatch(addDevice(device));
+                    }
+                    break;
+                case 'NRFDL_DEVICE_EVENT_LEFT':
+                    {
+                        const devices = getState().device.devices;
+
+                        let toRemove: Device | undefined;
+                        devices.forEach(device => {
+                            if (device.id === event.device_id) {
+                                toRemove = device;
+                            }
+                        });
+
+                        if (toRemove) {
+                            if (
+                                toRemove?.serialNumber ===
+                                getState().device.selectedSerialNumber
+                            ) {
+                                onDeviceDeselected();
+                            }
+                            dispatch(removeDevice(toRemove));
+                            onDeviceDisconnected(toRemove);
+                        }
+                    }
+                    break;
+            }
+        };
+
+        try {
             const nrfdlDevices = await nrfDeviceLib.enumerate(
                 getDeviceLibContext(),
                 deviceListing
             );
-            const devices = wrapDevicesFromNrfdl(nrfdlDevices);
-            const hasSerialNumber = (d: Device) =>
-                d.serialNumber === selectedSerialNumber;
+            const currentDevices = wrapDevicesFromNrfdl(nrfdlDevices);
+            dispatch(setDevices(currentDevices));
 
-            if (
-                selectedSerialNumber !== null &&
-                !devices.find(hasSerialNumber)
-            ) {
-                doDeselectDevice();
-            }
-
-            dispatch(devicesDetected(devices));
-        };
-
-        try {
-            await updateDeviceList();
             hotplugTaskId = nrfDeviceLib.startHotplugEvents(
                 getDeviceLibContext(),
                 () => {},
@@ -127,7 +170,7 @@ const DEFAULT_TRAITS: DeviceTraits = {
  */
 export const waitForDevice = (
     serialNumber: string,
-    timeout = DEFAULT_DEVICE_WAIT_TIME,
+    timeout = DEFAULT_DEVICE_WAIT_TIME_MS,
     expectedTraits: DeviceTraits = DEFAULT_TRAITS
 ) => {
     logger.debug(`Will wait for device ${serialNumber}`);
@@ -170,25 +213,4 @@ export const waitForDevice = (
             );
         }, timeout);
     });
-};
-
-const waitForModeSwitch = async (
-    devices: Devices,
-    selectedSerialNumber: string
-) => {
-    const hasDfuTriggerVersion =
-        devices[selectedSerialNumber]?.dfuTriggerVersion != null;
-
-    // Wait some time in case device is being put in either app or bootloader mode
-    if (hasDfuTriggerVersion) {
-        try {
-            await waitForDevice(selectedSerialNumber, DEFAULT_DEVICE_WAIT_TIME);
-        } catch (err) {
-            logger.debug(
-                `Device did not show up after ${
-                    DEFAULT_DEVICE_WAIT_TIME / 1000
-                } seconds`
-            );
-        }
-    }
 };

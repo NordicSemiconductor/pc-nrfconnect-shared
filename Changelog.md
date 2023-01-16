@@ -6,6 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 6.16.0 - 2023-01-23
+
+### Added
+
+-   OnConnect Event when device is connected via USB
+-   OnDisconnect Event when device is disconnected via USB
+-   Persistent Storage for the last Successful Serial Connection which use the
+    Device SN and app name as key
+-   Persistent Storage for the last Terminal settings use which use the Device
+    SN and vComIndex as key
+-   Add toggle to device list for apps to use and enable Auto Reconnect for that
+    session
+-   Optional auto reconnect to the last connected device for the app runtime
+    session
+
+### Fix
+
+-   Event `onDeviceDeselected` not emitted when connecting to new device without
+    eject old device
+
+### Changes
+
+-   Do nothing if the same connected device is reselected
+
 ## 6.15.3 - 2023-01-13
 
 ### Fixed

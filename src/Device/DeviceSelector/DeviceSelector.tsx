@@ -17,10 +17,12 @@ import {
     deselectDevice,
     deviceIsSelected as deviceIsSelectedSelector,
     selectDevice,
+    selectedSerialNumber,
 } from '../deviceSlice';
 import DeviceList from './DeviceList/DeviceList';
 import SelectDevice from './SelectDevice';
 import SelectedDevice from './SelectedDevice';
+import useAutoReconnectDevice from './useAutoReconnectDevice';
 import useAutoselectDevice from './useAutoselectDevice';
 
 interface OutdatedDeviceTraits {
@@ -34,6 +36,8 @@ interface Props {
     releaseCurrentDevice?: () => void;
     onDeviceSelected?: (device: Device) => void;
     onDeviceDeselected?: () => void;
+    onDeviceConnected?: (device: Device) => void;
+    onDeviceDisconnected?: (device: Device) => void;
     onDeviceIsReady?: (device: Device) => void;
     deviceFilter?: (device: Device) => boolean;
 }
@@ -45,6 +49,8 @@ const DeviceSelector: FC<Props> = ({
     releaseCurrentDevice = noop,
     onDeviceSelected = noop,
     onDeviceDeselected = noop,
+    onDeviceConnected = noop,
+    onDeviceDisconnected = noop,
     onDeviceIsReady = noop,
     deviceFilter,
 }) => {
@@ -52,6 +58,7 @@ const DeviceSelector: FC<Props> = ({
     const [deviceListVisible, setDeviceListVisible] = useState(false);
 
     const deviceIsSelected = useSelector(deviceIsSelectedSelector);
+    const selectedSN = useSelector(selectedSerialNumber);
 
     const doDeselectDevice = useCallback(() => {
         onDeviceDeselected();
@@ -63,10 +70,31 @@ const DeviceSelector: FC<Props> = ({
             serialPorts: deviceListing.serialPort || deviceListing.serialport,
             ...deviceListing,
         };
-        dispatch(startWatchingDevices(patchedDeviceListing, doDeselectDevice));
-    }, [deviceListing, dispatch, doDeselectDevice]);
+        dispatch(
+            startWatchingDevices(
+                patchedDeviceListing,
+                onDeviceConnected,
+                onDeviceDisconnected,
+                onDeviceDeselected
+            )
+        );
+    }, [
+        deviceListing,
+        dispatch,
+        onDeviceConnected,
+        onDeviceDisconnected,
+        onDeviceDeselected,
+    ]);
 
     const doSelectDevice = (device: Device) => {
+        if (device.serialNumber === selectedSN) {
+            setDeviceListVisible(false);
+            return;
+        }
+
+        if (deviceIsSelected) {
+            doDeselectDevice();
+        }
         setDeviceListVisible(false);
         dispatch(selectDevice(device));
         onDeviceSelected(device);
@@ -93,6 +121,7 @@ const DeviceSelector: FC<Props> = ({
     }, [doStartWatchingDevices]);
 
     useAutoselectDevice(doSelectDevice);
+    useAutoReconnectDevice(doSelectDevice);
 
     useHotKey({
         hotKey: 'alt+s',
@@ -119,7 +148,6 @@ const DeviceSelector: FC<Props> = ({
                 doSelectDevice={doSelectDevice}
                 deviceFilter={deviceFilter}
             />
-
             <DeviceSetup />
         </div>
     );

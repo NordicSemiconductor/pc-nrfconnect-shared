@@ -5,6 +5,8 @@
  */
 
 declare module 'pc-nrfconnect-shared' {
+    import type { AutoDetectTypes } from '@serialport/bindings-cpp';
+    import { SerialPortOpenOptions } from 'serialport';
     import Store from 'electron-store';
     import React from 'react';
     import { AnyAction, Reducer } from 'redux';
@@ -100,6 +102,12 @@ declare module 'pc-nrfconnect-shared' {
          * Each section will have a heading, content and a button which links to the relevant website.
          */
         documentation?: React.ReactElement[] | null;
+        /**
+         * Auto reconnects to the device App setting
+         *
+         * If true a device that has been disconnected will reconnect if no other device was selected in the mean time
+         */
+        autoReconnectByDefault?: boolean;
     }
 
     /**
@@ -214,6 +222,17 @@ declare module 'pc-nrfconnect-shared' {
          * callback will not be invoked.
          */
         onDeviceIsReady?: (device: Device) => void;
+
+        /**
+         * This callback is invoked when a device is connected
+         */
+        onDeviceConnected?: (device: Device) => void;
+
+        /**
+         * This callback is invoked when a device is disconnected
+         */
+        onDeviceDisconnected?: (device: Device) => void;
+
         /**
          * This callback is invoked when a selected device is again
          * deselected. This may be caused by the user deselecting
@@ -518,6 +537,34 @@ declare module 'pc-nrfconnect-shared' {
     export function getPersistentStore<
         StoreSchema extends Record<string, any>
     >(): Store<StoreSchema>;
+
+    export type TerminalSettings =
+        import('./src/utils/persistentStore').TerminalSettings;
+    export type SerialSettings =
+        import('./src/utils/persistentStore').SerialSettings;
+
+    export const persistSerialPort: (
+        serialNumber: string,
+        appName: string,
+        serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>,
+        vComIndex: number
+    ) => void;
+
+    export const getPersistedSerialPort: (
+        serialNumber: string,
+        appName: string
+    ) => SerialSettings;
+
+    export const persistTerminalSettings: (
+        serialNumber: string,
+        vComIndex: number,
+        terminalSettings: TerminalSettings
+    ) => void;
+
+    export const getPersistedTerminalSettings: (
+        serialNumber: string,
+        vComIndex: number
+    ) => TerminalSettings;
 
     export const deviceInfo: (device: Device) => DeviceInfo;
 
