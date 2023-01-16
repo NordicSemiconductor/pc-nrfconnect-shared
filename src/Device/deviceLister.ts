@@ -16,7 +16,7 @@ import { RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import { addDevice, removeDevice, setDevices } from './deviceSlice';
 
-const DEFAULT_DEVICE_WAIT_TIME = 3000;
+const DEFAULT_DEVICE_WAIT_TIME_MS = 3000;
 
 let hotplugTaskId: number;
 
@@ -161,7 +161,7 @@ const DEFAULT_TRAITS: DeviceTraits = {
  */
 export const waitForDevice = (
     serialNumber: string,
-    timeout = DEFAULT_DEVICE_WAIT_TIME,
+    timeout = DEFAULT_DEVICE_WAIT_TIME_MS,
     expectedTraits: DeviceTraits = DEFAULT_TRAITS
 ) => {
     logger.debug(`Will wait for device ${serialNumber}`);

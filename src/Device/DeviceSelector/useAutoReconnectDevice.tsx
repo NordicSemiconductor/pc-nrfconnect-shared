@@ -16,7 +16,7 @@ import {
     selectedDevice,
 } from '../deviceSlice';
 
-const DEFAULT_DEVICE_WAIT_TIME = 3000;
+const DEFAULT_DEVICE_WAIT_TIME_MS = 3000;
 
 export default (doSelectDevice: (device: Device) => void) => {
     const globalAutoReconnect = useSelector(getGlobalAutoReconnect);
@@ -41,11 +41,11 @@ export default (doSelectDevice: (device: Device) => void) => {
             if (!currentSelectedDevice && hasDfuTriggerVersion) {
                 logger.debug(
                     `Device did not show up after ${
-                        DEFAULT_DEVICE_WAIT_TIME / 1000
+                        DEFAULT_DEVICE_WAIT_TIME_MS / 1000
                     } seconds`
                 );
             }
-        }, DEFAULT_DEVICE_WAIT_TIME);
+        }, DEFAULT_DEVICE_WAIT_TIME_MS);
 
         return () => {
             clearTimeout(t);
@@ -72,7 +72,8 @@ export default (doSelectDevice: (device: Device) => void) => {
         if (
             hasDfuTriggerVersion &&
             !autoSelectDevice &&
-            autoReconnectDevice.disconnectionTime + DEFAULT_DEVICE_WAIT_TIME <
+            autoReconnectDevice.disconnectionTime +
+                DEFAULT_DEVICE_WAIT_TIME_MS <
                 Date.now()
         ) {
             return;
