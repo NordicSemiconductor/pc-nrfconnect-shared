@@ -11,8 +11,8 @@ and this project adheres to
 ### Added
 
 -   Optional auto reconnect to device
--   Support to persist last Serial settings keyed with device SN and app name
--   Support to persist terminal settings to keyed with device serial number and
+-   Support to persist last Serial settings, keyed by device SN and app name
+-   Support to persist terminal settings, keyed by device SN and
     vComIndex
 
 ### Fix
