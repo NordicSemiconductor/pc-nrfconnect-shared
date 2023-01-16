@@ -115,9 +115,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     });
 
     useEffect(() => {
-        if (autoReconnectByDefault) {
-            dispatch(setGlobalAutoReconnect(true));
-        }
+        dispatch(setGlobalAutoReconnect(autoReconnectByDefault));
     }, [dispatch, autoReconnectByDefault]);
 
     useEffect(() => {
