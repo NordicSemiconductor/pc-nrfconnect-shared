@@ -141,7 +141,7 @@
         "webpack-cli": "4.10.0",
         "winston": "3.8.1"
     },
-    "typings": "./types/src/index.d.ts",
+    "typings": "./types/generated/src/index.d.ts",
     "eslintConfig": {
         "extends": "./config/eslintrc"
     },
