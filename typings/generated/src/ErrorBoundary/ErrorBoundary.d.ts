@@ -22,5 +22,6 @@ declare class ErrorBoundary extends React.Component<Props, {
     componentDidCatch(error: Error): void;
     render(): React.ReactNode;
 }
-declare const _default: import("react-redux").ConnectedComponent<typeof ErrorBoundary, import("react-redux").Omit<React.ClassAttributes<ErrorBoundary> & Props, "devices" | "selectedSerialNumber">>;
+declare const _default: import("react-redux").ConnectedComponent<typeof ErrorBoundary, import("react-redux").Omit<React.ClassAttributes<ErrorBoundary> & Props, "selectedSerialNumber" | "devices">>;
 export default _default;
+//# sourceMappingURL=ErrorBoundary.d.ts.map

@@ -5,3 +5,4 @@ declare const MoreDeviceInfo: FC<{
     device: Device;
 }>;
 export default MoreDeviceInfo;
+//# sourceMappingURL=MoreDeviceInfo.d.ts.map

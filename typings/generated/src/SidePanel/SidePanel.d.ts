@@ -4,3 +4,4 @@ declare const SidePanel: React.FC<{
     className?: string;
 }>;
 export default SidePanel;
+//# sourceMappingURL=SidePanel.d.ts.map

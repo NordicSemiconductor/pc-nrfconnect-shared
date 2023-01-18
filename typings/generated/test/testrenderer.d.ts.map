@@ -1,0 +1,1 @@
+{"version":3,"file":"testrenderer.d.ts","sourceRoot":"","sources":["../../../test/testrenderer.tsx"],"names":[],"mappings":"AAMA,OAAO,KAAK,MAAM,OAAO,CAAC;AAG1B,OAAO,EAAE,MAAM,EAAgC,OAAO,EAAE,MAAM,OAAO,CAAC;AAqBtE,eAAO,MAAM,mBAAmB,gBACd,OAAO,eACX,MAAM,YAAY,YAAW,MAAM,EAAE,uGACwB,CAAC;kCAG/D,MAAM,YAAY,YAClB,MAAM,EAAE,eACJ,OAAO;AAHxB,wBAIyE"}

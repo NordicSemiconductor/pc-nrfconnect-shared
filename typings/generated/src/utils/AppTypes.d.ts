@@ -47,3 +47,4 @@ export interface PackageJson {
     scripts?: ObjectContainingOptionalStrings;
 }
 export {};
+//# sourceMappingURL=AppTypes.d.ts.map

@@ -7,3 +7,4 @@ declare class LogBuffer {
 }
 declare const createLogBuffer: () => LogBuffer;
 export default createLogBuffer;
+//# sourceMappingURL=logBuffer.d.ts.map

@@ -5,3 +5,4 @@ declare const ConnectedToStore: FC<{
     children: ReactNode;
 }>;
 export default ConnectedToStore;
+//# sourceMappingURL=ConnectedToStore.d.ts.map

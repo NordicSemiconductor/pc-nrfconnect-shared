@@ -1,0 +1,1 @@
+{"version":3,"file":"ShortcutModal.d.ts","sourceRoot":"","sources":["../../../../src/Shortcuts/ShortcutModal.tsx"],"names":[],"mappings":"AAMA,OAAc,EAAE,EAAE,EAAE,MAAM,OAAO,CAAC;AAOlC,OAAO,uBAAuB,CAAC;AAE/B,MAAM,WAAW,KAAK;IAClB,SAAS,EAAE,OAAO,CAAC;IACnB,QAAQ,EAAE,MAAM,IAAI,CAAC;CACxB;AAED,QAAA,MAAM,aAAa,EAAE,EAAE,CAAC,KAAK,CA4C5B,CAAC;AAEF,eAAe,aAAa,CAAC"}

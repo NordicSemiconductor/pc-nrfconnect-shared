@@ -12,3 +12,4 @@ export declare const deviceIsSelected: (state: RootState) => boolean;
 export declare const selectedDevice: (state: RootState) => Device | undefined;
 export declare const deviceInfo: (state: RootState) => Device | null;
 export declare const selectedSerialNumber: (state: RootState) => string | null;
+//# sourceMappingURL=deviceSlice.d.ts.map

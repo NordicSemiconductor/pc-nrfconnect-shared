@@ -7,3 +7,4 @@ declare const PseudoButton: React.FC<{
     testId?: string;
 }>;
 export default PseudoButton;
+//# sourceMappingURL=PseudoButton.d.ts.map

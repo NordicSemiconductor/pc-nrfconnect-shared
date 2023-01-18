@@ -50,3 +50,4 @@ interface ConfirmationDialogProps {
 }
 export declare const ConfirmationDialog: ({ isVisible, title, headerIcon, children, confirmLabel, onConfirm, cancelLabel, onCancel, optionalLabel, onOptional, }: ConfirmationDialogProps) => JSX.Element;
 export {};
+//# sourceMappingURL=Dialog.d.ts.map

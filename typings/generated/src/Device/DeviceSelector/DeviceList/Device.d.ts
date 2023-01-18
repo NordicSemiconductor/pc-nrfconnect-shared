@@ -8,3 +8,4 @@ interface Props {
 }
 declare const Device: FC<Props>;
 export default Device;
+//# sourceMappingURL=Device.d.ts.map

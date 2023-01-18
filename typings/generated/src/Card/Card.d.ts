@@ -4,3 +4,4 @@ declare type NrfCardProps = {
 };
 declare const NrfCard: React.FC<NrfCardProps>;
 export default NrfCard;
+//# sourceMappingURL=Card.d.ts.map

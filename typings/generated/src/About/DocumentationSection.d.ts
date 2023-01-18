@@ -7,3 +7,4 @@ interface Props {
 }
 export declare const DocumentationSection: FC<Props>;
 export default DocumentationSection;
+//# sourceMappingURL=DocumentationSection.d.ts.map

@@ -17,3 +17,4 @@ export interface Props {
 }
 declare const DeviceSelector: FC<Props>;
 export default DeviceSelector;
+//# sourceMappingURL=DeviceSelector.d.ts.map

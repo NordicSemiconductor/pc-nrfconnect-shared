@@ -10,3 +10,4 @@ declare const _default: <AppState>(appReducer?: Reducer<AppState, import("redux"
     app: AppState;
 }>, import("redux").AnyAction>;
 export default _default;
+//# sourceMappingURL=rootReducer.d.ts.map

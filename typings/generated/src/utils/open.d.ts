@@ -12,4 +12,6 @@ declare function openFile(filePath: string): void;
  * @returns {void}
  */
 declare function openUrl(url: string): void;
-export { openFile, openUrl };
+declare const foo = 2;
+export { openFile, openUrl, foo };
+//# sourceMappingURL=open.d.ts.map

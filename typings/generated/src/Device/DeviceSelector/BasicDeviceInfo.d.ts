@@ -8,3 +8,4 @@ interface BasicDeviceProps {
 }
 declare const BasicDeviceInfo: FC<BasicDeviceProps>;
 export default BasicDeviceInfo;
+//# sourceMappingURL=BasicDeviceInfo.d.ts.map

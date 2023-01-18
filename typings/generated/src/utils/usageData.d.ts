@@ -61,3 +61,4 @@ declare const _default: {
     sendUsageData: <T extends string>(action: T, label?: string | undefined) => void;
 };
 export default _default;
+//# sourceMappingURL=usageData.d.ts.map

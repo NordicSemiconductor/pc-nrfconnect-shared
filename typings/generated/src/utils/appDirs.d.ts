@@ -26,3 +26,4 @@ declare function getAppDataDir(): string;
  */
 declare function getAppLogDir(): string;
 export { setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir, };
+//# sourceMappingURL=appDirs.d.ts.map

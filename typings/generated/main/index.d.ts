@@ -16,3 +16,4 @@ export declare type OverwriteOptions = {
     overwrite?: boolean;
     settingsLocked?: boolean;
 };
+//# sourceMappingURL=index.d.ts.map

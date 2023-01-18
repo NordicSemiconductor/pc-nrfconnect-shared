@@ -6,3 +6,4 @@ interface Props {
 }
 declare const Section: FC<Props>;
 export default Section;
+//# sourceMappingURL=Section.d.ts.map

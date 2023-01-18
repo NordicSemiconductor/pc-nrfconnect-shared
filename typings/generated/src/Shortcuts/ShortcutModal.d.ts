@@ -6,3 +6,4 @@ export interface Props {
 }
 declare const ShortcutModal: FC<Props>;
 export default ShortcutModal;
+//# sourceMappingURL=ShortcutModal.d.ts.map
