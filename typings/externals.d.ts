@@ -24,4 +24,8 @@ interface Window {
 // Let typescript compiler in `npm run lint` resolve css modules
 declare module '*.icss.scss';
 declare module '*.gif';
-declare module '*.png';
+
+declare module '*.png' {
+    const path: string;
+    export default path;
+}

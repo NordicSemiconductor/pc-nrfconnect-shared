@@ -10,8 +10,8 @@ and this project adheres to
 
 ### Fixed
 
--   The ErrorBoundary component was broken if the Redux state wasn't in a
-    supported state.
+-   The components ErrorBoundary and Logo were broken if the Redux state wasn't
+    in a supported state.
 
 ## 6.17.0 - 2023-01-18
 
