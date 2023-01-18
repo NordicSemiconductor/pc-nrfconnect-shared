@@ -16,6 +16,10 @@ import type { ShortcutState } from './About/shortcutSlice';
 
 export type TDispatch = ThunkDispatch<RootState, null, AnyAction>;
 
+export interface NrfConnectState<AppState> extends RootState {
+    app: AppState;
+}
+
 export interface RootState {
     appLayout: AppLayout;
     errorDialog: ErrorDialog;

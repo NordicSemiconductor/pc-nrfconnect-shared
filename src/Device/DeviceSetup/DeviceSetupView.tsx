@@ -9,7 +9,7 @@ import Form from 'react-bootstrap/Form';
 
 import { Dialog, DialogButton } from '../../Dialog/Dialog';
 
-interface Props {
+export interface DeviceSetupViewProps {
     isVisible: boolean;
     isInProgress: boolean;
     text?: string | null;
@@ -31,8 +31,11 @@ interface State {
  * simple yes/no confirmation. Shows a spinner and disables input if the 'isInProgress'
  * prop is set to true.
  */
-export default class DeviceSetupDialog extends React.Component<Props, State> {
-    constructor(props: Props) {
+export default class DeviceSetupDialog extends React.Component<
+    DeviceSetupViewProps,
+    State
+> {
+    constructor(props: DeviceSetupViewProps) {
         super(props);
         this.onSelectChoice = this.onSelectChoice.bind(this);
         this.state = {

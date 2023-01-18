@@ -9,10 +9,9 @@ import nrfDeviceLib, {
     DeviceTraits,
     HotplugEvent,
 } from '@nordicsemiconductor/nrf-device-lib-js';
-import type { Device } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';
-import { RootState, TDispatch } from '../state';
+import { Device, RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import { addDevice, removeDevice, setDevices } from './deviceSlice';
 

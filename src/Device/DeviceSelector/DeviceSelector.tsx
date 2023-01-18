@@ -30,7 +30,7 @@ interface OutdatedDeviceTraits {
     serialport?: boolean;
 }
 
-interface Props {
+export interface Props {
     deviceListing: DeviceTraits & OutdatedDeviceTraits;
     deviceSetup?: DeviceSetupShared;
     releaseCurrentDevice?: () => void;

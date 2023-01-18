@@ -74,9 +74,13 @@ const initialiseUsageData = () => {
     }
 };
 
+export interface PaneProps {
+    active: boolean;
+}
+
 export interface Pane {
     name: string;
-    Main: FC<{ active: boolean }>;
+    Main: FC<PaneProps>;
     SidePanel?: FC;
 }
 

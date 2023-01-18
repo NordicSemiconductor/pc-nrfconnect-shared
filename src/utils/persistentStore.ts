@@ -124,7 +124,7 @@ export const getAppSpecificStore = <
     }
 
     return appSpecificStore as Store<
-        StoreSchema | SharedAppSpecificStoreSchema
+        StoreSchema & SharedAppSpecificStoreSchema
     >;
 };
 

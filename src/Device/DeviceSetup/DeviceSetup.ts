@@ -6,7 +6,7 @@
 
 import { connect } from 'react-redux';
 
-import { RootState, TDispatch } from '../../state';
+import type { RootState, TDispatch } from '../../state';
 import { receiveDeviceSetupInput } from '../deviceSetup';
 import DeviceSetupView from './DeviceSetupView';
 
