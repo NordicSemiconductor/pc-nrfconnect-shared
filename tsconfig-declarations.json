@@ -1,0 +1,17 @@
+{
+    "extends": "./config/tsconfig.json",
+    "compilerOptions": {
+        "emitDeclarationOnly": true,
+        "declaration": true,
+        "declarationMap": true,
+        "incremental": true,
+        "listEmittedFiles": true,
+        "outDir": "./typings/generated"
+    },
+    "include": [
+        "./src/**/*.ts",
+        "./main/**/*.ts",
+        "./src/**/*.tsx",
+        "./typings/*.d.ts"
+    ]
+}
