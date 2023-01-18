@@ -22,6 +22,7 @@ export {
 export { default as Spinner } from './Dialog/Spinner';
 export { default as Slider } from './Slider/Slider';
 export { Toggle } from './Toggle/Toggle';
+export { default as RootErrorDialog } from './ErrorDialog/ErrorDialog';
 export { Alert } from './Alert/Alert';
 export { default as Main } from './Main/Main';
 export { default as Button } from './Button/Button';
@@ -91,3 +92,4 @@ export type { Props as DeviceSelectorProps } from './Device/DeviceSelector/Devic
 export type { PaneProps } from './App/App';
 export type { DfuImage } from './Device/initPacket';
 export type { DeviceSetup } from './Device/deviceSetup';
+export type { PackageJson } from './utils/AppTypes';
