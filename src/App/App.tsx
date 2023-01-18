@@ -16,7 +16,12 @@ import { Reducer } from 'redux';
 import About from '../About/About';
 import { setDocumentationSections } from '../About/documentationSlice';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
-import { setGlobalAutoReconnect } from '../Device/deviceSlice';
+import {
+    selectedDevice as selectedDeviceSelector,
+    selectedSerialNumber as selectedSerialNumberSelector,
+    setGlobalAutoReconnect,
+    sortedDevices as sortedDevicesSelector,
+} from '../Device/deviceSlice';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import LogViewer from '../Log/LogViewer';
@@ -193,14 +198,30 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     );
 };
 
+const ConnectedErrorBoundary: React.FC = ({ children }) => {
+    const sortedDevices = useSelector(sortedDevicesSelector);
+    const selectedDevice = useSelector(selectedDeviceSelector);
+    const selectedSerialNumber = useSelector(selectedSerialNumberSelector);
+
+    return (
+        <ErrorBoundary
+            devices={sortedDevices}
+            selectedDevice={selectedDevice}
+            selectedSerialNumber={selectedSerialNumber ?? undefined}
+        >
+            {children}
+        </ErrorBoundary>
+    );
+};
+
 const App = ({
     appReducer,
     ...props
 }: { appReducer?: Reducer } & ConnectedAppProps) => (
     <ConnectedToStore appReducer={appReducer}>
-        <ErrorBoundary>
+        <ConnectedErrorBoundary>
             <ConnectedApp {...props} />
-        </ErrorBoundary>
+        </ConnectedErrorBoundary>
     </ConnectedToStore>
 );
 

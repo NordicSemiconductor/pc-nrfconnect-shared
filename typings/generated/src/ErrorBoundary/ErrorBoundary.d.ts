@@ -4,7 +4,8 @@ import './error-boundary.scss';
 interface Props {
     children: ReactNode;
     selectedSerialNumber?: string;
-    devices: Map<string, Device>;
+    selectedDevice?: Device;
+    devices?: Device[];
     appName?: string;
     restoreDefaults?: () => void;
     sendUsageData?: (message: string) => void;
@@ -22,5 +23,4 @@ declare class ErrorBoundary extends React.Component<Props, {
     componentDidCatch(error: Error): void;
     render(): React.ReactNode;
 }
-declare const _default: import("react-redux").ConnectedComponent<typeof ErrorBoundary, import("react-redux").Omit<React.ClassAttributes<ErrorBoundary> & Props, "devices" | "selectedSerialNumber">>;
-export default _default;
+export default ErrorBoundary;
