@@ -6,12 +6,13 @@
 
 import React, { ReactNode } from 'react';
 import { Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
 
 import Spinner from '../Dialog/Spinner';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { CollapsibleGroup } from '../SidePanel/Group';
-import { Device } from '../state';
+import { Device, RootState } from '../state';
 import { openUrl } from '../utils/open';
 import packageJson from '../utils/packageJson';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
@@ -39,8 +40,7 @@ const sendGAEvent = (error: string) => {
 interface Props {
     children: ReactNode;
     selectedSerialNumber?: string;
-    selectedDevice?: Device;
-    devices?: Device[];
+    devices: Map<string, Device>;
     appName?: string;
     restoreDefaults?: () => void;
     sendUsageData?: (message: string) => void;
@@ -72,15 +72,19 @@ class ErrorBoundary extends React.Component<
     }
 
     componentDidCatch(error: Error) {
-        const { devices, selectedDevice, selectedSerialNumber, sendUsageData } =
-            this.props;
+        const { devices, selectedSerialNumber, sendUsageData } = this.props;
         sendUsageData != null
             ? sendUsageData(error.message)
             : sendGAEvent(error.message);
 
+        const selectedDevice =
+            selectedSerialNumber == null
+                ? undefined
+                : devices.get(selectedSerialNumber);
+
         generateSystemReport(
             new Date().toISOString().replace(/:/g, '-'),
-            devices,
+            Object.values(devices) as Device[],
             selectedDevice,
             selectedSerialNumber
         ).then(report => {
@@ -180,4 +184,9 @@ class ErrorBoundary extends React.Component<
     }
 }
 
-export default ErrorBoundary;
+const mapStateToProps = (state: RootState) => ({
+    devices: state.device.devices,
+    selectedSerialNumber: state.device?.selectedSerialNumber ?? undefined,
+});
+
+export default connect(mapStateToProps)(ErrorBoundary);
