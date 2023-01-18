@@ -6,4 +6,3 @@ interface Props {
 }
 declare const SelectDevice: FC<Props>;
 export default SelectDevice;
-//# sourceMappingURL=SelectDevice.d.ts.map

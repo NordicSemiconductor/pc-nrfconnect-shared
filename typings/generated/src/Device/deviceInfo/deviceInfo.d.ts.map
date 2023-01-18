@@ -1,1 +1,0 @@
-{"version":3,"file":"deviceInfo.d.ts","sourceRoot":"","sources":["../../../../../src/Device/deviceInfo/deviceInfo.ts"],"names":[],"mappings":"AA6BA,OAAO,EAAE,MAAM,EAAE,UAAU,EAAE,MAAM,aAAa,CAAC;AAqKjD,eAAO,MAAM,UAAU,WAAY,MAAM,KAAG,UAC2B,CAAC;AAExE,eAAO,MAAM,mBAAmB,WACpB,MAAM;;YAQjB,CAAC;AAEF,eAAO,MAAM,cAAc,WAAY,MAAM,uBAEiC,CAAC;AAE/E,eAAO,MAAM,YAAY,WAAY,MAAM,uBAIrC,CAAC"}

@@ -11,4 +11,3 @@ export declare const getMin: (rangeOrValues: RangeOrValues) => number;
 export declare const getMax: (rangeOrValues: RangeOrValues) => number;
 export declare const getStep: (range: Range) => number;
 export declare const useValidatedRangeOrValues: (rangeOrValues: RangeOrValues) => void;
-//# sourceMappingURL=range.d.ts.map

@@ -13,4 +13,3 @@ export interface Props {
 }
 declare const Slider: FC<Props>;
 export default Slider;
-//# sourceMappingURL=Slider.d.ts.map

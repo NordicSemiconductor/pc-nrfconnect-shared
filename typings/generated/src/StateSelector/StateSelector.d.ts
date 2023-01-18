@@ -8,4 +8,3 @@ export interface Props {
 }
 declare const StateSelector: FC<Props>;
 export default StateSelector;
-//# sourceMappingURL=StateSelector.d.ts.map

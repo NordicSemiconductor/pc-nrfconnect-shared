@@ -7,4 +7,3 @@ interface SharedLogger extends Logger {
 }
 declare const logger: SharedLogger;
 export default logger;
-//# sourceMappingURL=index.d.ts.map

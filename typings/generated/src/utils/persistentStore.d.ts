@@ -33,4 +33,3 @@ export declare const getAppSpecificStore: <StoreSchema extends Record<string, an
 export declare const persistCurrentPane: (currentPane: number) => void;
 export declare const getPersistedCurrentPane: () => number | undefined;
 export {};
-//# sourceMappingURL=persistentStore.d.ts.map

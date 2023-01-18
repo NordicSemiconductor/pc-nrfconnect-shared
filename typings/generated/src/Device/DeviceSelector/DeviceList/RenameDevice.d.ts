@@ -4,4 +4,3 @@ declare const RenameDevice: FC<{
     startEditingDeviceName: () => void;
 }>;
 export default RenameDevice;
-//# sourceMappingURL=RenameDevice.d.ts.map

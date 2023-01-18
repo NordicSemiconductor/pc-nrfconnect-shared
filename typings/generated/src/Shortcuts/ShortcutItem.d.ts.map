@@ -1,1 +1,0 @@
-{"version":3,"file":"ShortcutItem.d.ts","sourceRoot":"","sources":["../../../../src/Shortcuts/ShortcutItem.tsx"],"names":[],"mappings":"AAMA,OAAc,EAAE,EAAE,EAAE,MAAM,OAAO,CAAC;AAElC,OAAO,sBAAsB,CAAC;AAE9B,MAAM,WAAW,KAAK;IAClB,KAAK,EAAE,MAAM,CAAC;IACd,MAAM,EAAE,MAAM,EAAE,GAAG,MAAM,CAAC;CAC7B;AAED,QAAA,MAAM,YAAY,EAAE,EAAE,CAAC,KAAK,CA8B3B,CAAC;AAEF,eAAe,YAAY,CAAC"}

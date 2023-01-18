@@ -24,4 +24,3 @@ declare class ErrorBoundary extends React.Component<Props, {
 }
 declare const _default: import("react-redux").ConnectedComponent<typeof ErrorBoundary, import("react-redux").Omit<React.ClassAttributes<ErrorBoundary> & Props, "devices" | "selectedSerialNumber">>;
 export default _default;
-//# sourceMappingURL=ErrorBoundary.d.ts.map

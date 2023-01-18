@@ -11,4 +11,3 @@ interface Props {
 }
 declare const Handle: FC<Props>;
 export default Handle;
-//# sourceMappingURL=Handle.d.ts.map

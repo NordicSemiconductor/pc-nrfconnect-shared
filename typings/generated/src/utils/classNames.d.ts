@@ -15,4 +15,3 @@
  */
 declare const _default: (...className: unknown[]) => string;
 export default _default;
-//# sourceMappingURL=classNames.d.ts.map

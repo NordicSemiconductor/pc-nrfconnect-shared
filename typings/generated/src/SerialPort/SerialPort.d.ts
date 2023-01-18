@@ -17,4 +17,3 @@ export declare const SerialPort: (options: SerialPortOpenOptions<AutoDetectTypes
     update: (newOptions: UpdateOptions) => void;
     set: (newOptions: SetOptions) => void;
 }>;
-//# sourceMappingURL=SerialPort.d.ts.map

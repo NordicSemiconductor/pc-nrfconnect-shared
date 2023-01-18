@@ -10,4 +10,3 @@ interface Props {
 }
 declare const Ticks: FC<Props>;
 export default Ticks;
-//# sourceMappingURL=Ticks.d.ts.map

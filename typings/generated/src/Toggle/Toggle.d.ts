@@ -17,4 +17,3 @@ export interface Props {
     children?: ReactNode;
 }
 export declare const Toggle: FC<Props>;
-//# sourceMappingURL=Toggle.d.ts.map

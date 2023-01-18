@@ -4,4 +4,3 @@ declare const Main: FC<{
     children?: ReactNode;
 }>;
 export default Main;
-//# sourceMappingURL=Main.d.ts.map

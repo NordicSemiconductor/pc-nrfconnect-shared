@@ -29,4 +29,3 @@ export declare const colors: {
     blueSlateLighter: string;
     greenLighter: string;
 };
-//# sourceMappingURL=colors.d.ts.map

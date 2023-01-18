@@ -10,4 +10,3 @@ interface Props {
 }
 declare const FactoryResetButton: FC<Props>;
 export default FactoryResetButton;
-//# sourceMappingURL=FactoryResetButton.d.ts.map

@@ -8,4 +8,3 @@ export interface AlertProps {
 }
 export declare const Alert: React.FC<AlertProps>;
 export {};
-//# sourceMappingURL=Alert.d.ts.map

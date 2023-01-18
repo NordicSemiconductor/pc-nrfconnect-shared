@@ -4,4 +4,3 @@ interface Props {
 }
 declare const ShortcutButton: FC<Props>;
 export default ShortcutButton;
-//# sourceMappingURL=ShortcutButton.d.ts.map

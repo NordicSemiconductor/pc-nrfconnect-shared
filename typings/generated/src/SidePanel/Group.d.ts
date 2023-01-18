@@ -12,4 +12,3 @@ export declare const Group: React.FC<{
     heading?: string;
     title?: string;
 }>;
-//# sourceMappingURL=Group.d.ts.map

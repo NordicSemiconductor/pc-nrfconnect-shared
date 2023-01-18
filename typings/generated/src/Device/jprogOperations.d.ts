@@ -31,4 +31,3 @@ export declare function validateFirmware(device: Device, fwVersion: string | {
  * @returns {Promise} Promise that resolves if successful or rejects with error.
  */
 export declare function programFirmware(device: Device, fw: string | Buffer, deviceSetupConfig: DeviceSetup): Promise<Device>;
-//# sourceMappingURL=jprogOperations.d.ts.map

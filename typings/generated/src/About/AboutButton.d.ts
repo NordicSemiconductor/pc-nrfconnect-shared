@@ -6,4 +6,3 @@ interface Props {
 }
 declare const AboutButton: FC<Props>;
 export default AboutButton;
-//# sourceMappingURL=AboutButton.d.ts.map

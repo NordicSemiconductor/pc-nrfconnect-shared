@@ -6,4 +6,3 @@ interface Props {
 }
 declare const Device: FC<Props>;
 export default Device;
-//# sourceMappingURL=BrokenDevice.d.ts.map

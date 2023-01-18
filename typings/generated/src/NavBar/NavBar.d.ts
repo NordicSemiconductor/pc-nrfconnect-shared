@@ -4,4 +4,3 @@ declare const NavBar: FC<{
     deviceSelect?: ReactNode;
 }>;
 export default NavBar;
-//# sourceMappingURL=NavBar.d.ts.map

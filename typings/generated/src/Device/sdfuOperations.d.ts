@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { Device } from '../state';
 import type { DeviceSetup } from './deviceSetup';
 import { DfuImage } from './initPacket';
@@ -24,4 +25,3 @@ declare const _default: {
     createDfuZipBuffer: (dfuImages: DfuImage[]) => Promise<Buffer>;
 };
 export default _default;
-//# sourceMappingURL=sdfuOperations.d.ts.map

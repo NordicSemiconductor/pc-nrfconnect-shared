@@ -10,4 +10,3 @@ export interface Props {
 }
 declare const NumberInlineInput: FC<Props>;
 export default NumberInlineInput;
-//# sourceMappingURL=NumberInlineInput.d.ts.map

@@ -30,4 +30,3 @@ declare const App: {
     };
 };
 export default App;
-//# sourceMappingURL=App.d.ts.map

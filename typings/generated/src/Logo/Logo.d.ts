@@ -4,4 +4,3 @@ declare const Logo: FC<{
     changeWithDeviceState?: boolean;
 }>;
 export default Logo;
-//# sourceMappingURL=Logo.d.ts.map

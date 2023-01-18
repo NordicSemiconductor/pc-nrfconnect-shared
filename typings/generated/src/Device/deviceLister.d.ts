@@ -36,4 +36,3 @@ export declare const stopWatchingDevices: () => void;
  * @returns {Promise} resolved to the expected device
  */
 export declare const waitForDevice: (serialNumber: string, timeout?: number, expectedTraits?: DeviceTraits) => Promise<Device>;
-//# sourceMappingURL=deviceLister.d.ts.map

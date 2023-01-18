@@ -5,4 +5,3 @@ export declare const displayedDeviceName: (device: Device, { respectNickname }?:
 }) => string;
 export declare const productPageUrl: (device: Device) => string | undefined;
 export declare const buyOnlineUrl: (device: Device) => string | undefined;
-//# sourceMappingURL=deviceInfo.d.ts.map

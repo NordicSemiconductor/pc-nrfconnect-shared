@@ -7,4 +7,3 @@ interface Props {
 }
 declare const EditDeviceButtons: FC<Props>;
 export default EditDeviceButtons;
-//# sourceMappingURL=EditDeviceButtons.d.ts.map

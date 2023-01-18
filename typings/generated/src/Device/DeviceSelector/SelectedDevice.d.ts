@@ -5,4 +5,3 @@ declare const SelectedDevice: FC<{
     toggleDeviceListVisible: () => void;
 }>;
 export default SelectedDevice;
-//# sourceMappingURL=SelectedDevice.d.ts.map

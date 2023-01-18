@@ -107,4 +107,3 @@ export declare const createInitPacketBuffer: (fwVersion: number, hwVersion: numb
  * @returns {Uint8Array} converted from init command packet buffer
  */
 export declare const createInitPacketUint8Array: (packetParams: InitPacket) => Uint8Array;
-//# sourceMappingURL=initPacket.d.ts.map

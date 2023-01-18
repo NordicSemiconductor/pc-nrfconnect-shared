@@ -6,4 +6,3 @@ interface Props {
 }
 declare const LogEntry: FC<Props>;
 export default LogEntry;
-//# sourceMappingURL=LogEntry.d.ts.map

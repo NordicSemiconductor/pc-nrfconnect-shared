@@ -5,4 +5,3 @@ declare const Bar: FC<{
     end: number;
 }>;
 export default Bar;
-//# sourceMappingURL=Bar.d.ts.map

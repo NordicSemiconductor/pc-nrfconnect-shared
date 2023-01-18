@@ -8,4 +8,3 @@ interface Props {
 }
 declare const NavMenuItem: FC<Props>;
 export default NavMenuItem;
-//# sourceMappingURL=NavMenuItem.d.ts.map

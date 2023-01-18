@@ -2,4 +2,3 @@
 import './broken-device-dialog.scss';
 declare const BrokenDeviceDialog: () => JSX.Element;
 export default BrokenDeviceDialog;
-//# sourceMappingURL=BrokenDeviceDialog.d.ts.map
