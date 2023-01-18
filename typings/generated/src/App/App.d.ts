@@ -19,6 +19,7 @@ interface ConnectedAppProps {
     reportUsageData?: boolean;
     documentation?: ReactNode[];
     children?: ReactNode;
+    autoReconnectByDefault?: boolean;
 }
 declare const App: {
     ({ appReducer, ...props }: {

@@ -1,5 +1,5 @@
 import { Device as NrfdlDevice, DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
-import { Device } from '../state';
+import { Device, RootState, TDispatch } from '../state';
 /**
  * Wrap the device form nrf-device-lib to make the Device type consistent
  *
@@ -14,16 +14,8 @@ export declare const wrapDeviceFromNrfdl: (device: NrfdlDevice) => Device;
  * @returns {Device[]} The updated devices
  */
 export declare const wrapDevicesFromNrfdl: (devices: NrfdlDevice[]) => Device[];
-/**
- * Starts watching for devices with the given traits. See the nrf-device-lib
- * library for available traits. Whenever devices are attached/detached, this
- * will dispatch DEVICES_DETECTED with a complete list of attached devices.
- *
- * @param {Object} deviceListing The configuration for the DeviceLister
- * @param {function(device)} doDeselectDevice Invoke to start deselect the current device
- * @returns {function(*)} Function that can be passed to redux dispatch.
- */
-export declare const startWatchingDevices: (deviceListing: DeviceTraits, doDeselectDevice: Function) => (dispatch: Function, getState: Function) => Promise<void>;
+export declare const hasValidDeviceTraits: (deviceTraits: DeviceTraits, requiredTraits: DeviceTraits) => boolean;
+export declare const startWatchingDevices: (deviceListing: DeviceTraits, onDeviceConnected: (device: Device) => void, onDeviceDisconnected: (device: Device) => void, onDeviceDeselected: () => void) => (dispatch: TDispatch, getState: () => RootState) => Promise<void>;
 /**
  * Stops watching for devices.
  *

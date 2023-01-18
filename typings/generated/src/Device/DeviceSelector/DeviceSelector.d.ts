@@ -12,6 +12,8 @@ export interface Props {
     releaseCurrentDevice?: () => void;
     onDeviceSelected?: (device: Device) => void;
     onDeviceDeselected?: () => void;
+    onDeviceConnected?: (device: Device) => void;
+    onDeviceDisconnected?: (device: Device) => void;
     onDeviceIsReady?: (device: Device) => void;
     deviceFilter?: (device: Device) => boolean;
 }

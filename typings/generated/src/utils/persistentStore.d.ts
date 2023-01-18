@@ -1,8 +1,25 @@
+import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 import Store from 'electron-store';
+import { SerialPortOpenOptions } from 'serialport';
+export interface SerialSettings {
+    serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>;
+    lastUpdated: number;
+    vComIndex: number;
+}
+export interface TerminalSettings {
+    lineMode: boolean;
+    echoOnShell: boolean;
+    lineEnding: string;
+    clearOnSend: boolean;
+}
 export declare const persistNickname: (serialNumber: string, nickname: string) => void;
 export declare const getPersistedNickname: (serialNumber: string) => string;
 export declare const persistIsFavorite: (serialNumber: string, value: boolean) => void;
 export declare const getPersistedIsFavorite: (serialNumber: string) => boolean;
+export declare const persistSerialPort: (serialNumber: string, appName: string, serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>, vComIndex: number) => void;
+export declare const getPersistedSerialPort: (serialNumber: string, appName: string) => SerialSettings | undefined;
+export declare const persistTerminalSettings: (serialNumber: string, vComIndex: number, terminalSettings: TerminalSettings) => void;
+export declare const getPersistedTerminalSettings: (serialNumber: string, vComIndex: number) => TerminalSettings | undefined;
 export declare const persistIsSendingUsageData: (value: boolean) => void;
 export declare const getIsSendingUsageData: () => boolean | undefined;
 export declare const deleteIsSendingUsageData: () => void;

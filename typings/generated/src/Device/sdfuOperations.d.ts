@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Device } from '../state';
 import type { DeviceSetup } from './deviceSetup';
 import { DfuImage } from './initPacket';

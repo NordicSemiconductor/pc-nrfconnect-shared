@@ -36,17 +36,20 @@ export interface Log {
     logEntries: LogEntry[];
     isLoggingVerbose: boolean;
 }
-export declare type Devices = {
-    [key: string]: Device | undefined;
-};
 export interface DeviceState {
-    devices: Devices;
+    devices: Map<string, Device>;
     deviceInfo: Device | null;
     isSetupDialogVisible: boolean;
     isSetupWaitingForUserInput: boolean | string;
     selectedSerialNumber: string | null;
     setupDialogChoices: readonly string[];
     setupDialogText?: string | null;
+    autoReconnectDevice?: AutoReconnectDevice | null;
+    autoReconnect: boolean;
+}
+export interface AutoReconnectDevice {
+    device: Device;
+    disconnectionTime?: number;
 }
 export interface DeviceInfo {
     name?: string;
@@ -62,6 +65,7 @@ export interface Device extends NrfdlDevice {
     nickname?: string;
     serialport?: SerialPort;
     favorite?: boolean;
+    id: number;
 }
 export interface BrokenDeviceDialog {
     isVisible: boolean;
