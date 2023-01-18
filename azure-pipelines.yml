@@ -8,7 +8,8 @@ steps:
     set -o errexit -o pipefail
     npm ci
     npm run check
-    npm run generate-types | grep -q "TSFILE" && echo "Generate types found changes"  && exit 1
+    npm run generate-types
+    [[ $(git status --porcelain) ]] && echo "Generate types found changes" && exit 1
     npm test -- --coverage --coverageReporters=cobertura
   displayName: "Lint & test"
 - task: PublishCodeCoverageResults@1

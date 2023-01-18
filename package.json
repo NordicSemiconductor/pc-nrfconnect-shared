@@ -22,7 +22,7 @@
         "check:lint": "eslint --color .",
         "check:types": "tsc --noEmit",
         "check:license": "ts-node scripts/nrfconnect-license.ts check",
-        "generate-types": "tsc --project ./tsconfig-declarations.json",
+        "generate-types": "tsc --emitDeclarationOnly --declaration --incremental --outDir ./typings/generated",
         "prepare": "husky install",
         "compile:publish": "esbuild scripts/nordic-publish.ts --bundle --outfile=scripts/nordic-publish.js --platform=node --log-level=warning --minify",
         "compile:bootstrap": "node scripts/esbuild-bootstrap.js",
