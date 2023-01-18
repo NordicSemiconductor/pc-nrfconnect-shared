@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
-npm run generate-types | grep -q "TSFILE" && echo "Generate types found changes"  && exit 1
+[[ $(git status --porcelain) ]] && echo "Generate types found changes" && exit 1
 npm run check && npm t
