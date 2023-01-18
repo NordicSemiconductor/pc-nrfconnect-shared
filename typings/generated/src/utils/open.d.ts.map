@@ -1,1 +1,1 @@
-{"version":3,"file":"open.d.ts","sourceRoot":"","sources":["../../../../src/utils/open.ts"],"names":[],"mappings":"AAWA;;;;;GAKG;AACH,iBAAS,QAAQ,CAAC,QAAQ,EAAE,MAAM,QAgBjC;AAED;;;;;GAKG;AACH,iBAAS,OAAO,CAAC,GAAG,EAAE,MAAM,QAE3B;AAED,QAAA,MAAM,GAAG,IAAI,CAAC;AAEd,OAAO,EAAE,QAAQ,EAAE,OAAO,EAAE,GAAG,EAAE,CAAC"}
+{"version":3,"file":"open.d.ts","sourceRoot":"","sources":["../../../../src/utils/open.ts"],"names":[],"mappings":"AAWA;;;;;GAKG;AACH,iBAAS,QAAQ,CAAC,QAAQ,EAAE,MAAM,QAgBjC;AAED;;;;;GAKG;AACH,iBAAS,OAAO,CAAC,GAAG,EAAE,MAAM,QAE3B;AAED,OAAO,EAAE,QAAQ,EAAE,OAAO,EAAE,CAAC"}
