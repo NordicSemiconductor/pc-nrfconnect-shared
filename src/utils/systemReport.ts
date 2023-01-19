@@ -91,7 +91,7 @@ const generalInfoReport = async () => {
     ];
 };
 
-const allDevicesReport = (allDevices: Device[]) => [
+const allDevicesReport = (allDevices: Device[] = []) => [
     '- Connected devices:',
     ...allDevices.map(
         d =>
@@ -121,7 +121,7 @@ const currentDeviceReport = (device?: Device, currentSerialNumber?: string) => {
 
 export const generateSystemReport = async (
     timestamp: string,
-    allDevices: Device[],
+    allDevices?: Device[],
     currentDevice?: Device,
     currentSerialNumber?: string
 ) =>

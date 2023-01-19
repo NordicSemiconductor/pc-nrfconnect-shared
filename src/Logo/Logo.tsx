@@ -6,7 +6,6 @@
 
 import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
-import { bool } from 'prop-types';
 
 import { deviceIsSelected as deviceIsSelectedSelector } from '../Device/deviceSlice';
 import { openUrl } from '../utils/open';
@@ -19,36 +18,31 @@ import './logo.scss';
 const goToNRFConnectWebsite = () =>
     openUrl('http://www.nordicsemi.com/nRFConnect');
 
-const chooseLogo = (
-    changeWithDeviceState: boolean,
-    deviceIsSelected: boolean
-) => {
-    if (!changeWithDeviceState) {
-        return logoUniform;
-    }
+const LogoImage: FC<{ src: string }> = ({ src }) => (
+    <img
+        className="core19-logo"
+        src={src}
+        alt="Nordic Semiconductor logo"
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
+        role="link"
+        onClick={goToNRFConnectWebsite}
+        onKeyPress={() => {}}
+        tabIndex={0}
+    />
+);
 
-    return deviceIsSelected ? logoConnected : logoDisconnected;
-};
-
-const Logo: FC<{ changeWithDeviceState?: boolean }> = ({
-    changeWithDeviceState = false,
-}) => {
+const DynamicLogo = () => {
     const deviceIsSelected = useSelector(deviceIsSelectedSelector);
-    const logo = chooseLogo(changeWithDeviceState, deviceIsSelected);
+
     return (
-        <img
-            className="core19-logo"
-            src={logo}
-            alt="Nordic Semiconductor logo"
-            // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
-            role="link"
-            onClick={goToNRFConnectWebsite}
-            onKeyPress={() => {}}
-            tabIndex={0}
-        />
+        <LogoImage src={deviceIsSelected ? logoConnected : logoDisconnected} />
     );
 };
 
-Logo.propTypes = { changeWithDeviceState: bool };
+const StaticLogo = () => <LogoImage src={logoUniform} />;
+
+const Logo: FC<{ changeWithDeviceState?: boolean }> = ({
+    changeWithDeviceState = false,
+}) => (changeWithDeviceState ? <DynamicLogo /> : <StaticLogo />);
 
 export default Logo;
