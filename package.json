@@ -23,7 +23,7 @@
         "check:types": "tsc --noEmit",
         "check:license": "ts-node scripts/nrfconnect-license.ts check",
         "generate-types": "tsc --emitDeclarationOnly --declaration --incremental --outDir ./typings/generated",
-        "prepare": "husky install",
+        "prepare": "ts-node scripts/installHusky.ts",
         "compile:publish": "esbuild scripts/nordic-publish.ts --bundle --outfile=scripts/nordic-publish.js --platform=node --log-level=warning --minify",
         "compile:bootstrap": "node scripts/esbuild-bootstrap.js",
         "postinstall": "run-p compile:*"
