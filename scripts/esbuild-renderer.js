@@ -16,8 +16,10 @@ const svgr = require('@svgr/core').transform;
  * @returns {void}
  */
 module.exports.build = options => {
-    // eslint-disable-next-line import/no-dynamic-require, global-require
-    const { dependencies } = require(join(process.cwd(), 'package.json'));
+    const { dependencies } = JSON.parse(
+        fs.readFileSync('package.json', 'utf8')
+    );
+
     const outfile =
         options.entryPoints.length === 1 ? './dist/bundle.js' : undefined;
     const outdir = outfile ? undefined : './dist';
