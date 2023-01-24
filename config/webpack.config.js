@@ -25,7 +25,7 @@ const externals = Object.fromEntries(
         'serialport',
         '@nordicsemiconductor/nrf-device-lib-js',
         'osx-temperature-sensor',
-        ...Object.keys(dependencies),
+        ...Object.keys(dependencies ?? {}),
     ].map(lib => [lib, lib])
 );
 

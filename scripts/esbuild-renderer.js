@@ -57,7 +57,7 @@ module.exports.build = options => {
             '@nordicsemiconductor/nrf-device-lib-js',
 
             // App dependencies
-            ...Object.keys(dependencies),
+            ...Object.keys(dependencies ?? {}),
         ],
         loader: {
             '.json': 'json',
