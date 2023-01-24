@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 6.17.2 - 2023-01-24
+
+### Fixed
+
+-   `husky install` sometimes was ran even if `shared` was installed only as a
+    dependency. That was wrong and also failed, because it found no `.git`
+    directory.
+
 ## 6.17.1 - 2023-01-19
 
 ### Fixed
