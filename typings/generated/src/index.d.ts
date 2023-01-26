@@ -55,4 +55,4 @@ export type { Props as DeviceSelectorProps } from './Device/DeviceSelector/Devic
 export type { PaneProps } from './App/App';
 export type { DfuImage } from './Device/initPacket';
 export type { DeviceSetup } from './Device/deviceSetup';
-export type { PackageJson } from './utils/AppTypes';
+export type { AppInfo, AppVersions, PackageJson, SourceJson, } from './utils/AppTypes';

@@ -12,6 +12,16 @@ and this project adheres to
 
 -   Hover colour for `Dropdown` and `StartStopButton` components.
 
+## 6.18.0 - 2023-01-26
+
+### Changed
+
+-   Updated nrf-device-lib-js to 0.5.0-pre7.
+
+### Fixed
+
+-   Some types needed by the launcher were not exported.
+
 ## 6.17.3 - 2023-01-24
 
 ### Fixed
