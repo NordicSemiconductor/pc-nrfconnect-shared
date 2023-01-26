@@ -16,7 +16,9 @@ import type { SerialPortOpenOptions } from 'serialport';
 import { OverwriteOptions, SERIALPORT_CHANNEL } from '../../main';
 import logger from '../logging';
 
-export const SerialPort = async (
+export type SerialPort = Awaited<ReturnType<typeof createSerialPort>>;
+
+export const createSerialPort = async (
     options: SerialPortOpenOptions<AutoDetectTypes>,
     overwriteOptions: OverwriteOptions = {
         overwrite: false,
