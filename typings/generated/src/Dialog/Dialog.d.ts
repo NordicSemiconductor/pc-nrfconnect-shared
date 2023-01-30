@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import './dialog.scss';
 export declare const Dialog: {
     ({ isVisible, closeOnUnfocus, onHide, className, children, }: {
@@ -22,7 +22,7 @@ export declare const Dialog: {
 };
 export declare const DialogButton: ({ variant, onClick, className, disabled, children, }: {
     variant?: "primary" | "secondary" | undefined;
-    onClick: () => void;
+    onClick: React.MouseEventHandler<HTMLButtonElement>;
     className?: string | undefined;
     disabled?: boolean | undefined;
     children: ReactNode | string;

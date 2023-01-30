@@ -80,7 +80,7 @@ export const DialogButton = ({
     children,
 }: {
     variant?: 'primary' | 'secondary';
-    onClick: () => void;
+    onClick: React.MouseEventHandler<HTMLButtonElement>;
     className?: string;
     disabled?: boolean;
     children: ReactNode | string;
