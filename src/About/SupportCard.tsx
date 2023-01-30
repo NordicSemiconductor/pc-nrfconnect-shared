@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
 
@@ -32,14 +32,6 @@ export default () => {
     const currentSerialNumber = useSelector(selectedSerialNumber);
     const verboseLogging = useSelector(isLoggingVerboseSelector);
     const currentDevice = useSelector(deviceInfo);
-
-    useEffect(() => {
-        persistIsLoggingVerbose(false);
-    }, []);
-
-    useEffect(() => {
-        setVerboseDeviceLibLogging(verboseLogging);
-    }, [verboseLogging]);
 
     return (
         <Card title="Support">
@@ -79,7 +71,10 @@ export default () => {
                 <Toggle
                     id="enableVerboseLoggin"
                     label="VERBOSE LOGGING"
-                    onToggle={() => dispatch(toggleIsLoggingVerbose())}
+                    onToggle={() => {
+                        setVerboseDeviceLibLogging(!verboseLogging);
+                        dispatch(toggleIsLoggingVerbose());
+                    }}
                     isToggled={verboseLogging}
                     variant="primary"
                 />
