@@ -20,7 +20,10 @@ import path from 'path';
 
 import { isLoggingVerbose } from '../Log/logSlice';
 import logger from '../logging';
-import { getIsLoggingVerbose } from '../utils/persistentStore';
+import {
+    getIsLoggingVerbose,
+    persistIsLoggingVerbose,
+} from '../utils/persistentStore';
 
 let deviceLibContext = 0;
 export const getDeviceLibContext = () => {
@@ -79,6 +82,9 @@ export const logNrfdlLogs = (evt: LogEvent) => {
 export const forwardLogEventsFromDeviceLib = () => {
     setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
     setVerboseDeviceLibLogging(getIsLoggingVerbose());
+
+    // Only the first reset after selecting "reset with verbose logging" is relevant
+    persistIsLoggingVerbose(false);
 
     const taskId = startLogEvents(
         getDeviceLibContext(),
