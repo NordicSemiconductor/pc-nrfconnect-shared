@@ -17,7 +17,7 @@ interface Props {
     startText?: string;
     stopText?: string;
     onClick: () => void;
-    running: boolean;
+    started: boolean;
     disabled?: boolean;
     large?: boolean;
     className?: string;
@@ -27,19 +27,19 @@ const StartStopButton: FC<Props> = ({
     startText = 'Start',
     stopText = 'Stop',
     onClick,
-    running,
+    started,
     disabled = false,
     className,
     large = true,
 }) => {
-    const label = running ? startText : stopText;
-    const src = running ? playSvg : stopSvg;
+    const label = started ? stopText : startText;
+    const src = started ? stopSvg : playSvg;
 
     return (
         <Button
             className={classNames(
                 'start-stop',
-                `${running ? '' : 'active-animation'}`,
+                `${started ? 'active-animation' : ''}`,
                 className
             )}
             disabled={disabled}
