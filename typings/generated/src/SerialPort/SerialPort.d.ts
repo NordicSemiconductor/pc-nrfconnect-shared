@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import type { AutoDetectTypes, SetOptions, UpdateOptions } from '@serialport/bindings-cpp';
 import type { SerialPortOpenOptions } from 'serialport';
 import { OverwriteOptions } from '../../main';
