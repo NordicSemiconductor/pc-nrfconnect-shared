@@ -6,6 +6,7 @@
 
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../../logging';
 import { Device, RootState } from '../../state';
@@ -17,6 +18,16 @@ import {
 } from '../deviceSlice';
 
 const DEFAULT_DEVICE_WAIT_TIME_MS = 3000;
+
+const hasSameDeviceTraits = (
+    deviceTraits: DeviceTraits,
+    otherDeviceTraits: DeviceTraits
+) =>
+    Object.keys(otherDeviceTraits).every(
+        rule =>
+            deviceTraits[rule as keyof DeviceTraits] ===
+            otherDeviceTraits[rule as keyof DeviceTraits]
+    );
 
 export default (doSelectDevice: (device: Device) => void) => {
     const globalAutoReconnect = useSelector(getGlobalAutoReconnect);
@@ -65,6 +76,19 @@ export default (doSelectDevice: (device: Device) => void) => {
             return;
         }
 
+        if (!autoSelectDevice) {
+            return;
+        }
+
+        if (
+            !hasSameDeviceTraits(
+                autoSelectDevice.traits,
+                autoReconnectDevice.device.traits
+            )
+        ) {
+            return;
+        }
+
         if (!autoReconnectDevice.disconnectionTime) {
             return;
         }
@@ -79,12 +103,10 @@ export default (doSelectDevice: (device: Device) => void) => {
             return;
         }
 
-        if (autoSelectDevice) {
-            logger.info(
-                `Auto Reconnecting Device SN: ${autoSelectDevice.serialNumber}`
-            );
-            doSelectDevice(autoSelectDevice);
-        }
+        logger.info(
+            `Auto Reconnecting Device SN: ${autoSelectDevice.serialNumber}`
+        );
+        doSelectDevice(autoSelectDevice);
     }, [
         doSelectDevice,
         autoReconnectDevice,
