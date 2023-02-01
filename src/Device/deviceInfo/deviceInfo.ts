@@ -48,7 +48,8 @@ type DevicePCA =
     | 'PCA10100'
     | 'PCA10121'
     | 'PCA20020'
-    | 'PCA20035';
+    | 'PCA20035'
+    | 'PCA10143';
 
 const devicesByPca: { [P in DevicePCA]: DeviceInfo } = {
     PCA10028: {
@@ -153,6 +154,15 @@ const devicesByPca: { [P in DevicePCA]: DeviceInfo } = {
             productPagePath:
                 'Software-and-tools/Prototyping-platforms/Nordic-Thingy-91',
             buyOnlineParams: 'search_token=nRF6943&series_token=nRF9160',
+        },
+    },
+    PCA10143: {
+        name: 'nRF7002 DK',
+        cores: 2,
+        icon: nrf53logo,
+        website: {
+            productPagePath: 'Products/Development-hardware/nRF7002-DK',
+            buyOnlineParams: 'search_token=nRF7002-DK&series_token=nRF7002',
         },
     },
 };
