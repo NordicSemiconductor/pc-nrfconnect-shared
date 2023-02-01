@@ -10,7 +10,7 @@ and this project adheres to
 
 ### Fixed
 
--   No device selected if `serialNumber` is and empty string
+-   No device selected if `serialNumber` is an empty string
 
 ## 6.18.1 - 2023-01-30
 
