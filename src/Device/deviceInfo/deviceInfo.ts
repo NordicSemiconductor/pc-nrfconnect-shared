@@ -32,6 +32,7 @@ import { Device, DeviceInfo } from '../../state';
 import nrf51logo from '!!@svgr/webpack!./nRF51-Series-logo.svg';
 import nrf52logo from '!!@svgr/webpack!./nRF52-Series-logo.svg';
 import nrf53logo from '!!@svgr/webpack!./nRF53-Series-logo.svg';
+import nrf7002logo from '!!@svgr/webpack!./nRF70-Series_no-background_RGB.svg';
 import nrf91logo from '!!@svgr/webpack!./nRF91-Series-logo.svg';
 import ppkLogo from '!!@svgr/webpack!./ppk-logo.svg';
 import unknownLogo from '!!@svgr/webpack!./unknown-logo.svg';
@@ -159,7 +160,7 @@ const devicesByPca: { [P in DevicePCA]: DeviceInfo } = {
     PCA10143: {
         name: 'nRF7002 DK',
         cores: 2,
-        icon: nrf53logo,
+        icon: nrf7002logo,
         website: {
             productPagePath: 'Products/Development-hardware/nRF7002-DK',
             buyOnlineParams: 'search_token=nRF7002-DK&series_token=nRF7002',
