@@ -234,7 +234,7 @@ export const getAutoReconnectDevice = (state: RootState) =>
         : null;
 
 export const selectedDevice = (state: RootState) =>
-    state.device.selectedSerialNumber
+    state.device.selectedSerialNumber !== null
         ? state.device.devices.get(state.device.selectedSerialNumber)
         : undefined;
 
