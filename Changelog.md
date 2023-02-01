@@ -10,6 +10,7 @@ and this project adheres to
 ### Changed
 
 -   Updated `serialport` to emit events and have more than one subscriber
+-   Export `DropdownItem`
 
 ## 6.18.3 - 2023-02-01
 
