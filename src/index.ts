@@ -84,7 +84,10 @@ export { defaultInitPacket, HashType, FwType } from './Device/initPacket';
 
 export { default as describeError } from './logging/describeError';
 
-export { SerialPort } from './SerialPort/SerialPort';
+export { createSerialPort } from './SerialPort/SerialPort';
+export type { SerialPort } from './SerialPort/SerialPort';
+
+export type { DropdownItem } from './Dropdown/Dropdown';
 
 export type { Device, NrfConnectState } from './state';
 export type { Props as DeviceSelectorProps } from './Device/DeviceSelector/DeviceSelector';

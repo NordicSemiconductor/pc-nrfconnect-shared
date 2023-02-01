@@ -7,7 +7,7 @@
 import { ipcRenderer } from 'electron';
 
 import { OverwriteOptions, SERIALPORT_CHANNEL } from '../../main';
-import { SerialPort } from './SerialPort';
+import { createSerialPort } from './SerialPort';
 
 jest.mock('electron', () => ({
     ipcRenderer: { invoke: jest.fn(), on: jest.fn(), send: jest.fn() },
@@ -16,7 +16,7 @@ jest.mock('electron', () => ({
 const defaultOptions = { path: '/dev/ROBOT', baudRate: 115200 };
 
 test('SerialPort is initialized with the correct setup', async () => {
-    const port = await SerialPort(defaultOptions);
+    const port = await createSerialPort(defaultOptions);
 
     expect(ipcRenderer.invoke).toHaveBeenCalledWith(
         SERIALPORT_CHANNEL.OPEN,
@@ -29,7 +29,7 @@ test('SerialPort is initialized with the correct setup', async () => {
 
 test('SerialPort may be initialized with overwrite and settingsLocked', async () => {
     let overwriteOptions: OverwriteOptions = { overwrite: true };
-    await SerialPort(defaultOptions, overwriteOptions);
+    await createSerialPort(defaultOptions, overwriteOptions);
     expect(ipcRenderer.invoke).toHaveBeenCalledWith(
         SERIALPORT_CHANNEL.OPEN,
         defaultOptions,
@@ -37,7 +37,7 @@ test('SerialPort may be initialized with overwrite and settingsLocked', async ()
     );
 
     overwriteOptions = { settingsLocked: true };
-    await SerialPort(defaultOptions, overwriteOptions);
+    await createSerialPort(defaultOptions, overwriteOptions);
     expect(ipcRenderer.invoke).toHaveBeenCalledWith(
         SERIALPORT_CHANNEL.OPEN,
         defaultOptions,
@@ -45,7 +45,7 @@ test('SerialPort may be initialized with overwrite and settingsLocked', async ()
     );
 
     overwriteOptions = { settingsLocked: true, overwrite: true };
-    await SerialPort(defaultOptions, overwriteOptions);
+    await createSerialPort(defaultOptions, overwriteOptions);
     expect(ipcRenderer.invoke).toHaveBeenCalledWith(
         SERIALPORT_CHANNEL.OPEN,
         defaultOptions,
