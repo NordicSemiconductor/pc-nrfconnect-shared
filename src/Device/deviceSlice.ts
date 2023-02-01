@@ -38,6 +38,7 @@ const initialState: DeviceState = {
     deviceInfo: null,
     isSetupWaitingForUserInput: false,
     autoReconnect: false,
+    readbackProtected: false,
     ...noDialogShown,
 };
 
@@ -187,6 +188,10 @@ const slice = createSlice({
         setGlobalAutoReconnect: (state, action: PayloadAction<boolean>) => {
             state.autoReconnect = action.payload;
         },
+
+        setReadbackProtected: (state, action: PayloadAction<boolean>) => {
+            state.readbackProtected = action.payload;
+        },
     },
 });
 
@@ -206,6 +211,7 @@ export const {
         setDeviceNickname,
         toggleDeviceFavorited,
         setGlobalAutoReconnect,
+        setReadbackProtected,
     },
 } = slice;
 
@@ -244,3 +250,6 @@ export const selectedSerialNumber = (state: RootState) =>
 
 export const getGlobalAutoReconnect = (state: RootState) =>
     state.device.autoReconnect;
+
+export const readbackProtectedDevice = (state: RootState) =>
+    state.device.readbackProtected;

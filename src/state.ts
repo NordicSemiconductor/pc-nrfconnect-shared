@@ -63,6 +63,7 @@ export interface DeviceState {
     setupDialogText?: string | null;
     autoReconnectDevice?: AutoReconnectDevice | null;
     autoReconnect: boolean;
+    readbackProtected: boolean;
 }
 
 export interface AutoReconnectDevice {

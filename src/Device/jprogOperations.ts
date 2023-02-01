@@ -143,6 +143,13 @@ export async function validateFirmware(
     try {
         fwInfo = await readFwInfo(deviceLibContext, device.id);
     } catch (error) {
+        // @ts-expect-error Wrongly typed in device lib at the moment
+        if (error.error_code === 24) {
+            logger.warn(
+                'Readback protection on device enabled. Unable to verify that the firmware version is correct.'
+            );
+            return 'READBACK_PROTECTION_ENABLED';
+        }
         return false;
     }
     if (
