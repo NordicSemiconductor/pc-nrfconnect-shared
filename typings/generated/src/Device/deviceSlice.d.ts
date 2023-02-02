@@ -5,7 +5,7 @@ export declare const reducer: import("redux").Reducer<DeviceState, import("redux
 }, string, never, never>, resetDeviceNickname: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, string>, selectDevice: import("@reduxjs/toolkit").ActionCreatorWithPayload<Device, string>, addDevice: import("@reduxjs/toolkit").ActionCreatorWithPayload<Device, string>, removeDevice: import("@reduxjs/toolkit").ActionCreatorWithPayload<Device, string>, setDevices: import("@reduxjs/toolkit").ActionCreatorWithPayload<Device[], string>, setDeviceNickname: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[serialNumber: string, nickname: string], {
     serialNumber: string;
     nickname: string;
-}, string, never, never>, toggleDeviceFavorited: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, string>, setGlobalAutoReconnect: import("@reduxjs/toolkit").ActionCreatorWithPayload<boolean, string>;
+}, string, never, never>, toggleDeviceFavorited: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, string>, setGlobalAutoReconnect: import("@reduxjs/toolkit").ActionCreatorWithPayload<boolean, string>, setReadbackProtected: import("@reduxjs/toolkit").ActionCreatorWithPayload<boolean, string>;
 export declare const getDevice: (serialNumber: string) => (state: RootState) => Device | undefined;
 export declare const sortedDevices: (state: RootState) => Device[];
 export declare const deviceIsSelected: (state: RootState) => boolean;
@@ -14,3 +14,4 @@ export declare const selectedDevice: (state: RootState) => Device | undefined;
 export declare const deviceInfo: (state: RootState) => Device | null;
 export declare const selectedSerialNumber: (state: RootState) => string | null;
 export declare const getGlobalAutoReconnect: (state: RootState) => boolean;
+export declare const readbackProtectedDevice: (state: RootState) => boolean;

@@ -21,7 +21,7 @@ export declare const verifySerialPortAvailable: (device: Device) => Promise<void
  */
 export declare function validateFirmware(device: Device, fwVersion: string | {
     validator: (imageInfoList: FWInfo.Image[], fromDeviceLib: boolean) => boolean;
-}): Promise<boolean | FWInfo.Image | undefined>;
+}): Promise<boolean | FWInfo.Image | "READBACK_PROTECTION_ENABLED" | undefined>;
 /**
  * Program the device with the given serial number with the given firmware with provided configuration
  *

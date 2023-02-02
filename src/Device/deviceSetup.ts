@@ -94,7 +94,7 @@ export const receiveDeviceSetupInput =
         }
     };
 
-export const prepareDevice = async (
+const prepareDevice = async (
     device: Device,
     deviceSetupConfig: DeviceSetup,
     dispatch: TDispatch
