@@ -45,19 +45,18 @@ export const getPersistedIsFavorite = (serialNumber: string) =>
 
 export const persistSerialPort = (
     serialNumber: string,
-    appName: string,
     serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>,
     vComIndex: number
 ) =>
-    sharedStore.set(`${serialNumber}.${appName}`, {
+    sharedStore.set(`${serialNumber}.${packageJson().name}`, {
         serialPortOptions,
         lastUpdated: Date.now(),
         vComIndex,
     } as SerialSettings);
 export const getPersistedSerialPort = (
-    serialNumber: string,
-    appName: string
+    serialNumber: string
 ): SerialSettings | undefined => {
+    const appName = packageJson().name;
     logger.info(
         `persistentStore.ts: Will get serialport options from ${serialNumber}.${appName}`
     );
@@ -69,7 +68,7 @@ export const persistTerminalSettings = (
     terminalSettings: TerminalSettings
 ) =>
     sharedStore.set(
-        `${serialNumber}.${vComIndex}.TerminalSettings`,
+        `${serialNumber}.vCom-${vComIndex}.TerminalSettings`,
         terminalSettings
     );
 export const getPersistedTerminalSettings = (
@@ -79,7 +78,9 @@ export const getPersistedTerminalSettings = (
     logger.info(
         `persistentStore.ts: Will get terminalSettings options from ${serialNumber}.${vComIndex}.TerminalSettings`
     );
-    return sharedStore.get(`${serialNumber}.${vComIndex}.TerminalSettings`);
+    return sharedStore.get(
+        `${serialNumber}.vCom-${vComIndex}.TerminalSettings`
+    );
 };
 
 export const persistIsSendingUsageData = (value: boolean) =>
