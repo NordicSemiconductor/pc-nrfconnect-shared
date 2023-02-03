@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-@import "../variables";
+@import '../variables';
 
 .core19-side-panel {
     font-size: 12px;
@@ -12,5 +12,9 @@
 
     > * {
         margin-top: 32px;
+
+        &:last-child {
+            margin-bottom: 32px;
+        }
     }
 }
