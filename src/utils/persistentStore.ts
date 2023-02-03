@@ -58,7 +58,7 @@ export const getPersistedSerialPort = (
 ): SerialSettings | undefined => {
     const appName = packageJson().name;
     logger.info(
-        `persistentStore.ts: Will get serialport options from ${serialNumber}.${appName}`
+        `Getting serialport options from persistent store ${serialNumber}.${appName}`
     );
     return sharedStore.get(`${serialNumber}.${appName}`);
 };
@@ -76,7 +76,7 @@ export const getPersistedTerminalSettings = (
     vComIndex: number
 ): TerminalSettings | undefined => {
     logger.info(
-        `persistentStore.ts: Will get terminalSettings options from ${serialNumber}.${vComIndex}.TerminalSettings`
+        `Get terminal settings from persistent store ${serialNumber}.${vComIndex}.TerminalSettings`
     );
     return sharedStore.get(
         `${serialNumber}.vCom-${vComIndex}.TerminalSettings`
