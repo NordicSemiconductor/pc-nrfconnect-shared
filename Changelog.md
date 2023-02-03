@@ -8,7 +8,7 @@ and this project adheres to
 
 ## 6.18.8 2023-02-03
 
-### Fix
+### Fixed
 
 -   `persistentStore` logging message of terminal settings, missing `vCom-`
 -   Types for bleChannels.
@@ -21,7 +21,7 @@ and this project adheres to
 
 ## 6.18.6 2023-02-03
 
-### Fix
+### Fixed
 
 -   `persistentStore` logging to persistent store missing `vCom-`
 
