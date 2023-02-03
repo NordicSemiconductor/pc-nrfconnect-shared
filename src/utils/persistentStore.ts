@@ -76,7 +76,7 @@ export const getPersistedTerminalSettings = (
     vComIndex: number
 ): TerminalSettings | undefined => {
     logger.info(
-        `Get terminal settings from persistent store ${serialNumber}.${vComIndex}.TerminalSettings`
+        `Get terminal settings from persistent store ${serialNumber}.vCom-${vComIndex}.TerminalSettings`
     );
     return sharedStore.get(
         `${serialNumber}.vCom-${vComIndex}.TerminalSettings`
