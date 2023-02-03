@@ -18,7 +18,7 @@ and this project adheres to
 
 -   Programming DFU devices from device selector on macOS.
 
-## 6.18.8 2023-02-03
+## 6.18.6 2023-02-03
 
 ### Fix
 
