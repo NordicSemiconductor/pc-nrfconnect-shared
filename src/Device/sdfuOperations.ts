@@ -384,7 +384,6 @@ const prepareInDFUBootloader = async (
     dfuImages.push({ name: 'Application', initPacket: packet, firmwareImage });
 
     const zipBuffer = await createDfuZipBuffer(dfuImages);
-    fs.writeFileSync('tem.zip', zipBuffer);
 
     let prevPercentage: number;
 
