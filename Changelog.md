@@ -11,6 +11,7 @@ and this project adheres to
 ### Fix
 
 -   `persistentStore` logging to persistent store missing `vCom-`
+
 ## 6.18.7 2023-02-03
 
 ### Fixed
