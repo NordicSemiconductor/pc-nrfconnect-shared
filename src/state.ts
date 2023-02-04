@@ -87,6 +87,7 @@ export interface Device extends NrfdlDevice {
     serialport?: SerialPort;
     favorite?: boolean;
     id: number;
+    readbackProtected?: boolean;
 }
 
 export interface BrokenDeviceDialog {
