@@ -189,12 +189,15 @@ const slice = createSlice({
             state.autoReconnect = action.payload;
         },
 
-        setReadbackProtected: (state, action: PayloadAction<boolean>) => {
+        setReadbackProtected: (
+            state,
+            action: PayloadAction<Device['readbackProtection']>
+        ) => {
             if (!state.selectedSerialNumber) return;
             const device = state.devices.get(state.selectedSerialNumber);
 
             if (device) {
-                device.readbackProtected = action.payload;
+                device.readbackProtection = action.payload;
                 state.devices.set(state.selectedSerialNumber, device);
             }
         },

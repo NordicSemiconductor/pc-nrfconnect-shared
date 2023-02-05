@@ -147,7 +147,13 @@ const prepareDevice = async (
         const { fw, fwVersion } = jprog[key];
         const valid = await validateFirmware(device, fwVersion);
 
-        dispatch(setReadbackProtected(valid === 'READBACK_PROTECTION_ENABLED'));
+        dispatch(
+            setReadbackProtected(
+                valid === 'READBACK_PROTECTION_ENABLED'
+                    ? 'protected'
+                    : 'unprotected'
+            )
+        );
 
         if (valid) return device;
 
