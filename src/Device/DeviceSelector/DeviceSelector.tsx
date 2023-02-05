@@ -18,6 +18,7 @@ import {
     deviceIsSelected as deviceIsSelectedSelector,
     selectDevice,
     selectedSerialNumber,
+    setReadbackProtected,
 } from '../deviceSlice';
 import DeviceList from './DeviceList/DeviceList';
 import SelectDevice from './SelectDevice';
@@ -61,6 +62,7 @@ const DeviceSelector: FC<Props> = ({
     const selectedSN = useSelector(selectedSerialNumber);
 
     const doDeselectDevice = useCallback(() => {
+        dispatch(setReadbackProtected('unknown'));
         onDeviceDeselected();
         dispatch(deselectDevice());
     }, [dispatch, onDeviceDeselected]);

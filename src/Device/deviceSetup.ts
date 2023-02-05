@@ -12,6 +12,7 @@ import {
     deviceSetupError,
     deviceSetupInputReceived,
     deviceSetupInputRequired,
+    setReadbackProtected,
 } from './deviceSlice';
 import { InitPacket } from './initPacket';
 import {
@@ -93,9 +94,10 @@ export const receiveDeviceSetupInput =
         }
     };
 
-export const prepareDevice = async (
+const prepareDevice = async (
     device: Device,
-    deviceSetupConfig: DeviceSetup
+    deviceSetupConfig: DeviceSetup,
+    dispatch: TDispatch
 ): Promise<Device> => {
     const { jprog, dfu, needSerialport } = deviceSetupConfig;
 
@@ -144,6 +146,15 @@ export const prepareDevice = async (
         logger.debug('Found matching firmware definition', key);
         const { fw, fwVersion } = jprog[key];
         const valid = await validateFirmware(device, fwVersion);
+
+        dispatch(
+            setReadbackProtected(
+                valid === 'READBACK_PROTECTION_ENABLED'
+                    ? 'protected'
+                    : 'unprotected'
+            )
+        );
+
         if (valid) return device;
 
         try {
@@ -195,7 +206,8 @@ export const setupDevice =
         try {
             const preparedDevice = await prepareDevice(
                 device,
-                deviceSetupConfig
+                deviceSetupConfig,
+                dispatch
             );
 
             onSuccessfulDeviceSetup(
