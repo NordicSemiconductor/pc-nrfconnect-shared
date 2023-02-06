@@ -5,6 +5,7 @@ interface Props {
     stopText?: string;
     onClick: () => void;
     disabled?: boolean;
+    large?: boolean;
 }
 declare const StartStopButton: FC<Props>;
 export default StartStopButton;

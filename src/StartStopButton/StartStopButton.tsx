@@ -18,6 +18,7 @@ interface Props {
     stopText?: string;
     onClick: () => void;
     disabled?: boolean;
+    large?: boolean;
 }
 
 const StartStopButton: FC<Props> = ({
@@ -25,6 +26,7 @@ const StartStopButton: FC<Props> = ({
     stopText = 'Stop',
     onClick,
     disabled = false,
+    large = true,
 }) => {
     const [showStart, setShowStart] = useState(true);
     const label = showStart ? startText : stopText;
@@ -34,6 +36,7 @@ const StartStopButton: FC<Props> = ({
         <Button
             className={`start-stop  ${showStart ? '' : 'active-animation'}`}
             disabled={disabled}
+            large={large}
             onClick={() => {
                 setShowStart(!showStart);
                 onClick();
