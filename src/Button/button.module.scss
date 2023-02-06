@@ -26,6 +26,7 @@
     }
 
     &:focus:not([disabled]) {
+        background-color: $white;
         border-color: inherit !important;
     }
 
