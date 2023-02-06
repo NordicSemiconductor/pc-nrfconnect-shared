@@ -62,7 +62,6 @@ const DeviceSelector: FC<Props> = ({
     const selectedSN = useSelector(selectedSerialNumber);
 
     const doDeselectDevice = useCallback(() => {
-        dispatch(setReadbackProtected('unknown'));
         onDeviceDeselected();
         dispatch(deselectDevice());
     }, [dispatch, onDeviceDeselected]);

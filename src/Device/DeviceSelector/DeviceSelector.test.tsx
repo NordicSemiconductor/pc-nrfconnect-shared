@@ -92,7 +92,6 @@ const testDevice: Device = {
         deviceFamily: 'PCATest',
         deviceVersion: 'PCATest',
     },
-    readbackProtection: 'unknown',
 };
 
 const validFirmware = {

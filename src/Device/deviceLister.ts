@@ -29,7 +29,6 @@ export const wrapDeviceFromNrfdl = (device: NrfdlDevice): Device => ({
     ...device,
     boardVersion: device.jlink?.boardVersion ?? undefined,
     serialport: device.serialPorts?.[0] ?? undefined,
-    readbackProtection: 'unknown',
 });
 
 /**

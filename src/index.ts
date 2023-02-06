@@ -75,7 +75,7 @@ export {
     getPersistedTerminalSettings,
 } from './utils/persistentStore';
 
-export { selectedDevice } from './Device/deviceSlice';
+export { selectedDevice, getReadbackProtection } from './Device/deviceSlice';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
 export { waitForDevice } from './Device/deviceLister';
 export { getDeviceLibContext } from './Device/deviceLibWrapper';
