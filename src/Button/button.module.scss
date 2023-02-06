@@ -18,19 +18,19 @@
         height: 32px;
     }
 
-    &:hover {
+    &:hover:not([disabled]) {
         color: $gray-700 !important;
         background-color: $white !important;
         border-color: $gray-700 !important;
     }
 
-    &:focus {
+    &:focus:not([disabled]) {
         color: inherit !important;
         background-color: $white !important;
         border-color: inherit !important;
     }
 
-    &:active {
+    &:active:not([disabled]) {
         background-color: $gray-100 !important;
     }
 }
