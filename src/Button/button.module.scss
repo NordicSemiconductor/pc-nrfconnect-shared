@@ -19,18 +19,16 @@
     }
 
     &:hover:not([disabled]) {
-        color: $gray-700 !important;
-        background-color: $white !important;
-        border-color: $gray-700 !important;
+        color: $gray-700;
+        background-color: $white;
+        border-color: $gray-700;
     }
 
     &:focus:not([disabled]) {
-        color: inherit !important;
-        background-color: $white !important;
         border-color: inherit !important;
     }
 
     &:active:not([disabled]) {
-        background-color: $gray-100 !important;
+        background-color: $gray-100;
     }
 }
