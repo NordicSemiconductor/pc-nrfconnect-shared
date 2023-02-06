@@ -32,7 +32,7 @@ const Button: React.FC<ButtonProps> = ({
     <button
         type="button"
         id={id}
-        className={classNames(styles.button, large && 'large', className)}
+        className={classNames(styles.button, large && styles.large, className)}
         disabled={disabled}
         onClick={onClick}
         title={title}
