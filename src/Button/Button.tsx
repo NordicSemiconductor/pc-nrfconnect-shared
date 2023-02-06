@@ -17,6 +17,7 @@ type ButtonProps = {
     onClick: React.MouseEventHandler<HTMLButtonElement>;
     disabled?: boolean;
     title?: string;
+    large?: boolean;
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -26,11 +27,12 @@ const Button: React.FC<ButtonProps> = ({
     onClick,
     disabled = false,
     title,
+    large = false,
 }) => (
     <button
         type="button"
         id={id}
-        className={classNames(styles.button, className)}
+        className={classNames(styles.button, large && 'large', className)}
         disabled={disabled}
         onClick={onClick}
         title={title}

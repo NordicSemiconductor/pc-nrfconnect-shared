@@ -5,6 +5,7 @@ declare type ButtonProps = {
     onClick: React.MouseEventHandler<HTMLButtonElement>;
     disabled?: boolean;
     title?: string;
+    large?: boolean;
 };
 declare const Button: React.FC<ButtonProps>;
 export default Button;

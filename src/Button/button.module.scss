@@ -13,4 +13,22 @@
     border: 1px;
     border-style: solid;
     border-color: $gray-700;
+
+    &.large {
+        height: 32px;
+    }
+
+    &:hover:not([disabled]) {
+        color: $gray-700;
+        background-color: $white;
+        border-color: $gray-700;
+    }
+
+    &:focus:not([disabled]) {
+        border-color: inherit !important;
+    }
+
+    &:active:not([disabled]) {
+        background-color: $gray-100;
+    }
 }
