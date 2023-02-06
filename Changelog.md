@@ -14,8 +14,8 @@ and this project adheres to
 
 ### Added
 
--   `large` Property to `Button` to make it's height at 32px
--   `large` Property to `StartStopButton` to make it's height at 32px
+-   `large` Property to `Button` to make its height at 32px
+-   `large` Property to `StartStopButton` to make its height at 32px
 
 ### Changed
 
