@@ -46,7 +46,7 @@ export interface DeviceState {
     setupDialogText?: string | null;
     autoReconnectDevice?: AutoReconnectDevice | null;
     autoReconnect: boolean;
-    readbackProtected: boolean;
+    readbackProtection: 'unknown' | 'protected' | 'unprotected';
 }
 export interface AutoReconnectDevice {
     device: Device;
@@ -67,7 +67,6 @@ export interface Device extends NrfdlDevice {
     serialport?: SerialPort;
     favorite?: boolean;
     id: number;
-    readbackProtection: 'unknown' | 'protected' | 'unprotected';
 }
 export interface BrokenDeviceDialog {
     isVisible: boolean;

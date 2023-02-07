@@ -14,3 +14,4 @@ export declare const selectedDevice: (state: RootState) => Device | undefined;
 export declare const deviceInfo: (state: RootState) => Device | null;
 export declare const selectedSerialNumber: (state: RootState) => string | null;
 export declare const getGlobalAutoReconnect: (state: RootState) => boolean;
+export declare const getReadbackProtection: (state: RootState) => "unknown" | "protected" | "unprotected";

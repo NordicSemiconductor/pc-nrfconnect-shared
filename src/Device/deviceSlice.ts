@@ -38,7 +38,7 @@ const initialState: DeviceState = {
     deviceInfo: null,
     isSetupWaitingForUserInput: false,
     autoReconnect: false,
-    readbackProtected: false,
+    readbackProtection: 'unknown',
     ...noDialogShown,
 };
 
@@ -63,6 +63,7 @@ const slice = createSlice({
             state.selectedSerialNumber = null;
             state.deviceInfo = null;
             state.autoReconnectDevice = null;
+            state.readbackProtection = 'unknown';
         },
 
         /*
@@ -191,15 +192,9 @@ const slice = createSlice({
 
         setReadbackProtected: (
             state,
-            action: PayloadAction<Device['readbackProtection']>
+            action: PayloadAction<DeviceState['readbackProtection']>
         ) => {
-            if (!state.selectedSerialNumber) return;
-            const device = state.devices.get(state.selectedSerialNumber);
-
-            if (device) {
-                device.readbackProtection = action.payload;
-                state.devices.set(state.selectedSerialNumber, device);
-            }
+            state.readbackProtection = action.payload;
         },
     },
 });
@@ -259,3 +254,6 @@ export const selectedSerialNumber = (state: RootState) =>
 
 export const getGlobalAutoReconnect = (state: RootState) =>
     state.device.autoReconnect;
+
+export const getReadbackProtection = (state: RootState) =>
+    state.device.readbackProtection;
