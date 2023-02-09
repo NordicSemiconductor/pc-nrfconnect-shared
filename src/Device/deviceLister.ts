@@ -13,9 +13,13 @@ import nrfDeviceLib, {
 import logger from '../logging';
 import { Device, RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import { addDevice, removeDevice, setDevices } from './deviceSlice';
-
-const DEFAULT_DEVICE_WAIT_TIME_MS = 3000;
+import { DEFAULT_DEVICE_WAIT_TIME_MS } from './DeviceSelector/useAutoReconnectDevice';
+import {
+    addDevice,
+    removeDevice,
+    setDevices,
+    setForceAutoReconnect,
+} from './deviceSlice';
 
 let hotplugTaskId: number;
 
@@ -105,6 +109,13 @@ export const startWatchingDevices =
                             ) {
                                 onDeviceDeselected();
                             }
+                            if (toRemove.dfuTriggerVersion !== undefined) {
+                                dispatch(
+                                    setForceAutoReconnect({
+                                        timeoutMS: DEFAULT_DEVICE_WAIT_TIME_MS,
+                                    })
+                                );
+                            }
                             dispatch(removeDevice(toRemove));
                             onDeviceDisconnected(toRemove);
                         }
@@ -150,66 +161,20 @@ export const stopWatchingDevices = () => {
     }
 };
 
-const DEFAULT_TRAITS: DeviceTraits = {
-    serialPorts: true,
-};
-
-/**
- * Waits until a device (with a matching serial number) is listed by
- * nrf-device-lister, up to a maximum of `timeout` milliseconds.
- *
- * If `expectedTraits` is given, then the device must (in addition to
- * a matching serial number) also have the given traits. See the
- * nrf-device-lister library for the full list of traits.
- *
- * @param {string} serialNumber of the device expected to appear
- * @param {number} [timeout] Timeout, in milliseconds, to wait for device enumeration
- * @param {DeviceTraits} [expectedTraits] The traits that the device is expected to have
- * @returns {Promise} resolved to the expected device
- */
-export const waitForDevice = (
-    serialNumber: string,
-    timeout = DEFAULT_DEVICE_WAIT_TIME_MS,
-    expectedTraits: DeviceTraits = DEFAULT_TRAITS
-) => {
-    logger.debug(`Will wait for device ${serialNumber}`);
-    return new Promise<Device>((resolve, reject) => {
-        let timeoutId: NodeJS.Timeout;
-
-        nrfDeviceLib.enumerate(getDeviceLibContext(), expectedTraits);
-        const hotplugEventsId = nrfDeviceLib.startHotplugEvents(
-            getDeviceLibContext(),
-            () => {},
-            (event: HotplugEvent) => {
-                const { device: nrfdlDevice } = event;
-                if (!nrfdlDevice) return;
-
-                const device = wrapDeviceFromNrfdl(nrfdlDevice);
-                const isTraitIncluded = () =>
-                    Object.keys(expectedTraits).every(
-                        trait => device.traits[trait as keyof DeviceTraits]
-                    );
-                if (
-                    device &&
-                    device.serialNumber === serialNumber &&
-                    isTraitIncluded()
-                ) {
-                    clearTimeout(timeoutId);
-                    nrfDeviceLib.stopHotplugEvents(hotplugEventsId);
+export const waitForAutoReconnect = (
+    dispatch: TDispatch,
+    timeoutMS = DEFAULT_DEVICE_WAIT_TIME_MS
+) =>
+    new Promise<Device>((resolve, reject) => {
+        dispatch(
+            setForceAutoReconnect({
+                timeoutMS,
+                onSuccess: (device: Device) => {
                     resolve(device);
-                }
-            }
+                },
+                onFail: () => {
+                    reject();
+                },
+            })
         );
-        timeoutId = setTimeout(() => {
-            logger.debug(
-                `Timeout when waiting for attachment of device with serial number ${serialNumber}`
-            );
-            nrfDeviceLib.stopHotplugEvents(hotplugEventsId);
-            reject(
-                new Error(
-                    `Timeout while waiting for device  ${serialNumber} to be attached and enumerated`
-                )
-            );
-        }, timeout);
     });
-};

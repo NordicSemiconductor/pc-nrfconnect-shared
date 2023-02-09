@@ -48,9 +48,15 @@ export interface DeviceState {
     autoReconnect: boolean;
     readbackProtection: 'unknown' | 'protected' | 'unprotected';
 }
+export interface ForceAutoReconnect {
+    timeoutMS: number;
+    onSuccess?: (device: Device) => void;
+    onFail?: () => void;
+}
 export interface AutoReconnectDevice {
     device: Device;
     disconnectionTime?: number;
+    forceReconnect?: ForceAutoReconnect;
 }
 export interface DeviceInfo {
     name?: string;

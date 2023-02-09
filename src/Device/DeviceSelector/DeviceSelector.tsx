@@ -34,7 +34,7 @@ export interface Props {
     deviceListing: DeviceTraits & OutdatedDeviceTraits;
     deviceSetup?: DeviceSetupShared;
     releaseCurrentDevice?: () => void;
-    onDeviceSelected?: (device: Device) => void;
+    onDeviceSelected?: (device: Device, autoReconnected: boolean) => void;
     onDeviceDeselected?: () => void;
     onDeviceConnected?: (device: Device) => void;
     onDeviceDisconnected?: (device: Device) => void;
@@ -86,7 +86,7 @@ const DeviceSelector: FC<Props> = ({
         onDeviceDeselected,
     ]);
 
-    const doSelectDevice = (device: Device) => {
+    const doSelectDevice = (device: Device, autoReconnected = false) => {
         if (device.serialNumber === selectedSN) {
             setDeviceListVisible(false);
             return;
@@ -97,7 +97,7 @@ const DeviceSelector: FC<Props> = ({
         }
         setDeviceListVisible(false);
         dispatch(selectDevice(device));
-        onDeviceSelected(device);
+        onDeviceSelected(device, autoReconnected);
         if (deviceSetup) {
             dispatch(
                 setupDevice(
@@ -105,7 +105,6 @@ const DeviceSelector: FC<Props> = ({
                     deviceSetup,
                     releaseCurrentDevice,
                     onDeviceIsReady,
-                    doStartWatchingDevices,
                     doDeselectDevice
                 )
             );

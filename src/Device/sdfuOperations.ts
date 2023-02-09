@@ -12,9 +12,9 @@ import MemoryMap from 'nrf-intel-hex';
 import { SerialPort } from 'serialport';
 
 import logger from '../logging';
-import { Device } from '../state';
+import { Device, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import { waitForDevice } from './deviceLister';
+import { waitForAutoReconnect } from './deviceLister';
 import type { DeviceSetup, DfuEntry } from './deviceSetup';
 import {
     createInitPacketBuffer,
@@ -322,19 +322,10 @@ const createDfuZipBuffer = async (dfuImages: DfuImage[]) => {
     return buffer;
 };
 
-/**
- * Prepares a device which is expected to be in DFU Bootloader.
- * First it loads the firmware from HEX file specified by dfu argument,
- * then performs the DFU operation.
- * This causes the device to be detached, so finally it waits for it to be attached again.
- *
- * @param {object} device nrf-device-lister's device
- * @param {object} dfu configuration object for performing the DFU
- * @returns {Promise} resolved to prepared device
- */
 const prepareInDFUBootloader = async (
     device: Device,
-    dfu: DfuEntry
+    dfu: DfuEntry,
+    dispatch: TDispatch
 ): Promise<Device> => {
     logger.debug(
         `${device.serialNumber} on ${device.serialport?.comName} is now in DFU-Bootloader...`
@@ -425,23 +416,13 @@ const prepareInDFUBootloader = async (
         );
     });
 
-    return waitForDevice(device.serialNumber, DEFAULT_DEVICE_WAIT_TIME, {
-        serialPorts: true,
-        nordicUsb: true,
-    });
+    return waitForAutoReconnect(dispatch, DEFAULT_DEVICE_WAIT_TIME);
 };
 
-/**
- * DFU procedure which also tries to update bootloader in case bootloader mode is
- * set during the process and it happens to be outdated.
- *
- * @param {Object} selectedDevice device
- * @param {Object} options options
- * @returns {Promise} device or { device, details } object
- */
 export const performDFU = async (
     selectedDevice: Device,
-    options: DeviceSetup
+    options: DeviceSetup,
+    dispatch: TDispatch
 ): Promise<Device> => {
     const { dfu, needSerialport, promiseConfirm, promiseChoice } = options;
     const isConfirmed = await confirmHelper(promiseConfirm);
@@ -462,7 +443,7 @@ export const performDFU = async (
         let device = await ensureBootloaderMode(selectedDevice);
         device = await checkConfirmUpdateBootloader(device, promiseConfirm);
         device = await ensureBootloaderMode(device);
-        device = await prepareInDFUBootloader(device, dfu[choice]);
+        device = await prepareInDFUBootloader(device, dfu[choice], dispatch);
         device = await validateSerialPort(device, needSerialport);
 
         logger.debug('DFU finished: ', device);

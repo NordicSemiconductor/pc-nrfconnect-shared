@@ -22,17 +22,4 @@ export declare const startWatchingDevices: (deviceListing: DeviceTraits, onDevic
  * @returns {undefined}
  */
 export declare const stopWatchingDevices: () => void;
-/**
- * Waits until a device (with a matching serial number) is listed by
- * nrf-device-lister, up to a maximum of `timeout` milliseconds.
- *
- * If `expectedTraits` is given, then the device must (in addition to
- * a matching serial number) also have the given traits. See the
- * nrf-device-lister library for the full list of traits.
- *
- * @param {string} serialNumber of the device expected to appear
- * @param {number} [timeout] Timeout, in milliseconds, to wait for device enumeration
- * @param {DeviceTraits} [expectedTraits] The traits that the device is expected to have
- * @returns {Promise} resolved to the expected device
- */
-export declare const waitForDevice: (serialNumber: string, timeout?: number, expectedTraits?: DeviceTraits) => Promise<Device>;
+export declare const waitForAutoReconnect: (dispatch: TDispatch, timeoutMS?: number) => Promise<Device>;

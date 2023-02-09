@@ -43,7 +43,7 @@ const NoSupportedDevicesConnected = () => (
 const showAllDevices = () => true;
 
 interface Props {
-    doSelectDevice: (device: DeviceProps) => void;
+    doSelectDevice: (device: DeviceProps, autoReconnected: boolean) => void;
     isVisible: boolean;
     deviceFilter?: (device: DeviceProps) => boolean;
 }

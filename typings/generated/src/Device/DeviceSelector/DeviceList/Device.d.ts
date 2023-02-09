@@ -3,7 +3,7 @@ import { Device as DeviceProps } from '../../../state';
 import './device.scss';
 interface Props {
     device: DeviceProps;
-    doSelectDevice: (device: DeviceProps) => void;
+    doSelectDevice: (device: DeviceProps, autoReconnected: boolean) => void;
     allowMoreInfoVisible: boolean;
 }
 declare const Device: FC<Props>;
