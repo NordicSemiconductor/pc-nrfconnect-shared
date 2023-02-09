@@ -105,7 +105,7 @@ const prepareDevice = async (
         // Check if device is in DFU-Bootloader, it might only have serialport
         if (isDeviceInDFUBootloader(device)) {
             logger.debug('Device is in DFU-Bootloader, DFU is defined');
-            return performDFU(device, deviceSetupConfig);
+            return performDFU(device, deviceSetupConfig, dispatch);
         }
 
         if (device.dfuTriggerVersion) {
@@ -122,7 +122,7 @@ const prepareDevice = async (
             ) {
                 return device;
             }
-            return performDFU(device, deviceSetupConfig);
+            return performDFU(device, deviceSetupConfig, dispatch);
         }
     }
 
@@ -170,10 +170,8 @@ const prepareDevice = async (
 const onSuccessfulDeviceSetup = (
     dispatch: TDispatch,
     device: Device,
-    doStartWatchingDevices: () => void,
     onDeviceIsReady: (device: Device) => void
 ) => {
-    doStartWatchingDevices();
     dispatch(deviceSetupComplete(device));
     onDeviceIsReady(device);
 };
@@ -184,7 +182,6 @@ export const setupDevice =
         deviceSetup: DeviceSetup,
         releaseCurrentDevice: () => void,
         onDeviceIsReady: (device: Device) => void,
-        doStartWatchingDevices: () => void,
         doDeselectDevice: () => void
     ) =>
     async (dispatch: TDispatch) => {
@@ -210,12 +207,7 @@ export const setupDevice =
                 dispatch
             );
 
-            onSuccessfulDeviceSetup(
-                dispatch,
-                preparedDevice,
-                doStartWatchingDevices,
-                onDeviceIsReady
-            );
+            onSuccessfulDeviceSetup(dispatch, preparedDevice, onDeviceIsReady);
         } catch (error) {
             dispatch(deviceSetupError());
             if (
@@ -235,12 +227,7 @@ export const setupDevice =
                         'with a compatible firmware.'
                 );
 
-                onSuccessfulDeviceSetup(
-                    dispatch,
-                    device,
-                    doStartWatchingDevices,
-                    onDeviceIsReady
-                );
+                onSuccessfulDeviceSetup(dispatch, device, onDeviceIsReady);
             } else {
                 logger.logError(
                     `Error while setting up device ${device.serialNumber}`,
@@ -248,6 +235,5 @@ export const setupDevice =
                 );
                 doDeselectDevice();
             }
-            doStartWatchingDevices();
         }
     };

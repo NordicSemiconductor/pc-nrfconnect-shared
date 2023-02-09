@@ -10,7 +10,7 @@ export interface Props {
     deviceListing: DeviceTraits & OutdatedDeviceTraits;
     deviceSetup?: DeviceSetupShared;
     releaseCurrentDevice?: () => void;
-    onDeviceSelected?: (device: Device) => void;
+    onDeviceSelected?: (device: Device, autoReconnected: boolean) => void;
     onDeviceDeselected?: () => void;
     onDeviceConnected?: (device: Device) => void;
     onDeviceDisconnected?: (device: Device) => void;

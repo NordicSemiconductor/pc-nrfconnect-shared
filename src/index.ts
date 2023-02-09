@@ -77,9 +77,13 @@ export {
     getPersistedTerminalSettings,
 } from './utils/persistentStore';
 
-export { selectedDevice, getReadbackProtection } from './Device/deviceSlice';
+export {
+    selectedDevice,
+    getReadbackProtection,
+    setForceAutoReconnect,
+} from './Device/deviceSlice';
+export { waitForAutoReconnect } from './Device/deviceLister';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
-export { waitForDevice } from './Device/deviceLister';
 export { getDeviceLibContext } from './Device/deviceLibWrapper';
 export { default as sdfuOperations } from './Device/sdfuOperations';
 export { defaultInitPacket, HashType, FwType } from './Device/initPacket';

@@ -6,7 +6,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { Device, DeviceState, RootState } from '../state';
+import { Device, DeviceState, ForceAutoReconnect, RootState } from '../state';
 import {
     getPersistedIsFavorite,
     getPersistedNickname,
@@ -190,6 +190,14 @@ const slice = createSlice({
             state.autoReconnect = action.payload;
         },
 
+        setForceAutoReconnect: (
+            state,
+            action: PayloadAction<ForceAutoReconnect>
+        ) => {
+            if (state.autoReconnectDevice)
+                state.autoReconnectDevice.forceReconnect = action.payload;
+        },
+
         setReadbackProtected: (
             state,
             action: PayloadAction<DeviceState['readbackProtection']>
@@ -215,6 +223,7 @@ export const {
         setDeviceNickname,
         toggleDeviceFavorited,
         setGlobalAutoReconnect,
+        setForceAutoReconnect,
         setReadbackProtected,
     },
 } = slice;
@@ -238,10 +247,7 @@ export const deviceIsSelected = (state: RootState) =>
     state.device.selectedSerialNumber != null;
 
 export const getAutoReconnectDevice = (state: RootState) =>
-    state.device.autoReconnect ||
-    state.device.autoReconnectDevice?.device.dfuTriggerVersion != null
-        ? state.device.autoReconnectDevice
-        : null;
+    state.device.autoReconnectDevice;
 
 export const selectedDevice = (state: RootState) =>
     state.device.selectedSerialNumber !== null
