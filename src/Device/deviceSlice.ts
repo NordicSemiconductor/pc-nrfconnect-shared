@@ -146,6 +146,7 @@ const slice = createSlice({
                 state.autoReconnectDevice.disconnectionTime = Date.now();
                 state.selectedSerialNumber = null;
                 state.deviceInfo = null;
+                state.isSetupDialogVisible = false;
             }
         },
 
