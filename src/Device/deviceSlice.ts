@@ -144,6 +144,7 @@ const slice = createSlice({
                 action.payload.serialNumber
             ) {
                 state.autoReconnectDevice.disconnectionTime = Date.now();
+
                 state.selectedSerialNumber = null;
                 state.deviceInfo = null;
                 state.isSetupDialogVisible = false;
@@ -200,6 +201,10 @@ const slice = createSlice({
                 state.autoReconnectDevice.forceReconnect = action.payload;
         },
 
+        clearAutoReconnect: state => {
+            state.autoReconnectDevice = null;
+        },
+
         setReadbackProtected: (
             state,
             action: PayloadAction<DeviceState['readbackProtection']>
@@ -226,6 +231,7 @@ export const {
         toggleDeviceFavorited,
         setGlobalAutoReconnect,
         setForceAutoReconnect,
+        clearAutoReconnect,
         setReadbackProtected,
     },
 } = slice;

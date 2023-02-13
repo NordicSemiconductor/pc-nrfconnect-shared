@@ -16,6 +16,8 @@ import DeviceSetup from '../DeviceSetup/DeviceSetup';
 import {
     deselectDevice,
     deviceIsSelected as deviceIsSelectedSelector,
+    getAutoReconnectDevice,
+    getGlobalAutoReconnect,
     selectDevice,
     selectedSerialNumber,
 } from '../deviceSlice';
@@ -63,6 +65,18 @@ const DeviceSelector: FC<Props> = ({
 
     const deviceIsSelected = useSelector(deviceIsSelectedSelector);
     const selectedSN = useSelector(selectedSerialNumber);
+    const autoReconnectDevice = useSelector(getAutoReconnectDevice);
+    const globalAutoReconnect = useSelector(getGlobalAutoReconnect);
+    const showDeviceList =
+        deviceIsSelected ||
+        (autoReconnectDevice?.disconnectionTime &&
+            (autoReconnectMCUBoot || globalAutoReconnect));
+
+    console.log(
+        autoReconnectDevice?.disconnectionTime,
+        autoReconnectDevice?.forceReconnect,
+        globalAutoReconnect
+    );
 
     const doDeselectDevice = useCallback(() => {
         onDeviceDeselected();
@@ -124,7 +138,7 @@ const DeviceSelector: FC<Props> = ({
     }, [doStartWatchingDevices]);
 
     useAutoselectDevice(doSelectDevice);
-    useAutoReconnectDevice(doSelectDevice, autoReconnectMCUBoot);
+    useAutoReconnectDevice(doSelectDevice, dispatch, autoReconnectMCUBoot);
 
     useHotKey({
         hotKey: 'alt+s',
@@ -135,7 +149,7 @@ const DeviceSelector: FC<Props> = ({
 
     return (
         <div className="core19-device-selector">
-            {deviceIsSelected ? (
+            {showDeviceList ? (
                 <SelectedDevice
                     doDeselectDevice={doDeselectDevice}
                     toggleDeviceListVisible={toggleDeviceListVisible}

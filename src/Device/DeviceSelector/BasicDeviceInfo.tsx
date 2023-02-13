@@ -5,12 +5,16 @@
  */
 
 import React, { FC, ReactNode } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import InlineInput from '../../InlineInput/InlineInput';
 import { Device } from '../../state';
 import { displayedDeviceName } from '../deviceInfo/deviceInfo';
-import { resetDeviceNickname, setDeviceNickname } from '../deviceSlice';
+import {
+    getAutoReconnectDevice,
+    resetDeviceNickname,
+    setDeviceNickname,
+} from '../deviceSlice';
 import DeviceIcon from './DeviceIcon';
 
 import './basic-device-info.scss';
@@ -44,8 +48,13 @@ const DeviceName: FC<Props> = ({ device, inputRef }) => {
     );
 };
 
-const DeviceSerialNumber: FC<{ device: Device }> = ({ device }) => (
-    <div className="serial-number">{device.serialNumber}</div>
+const DeviceSerialNumber: FC<{ device: Device; reconnecting: boolean }> = ({
+    device,
+    reconnecting,
+}) => (
+    <div className="serial-number">
+        {device.serialNumber} {reconnecting ? ' Reconnecting' : ''}
+    </div>
 );
 
 interface BasicDeviceProps {
@@ -58,15 +67,25 @@ const BasicDeviceInfo: FC<BasicDeviceProps> = ({
     device,
     deviceNameInputRef,
     toggles,
-}) => (
-    <div className="basic-device-info">
-        <DeviceIcon device={device} />
-        <div className="details">
-            <DeviceName device={device} inputRef={deviceNameInputRef} />
-            <DeviceSerialNumber device={device} />
+}) => {
+    const autoReconnectDevice = useSelector(getAutoReconnectDevice);
+    const deviceWaitingToReconnect =
+        device.serialNumber === autoReconnectDevice?.device.serialNumber &&
+        autoReconnectDevice?.disconnectionTime !== undefined;
+
+    return (
+        <div className="basic-device-info">
+            <DeviceIcon device={device} />
+            <div className="details">
+                <DeviceName device={device} inputRef={deviceNameInputRef} />
+                <DeviceSerialNumber
+                    device={device}
+                    reconnecting={deviceWaitingToReconnect}
+                />
+            </div>
+            <div className="toggles">{toggles}</div>
         </div>
-        <div className="toggles">{toggles}</div>
-    </div>
-);
+    );
+};
 
 export default BasicDeviceInfo;
