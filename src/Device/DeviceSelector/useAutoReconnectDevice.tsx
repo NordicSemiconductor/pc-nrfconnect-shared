@@ -30,7 +30,8 @@ const hasSameDeviceTraits = (
     );
 
 export default (
-    doSelectDevice: (device: Device, autoReconnected: boolean) => void
+    doSelectDevice: (device: Device, autoReconnected: boolean) => void,
+    autoReconnectMCUBoot?: { timeout: number }
 ) => {
     const timeoutWarning = useRef<NodeJS.Timeout | null>(null);
 
@@ -90,7 +91,7 @@ export default (
 
         // The device is already selected
         if (
-            autoSelectDevice.serialNumber ===
+            currentSelectedDevice?.serialNumber ===
             autoReconnectDevice.device.serialNumber
         ) {
             return null;
@@ -100,7 +101,7 @@ export default (
         if (
             autoReconnectDevice.forceReconnect &&
             autoReconnectDevice.disconnectionTime +
-                autoReconnectDevice.forceReconnect.timeoutMS <
+                autoReconnectDevice.forceReconnect.timeoutMS >=
                 Date.now()
         ) {
             logger.info(`Force Auto Reconnecting`);
@@ -109,10 +110,11 @@ export default (
 
         // Device is in boot loader reconnected before DEFAULT_DEVICE_WAIT_TIME_MS
         if (
-            autoSelectDevice.usb?.device.descriptor.idProduct !== 0x521f &&
-            autoSelectDevice.usb?.device.descriptor.idVendor !== 0x1915 &&
+            autoReconnectMCUBoot?.timeout &&
+            autoSelectDevice.usb?.device.descriptor.idProduct === 0x521f &&
+            autoSelectDevice.usb?.device.descriptor.idVendor === 0x1915 &&
             autoReconnectDevice.disconnectionTime +
-                DEFAULT_DEVICE_WAIT_TIME_MS <
+                autoReconnectMCUBoot.timeout >=
                 Date.now()
         ) {
             logger.info(`Auto Reconnecting due to boot loader mode`);
@@ -130,7 +132,13 @@ export default (
         }
 
         return globalAutoReconnect ? autoSelectDevice : null;
-    }, [autoReconnectDevice, autoSelectDevice, globalAutoReconnect]);
+    }, [
+        autoReconnectDevice,
+        autoReconnectMCUBoot,
+        autoSelectDevice,
+        currentSelectedDevice?.serialNumber,
+        globalAutoReconnect,
+    ]);
 
     useEffect(() => {
         const device = shouldAutoReconnect();

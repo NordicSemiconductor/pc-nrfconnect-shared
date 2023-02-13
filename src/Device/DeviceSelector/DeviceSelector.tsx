@@ -40,6 +40,9 @@ export interface Props {
     onDeviceDisconnected?: (device: Device) => void;
     onDeviceIsReady?: (device: Device) => void;
     deviceFilter?: (device: Device) => boolean;
+    autoReconnectMCUBoot?: {
+        timeout: number;
+    };
 }
 
 const noop = () => {};
@@ -53,6 +56,7 @@ const DeviceSelector: FC<Props> = ({
     onDeviceDisconnected = noop,
     onDeviceIsReady = noop,
     deviceFilter,
+    autoReconnectMCUBoot,
 }) => {
     const dispatch = useDispatch();
     const [deviceListVisible, setDeviceListVisible] = useState(false);
@@ -120,7 +124,7 @@ const DeviceSelector: FC<Props> = ({
     }, [doStartWatchingDevices]);
 
     useAutoselectDevice(doSelectDevice);
-    useAutoReconnectDevice(doSelectDevice);
+    useAutoReconnectDevice(doSelectDevice, autoReconnectMCUBoot);
 
     useHotKey({
         hotKey: 'alt+s',

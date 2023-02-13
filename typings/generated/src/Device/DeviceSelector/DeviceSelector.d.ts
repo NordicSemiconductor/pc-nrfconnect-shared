@@ -16,6 +16,9 @@ export interface Props {
     onDeviceDisconnected?: (device: Device) => void;
     onDeviceIsReady?: (device: Device) => void;
     deviceFilter?: (device: Device) => boolean;
+    autoReconnectMCUBoot?: {
+        timeout: number;
+    };
 }
 declare const DeviceSelector: FC<Props>;
 export default DeviceSelector;
