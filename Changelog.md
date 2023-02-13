@@ -14,25 +14,25 @@ and this project adheres to
     our tarballs and for `npm@7` and later it is not added automatically any
     longer when running `npm pack`.
 
-## 6.18.14 2023-02-07
+## 6.18.14 - 2023-02-07
 
 ### Changed
 
 -   Readback status is now maintained separate from the device itself.
 
-## 6.18.13 2023-02-06
+## 6.18.13 - 2023-02-06
 
 ### Fixed
 
 -   `Button` :focus background to white
 
-## 6.18.12 2023-02-06
+## 6.18.12 - 2023-02-06
 
 ### Changed
 
 -   `Button` font size to 14px
 
-## 6.18.11 2023-02-06
+## 6.18.11 - 2023-02-06
 
 ### Fixed
 
@@ -47,32 +47,32 @@ and this project adheres to
 
 -   `StartStopButton` default to large
 
-## 6.18.10 2023-02-04
+## 6.18.10 - 2023-02-04
 
 ### Added
 
 -   Allow apps to see if selected device has readback protection enabled.
 
-## 6.18.9 2023-02-03
+## 6.18.9 - 2023-02-03
 
 ### Fixed
 
 -   `SidePanel` bottom margin of the last component
 
-## 6.18.8 2023-02-03
+## 6.18.8 - 2023-02-03
 
 ### Fixed
 
 -   `persistentStore` logging message of terminal settings, missing `vCom-`
 -   Types for bleChannels.
 
-## 6.18.7 2023-02-03
+## 6.18.7 - 2023-02-03
 
 ### Fixed
 
 -   Programming DFU devices from device selector on macOS.
 
-## 6.18.6 2023-02-03
+## 6.18.6 - 2023-02-03
 
 ### Fixed
 
