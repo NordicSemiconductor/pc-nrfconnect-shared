@@ -6,7 +6,6 @@
 
 import logger from '../logging';
 import { Device, TDispatch } from '../state';
-import { stopWatchingDevices } from './deviceLister';
 import {
     deviceSetupComplete,
     deviceSetupError,
@@ -185,13 +184,6 @@ export const setupDevice =
         doDeselectDevice: () => void
     ) =>
     async (dispatch: TDispatch) => {
-        // During device setup, the device may go in and out of bootloader
-        // mode. This will make it appear as detached in the device lister,
-        // causing a DESELECT_DEVICE. To avoid this, we stop the device
-        // listing while setting up the device, and start it again after the
-        // device has been set up.
-        stopWatchingDevices();
-
         await releaseCurrentDevice();
         const deviceSetupConfig = {
             promiseConfirm: getDeviceSetupUserInput(dispatch) as PromiseConfirm,

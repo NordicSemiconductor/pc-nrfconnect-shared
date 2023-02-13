@@ -109,13 +109,6 @@ export const startWatchingDevices =
                             ) {
                                 onDeviceDeselected();
                             }
-                            if (toRemove.dfuTriggerVersion !== undefined) {
-                                dispatch(
-                                    setForceAutoReconnect({
-                                        timeoutMS: DEFAULT_DEVICE_WAIT_TIME_MS,
-                                    })
-                                );
-                            }
                             dispatch(removeDevice(toRemove));
                             onDeviceDisconnected(toRemove);
                         }
