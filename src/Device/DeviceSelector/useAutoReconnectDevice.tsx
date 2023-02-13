@@ -9,8 +9,9 @@ import { useSelector } from 'react-redux';
 import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../../logging';
-import { Device, RootState } from '../../state';
+import { Device, RootState, TDispatch } from '../../state';
 import {
+    clearAutoReconnect,
     getAutoReconnectDevice,
     getDevice,
     getGlobalAutoReconnect,
@@ -31,6 +32,7 @@ const hasSameDeviceTraits = (
 
 export default (
     doSelectDevice: (device: Device, autoReconnected: boolean) => void,
+    dispatch: TDispatch,
     autoReconnectMCUBoot?: { timeout: number }
 ) => {
     const timeoutWarning = useRef<NodeJS.Timeout | null>(null);
@@ -47,6 +49,7 @@ export default (
     const initTimeoutWarning = useCallback(
         (timeoutMs: number) => {
             timeoutWarning.current = setTimeout(() => {
+                dispatch(clearAutoReconnect);
                 if (autoReconnectDevice?.forceReconnect?.onFail)
                     autoReconnectDevice?.forceReconnect?.onFail();
                 logger.error(
@@ -56,7 +59,7 @@ export default (
                 );
             }, timeoutMs);
         },
-        [autoReconnectDevice]
+        [autoReconnectDevice?.forceReconnect, dispatch]
     );
 
     useEffect(() => {
