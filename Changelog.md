@@ -2,14 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to
-[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+This project does _not_ adhere to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
+every new version is a new major version.
 
-## Unreleased
+## 7 - 2023-02-13
 
 ### Changed
 
+-   Switched to use only major versions for releases of `shared`.
 -   Check for `Changelog.md` entry in `files` in `package.json`. We need it in
     our tarballs and for `npm@7` and later it is not added automatically any
     longer when running `npm pack`.
