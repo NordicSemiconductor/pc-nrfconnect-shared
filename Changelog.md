@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+-   Check for `Changelog.md` entry in `files` in `package.json`. We need it in
+    our tarballs and for `npm@7` and later it is not added automatically any
+    longer when running `npm pack`.
+
 ## 6.18.14 2023-02-07
 
 ### Changed
