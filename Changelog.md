@@ -2,29 +2,39 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to
-[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+This project does _not_ adhere to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
+every new version is a new major version.
 
-## 6.18.14 2023-02-07
+## 7 - 2023-02-13
+
+### Changed
+
+-   Switched to use only major versions for releases of `shared`.
+-   Check for `Changelog.md` entry in `files` in `package.json`. We need it in
+    our tarballs and for `npm@7` and later it is not added automatically any
+    longer when running `npm pack`.
+
+## 6.18.14 - 2023-02-07
 
 ### Changed
 
 -   Readback status is now maintained separate from the device itself.
 
-## 6.18.13 2023-02-06
+## 6.18.13 - 2023-02-06
 
 ### Fixed
 
 -   `Button` :focus background to white
 
-## 6.18.12 2023-02-06
+## 6.18.12 - 2023-02-06
 
 ### Changed
 
 -   `Button` font size to 14px
 
-## 6.18.11 2023-02-06
+## 6.18.11 - 2023-02-06
 
 ### Fixed
 
@@ -39,32 +49,32 @@ and this project adheres to
 
 -   `StartStopButton` default to large
 
-## 6.18.10 2023-02-04
+## 6.18.10 - 2023-02-04
 
 ### Added
 
 -   Allow apps to see if selected device has readback protection enabled.
 
-## 6.18.9 2023-02-03
+## 6.18.9 - 2023-02-03
 
 ### Fixed
 
 -   `SidePanel` bottom margin of the last component
 
-## 6.18.8 2023-02-03
+## 6.18.8 - 2023-02-03
 
 ### Fixed
 
 -   `persistentStore` logging message of terminal settings, missing `vCom-`
 -   Types for bleChannels.
 
-## 6.18.7 2023-02-03
+## 6.18.7 - 2023-02-03
 
 ### Fixed
 
 -   Programming DFU devices from device selector on macOS.
 
-## 6.18.6 2023-02-03
+## 6.18.6 - 2023-02-03
 
 ### Fixed
 

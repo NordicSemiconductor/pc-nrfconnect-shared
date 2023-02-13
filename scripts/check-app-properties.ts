@@ -115,7 +115,7 @@ const checkOptionalProperties = (packageJson: PackageJson) => {
 const checkFileProperty = (packageJson: PackageJson) => {
     mustContain(
         packageJson.files ?? [],
-        ['LICENSE', 'dist/'],
+        ['LICENSE', 'dist/', 'Changelog.md'],
         'These entries are missing in the property `files` in package.json'
     );
 
