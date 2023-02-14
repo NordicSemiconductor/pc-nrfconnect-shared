@@ -127,7 +127,7 @@ const slice = createSlice({
             action.payload.forEach(device => {
                 state.devices.set(device.serialNumber, device);
             });
-            state.sortedDevices = sorted([...state.devices.values()]);
+            state.sortedDevices = sorted([...action.payload]);
         },
 
         addDevice: (state, action: PayloadAction<Device>) => {

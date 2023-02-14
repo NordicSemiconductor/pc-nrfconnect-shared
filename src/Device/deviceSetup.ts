@@ -97,7 +97,7 @@ const prepareDevice = async (
     device: Device,
     deviceSetupConfig: DeviceSetup,
     dispatch: TDispatch
-): Promise<Device> => {
+): Promise<Device | null> => {
     const { jprog, dfu, needSerialport } = deviceSetupConfig;
 
     if (dfu && Object.keys(dfu).length > 0) {
@@ -199,7 +199,12 @@ export const setupDevice =
                 dispatch
             );
 
-            onSuccessfulDeviceSetup(dispatch, preparedDevice, onDeviceIsReady);
+            if (preparedDevice)
+                onSuccessfulDeviceSetup(
+                    dispatch,
+                    preparedDevice,
+                    onDeviceIsReady
+                );
         } catch (error) {
             dispatch(deviceSetupError());
             if (
