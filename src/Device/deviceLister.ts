@@ -11,9 +11,8 @@ import nrfDeviceLib, {
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../logging';
-import { Device, RootState, TDispatch } from '../state';
+import { Device, ForceAutoReconnect, RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import { DEFAULT_DEVICE_WAIT_TIME_MS } from './DeviceSelector/useAutoReconnectDevice';
 import {
     addDevice,
     removeDevice,
@@ -156,16 +155,20 @@ export const stopWatchingDevices = () => {
 
 export const waitForAutoReconnect = (
     dispatch: TDispatch,
-    timeoutMS = DEFAULT_DEVICE_WAIT_TIME_MS
-) =>
+    forceAutoReconnect: ForceAutoReconnect
+): Promise<Device> =>
     new Promise<Device>((resolve, reject) => {
         dispatch(
             setForceAutoReconnect({
-                timeoutMS,
+                timeout: forceAutoReconnect.timeout,
+                when: forceAutoReconnect.when,
                 onSuccess: (device: Device) => {
+                    if (forceAutoReconnect.onSuccess)
+                        forceAutoReconnect.onSuccess(device);
                     resolve(device);
                 },
                 onFail: () => {
+                    if (forceAutoReconnect.onFail) forceAutoReconnect.onFail();
                     reject();
                 },
             })

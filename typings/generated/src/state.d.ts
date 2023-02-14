@@ -49,7 +49,8 @@ export interface DeviceState {
     readbackProtection: 'unknown' | 'protected' | 'unprotected';
 }
 export interface ForceAutoReconnect {
-    timeoutMS: number;
+    timeout: number;
+    when: 'always' | 'applicationMode' | 'BootLoaderMode';
     onSuccess?: (device: Device) => void;
     onFail?: () => void;
 }

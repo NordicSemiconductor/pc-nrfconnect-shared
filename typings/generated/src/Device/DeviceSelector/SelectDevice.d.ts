@@ -1,8 +1,8 @@
-import { FC } from 'react';
+/// <reference types="react" />
 import './select-device.scss';
 interface Props {
     deviceListVisible: boolean;
     toggleDeviceListVisible: () => void;
 }
-declare const SelectDevice: FC<Props>;
-export default SelectDevice;
+declare const _default: ({ deviceListVisible, toggleDeviceListVisible }: Props) => JSX.Element;
+export default _default;

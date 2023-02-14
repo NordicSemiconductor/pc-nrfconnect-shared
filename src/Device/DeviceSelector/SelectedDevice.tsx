@@ -4,18 +4,23 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { func } from 'prop-types';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
-import { getAutoReconnectDevice, selectedDevice } from '../deviceSlice';
+import {
+    getAutoReconnectDevice,
+    getWaitingToAutoReconnect,
+    selectedDevice,
+} from '../deviceSlice';
 import BasicDeviceInfo from './BasicDeviceInfo';
 
 import './selected-device.scss';
 
-const DisconnectDevice: FC<{ doDeselectDevice: () => void }> = ({
+const DisconnectDevice = ({
     doDeselectDevice,
+}: {
+    doDeselectDevice: () => void;
 }) => (
     <PseudoButton
         className="mdi mdi-24px mdi-eject disconnect"
@@ -24,18 +29,18 @@ const DisconnectDevice: FC<{ doDeselectDevice: () => void }> = ({
         testId="disconnect-device"
     />
 );
-DisconnectDevice.propTypes = {
-    doDeselectDevice: func.isRequired,
-};
 
-const SelectedDevice: FC<{
+export default ({
+    doDeselectDevice,
+    toggleDeviceListVisible,
+}: {
     doDeselectDevice: () => void;
     toggleDeviceListVisible: () => void;
-}> = ({ doDeselectDevice, toggleDeviceListVisible }) => {
+}) => {
+    const reconnecting = useSelector(getWaitingToAutoReconnect);
     const selDevice = useSelector(selectedDevice);
     const autoReconnectDevice = useSelector(getAutoReconnectDevice);
     const device = autoReconnectDevice ? autoReconnectDevice.device : selDevice;
-    const reconnecting = autoReconnectDevice?.disconnectionTime !== undefined;
 
     return (
         <PseudoButton
@@ -48,14 +53,9 @@ const SelectedDevice: FC<{
                     toggles={
                         <DisconnectDevice doDeselectDevice={doDeselectDevice} />
                     }
+                    showReconnecting
                 />
             )}
         </PseudoButton>
     );
 };
-SelectedDevice.propTypes = {
-    doDeselectDevice: func.isRequired,
-    toggleDeviceListVisible: func.isRequired,
-};
-
-export default SelectedDevice;

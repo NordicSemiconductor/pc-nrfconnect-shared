@@ -11,7 +11,7 @@
         background: $white;
     }
     50% {
-        background: $gray-200;
+        background: $gray-100;
     }
     100% {
         background: $white;
@@ -27,8 +27,8 @@
         background: $white;
 
         &.reconnecting {
-            background: $gray-200;
-            animation: alert 6s infinite;
+            background: $gray-100;
+            animation: alert 2s infinite;
         }
 
         display: flex;

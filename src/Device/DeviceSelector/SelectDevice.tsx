@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC } from 'react';
+import React from 'react';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
 import classNames from '../../utils/classNames';
@@ -17,10 +17,7 @@ interface Props {
     toggleDeviceListVisible: () => void;
 }
 
-const SelectDevice: FC<Props> = ({
-    deviceListVisible,
-    toggleDeviceListVisible,
-}) => (
+export default ({ deviceListVisible, toggleDeviceListVisible }: Props) => (
     <PseudoButton
         title="alt+s"
         className={classNames(
@@ -37,4 +34,3 @@ const SelectDevice: FC<Props> = ({
         />
     </PseudoButton>
 );
-export default SelectDevice;

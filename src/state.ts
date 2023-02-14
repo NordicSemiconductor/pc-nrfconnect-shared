@@ -55,6 +55,7 @@ export interface Log {
 
 export interface DeviceState {
     devices: Map<string, Device>;
+    sortedDevices: Device[];
     deviceInfo: Device | null;
     isSetupDialogVisible: boolean;
     isSetupWaitingForUserInput: boolean | string;
@@ -67,7 +68,8 @@ export interface DeviceState {
 }
 
 export interface ForceAutoReconnect {
-    timeoutMS: number;
+    timeout: number;
+    when: 'always' | 'applicationMode' | 'BootLoaderMode';
     onSuccess?: (device: Device) => void;
     onFail?: () => void;
 }

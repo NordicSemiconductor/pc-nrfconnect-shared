@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
@@ -16,8 +16,7 @@ import DeviceSetup from '../DeviceSetup/DeviceSetup';
 import {
     deselectDevice,
     deviceIsSelected as deviceIsSelectedSelector,
-    getAutoReconnectDevice,
-    getGlobalAutoReconnect,
+    getWaitingToAutoReconnect,
     selectDevice,
     selectedSerialNumber,
 } from '../deviceSlice';
@@ -42,13 +41,10 @@ export interface Props {
     onDeviceDisconnected?: (device: Device) => void;
     onDeviceIsReady?: (device: Device) => void;
     deviceFilter?: (device: Device) => boolean;
-    autoReconnectMCUBoot?: {
-        timeout: number;
-    };
 }
 
 const noop = () => {};
-const DeviceSelector: FC<Props> = ({
+export default ({
     deviceListing,
     deviceSetup,
     releaseCurrentDevice = noop,
@@ -58,25 +54,14 @@ const DeviceSelector: FC<Props> = ({
     onDeviceDisconnected = noop,
     onDeviceIsReady = noop,
     deviceFilter,
-    autoReconnectMCUBoot,
-}) => {
+}: Props) => {
     const dispatch = useDispatch();
     const [deviceListVisible, setDeviceListVisible] = useState(false);
 
     const deviceIsSelected = useSelector(deviceIsSelectedSelector);
     const selectedSN = useSelector(selectedSerialNumber);
-    const autoReconnectDevice = useSelector(getAutoReconnectDevice);
-    const globalAutoReconnect = useSelector(getGlobalAutoReconnect);
-    const showDeviceList =
-        deviceIsSelected ||
-        (autoReconnectDevice?.disconnectionTime &&
-            (autoReconnectMCUBoot || globalAutoReconnect));
-
-    console.log(
-        autoReconnectDevice?.disconnectionTime,
-        autoReconnectDevice?.forceReconnect,
-        globalAutoReconnect
-    );
+    const waitingToAutoReconnect = useSelector(getWaitingToAutoReconnect);
+    const showSelectedDevice = deviceIsSelected || waitingToAutoReconnect;
 
     const doDeselectDevice = useCallback(() => {
         onDeviceDeselected();
@@ -138,7 +123,7 @@ const DeviceSelector: FC<Props> = ({
     }, [doStartWatchingDevices]);
 
     useAutoselectDevice(doSelectDevice);
-    useAutoReconnectDevice(doSelectDevice, dispatch, autoReconnectMCUBoot);
+    useAutoReconnectDevice(doSelectDevice, dispatch);
 
     useHotKey({
         hotKey: 'alt+s',
@@ -149,7 +134,7 @@ const DeviceSelector: FC<Props> = ({
 
     return (
         <div className="core19-device-selector">
-            {showDeviceList ? (
+            {showSelectedDevice ? (
                 <SelectedDevice
                     doDeselectDevice={doDeselectDevice}
                     toggleDeviceListVisible={toggleDeviceListVisible}
@@ -169,5 +154,3 @@ const DeviceSelector: FC<Props> = ({
         </div>
     );
 };
-
-export default DeviceSelector;

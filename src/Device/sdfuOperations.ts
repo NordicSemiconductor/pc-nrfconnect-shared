@@ -9,7 +9,6 @@ import AdmZip from 'adm-zip';
 import { createHash } from 'crypto';
 import fs from 'fs';
 import MemoryMap from 'nrf-intel-hex';
-import { SerialPort } from 'serialport';
 
 import logger from '../logging';
 import { Device, TDispatch } from '../state';
@@ -171,53 +170,6 @@ function parseFirmwareImage(firmware: Buffer | string) {
         Math.ceil((endAddress - startAddress) / 4) * 4
     ) as Buffer;
 }
-
-/**
- * Aux function. Returns a promise that resolves after the given time.
- *
- * @param {number} ms Time, in milliseconds, to wait until promise resolution
- * @returns {Promise<undefined>} Promise that resolves after a time
- */
-const sleep = (ms: number) =>
-    new Promise(resolve => {
-        setTimeout(resolve, ms);
-    });
-
-/**
- * Ensures that device has a serialport that is ready to be opened
- * @param {object} device nrf-device-lister's device
- * @param {boolean} needSerialport indicates if the device is expected to have a serialport
- * @returns {Promise} resolved to device
- */
-const validateSerialPort = async (device: Device, needSerialport?: boolean) => {
-    if (!needSerialport) {
-        logger.debug('device does not need serialport');
-        return device;
-    }
-
-    const checkOpen = (path: string) =>
-        new Promise(resolve => {
-            const port = new SerialPort({ path, baudRate: 9600 }, err => {
-                if (!err)
-                    port.close(e => {
-                        resolve(!e);
-                    });
-                else resolve(!err);
-            });
-        });
-
-    for (let i = 10; i > 1; i -= 1) {
-        /* eslint-disable-next-line no-await-in-loop */
-        await sleep(2000 / i);
-        // logger.debug('validating serialport', device.serialport.path, i);
-        /* eslint-disable-next-line no-await-in-loop */
-        if (await checkOpen(device.serialport?.comName as string)) {
-            logger.debug('resolving', device);
-            return device;
-        }
-    }
-    throw new Error('Could not open serialport');
-};
 
 /**
  * Calculates SHA256 hash of image
@@ -419,7 +371,10 @@ const prepareInDFUBootloader = async (
         );
     });
 
-    return waitForAutoReconnect(dispatch, DEFAULT_DEVICE_WAIT_TIME);
+    return waitForAutoReconnect(dispatch, {
+        timeout: DEFAULT_DEVICE_WAIT_TIME,
+        when: 'applicationMode',
+    });
 };
 
 export const performDFU = async (
@@ -427,7 +382,7 @@ export const performDFU = async (
     options: DeviceSetup,
     dispatch: TDispatch
 ): Promise<Device> => {
-    const { dfu, needSerialport, promiseConfirm, promiseChoice } = options;
+    const { dfu, promiseConfirm, promiseChoice } = options;
     const isConfirmed = await confirmHelper(promiseConfirm);
 
     if (!isConfirmed) {
@@ -447,7 +402,6 @@ export const performDFU = async (
         device = await checkConfirmUpdateBootloader(device, promiseConfirm);
         device = await ensureBootloaderMode(device);
         device = await prepareInDFUBootloader(device, dfu[choice], dispatch);
-        device = await validateSerialPort(device, needSerialport);
 
         logger.debug('DFU finished: ', device);
         return device;
