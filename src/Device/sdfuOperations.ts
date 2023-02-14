@@ -381,7 +381,7 @@ export const performDFU = async (
     selectedDevice: Device,
     options: DeviceSetup,
     dispatch: TDispatch
-): Promise<Device> => {
+): Promise<Device | null> => {
     const { dfu, promiseConfirm, promiseChoice } = options;
     const isConfirmed = await confirmHelper(promiseConfirm);
 
@@ -404,7 +404,7 @@ export const performDFU = async (
         device = await prepareInDFUBootloader(device, dfu[choice], dispatch);
 
         logger.debug('DFU finished: ', device);
-        return device;
+        return null;
     } catch (err) {
         logger.debug('DFU failed: ', err);
         throw err;
