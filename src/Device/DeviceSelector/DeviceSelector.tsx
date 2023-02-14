@@ -18,7 +18,6 @@ import {
     deviceIsSelected as deviceIsSelectedSelector,
     selectDevice,
     selectedSerialNumber,
-    setReadbackProtected,
 } from '../deviceSlice';
 import DeviceList from './DeviceList/DeviceList';
 import SelectDevice from './SelectDevice';

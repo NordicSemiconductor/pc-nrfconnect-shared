@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## Unreleased
+
+### Changed
+
+-   Better Redux dev tools configuration: More actions (100 instead of 50) and
+    show some more objects, e.g. Maps and Sets.
+
 ## 7 - 2023-02-13
 
 ### Changed
