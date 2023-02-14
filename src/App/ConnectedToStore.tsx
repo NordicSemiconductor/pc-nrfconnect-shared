@@ -13,13 +13,24 @@ import thunk from 'redux-thunk';
 
 import rootReducer from '../rootReducer';
 
-const middleware = composeWithDevTools(applyMiddleware(thunk));
+const ifBuiltForDevelopment = <X,>(value: X) =>
+    process.env.NODE_ENV === 'development' ? value : undefined;
+
+const composeEnhancers = composeWithDevTools({
+    maxAge: ifBuiltForDevelopment(100),
+    serialize: ifBuiltForDevelopment(true),
+});
 
 const ConnectedToStore: FC<{
     appReducer?: Reducer;
     children: ReactNode;
 }> = ({ appReducer, children }) => (
-    <Provider store={createStore(rootReducer(appReducer), middleware)}>
+    <Provider
+        store={createStore(
+            rootReducer(appReducer),
+            composeEnhancers(applyMiddleware(thunk))
+        )}
+    >
         {children}
     </Provider>
 );
