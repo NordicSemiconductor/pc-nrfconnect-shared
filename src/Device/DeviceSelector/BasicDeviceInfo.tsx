@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import InlineInput from '../../InlineInput/InlineInput';
@@ -12,6 +12,7 @@ import { Device } from '../../state';
 import { displayedDeviceName } from '../deviceInfo/deviceInfo';
 import {
     getAutoReconnectDevice,
+    getWaitingToAutoReconnect,
     resetDeviceNickname,
     setDeviceNickname,
 } from '../deviceSlice';
@@ -22,9 +23,10 @@ import './basic-device-info.scss';
 interface Props {
     device: Device;
     inputRef?: React.Ref<HTMLInputElement>;
+    reconnecting: boolean;
 }
 
-const DeviceName: FC<Props> = ({ device, inputRef }) => {
+const DeviceName = ({ device, inputRef, reconnecting }: Props) => {
     const dispatch = useDispatch();
     const setOrResetNickname = (name: string) => {
         const newNameIsEqualToDefaultName =
@@ -37,7 +39,9 @@ const DeviceName: FC<Props> = ({ device, inputRef }) => {
         }
     };
 
-    return (
+    return reconnecting ? (
+        <div className="reconnecting">Reconnecting...</div>
+    ) : (
         <InlineInput
             ref={inputRef}
             className="name"
@@ -48,44 +52,41 @@ const DeviceName: FC<Props> = ({ device, inputRef }) => {
     );
 };
 
-const DeviceSerialNumber: FC<{ device: Device; reconnecting: boolean }> = ({
-    device,
-    reconnecting,
-}) => (
-    <div className="serial-number">
-        {device.serialNumber} {reconnecting ? ' Reconnecting' : ''}
-    </div>
+const DeviceSerialNumber = ({ device }: { device: Device }) => (
+    <div className="serial-number">{device.serialNumber}</div>
 );
 
 interface BasicDeviceProps {
     device: Device;
     deviceNameInputRef?: React.Ref<HTMLInputElement>;
     toggles?: ReactNode;
+    showReconnecting?: boolean;
 }
 
-const BasicDeviceInfo: FC<BasicDeviceProps> = ({
+export default ({
     device,
     deviceNameInputRef,
     toggles,
-}) => {
+    showReconnecting = false,
+}: BasicDeviceProps) => {
     const autoReconnectDevice = useSelector(getAutoReconnectDevice);
+    const waitingToAutoReconnect = useSelector(getWaitingToAutoReconnect);
     const deviceWaitingToReconnect =
-        device.serialNumber === autoReconnectDevice?.device.serialNumber &&
-        autoReconnectDevice?.disconnectionTime !== undefined;
+        waitingToAutoReconnect &&
+        device.serialNumber === autoReconnectDevice?.device.serialNumber;
 
     return (
         <div className="basic-device-info">
             <DeviceIcon device={device} />
             <div className="details">
-                <DeviceName device={device} inputRef={deviceNameInputRef} />
-                <DeviceSerialNumber
+                <DeviceName
                     device={device}
-                    reconnecting={deviceWaitingToReconnect}
+                    inputRef={deviceNameInputRef}
+                    reconnecting={deviceWaitingToReconnect && showReconnecting}
                 />
+                <DeviceSerialNumber device={device} />
             </div>
             <div className="toggles">{toggles}</div>
         </div>
     );
 };
-
-export default BasicDeviceInfo;

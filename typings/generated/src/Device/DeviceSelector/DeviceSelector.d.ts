@@ -1,4 +1,4 @@
-import { FC } from 'react';
+/// <reference types="react" />
 import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 import { Device } from '../../state';
 import { DeviceSetup as DeviceSetupShared } from '../deviceSetup';
@@ -16,9 +16,6 @@ export interface Props {
     onDeviceDisconnected?: (device: Device) => void;
     onDeviceIsReady?: (device: Device) => void;
     deviceFilter?: (device: Device) => boolean;
-    autoReconnectMCUBoot?: {
-        timeout: number;
-    };
 }
-declare const DeviceSelector: FC<Props>;
-export default DeviceSelector;
+declare const _default: ({ deviceListing, deviceSetup, releaseCurrentDevice, onDeviceSelected, onDeviceDeselected, onDeviceConnected, onDeviceDisconnected, onDeviceIsReady, deviceFilter, }: Props) => JSX.Element;
+export default _default;

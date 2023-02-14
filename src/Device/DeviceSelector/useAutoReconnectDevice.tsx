@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
@@ -16,7 +16,9 @@ import {
     getDevice,
     getGlobalAutoReconnect,
     selectedDevice,
+    sortedDevices,
 } from '../deviceSlice';
+import { isDeviceInDFUBootloader } from '../sdfuOperations';
 
 export const DEFAULT_DEVICE_WAIT_TIME_MS = 3000;
 
@@ -32,11 +34,12 @@ const hasSameDeviceTraits = (
 
 export default (
     doSelectDevice: (device: Device, autoReconnected: boolean) => void,
-    dispatch: TDispatch,
-    autoReconnectMCUBoot?: { timeout: number }
+    dispatch: TDispatch
 ) => {
     const timeoutWarning = useRef<NodeJS.Timeout | null>(null);
+    const [deviceListChanged, setDeviceListChanged] = useState(false);
 
+    const deviceList = useSelector(sortedDevices);
     const globalAutoReconnect = useSelector(getGlobalAutoReconnect);
     const autoReconnectDevice = useSelector(getAutoReconnectDevice);
     const autoSelectDevice = useSelector<RootState, Device | undefined>(state =>
@@ -49,7 +52,7 @@ export default (
     const initTimeoutWarning = useCallback(
         (timeoutMs: number) => {
             timeoutWarning.current = setTimeout(() => {
-                dispatch(clearAutoReconnect);
+                dispatch(clearAutoReconnect());
                 if (autoReconnectDevice?.forceReconnect?.onFail)
                     autoReconnectDevice?.forceReconnect?.onFail();
                 logger.error(
@@ -59,7 +62,7 @@ export default (
                 );
             }, timeoutMs);
         },
-        [autoReconnectDevice?.forceReconnect, dispatch]
+        [autoReconnectDevice, dispatch]
     );
 
     useEffect(() => {
@@ -68,7 +71,7 @@ export default (
             autoReconnectDevice?.disconnectionTime !== undefined &&
             autoReconnectDevice.forceReconnect !== undefined
         ) {
-            initTimeoutWarning(autoReconnectDevice.forceReconnect.timeoutMS);
+            initTimeoutWarning(autoReconnectDevice.forceReconnect.timeout);
         }
     }, [autoReconnectDevice, initTimeoutWarning]);
 
@@ -80,12 +83,21 @@ export default (
         }
     }, [currentSelectedDevice]);
 
+    useEffect(() => {
+        setDeviceListChanged(true);
+    }, [dispatch, deviceList]);
+
     const shouldAutoReconnect = useCallback(() => {
+        // device list did not change
+        if (!deviceListChanged) return null;
+
         // No device was selected when disconnection occurred
         if (!autoReconnectDevice) return null;
 
         // device is still connected
         if (autoReconnectDevice.disconnectionTime === undefined) return null;
+
+        setDeviceListChanged(false);
 
         // The device that was selected when disconnection occurred is not yet connected
         if (!autoSelectDevice) {
@@ -104,24 +116,29 @@ export default (
         if (
             autoReconnectDevice.forceReconnect &&
             autoReconnectDevice.disconnectionTime +
-                autoReconnectDevice.forceReconnect.timeoutMS >=
+                autoReconnectDevice.forceReconnect.timeout >=
                 Date.now()
         ) {
-            logger.info(`Force Auto Reconnecting`);
-            return autoSelectDevice;
-        }
+            if (autoReconnectDevice.forceReconnect.when === 'always') {
+                logger.info(`Force Auto Reconnecting`);
+                return autoSelectDevice;
+            }
 
-        // Device is in boot loader reconnected before DEFAULT_DEVICE_WAIT_TIME_MS
-        if (
-            autoReconnectMCUBoot?.timeout &&
-            autoSelectDevice.usb?.device.descriptor.idProduct === 0x521f &&
-            autoSelectDevice.usb?.device.descriptor.idVendor === 0x1915 &&
-            autoReconnectDevice.disconnectionTime +
-                autoReconnectMCUBoot.timeout >=
-                Date.now()
-        ) {
-            logger.info(`Auto Reconnecting due to boot loader mode`);
-            return autoSelectDevice;
+            if (
+                autoReconnectDevice.forceReconnect.when === 'BootLoaderMode' &&
+                isDeviceInDFUBootloader(autoSelectDevice)
+            ) {
+                logger.info(`Force Auto Reconnecting in Boot Loader Mode`);
+                return autoSelectDevice;
+            }
+
+            if (
+                autoReconnectDevice.forceReconnect.when === 'applicationMode' &&
+                autoSelectDevice.dfuTriggerInfo !== null
+            ) {
+                logger.info(`Force Auto Reconnecting in Application Mode`);
+                return autoSelectDevice;
+            }
         }
 
         // Device does not have the same traits
@@ -137,9 +154,9 @@ export default (
         return globalAutoReconnect ? autoSelectDevice : null;
     }, [
         autoReconnectDevice,
-        autoReconnectMCUBoot,
         autoSelectDevice,
         currentSelectedDevice?.serialNumber,
+        deviceListChanged,
         globalAutoReconnect,
     ]);
 

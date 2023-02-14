@@ -1,5 +1,5 @@
 import { Device as NrfdlDevice, DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
-import { Device, RootState, TDispatch } from '../state';
+import { Device, ForceAutoReconnect, RootState, TDispatch } from '../state';
 /**
  * Wrap the device form nrf-device-lib to make the Device type consistent
  *
@@ -22,4 +22,4 @@ export declare const startWatchingDevices: (deviceListing: DeviceTraits, onDevic
  * @returns {undefined}
  */
 export declare const stopWatchingDevices: () => void;
-export declare const waitForAutoReconnect: (dispatch: TDispatch, timeoutMS?: number) => Promise<Device>;
+export declare const waitForAutoReconnect: (dispatch: TDispatch, forceAutoReconnect: ForceAutoReconnect) => Promise<Device>;
