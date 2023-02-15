@@ -7,10 +7,36 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 15 - 2023-03-03
+## 15 UNRELEASED
+
+### Added
+
+-   `Update Bootloader` prompt and `sdfu` programming for it.
+-   Reconnecting status in device selector.
+-   `setForceAutoReconnect` can be dispatched by apps to force a one time
+    reconnection.
+-   Logging indicating the reason for the forced reconnection.
+
+### Fixed
+
+-   Blocking dialog when disconnecting a device when the Programming dialog is
+    open.
+-   No longer auto reconnect to the least device if still in the device list
+    when clicking the `Auto Reconnect` Toggle.
+-   Dispatch `deviceSetupError` when `sdfu` programming fails.
 
 ### Changed
 
+-   Device Enumeration is only done once in the app life cycle
+-   Only one instance of the hot plug events.
+-   Explicit request to force once time reconnection is needed by dispatching
+    `setForceAutoReconnect`.
+-   Apps will now get the `onDeviceDeselected`, `onDeviceDisconnected`,
+    `onDeviceConnected` and `onDeviceSelected` if programing reboots the device.
+-   `setForceAutoReconnect` is automatically dispatched when doing `sdfu`
+    programming.
+-   `onDeviceIsReady` called if all actions if any are needed are done or
+    canceled and no power cycle is done.
 -   Update nrf-device-lib-js to version 0.5.0.
 
 ## 14 - 2023-02-28
@@ -63,22 +89,36 @@ every new version is a new major version.
 
 ## 8 - 2023-02-15
 
+### Added
+
+-   `Update Bootloader` prompt and `sdfu` programming for it.
+-   Reconnecting status in device selector.
+-   `setForceAutoReconnect` can be dispatched by apps to force a one time
+    reconnection.
+-   Logging indicating the reason for the forced reconnection.
+
+### Fixed
+
+-   Blocking dialog when disconnecting a device when the Programming dialog is
+    open.
+-   No longer auto reconnect to the least device if still in the device list
+    when clicking the `Auto Reconnect` Toggle.
+-   Dispatch `deviceSetupError` when `sdfu` programming fails.
+
 ### Changed
 
--   Better Redux dev tools configuration: More actions (100 instead of 50) and
-    show some more objects, e.g. Maps and Sets.
--   Updated `StartStopButton` to be a controlled component
+-   Device Enumeration is only done once in the app life cycle
+-   Only one instance of the hot plug events.
+-   Explicit request to force once time reconnection is needed by dispatching
+    `setForceAutoReconnect`.
+-   Apps will now get the `onDeviceDeselected`, `onDeviceDisconnected`,
+    `onDeviceConnected` and `onDeviceSelected` if programing reboots the device.
+-   `setForceAutoReconnect` is automatically dispatched when doing `sdfu`
+    programming.
+-   `onDeviceIsReady` called if all actions if any are needed are done or
+    canceled and no power cycle is done.
 
-## 7 - 2023-02-13
-
-### Changed
-
--   Switched to use only major versions for releases of `shared`.
--   Check for `Changelog.md` entry in `files` in `package.json`. We need it in
-    our tarballs and for `npm@7` and later it is not added automatically any
-    longer when running `npm pack`.
-
-## 6.18.14 - 2023-02-07
+## 6.18.14 2023-02-07
 
 ### Changed
 
