@@ -14,9 +14,9 @@ import {
     clearAutoReconnect,
     getAutoReconnectDevice,
     getDevice,
+    getDevices,
     getGlobalAutoReconnect,
     selectedDevice,
-    sortedDevices,
 } from '../deviceSlice';
 import { isDeviceInDFUBootloader } from '../sdfuOperations';
 
@@ -39,7 +39,7 @@ export default (
     const timeoutWarning = useRef<NodeJS.Timeout | null>(null);
     const [deviceListChanged, setDeviceListChanged] = useState(false);
 
-    const deviceList = useSelector(sortedDevices);
+    const deviceList = useSelector(getDevices);
     const globalAutoReconnect = useSelector(getGlobalAutoReconnect);
     const autoReconnectDevice = useSelector(getAutoReconnectDevice);
     const autoSelectDevice = useSelector<RootState, Device | undefined>(state =>

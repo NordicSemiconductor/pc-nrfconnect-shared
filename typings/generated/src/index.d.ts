@@ -47,6 +47,7 @@ export { selectedDevice, getReadbackProtection, setForceAutoReconnect, } from '.
 export { waitForAutoReconnect } from './Device/deviceLister';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
 export { getDeviceLibContext } from './Device/deviceLibWrapper';
+export { isDeviceInDFUBootloader } from './Device/sdfuOperations';
 export { default as sdfuOperations } from './Device/sdfuOperations';
 export { defaultInitPacket, HashType, FwType } from './Device/initPacket';
 export { default as describeError } from './logging/describeError';
