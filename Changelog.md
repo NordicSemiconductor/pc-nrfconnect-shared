@@ -13,6 +13,7 @@ every new version is a new major version.
 
 -   Better Redux dev tools configuration: More actions (100 instead of 50) and
     show some more objects, e.g. Maps and Sets.
+-   Updated `StartStopButton` to be a controlled component
 
 ## 7 - 2023-02-13
 
