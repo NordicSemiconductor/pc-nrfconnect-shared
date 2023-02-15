@@ -4,17 +4,18 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { bool, func } from 'prop-types';
 
 import { Device as DeviceProps } from '../../../state';
 import { Toggle } from '../../../Toggle/Toggle';
 import classNames from '../../../utils/classNames';
+import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
 import {
+    getDevices,
     getGlobalAutoReconnect,
     setGlobalAutoReconnect,
-    sortedDevices,
 } from '../../deviceSlice';
 import { AnimatedItem, AnimatedList } from './AnimatedList';
 import BrokenDevice from './BrokenDevice';
@@ -42,6 +43,14 @@ const NoSupportedDevicesConnected = () => (
 
 const showAllDevices = () => true;
 
+const sorted = (devices: DeviceProps[]) =>
+    [...devices].sort((a, b) => {
+        if (a.favorite !== b.favorite) {
+            return a.favorite ? -1 : 1;
+        }
+
+        return displayedDeviceName(a) < displayedDeviceName(b) ? -1 : 1;
+    });
 interface Props {
     doSelectDevice: (device: DeviceProps, autoReconnected: boolean) => void;
     isVisible: boolean;
@@ -55,8 +64,17 @@ const DeviceList: FC<Props> = ({
 }) => {
     const dispatch = useDispatch();
     const autoReconnect = useSelector(getGlobalAutoReconnect);
-    const devices = useSelector(sortedDevices);
-    const filteredDevices = devices.filter(deviceFilter);
+    const devices = useSelector(getDevices);
+
+    const sortedDevices = useMemo(
+        () => sorted([...devices.values()]),
+        [devices]
+    );
+
+    const filteredDevices = useMemo(
+        () => sortedDevices.filter(deviceFilter),
+        [deviceFilter, sortedDevices]
+    );
 
     return (
         <div className={classNames('device-list', isVisible || 'hidden')}>
@@ -70,11 +88,11 @@ const DeviceList: FC<Props> = ({
                     }}
                 />
             </div>
-            {devices.length === 0 && <NoDevicesConnected />}
-            {devices.length > 0 && filteredDevices.length === 0 ? (
+            {sortedDevices.length === 0 && <NoDevicesConnected />}
+            {sortedDevices.length > 0 && filteredDevices.length === 0 ? (
                 <NoSupportedDevicesConnected />
             ) : (
-                <AnimatedList devices={devices}>
+                <AnimatedList devices={sortedDevices}>
                     {filteredDevices.map(device => (
                         <AnimatedItem
                             key={device.serialNumber}

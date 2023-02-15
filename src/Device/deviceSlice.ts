@@ -13,7 +13,6 @@ import {
     persistIsFavorite,
     persistNickname,
 } from '../utils/persistentStore';
-import { displayedDeviceName } from './deviceInfo/deviceInfo';
 
 const updateDevice = (
     state: DeviceState,
@@ -34,7 +33,6 @@ const noDialogShown = {
 
 const initialState: DeviceState = {
     devices: new Map(),
-    sortedDevices: [],
     selectedSerialNumber: null,
     deviceInfo: null,
     isSetupWaitingForUserInput: false,
@@ -127,7 +125,6 @@ const slice = createSlice({
             action.payload.forEach(device => {
                 state.devices.set(device.serialNumber, device);
             });
-            state.sortedDevices = sorted([...action.payload]);
         },
 
         addDevice: (state, action: PayloadAction<Device>) => {
@@ -136,7 +133,6 @@ const slice = createSlice({
                 favorite: getPersistedIsFavorite(action.payload.serialNumber),
                 nickname: getPersistedNickname(action.payload.serialNumber),
             });
-            state.sortedDevices = sorted([...state.devices.values()]);
         },
 
         removeDevice: (state, action: PayloadAction<Device>) => {
@@ -154,8 +150,6 @@ const slice = createSlice({
                 state.deviceInfo = null;
                 state.isSetupDialogVisible = false;
             }
-
-            state.sortedDevices = sorted([...state.devices.values()]);
         },
 
         toggleDeviceFavorited: (state, action: PayloadAction<string>) => {
@@ -197,8 +191,9 @@ const slice = createSlice({
 
         setGlobalAutoReconnect: (state, action: PayloadAction<boolean>) => {
             state.autoReconnect = action.payload;
-            if (state.autoReconnectDevice)
-                state.autoReconnectDevice.disconnectionTime = undefined;
+            if (state.autoReconnectDevice?.disconnectionTime !== undefined) {
+                state.autoReconnectDevice = null;
+            }
         },
 
         setForceAutoReconnect: (
@@ -244,19 +239,10 @@ export const {
     },
 } = slice;
 
-const sorted = (devices: Device[]) =>
-    [...devices].sort((a, b) => {
-        if (a.favorite !== b.favorite) {
-            return a.favorite ? -1 : 1;
-        }
-
-        return displayedDeviceName(a) < displayedDeviceName(b) ? -1 : 1;
-    });
-
 export const getDevice = (serialNumber: string) => (state: RootState) =>
     state.device.devices.get(serialNumber);
 
-export const sortedDevices = (state: RootState) => state.device.sortedDevices;
+export const getDevices = (state: RootState) => state.device.devices;
 
 export const deviceIsSelected = (state: RootState) =>
     state.device.selectedSerialNumber != null;

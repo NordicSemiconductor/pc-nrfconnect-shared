@@ -7,7 +7,7 @@ export declare const reducer: import("redux").Reducer<DeviceState, import("redux
     nickname: string;
 }, string, never, never>, toggleDeviceFavorited: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, string>, setGlobalAutoReconnect: import("@reduxjs/toolkit").ActionCreatorWithPayload<boolean, string>, setForceAutoReconnect: import("@reduxjs/toolkit").ActionCreatorWithPayload<ForceAutoReconnect, string>, clearAutoReconnect: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<string>, setReadbackProtected: import("@reduxjs/toolkit").ActionCreatorWithPayload<"unknown" | "protected" | "unprotected", string>;
 export declare const getDevice: (serialNumber: string) => (state: RootState) => Device | undefined;
-export declare const sortedDevices: (state: RootState) => Device[];
+export declare const getDevices: (state: RootState) => Map<string, Device>;
 export declare const deviceIsSelected: (state: RootState) => boolean;
 export declare const getAutoReconnectDevice: (state: RootState) => import("../state").AutoReconnectDevice | null | undefined;
 export declare const selectedDevice: (state: RootState) => Device | undefined;
