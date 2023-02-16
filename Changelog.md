@@ -11,7 +11,7 @@ every new version is a new major version.
 
 ### Fixed
 
--   Max height generation algorithm
+-   Masonry layout Max height generation algorithm
 -   Regression with dropdown items on hover effect
 
 ## 9 - 2023-02-16
