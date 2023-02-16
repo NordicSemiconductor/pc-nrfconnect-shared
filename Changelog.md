@@ -7,7 +7,21 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## Unreleased
+## 9 - 2023-02-16
+
+### Added
+
+-   Masonry Layout
+
+## 8 - 2023-02-15
+
+### Changed
+
+-   Better Redux dev tools configuration: More actions (100 instead of 50) and
+    show some more objects, e.g. Maps and Sets.
+-   Updated `StartStopButton` to be a controlled component
+
+## 8 - 2023-02-15
 
 ### Changed
 
