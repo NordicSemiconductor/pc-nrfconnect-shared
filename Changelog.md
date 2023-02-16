@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 10 - 2023-02-16
+
+### Fixed
+
+-   Masonry layout Max height generation algorithm
+-   Regression with dropdown items on hover effect
+
 ## 9 - 2023-02-16
 
 ### Added
