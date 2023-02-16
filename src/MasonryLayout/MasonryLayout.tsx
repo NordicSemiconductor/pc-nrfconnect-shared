@@ -46,22 +46,6 @@ const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
         return heightMatrix;
     };
 
-    const rowFitsWithoutAdditionalHeight = (
-        heights: number[],
-        rowHeights: number[]
-    ) => {
-        const heightLimit = Math.max(...heights);
-
-        rowHeights.forEach(h => {
-            const smallest =
-                heights.findIndex(v => v === Math.min(...heights)) ?? 0;
-
-            heights[smallest] += h;
-        });
-
-        return heightLimit === Math.max(...heights);
-    };
-
     const calcMaxHeight = useCallback((col: number): number => {
         if (!masonryLayoutRef.current) return 0;
 
@@ -71,22 +55,12 @@ const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
         const newOrder: number[] = [];
 
         heightMatrix.forEach(row => {
-            if (
-                rowFitsWithoutAdditionalHeight([...heights], row) ||
-                row.length !== col
-            ) {
-                row.forEach(h => {
-                    const smallest =
-                        heights.findIndex(v => v === Math.min(...heights)) ?? 0;
-                    heights[smallest] += h;
-                    newOrder.push(smallest + 1);
-                });
-            } else {
-                row.forEach((h, columnIndex) => {
-                    heights[columnIndex] += h;
-                    newOrder.push(columnIndex + 1);
-                });
-            }
+            row.forEach(h => {
+                const smallest =
+                    heights.findIndex(v => v === Math.min(...heights)) ?? 0;
+                heights[smallest] += h;
+                newOrder.push(smallest + 1);
+            });
         });
 
         setOrders(newOrder);
@@ -134,6 +108,7 @@ const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
                     style={{
                         minWidth,
                         order: `${orders[i]}`,
+                        pageBreakBefore: `${i < columns ? 'always' : 'auto'}`,
                     }}
                 >
                     {child}
