@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 2023 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
+$margin: 8px; //px unit dependency in dropdown.tsx
+
+:export {
+    margin: $margin;
+}
+
+.masonryLayout {
+    display: flex;
+    flex-flow: column wrap;
+    align-content: stretch;
+    height: 100%;
+    width: calc(100% + $margin);
+    position: relative;
+    right: 4px;
+    overflow: hidden;
+
+    > div {
+        border-bottom: $margin solid transparent;
+        border-left: calc($margin / 2) solid transparent;
+        border-right: calc($margin / 2) solid transparent;
+        border-color: transparent;
+        background-clip: padding-box;
+    }
+}
