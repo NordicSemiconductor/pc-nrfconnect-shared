@@ -107,6 +107,7 @@ const updateBootloader = (device: Device, dispatch: TDispatch) => {
         setForceAutoReconnect({
             timeout: DEFAULT_DEVICE_WAIT_TIME,
             when: 'always',
+            once: true,
         })
     );
 
@@ -149,6 +150,15 @@ const checkConfirmUpdateBootloader = async (
         return device;
     }
 
+    if (!isDeviceInDFUBootloader(device)) {
+        dispatch(
+            setForceAutoReconnect({
+                timeout: 3000,
+                when: 'BootLoaderMode',
+                once: true,
+            })
+        );
+    }
     const bootloaderInfo = await getBootloaderInformation(device);
     if (
         !bootloaderInfo ||
@@ -357,7 +367,8 @@ const prepareInDFUBootloader = async (
     dispatch(
         setForceAutoReconnect({
             timeout: DEFAULT_DEVICE_WAIT_TIME,
-            when: 'applicationMode',
+            when: 'always',
+            once: false,
         })
     );
 
@@ -369,6 +380,13 @@ const prepareInDFUBootloader = async (
             'NRFDL_FW_SDFU_ZIP',
             zipBuffer,
             err => {
+                dispatch(
+                    setForceAutoReconnect({
+                        timeout: DEFAULT_DEVICE_WAIT_TIME,
+                        when: 'applicationMode',
+                        once: true,
+                    })
+                );
                 if (err) {
                     logger.error(
                         `Failed to write to the target device: ${
