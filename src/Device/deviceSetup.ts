@@ -96,7 +96,8 @@ export const receiveDeviceSetupInput =
 const prepareDevice = async (
     device: Device,
     deviceSetupConfig: DeviceSetup,
-    dispatch: TDispatch
+    dispatch: TDispatch,
+    autoReconnected: boolean
 ): Promise<boolean> => {
     const { jprog, dfu, needSerialport } = deviceSetupConfig;
 
@@ -104,7 +105,12 @@ const prepareDevice = async (
         // Check if device is in DFU-Bootloader, it might only have serialport
         if (isDeviceInDFUBootloader(device)) {
             logger.debug('Device is in DFU-Bootloader, DFU is defined');
-            await performDFU(device, deviceSetupConfig, dispatch);
+            await performDFU(
+                device,
+                deviceSetupConfig,
+                dispatch,
+                autoReconnected
+            );
             return false; // Any DFU operation will power cycle hence we are not ready
         }
 
@@ -122,7 +128,13 @@ const prepareDevice = async (
             ) {
                 return true;
             }
-            await performDFU(device, deviceSetupConfig, dispatch);
+
+            await performDFU(
+                device,
+                deviceSetupConfig,
+                dispatch,
+                autoReconnected
+            );
             return false; // Any DFU operation will power cycle hence we are not ready
         }
     }
@@ -184,7 +196,8 @@ export const setupDevice =
         deviceSetup: DeviceSetup,
         releaseCurrentDevice: () => void,
         onDeviceIsReady: (device: Device) => void,
-        doDeselectDevice: () => void
+        doDeselectDevice: () => void,
+        autoReconnected: boolean
     ) =>
     async (dispatch: TDispatch) => {
         await releaseCurrentDevice();
@@ -199,7 +212,8 @@ export const setupDevice =
             const ready = await prepareDevice(
                 device,
                 deviceSetupConfig,
-                dispatch
+                dispatch,
+                autoReconnected
             );
 
             if (ready)
