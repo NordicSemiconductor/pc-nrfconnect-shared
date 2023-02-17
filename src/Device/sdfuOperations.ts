@@ -183,7 +183,7 @@ const checkConfirmUpdateBootloader = async (
     return false; // device will not be ready as it will reboot
 };
 
-const confirmHelper = async (promiseConfirm?: PromiseConfirm) => {
+export const confirmHelper = async (promiseConfirm?: PromiseConfirm) => {
     if (!promiseConfirm) return true;
     try {
         return await promiseConfirm(
@@ -194,7 +194,7 @@ const confirmHelper = async (promiseConfirm?: PromiseConfirm) => {
     }
 };
 
-const choiceHelper = /* async */ (
+export const choiceHelper = /* async */ (
     choices: string[],
     promiseChoice?: PromiseChoice
 ) => {
@@ -411,21 +411,13 @@ const prepareInDFUBootloader = async (
 export const performDFU = async (
     selectedDevice: Device,
     options: DeviceSetup,
-    dispatch: TDispatch,
-    autoReconnected: boolean
+    dispatch: TDispatch
 ): Promise<void> => {
     const { dfu, promiseConfirm, promiseChoice } = options;
 
     if (dfu == null) {
         logger.error('Must never be called without DFU options.');
         throw new Error('Must never be called without DFU options.');
-    }
-
-    if (!autoReconnected) {
-        const isConfirmed = await confirmHelper(promiseConfirm);
-        if (!isConfirmed) {
-            throw new Error('Device is in bootloader mode. We cannot use it.');
-        }
     }
 
     try {

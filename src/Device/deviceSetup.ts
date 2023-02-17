@@ -20,6 +20,7 @@ import {
     verifySerialPortAvailable,
 } from './jprogOperations';
 import {
+    confirmHelper,
     isDeviceInDFUBootloader,
     performDFU,
     PromiseChoice,
@@ -105,13 +106,19 @@ const prepareDevice = async (
         // Check if device is in DFU-Bootloader, it might only have serialport
         if (isDeviceInDFUBootloader(device)) {
             logger.debug('Device is in DFU-Bootloader, DFU is defined');
-            await performDFU(
-                device,
-                deviceSetupConfig,
-                dispatch,
-                forcedAutoReconnected
-            );
-            return false; // Any DFU operation will power cycle hence we are not ready
+            if (!forcedAutoReconnected) {
+                const isConfirmed = await confirmHelper(
+                    deviceSetupConfig.promiseConfirm
+                );
+                if (!isConfirmed) {
+                    throw new Error(
+                        'Device is in bootloader mode. We cannot use it.'
+                    );
+                }
+
+                await performDFU(device, deviceSetupConfig, dispatch);
+                return false; // Any DFU operation will power cycle hence we are not ready
+            }
         }
 
         if (device.dfuTriggerVersion) {
@@ -129,12 +136,16 @@ const prepareDevice = async (
                 return true;
             }
 
-            await performDFU(
-                device,
-                deviceSetupConfig,
-                dispatch,
-                forcedAutoReconnected
-            );
+            if (!forcedAutoReconnected) {
+                const isConfirmed = await confirmHelper(
+                    deviceSetupConfig.promiseConfirm
+                );
+                if (!isConfirmed) {
+                    return true;
+                }
+            }
+
+            await performDFU(device, deviceSetupConfig, dispatch);
             return false; // Any DFU operation will power cycle hence we are not ready
         }
     }
