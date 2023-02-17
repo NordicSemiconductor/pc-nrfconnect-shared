@@ -154,7 +154,7 @@ const checkConfirmUpdateBootloader = async (
     if (!isDeviceInDFUBootloader(device)) {
         dispatch(
             setForceAutoReconnect({
-                timeout: 3000,
+                timeout: 10000,
                 when: 'BootLoaderMode',
                 once: true,
             })
@@ -162,6 +162,11 @@ const checkConfirmUpdateBootloader = async (
     }
 
     const bootloaderInfo = await getBootloaderInformation(device);
+
+    if (!isDeviceInDFUBootloader(device)) {
+        return false;
+    }
+
     if (
         !bootloaderInfo ||
         bootloaderInfo.bootloaderType !== 'NRFDL_BOOTLOADER_TYPE_SDFU' ||

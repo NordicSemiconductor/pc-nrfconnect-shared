@@ -12,6 +12,7 @@ import logger from '../../logging';
 import { Device, RootState, TDispatch } from '../../state';
 import {
     clearAutoReconnect,
+    closeSetupDialogVisible,
     getAutoReconnectDevice,
     getDevice,
     getDevices,
@@ -57,6 +58,7 @@ export default (
         (timeoutMs: number) => {
             timeoutWarning.current = setTimeout(() => {
                 dispatch(clearAutoReconnect());
+                dispatch(closeSetupDialogVisible());
                 if (autoReconnectDevice?.forceReconnect?.onFail)
                     autoReconnectDevice?.forceReconnect?.onFail();
                 logger.warn(
