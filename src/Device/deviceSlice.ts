@@ -50,9 +50,18 @@ const slice = createSlice({
          */
         selectDevice: (state, action: PayloadAction<Device>) => {
             state.selectedSerialNumber = action.payload.serialNumber;
+            const forceAutoReconnect =
+                state.autoReconnectDevice?.forceReconnect;
             state.autoReconnectDevice = {
                 device: { ...action.payload },
             };
+
+            if (
+                !forceAutoReconnect === undefined &&
+                !forceAutoReconnect?.once
+            ) {
+                state.autoReconnectDevice.forceReconnect = forceAutoReconnect;
+            }
         },
 
         /*

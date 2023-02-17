@@ -51,6 +51,7 @@ export interface DeviceState {
 export interface ForceAutoReconnect {
     timeout: number;
     when: 'always' | 'applicationMode' | 'BootLoaderMode';
+    once: boolean;
     onSuccess?: (device: Device) => void;
     onFail?: () => void;
 }

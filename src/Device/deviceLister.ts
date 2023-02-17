@@ -162,6 +162,7 @@ export const waitForAutoReconnect = (
             setForceAutoReconnect({
                 timeout: forceAutoReconnect.timeout,
                 when: forceAutoReconnect.when,
+                once: true,
                 onSuccess: (device: Device) => {
                     if (forceAutoReconnect.onSuccess)
                         forceAutoReconnect.onSuccess(device);
