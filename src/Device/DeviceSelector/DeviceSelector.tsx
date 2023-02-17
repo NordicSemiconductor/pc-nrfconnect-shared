@@ -108,7 +108,8 @@ export default ({
                     deviceSetup,
                     releaseCurrentDevice,
                     onDeviceIsReady,
-                    doDeselectDevice
+                    doDeselectDevice,
+                    autoReconnected
                 )
             );
         }
