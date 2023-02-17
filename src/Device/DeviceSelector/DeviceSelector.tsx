@@ -89,7 +89,11 @@ export default ({
         onDeviceDeselected,
     ]);
 
-    const doSelectDevice = (device: Device, autoReconnected = false) => {
+    const doSelectDevice = (
+        device: Device,
+        autoReconnected: boolean,
+        forcedAutoReconnected: boolean
+    ) => {
         if (device.serialNumber === selectedSN) {
             setDeviceListVisible(false);
             return;
@@ -109,7 +113,7 @@ export default ({
                     releaseCurrentDevice,
                     onDeviceIsReady,
                     doDeselectDevice,
-                    autoReconnected
+                    forcedAutoReconnected
                 )
             );
         }
