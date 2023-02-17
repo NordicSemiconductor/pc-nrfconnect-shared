@@ -97,7 +97,7 @@ const prepareDevice = async (
     device: Device,
     deviceSetupConfig: DeviceSetup,
     dispatch: TDispatch
-): Promise<Device | null> => {
+): Promise<boolean> => {
     const { jprog, dfu, needSerialport } = deviceSetupConfig;
 
     if (dfu && Object.keys(dfu).length > 0) {
@@ -119,7 +119,7 @@ const prepareDevice = async (
                     .map(key => dfu[key].semver)
                     .includes(semVer)
             ) {
-                return device;
+                return true;
             }
             return performDFU(device, deviceSetupConfig, dispatch);
         }
@@ -154,16 +154,17 @@ const prepareDevice = async (
             )
         );
 
-        if (valid) return device;
+        if (valid) return true;
 
         try {
-            return await programFirmware(device, fw, deviceSetupConfig);
+            await programFirmware(device, fw, deviceSetupConfig);
+            return true;
         } catch (error) {
             throw new Error('Failed to program firmware');
         }
     }
 
-    return device;
+    return true;
 };
 
 const onSuccessfulDeviceSetup = (
@@ -193,18 +194,14 @@ export const setupDevice =
         };
 
         try {
-            const preparedDevice = await prepareDevice(
+            const ready = await prepareDevice(
                 device,
                 deviceSetupConfig,
                 dispatch
             );
 
-            if (preparedDevice)
-                onSuccessfulDeviceSetup(
-                    dispatch,
-                    preparedDevice,
-                    onDeviceIsReady
-                );
+            if (ready)
+                onSuccessfulDeviceSetup(dispatch, device, onDeviceIsReady);
         } catch (error) {
             dispatch(deviceSetupError());
             if (
