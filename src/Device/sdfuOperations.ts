@@ -74,9 +74,10 @@ export const isDeviceInDFUBootloader = (device: Device) => {
 export const ensureBootloaderMode = (device: Device) => {
     if (isDeviceInDFUBootloader(device)) {
         logger.debug('Device is in bootloader mode');
-        return device;
+        return true;
     }
-    return device;
+    logger.debug('Device is NOT in bootloader mode');
+    return false;
 };
 
 const getBootloaderInformation = async (device: Device) => {
@@ -106,7 +107,7 @@ const updateBootloader = (device: Device, dispatch: TDispatch) => {
     dispatch(
         setForceAutoReconnect({
             timeout: DEFAULT_DEVICE_WAIT_TIME,
-            when: 'always',
+            when: 'BootLoaderMode',
             once: true,
         })
     );
@@ -147,25 +148,16 @@ const checkConfirmUpdateBootloader = async (
 ) => {
     if (!promiseConfirm) {
         // without explicit consent bootloader will not be updated
-        return device;
+        return true;
     }
 
-    if (!isDeviceInDFUBootloader(device)) {
-        dispatch(
-            setForceAutoReconnect({
-                timeout: 3000,
-                when: 'BootLoaderMode',
-                once: true,
-            })
-        );
-    }
     const bootloaderInfo = await getBootloaderInformation(device);
     if (
         !bootloaderInfo ||
         bootloaderInfo.bootloaderType !== 'NRFDL_BOOTLOADER_TYPE_SDFU' ||
         bootloaderInfo.version >= LATEST_BOOTLOADER_VERSION
     ) {
-        return device;
+        return true;
     }
 
     if (
@@ -174,12 +166,11 @@ const checkConfirmUpdateBootloader = async (
         ))
     ) {
         logger.info('Continuing with old bootloader');
-        return device;
+        return true;
     }
 
     await updateBootloader(device, dispatch);
-
-    return null;
+    return false; // device will not be ready as it will reboot
 };
 
 const confirmHelper = async (promiseConfirm?: PromiseConfirm) => {
@@ -411,35 +402,33 @@ export const performDFU = async (
     selectedDevice: Device,
     options: DeviceSetup,
     dispatch: TDispatch
-): Promise<Device | null> => {
+): Promise<boolean> => {
     const { dfu, promiseConfirm, promiseChoice } = options;
 
     if (dfu == null) {
         logger.error('Must never be called without DFU options.');
-        return selectedDevice;
+        throw new Error('Must never be called without DFU options.');
     }
 
-    const choice = await choiceHelper(Object.keys(dfu), promiseChoice);
-
     try {
-        const device = await checkConfirmUpdateBootloader(
-            await ensureBootloaderMode(selectedDevice),
-            dispatch,
-            promiseConfirm
-        );
+        if (
+            !(await checkConfirmUpdateBootloader(
+                selectedDevice,
+                dispatch,
+                promiseConfirm
+            ))
+        )
+            return false; // Device is not ready
 
-        if (device) {
-            const isConfirmed = await confirmHelper(promiseConfirm);
-
-            if (!isConfirmed) {
-                // Do not program
-                return device;
-            }
-            await prepareInDFUBootloader(device, dfu[choice], dispatch);
-
-            logger.debug('DFU finished: ', device);
+        const isConfirmed = await confirmHelper(promiseConfirm);
+        if (!isConfirmed) {
+            return true; // Do not program. Device is ready
         }
-        return null;
+
+        const choice = await choiceHelper(Object.keys(dfu), promiseChoice);
+        await prepareInDFUBootloader(selectedDevice, dfu[choice], dispatch);
+        logger.debug('DFU finished: ', selectedDevice);
+        return false; // Device is not ready we have just programmed it will reboot;
     } catch (err) {
         logger.debug('DFU failed: ', err);
         throw err;
