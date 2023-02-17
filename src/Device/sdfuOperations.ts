@@ -151,6 +151,16 @@ const checkConfirmUpdateBootloader = async (
         return true;
     }
 
+    if (!isDeviceInDFUBootloader(device)) {
+        dispatch(
+            setForceAutoReconnect({
+                timeout: 3000,
+                when: 'BootLoaderMode',
+                once: true,
+            })
+        );
+    }
+
     const bootloaderInfo = await getBootloaderInformation(device);
     if (
         !bootloaderInfo ||
