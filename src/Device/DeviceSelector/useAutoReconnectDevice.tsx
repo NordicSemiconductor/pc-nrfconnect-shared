@@ -55,7 +55,7 @@ export default (
                 dispatch(clearAutoReconnect());
                 if (autoReconnectDevice?.forceReconnect?.onFail)
                     autoReconnectDevice?.forceReconnect?.onFail();
-                logger.error(
+                logger.warn(
                     `Auto Reconnect failed. Device did not show up after ${
                         timeoutMs / 1000
                     } seconds`

@@ -104,7 +104,8 @@ const prepareDevice = async (
         // Check if device is in DFU-Bootloader, it might only have serialport
         if (isDeviceInDFUBootloader(device)) {
             logger.debug('Device is in DFU-Bootloader, DFU is defined');
-            return performDFU(device, deviceSetupConfig, dispatch);
+            await performDFU(device, deviceSetupConfig, dispatch);
+            return false; // Any DFU operation will power cycle hence we are not ready
         }
 
         if (device.dfuTriggerVersion) {
@@ -121,7 +122,8 @@ const prepareDevice = async (
             ) {
                 return true;
             }
-            return performDFU(device, deviceSetupConfig, dispatch);
+            await performDFU(device, deviceSetupConfig, dispatch);
+            return false; // Any DFU operation will power cycle hence we are not ready
         }
     }
 

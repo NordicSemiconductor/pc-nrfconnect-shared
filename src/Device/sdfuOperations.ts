@@ -412,7 +412,7 @@ export const performDFU = async (
     selectedDevice: Device,
     options: DeviceSetup,
     dispatch: TDispatch
-): Promise<boolean> => {
+): Promise<void> => {
     const { dfu, promiseConfirm, promiseChoice } = options;
 
     if (dfu == null) {
@@ -428,17 +428,17 @@ export const performDFU = async (
                 promiseConfirm
             ))
         )
-            return false; // Device is not ready
+            return;
 
         const isConfirmed = await confirmHelper(promiseConfirm);
         if (!isConfirmed) {
-            return true; // Do not program. Device is ready
+            throw new Error('Device is in bootloader mode. We cannot use it.');
         }
 
         const choice = await choiceHelper(Object.keys(dfu), promiseChoice);
         await prepareInDFUBootloader(selectedDevice, dfu[choice], dispatch);
         logger.debug('DFU finished: ', selectedDevice);
-        return false; // Device is not ready we have just programmed it will reboot;
+        return; // Device is not ready we have just programmed it will reboot;
     } catch (err) {
         logger.debug('DFU failed: ', err);
         throw err;
