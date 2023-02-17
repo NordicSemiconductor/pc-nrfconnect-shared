@@ -10,7 +10,13 @@ import { useSelector } from 'react-redux';
 import { Device, RootState } from '../../state';
 import { getDevice } from '../deviceSlice';
 
-export default (doSelectDevice: (device: Device) => void) => {
+export default (
+    doSelectDevice: (
+        device: Device,
+        autoReconnected: boolean,
+        forcedAutoReconnected: boolean
+    ) => void
+) => {
     const alreadyTriedToAutoselect = useRef(false);
 
     const { argv } = process;
@@ -27,6 +33,6 @@ export default (doSelectDevice: (device: Device) => void) => {
         }
 
         alreadyTriedToAutoselect.current = true;
-        doSelectDevice(autoselectDevice);
+        doSelectDevice(autoselectDevice, true, false);
     }, [autoselectDevice, doSelectDevice]);
 };

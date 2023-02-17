@@ -97,7 +97,7 @@ const prepareDevice = async (
     device: Device,
     deviceSetupConfig: DeviceSetup,
     dispatch: TDispatch,
-    autoReconnected: boolean
+    forcedAutoReconnected: boolean
 ): Promise<boolean> => {
     const { jprog, dfu, needSerialport } = deviceSetupConfig;
 
@@ -109,7 +109,7 @@ const prepareDevice = async (
                 device,
                 deviceSetupConfig,
                 dispatch,
-                autoReconnected
+                forcedAutoReconnected
             );
             return false; // Any DFU operation will power cycle hence we are not ready
         }
@@ -133,7 +133,7 @@ const prepareDevice = async (
                 device,
                 deviceSetupConfig,
                 dispatch,
-                autoReconnected
+                forcedAutoReconnected
             );
             return false; // Any DFU operation will power cycle hence we are not ready
         }
@@ -197,7 +197,7 @@ export const setupDevice =
         releaseCurrentDevice: () => void,
         onDeviceIsReady: (device: Device) => void,
         doDeselectDevice: () => void,
-        autoReconnected: boolean
+        forcedAutoReconnected: boolean
     ) =>
     async (dispatch: TDispatch) => {
         await releaseCurrentDevice();
@@ -213,7 +213,7 @@ export const setupDevice =
                 device,
                 deviceSetupConfig,
                 dispatch,
-                autoReconnected
+                forcedAutoReconnected
             );
 
             if (ready)

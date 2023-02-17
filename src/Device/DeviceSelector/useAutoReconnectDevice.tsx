@@ -33,7 +33,11 @@ const hasSameDeviceTraits = (
     );
 
 export default (
-    doSelectDevice: (device: Device, autoReconnected: boolean) => void,
+    doSelectDevice: (
+        device: Device,
+        autoReconnected: boolean,
+        forcedAutoReconnected: boolean
+    ) => void,
     dispatch: TDispatch
 ) => {
     const timeoutWarning = useRef<NodeJS.Timeout | null>(null);
@@ -87,7 +91,10 @@ export default (
         setDeviceListChanged(true);
     }, [dispatch, deviceList]);
 
-    const shouldAutoReconnect = useCallback(() => {
+    const shouldAutoReconnect = useCallback((): {
+        device: Device;
+        forcedAutoReconnected: boolean;
+    } | null => {
         // device list did not change
         if (!deviceListChanged) return null;
 
@@ -121,7 +128,10 @@ export default (
         ) {
             if (autoReconnectDevice.forceReconnect.when === 'always') {
                 logger.info(`Force Auto Reconnecting`);
-                return autoSelectDevice;
+                return {
+                    device: autoSelectDevice,
+                    forcedAutoReconnected: true,
+                };
             }
 
             if (
@@ -129,7 +139,10 @@ export default (
                 isDeviceInDFUBootloader(autoSelectDevice)
             ) {
                 logger.info(`Force Auto Reconnecting in Boot Loader Mode`);
-                return autoSelectDevice;
+                return {
+                    device: autoSelectDevice,
+                    forcedAutoReconnected: true,
+                };
             }
 
             if (
@@ -137,7 +150,10 @@ export default (
                 autoSelectDevice.dfuTriggerInfo !== null
             ) {
                 logger.info(`Force Auto Reconnecting in Application Mode`);
-                return autoSelectDevice;
+                return {
+                    device: autoSelectDevice,
+                    forcedAutoReconnected: true,
+                };
             }
         }
 
@@ -151,7 +167,12 @@ export default (
             return null;
         }
 
-        return globalAutoReconnect ? autoSelectDevice : null;
+        return globalAutoReconnect
+            ? {
+                  device: autoSelectDevice,
+                  forcedAutoReconnected: false,
+              }
+            : null;
     }, [
         autoReconnectDevice,
         autoSelectDevice,
@@ -161,12 +182,14 @@ export default (
     ]);
 
     useEffect(() => {
-        const device = shouldAutoReconnect();
-        if (device) {
-            logger.info(`Auto Reconnecting Device SN: ${device.serialNumber}`);
-            doSelectDevice(device, true);
+        const result = shouldAutoReconnect();
+        if (result?.device) {
+            logger.info(
+                `Auto Reconnecting Device SN: ${result.device.serialNumber}`
+            );
+            doSelectDevice(result.device, true, result.forcedAutoReconnected);
             if (autoReconnectDevice?.forceReconnect?.onSuccess)
-                autoReconnectDevice?.forceReconnect?.onSuccess(device);
+                autoReconnectDevice?.forceReconnect?.onSuccess(result.device);
         }
     }, [
         autoReconnectDevice,
