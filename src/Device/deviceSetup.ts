@@ -115,10 +115,10 @@ const prepareDevice = async (
                         'Device is in bootloader mode. We cannot use it.'
                     );
                 }
-
-                await performDFU(device, deviceSetupConfig, dispatch);
-                return false; // Any DFU operation will power cycle hence we are not ready
             }
+
+            await performDFU(device, deviceSetupConfig, dispatch);
+            return false; // Any DFU operation will power cycle hence we are not ready
         }
 
         if (device.dfuTriggerVersion) {

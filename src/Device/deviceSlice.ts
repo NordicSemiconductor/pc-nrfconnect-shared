@@ -157,7 +157,10 @@ const slice = createSlice({
             if (state.selectedSerialNumber === action.payload.serialNumber) {
                 state.selectedSerialNumber = null;
                 state.deviceInfo = null;
-                state.isSetupDialogVisible = false;
+
+                if (state.autoReconnectDevice?.forceReconnect === undefined) {
+                    state.isSetupDialogVisible = false;
+                }
             }
         },
 
@@ -217,6 +220,10 @@ const slice = createSlice({
             state.autoReconnectDevice = null;
         },
 
+        closeSetupDialogVisible: state => {
+            state.isSetupDialogVisible = false;
+        },
+
         setReadbackProtected: (
             state,
             action: PayloadAction<DeviceState['readbackProtection']>
@@ -244,6 +251,7 @@ export const {
         setGlobalAutoReconnect,
         setForceAutoReconnect,
         clearAutoReconnect,
+        closeSetupDialogVisible,
         setReadbackProtected,
     },
 } = slice;
