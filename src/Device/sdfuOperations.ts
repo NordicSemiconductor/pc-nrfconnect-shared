@@ -107,7 +107,7 @@ const updateBootloader = (device: Device, dispatch: TDispatch) => {
     dispatch(
         setForceAutoReconnect({
             timeout: DEFAULT_DEVICE_WAIT_TIME,
-            when: 'BootLoaderMode',
+            when: 'always',
             once: true,
         })
     );
@@ -177,7 +177,7 @@ const checkConfirmUpdateBootloader = async (
 
     if (
         !(await promiseConfirm(
-            'Newer version of the bootloader is available, do you want to update it?'
+            'Device will be programmed. A Newer version of the bootloader is available, do you want to update it as well?'
         ))
     ) {
         logger.info('Continuing with old bootloader');
