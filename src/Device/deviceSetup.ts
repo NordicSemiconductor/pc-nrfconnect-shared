@@ -111,6 +111,7 @@ const prepareDevice = async (
                     deviceSetupConfig.promiseConfirm
                 );
                 if (!isConfirmed) {
+                    // TODO Switch To APP Mode and return
                     throw new Error(
                         'Device is in bootloader mode. We cannot use it.'
                     );
