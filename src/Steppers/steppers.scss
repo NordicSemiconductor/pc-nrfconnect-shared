@@ -1,0 +1,138 @@
+/*
+ * Copyright (c) 2015 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
+@import '../variables';
+
+.steppers {
+    border-style: solid;
+    border-width: 1px;
+    border-color: $tooltip-bg;
+    padding: 8px 8px;
+}
+
+.step {
+    position: relative;
+    min-height: 1em;
+    color: gray;
+}
+
+.step + .step {
+    margin-top: 1.5em;
+}
+
+.step > div:first-child {
+    position: static;
+    height: 0;
+}
+
+.step > div:not(:first-child) {
+    margin-left: 1.5em;
+    padding-left: 1em;
+}
+
+.step.step-active {
+    color: #4285f4;
+}
+
+.step.step-active .circle {
+    background-color: #4285f4;
+}
+
+.step.step-success {
+    color: #4caf50;
+}
+
+.step.step-success .circle {
+    background-color: #4caf50;
+}
+
+.step.step-fail {
+    color: #f44336;
+}
+
+.step.step-fail .circle {
+    background-color: #f44336;
+}
+
+/* Circle */
+.circle {
+    background: $tooltip-bg;
+    position: relative;
+    width: 1.5em;
+    height: 1.5em;
+    line-height: 1.5em;
+    border-radius: 100%;
+    // color: #fff;
+    text-align: center;
+}
+
+/* Vertical Line */
+.circle:after {
+    content: ' ';
+    position: absolute;
+    display: block;
+    top: 1px;
+    right: 50%;
+    bottom: 1px;
+    left: 50%;
+    height: 100%;
+    width: 1px;
+    transform: scale(1, 2);
+    transform-origin: 50% -100%;
+    background-color: rgba(0, 0, 0, 0.25);
+    // z-index: -1;
+}
+
+.step:last-child .circle:after {
+    display: none;
+}
+
+.loading {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    width: 24px;
+    height: 24px;
+    border: 2px solid transparent;
+    border-top-color: #a05;
+    border-bottom-color: #a05;
+    border-radius: 50%;
+    animation: rotate 3s linear infinite;
+}
+.loading:after,
+.loading:before {
+    position: absolute;
+    content: '';
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-bottom-color: #a05;
+}
+.loading:after {
+    top: 1px;
+    right: -7px;
+    transform: rotate(135deg);
+}
+.loading:before {
+    top: 11px;
+    left: -7px;
+    transform: rotate(-45deg);
+}
+@keyframes rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Stepper Titles */
+.title {
+    line-height: 1.5em;
+    font-weight: bold;
+}
+
+.caption {
+    font-size: 0.8em;
+}
