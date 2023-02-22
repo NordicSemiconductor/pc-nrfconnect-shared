@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 11 - 2023-02-22
+
+### Changed
+
+-   `shasum` property on apps became optional.
+
 ## 10 - 2023-02-16
 
 ### Fixed
