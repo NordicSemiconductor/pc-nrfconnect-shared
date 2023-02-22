@@ -7,6 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 12 - 2023-02-23
+
+### Added
+
+-   `openAppWindow` sends IPC call to launcher, in order to open an app,
+    identified by its `name` and `source`. And gives the ability to provide
+    `openAppOptions` with `device` and `serialPortPath`, in order to directly
+    connect to a device, and its serial port.
+
 ## 11 - 2023-02-22
 
 ### Changed
