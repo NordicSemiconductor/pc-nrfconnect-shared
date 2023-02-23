@@ -27,4 +27,10 @@ $margin: 8px; //px unit dependency in dropdown.tsx
         border-color: transparent;
         background-clip: padding-box;
     }
+
+    > div.filler {
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
 }
