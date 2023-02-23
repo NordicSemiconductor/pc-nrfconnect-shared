@@ -19,7 +19,8 @@ every new version is a new major version.
 
 ### Changed
 
--   Improved masonry layout algorithm
+-   Improved `MasonryLayout` algorithm
+-   `MasonryLayout` Items with no height are hidden
 
 ## 11 - 2023-02-22
 
