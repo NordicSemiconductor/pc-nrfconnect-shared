@@ -58,7 +58,7 @@
         "@types/klaw": "3.0.3",
         "@types/lodash.range": "3.2.7",
         "@types/mousetrap": "1.6.9",
-        "@types/react": "17.0.47",
+        "@types/react": "18.0.28",
         "@types/react-dom": "17.0.17",
         "@types/react-redux": "7.1.24",
         "@types/semver": "7.3.10",
