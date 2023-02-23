@@ -11,11 +11,13 @@ import styles from './masonryLayout.module.scss';
 
 interface MasonryLayoutProperties {
     minWidth: number;
+    className?: string;
 }
 
 const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
     children,
     minWidth,
+    className,
 }) => {
     const masonryLayoutRef = useRef<HTMLDivElement>(null);
 
@@ -123,7 +125,7 @@ const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
     return (
         <div
             ref={masonryLayoutRef}
-            className={classNames(styles.masonryLayout)}
+            className={classNames(styles.masonryLayout, className)}
             style={{ maxHeight: `${maxHeight}px` }}
         >
             {React.Children.map(children, (child, i) => (
