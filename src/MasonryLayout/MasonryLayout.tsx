@@ -62,7 +62,6 @@ const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
             }
         }
 
-        console.log([...heightMatrix]);
         return { heightMatrix, hiddenChildren: zeroHeightChildren };
     }, []);
 
@@ -79,7 +78,6 @@ const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
                     const smallest =
                         heights.findIndex(h => h === Math.min(...heights)) ?? 0;
                     heights[smallest] += itemHeight;
-                    console.log([...heights]);
                     newOrder.push(smallest + 1);
                 });
             });
@@ -116,7 +114,6 @@ const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
 
             if (noOfColumns !== columns) {
                 const data = calcData(noOfColumns);
-                console.log('data0', data, noOfColumns, current.clientWidth);
                 if (data) {
                     setOrders(data.order);
                     setColumnHeights(data.columnHeights);
