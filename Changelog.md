@@ -19,7 +19,7 @@ every new version is a new major version.
 
 ### Changed
 
--   Improved masonry layout item layout
+-   Improved masonry layout algorithm
 
 ## 11 - 2023-02-22
 

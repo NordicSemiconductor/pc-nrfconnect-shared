@@ -10,27 +10,35 @@ $margin: 8px; //px unit dependency in dropdown.tsx
     margin: $margin;
 }
 
-.masonryLayout {
-    display: flex;
-    flex-flow: column wrap;
-    align-content: stretch;
-    height: 100%;
-    width: calc(100% + $margin);
-    position: relative;
-    right: 4px;
-    overflow: hidden;
+.masonryLayoutOut {
+    overflow-x: hidden;
 
-    > div {
-        border-bottom: $margin solid transparent;
-        border-left: calc($margin / 2) solid transparent;
-        border-right: calc($margin / 2) solid transparent;
-        border-color: transparent;
-        background-clip: padding-box;
-    }
+    .masonryLayout {
+        display: flex;
+        flex-flow: column wrap;
+        align-content: stretch;
+        height: fit-content;
+        width: calc(100% + $margin);
+        position: relative;
+        right: 4px;
+        overflow: hidden;
 
-    > div.filler {
-        border: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
+        > div {
+            border-bottom: $margin solid transparent;
+            border-left: calc($margin / 2) solid transparent;
+            border-right: calc($margin / 2) solid transparent;
+            border-color: transparent;
+            background-clip: padding-box;
+        }
+
+        > div[data-filler='true'] {
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        > div[data-hidden='true'] {
+            display: none;
+        }
     }
 }
