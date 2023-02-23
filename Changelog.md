@@ -15,6 +15,12 @@ every new version is a new major version.
     identified by its `name` and `source`. And gives the ability to provide
     `openAppOptions` with `device` and `serialPortPath`, in order to directly
     connect to a device, and its serial port.
+-   Optional `className` property on `MasonryLayout`.
+
+### Changed
+
+-   Improved `MasonryLayout` algorithm
+-   `MasonryLayout` Items with no height are hidden
 
 ## 11 - 2023-02-22
 
