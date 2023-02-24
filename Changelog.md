@@ -21,6 +21,12 @@ every new version is a new major version.
 
 -   Wrongly import of `electron/renderer`, now changed to `electron`.
 
+## 13 - 2023-02-23
+
+### Changed
+
+-   Update to support npm 18
+
 ## 12 - 2023-02-23
 
 ### Added

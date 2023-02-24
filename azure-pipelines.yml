@@ -1,19 +1,19 @@
 pool:
-  vmImage: 'ubuntu-latest'
+    vmImage: 'ubuntu-latest'
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: 14
-- bash: |
-    set -o errexit -o pipefail
-    npm ci
-    npm run check
-    npm run generate-types
-    [[ $(git status --porcelain) ]] && echo "Generate types found changes" && exit 1
-    npm test -- --coverage --coverageReporters=cobertura
-  displayName: "Lint & test"
-- task: PublishCodeCoverageResults@1
-  displayName: Publish code coverage
-  inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml
+    - task: NodeTool@0
+      inputs:
+          versionSpec: 18
+    - bash: |
+          set -o errexit -o pipefail
+          npm ci
+          npm run check
+          npm run generate-types
+          [[ $(git status --porcelain) ]] && echo "Generate types found changes" && exit 1
+          npm test -- --coverage --coverageReporters=cobertura
+      displayName: 'Lint & test'
+    - task: PublishCodeCoverageResults@1
+      displayName: Publish code coverage
+      inputs:
+          codeCoverageTool: Cobertura
+          summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml
