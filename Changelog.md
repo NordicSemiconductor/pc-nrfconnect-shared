@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 13 - 2023-02-24
+
+### Fixed
+
+-   Wrongly import of `electron/renderer`, now changed to `electron`.
+
 ## 12 - 2023-02-23
 
 ### Added

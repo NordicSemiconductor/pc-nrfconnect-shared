@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { ipcRenderer } from 'electron/renderer';
+import { ipcRenderer } from 'electron';
 
 import type { OpenAppOptions } from '../../main';
 
