@@ -6,17 +6,16 @@
 
 import React, { FC, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { bool, func } from 'prop-types';
 
 import { Device as DeviceProps } from '../../../state';
 import { Toggle } from '../../../Toggle/Toggle';
 import classNames from '../../../utils/classNames';
-import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
 import {
-    getDevices,
-    getGlobalAutoReconnect,
-    setGlobalAutoReconnect,
-} from '../../deviceSlice';
+    getGlobalAutoReselect,
+    setGlobalAutoReselect,
+} from '../../deviceAutoSelectSlice';
+import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
+import { getDevices } from '../../deviceSlice';
 import { AnimatedItem, AnimatedList } from './AnimatedList';
 import BrokenDevice from './BrokenDevice';
 import Device from './Device';
@@ -67,7 +66,7 @@ const DeviceList: FC<Props> = ({
     deviceFilter = showAllDevices,
 }) => {
     const dispatch = useDispatch();
-    const autoReconnect = useSelector(getGlobalAutoReconnect);
+    const autoReconnect = useSelector(getGlobalAutoReselect);
     const devices = useSelector(getDevices);
 
     const sortedDevices = useMemo(
@@ -88,7 +87,7 @@ const DeviceList: FC<Props> = ({
                     label="Auto Reconnect"
                     isToggled={autoReconnect}
                     onToggle={value => {
-                        dispatch(setGlobalAutoReconnect(value));
+                        dispatch(setGlobalAutoReselect(value));
                     }}
                 />
             </div>
@@ -117,11 +116,6 @@ const DeviceList: FC<Props> = ({
             )}
         </div>
     );
-};
-DeviceList.propTypes = {
-    doSelectDevice: func.isRequired,
-    isVisible: bool.isRequired,
-    deviceFilter: func, // (device) => boolean
 };
 
 export default DeviceList;

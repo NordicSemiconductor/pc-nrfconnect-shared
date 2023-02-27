@@ -6,7 +6,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { Device, DeviceState, ForceAutoReconnect, RootState } from '../state';
+import { Device, DeviceState, RootState } from '../state';
 import {
     getPersistedIsFavorite,
     getPersistedNickname,
@@ -36,7 +36,6 @@ const initialState: DeviceState = {
     selectedSerialNumber: null,
     deviceInfo: null,
     isSetupWaitingForUserInput: false,
-    autoReconnect: false,
     readbackProtection: 'unknown',
     ...noDialogShown,
 };
@@ -50,18 +49,6 @@ const slice = createSlice({
          */
         selectDevice: (state, action: PayloadAction<Device>) => {
             state.selectedSerialNumber = action.payload.serialNumber;
-            const forceAutoReconnect =
-                state.autoReconnectDevice?.forceReconnect;
-            state.autoReconnectDevice = {
-                device: { ...action.payload },
-            };
-
-            if (
-                !forceAutoReconnect === undefined &&
-                !forceAutoReconnect?.once
-            ) {
-                state.autoReconnectDevice.forceReconnect = forceAutoReconnect;
-            }
         },
 
         /*
@@ -70,7 +57,6 @@ const slice = createSlice({
         deselectDevice: state => {
             state.selectedSerialNumber = null;
             state.deviceInfo = null;
-            state.autoReconnectDevice = null;
             state.readbackProtection = 'unknown';
         },
 
@@ -147,21 +133,9 @@ const slice = createSlice({
         removeDevice: (state, action: PayloadAction<Device>) => {
             state.devices.delete(action.payload.serialNumber);
 
-            if (
-                state.autoReconnectDevice?.device.serialNumber ===
-                action.payload.serialNumber
-            ) {
-                state.autoReconnectDevice.disconnectionTime = Date.now();
-            }
-
-            if (state.selectedSerialNumber === action.payload.serialNumber) {
-                state.selectedSerialNumber = null;
-                state.deviceInfo = null;
-
-                if (state.autoReconnectDevice?.forceReconnect === undefined) {
-                    state.isSetupDialogVisible = false;
-                }
-            }
+            // if (state.autoReconnectDevice?.forceReconnect === undefined) {
+            //     state.isSetupDialogVisible = false;
+            // }
         },
 
         toggleDeviceFavorited: (state, action: PayloadAction<string>) => {
@@ -201,25 +175,6 @@ const slice = createSlice({
             });
         },
 
-        setGlobalAutoReconnect: (state, action: PayloadAction<boolean>) => {
-            state.autoReconnect = action.payload;
-            if (state.autoReconnectDevice?.disconnectionTime !== undefined) {
-                state.autoReconnectDevice = null;
-            }
-        },
-
-        setForceAutoReconnect: (
-            state,
-            action: PayloadAction<ForceAutoReconnect>
-        ) => {
-            if (state.autoReconnectDevice)
-                state.autoReconnectDevice.forceReconnect = action.payload;
-        },
-
-        clearAutoReconnect: state => {
-            state.autoReconnectDevice = null;
-        },
-
         closeSetupDialogVisible: state => {
             state.isSetupDialogVisible = false;
         },
@@ -248,9 +203,6 @@ export const {
         setDevices,
         setDeviceNickname,
         toggleDeviceFavorited,
-        setGlobalAutoReconnect,
-        setForceAutoReconnect,
-        clearAutoReconnect,
         closeSetupDialogVisible,
         setReadbackProtected,
     },
@@ -264,9 +216,6 @@ export const getDevices = (state: RootState) => state.device.devices;
 export const deviceIsSelected = (state: RootState) =>
     state.device.selectedSerialNumber != null;
 
-export const getAutoReconnectDevice = (state: RootState) =>
-    state.device.autoReconnectDevice;
-
 export const selectedDevice = (state: RootState) =>
     state.device.selectedSerialNumber !== null
         ? state.device.devices.get(state.device.selectedSerialNumber)
@@ -275,13 +224,6 @@ export const selectedDevice = (state: RootState) =>
 export const deviceInfo = (state: RootState) => state.device.deviceInfo;
 export const selectedSerialNumber = (state: RootState) =>
     state.device.selectedSerialNumber;
-
-export const getGlobalAutoReconnect = (state: RootState) =>
-    state.device.autoReconnect;
-export const getWaitingToAutoReconnect = (state: RootState) =>
-    state.device.autoReconnectDevice?.disconnectionTime !== undefined &&
-    (state.device.autoReconnectDevice?.forceReconnect !== undefined ||
-        state.device.autoReconnect);
 
 export const getReadbackProtection = (state: RootState) =>
     state.device.readbackProtection;

@@ -10,21 +10,22 @@ import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import { Device } from '../../state';
 import useHotKey from '../../utils/useHotKey';
+import {
+    clearAutoReconnectTimeoutID,
+    getWaitingToAutoReselect,
+} from '../deviceAutoSelectSlice';
 import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
 import { DeviceSetup as DeviceSetupShared, setupDevice } from '../deviceSetup';
 import DeviceSetup from '../DeviceSetup/DeviceSetup';
 import {
     deselectDevice,
     deviceIsSelected as deviceIsSelectedSelector,
-    getWaitingToAutoReconnect,
     selectDevice,
     selectedSerialNumber,
 } from '../deviceSlice';
 import DeviceList from './DeviceList/DeviceList';
 import SelectDevice from './SelectDevice';
 import SelectedDevice from './SelectedDevice';
-import useAutoReconnectDevice from './useAutoReconnectDevice';
-import useAutoselectDevice from './useAutoselectDevice';
 
 interface OutdatedDeviceTraits {
     serialPort?: boolean;
@@ -60,13 +61,58 @@ export default ({
 
     const deviceIsSelected = useSelector(deviceIsSelectedSelector);
     const selectedSN = useSelector(selectedSerialNumber);
-    const waitingToAutoReconnect = useSelector(getWaitingToAutoReconnect);
+    const waitingToAutoReconnect = useSelector(getWaitingToAutoReselect);
     const showSelectedDevice = deviceIsSelected || waitingToAutoReconnect;
 
     const doDeselectDevice = useCallback(() => {
         onDeviceDeselected();
         dispatch(deselectDevice());
     }, [dispatch, onDeviceDeselected]);
+
+    const doSelectDevice = useCallback(
+        (
+            device: Device,
+            autoReconnected: boolean,
+            forcedAutoReconnected: boolean
+        ) => {
+            if (device.serialNumber === selectedSN) {
+                setDeviceListVisible(false);
+                return;
+            }
+
+            if (deviceIsSelected) {
+                doDeselectDevice();
+                return; // ??
+            }
+
+            dispatch(clearAutoReconnectTimeoutID());
+            setDeviceListVisible(false);
+            dispatch(selectDevice(device));
+            onDeviceSelected(device, autoReconnected);
+            if (deviceSetup) {
+                dispatch(
+                    setupDevice(
+                        device,
+                        deviceSetup,
+                        releaseCurrentDevice,
+                        onDeviceIsReady,
+                        doDeselectDevice,
+                        forcedAutoReconnected
+                    )
+                );
+            }
+        },
+        [
+            deviceIsSelected,
+            deviceSetup,
+            dispatch,
+            doDeselectDevice,
+            onDeviceIsReady,
+            onDeviceSelected,
+            releaseCurrentDevice,
+            selectedSN,
+        ]
+    );
 
     const doStartWatchingDevices = useCallback(() => {
         const patchedDeviceListing = {
@@ -78,7 +124,8 @@ export default ({
                 patchedDeviceListing,
                 onDeviceConnected,
                 onDeviceDisconnected,
-                onDeviceDeselected
+                onDeviceDeselected,
+                doSelectDevice
             )
         );
     }, [
@@ -87,37 +134,8 @@ export default ({
         onDeviceConnected,
         onDeviceDisconnected,
         onDeviceDeselected,
+        doSelectDevice,
     ]);
-
-    const doSelectDevice = (
-        device: Device,
-        autoReconnected: boolean,
-        forcedAutoReconnected: boolean
-    ) => {
-        if (device.serialNumber === selectedSN) {
-            setDeviceListVisible(false);
-            return;
-        }
-
-        if (deviceIsSelected) {
-            doDeselectDevice();
-        }
-        setDeviceListVisible(false);
-        dispatch(selectDevice(device));
-        onDeviceSelected(device, autoReconnected);
-        if (deviceSetup) {
-            dispatch(
-                setupDevice(
-                    device,
-                    deviceSetup,
-                    releaseCurrentDevice,
-                    onDeviceIsReady,
-                    doDeselectDevice,
-                    forcedAutoReconnected
-                )
-            );
-        }
-    };
 
     const toggleDeviceListVisible = () =>
         setDeviceListVisible(!deviceListVisible);
@@ -126,9 +144,6 @@ export default ({
         doStartWatchingDevices();
         return stopWatchingDevices;
     }, [doStartWatchingDevices]);
-
-    useAutoselectDevice(doSelectDevice);
-    useAutoReconnectDevice(doSelectDevice, dispatch);
 
     useHotKey({
         hotKey: 'alt+s',

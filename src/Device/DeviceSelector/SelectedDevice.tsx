@@ -9,10 +9,10 @@ import { useSelector } from 'react-redux';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
 import {
-    getAutoReconnectDevice,
-    getWaitingToAutoReconnect,
-    selectedDevice,
-} from '../deviceSlice';
+    getAutoReselectDevice,
+    getWaitingToAutoReselect,
+} from '../deviceAutoSelectSlice';
+import { selectedDevice } from '../deviceSlice';
 import BasicDeviceInfo from './BasicDeviceInfo';
 
 import './selected-device.scss';
@@ -37,14 +37,16 @@ export default ({
     doDeselectDevice: () => void;
     toggleDeviceListVisible: () => void;
 }) => {
-    const reconnecting = useSelector(getWaitingToAutoReconnect);
+    const autoReselecting = useSelector(getWaitingToAutoReselect);
     const selDevice = useSelector(selectedDevice);
-    const autoReconnectDevice = useSelector(getAutoReconnectDevice);
-    const device = autoReconnectDevice ? autoReconnectDevice.device : selDevice;
+    const autoReconnectDevice = useSelector(getAutoReselectDevice);
+    const device = autoReconnectDevice ?? selDevice;
 
     return (
         <PseudoButton
-            className={`selected-device ${reconnecting ? 'reconnecting' : ''}`}
+            className={`selected-device ${
+                autoReselecting ? 'reconnecting' : ''
+            }`}
             onClick={toggleDeviceListVisible}
         >
             {device && (

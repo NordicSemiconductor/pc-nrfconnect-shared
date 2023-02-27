@@ -9,13 +9,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import InlineInput from '../../InlineInput/InlineInput';
 import { Device } from '../../state';
-import { displayedDeviceName } from '../deviceInfo/deviceInfo';
 import {
-    getAutoReconnectDevice,
-    getWaitingToAutoReconnect,
-    resetDeviceNickname,
-    setDeviceNickname,
-} from '../deviceSlice';
+    getAutoReselectDevice,
+    getWaitingToAutoReselect,
+} from '../deviceAutoSelectSlice';
+import { displayedDeviceName } from '../deviceInfo/deviceInfo';
+import { resetDeviceNickname, setDeviceNickname } from '../deviceSlice';
 import DeviceIcon from './DeviceIcon';
 
 import './basic-device-info.scss';
@@ -69,11 +68,11 @@ export default ({
     toggles,
     showReconnecting = false,
 }: BasicDeviceProps) => {
-    const autoReconnectDevice = useSelector(getAutoReconnectDevice);
-    const waitingToAutoReconnect = useSelector(getWaitingToAutoReconnect);
-    const deviceWaitingToReconnect =
-        waitingToAutoReconnect &&
-        device.serialNumber === autoReconnectDevice?.device.serialNumber;
+    const autoReselectDevice = useSelector(getAutoReselectDevice);
+    const waitingToAutoReselect = useSelector(getWaitingToAutoReselect);
+    const deviceWaitingToReselect =
+        waitingToAutoReselect &&
+        device.serialNumber === autoReselectDevice?.serialNumber;
 
     return (
         <div className="basic-device-info">
@@ -82,7 +81,7 @@ export default ({
                 <DeviceName
                     device={device}
                     inputRef={deviceNameInputRef}
-                    reconnecting={deviceWaitingToReconnect && showReconnecting}
+                    reconnecting={deviceWaitingToReselect && showReconnecting}
                 />
                 <DeviceSerialNumber device={device} />
             </div>

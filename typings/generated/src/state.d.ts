@@ -1,3 +1,4 @@
+/// <reference types="node" />
 /// <reference types="react" />
 import { Device as NrfdlDevice, SerialPort } from '@nordicsemiconductor/nrf-device-lib-js';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
@@ -12,6 +13,7 @@ export interface RootState {
     appLayout: AppLayout;
     errorDialog: ErrorDialog;
     log: Log;
+    deviceAutoSelect: DeviceAutoSelectState;
     device: DeviceState;
     documentation: DocumentationState;
     brokenDeviceDialog: BrokenDeviceDialog;
@@ -44,21 +46,21 @@ export interface DeviceState {
     selectedSerialNumber: string | null;
     setupDialogChoices: readonly string[];
     setupDialogText?: string | null;
-    autoReconnectDevice?: AutoReconnectDevice | null;
-    autoReconnect: boolean;
     readbackProtection: 'unknown' | 'protected' | 'unprotected';
 }
-export interface ForceAutoReconnect {
+export interface DeviceAutoSelectState {
+    globalAutoReselect: boolean;
+    device?: Device;
+    disconnectionTime?: number;
+    forceReselect?: ForceAutoReselect;
+    autoReconnectTimeout?: NodeJS.Timeout;
+}
+export interface ForceAutoReselect {
     timeout: number;
     when: 'always' | 'applicationMode' | 'BootLoaderMode';
     once: boolean;
     onSuccess?: (device: Device) => void;
     onFail?: () => void;
-}
-export interface AutoReconnectDevice {
-    device: Device;
-    disconnectionTime?: number;
-    forceReconnect?: ForceAutoReconnect;
 }
 export interface DeviceInfo {
     name?: string;

@@ -11,14 +11,151 @@ import nrfDeviceLib, {
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../logging';
-import { Device, ForceAutoReconnect, RootState, TDispatch } from '../state';
+import { Device, ForceAutoReselect, RootState, TDispatch } from '../state';
+import {
+    clearAutoReselect,
+    setAutoReconnectTimeoutID,
+    setForceAutoReselect,
+} from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import {
     addDevice,
+    closeSetupDialogVisible,
     removeDevice,
     setDevices,
-    setForceAutoReconnect,
 } from './deviceSlice';
+import { isDeviceInDFUBootloader } from './sdfuOperations';
+
+const hasSameDeviceTraits = (
+    deviceTraits: DeviceTraits,
+    otherDeviceTraits: DeviceTraits
+) =>
+    Object.keys(otherDeviceTraits).every(
+        rule =>
+            deviceTraits[rule as keyof DeviceTraits] ===
+            otherDeviceTraits[rule as keyof DeviceTraits]
+    );
+
+const shouldAutoReconnect = (
+    addedDevice: Device,
+    globalAutoReconnect: boolean,
+    autoReconnectDevice?: Device,
+    disconnectionTime?: number,
+    currentSelectedDevice?: Device,
+    forceReselect?: ForceAutoReselect
+): {
+    autoReconnect: boolean;
+    forcedAutoReconnected: boolean;
+} => {
+    // No device was selected when disconnection occurred
+    if (!autoReconnectDevice)
+        return {
+            autoReconnect: false,
+            forcedAutoReconnected: false,
+        };
+
+    // device is still connected
+    if (disconnectionTime === undefined)
+        return {
+            autoReconnect: false,
+            forcedAutoReconnected: false,
+        };
+
+    // The device that was selected when disconnection occurred is not yet connected
+    if (addedDevice.serialNumber !== autoReconnectDevice.serialNumber) {
+        return {
+            autoReconnect: false,
+            forcedAutoReconnected: false,
+        };
+    }
+
+    // The device is already selected
+    if (
+        currentSelectedDevice?.serialNumber === autoReconnectDevice.serialNumber
+    ) {
+        return {
+            autoReconnect: false,
+            forcedAutoReconnected: false,
+        };
+    }
+
+    // Device is to be reconnected as timeout is provided
+    if (
+        forceReselect &&
+        disconnectionTime + forceReselect.timeout >= Date.now()
+    ) {
+        if (forceReselect.when === 'always') {
+            logger.info(`Force Auto Reconnecting`);
+            return {
+                autoReconnect: true,
+                forcedAutoReconnected: true,
+            };
+        }
+
+        if (
+            forceReselect.when === 'BootLoaderMode' &&
+            isDeviceInDFUBootloader(addedDevice)
+        ) {
+            logger.info(`Force Auto Reconnecting in Boot Loader Mode`);
+            return {
+                autoReconnect: true,
+                forcedAutoReconnected: true,
+            };
+        }
+
+        if (
+            forceReselect.when === 'applicationMode' &&
+            addedDevice.dfuTriggerInfo !== null
+        ) {
+            logger.info(`Force Auto Reconnecting in Application Mode`);
+            return {
+                autoReconnect: true,
+                forcedAutoReconnected: true,
+            };
+        }
+    }
+
+    // Device does not have the same traits
+    if (!hasSameDeviceTraits(addedDevice.traits, autoReconnectDevice.traits)) {
+        return {
+            autoReconnect: false,
+            forcedAutoReconnected: false,
+        };
+    }
+
+    return globalAutoReconnect
+        ? {
+              autoReconnect: true,
+              forcedAutoReconnected: false,
+          }
+        : {
+              autoReconnect: false,
+              forcedAutoReconnected: false,
+          };
+};
+
+const initAutoReconnectTimeout = (
+    dispatch: TDispatch,
+    forceAutoReselect?: ForceAutoReselect
+) => {
+    const timeout = forceAutoReselect?.timeout;
+    if (timeout == null) return;
+
+    dispatch(
+        setAutoReconnectTimeoutID(
+            setTimeout(() => {
+                dispatch(clearAutoReselect());
+                dispatch(closeSetupDialogVisible());
+                if (forceAutoReselect?.onFail) forceAutoReselect?.onFail();
+                logger.warn(
+                    `Auto Reconnect failed. Device did not show up after ${
+                        timeout / 1000
+                    } seconds`
+                );
+            }, timeout)
+        )
+    );
+};
 
 let hotplugTaskId: number;
 
@@ -66,7 +203,12 @@ export const startWatchingDevices =
         deviceListing: DeviceTraits,
         onDeviceConnected: (device: Device) => void,
         onDeviceDisconnected: (device: Device) => void,
-        onDeviceDeselected: () => void
+        onDeviceDeselected: () => void,
+        doSelectDevice: (
+            device: Device,
+            autoReconnected: boolean,
+            forcedAutoReconnected: boolean
+        ) => void
     ) =>
     async (dispatch: TDispatch, getState: () => RootState) => {
         const updateDeviceList = (event: HotplugEvent) => {
@@ -88,6 +230,36 @@ export const startWatchingDevices =
                             onDeviceConnected(device);
                         }
                         dispatch(addDevice(device));
+
+                        const sn = getState().device.selectedSerialNumber;
+                        const result = shouldAutoReconnect(
+                            device,
+                            getState().deviceAutoSelect.globalAutoReselect,
+                            getState().deviceAutoSelect.device,
+                            getState().deviceAutoSelect.disconnectionTime,
+                            sn !== null
+                                ? getState().device.devices.get(sn)
+                                : undefined,
+                            getState().deviceAutoSelect.forceReselect
+                        );
+
+                        if (result.autoReconnect) {
+                            logger.info(
+                                `Auto Reconnecting Device SN: ${device.serialNumber}`
+                            );
+                            doSelectDevice(
+                                device,
+                                true,
+                                result.forcedAutoReconnected
+                            );
+
+                            const onSuccess =
+                                getState().deviceAutoSelect.forceReselect
+                                    ?.onSuccess;
+
+                            if (result.forcedAutoReconnected && onSuccess)
+                                onSuccess(device);
+                        }
                     }
                     break;
                 case 'NRFDL_DEVICE_EVENT_LEFT':
@@ -108,8 +280,29 @@ export const startWatchingDevices =
                             ) {
                                 onDeviceDeselected();
                             }
+
+                            if (
+                                toRemove?.serialNumber ===
+                                    getState().device.selectedSerialNumber &&
+                                getState().deviceAutoSelect.forceReselect
+                            ) {
+                                dispatch(closeSetupDialogVisible());
+                            }
+
                             dispatch(removeDevice(toRemove));
                             onDeviceDisconnected(toRemove);
+
+                            if (
+                                toRemove.serialNumber ===
+                                    getState().deviceAutoSelect.device
+                                        ?.serialNumber &&
+                                getState().deviceAutoSelect.forceReselect
+                            ) {
+                                initAutoReconnectTimeout(
+                                    dispatch,
+                                    getState().deviceAutoSelect.forceReselect
+                                );
+                            }
                         }
                     }
                     break;
@@ -124,6 +317,16 @@ export const startWatchingDevices =
             const currentDevices = wrapDevicesFromNrfdl(nrfdlDevices);
             dispatch(setDevices(currentDevices));
 
+            const autoSelectSN = getAutoSelectDeviceCLISerial();
+
+            if (autoSelectSN !== undefined) {
+                const autoSelectDevice =
+                    getState().device.devices.get(autoSelectSN);
+
+                if (autoSelectDevice)
+                    doSelectDevice(autoSelectDevice, true, false);
+            }
+
             hotplugTaskId = nrfDeviceLib.startHotplugEvents(
                 getDeviceLibContext(),
                 () => {},
@@ -136,6 +339,12 @@ export const startWatchingDevices =
             );
         }
     };
+
+const getAutoSelectDeviceCLISerial = () => {
+    const { argv } = process;
+    const serialIndex = argv.findIndex(arg => arg === '--deviceSerial');
+    return serialIndex > -1 ? argv[serialIndex + 1] : undefined;
+};
 
 /**
  * Stops watching for devices.
@@ -155,14 +364,14 @@ export const stopWatchingDevices = () => {
 
 export const waitForAutoReconnect = (
     dispatch: TDispatch,
-    forceAutoReconnect: ForceAutoReconnect
+    forceAutoReconnect: Omit<ForceAutoReselect, 'once'>
 ): Promise<Device> =>
     new Promise<Device>((resolve, reject) => {
         dispatch(
-            setForceAutoReconnect({
+            setForceAutoReselect({
                 timeout: forceAutoReconnect.timeout,
                 when: forceAutoReconnect.when,
-                once: true,
+                once: true, // TODO can user pass this
                 onSuccess: (device: Device) => {
                     if (forceAutoReconnect.onSuccess)
                         forceAutoReconnect.onSuccess(device);

@@ -16,11 +16,11 @@ import { Reducer } from 'redux';
 import About from '../About/About';
 import { setDocumentationSections } from '../About/documentationSlice';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
+import { setGlobalAutoReselect } from '../Device/deviceAutoSelectSlice';
 import {
     getDevices,
     selectedDevice as selectedDeviceSelector,
     selectedSerialNumber as selectedSerialNumberSelector,
-    setGlobalAutoReconnect,
 } from '../Device/deviceSlice';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
@@ -97,7 +97,7 @@ interface ConnectedAppProps {
     reportUsageData?: boolean;
     documentation?: ReactNode[];
     children?: ReactNode;
-    autoReconnectByDefault?: boolean;
+    autoReselectByDefault?: boolean;
 }
 
 const ConnectedApp: FC<ConnectedAppProps> = ({
@@ -108,7 +108,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     reportUsageData = false,
     documentation,
     children,
-    autoReconnectByDefault = false,
+    autoReselectByDefault = false,
 }) => {
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
@@ -124,8 +124,8 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     });
 
     useEffect(() => {
-        dispatch(setGlobalAutoReconnect(autoReconnectByDefault));
-    }, [dispatch, autoReconnectByDefault]);
+        dispatch(setGlobalAutoReselect(autoReselectByDefault));
+    }, [dispatch, autoReselectByDefault]);
 
     useEffect(() => {
         if (!showLogByDefault) {
