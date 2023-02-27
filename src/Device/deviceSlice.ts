@@ -133,9 +133,10 @@ const slice = createSlice({
         removeDevice: (state, action: PayloadAction<Device>) => {
             state.devices.delete(action.payload.serialNumber);
 
-            // if (state.autoReconnectDevice?.forceReconnect === undefined) {
-            //     state.isSetupDialogVisible = false;
-            // }
+            if (state.selectedSerialNumber === action.payload.serialNumber) {
+                state.selectedSerialNumber = null;
+                state.deviceInfo = null;
+            }
         },
 
         toggleDeviceFavorited: (state, action: PayloadAction<string>) => {

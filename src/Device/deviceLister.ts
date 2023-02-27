@@ -13,8 +13,10 @@ import nrfDeviceLib, {
 import logger from '../logging';
 import { Device, ForceAutoReselect, RootState, TDispatch } from '../state';
 import {
+    clearAutoReconnectTimeoutID,
     clearAutoReselect,
     setAutoReconnectTimeoutID,
+    setDisconnectedTime,
     setForceAutoReselect,
 } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
@@ -229,7 +231,6 @@ export const startWatchingDevices =
                         ) {
                             onDeviceConnected(device);
                         }
-                        dispatch(addDevice(device));
 
                         const sn = getState().device.selectedSerialNumber;
                         const result = shouldAutoReconnect(
@@ -247,6 +248,7 @@ export const startWatchingDevices =
                             logger.info(
                                 `Auto Reconnecting Device SN: ${device.serialNumber}`
                             );
+                            dispatch(clearAutoReconnectTimeoutID());
                             doSelectDevice(
                                 device,
                                 true,
@@ -260,6 +262,8 @@ export const startWatchingDevices =
                             if (result.forcedAutoReconnected && onSuccess)
                                 onSuccess(device);
                         }
+
+                        dispatch(addDevice(device));
                     }
                     break;
                 case 'NRFDL_DEVICE_EVENT_LEFT':
@@ -284,7 +288,7 @@ export const startWatchingDevices =
                             if (
                                 toRemove?.serialNumber ===
                                     getState().device.selectedSerialNumber &&
-                                getState().deviceAutoSelect.forceReselect
+                                !getState().deviceAutoSelect.forceReselect
                             ) {
                                 dispatch(closeSetupDialogVisible());
                             }
@@ -294,14 +298,16 @@ export const startWatchingDevices =
 
                             if (
                                 toRemove.serialNumber ===
-                                    getState().deviceAutoSelect.device
-                                        ?.serialNumber &&
-                                getState().deviceAutoSelect.forceReselect
+                                getState().deviceAutoSelect.device?.serialNumber
                             ) {
-                                initAutoReconnectTimeout(
-                                    dispatch,
-                                    getState().deviceAutoSelect.forceReselect
-                                );
+                                if (getState().deviceAutoSelect.forceReselect)
+                                    initAutoReconnectTimeout(
+                                        dispatch,
+                                        getState().deviceAutoSelect
+                                            .forceReselect
+                                    );
+
+                                dispatch(setDisconnectedTime(Date.now()));
                             }
                         }
                     }
@@ -371,7 +377,7 @@ export const waitForAutoReconnect = (
             setForceAutoReselect({
                 timeout: forceAutoReconnect.timeout,
                 when: forceAutoReconnect.when,
-                once: true, // TODO can user pass this
+                once: true,
                 onSuccess: (device: Device) => {
                     if (forceAutoReconnect.onSuccess)
                         forceAutoReconnect.onSuccess(device);

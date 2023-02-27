@@ -25,6 +25,7 @@ const slice = createSlice({
             state,
             action: PayloadAction<NodeJS.Timeout>
         ) => {
+            clearTimeout(state.autoReconnectTimeout);
             state.autoReconnectTimeout = action.payload;
         },
 
@@ -33,11 +34,24 @@ const slice = createSlice({
             state.autoReconnectTimeout = undefined;
         },
 
-        setAutoSelectDevice: (state, action: PayloadAction<Device>) => {
-            state.device = { ...action.payload };
+        setAutoSelectDevice: (
+            state,
+            action: PayloadAction<Device | undefined>
+        ) => {
+            state.device = action.payload ? { ...action.payload } : undefined;
+            state.disconnectionTime = undefined;
+            clearTimeout(state.autoReconnectTimeout);
+            state.autoReconnectTimeout = undefined;
+
+            if (state.forceReselect?.once) {
+                state.forceReselect = undefined;
+            }
         },
 
-        setDisconnectedTime: (state, action: PayloadAction<number>) => {
+        setDisconnectedTime: (
+            state,
+            action: PayloadAction<number | undefined>
+        ) => {
             if (state.device) {
                 state.disconnectionTime = action.payload;
             }
@@ -61,6 +75,8 @@ const slice = createSlice({
             state.device = undefined;
             state.forceReselect = undefined;
             state.disconnectionTime = undefined;
+            clearTimeout(state.autoReconnectTimeout);
+            state.autoReconnectTimeout = undefined;
         },
     },
 });
