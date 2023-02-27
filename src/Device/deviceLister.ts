@@ -288,7 +288,7 @@ export const startWatchingDevices =
                             if (
                                 toRemove?.serialNumber ===
                                     getState().device.selectedSerialNumber &&
-                                getState().deviceAutoSelect.forceReselect
+                                !getState().deviceAutoSelect.forceReselect
                             ) {
                                 dispatch(closeSetupDialogVisible());
                             }
