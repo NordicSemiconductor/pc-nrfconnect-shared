@@ -11,6 +11,14 @@ import { loadPackageJson } from './packageJson';
 
 const getUserDataDir = () => getGlobal('userDataDir');
 
+declare global {
+    interface Window {
+        appDir: string;
+        appDataDir: string;
+        appLogDir: string;
+    }
+}
+
 function setAppDirs(
     newAppDir: string,
     newAppDataDir: string,
