@@ -1,4 +1,11 @@
 declare const getUserDataDir: () => any;
+declare global {
+    interface Window {
+        appDir: string;
+        appDataDir: string;
+        appLogDir: string;
+    }
+}
 declare function setAppDirs(newAppDir: string, newAppDataDir: string, newAppLogDir: string): void;
 /**
  * Get the filesystem path of the currently loaded app.
