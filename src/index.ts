@@ -77,11 +77,8 @@ export {
     getPersistedTerminalSettings,
 } from './utils/persistentStore';
 
-export {
-    selectedDevice,
-    getReadbackProtection,
-    setForceAutoReconnect,
-} from './Device/deviceSlice';
+export { selectedDevice, getReadbackProtection } from './Device/deviceSlice';
+export { setForceAutoReselect } from './Device/deviceAutoSelectSlice';
 export { waitForAutoReconnect } from './Device/deviceLister';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
 export { getDeviceLibContext } from './Device/deviceLibWrapper';

@@ -13,9 +13,9 @@ import MemoryMap from 'nrf-intel-hex';
 import logger from '../logging';
 import { Device, TDispatch } from '../state';
 import { getAppFile } from '../utils/appDirs';
+import { setForceAutoReselect } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import type { DeviceSetup, DfuEntry } from './deviceSetup';
-import { setForceAutoReconnect } from './deviceSlice';
 import {
     createInitPacketBuffer,
     defaultInitPacket,
@@ -105,7 +105,7 @@ const updateBootloader = (device: Device, dispatch: TDispatch) => {
     const zipBuffer = zip.toBuffer();
 
     dispatch(
-        setForceAutoReconnect({
+        setForceAutoReselect({
             timeout: DEFAULT_DEVICE_WAIT_TIME,
             when: 'always',
             once: true,
@@ -153,7 +153,7 @@ const checkConfirmUpdateBootloader = async (
 
     if (!isDeviceInDFUBootloader(device)) {
         dispatch(
-            setForceAutoReconnect({
+            setForceAutoReselect({
                 timeout: 10000,
                 when: 'BootLoaderMode',
                 once: true,
@@ -371,7 +371,7 @@ const prepareInDFUBootloader = async (
     logger.debug('Starting DFU');
 
     dispatch(
-        setForceAutoReconnect({
+        setForceAutoReselect({
             timeout: DEFAULT_DEVICE_WAIT_TIME,
             when: 'always',
             once: false,
@@ -387,7 +387,7 @@ const prepareInDFUBootloader = async (
             zipBuffer,
             err => {
                 dispatch(
-                    setForceAutoReconnect({
+                    setForceAutoReselect({
                         timeout: DEFAULT_DEVICE_WAIT_TIME,
                         when: 'applicationMode',
                         once: true,
