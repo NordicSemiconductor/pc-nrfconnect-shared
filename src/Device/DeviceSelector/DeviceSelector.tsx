@@ -13,6 +13,7 @@ import useHotKey from '../../utils/useHotKey';
 import {
     clearAutoReconnectTimeoutID,
     getWaitingToAutoReselect,
+    setAutoSelectDevice,
 } from '../deviceAutoSelectSlice';
 import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
 import { DeviceSetup as DeviceSetupShared, setupDevice } from '../deviceSetup';
@@ -67,6 +68,7 @@ export default ({
     const doDeselectDevice = useCallback(() => {
         onDeviceDeselected();
         dispatch(deselectDevice());
+        dispatch(setAutoSelectDevice(undefined));
     }, [dispatch, onDeviceDeselected]);
 
     const doSelectDevice = useCallback(
@@ -82,12 +84,12 @@ export default ({
 
             if (deviceIsSelected) {
                 doDeselectDevice();
-                return; // ??
             }
 
             dispatch(clearAutoReconnectTimeoutID());
             setDeviceListVisible(false);
             dispatch(selectDevice(device));
+            dispatch(setAutoSelectDevice(device));
             onDeviceSelected(device, autoReconnected);
             if (deviceSetup) {
                 dispatch(
