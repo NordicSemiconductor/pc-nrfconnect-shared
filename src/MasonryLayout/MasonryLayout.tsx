@@ -19,14 +19,14 @@ const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
     minWidth,
     className,
 }) => {
-    const masonryLayoutRef = useRef<HTMLDivElement>(null);
-
     const [width, setWidth] = useState(-1);
     const [maxHeight, setMaxHeight] = useState(-1);
     const [columns, setColumns] = useState(-1);
     const [orders, setOrders] = useState<number[]>([]);
     const [hiddenChildren, setHiddenChildren] = useState<boolean[]>([]);
     const [columnHeights, setColumnHeights] = useState<number[]>([]);
+
+    const masonryLayoutRef = useRef<HTMLDivElement>(null);
 
     const generateMetaData = useCallback((col: number) => {
         let child = masonryLayoutRef.current?.firstElementChild;
@@ -112,15 +112,13 @@ const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
                 setWidth(current.clientWidth);
             }
 
-            if (noOfColumns !== columns) {
-                const data = calcData(noOfColumns);
-                if (data) {
-                    setOrders(data.order);
-                    setColumnHeights(data.columnHeights);
-                    setMaxHeight(data.maxHeight);
-                    setHiddenChildren(data.hiddenChildren);
-                    setColumns(data.columns);
-                }
+            const data = calcData(noOfColumns);
+            if (data) {
+                setOrders(data.order);
+                setColumnHeights(data.columnHeights);
+                setMaxHeight(data.maxHeight);
+                setHiddenChildren(data.hiddenChildren);
+                setColumns(data.columns);
             }
         });
         observer.observe(masonryLayoutRef.current);
@@ -140,9 +138,7 @@ const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
                 {React.Children.map(children, (child, i) => (
                     <div
                         data-hidden={
-                            hiddenChildren[i] === true
-                                ? 'true'
-                                : `${hiddenChildren[i]}`
+                            hiddenChildren[i] === true ? 'true' : 'false'
                         }
                         style={{
                             width: `${width / columns}px`,
