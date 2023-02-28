@@ -7,6 +7,14 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 14 - 2023-02-28
+
+### Fixed
+
+-   `MasonryLayout` Update layout more frequently.
+-   `MasonryLayout` Hidden items can become visible and not remain hidden for
+    the full app life cycle.
+
 ## 13 - 2023-02-24
 
 ### Fixed
