@@ -38,7 +38,9 @@ $margin: 8px; //px unit dependency in dropdown.tsx
         }
 
         > div[data-hidden='true'] {
-            display: none;
+            border-bottom: 0 !important;
+            border-left: 0 !important;
+            border-right: 0 !important;
         }
     }
 }
