@@ -49,18 +49,18 @@ export interface DeviceState {
     readbackProtection: 'unknown' | 'protected' | 'unprotected';
 }
 export interface DeviceAutoSelectState {
-    globalAutoReselect: boolean;
+    autoReselect: boolean;
     device?: Device;
     disconnectionTime?: number;
-    forceReselect?: ForceAutoReselect;
+    waitForDevice?: WaitForDevice;
     autoReconnectTimeout?: NodeJS.Timeout;
 }
-export interface ForceAutoReselect {
+export interface WaitForDevice {
     timeout: number;
     when: 'always' | 'applicationMode' | 'BootLoaderMode';
     once: boolean;
     onSuccess?: (device: Device) => void;
-    onFail?: () => void;
+    onFail?: (reason?: unknown) => void;
 }
 export interface DeviceInfo {
     name?: string;

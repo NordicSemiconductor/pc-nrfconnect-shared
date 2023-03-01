@@ -5,7 +5,7 @@ interface BasicDeviceProps {
     device: Device;
     deviceNameInputRef?: React.Ref<HTMLInputElement>;
     toggles?: ReactNode;
-    showReconnecting?: boolean;
+    showWaitingStatus?: boolean;
 }
-declare const _default: ({ device, deviceNameInputRef, toggles, showReconnecting, }: BasicDeviceProps) => JSX.Element;
+declare const _default: ({ device, deviceNameInputRef, toggles, showWaitingStatus, }: BasicDeviceProps) => JSX.Element;
 export default _default;

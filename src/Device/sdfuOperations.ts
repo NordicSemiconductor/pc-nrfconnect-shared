@@ -13,7 +13,7 @@ import MemoryMap from 'nrf-intel-hex';
 import logger from '../logging';
 import { Device, TDispatch } from '../state';
 import { getAppFile } from '../utils/appDirs';
-import { setForceAutoReselect } from './deviceAutoSelectSlice';
+import { setWaitForDevice } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import type { DeviceSetup, DfuEntry } from './deviceSetup';
 import {
@@ -99,73 +99,117 @@ const getBootloaderInformation = async (device: Device) => {
     return null;
 };
 
-const updateBootloader = (device: Device, dispatch: TDispatch) => {
+const updateBootloader = async (
+    device: Device,
+    dispatch: TDispatch,
+    onSuccess: (device: Device) => void,
+    onFail: (reason?: unknown) => void
+) => {
     logger.info(`Update Bootloader ${device}`);
     const zip = new AdmZip(getAppFile(LATEST_BOOTLOADER));
     const zipBuffer = zip.toBuffer();
 
-    dispatch(
-        setForceAutoReselect({
-            timeout: DEFAULT_DEVICE_WAIT_TIME,
-            when: 'always',
-            once: true,
-        })
-    );
-
     logger.debug('Starting Bootloader Update');
-    return new Promise<void>((resolve, reject) => {
-        nrfDeviceLib.firmwareProgram(
-            getDeviceLibContext(),
-            device.id,
-            'NRFDL_FW_BUFFER',
-            'NRFDL_FW_SDFU_ZIP',
-            zipBuffer,
-            err => {
-                if (err) {
-                    logger.error(
-                        `Failed to write bootloader to the target device: ${
-                            err.message || err
-                        }`
-                    );
-                    reject(err.message);
-                } else {
-                    logger.info(
-                        'Bootloader has been written to the target device'
-                    );
-                    logger.debug('Bootloader DFU completed successfully!');
-                    resolve();
-                }
-            },
-            progressJson
-        );
-    });
+
+    await nrfDeviceLib.firmwareProgram(
+        getDeviceLibContext(),
+        device.id,
+        'NRFDL_FW_BUFFER',
+        'NRFDL_FW_SDFU_ZIP',
+        zipBuffer,
+        err => {
+            if (err) {
+                logger.error(
+                    `Failed to write bootloader to the target device: ${
+                        err.message || err
+                    }`
+                );
+                onFail(err.message);
+            } else {
+                dispatch(
+                    setWaitForDevice({
+                        timeout: DEFAULT_DEVICE_WAIT_TIME,
+                        when: 'always',
+                        once: true,
+                        onSuccess,
+                        onFail,
+                    })
+                );
+
+                logger.info('Bootloader has been written to the target device');
+                logger.debug('Bootloader DFU completed successfully!');
+            }
+        },
+        progressJson
+    );
 };
 
-const checkConfirmUpdateBootloader = async (
+const switchToDeviceMode = (
+    device: Device,
+    mcuState: nrfDeviceLib.MCUState,
+    dispatch: TDispatch,
+    onSuccess: (device: Device) => void,
+    onFail: (reason?: unknown) => void
+) => {
+    nrfDeviceLib
+        .deviceControlSetMcuState(getDeviceLibContext(), device.id, mcuState)
+        .then(() => {
+            dispatch(
+                setWaitForDevice({
+                    timeout: 10000,
+                    when:
+                        mcuState === 'NRFDL_MCU_STATE_APPLICATION'
+                            ? 'applicationMode'
+                            : 'BootLoaderMode',
+                    once: true,
+                    onSuccess,
+                    onFail,
+                })
+            );
+        })
+        .catch(err => onFail(err));
+};
+
+export const switchToBootloaderMode = (
     device: Device,
     dispatch: TDispatch,
-    promiseConfirm?: PromiseConfirm
+    onSuccess: (device: Device) => void,
+    onFail: (reason?: unknown) => void
 ) => {
-    if (!promiseConfirm) {
-        // without explicit consent bootloader will not be updated
-        return true;
-    }
-
     if (!isDeviceInDFUBootloader(device)) {
-        dispatch(
-            setForceAutoReselect({
-                timeout: 10000,
-                when: 'BootLoaderMode',
-                once: true,
-            })
+        switchToDeviceMode(
+            device,
+            'NRFDL_MCU_STATE_PROGRAMMING',
+            dispatch,
+            onSuccess,
+            onFail
         );
+    } else if (onSuccess) {
+        onSuccess(device);
+    }
+};
+
+export const switchToApplicationMode = (
+    device: Device,
+    dispatch: TDispatch,
+    onSuccess: (device: Device) => void,
+    onFail: (reason?: unknown) => void
+) => {
+    switchToDeviceMode(
+        device,
+        'NRFDL_MCU_STATE_APPLICATION',
+        dispatch,
+        onSuccess,
+        onFail
+    );
+};
+
+const isLatestBootloader = async (device: Device) => {
+    if (!isDeviceInDFUBootloader(device)) {
+        throw new Error('Cannot read bootloader information.');
     }
 
     const bootloaderInfo = await getBootloaderInformation(device);
-
-    if (!isDeviceInDFUBootloader(device)) {
-        return false;
-    }
 
     if (
         !bootloaderInfo ||
@@ -175,17 +219,37 @@ const checkConfirmUpdateBootloader = async (
         return true;
     }
 
-    if (
-        !(await promiseConfirm(
-            'Device will be programmed. A Newer version of the bootloader is available, do you want to update it as well?'
-        ))
-    ) {
-        logger.info('Continuing with old bootloader');
-        return true;
-    }
+    return false;
+};
 
-    await updateBootloader(device, dispatch);
-    return false; // device will not be ready as it will reboot
+const askAndUpdateBootloader = (
+    device: Device,
+    dispatch: TDispatch,
+    promiseConfirm: PromiseConfirm,
+    onSuccess: (device: Device) => void,
+    onFail: (reason?: unknown) => void
+) => {
+    switchToBootloaderMode(
+        device,
+        dispatch,
+        async d => {
+            if (!(await isLatestBootloader(d))) {
+                if (
+                    !(await promiseConfirm(
+                        'Device will be programmed. A Newer version of the bootloader is available, do you want to update it as well?'
+                    ))
+                ) {
+                    logger.info('Continuing with old bootloader');
+                    onSuccess(d);
+                } else {
+                    updateBootloader(d, dispatch, onSuccess, onFail);
+                }
+            } else {
+                onSuccess(d);
+            }
+        },
+        onFail
+    );
 };
 
 export const confirmHelper = async (promiseConfirm?: PromiseConfirm) => {
@@ -199,7 +263,7 @@ export const confirmHelper = async (promiseConfirm?: PromiseConfirm) => {
     }
 };
 
-export const choiceHelper = /* async */ (
+export const choiceHelper = (
     choices: string[],
     promiseChoice?: PromiseChoice
 ) => {
@@ -314,11 +378,13 @@ const createDfuZipBuffer = async (dfuImages: DfuImage[]) => {
     return buffer;
 };
 
-const prepareInDFUBootloader = async (
+const programInDFUBootloader = async (
     device: Device,
     dfu: DfuEntry,
-    dispatch: TDispatch
-): Promise<void> => {
+    dispatch: TDispatch,
+    onSuccess: (device: Device) => void,
+    onFail: (reason?: unknown) => void
+) => {
     logger.debug(
         `${device.serialNumber} on ${device.serialport?.comName} is now in DFU-Bootloader...`
     );
@@ -370,54 +436,47 @@ const prepareInDFUBootloader = async (
 
     logger.debug('Starting DFU');
 
-    dispatch(
-        setForceAutoReselect({
-            timeout: DEFAULT_DEVICE_WAIT_TIME,
-            when: 'always',
-            once: false,
-        })
-    );
-
-    return new Promise<void>((resolve, reject) => {
-        nrfDeviceLib.firmwareProgram(
-            getDeviceLibContext(),
-            device.id,
-            'NRFDL_FW_BUFFER',
-            'NRFDL_FW_SDFU_ZIP',
-            zipBuffer,
-            err => {
+    nrfDeviceLib.firmwareProgram(
+        getDeviceLibContext(),
+        device.id,
+        'NRFDL_FW_BUFFER',
+        'NRFDL_FW_SDFU_ZIP',
+        zipBuffer,
+        err => {
+            if (err) {
+                logger.error(
+                    `Failed to write to the target device: ${
+                        err.message || err
+                    }`
+                );
+                onFail(err.message);
+            } else {
+                logger.info(
+                    'All dfu images have been written to the target device'
+                );
+                logger.debug('DFU completed successfully!');
                 dispatch(
-                    setForceAutoReselect({
+                    setWaitForDevice({
                         timeout: DEFAULT_DEVICE_WAIT_TIME,
                         when: 'applicationMode',
                         once: true,
+                        onSuccess,
+                        onFail,
                     })
                 );
-                if (err) {
-                    logger.error(
-                        `Failed to write to the target device: ${
-                            err.message || err
-                        }`
-                    );
-                    reject(err.message);
-                } else {
-                    logger.info(
-                        'All dfu images have been written to the target device'
-                    );
-                    logger.debug('DFU completed successfully!');
-                    resolve();
-                }
-            },
-            progressJson
-        );
-    });
+            }
+        },
+        progressJson
+    );
 };
 
-export const performDFU = async (
+export const performDFU = (
     selectedDevice: Device,
     options: DeviceSetup,
-    dispatch: TDispatch
-): Promise<void> => {
+    dispatch: TDispatch,
+    onSuccess: (device: Device) => void,
+    onFail: (reason?: unknown) => void
+) => {
     const { dfu, promiseConfirm, promiseChoice } = options;
 
     if (dfu == null) {
@@ -425,23 +484,22 @@ export const performDFU = async (
         throw new Error('Must never be called without DFU options.');
     }
 
-    try {
-        if (
-            !(await checkConfirmUpdateBootloader(
-                selectedDevice,
-                dispatch,
-                promiseConfirm
-            ))
-        )
-            return;
-
+    const action = async (d: Device) => {
         const choice = await choiceHelper(Object.keys(dfu), promiseChoice);
-        await prepareInDFUBootloader(selectedDevice, dfu[choice], dispatch);
+        programInDFUBootloader(d, dfu[choice], dispatch, onSuccess, onFail);
         logger.debug('DFU finished: ', selectedDevice);
-        return; // Device is not ready we have just programmed it will reboot;
-    } catch (err) {
-        logger.debug('DFU failed: ', err);
-        throw err;
+    };
+
+    if (promiseConfirm) {
+        askAndUpdateBootloader(
+            selectedDevice,
+            dispatch,
+            promiseConfirm,
+            action,
+            onFail
+        );
+    } else {
+        action(selectedDevice);
     }
 };
 

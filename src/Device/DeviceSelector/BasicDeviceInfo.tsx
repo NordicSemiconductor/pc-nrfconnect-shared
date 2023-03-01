@@ -4,13 +4,14 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import InlineInput from '../../InlineInput/InlineInput';
 import { Device } from '../../state';
 import {
     getAutoReselectDevice,
+    getWaitingForDevice,
     getWaitingToAutoReselect,
 } from '../deviceAutoSelectSlice';
 import { displayedDeviceName } from '../deviceInfo/deviceInfo';
@@ -22,10 +23,10 @@ import './basic-device-info.scss';
 interface Props {
     device: Device;
     inputRef?: React.Ref<HTMLInputElement>;
-    reconnecting: boolean;
+    messageType: 'AutoReselect' | 'WaitingForDevice' | 'DeviceName';
 }
 
-const DeviceName = ({ device, inputRef, reconnecting }: Props) => {
+const DeviceName = ({ device, inputRef, messageType }: Props) => {
     const dispatch = useDispatch();
     const setOrResetNickname = (name: string) => {
         const newNameIsEqualToDefaultName =
@@ -38,17 +39,24 @@ const DeviceName = ({ device, inputRef, reconnecting }: Props) => {
         }
     };
 
-    return reconnecting ? (
-        <div className="reconnecting">Reconnecting...</div>
-    ) : (
-        <InlineInput
-            ref={inputRef}
-            className="name"
-            value={displayedDeviceName(device)}
-            isValid={name => name !== ''}
-            onChange={setOrResetNickname}
-        />
-    );
+    switch (messageType) {
+        case 'AutoReselect':
+            return <div className="reconnecting">Reconnecting...</div>;
+            break;
+        case 'WaitingForDevice':
+            return <div className="reconnecting">Rebooting...</div>;
+            break;
+        case 'DeviceName':
+            return (
+                <InlineInput
+                    ref={inputRef}
+                    className="name"
+                    value={displayedDeviceName(device)}
+                    isValid={name => name !== ''}
+                    onChange={setOrResetNickname}
+                />
+            );
+    }
 };
 
 const DeviceSerialNumber = ({ device }: { device: Device }) => (
@@ -59,20 +67,41 @@ interface BasicDeviceProps {
     device: Device;
     deviceNameInputRef?: React.Ref<HTMLInputElement>;
     toggles?: ReactNode;
-    showReconnecting?: boolean;
+    showWaitingStatus?: boolean;
 }
 
 export default ({
     device,
     deviceNameInputRef,
     toggles,
-    showReconnecting = false,
+    showWaitingStatus = false,
 }: BasicDeviceProps) => {
+    const [messageType, setMessageType] = useState<
+        'AutoReselect' | 'WaitingForDevice' | 'DeviceName'
+    >('DeviceName');
     const autoReselectDevice = useSelector(getAutoReselectDevice);
     const waitingToAutoReselect = useSelector(getWaitingToAutoReselect);
-    const deviceWaitingToReselect =
-        waitingToAutoReselect &&
+    const waitingForDevice = useSelector(getWaitingForDevice);
+    const deviceWaiting =
+        (waitingToAutoReselect || waitingForDevice) &&
         device.serialNumber === autoReselectDevice?.serialNumber;
+
+    useEffect(() => {
+        if (!showWaitingStatus) {
+            setMessageType('DeviceName');
+        } else if (waitingForDevice && deviceWaiting) {
+            setMessageType('WaitingForDevice');
+        } else if (waitingToAutoReselect && deviceWaiting) {
+            setMessageType('AutoReselect');
+        } else {
+            setMessageType('DeviceName');
+        }
+    }, [
+        deviceWaiting,
+        showWaitingStatus,
+        waitingForDevice,
+        waitingToAutoReselect,
+    ]);
 
     return (
         <div className="basic-device-info">
@@ -81,7 +110,7 @@ export default ({
                 <DeviceName
                     device={device}
                     inputRef={deviceNameInputRef}
-                    reconnecting={deviceWaitingToReselect && showReconnecting}
+                    messageType={messageType}
                 />
                 <DeviceSerialNumber device={device} />
             </div>

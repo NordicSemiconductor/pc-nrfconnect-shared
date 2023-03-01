@@ -11,13 +11,13 @@ import nrfDeviceLib, {
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../logging';
-import { Device, ForceAutoReselect, RootState, TDispatch } from '../state';
+import { Device, RootState, TDispatch, WaitForDevice } from '../state';
 import {
-    clearAutoReconnectTimeoutID,
-    clearAutoReselect,
-    setAutoReconnectTimeoutID,
+    clearWaitForDeviceTimeout,
     setDisconnectedTime,
-    setForceAutoReselect,
+    setLastArrivedDeviceId,
+    setWaitForDevice,
+    setWaitForDeviceTimeout,
 } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import {
@@ -38,117 +38,58 @@ const hasSameDeviceTraits = (
             otherDeviceTraits[rule as keyof DeviceTraits]
     );
 
-const shouldAutoReconnect = (
+const shouldAutoReselect = (
     addedDevice: Device,
-    globalAutoReconnect: boolean,
-    autoReconnectDevice?: Device,
+    globalAutoReselect: boolean,
+    autoReselectDevice?: Device,
     disconnectionTime?: number,
-    currentSelectedDevice?: Device,
-    forceReselect?: ForceAutoReselect
-): {
-    autoReconnect: boolean;
-    forcedAutoReconnected: boolean;
-} => {
+    currentSelectedDevice?: Device
+): boolean => {
     // No device was selected when disconnection occurred
-    if (!autoReconnectDevice)
-        return {
-            autoReconnect: false,
-            forcedAutoReconnected: false,
-        };
+    if (!autoReselectDevice) return false;
 
     // device is still connected
-    if (disconnectionTime === undefined)
-        return {
-            autoReconnect: false,
-            forcedAutoReconnected: false,
-        };
+    if (disconnectionTime === undefined) return false;
 
     // The device that was selected when disconnection occurred is not yet connected
-    if (addedDevice.serialNumber !== autoReconnectDevice.serialNumber) {
-        return {
-            autoReconnect: false,
-            forcedAutoReconnected: false,
-        };
+    if (addedDevice.serialNumber !== autoReselectDevice.serialNumber) {
+        return false;
     }
 
     // The device is already selected
     if (
-        currentSelectedDevice?.serialNumber === autoReconnectDevice.serialNumber
+        currentSelectedDevice?.serialNumber === autoReselectDevice.serialNumber
     ) {
-        return {
-            autoReconnect: false,
-            forcedAutoReconnected: false,
-        };
-    }
-
-    // Device is to be reconnected as timeout is provided
-    if (
-        forceReselect &&
-        disconnectionTime + forceReselect.timeout >= Date.now()
-    ) {
-        if (forceReselect.when === 'always') {
-            logger.info(`Force Auto Reconnecting`);
-            return {
-                autoReconnect: true,
-                forcedAutoReconnected: true,
-            };
-        }
-
-        if (
-            forceReselect.when === 'BootLoaderMode' &&
-            isDeviceInDFUBootloader(addedDevice)
-        ) {
-            logger.info(`Force Auto Reconnecting in Boot Loader Mode`);
-            return {
-                autoReconnect: true,
-                forcedAutoReconnected: true,
-            };
-        }
-
-        if (
-            forceReselect.when === 'applicationMode' &&
-            addedDevice.dfuTriggerInfo !== null
-        ) {
-            logger.info(`Force Auto Reconnecting in Application Mode`);
-            return {
-                autoReconnect: true,
-                forcedAutoReconnected: true,
-            };
-        }
+        return false;
     }
 
     // Device does not have the same traits
-    if (!hasSameDeviceTraits(addedDevice.traits, autoReconnectDevice.traits)) {
-        return {
-            autoReconnect: false,
-            forcedAutoReconnected: false,
-        };
+    if (!hasSameDeviceTraits(addedDevice.traits, autoReselectDevice.traits)) {
+        return false;
     }
 
-    return globalAutoReconnect
-        ? {
-              autoReconnect: true,
-              forcedAutoReconnected: false,
-          }
-        : {
-              autoReconnect: false,
-              forcedAutoReconnected: false,
-          };
+    return globalAutoReselect;
 };
 
 const initAutoReconnectTimeout = (
     dispatch: TDispatch,
-    forceAutoReselect?: ForceAutoReselect
+    onTimeout: () => void,
+    forceAutoReselect?: WaitForDevice
 ) => {
     const timeout = forceAutoReselect?.timeout;
     if (timeout == null) return;
 
     dispatch(
-        setAutoReconnectTimeoutID(
+        setWaitForDeviceTimeout(
             setTimeout(() => {
-                dispatch(clearAutoReselect());
                 dispatch(closeSetupDialogVisible());
-                if (forceAutoReselect?.onFail) forceAutoReselect?.onFail();
+                if (forceAutoReselect?.onFail)
+                    forceAutoReselect?.onFail(
+                        `Auto Reconnect failed. Device did not show up after ${
+                            timeout / 1000
+                        } seconds`
+                    );
+                onTimeout();
                 logger.warn(
                     `Auto Reconnect failed. Device did not show up after ${
                         timeout / 1000
@@ -206,14 +147,30 @@ export const startWatchingDevices =
         onDeviceConnected: (device: Device) => void,
         onDeviceDisconnected: (device: Device) => void,
         onDeviceDeselected: () => void,
-        doSelectDevice: (
-            device: Device,
-            autoReconnected: boolean,
-            forcedAutoReconnected: boolean
-        ) => void
+        doSelectDevice: (device: Device, autoReselected: boolean) => void
     ) =>
     async (dispatch: TDispatch, getState: () => RootState) => {
         const updateDeviceList = (event: HotplugEvent) => {
+            const removeDeviceFromList = (remove: Device) => {
+                if (
+                    remove.serialNumber ===
+                    getState().device.selectedSerialNumber
+                ) {
+                    onDeviceDeselected();
+                }
+
+                if (
+                    remove.serialNumber ===
+                        getState().device.selectedSerialNumber &&
+                    !getState().deviceAutoSelect.waitForDevice
+                ) {
+                    dispatch(closeSetupDialogVisible());
+                }
+
+                dispatch(removeDevice(remove));
+                onDeviceDisconnected(remove);
+            };
+
             switch (event.event_type) {
                 case 'NRFDL_DEVICE_EVENT_ARRIVED':
                     if (!event.device) {
@@ -233,34 +190,73 @@ export const startWatchingDevices =
                         }
 
                         const sn = getState().device.selectedSerialNumber;
-                        const result = shouldAutoReconnect(
+                        const disconnectionTime =
+                            getState().deviceAutoSelect.disconnectionTime;
+                        const autoSelectDevice =
+                            getState().deviceAutoSelect.device;
+
+                        const result = shouldAutoReselect(
                             device,
-                            getState().deviceAutoSelect.globalAutoReselect,
-                            getState().deviceAutoSelect.device,
-                            getState().deviceAutoSelect.disconnectionTime,
+                            getState().deviceAutoSelect.autoReselect,
+                            autoSelectDevice,
+                            disconnectionTime,
                             sn !== null
                                 ? getState().device.devices.get(sn)
-                                : undefined,
-                            getState().deviceAutoSelect.forceReselect
+                                : undefined
                         );
 
-                        if (result.autoReconnect) {
+                        if (result) {
                             logger.info(
                                 `Auto Reconnecting Device SN: ${device.serialNumber}`
                             );
-                            dispatch(clearAutoReconnectTimeoutID());
-                            doSelectDevice(
-                                device,
-                                true,
-                                result.forcedAutoReconnected
-                            );
+                            doSelectDevice(device, true);
+                        }
 
-                            const onSuccess =
-                                getState().deviceAutoSelect.forceReselect
-                                    ?.onSuccess;
+                        if (
+                            device.serialNumber ===
+                            getState().deviceAutoSelect.device?.serialNumber
+                        ) {
+                            const waitForDevice =
+                                getState().deviceAutoSelect.waitForDevice;
+                            // Device is to be reconnected as timeout is provided
+                            if (
+                                waitForDevice &&
+                                ((disconnectionTime === undefined &&
+                                    getState().deviceAutoSelect
+                                        .lastArrivedDeviceId !== device.id) ||
+                                    (disconnectionTime ?? 0) +
+                                        waitForDevice.timeout >=
+                                        Date.now())
+                            ) {
+                                dispatch(setLastArrivedDeviceId(device.id));
+                                dispatch(setDisconnectedTime(undefined));
+                                if (
+                                    waitForDevice.when === 'always' ||
+                                    (waitForDevice.when === 'BootLoaderMode' &&
+                                        isDeviceInDFUBootloader(device)) ||
+                                    (waitForDevice.when === 'applicationMode' &&
+                                        device.dfuTriggerInfo !== null)
+                                ) {
+                                    logger.info(
+                                        'Wait For Device was successfully'
+                                    );
 
-                            if (result.forcedAutoReconnected && onSuccess)
-                                onSuccess(device);
+                                    dispatch(clearWaitForDeviceTimeout());
+                                    if (waitForDevice.once) {
+                                        dispatch(setWaitForDevice(undefined));
+                                    } else {
+                                        initAutoReconnectTimeout(
+                                            dispatch,
+                                            () => removeDeviceFromList(device),
+                                            getState().deviceAutoSelect
+                                                .waitForDevice
+                                        );
+                                    }
+
+                                    if (waitForDevice.onSuccess)
+                                        waitForDevice.onSuccess(device);
+                                }
+                            }
                         }
 
                         dispatch(addDevice(device));
@@ -270,46 +266,32 @@ export const startWatchingDevices =
                     {
                         const devices = getState().device.devices;
 
-                        let toRemove: Device | undefined;
                         devices.forEach(device => {
                             if (device.id === event.device_id) {
-                                toRemove = device;
+                                const waitForDevice =
+                                    getState().deviceAutoSelect.waitForDevice;
+                                if (
+                                    device.serialNumber ===
+                                    getState().deviceAutoSelect.device
+                                        ?.serialNumber
+                                ) {
+                                    if (waitForDevice) {
+                                        initAutoReconnectTimeout(
+                                            dispatch,
+                                            () => removeDeviceFromList(device),
+                                            getState().deviceAutoSelect
+                                                .waitForDevice
+                                        );
+                                    } else {
+                                        removeDeviceFromList(device);
+                                    }
+
+                                    dispatch(setDisconnectedTime(Date.now()));
+                                } else {
+                                    removeDeviceFromList(device);
+                                }
                             }
                         });
-
-                        if (toRemove) {
-                            if (
-                                toRemove?.serialNumber ===
-                                getState().device.selectedSerialNumber
-                            ) {
-                                onDeviceDeselected();
-                            }
-
-                            if (
-                                toRemove?.serialNumber ===
-                                    getState().device.selectedSerialNumber &&
-                                !getState().deviceAutoSelect.forceReselect
-                            ) {
-                                dispatch(closeSetupDialogVisible());
-                            }
-
-                            dispatch(removeDevice(toRemove));
-                            onDeviceDisconnected(toRemove);
-
-                            if (
-                                toRemove.serialNumber ===
-                                getState().deviceAutoSelect.device?.serialNumber
-                            ) {
-                                if (getState().deviceAutoSelect.forceReselect)
-                                    initAutoReconnectTimeout(
-                                        dispatch,
-                                        getState().deviceAutoSelect
-                                            .forceReselect
-                                    );
-
-                                dispatch(setDisconnectedTime(Date.now()));
-                            }
-                        }
                     }
                     break;
             }
@@ -329,8 +311,7 @@ export const startWatchingDevices =
                 const autoSelectDevice =
                     getState().device.devices.get(autoSelectSN);
 
-                if (autoSelectDevice)
-                    doSelectDevice(autoSelectDevice, true, false);
+                if (autoSelectDevice) doSelectDevice(autoSelectDevice, true);
             }
 
             hotplugTaskId = nrfDeviceLib.startHotplugEvents(
@@ -367,26 +348,3 @@ export const stopWatchingDevices = () => {
         }
     }
 };
-
-export const waitForAutoReconnect = (
-    dispatch: TDispatch,
-    forceAutoReconnect: Omit<ForceAutoReselect, 'once'>
-): Promise<Device> =>
-    new Promise<Device>((resolve, reject) => {
-        dispatch(
-            setForceAutoReselect({
-                timeout: forceAutoReconnect.timeout,
-                when: forceAutoReconnect.when,
-                once: true,
-                onSuccess: (device: Device) => {
-                    if (forceAutoReconnect.onSuccess)
-                        forceAutoReconnect.onSuccess(device);
-                    resolve(device);
-                },
-                onFail: () => {
-                    if (forceAutoReconnect.onFail) forceAutoReconnect.onFail();
-                    reject();
-                },
-            })
-        );
-    });

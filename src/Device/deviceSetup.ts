@@ -25,6 +25,7 @@ import {
     performDFU,
     PromiseChoice,
     PromiseConfirm,
+    switchToApplicationMode,
 } from './sdfuOperations';
 
 export interface DfuEntry {
@@ -94,103 +95,143 @@ export const receiveDeviceSetupInput =
         }
     };
 
-const prepareDevice = async (
+type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+
+const prepareDFUDevice = async (
+    device: Device,
+    deviceSetupConfig: WithRequired<DeviceSetup, 'dfu'>,
+    dispatch: TDispatch,
+    onSuccess: (device: Device) => void,
+    onFail: (reason?: unknown) => void
+) => {
+    // Check if device is in DFU-Bootloader, it might only have serialport
+    if (isDeviceInDFUBootloader(device)) {
+        logger.debug('Device is in DFU-Bootloader, DFU is defined');
+
+        const isConfirmed = await confirmHelper(
+            deviceSetupConfig.promiseConfirm
+        );
+        if (!isConfirmed) {
+            switchToApplicationMode(device, dispatch, onSuccess, onFail);
+        } else {
+            performDFU(device, deviceSetupConfig, dispatch, onSuccess, onFail);
+        }
+    } else if (device.dfuTriggerVersion) {
+        logger.debug(
+            'Device has DFU trigger interface, the device is in Application mode'
+        );
+
+        const { semVer } = device.dfuTriggerVersion;
+
+        if (
+            Object.keys(deviceSetupConfig.dfu)
+                .map(key => deviceSetupConfig.dfu[key].semver)
+                .includes(semVer)
+        ) {
+            onSuccess(device);
+            return;
+        }
+        const isConfirmed = await confirmHelper(
+            deviceSetupConfig.promiseConfirm
+        );
+        if (!isConfirmed) {
+            onSuccess(device);
+            return;
+        }
+
+        performDFU(device, deviceSetupConfig, dispatch, onSuccess, onFail);
+    }
+};
+
+const prepareJProgDevice = async (
+    device: Device,
+    deviceSetupConfig: WithRequired<DeviceSetup, 'jprog'>,
+    dispatch: TDispatch,
+    onSuccess: (device: Device) => void,
+    onFail: (reason?: unknown) => void
+) => {
+    const family = (device.jlink?.deviceFamily || '').toLowerCase();
+    const deviceType = (device.jlink?.deviceVersion || '').toLowerCase();
+    const shortDeviceType = deviceType.split('_').shift();
+    const boardVersion = (device.jlink?.boardVersion || '').toLowerCase();
+
+    const key =
+        Object.keys(deviceSetupConfig.jprog).find(
+            k => k.toLowerCase() === deviceType
+        ) ||
+        Object.keys(deviceSetupConfig.jprog).find(
+            k => k.toLowerCase() === shortDeviceType
+        ) ||
+        Object.keys(deviceSetupConfig.jprog).find(
+            k => k.toLowerCase() === boardVersion
+        ) ||
+        Object.keys(deviceSetupConfig.jprog).find(
+            k => k.toLowerCase() === family
+        );
+
+    if (!key) {
+        onFail(new Error('No firmware defined for selected device'));
+        return;
+    }
+
+    logger.debug('Found matching firmware definition', key);
+    const { fw, fwVersion } = deviceSetupConfig.jprog[key];
+    const valid = await validateFirmware(device, fwVersion);
+
+    dispatch(
+        setReadbackProtected(
+            valid === 'READBACK_PROTECTION_ENABLED'
+                ? 'protected'
+                : 'unprotected'
+        )
+    );
+
+    if (valid) {
+        onSuccess(device);
+    } else {
+        programFirmware(device, fw, deviceSetupConfig)
+            .then(() => onSuccess(device))
+            .catch(() => onFail(new Error('Failed to program firmware')));
+    }
+};
+
+const prepareDevice = (
     device: Device,
     deviceSetupConfig: DeviceSetup,
     dispatch: TDispatch,
-    forcedAutoReconnected: boolean
-): Promise<boolean> => {
-    const { jprog, dfu, needSerialport } = deviceSetupConfig;
-
-    if (dfu && Object.keys(dfu).length > 0) {
-        // Check if device is in DFU-Bootloader, it might only have serialport
-        if (isDeviceInDFUBootloader(device)) {
-            logger.debug('Device is in DFU-Bootloader, DFU is defined');
-            if (!forcedAutoReconnected) {
-                const isConfirmed = await confirmHelper(
-                    deviceSetupConfig.promiseConfirm
-                );
-                if (!isConfirmed) {
-                    // TODO Switch To APP Mode and return
-                    throw new Error(
-                        'Device is in bootloader mode. We cannot use it.'
-                    );
-                }
-            }
-
-            await performDFU(device, deviceSetupConfig, dispatch);
-            return false; // Any DFU operation will power cycle hence we are not ready
-        }
-
-        if (device.dfuTriggerVersion) {
-            logger.debug(
-                'Device has DFU trigger interface, the device is in Application mode'
+    onSuccess: (device: Device) => void,
+    onFail: (reason?: unknown) => void
+) => {
+    const action = () => {
+        if (deviceSetupConfig.jprog && device.traits.jlink) {
+            prepareJProgDevice(
+                device,
+                deviceSetupConfig as WithRequired<DeviceSetup, 'jprog'>,
+                dispatch,
+                onSuccess,
+                onFail
             );
-
-            const { semVer } = device.dfuTriggerVersion;
-
-            if (
-                Object.keys(dfu)
-                    .map(key => dfu[key].semver)
-                    .includes(semVer)
-            ) {
-                return true;
-            }
-
-            if (!forcedAutoReconnected) {
-                const isConfirmed = await confirmHelper(
-                    deviceSetupConfig.promiseConfirm
-                );
-                if (!isConfirmed) {
-                    return true;
-                }
-            }
-
-            await performDFU(device, deviceSetupConfig, dispatch);
-            return false; // Any DFU operation will power cycle hence we are not ready
+        } else if (
+            deviceSetupConfig.dfu &&
+            Object.keys(deviceSetupConfig.dfu).length > 0
+        ) {
+            prepareDFUDevice(
+                device,
+                deviceSetupConfig as WithRequired<DeviceSetup, 'dfu'>,
+                dispatch,
+                onSuccess,
+                onFail
+            );
+        } else {
+            onSuccess(device);
         }
+    };
+
+    if (deviceSetupConfig.needSerialport) {
+        verifySerialPortAvailable(device).then(action).catch(onFail);
+    } else {
+        action();
     }
-
-    if (jprog && device.traits.jlink) {
-        if (needSerialport) await verifySerialPortAvailable(device);
-        const family = (device.jlink?.deviceFamily || '').toLowerCase();
-        const deviceType = (device.jlink?.deviceVersion || '').toLowerCase();
-        const shortDeviceType = deviceType.split('_').shift();
-        const boardVersion = (device.jlink?.boardVersion || '').toLowerCase();
-
-        const key =
-            Object.keys(jprog).find(k => k.toLowerCase() === deviceType) ||
-            Object.keys(jprog).find(k => k.toLowerCase() === shortDeviceType) ||
-            Object.keys(jprog).find(k => k.toLowerCase() === boardVersion) ||
-            Object.keys(jprog).find(k => k.toLowerCase() === family);
-
-        if (!key) {
-            throw new Error('No firmware defined for selected device');
-        }
-
-        logger.debug('Found matching firmware definition', key);
-        const { fw, fwVersion } = jprog[key];
-        const valid = await validateFirmware(device, fwVersion);
-
-        dispatch(
-            setReadbackProtected(
-                valid === 'READBACK_PROTECTION_ENABLED'
-                    ? 'protected'
-                    : 'unprotected'
-            )
-        );
-
-        if (valid) return true;
-
-        try {
-            await programFirmware(device, fw, deviceSetupConfig);
-            return true;
-        } catch (error) {
-            throw new Error('Failed to program firmware');
-        }
-    }
-
-    return true;
 };
 
 const onSuccessfulDeviceSetup = (
@@ -208,8 +249,7 @@ export const setupDevice =
         deviceSetup: DeviceSetup,
         releaseCurrentDevice: () => void,
         onDeviceIsReady: (device: Device) => void,
-        doDeselectDevice: () => void,
-        forcedAutoReconnected: boolean
+        doDeselectDevice: () => void
     ) =>
     async (dispatch: TDispatch) => {
         await releaseCurrentDevice();
@@ -220,42 +260,40 @@ export const setupDevice =
             ...deviceSetup,
         };
 
-        try {
-            const ready = await prepareDevice(
-                device,
-                deviceSetupConfig,
-                dispatch,
-                forcedAutoReconnected
-            );
+        prepareDevice(
+            device,
+            deviceSetupConfig,
+            dispatch,
+            d => {
+                onSuccessfulDeviceSetup(dispatch, d, onDeviceIsReady);
+            },
+            error => {
+                dispatch(deviceSetupError());
+                if (
+                    deviceSetupConfig.allowCustomDevice &&
+                    error instanceof Error &&
+                    error.message.includes('No firmware defined')
+                ) {
+                    logger.info(
+                        `Connected to device with serial number: ${device.serialNumber} ` +
+                            `and family: ${
+                                device.jlink?.deviceFamily || 'Unknown'
+                            } `
+                    );
+                    logger.info(
+                        'Note: no pre-compiled firmware is available for the selected device. ' +
+                            'You may still use the app if you have programmed the device ' +
+                            'with a compatible firmware.'
+                    );
 
-            if (ready)
-                onSuccessfulDeviceSetup(dispatch, device, onDeviceIsReady);
-        } catch (error) {
-            dispatch(deviceSetupError());
-            if (
-                deviceSetupConfig.allowCustomDevice &&
-                error instanceof Error &&
-                error.message.includes('No firmware defined')
-            ) {
-                logger.info(
-                    `Connected to device with serial number: ${device.serialNumber} ` +
-                        `and family: ${
-                            device.jlink?.deviceFamily || 'Unknown'
-                        } `
-                );
-                logger.info(
-                    'Note: no pre-compiled firmware is available for the selected device. ' +
-                        'You may still use the app if you have programmed the device ' +
-                        'with a compatible firmware.'
-                );
-
-                onSuccessfulDeviceSetup(dispatch, device, onDeviceIsReady);
-            } else {
-                logger.logError(
-                    `Error while setting up device ${device.serialNumber}`,
-                    error
-                );
-                doDeselectDevice();
+                    onSuccessfulDeviceSetup(dispatch, device, onDeviceIsReady);
+                } else {
+                    logger.logError(
+                        `Error while setting up device ${device.serialNumber}`,
+                        error
+                    );
+                    doDeselectDevice();
+                }
             }
-        }
+        );
     };

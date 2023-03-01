@@ -9,19 +9,19 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
     Device,
     DeviceAutoSelectState,
-    ForceAutoReselect,
     RootState,
+    WaitForDevice,
 } from '../state';
 
 const initialState: DeviceAutoSelectState = {
-    globalAutoReselect: false,
+    autoReselect: false,
 };
 
 const slice = createSlice({
     name: 'deviceAutoSelect',
     initialState,
     reducers: {
-        setAutoReconnectTimeoutID: (
+        setWaitForDeviceTimeout: (
             state,
             action: PayloadAction<NodeJS.Timeout>
         ) => {
@@ -29,7 +29,7 @@ const slice = createSlice({
             state.autoReconnectTimeout = action.payload;
         },
 
-        clearAutoReconnectTimeoutID: state => {
+        clearWaitForDeviceTimeout: state => {
             clearTimeout(state.autoReconnectTimeout);
             state.autoReconnectTimeout = undefined;
         },
@@ -42,10 +42,6 @@ const slice = createSlice({
             state.disconnectionTime = undefined;
             clearTimeout(state.autoReconnectTimeout);
             state.autoReconnectTimeout = undefined;
-
-            if (state.forceReselect?.once) {
-                state.forceReselect = undefined;
-            }
         },
 
         setDisconnectedTime: (
@@ -57,26 +53,25 @@ const slice = createSlice({
             }
         },
 
-        setGlobalAutoReselect: (state, action: PayloadAction<boolean>) => {
-            state.globalAutoReselect = action.payload;
-            if (state.disconnectionTime !== undefined) {
-                state.device = undefined;
+        setAutoReselect: (state, action: PayloadAction<boolean>) => {
+            state.autoReselect = action.payload;
+            if (state.autoReselect) {
+                state.disconnectionTime = undefined;
             }
         },
 
-        setForceAutoReselect: (
+        setWaitForDevice: (
             state,
-            action: PayloadAction<ForceAutoReselect>
+            action: PayloadAction<WaitForDevice | undefined>
         ) => {
-            if (state.device) state.forceReselect = action.payload;
+            if (state.device) state.waitForDevice = action.payload;
         },
 
-        clearAutoReselect: state => {
-            state.device = undefined;
-            state.forceReselect = undefined;
-            state.disconnectionTime = undefined;
-            clearTimeout(state.autoReconnectTimeout);
-            state.autoReconnectTimeout = undefined;
+        setLastArrivedDeviceId: (
+            state,
+            action: PayloadAction<number | undefined>
+        ) => {
+            if (state.device) state.lastArrivedDeviceId = action.payload;
         },
     },
 });
@@ -84,29 +79,35 @@ const slice = createSlice({
 export const {
     reducer,
     actions: {
-        setAutoReconnectTimeoutID,
-        clearAutoReconnectTimeoutID,
+        setWaitForDeviceTimeout,
+        clearWaitForDeviceTimeout,
         setAutoSelectDevice,
         setDisconnectedTime,
-        setGlobalAutoReselect,
-        setForceAutoReselect,
-        clearAutoReselect,
+        setAutoReselect,
+        setWaitForDevice,
+        setLastArrivedDeviceId,
     },
 } = slice;
 
 export const getAutoReselectDevice = (state: RootState) =>
     state.deviceAutoSelect.device;
 
-export const getGlobalAutoReselect = (state: RootState) =>
-    state.deviceAutoSelect.globalAutoReselect;
+export const getAutoReselect = (state: RootState) =>
+    state.deviceAutoSelect.autoReselect;
 
 export const getWaitingToAutoReselect = (state: RootState) =>
     state.deviceAutoSelect.disconnectionTime !== undefined &&
-    (state.deviceAutoSelect.forceReselect !== undefined ||
-        state.deviceAutoSelect.globalAutoReselect);
+    state.deviceAutoSelect.autoReselect;
+
+export const getWaitingForDevice = (state: RootState) =>
+    state.deviceAutoSelect.disconnectionTime !== undefined &&
+    state.deviceAutoSelect.waitForDevice !== undefined;
 
 export const getDisconnectionTime = (state: RootState) =>
     state.deviceAutoSelect.disconnectionTime;
 
-export const getForceReselect = (state: RootState) =>
-    state.deviceAutoSelect.forceReselect;
+export const getWaitForDevice = (state: RootState) =>
+    state.deviceAutoSelect.waitForDevice;
+
+export const getLastArrivedDeviceId = (state: RootState) =>
+    state.deviceAutoSelect.lastArrivedDeviceId;

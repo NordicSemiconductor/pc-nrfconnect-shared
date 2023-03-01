@@ -10,10 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Device as DeviceProps } from '../../../state';
 import { Toggle } from '../../../Toggle/Toggle';
 import classNames from '../../../utils/classNames';
-import {
-    getGlobalAutoReselect,
-    setGlobalAutoReselect,
-} from '../../deviceAutoSelectSlice';
+import { getAutoReselect, setAutoReselect } from '../../deviceAutoSelectSlice';
 import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
 import { getDevices } from '../../deviceSlice';
 import { AnimatedItem, AnimatedList } from './AnimatedList';
@@ -66,7 +63,7 @@ const DeviceList: FC<Props> = ({
     deviceFilter = showAllDevices,
 }) => {
     const dispatch = useDispatch();
-    const autoReconnect = useSelector(getGlobalAutoReselect);
+    const autoReconnect = useSelector(getAutoReselect);
     const devices = useSelector(getDevices);
 
     const sortedDevices = useMemo(
@@ -87,7 +84,7 @@ const DeviceList: FC<Props> = ({
                     label="Auto Reconnect"
                     isToggled={autoReconnect}
                     onToggle={value => {
-                        dispatch(setGlobalAutoReselect(value));
+                        dispatch(setAutoReselect(value));
                     }}
                 />
             </div>

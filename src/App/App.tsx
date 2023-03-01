@@ -16,7 +16,7 @@ import { Reducer } from 'redux';
 import About from '../About/About';
 import { setDocumentationSections } from '../About/documentationSlice';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
-import { setGlobalAutoReselect } from '../Device/deviceAutoSelectSlice';
+import { setAutoReselect } from '../Device/deviceAutoSelectSlice';
 import {
     getDevices,
     selectedDevice as selectedDeviceSelector,
@@ -124,7 +124,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     });
 
     useEffect(() => {
-        dispatch(setGlobalAutoReselect(autoReselectByDefault));
+        dispatch(setAutoReselect(autoReselectByDefault));
     }, [dispatch, autoReselectByDefault]);
 
     useEffect(() => {

@@ -11,7 +11,7 @@ import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 import { Device } from '../../state';
 import useHotKey from '../../utils/useHotKey';
 import {
-    clearAutoReconnectTimeoutID,
+    clearWaitForDeviceTimeout,
     getWaitingToAutoReselect,
     setAutoSelectDevice,
 } from '../deviceAutoSelectSlice';
@@ -37,7 +37,7 @@ export interface Props {
     deviceListing: DeviceTraits & OutdatedDeviceTraits;
     deviceSetup?: DeviceSetupShared;
     releaseCurrentDevice?: () => void;
-    onDeviceSelected?: (device: Device, autoReconnected: boolean) => void;
+    onDeviceSelected?: (device: Device, autoReselected: boolean) => void;
     onDeviceDeselected?: () => void;
     onDeviceConnected?: (device: Device) => void;
     onDeviceDisconnected?: (device: Device) => void;
@@ -72,11 +72,7 @@ export default ({
     }, [dispatch, onDeviceDeselected]);
 
     const doSelectDevice = useCallback(
-        (
-            device: Device,
-            autoReconnected: boolean,
-            forcedAutoReconnected: boolean
-        ) => {
+        (device: Device, autoReselected: boolean) => {
             if (device.serialNumber === selectedSN) {
                 setDeviceListVisible(false);
                 return;
@@ -86,11 +82,11 @@ export default ({
                 doDeselectDevice();
             }
 
-            dispatch(clearAutoReconnectTimeoutID());
+            dispatch(clearWaitForDeviceTimeout());
             setDeviceListVisible(false);
             dispatch(selectDevice(device));
             dispatch(setAutoSelectDevice(device));
-            onDeviceSelected(device, autoReconnected);
+            onDeviceSelected(device, autoReselected);
             if (deviceSetup) {
                 dispatch(
                     setupDevice(
@@ -98,8 +94,7 @@ export default ({
                         deviceSetup,
                         releaseCurrentDevice,
                         onDeviceIsReady,
-                        doDeselectDevice,
-                        forcedAutoReconnected
+                        doDeselectDevice
                     )
                 );
             }

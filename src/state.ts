@@ -66,19 +66,20 @@ export interface DeviceState {
 }
 
 export interface DeviceAutoSelectState {
-    globalAutoReselect: boolean;
+    autoReselect: boolean;
     device?: Device;
     disconnectionTime?: number;
-    forceReselect?: ForceAutoReselect;
+    waitForDevice?: WaitForDevice;
     autoReconnectTimeout?: NodeJS.Timeout;
+    lastArrivedDeviceId?: number;
 }
 
-export interface ForceAutoReselect {
+export interface WaitForDevice {
     timeout: number;
     when: 'always' | 'applicationMode' | 'BootLoaderMode';
     once: boolean;
     onSuccess?: (device: Device) => void;
-    onFail?: () => void;
+    onFail?: (reason?: unknown) => void;
 }
 
 export interface DeviceInfo {
