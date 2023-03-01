@@ -35,11 +35,7 @@ ShowMoreInfo.propTypes = {
 
 interface Props {
     device: DeviceProps;
-    doSelectDevice: (
-        device: DeviceProps,
-        autoReconnected: boolean,
-        forcedAutoReconnected: boolean
-    ) => void;
+    doSelectDevice: (device: DeviceProps, autoReselected: boolean) => void;
     allowMoreInfoVisible: boolean;
 }
 
@@ -66,7 +62,7 @@ const Device: FC<Props> = ({
                 'device',
                 moreVisible && 'more-infos-visible'
             )}
-            onClick={() => doSelectDevice(device, false, false)}
+            onClick={() => doSelectDevice(device, false)}
         >
             <BasicDeviceInfo
                 deviceNameInputRef={deviceNameInputRef}

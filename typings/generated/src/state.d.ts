@@ -54,6 +54,7 @@ export interface DeviceAutoSelectState {
     disconnectionTime?: number;
     waitForDevice?: WaitForDevice;
     autoReconnectTimeout?: NodeJS.Timeout;
+    lastArrivedDeviceId?: number;
 }
 export interface WaitForDevice {
     timeout: number;

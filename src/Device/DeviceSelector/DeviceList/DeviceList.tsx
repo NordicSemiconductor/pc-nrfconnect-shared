@@ -48,11 +48,7 @@ const sorted = (devices: DeviceProps[]) =>
         return displayedDeviceName(a) < displayedDeviceName(b) ? -1 : 1;
     });
 interface Props {
-    doSelectDevice: (
-        device: DeviceProps,
-        autoReconnected: boolean,
-        forcedAutoReconnected: boolean
-    ) => void;
+    doSelectDevice: (device: DeviceProps, autoReselected: boolean) => void;
     isVisible: boolean;
     deviceFilter?: (device: DeviceProps) => boolean;
 }
