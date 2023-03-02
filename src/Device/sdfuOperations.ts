@@ -242,7 +242,10 @@ const askAndUpdateBootloader = (
                     logger.info('Continuing with old bootloader');
                     onSuccess(d);
                 } else {
-                    updateBootloader(d, dispatch, onSuccess, onFail);
+                    const action = (dd: Device) => {
+                        switchToBootloaderMode(dd, dispatch, onSuccess, onFail);
+                    };
+                    updateBootloader(d, dispatch, action, onFail);
                 }
             } else {
                 onSuccess(d);
@@ -487,7 +490,7 @@ export const performDFU = (
     const action = async (d: Device) => {
         const choice = await choiceHelper(Object.keys(dfu), promiseChoice);
         programInDFUBootloader(d, dfu[choice], dispatch, onSuccess, onFail);
-        logger.debug('DFU finished: ', selectedDevice);
+        logger.debug('DFU finished: ', d);
     };
 
     if (promiseConfirm) {
