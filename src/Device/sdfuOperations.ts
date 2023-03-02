@@ -199,7 +199,10 @@ export const switchToApplicationMode = (
         device,
         'NRFDL_MCU_STATE_APPLICATION',
         dispatch,
-        onSuccess,
+        d => {
+            if (isDeviceInDFUBootloader(d)) onFail();
+            else onSuccess(d);
+        },
         onFail
     );
 };
