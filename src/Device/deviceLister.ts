@@ -244,13 +244,6 @@ export const startWatchingDevices =
                                     dispatch(clearWaitForDeviceTimeout());
                                     if (waitForDevice.once) {
                                         dispatch(setWaitForDevice(undefined));
-                                    } else {
-                                        initAutoReconnectTimeout(
-                                            dispatch,
-                                            () => removeDeviceFromList(device),
-                                            getState().deviceAutoSelect
-                                                .waitForDevice
-                                        );
                                     }
 
                                     if (waitForDevice.onSuccess)
