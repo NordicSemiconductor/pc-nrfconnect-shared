@@ -181,7 +181,10 @@ export const switchToBootloaderMode = (
             device,
             'NRFDL_MCU_STATE_PROGRAMMING',
             dispatch,
-            onSuccess,
+            d => {
+                if (!isDeviceInDFUBootloader(d)) onFail();
+                else onSuccess(d);
+            },
             onFail
         );
     } else if (onSuccess) {

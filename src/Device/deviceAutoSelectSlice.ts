@@ -100,8 +100,7 @@ export const getWaitingToAutoReselect = (state: RootState) =>
     state.deviceAutoSelect.autoReselect;
 
 export const getWaitingForDevice = (state: RootState) =>
-    state.deviceAutoSelect.disconnectionTime !== undefined &&
-    state.deviceAutoSelect.waitForDevice !== undefined;
+    state.deviceAutoSelect.autoReconnectTimeout !== undefined;
 
 export const getDisconnectionTime = (state: RootState) =>
     state.deviceAutoSelect.disconnectionTime;

@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
+import { SerialPort } from 'serialport';
 
 import logger from '../logging';
 import { Device, TDispatch } from '../state';
@@ -14,11 +15,7 @@ import {
     setReadbackProtected,
 } from './deviceSlice';
 import { InitPacket } from './initPacket';
-import {
-    programFirmware,
-    validateFirmware,
-    verifySerialPortAvailable,
-} from './jprogOperations';
+import { programFirmware, validateFirmware } from './jprogOperations';
 import {
     confirmHelper,
     isDeviceInDFUBootloader,
@@ -45,8 +42,8 @@ export interface DeviceSetup {
             fwVersion: string;
         };
     };
-    needSerialport?: boolean;
-    allowCustomDevice?: boolean;
+    needSerialport?: boolean; // only used if dfu OR jprog available in the `DeviceSetup`
+    allowCustomDevice?: boolean; // allow custom J-Link device
     promiseChoice?: PromiseChoice;
     promiseConfirm?: PromiseConfirm;
 }
@@ -140,6 +137,8 @@ const prepareDFUDevice = async (
         }
 
         performDFU(device, deviceSetupConfig, dispatch, onSuccess, onFail);
+    } else {
+        onSuccess(device);
     }
 };
 
@@ -195,6 +194,51 @@ const prepareJProgDevice = async (
     }
 };
 
+const verifySerialPortAvailableAndFree = (
+    device: Device,
+    needSerialport?: boolean
+) => {
+    if (!needSerialport) {
+        return Promise.resolve();
+    }
+
+    if (!device.serialport) {
+        return Promise.reject(
+            new Error(
+                'No serial port available for device with ' +
+                    `serial number ${device.serialNumber}`
+            )
+        );
+    }
+    return new Promise<void>((resolve, reject) => {
+        if (!device.serialport?.comName) {
+            reject();
+            return;
+        }
+        const serialPort = new SerialPort({
+            path: device.serialport.comName,
+            // The BaudRate should not matter in this case, but as of serialport v10 it is required.
+            // To be sure to keep the code as similar as possible, baudRate is set to the same as the
+            // default baudRate in serialport v8.
+            baudRate: 9600,
+            autoOpen: false,
+        });
+        serialPort.open(openErr => {
+            if (openErr) {
+                reject(openErr);
+            } else {
+                serialPort.close(closeErr => {
+                    if (closeErr) {
+                        reject(closeErr);
+                    } else {
+                        resolve();
+                    }
+                });
+            }
+        });
+    });
+};
+
 const prepareDevice = (
     device: Device,
     deviceSetupConfig: DeviceSetup,
@@ -202,35 +246,41 @@ const prepareDevice = (
     onSuccess: (device: Device) => void,
     onFail: (reason?: unknown) => void
 ) => {
-    const action = () => {
-        if (deviceSetupConfig.jprog && device.traits.jlink) {
-            prepareJProgDevice(
-                device,
-                deviceSetupConfig as WithRequired<DeviceSetup, 'jprog'>,
-                dispatch,
-                onSuccess,
-                onFail
-            );
-        } else if (
-            deviceSetupConfig.dfu &&
-            Object.keys(deviceSetupConfig.dfu).length > 0
-        ) {
-            prepareDFUDevice(
-                device,
-                deviceSetupConfig as WithRequired<DeviceSetup, 'dfu'>,
-                dispatch,
-                onSuccess,
-                onFail
-            );
-        } else {
-            onSuccess(device);
-        }
-    };
-
-    if (deviceSetupConfig.needSerialport) {
-        verifySerialPortAvailable(device).then(action).catch(onFail);
+    if (deviceSetupConfig.jprog && device.traits.jlink) {
+        verifySerialPortAvailableAndFree(
+            device,
+            deviceSetupConfig.needSerialport
+        )
+            .then(() => {
+                prepareJProgDevice(
+                    device,
+                    deviceSetupConfig as WithRequired<DeviceSetup, 'jprog'>,
+                    dispatch,
+                    onSuccess,
+                    onFail
+                );
+            })
+            .catch(onFail);
+    } else if (
+        deviceSetupConfig.dfu &&
+        Object.keys(deviceSetupConfig.dfu).length > 0
+    ) {
+        verifySerialPortAvailableAndFree(
+            device,
+            deviceSetupConfig.needSerialport
+        )
+            .then(() => {
+                prepareDFUDevice(
+                    device,
+                    deviceSetupConfig as WithRequired<DeviceSetup, 'dfu'>,
+                    dispatch,
+                    onSuccess,
+                    onFail
+                );
+            })
+            .catch(onFail);
     } else {
-        action();
+        onSuccess(device);
     }
 };
 
@@ -268,7 +318,6 @@ export const setupDevice =
                 onSuccessfulDeviceSetup(dispatch, d, onDeviceIsReady);
             },
             error => {
-                dispatch(deviceSetupError());
                 if (
                     deviceSetupConfig.allowCustomDevice &&
                     error instanceof Error &&
@@ -288,6 +337,7 @@ export const setupDevice =
 
                     onSuccessfulDeviceSetup(dispatch, device, onDeviceIsReady);
                 } else {
+                    dispatch(deviceSetupError());
                     logger.logError(
                         `Error while setting up device ${device.serialNumber}`,
                         error
