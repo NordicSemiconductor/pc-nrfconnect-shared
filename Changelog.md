@@ -12,6 +12,7 @@ every new version is a new major version.
 ### Fixed
 
 -   Selecting a device will no longer stop and start hotplug events
+-   Long Serial number and device names will now render correctly
 
 ## 15 - 2023-03-03
 
