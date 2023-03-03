@@ -24,6 +24,7 @@
             .name {
                 font-size: 14px;
                 font-weight: $font-weight-bold;
+                text-overflow: ellipsis;
 
                 &:not(:focus) {
                     pointer-events: none;
@@ -40,6 +41,12 @@
                 &:not(:focus) {
                     pointer-events: none;
                 }
+            }
+
+            .serial-number {
+                overflow-wrap: break-word;
+                max-width: 155px;
+                text-overflow: ellipsis;
             }
         }
 
