@@ -7,7 +7,7 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 15 UNRELEASED
+## 15 - 2023-03-03
 
 ### Added
 
@@ -32,6 +32,7 @@ every new version is a new major version.
 -   Only one instance of the hot plug events.
 -   `setWaitForDevice` is callback based and this calls that reboot the device
     do not need to be awaited.
+-   Update nrf-device-lib-js to version 0.5.0.
 
 ## 14 - 2023-02-28
 
