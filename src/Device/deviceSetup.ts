@@ -338,10 +338,10 @@ export const setupDevice =
                     onSuccessfulDeviceSetup(dispatch, device, onDeviceIsReady);
                 } else {
                     dispatch(deviceSetupError());
-                    logger.logError(
-                        `Error while setting up device ${device.serialNumber}`,
-                        error
+                    logger.error(
+                        `Error while setting up device ${device.serialNumber}`
                     );
+                    if (error instanceof Error) logger.error(error.message);
                     doDeselectDevice();
                 }
             }

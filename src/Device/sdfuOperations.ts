@@ -182,7 +182,8 @@ export const switchToBootloaderMode = (
             'NRFDL_MCU_STATE_PROGRAMMING',
             dispatch,
             d => {
-                if (!isDeviceInDFUBootloader(d)) onFail();
+                if (!isDeviceInDFUBootloader(d))
+                    onFail(new Error('Failed to switch To Bootloader Mode'));
                 else onSuccess(d);
             },
             onFail
@@ -203,7 +204,8 @@ export const switchToApplicationMode = (
         'NRFDL_MCU_STATE_APPLICATION',
         dispatch,
         d => {
-            if (isDeviceInDFUBootloader(d)) onFail();
+            if (isDeviceInDFUBootloader(d))
+                onFail(new Error('Failed to switch to Application Mode'));
             else onSuccess(d);
         },
         onFail
@@ -458,7 +460,7 @@ const programInDFUBootloader = async (
                         err.message || err
                     }`
                 );
-                onFail(err.message);
+                onFail(err);
             } else {
                 logger.info(
                     'All dfu images have been written to the target device'
