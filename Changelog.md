@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 16 - 2023-03-03
+
+### Fixed
+
+-   Selecting a device will no longer stop and start hotplug events
+
 ## 15 - 2023-03-03
 
 ### Added

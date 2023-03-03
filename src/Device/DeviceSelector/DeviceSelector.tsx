@@ -71,17 +71,11 @@ export default ({
         dispatch(setAutoSelectDevice(undefined));
     }, [dispatch, onDeviceDeselected]);
 
+    // Ensure that useCallback is
+    // not updated frequently as this
+    // will have a side effect to stop and start the hotplug events
     const doSelectDevice = useCallback(
         (device: Device, autoReselected: boolean) => {
-            if (device.serialNumber === selectedSN) {
-                setDeviceListVisible(false);
-                return;
-            }
-
-            if (deviceIsSelected) {
-                doDeselectDevice();
-            }
-
             dispatch(clearWaitForDeviceTimeout());
             setDeviceListVisible(false);
             dispatch(selectDevice(device));
@@ -100,14 +94,12 @@ export default ({
             }
         },
         [
-            deviceIsSelected,
             deviceSetup,
             dispatch,
             doDeselectDevice,
             onDeviceIsReady,
             onDeviceSelected,
             releaseCurrentDevice,
-            selectedSN,
         ]
     );
 
@@ -164,7 +156,18 @@ export default ({
             )}
             <DeviceList
                 isVisible={deviceListVisible}
-                doSelectDevice={doSelectDevice}
+                doSelectDevice={(device, autoReselected) => {
+                    if (device.serialNumber === selectedSN) {
+                        setDeviceListVisible(false);
+                        return;
+                    }
+
+                    if (deviceIsSelected) {
+                        doDeselectDevice();
+                    }
+
+                    doSelectDevice(device, autoReselected);
+                }}
                 deviceFilter={deviceFilter}
             />
             <DeviceSetup />
