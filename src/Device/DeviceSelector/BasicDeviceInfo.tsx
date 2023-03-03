@@ -82,22 +82,20 @@ export default ({
     const autoReselectDevice = useSelector(getAutoReselectDevice);
     const waitingToAutoReselect = useSelector(getWaitingToAutoReselect);
     const waitingForDevice = useSelector(getWaitingForDevice);
-    const deviceWaiting =
-        (waitingToAutoReselect || waitingForDevice) &&
-        device.serialNumber === autoReselectDevice?.serialNumber;
+    const thisDevice = device.serialNumber === autoReselectDevice?.serialNumber;
 
     useEffect(() => {
         if (!showWaitingStatus) {
             setMessageType('DeviceName');
-        } else if (waitingForDevice && deviceWaiting) {
+        } else if (waitingForDevice && thisDevice) {
             setMessageType('WaitingForDevice');
-        } else if (waitingToAutoReselect && deviceWaiting) {
+        } else if (waitingToAutoReselect && thisDevice) {
             setMessageType('AutoReselect');
         } else {
             setMessageType('DeviceName');
         }
     }, [
-        deviceWaiting,
+        thisDevice,
         showWaitingStatus,
         waitingForDevice,
         waitingToAutoReselect,
