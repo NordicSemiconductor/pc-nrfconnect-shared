@@ -28,6 +28,8 @@ import {
 } from './deviceSlice';
 import { isDeviceInDFUBootloader } from './sdfuOperations';
 
+let autoSelectDeviceCLISerialUsed = false;
+
 const hasSameDeviceTraits = (
     deviceTraits: DeviceTraits,
     otherDeviceTraits: DeviceTraits
@@ -100,7 +102,7 @@ const initAutoReconnectTimeout = (
     );
 };
 
-let hotplugTaskId: number;
+let hotplugTaskId: number | null = null;
 
 /**
  * Wrap the device form nrf-device-lib to make the Device type consistent
@@ -291,20 +293,26 @@ export const startWatchingDevices =
         };
 
         try {
+            stopWatchingDevices();
             const nrfdlDevices = await nrfDeviceLib.enumerate(
                 getDeviceLibContext(),
                 deviceListing
             );
+
             const currentDevices = wrapDevicesFromNrfdl(nrfdlDevices);
             dispatch(setDevices(currentDevices));
 
-            const autoSelectSN = getAutoSelectDeviceCLISerial();
+            if (!autoSelectDeviceCLISerialUsed) {
+                const autoSelectSN = getAutoSelectDeviceCLISerial();
 
-            if (autoSelectSN !== undefined) {
-                const autoSelectDevice =
-                    getState().device.devices.get(autoSelectSN);
+                if (autoSelectSN !== undefined) {
+                    const autoSelectDevice =
+                        getState().device.devices.get(autoSelectSN);
 
-                if (autoSelectDevice) doSelectDevice(autoSelectDevice, true);
+                    if (autoSelectDevice)
+                        doSelectDevice(autoSelectDevice, true);
+                }
+                autoSelectDeviceCLISerialUsed = true;
             }
 
             hotplugTaskId = nrfDeviceLib.startHotplugEvents(
@@ -333,9 +341,10 @@ const getAutoSelectDeviceCLISerial = () => {
  */
 export const stopWatchingDevices = () => {
     // Not sure, if this guard clause is really needed
-    if (getDeviceLibContext()) {
+    if (getDeviceLibContext() && hotplugTaskId !== null) {
         try {
             nrfDeviceLib.stopHotplugEvents(hotplugTaskId);
+            hotplugTaskId = null;
         } catch (error) {
             logger.logError('Error while stopping to watch devices', error);
         }
