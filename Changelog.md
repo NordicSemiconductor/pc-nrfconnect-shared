@@ -9,8 +9,29 @@ every new version is a new major version.
 
 ## 15 - 2023-03-03
 
+### Added
+
+-   `Update Bootloader` prompt and `sdfu` programming for it.
+-   Reconnecting status in device selector.
+-   `setWaitForDevice` can be dispatched by apps to wait for a temporary
+    disconnect.
+-   During device setup, if device is in bootloader mode and user declines to
+    program, device is automatically switched to Application mode
+
+### Fixed
+
+-   Blocking dialog when disconnecting a device when the Programming dialog is
+    open.
+-   No longer auto reselect to the least disconnected device if is is in the
+    device list when clicking the `Auto Reconnect` Toggle.
+-   Dispatch `deviceSetupError` when `sdfu` programming fails.
+
 ### Changed
 
+-   Device Enumeration is only done once in the app life cycle
+-   Only one instance of the hot plug events.
+-   `setWaitForDevice` is callback based and this calls that reboot the device
+    do not need to be awaited.
 -   Update nrf-device-lib-js to version 0.5.0.
 
 ## 14 - 2023-02-28

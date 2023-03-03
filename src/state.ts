@@ -24,6 +24,7 @@ export interface RootState {
     appLayout: AppLayout;
     errorDialog: ErrorDialog;
     log: Log;
+    deviceAutoSelect: DeviceAutoSelectState;
     device: DeviceState;
     documentation: DocumentationState;
     brokenDeviceDialog: BrokenDeviceDialog;
@@ -61,14 +62,24 @@ export interface DeviceState {
     selectedSerialNumber: string | null;
     setupDialogChoices: readonly string[];
     setupDialogText?: string | null;
-    autoReconnectDevice?: AutoReconnectDevice | null;
-    autoReconnect: boolean;
     readbackProtection: 'unknown' | 'protected' | 'unprotected';
 }
 
-export interface AutoReconnectDevice {
-    device: Device;
+export interface DeviceAutoSelectState {
+    autoReselect: boolean;
+    device?: Device;
     disconnectionTime?: number;
+    waitForDevice?: WaitForDevice;
+    autoReconnectTimeout?: NodeJS.Timeout;
+    lastArrivedDeviceId?: number;
+}
+
+export interface WaitForDevice {
+    timeout: number;
+    when: 'always' | 'applicationMode' | 'BootLoaderMode';
+    once: boolean;
+    onSuccess?: (device: Device) => void;
+    onFail?: (reason?: unknown) => void;
 }
 
 export interface DeviceInfo {

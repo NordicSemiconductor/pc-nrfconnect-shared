@@ -78,10 +78,15 @@ export {
 } from './utils/persistentStore';
 
 export { selectedDevice, getReadbackProtection } from './Device/deviceSlice';
+export { setWaitForDevice } from './Device/deviceAutoSelectSlice';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
-export { waitForDevice } from './Device/deviceLister';
 export { getDeviceLibContext } from './Device/deviceLibWrapper';
-export { default as sdfuOperations } from './Device/sdfuOperations';
+export { isDeviceInDFUBootloader } from './Device/sdfuOperations';
+export {
+    default as sdfuOperations,
+    switchToBootloaderMode,
+    switchToApplicationMode,
+} from './Device/sdfuOperations';
 export { defaultInitPacket, HashType, FwType } from './Device/initPacket';
 
 export { default as describeError } from './logging/describeError';

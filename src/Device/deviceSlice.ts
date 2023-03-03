@@ -13,7 +13,6 @@ import {
     persistIsFavorite,
     persistNickname,
 } from '../utils/persistentStore';
-import { displayedDeviceName } from './deviceInfo/deviceInfo';
 
 const updateDevice = (
     state: DeviceState,
@@ -37,7 +36,6 @@ const initialState: DeviceState = {
     selectedSerialNumber: null,
     deviceInfo: null,
     isSetupWaitingForUserInput: false,
-    autoReconnect: false,
     readbackProtection: 'unknown',
     ...noDialogShown,
 };
@@ -51,9 +49,6 @@ const slice = createSlice({
          */
         selectDevice: (state, action: PayloadAction<Device>) => {
             state.selectedSerialNumber = action.payload.serialNumber;
-            state.autoReconnectDevice = {
-                device: { ...action.payload },
-            };
         },
 
         /*
@@ -62,7 +57,6 @@ const slice = createSlice({
         deselectDevice: state => {
             state.selectedSerialNumber = null;
             state.deviceInfo = null;
-            state.autoReconnectDevice = null;
             state.readbackProtection = 'unknown';
         },
 
@@ -139,11 +133,7 @@ const slice = createSlice({
         removeDevice: (state, action: PayloadAction<Device>) => {
             state.devices.delete(action.payload.serialNumber);
 
-            if (
-                state.autoReconnectDevice?.device.serialNumber ===
-                action.payload.serialNumber
-            ) {
-                state.autoReconnectDevice.disconnectionTime = Date.now();
+            if (state.selectedSerialNumber === action.payload.serialNumber) {
                 state.selectedSerialNumber = null;
                 state.deviceInfo = null;
             }
@@ -186,8 +176,8 @@ const slice = createSlice({
             });
         },
 
-        setGlobalAutoReconnect: (state, action: PayloadAction<boolean>) => {
-            state.autoReconnect = action.payload;
+        closeSetupDialogVisible: state => {
+            state.isSetupDialogVisible = false;
         },
 
         setReadbackProtected: (
@@ -214,34 +204,18 @@ export const {
         setDevices,
         setDeviceNickname,
         toggleDeviceFavorited,
-        setGlobalAutoReconnect,
+        closeSetupDialogVisible,
         setReadbackProtected,
     },
 } = slice;
 
-const sorted = (devices: Device[]) =>
-    [...devices].sort((a, b) => {
-        if (a.favorite !== b.favorite) {
-            return a.favorite ? -1 : 1;
-        }
-
-        return displayedDeviceName(a) < displayedDeviceName(b) ? -1 : 1;
-    });
-
 export const getDevice = (serialNumber: string) => (state: RootState) =>
     state.device.devices.get(serialNumber);
 
-export const sortedDevices = (state: RootState) =>
-    sorted([...state.device.devices.values()]);
+export const getDevices = (state: RootState) => state.device.devices;
 
 export const deviceIsSelected = (state: RootState) =>
     state.device.selectedSerialNumber != null;
-
-export const getAutoReconnectDevice = (state: RootState) =>
-    state.device.autoReconnect ||
-    state.device.autoReconnectDevice?.device.dfuTriggerVersion != null
-        ? state.device.autoReconnectDevice
-        : null;
 
 export const selectedDevice = (state: RootState) =>
     state.device.selectedSerialNumber !== null
@@ -251,9 +225,6 @@ export const selectedDevice = (state: RootState) =>
 export const deviceInfo = (state: RootState) => state.device.deviceInfo;
 export const selectedSerialNumber = (state: RootState) =>
     state.device.selectedSerialNumber;
-
-export const getGlobalAutoReconnect = (state: RootState) =>
-    state.device.autoReconnect;
 
 export const getReadbackProtection = (state: RootState) =>
     state.device.readbackProtection;
