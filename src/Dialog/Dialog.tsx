@@ -75,7 +75,7 @@ Dialog.Footer = ({
 export const DialogButton = ({
     variant = 'secondary',
     onClick,
-    className,
+    className = '',
     disabled = false,
     children,
 }: {
