@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 17 - 2023-03-08
+
+### Added
+
+-   Allow apps to see if auto-reconnect is enabled.
+
 ## 16 - 2023-03-03
 
 ### Fixed
