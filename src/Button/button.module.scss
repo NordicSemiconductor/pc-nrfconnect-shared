@@ -142,4 +142,11 @@
             background-color: color.scale($btn-danger-bg, $lightness: -10%);
         }
     }
+
+    &.link {
+        color: $nordic-blue;
+        padding: 0;
+        border: none;
+        background: none;
+    }
 }

@@ -17,6 +17,7 @@ export type ButtonVariants =
     | 'info'
     | 'warning'
     | 'danger'
+    | 'link'
     | 'custom';
 
 type ButtonProps = {
@@ -51,6 +52,7 @@ const Button: React.FC<ButtonProps> = ({
             variant === 'info' && styles.info,
             variant === 'warning' && styles.warning,
             variant === 'danger' && styles.danger,
+            variant === 'link' && styles.link,
             className
         )}
         disabled={disabled}
