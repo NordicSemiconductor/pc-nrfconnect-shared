@@ -113,3 +113,5 @@ export type {
     PackageJson,
     SourceJson,
 } from './utils/AppTypes';
+
+export { default as FeedbackPane } from './Panes/FeedbackPane';
