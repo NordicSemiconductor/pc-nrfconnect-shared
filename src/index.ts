@@ -78,7 +78,10 @@ export {
 } from './utils/persistentStore';
 
 export { selectedDevice, getReadbackProtection } from './Device/deviceSlice';
-export { setWaitForDevice } from './Device/deviceAutoSelectSlice';
+export {
+    setWaitForDevice,
+    getAutoReselect,
+} from './Device/deviceAutoSelectSlice';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
 export { getDeviceLibContext } from './Device/deviceLibWrapper';
 export { isDeviceInDFUBootloader } from './Device/sdfuOperations';
