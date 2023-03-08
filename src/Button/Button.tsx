@@ -44,7 +44,7 @@ const Button: React.FC<ButtonProps> = ({
         type="button"
         id={id}
         className={classNames(
-            styles.button,
+            variant !== 'custom' && styles.button,
             large && styles.large,
             variant === 'primary' && styles.primary,
             variant === 'secondary' && styles.secondary,
