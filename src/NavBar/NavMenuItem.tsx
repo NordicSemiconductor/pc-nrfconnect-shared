@@ -25,7 +25,7 @@ const NavMenuItem: FC<Props> = ({ index, isFirst, isSelected, label }) => {
 
     return (
         <Button
-            variant="link"
+            variant="custom"
             className={classNames(
                 'core19-nav-menu-item',
                 isSelected && 'selected',
