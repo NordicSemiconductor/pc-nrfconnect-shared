@@ -6,11 +6,11 @@
 
 import React, { useState } from 'react';
 
-import packageJson from '../../package.json';
 import Button from '../Button/Button';
 import logger from '../logging';
 import { isDevelopment } from '../utils/environment';
 import { openUrl } from '../utils/open';
+import packageJson from '../utils/packageJson';
 
 export default () => {
     const [feedback, setFeedback] = useState('');
@@ -103,6 +103,7 @@ export default () => {
                     large
                     className="btn-primary"
                     onClick={() => handleFormData(feedback, setSayThankYou)}
+                    disabled={feedback === ''}
                 >
                     Send Feedback
                 </Button>
@@ -121,7 +122,7 @@ const handleFormData = async (
     setResponse: (response: boolean) => void
 ) => {
     const data = {
-        name: packageJson.name,
+        name: getAppName(),
         feedback,
         platform: process.platform,
     };
@@ -150,3 +151,5 @@ const handleFormData = async (
         );
     }
 };
+
+const getAppName = () => packageJson().name;

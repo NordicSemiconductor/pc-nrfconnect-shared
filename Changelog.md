@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 18 - 2023-03-09
+
+### Added
+
+-   FeedbackPane component, to be added in the `Main` entry of a panes entry.
+
 ## 17 - 2023-03-08
 
 ### Added
