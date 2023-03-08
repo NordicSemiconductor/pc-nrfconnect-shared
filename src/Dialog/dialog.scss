@@ -45,22 +45,7 @@
         border: 0 transparent;
 
         button {
-            height: 32px;
             padding: 0 16px;
-            font-size: 12px;
-            &.btn-primary {
-                background-color: $nordic-blue;
-                color: $white;
-                border-color: $nordic-blue;
-                &:hover {
-                    border-color: $nordic-blue;
-                }
-            }
-            &.btn-secondary {
-                color: $gray-700;
-                background-color: $white;
-                border: 1px solid $gray-700;
-            }
         }
     }
 }

@@ -86,8 +86,10 @@ export const DialogButton = ({
     children: ReactNode | string;
 }) => (
     <Button
+        large
+        variant={variant}
         onClick={onClick}
-        className={`${className} btn-${variant}`}
+        className={className}
         disabled={disabled}
     >
         {children}

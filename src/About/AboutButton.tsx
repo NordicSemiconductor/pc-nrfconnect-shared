@@ -5,7 +5,6 @@
  */
 
 import React, { FC } from 'react';
-import { func, string } from 'prop-types';
 
 import Button from '../Button/Button';
 import { openUrl } from '../utils/open';
@@ -20,14 +19,10 @@ const AboutButton: FC<Props> = ({ url, label, onClick }) => (
     <Button
         disabled={!url && !onClick}
         onClick={onClick || (() => openUrl(url as string))}
+        variant="secondary"
     >
         {label}
     </Button>
 );
-AboutButton.propTypes = {
-    onClick: func,
-    url: string,
-    label: string.isRequired,
-};
 
 export default AboutButton;

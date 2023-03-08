@@ -80,6 +80,7 @@ export default () => {
                 />
                 <Section>
                     <Button
+                        variant="secondary"
                         onClick={() => {
                             persistIsLoggingVerbose(true);
                             getCurrentWindow().reload();
