@@ -6,16 +6,13 @@
 
 import React, { useState } from 'react';
 
+import packageJson from '../../package.json';
 import Button from '../Button/Button';
 import logger from '../logging';
 import { isDevelopment } from '../utils/environment';
 import { openUrl } from '../utils/open';
 
-type FeedbackPane = {
-    appName: string;
-};
-
-export default ({ appName }: FeedbackPane) => {
+export default () => {
     const [feedback, setFeedback] = useState('');
     const [sayThankYou, setSayThankYou] = useState(false);
 
@@ -105,9 +102,7 @@ export default ({ appName }: FeedbackPane) => {
                 <Button
                     large
                     className="btn-primary"
-                    onClick={() =>
-                        handleFormData(appName, feedback, setSayThankYou)
-                    }
+                    onClick={() => handleFormData(feedback, setSayThankYou)}
                 >
                     Send Feedback
                 </Button>
@@ -122,12 +117,11 @@ const formURL =
         : 'https://formkeep.com/f/36b394b92851';
 
 const handleFormData = async (
-    appName: string,
     feedback: string,
     setResponse: (response: boolean) => void
 ) => {
     const data = {
-        appName,
+        name: packageJson.name,
         feedback,
         platform: process.platform,
     };

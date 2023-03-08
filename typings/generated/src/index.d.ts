@@ -61,3 +61,4 @@ export type { PaneProps } from './App/App';
 export type { DfuImage } from './Device/initPacket';
 export type { DeviceSetup } from './Device/deviceSetup';
 export type { AppInfo, AppVersions, PackageJson, SourceJson, } from './utils/AppTypes';
+export { default as FeedbackPane } from './Panes/FeedbackPane';
