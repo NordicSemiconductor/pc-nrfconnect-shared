@@ -27,12 +27,14 @@ export const createSerialPort = async (
 ) => {
     const { path } = options;
     const eventEmitter = new EventEmitter();
+    let closed = false;
 
     ipcRenderer.on(`${SERIALPORT_CHANNEL.ON_DATA}_${path}`, (_event, data) =>
         eventEmitter.emit('onData', data)
     );
     ipcRenderer.on(`${SERIALPORT_CHANNEL.ON_CLOSED}_${path}`, () => {
         eventEmitter.emit('onClosed');
+        closed = true;
     });
     ipcRenderer.on(
         `${SERIALPORT_CHANNEL.ON_UPDATE}_${path}`,
@@ -60,6 +62,7 @@ export const createSerialPort = async (
         ipcRenderer.invoke(SERIALPORT_CHANNEL.IS_OPEN, path);
 
     const close = async () => {
+        if (closed) return;
         const error = await ipcRenderer.invoke(SERIALPORT_CHANNEL.CLOSE, path);
         if (error) {
             // IPC only carries the error message, that's why we throw new Error.
@@ -86,11 +89,31 @@ export const createSerialPort = async (
         ipcRenderer.invoke(SERIALPORT_CHANNEL.SET, path, newOptions);
     };
 
-    const error = await ipcRenderer.invoke(
-        SERIALPORT_CHANNEL.OPEN,
-        options,
-        overwriteOptions
-    );
+    const tryAndOpen = async (retryCount: number) => {
+        try {
+            return (await ipcRenderer.invoke(
+                SERIALPORT_CHANNEL.OPEN,
+                options,
+                overwriteOptions
+            )) as string;
+        } catch (error) {
+            if (
+                (error as Error).message.includes(
+                    'PORT_IS_ALREADY_BEING_OPENED'
+                ) ||
+                retryCount === 0
+            ) {
+                return new Promise<string>(resolve => {
+                    setTimeout(async () => {
+                        resolve((await tryAndOpen(retryCount - 1)) as string);
+                    }, 50 + Math.random() * 100);
+                });
+            }
+            return Promise.resolve<string>((error as Error).message);
+        }
+    };
+
+    const error = await tryAndOpen(3);
 
     if (error) {
         logger.error(

@@ -13,6 +13,11 @@ every new version is a new major version.
 
 -   FeedbackPane component, to be added in the `Main` entry of a panes entry.
 
+### Changed
+
+-   Do not resend close() if event that port was closed externally was emitted
+-   Add retry to open port on error `PORT_IS_ALREADY_BEING_OPENED`
+
 ## 17 - 2023-03-08
 
 ### Added
