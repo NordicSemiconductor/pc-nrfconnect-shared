@@ -84,7 +84,7 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
 
             const newValue = event.target.value;
             setInternalValue(newValue);
-            if (isValid(newValue)) {
+            if (newValue !== externalValue && isValid(newValue)) {
                 onChange(newValue);
             }
         };
@@ -94,7 +94,7 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
                 return;
             }
 
-            if (isValid(internalValue)) {
+            if (internalValue !== externalValue && isValid(internalValue)) {
                 onChangeComplete(internalValue);
             } else {
                 setInternalValue(externalValue);
