@@ -54,8 +54,8 @@ interface Props {
     isValid?: (value: string) => boolean;
     onChange: (value: string) => void;
     onChangeComplete?: (value: string) => void;
-    onKeyboardIncrementAction?: () => void;
-    onKeyboardDecrementAction?: () => void;
+    onKeyboardIncrementAction?: () => string;
+    onKeyboardDecrementAction?: () => string;
     className?: string;
 }
 
@@ -67,25 +67,28 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
             isValid = () => true,
             onChange,
             onChangeComplete = () => {},
-            onKeyboardIncrementAction = () => {},
-            onKeyboardDecrementAction = () => {},
+            onKeyboardIncrementAction = () => externalValue,
+            onKeyboardDecrementAction = () => externalValue,
             className = '',
         },
         ref
     ) => {
         const [internalValue, setInternalValue] = useState(externalValue);
+        const [beforeChangeValue, setBeforeChangeValue] =
+            useState(externalValue);
+        const [initialValue, setInitialValue] = useState(externalValue);
         useSynchronisationIfChangedFromOutside(externalValue, setInternalValue);
-        const onChangeIfValid = (
-            event: React.ChangeEvent<HTMLInputElement>
-        ) => {
+        const onChangeIfValid = (newValue: string) => {
             if (disabled) {
                 return;
             }
 
-            const newValue = event.target.value;
             setInternalValue(newValue);
-            if (newValue !== externalValue && isValid(newValue)) {
-                onChange(newValue);
+            if (isValid(newValue)) {
+                if (beforeChangeValue !== newValue) {
+                    setBeforeChangeValue(newValue);
+                    onChange(newValue);
+                }
             }
         };
 
@@ -94,8 +97,11 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
                 return;
             }
 
-            if (internalValue !== externalValue && isValid(internalValue)) {
-                onChangeComplete(internalValue);
+            if (isValid(internalValue)) {
+                if (initialValue !== internalValue) {
+                    setInitialValue(internalValue);
+                    onChangeComplete(internalValue);
+                }
             } else {
                 setInternalValue(externalValue);
             }
@@ -109,7 +115,10 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
             event.stopPropagation();
 
             if (event.key === 'Enter' && isValid(internalValue)) {
-                onChangeComplete(internalValue);
+                if (initialValue !== internalValue) {
+                    setInitialValue(internalValue);
+                    onChangeComplete(internalValue);
+                }
             }
         };
 
@@ -122,10 +131,10 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
 
             switch (event.key) {
                 case 'ArrowUp':
-                    onKeyboardIncrementAction();
+                    onChangeIfValid(onKeyboardIncrementAction());
                     break;
                 case 'ArrowDown':
-                    onKeyboardDecrementAction();
+                    onChangeIfValid(onKeyboardDecrementAction());
                     break;
             }
         };
@@ -148,7 +157,11 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
                 }
                 disabled={disabled}
                 value={internalValue}
-                onChange={onChangeIfValid}
+                onFocus={() => {
+                    setInitialValue(internalValue);
+                    setBeforeChangeValue(internalValue);
+                }}
+                onChange={event => onChangeIfValid(event.target.value)}
                 onBlur={resetToExternalValueOrOnChangeCompleteIfValid}
                 onKeyUp={onChangeCompleteIfValid}
                 onKeyDown={startKeyboardEvents}
