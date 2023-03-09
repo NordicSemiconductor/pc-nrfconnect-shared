@@ -33,11 +33,11 @@ export default () => {
                     </section>
                     <Button
                         large
-                        className="btn-secondary"
                         onClick={() => {
                             setSayThankYou(false);
                             setFeedback('');
                         }}
+                        variant="secondary"
                     >
                         Give more feedback
                     </Button>
@@ -101,7 +101,7 @@ export default () => {
                 </section>
                 <Button
                     large
-                    className="btn-primary"
+                    variant="primary"
                     onClick={() => handleFormData(feedback, setSayThankYou)}
                     disabled={feedback === ''}
                 >

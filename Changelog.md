@@ -25,6 +25,7 @@ every new version is a new major version.
 -   `SupportCard` use the shared `Button` component
 -   `FactoryResetButton` use the shared `Button` component
 -   `NavMenuItem` use the shared `Button` component
+-   `FeedbackPane` use the shared `Button` component
 
 ## 17 - 2023-03-08
 
