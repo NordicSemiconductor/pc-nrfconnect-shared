@@ -12,6 +12,11 @@ every new version is a new major version.
 ### Added
 
 -   FeedbackPane component, to be added in the `Main` entry of a panes entry.
+-   Switch to next pane left, in order to navigate both ways.
+
+### Fixed
+
+-   Switch pane hotkey crashed the applications when it was fired.
 
 ### Changed
 

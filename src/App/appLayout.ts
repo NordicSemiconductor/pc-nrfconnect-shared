@@ -18,6 +18,13 @@ const initialState: AppLayout = {
 
 const isAboutPane = (pane: number, paneCount: number) => pane === paneCount - 1;
 
+const setCurrentPaneInState = (newPane: number, state: AppLayout) => {
+    if (!isAboutPane(newPane, state.paneNames.length)) {
+        persistCurrentPane(newPane);
+    }
+    state.currentPane = newPane;
+};
+
 interface PaneSpec {
     name: string;
     Main: unknown;
@@ -33,14 +40,27 @@ const slice = createSlice({
         toggleSidePanelVisible: state => {
             state.isSidePanelVisible = !state.isSidePanelVisible;
         },
-        setCurrentPane: (state, action) => {
-            if (!isAboutPane(action.payload, state.paneNames.length)) {
-                persistCurrentPane(action.payload);
-            }
-            state.currentPane = action.payload;
+        setCurrentPane: (
+            state,
+            { payload: newPane }: PayloadAction<number>
+        ) => {
+            setCurrentPaneInState(newPane, state);
         },
         setPanes: (state, action: PayloadAction<PaneSpec[]>) => {
             state.paneNames = action.payload.map(pane => pane.name);
+        },
+        switchToNextPane: state => {
+            setCurrentPaneInState(
+                (state.currentPane + 1) % state.paneNames.length,
+                state
+            );
+        },
+        switchToPreviousPane: state => {
+            let nextPane = state.currentPane - 1;
+            if (nextPane < 0) {
+                nextPane = state.paneNames.length - 1;
+            }
+            setCurrentPaneInState(nextPane, state);
         },
     },
 });
@@ -52,6 +72,8 @@ export const {
         setPanes,
         toggleLogVisible,
         toggleSidePanelVisible,
+        switchToNextPane,
+        switchToPreviousPane,
     },
 } = slice;
 
