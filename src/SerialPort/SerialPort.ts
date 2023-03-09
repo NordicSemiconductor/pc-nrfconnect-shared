@@ -89,7 +89,7 @@ export const createSerialPort = async (
         ipcRenderer.invoke(SERIALPORT_CHANNEL.SET, path, newOptions);
     };
 
-    const tryAndOpen = async (retryCount: number) => {
+    const openWithRetries = async (retryCount: number) => {
         try {
             return (await ipcRenderer.invoke(
                 SERIALPORT_CHANNEL.OPEN,
@@ -100,12 +100,14 @@ export const createSerialPort = async (
             if (
                 (error as Error).message.includes(
                     'PORT_IS_ALREADY_BEING_OPENED'
-                ) ||
-                retryCount === 0
+                ) &&
+                retryCount > 0
             ) {
                 return new Promise<string>(resolve => {
                     setTimeout(async () => {
-                        resolve((await tryAndOpen(retryCount - 1)) as string);
+                        resolve(
+                            (await openWithRetries(retryCount - 1)) as string
+                        );
                     }, 50 + Math.random() * 100);
                 });
             }
@@ -113,7 +115,7 @@ export const createSerialPort = async (
         }
     };
 
-    const error = await tryAndOpen(3);
+    const error = await openWithRetries(3);
 
     if (error) {
         logger.error(
