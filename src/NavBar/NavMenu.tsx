@@ -10,7 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     currentPane as currentPaneSelector,
     paneNames as paneNamesSelector,
-    setCurrentPane,
+    switchToNextPane,
+    switchToPreviousPane,
 } from '../App/appLayout';
 import useHotKey from '../utils/useHotKey';
 import NavMenuItem from './NavMenuItem';
@@ -22,10 +23,16 @@ const NavMenu = () => {
 
     useHotKey({
         hotKey: 'ctrl+tab',
-        title: 'Switch pane',
+        title: 'Switch pane right',
         isGlobal: true,
-        action: () =>
-            dispatch(setCurrentPane((currentPane + 1) % paneNames.length)),
+        action: () => dispatch(switchToNextPane()),
+    });
+
+    useHotKey({
+        hotKey: 'ctrl+shift+tab',
+        title: 'Switch pane left',
+        isGlobal: true,
+        action: () => dispatch(switchToPreviousPane()),
     });
 
     return (
