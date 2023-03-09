@@ -4,11 +4,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-@import "../variables";
+@import '../variables';
 
-// This cannot be only .core19-nav-menu-item, because then it would be overriden by the normal .btn style
-.btn.core19-nav-menu-item {
+.core19-nav-menu-item {
     margin-left: 29px;
+    border: none;
+    background: none;
 
     &.first {
         margin-left: 20px;
@@ -25,7 +26,8 @@
         font-weight: $font-weight-bold;
     }
 
-    &:focus, &:hover {
+    &:focus,
+    &:hover {
         text-decoration: none;
         color: inherit;
     }

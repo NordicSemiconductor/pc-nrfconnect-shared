@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { ButtonVariants } from '../Button/Button';
 import './dialog.scss';
 export declare const Dialog: {
     ({ isVisible, closeOnUnfocus, onHide, className, children, }: {
@@ -21,7 +22,7 @@ export declare const Dialog: {
     }): JSX.Element;
 };
 export declare const DialogButton: ({ variant, onClick, className, disabled, children, }: {
-    variant?: "primary" | "secondary" | undefined;
+    variant?: ButtonVariants | undefined;
     onClick: () => void;
     className?: string | undefined;
     disabled?: boolean | undefined;

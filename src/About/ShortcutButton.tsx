@@ -27,7 +27,9 @@ const ShortcutButton: FC<Props> = ({ label }) => {
 
     return (
         <>
-            <Button onClick={toggleModalVisible}>{label}</Button>
+            <Button variant="secondary" onClick={toggleModalVisible}>
+                {label}
+            </Button>
             <ShortcutModal
                 isVisible={isModalVisible}
                 onCancel={toggleModalVisible}

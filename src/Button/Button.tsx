@@ -5,14 +5,24 @@
  */
 
 import React from 'react';
-import { bool, func, string } from 'prop-types';
 
 import classNames from '../utils/classNames';
 
 import styles from './button.module.scss';
 
+export type ButtonVariants =
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'info'
+    | 'warning'
+    | 'danger'
+    | 'link'
+    | 'custom';
+
 type ButtonProps = {
     id?: string;
+    variant: ButtonVariants;
     className?: string;
     onClick: React.MouseEventHandler<HTMLButtonElement>;
     disabled?: boolean;
@@ -24,6 +34,7 @@ const Button: React.FC<ButtonProps> = ({
     children,
     id,
     className,
+    variant,
     onClick,
     disabled = false,
     title,
@@ -32,7 +43,18 @@ const Button: React.FC<ButtonProps> = ({
     <button
         type="button"
         id={id}
-        className={classNames(styles.button, large && styles.large, className)}
+        className={classNames(
+            variant !== 'custom' && styles.button,
+            large && styles.large,
+            variant === 'primary' && styles.primary,
+            variant === 'secondary' && styles.secondary,
+            variant === 'success' && styles.success,
+            variant === 'info' && styles.info,
+            variant === 'warning' && styles.warning,
+            variant === 'danger' && styles.danger,
+            variant === 'link' && styles.link,
+            className
+        )}
         disabled={disabled}
         onClick={onClick}
         title={title}
@@ -40,13 +62,5 @@ const Button: React.FC<ButtonProps> = ({
         {children}
     </button>
 );
-
-Button.propTypes = {
-    id: string,
-    className: string,
-    onClick: func.isRequired,
-    disabled: bool,
-    title: string,
-};
 
 export default Button;

@@ -17,6 +17,15 @@ every new version is a new major version.
 
 -   Do not resend close() if event that port was closed externally was emitted
 -   Add retry to open port on error `PORT_IS_ALREADY_BEING_OPENED`
+-   `Button` styles match the UX design guidelines.
+-   `Button` has `variant` property to assign it the designated style
+-   `Dialogs` use the shared `Button` component
+-   `AboutButton` use the shared `Button` component
+-   `ShortcutButton` use the shared `Button` component
+-   `SupportCard` use the shared `Button` component
+-   `FactoryResetButton` use the shared `Button` component
+-   `NavMenuItem` use the shared `Button` component
+-   `FeedbackPane` use the shared `Button` component
 
 ## 17 - 2023-03-08
 
