@@ -5,8 +5,8 @@
  */
 
 import React, { FC, useRef, useState } from 'react';
-import { Button, ButtonProps } from 'react-bootstrap';
 
+import Button, { ButtonVariants } from '../Button/Button';
 import { Dialog, DialogButton } from '../Dialog/Dialog';
 import logger from '../logging';
 import combineClassNames from '../utils/classNames';
@@ -18,7 +18,7 @@ interface Props {
     resetFn?: () => void;
     label: string;
     modalText?: string;
-    variant?: ButtonProps['variant'];
+    variant?: ButtonVariants;
     classNames?: string;
 }
 
@@ -29,7 +29,7 @@ const FactoryResetButton: FC<Props> = ({
     resetFn,
     label,
     modalText,
-    variant,
+    variant = 'secondary',
     classNames,
 }) => {
     const [showDialog, setShowDialog] = useState(false);
@@ -42,7 +42,7 @@ const FactoryResetButton: FC<Props> = ({
     return (
         <>
             <Button
-                variant={variant || 'secondary'}
+                variant={variant}
                 onClick={() => setShowDialog(true)}
                 className={combineClassNames(
                     'factory-reset-button',
