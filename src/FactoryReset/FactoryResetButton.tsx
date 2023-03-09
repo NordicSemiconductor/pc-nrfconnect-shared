@@ -9,10 +9,7 @@ import React, { FC, useRef, useState } from 'react';
 import Button, { ButtonVariants } from '../Button/Button';
 import { Dialog, DialogButton } from '../Dialog/Dialog';
 import logger from '../logging';
-import combineClassNames from '../utils/classNames';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
-
-import './factory-reset-button.scss';
 
 interface Props {
     resetFn?: () => void;
@@ -44,10 +41,7 @@ const FactoryResetButton: FC<Props> = ({
             <Button
                 variant={variant}
                 onClick={() => setShowDialog(true)}
-                className={combineClassNames(
-                    'factory-reset-button',
-                    classNames
-                )}
+                className={classNames}
             >
                 {label}
             </Button>
@@ -63,7 +57,7 @@ const FactoryResetButton: FC<Props> = ({
                 <Dialog.Body>{modalText || DEFAULT_MODAL_TEXT}</Dialog.Body>
                 <Dialog.Footer>
                     <DialogButton
-                        className="restore-btn"
+                        variant="danger"
                         onClick={() => {
                             if (resetFn) resetFn();
                             else defaultResetFn();
