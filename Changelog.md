@@ -13,6 +13,8 @@ every new version is a new major version.
 
 -   Steppers component which allows to add states for success, failure and
     warning.
+-   `ErrorBoundary` use the shared `Button` component
+-   Update nrf-device-lib-js to version 0.6.0.
 
 ## 18 - 2023-03-09
 
