@@ -41,20 +41,13 @@ const Steppers = ({ title, steps }: Steppers) => (
                     )}
                 >
                     <div>
-                        <div className={classNames('circle')}>
-                            {step.active && (
-                                <div className={classNames('loading')} />
-                            )}
-                            {step.success && (
-                                <div className={classNames('check-mark')} />
-                            )}
-                            {step.fail && (
-                                <div className={classNames('cross-mark')} />
-                            )}
-                            {step.warn && (
-                                <div className={classNames('warning-mark')} />
-                            )}
+                        <div className="circle">
+                            {step.active && <div className="loading" />}
+                            {step.success && <div className="check-mark" />}
+                            {step.fail && <div className="cross-mark" />}
+                            {step.warn && <div className="warning-mark" />}
                         </div>
+                        <div className="step-line" />
                     </div>
                     <div>
                         <div className="title">{step.title}</div>
