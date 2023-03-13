@@ -10,7 +10,7 @@ import classNames from '../utils/classNames';
 
 import './steppers.scss';
 
-export type StepState = 'active' | 'success' | 'warn' | 'fail';
+export type StepState = 'active' | 'success' | 'warning' | 'failure';
 
 export type Step = {
     title: string;
@@ -33,22 +33,13 @@ const Steppers = ({ title, steps }: Steppers) => (
                     'step',
                     step.state === 'active' && 'step-active',
                     step.state === 'success' && 'step-success',
-                    step.state === 'fail' && 'step-fail',
-                    step.state === 'warn' && 'step-warn'
+                    step.state === 'failure' && 'step-failure',
+                    step.state === 'warning' && 'step-warning'
                 )}
             >
                 <div>
                     <div className="circle">
-                        {step.state === 'active' && <div className="loading" />}
-                        {step.state === 'success' && (
-                            <div className="check-mark" />
-                        )}
-                        {step.state === 'fail' && (
-                            <div className="cross-mark" />
-                        )}
-                        {step.state === 'warn' && (
-                            <div className="warning-mark" />
-                        )}
+                        {step.state && <div className={`${step.state}-mark`} />}
                     </div>
                     <div className="line" />
                 </div>

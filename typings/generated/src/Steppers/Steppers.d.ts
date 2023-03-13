@@ -1,16 +1,14 @@
-import { FC } from 'react';
+/// <reference types="react" />
 import './steppers.scss';
+export declare type StepState = 'active' | 'success' | 'warning' | 'failure';
 export declare type Step = {
     title: string;
     caption?: string;
-    active?: boolean;
-    success?: boolean;
-    warn?: boolean;
-    fail?: boolean;
+    state?: StepState;
 };
-export interface Props {
+export interface Steppers {
     title?: string;
     steps: Step[];
 }
-declare const Steppers: FC<Props>;
+declare const Steppers: ({ title, steps }: Steppers) => JSX.Element;
 export default Steppers;
