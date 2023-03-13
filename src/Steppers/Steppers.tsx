@@ -15,6 +15,7 @@ export type Step = {
     caption?: string;
     active?: boolean;
     success?: boolean;
+    warn?: boolean;
     fail?: boolean;
 };
 
@@ -24,7 +25,7 @@ export interface Props {
 }
 
 const Steppers: FC<Props> = ({ title, steps }) => (
-    <div className={classNames('steppers')}>
+    <>
         {title && <div>{title}</div>}
         {steps.map(step => {
             console.log(step);
@@ -35,13 +36,23 @@ const Steppers: FC<Props> = ({ title, steps }) => (
                         'step',
                         step.active && 'step-active',
                         step.success && 'step-success',
-                        step.fail && 'step-fail'
+                        step.fail && 'step-fail',
+                        step.warn && 'step-warn'
                     )}
                 >
                     <div>
                         <div className={classNames('circle')}>
                             {step.active && (
                                 <div className={classNames('loading')} />
+                            )}
+                            {step.success && (
+                                <div className={classNames('check-mark')} />
+                            )}
+                            {step.fail && (
+                                <div className={classNames('cross-mark')} />
+                            )}
+                            {step.warn && (
+                                <div className={classNames('warning-mark')} />
                             )}
                         </div>
                     </div>
@@ -52,7 +63,7 @@ const Steppers: FC<Props> = ({ title, steps }) => (
                 </div>
             );
         })}
-    </div>
+    </>
 );
 
 export default Steppers;
