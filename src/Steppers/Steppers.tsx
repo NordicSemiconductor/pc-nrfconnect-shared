@@ -19,12 +19,12 @@ export type Step = {
     fail?: boolean;
 };
 
-export interface Props {
+export interface Steppers {
     title?: string;
     steps: Step[];
 }
 
-const Steppers: FC<Props> = ({ title, steps }) => (
+const Steppers = ({ title, steps }: Steppers) => (
     <>
         {title && <div>{title}</div>}
         {steps.map(step => {
