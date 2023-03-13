@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import React from 'react';
+
 import classNames from '../utils/classNames';
 
 import './steppers.scss';
