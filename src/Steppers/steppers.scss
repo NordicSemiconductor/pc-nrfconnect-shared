@@ -13,14 +13,14 @@
     color: gray;
 }
 
-.step .step-line {
+.step .line {
     border-left: 2px solid $custom-control-indicator-checked-bg;
     height: 100%;
     left: 42%;
     position: relative;
 }
 
-.step:last-child .step-line {
+.step:last-child .line {
     display: none;
 }
 
@@ -65,7 +65,7 @@
     font-size: 1.2em;
 }
 
-.circle {
+.step .circle {
     background: $tooltip-bg;
     position: relative;
     width: 1.5em;
