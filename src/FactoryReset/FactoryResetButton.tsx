@@ -17,6 +17,7 @@ interface Props {
     modalText?: string;
     variant?: ButtonVariants;
     classNames?: string;
+    large?: boolean;
 }
 
 const DEFAULT_MODAL_TEXT =
@@ -28,6 +29,7 @@ const FactoryResetButton: FC<Props> = ({
     modalText,
     variant = 'secondary',
     classNames,
+    large = false,
 }) => {
     const [showDialog, setShowDialog] = useState(false);
     useRef(); // showdialog
@@ -39,6 +41,7 @@ const FactoryResetButton: FC<Props> = ({
     return (
         <>
             <Button
+                large={large}
                 variant={variant}
                 onClick={() => setShowDialog(true)}
                 className={classNames}

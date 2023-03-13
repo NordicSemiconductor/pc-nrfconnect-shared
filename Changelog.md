@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 19 - UNRELEASED
+
+### Changed
+
+-   `ErrorBoundary` use the shared `Button` component
+
 ## 18 - 2023-03-09
 
 ### Added
