@@ -1,7 +1,16 @@
 import { FC } from 'react';
 import './steppers.scss';
+export declare type Step = {
+    title: string;
+    caption?: string;
+    active?: boolean;
+    success?: boolean;
+    warn?: boolean;
+    fail?: boolean;
+};
 export interface Props {
-    id?: string;
     title?: string;
+    steps: Step[];
 }
-export declare const Steppers: FC<Props>;
+declare const Steppers: FC<Props>;
+export default Steppers;
