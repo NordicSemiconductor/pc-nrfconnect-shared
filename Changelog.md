@@ -11,7 +11,8 @@ every new version is a new major version.
 
 ### Added
 
--   Steppers component which allows to add states for success, failure and warning.
+-   Steppers component which allows to add states for success, failure and
+    warning.
 
 ## 18 - 2023-03-09
 
