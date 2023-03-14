@@ -249,7 +249,7 @@ describe('Stop Watch', () => {
 
         expect(timerMock.setTimeout).toBeCalledTimes(2);
         expect(timerMock.setTimeout).nthCalledWith(1, expect.anything(), 1000);
-        expect(timerMock.setTimeout).nthCalledWith(2, expect.anything(), 1200);
+        expect(timerMock.setTimeout).nthCalledWith(2, expect.anything(), 200);
 
         expect(stopwatch.time).toBe(800);
         expect(stopwatch.seconds).toBe(0);

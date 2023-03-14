@@ -19,7 +19,7 @@ export type Stopwatch = {
 
 const defaultTimer: ITimer = {
     now: () => Date.now(),
-    setTimeout: (callback: () => void, ms: number) => () => {
+    setTimeout: (callback: () => void, ms: number) => {
         const t = setTimeout(callback, ms);
         return () => clearTimeout(t);
     },
@@ -30,35 +30,42 @@ export default ({
     timer = defaultTimer,
     resolution = 1000,
 }: Stopwatch) => {
-    const tickTime = useRef(timer.now());
+    const previousTickTime = useRef(timer.now());
     const expectedTickTime = useRef(-1);
     const resetFlag = useRef(false);
     const [elapsedTime, setElapsedTime] = useState(0);
     const [isRunning, setIsRunning] = useState(autoStart);
 
     const initTick = useCallback(() => {
-        const offset =
+        const correction =
             expectedTickTime.current < 0
                 ? 0
                 : expectedTickTime.current - timer.now();
-        const interval = offset + resolution;
 
-        expectedTickTime.current = tickTime.current + resolution;
+        // timeoutFinishedToEarly
+        let nextInterval = resolution;
+        if (correction > 0) {
+            nextInterval = correction;
+        } else {
+            nextInterval = correction + resolution;
+        }
+
+        expectedTickTime.current = previousTickTime.current + resolution;
 
         let complete = false;
         const handler = (delta: number) => {
             complete = true;
             setElapsedTime(elapsedTime + delta);
-            tickTime.current = timer.now();
+            previousTickTime.current = timer.now();
         };
 
         const release = timer.setTimeout(() => {
-            handler(timer.now() - tickTime.current);
-        }, interval);
+            handler(timer.now() - previousTickTime.current);
+        }, nextInterval);
 
         return () => {
             if (!complete && !resetFlag.current) {
-                handler(timer.now() - tickTime.current);
+                handler(timer.now() - previousTickTime.current);
                 release();
             }
 
@@ -72,7 +79,7 @@ export default ({
     }, [initTick, isRunning, timer]);
 
     const start = () => {
-        tickTime.current = timer.now();
+        previousTickTime.current = timer.now();
         setIsRunning(true);
     };
 
@@ -84,7 +91,7 @@ export default ({
     const reset = () => {
         resetFlag.current = true;
         expectedTickTime.current = -1;
-        tickTime.current = timer.now();
+        previousTickTime.current = timer.now();
         setElapsedTime(0);
     };
 
