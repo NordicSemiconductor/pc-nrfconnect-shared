@@ -71,18 +71,6 @@ export default ({
         return initTick();
     }, [initTick, isRunning, timer]);
 
-    useEffect(() => {
-        console.log('initTick');
-    }, [initTick]);
-
-    useEffect(() => {
-        console.log('isRunning');
-    }, [isRunning]);
-
-    useEffect(() => {
-        console.log('timer');
-    }, [timer]);
-
     const start = () => {
         tickTime.current = timer.now();
         setIsRunning(true);
