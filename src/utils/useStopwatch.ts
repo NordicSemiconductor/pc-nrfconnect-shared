@@ -17,15 +17,17 @@ export type Stopwatch = {
     timer?: ITimer;
 };
 
+const defaultTimer: ITimer = {
+    now: () => Date.now(),
+    setTimeout: (callback: () => void, ms: number) => () => {
+        const t = setTimeout(callback, ms);
+        return () => clearTimeout(t);
+    },
+};
+
 export default ({
     autoStart = false,
-    timer = {
-        now: () => Date.now(),
-        setTimeout: (callback: () => void, ms: number) => () => {
-            const t = setTimeout(callback, ms);
-            return () => clearTimeout(t);
-        },
-    },
+    timer = defaultTimer,
     resolution = 1000,
 }: Stopwatch) => {
     const tickTime = useRef(timer.now());
@@ -68,6 +70,18 @@ export default ({
         if (!isRunning) return;
         return initTick();
     }, [initTick, isRunning, timer]);
+
+    useEffect(() => {
+        console.log('initTick');
+    }, [initTick]);
+
+    useEffect(() => {
+        console.log('isRunning');
+    }, [isRunning]);
+
+    useEffect(() => {
+        console.log('timer');
+    }, [timer]);
 
     const start = () => {
         tickTime.current = timer.now();

@@ -11,7 +11,7 @@ every new version is a new major version.
 
 ### Added
 
--   `useStopWatch` component
+-   `useStopWatch` hook
 
 ## 20 - 2023-03-14
 
