@@ -34,6 +34,16 @@ describe('Stop Watch', () => {
         setTimeout: mockSetTimeout,
     };
 
+    const expectZeroElapsedTime = (
+        stopwatch: ReturnType<typeof useStopWatch>
+    ) => {
+        expect(stopwatch.time).toBe(0);
+        expect(stopwatch.seconds).toBe(0);
+        expect(stopwatch.minutes).toBe(0);
+        expect(stopwatch.hours).toBe(0);
+        expect(stopwatch.days).toBe(0);
+    };
+
     beforeEach(() => {
         mockNow.mockReturnValue(0);
         jest.clearAllMocks();
@@ -62,16 +72,12 @@ describe('Stop Watch', () => {
         expect(timerMock.setTimeout).toBeCalledWith(expect.anything(), 1000);
         expect(stopwatch.isRunning).toBeTruthy();
 
-        expect(stopwatch.time).toBe(0);
-        expect(stopwatch.seconds).toBe(0);
-        expect(stopwatch.minutes).toBe(0);
-        expect(stopwatch.hours).toBe(0);
-        expect(stopwatch.days).toBe(0);
+        expectZeroElapsedTime(stopwatch);
 
         mockNow.mockReturnValue(433);
-        stopwatch.pause();
 
         act(() => {
+            stopwatch.pause();
             stopwatch;
         });
 
@@ -94,18 +100,14 @@ describe('Stop Watch', () => {
         expect(timerMock.setTimeout).toBeCalledWith(expect.anything(), 1000);
         expect(stopwatch.isRunning).toBeTruthy();
 
-        expect(stopwatch.time).toBe(0);
-        expect(stopwatch.seconds).toBe(0);
-        expect(stopwatch.minutes).toBe(0);
-        expect(stopwatch.hours).toBe(0);
-        expect(stopwatch.days).toBe(0);
+        expectZeroElapsedTime(stopwatch);
 
         expect(timerMock.setTimeout).nthCalledWith(1, expect.anything(), 1000);
 
         mockNow.mockReturnValue(500);
-        stopwatch.pause();
 
         act(() => {
+            stopwatch.pause();
             stopwatch;
         });
 
@@ -117,9 +119,9 @@ describe('Stop Watch', () => {
         expect(stopwatch.isRunning).toBeFalsy();
 
         mockNow.mockReturnValue(5000);
-        stopwatch.start();
 
         act(() => {
+            stopwatch.start();
             stopwatch;
         });
 
@@ -149,9 +151,9 @@ describe('Stop Watch', () => {
         expect(stopwatch.isRunning).toBeFalsy();
 
         mockNow.mockReturnValue(5000);
-        stopwatch.start();
 
         act(() => {
+            stopwatch.start();
             stopwatch;
         });
 
@@ -171,16 +173,12 @@ describe('Stop Watch', () => {
         expect(timerMock.setTimeout).nthCalledWith(1, expect.anything(), 1000);
         expect(stopwatch.isRunning).toBeTruthy();
 
-        expect(stopwatch.time).toBe(0);
-        expect(stopwatch.seconds).toBe(0);
-        expect(stopwatch.minutes).toBe(0);
-        expect(stopwatch.hours).toBe(0);
-        expect(stopwatch.days).toBe(0);
+        expectZeroElapsedTime(stopwatch);
 
         mockNow.mockReturnValue(1200);
-        appCallback();
 
         act(() => {
+            appCallback();
             stopwatch;
         });
 
@@ -194,18 +192,14 @@ describe('Stop Watch', () => {
         expect(stopwatch.isRunning).toBeTruthy();
 
         mockNow.mockReturnValue(6800);
-        stopwatch.reset();
         act(() => {
+            stopwatch.reset();
             stopwatch;
         });
 
         expect(timerMock.setTimeout).nthCalledWith(3, expect.anything(), 1000);
 
-        expect(stopwatch.time).toBe(0);
-        expect(stopwatch.seconds).toBe(0);
-        expect(stopwatch.minutes).toBe(0);
-        expect(stopwatch.hours).toBe(0);
-        expect(stopwatch.days).toBe(0);
+        expectZeroElapsedTime(stopwatch);
         expect(stopwatch.isRunning).toBeTruthy();
     });
 
@@ -216,17 +210,13 @@ describe('Stop Watch', () => {
             timer: timerMock,
         });
 
-        expect(stopwatch.time).toBe(0);
-        expect(stopwatch.seconds).toBe(0);
-        expect(stopwatch.minutes).toBe(0);
-        expect(stopwatch.hours).toBe(0);
-        expect(stopwatch.days).toBe(0);
+        expectZeroElapsedTime(stopwatch);
 
         // trigger timeout with precise time elapsed
         mockNow.mockReturnValue(1000);
-        appCallback();
 
         act(() => {
+            appCallback();
             stopwatch;
         });
 
@@ -247,19 +237,13 @@ describe('Stop Watch', () => {
             timer: timerMock,
         });
 
-        stopwatch;
-
-        expect(stopwatch.time).toBe(0);
-        expect(stopwatch.seconds).toBe(0);
-        expect(stopwatch.minutes).toBe(0);
-        expect(stopwatch.hours).toBe(0);
-        expect(stopwatch.days).toBe(0);
+        expectZeroElapsedTime(stopwatch);
 
         // trigger timeout with error of -200ms
         mockNow.mockReturnValue(800);
-        appCallback();
 
         act(() => {
+            appCallback();
             stopwatch;
         });
 
@@ -281,19 +265,13 @@ describe('Stop Watch', () => {
             timer: timerMock,
         });
 
-        stopwatch;
-
-        expect(stopwatch.time).toBe(0);
-        expect(stopwatch.seconds).toBe(0);
-        expect(stopwatch.minutes).toBe(0);
-        expect(stopwatch.hours).toBe(0);
-        expect(stopwatch.days).toBe(0);
+        expectZeroElapsedTime(stopwatch);
 
         // trigger timeout with error of +200ms
         mockNow.mockReturnValue(1200);
-        appCallback();
 
         act(() => {
+            appCallback();
             stopwatch;
         });
 
@@ -315,19 +293,13 @@ describe('Stop Watch', () => {
             timer: timerMock,
         });
 
-        stopwatch;
-
-        expect(stopwatch.time).toBe(0);
-        expect(stopwatch.seconds).toBe(0);
-        expect(stopwatch.minutes).toBe(0);
-        expect(stopwatch.hours).toBe(0);
-        expect(stopwatch.days).toBe(0);
+        expectZeroElapsedTime(stopwatch);
 
         // 2days 1hr 1 min 3 seconds 500ms
         mockNow.mockReturnValue(176588500);
-        appCallback();
 
         act(() => {
+            appCallback();
             stopwatch;
         });
 
