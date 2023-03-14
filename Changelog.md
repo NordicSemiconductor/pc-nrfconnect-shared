@@ -7,12 +7,17 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 19 - 2023-03-13
+## 20 - 2023-03-14
 
 ### Added
 
 -   Steppers component which allows to add states for success, failure and
     warning.
+
+## 19 - 2023-03-13
+
+### Added
+
 -   `ErrorBoundary` use the shared `Button` component
 -   Update nrf-device-lib-js to version 0.6.0.
 
