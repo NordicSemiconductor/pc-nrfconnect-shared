@@ -13,6 +13,10 @@ every new version is a new major version.
 
 -   `useStopWatch` hook
 
+### Fix
+
+-   `ErrorBoundary` `Button` are now large.
+
 ## 20 - 2023-03-14
 
 ### Added
