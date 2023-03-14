@@ -7,7 +7,7 @@
 import React from 'react';
 import { act, render } from '@testing-library/react';
 
-import useStopWatch, { ITimer, Stopwatch } from './useStopWatch';
+import useStopWatch, { ITimer, Stopwatch } from './useStopwatch';
 
 let appCallback = () => {};
 

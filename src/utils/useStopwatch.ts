@@ -13,8 +13,8 @@ export interface ITimer {
 
 export type Stopwatch = {
     autoStart: boolean;
-    resolution: number;
-    timer: ITimer;
+    resolution?: number;
+    timer?: ITimer;
 };
 
 export default ({
