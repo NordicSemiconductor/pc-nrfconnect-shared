@@ -116,6 +116,7 @@ class ErrorBoundary extends React.Component<
                             problem we recommend restarting the application.
                         </p>
                         <Button
+                            large
                             variant="primary"
                             onClick={() => getCurrentWindow().reload()}
                         >
@@ -166,6 +167,7 @@ class ErrorBoundary extends React.Component<
                         experienced it multiple times
                     </p>
                     <Button
+                        large
                         variant="primary"
                         onClick={() =>
                             openUrl(

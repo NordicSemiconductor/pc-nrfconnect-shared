@@ -7,11 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 21 - 2023-03-14
+## 21 - 2023-03-15
 
 ### Added
 
 -   `useStopWatch` hook
+
+### Fix
+
+-   `ErrorBoundary` `Button` are now large.
 
 ## 20 - 2023-03-14
 
