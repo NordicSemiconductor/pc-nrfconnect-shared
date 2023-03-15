@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 export interface ITimer {
     now: () => number;
@@ -32,22 +32,23 @@ export default ({
 }: Stopwatch) => {
     const previousTickTime = useRef(timer.now());
     const expectedTickTime = useRef(-1);
-    const resetFlag = useRef(false);
+    const autoStarted = useRef(false);
+    const pauseTimeout = useRef<(() => void) | null>(null);
+    const [isRunning, setIsRunning] = useState(false);
     const [elapsedTime, setElapsedTime] = useState(0);
-    const [isRunning, setIsRunning] = useState(autoStart);
 
-    const initTick = useCallback(() => {
+    const nextTick = (eT: number) => {
         expectedTickTime.current =
-            previousTickTime.current +
-            (resolution - (elapsedTime % resolution));
+            previousTickTime.current + (resolution - (eT % resolution));
 
         const nextInterval = expectedTickTime.current - timer.now();
 
         let complete = false;
-        const handler = (delta: number) => {
+        const handler = (delta: number, shouldContinue = true) => {
             complete = true;
-            setElapsedTime(elapsedTime + delta);
+            setElapsedTime(eT + delta);
             previousTickTime.current = timer.now();
+            if (shouldContinue) pauseTimeout.current = nextTick(eT + delta);
         };
 
         const release = timer.setTimeout(() => {
@@ -55,36 +56,35 @@ export default ({
         }, nextInterval);
 
         return () => {
-            if (!complete && !resetFlag.current) {
-                handler(timer.now() - previousTickTime.current);
+            if (!complete) {
+                handler(timer.now() - previousTickTime.current, false);
                 release();
             }
-
-            resetFlag.current = false;
         };
-    }, [elapsedTime, resolution, timer]);
+    };
 
-    useEffect(() => {
-        if (!isRunning) return;
-        return initTick();
-    }, [initTick, isRunning, timer]);
-
-    const start = () => {
-        previousTickTime.current = timer.now();
-        expectedTickTime.current =
-            timer.now() + (resolution - (elapsedTime % resolution));
-        setIsRunning(true);
+    const start = (eT = elapsedTime) => {
+        if (pauseTimeout.current === null) {
+            previousTickTime.current = timer.now();
+            expectedTickTime.current =
+                timer.now() + (resolution - (eT % resolution));
+            setIsRunning(true);
+            pauseTimeout.current = nextTick(eT);
+        }
     };
 
     const pause = () => {
         setIsRunning(false);
+        if (pauseTimeout.current) {
+            pauseTimeout.current();
+            pauseTimeout.current = null;
+        }
     };
 
     const reset = () => {
-        resetFlag.current = true;
-        expectedTickTime.current = -1;
-        previousTickTime.current = timer.now();
+        pause();
         setElapsedTime(0);
+        start(0);
     };
 
     const splitMS = (ms: number) => {
@@ -110,6 +110,11 @@ export default ({
             millisecond,
         };
     };
+
+    if (autoStart && !autoStarted.current) {
+        autoStarted.current = true;
+        start();
+    }
 
     return {
         ...splitMS(elapsedTime),
