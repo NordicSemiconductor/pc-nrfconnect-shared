@@ -37,20 +37,11 @@ export default ({
     const [isRunning, setIsRunning] = useState(autoStart);
 
     const initTick = useCallback(() => {
-        const correction =
-            expectedTickTime.current < 0
-                ? 0
-                : expectedTickTime.current - timer.now();
+        expectedTickTime.current =
+            previousTickTime.current +
+            (resolution - (elapsedTime % resolution));
 
-        // timeoutFinishedToEarly
-        let nextInterval = resolution;
-        if (correction > 0) {
-            nextInterval = correction;
-        } else {
-            nextInterval = correction + resolution;
-        }
-
-        expectedTickTime.current = previousTickTime.current + resolution;
+        const nextInterval = expectedTickTime.current - timer.now();
 
         let complete = false;
         const handler = (delta: number) => {
@@ -80,11 +71,12 @@ export default ({
 
     const start = () => {
         previousTickTime.current = timer.now();
+        expectedTickTime.current =
+            timer.now() + (resolution - (elapsedTime % resolution));
         setIsRunning(true);
     };
 
     const pause = () => {
-        expectedTickTime.current = -1;
         setIsRunning(false);
     };
 

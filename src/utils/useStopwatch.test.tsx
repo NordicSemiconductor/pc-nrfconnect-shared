@@ -126,7 +126,7 @@ describe('Stop Watch', () => {
         });
 
         expect(timerMock.setTimeout).toBeCalledTimes(2);
-        expect(timerMock.setTimeout).nthCalledWith(2, expect.anything(), 1000);
+        expect(timerMock.setTimeout).nthCalledWith(2, expect.anything(), 500);
     });
 
     test('Timer will not automatically start', () => {
