@@ -13,10 +13,10 @@ import nrfDeviceLib, {
 import logger from '../logging';
 import { Device, RootState, TDispatch, WaitForDevice } from '../state';
 import {
+    clearWaitForDevice,
     clearWaitForDeviceTimeout,
     setDisconnectedTime,
     setLastArrivedDeviceId,
-    setWaitForDevice,
     setWaitForDeviceTimeout,
 } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
@@ -243,9 +243,10 @@ export const startWatchingDevices =
                                         'Wait For Device was successfully'
                                     );
 
-                                    dispatch(clearWaitForDeviceTimeout());
                                     if (waitForDevice.once) {
-                                        dispatch(setWaitForDevice(undefined));
+                                        dispatch(clearWaitForDevice());
+                                    } else {
+                                        dispatch(clearWaitForDeviceTimeout());
                                     }
 
                                     if (waitForDevice.onSuccess)

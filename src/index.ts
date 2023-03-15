@@ -85,6 +85,8 @@ export { selectedDevice, getReadbackProtection } from './Device/deviceSlice';
 export {
     setWaitForDevice,
     getAutoReselect,
+    getWaitingForDeviceTimeout,
+    getWaitingToAutoReselect,
 } from './Device/deviceAutoSelectSlice';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
 export { getDeviceLibContext } from './Device/deviceLibWrapper';
