@@ -30,6 +30,7 @@ export { Group, CollapsibleGroup } from './SidePanel/Group';
 export { default as InlineInput } from './InlineInput/InlineInput';
 export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
 export { default as MasonryLayout } from './MasonryLayout/MasonryLayout';
+export { default as useStopwatch } from './utils/useStopwatch';
 export { reducer as errorDialogReducer } from './ErrorDialog/errorDialogSlice';
 export { default as logger } from './logging';
 export { default as bleChannels } from './utils/bleChannels';
