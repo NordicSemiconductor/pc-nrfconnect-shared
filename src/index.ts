@@ -84,6 +84,7 @@ export {
 export { selectedDevice, getReadbackProtection } from './Device/deviceSlice';
 export {
     setWaitForDevice,
+    clearWaitForDevice,
     getAutoReselect,
     getWaitingForDeviceTimeout,
     getWaitingToAutoReselect,
