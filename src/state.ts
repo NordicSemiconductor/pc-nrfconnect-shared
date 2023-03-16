@@ -79,7 +79,7 @@ export interface WaitForDevice {
     when: 'always' | 'applicationMode' | 'BootLoaderMode';
     once: boolean;
     onSuccess?: (device: Device) => void;
-    onFail?: (reason?: unknown) => void;
+    onFail?: (reason?: string) => void;
 }
 
 export interface DeviceInfo {
