@@ -7,6 +7,21 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 23 - 2023-03-16
+
+### Added
+
+-   `getWaitingToAutoReselect` to tell when We are waiting to auto reconnect as
+    `getAutoReselect` is true
+-   `getWaitingForDeviceTimeout` to tell when `setWaitForDevice` timeout has
+    started
+-   `clearWaitForDevice` to cancel when `setWaitForDevice`
+
+### Changed
+
+-   `setWaitForDevice` with `undefined` can no longer be used to cancel timeouts
+    instead one should use `clearWaitForDevice`
+
 ## 22 - 2023-03-15
 
 ### Added

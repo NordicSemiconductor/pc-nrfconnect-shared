@@ -11,7 +11,7 @@ import InlineInput from '../../InlineInput/InlineInput';
 import { Device } from '../../state';
 import {
     getAutoReselectDevice,
-    getWaitingForDevice,
+    getWaitingForDeviceTimeout,
     getWaitingToAutoReselect,
 } from '../deviceAutoSelectSlice';
 import { displayedDeviceName } from '../deviceInfo/deviceInfo';
@@ -81,7 +81,7 @@ export default ({
     >('DeviceName');
     const autoReselectDevice = useSelector(getAutoReselectDevice);
     const waitingToAutoReselect = useSelector(getWaitingToAutoReselect);
-    const waitingForDevice = useSelector(getWaitingForDevice);
+    const waitingForDevice = useSelector(getWaitingForDeviceTimeout);
     const thisDevice = device.serialNumber === autoReselectDevice?.serialNumber;
 
     useEffect(() => {

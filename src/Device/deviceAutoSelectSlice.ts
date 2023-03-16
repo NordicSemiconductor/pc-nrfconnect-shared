@@ -60,11 +60,14 @@ const slice = createSlice({
             }
         },
 
-        setWaitForDevice: (
-            state,
-            action: PayloadAction<WaitForDevice | undefined>
-        ) => {
+        setWaitForDevice: (state, action: PayloadAction<WaitForDevice>) => {
             if (state.device) state.waitForDevice = action.payload;
+        },
+
+        clearWaitForDevice: state => {
+            state.waitForDevice = undefined;
+            clearTimeout(state.autoReconnectTimeout);
+            state.autoReconnectTimeout = undefined;
         },
 
         setLastArrivedDeviceId: (
@@ -85,6 +88,7 @@ export const {
         setDisconnectedTime,
         setAutoReselect,
         setWaitForDevice,
+        clearWaitForDevice,
         setLastArrivedDeviceId,
     },
 } = slice;
@@ -99,7 +103,7 @@ export const getWaitingToAutoReselect = (state: RootState) =>
     state.deviceAutoSelect.disconnectionTime !== undefined &&
     state.deviceAutoSelect.autoReselect;
 
-export const getWaitingForDevice = (state: RootState) =>
+export const getWaitingForDeviceTimeout = (state: RootState) =>
     state.deviceAutoSelect.autoReconnectTimeout !== undefined;
 
 export const getDisconnectionTime = (state: RootState) =>

@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import PseudoButton from '../../PseudoButton/PseudoButton';
 import {
     getAutoReselectDevice,
-    getWaitingForDevice,
+    getWaitingForDeviceTimeout,
     getWaitingToAutoReselect,
 } from '../deviceAutoSelectSlice';
 import { selectedDevice } from '../deviceSlice';
@@ -39,7 +39,7 @@ export default ({
     toggleDeviceListVisible: () => void;
 }) => {
     const waitingForAutoReselect = useSelector(getWaitingToAutoReselect);
-    const waitingForDevice = useSelector(getWaitingForDevice);
+    const waitingForDevice = useSelector(getWaitingForDeviceTimeout);
     const selDevice = useSelector(selectedDevice);
     const autoReconnectDevice = useSelector(getAutoReselectDevice);
     const device = selDevice ?? autoReconnectDevice;
