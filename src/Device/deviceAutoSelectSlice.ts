@@ -67,6 +67,7 @@ const slice = createSlice({
         clearWaitForDevice: state => {
             state.waitForDevice = undefined;
             clearTimeout(state.autoReconnectTimeout);
+            state.autoReconnectTimeout = undefined;
         },
 
         setLastArrivedDeviceId: (
