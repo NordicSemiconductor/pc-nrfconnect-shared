@@ -39,7 +39,7 @@ const Steppers = ({ title, steps }: Steppers) => (
             >
                 <div>
                     <div className="circle">
-                        {step.state && <div className={`${step.state}-mark`} />}
+                        {step.state && <div className="step-icon" />}
                     </div>
                     <div className="line" />
                 </div>
