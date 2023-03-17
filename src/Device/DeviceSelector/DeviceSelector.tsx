@@ -4,18 +4,18 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import { Device } from '../../state';
 import useHotKey from '../../utils/useHotKey';
 import {
-    clearWaitForDeviceTimeout,
+    clearWaitForDevice,
     getWaitingToAutoReselect,
     setAutoSelectDevice,
 } from '../deviceAutoSelectSlice';
-import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
+import { startWatchingDevices } from '../deviceLister';
 import { DeviceSetup as DeviceSetupShared, setupDevice } from '../deviceSetup';
 import DeviceSetup from '../DeviceSetup/DeviceSetup';
 import {
@@ -58,6 +58,7 @@ export default ({
     deviceFilter,
 }: Props) => {
     const dispatch = useDispatch();
+    const hotplugEventsStarted = useRef(false);
     const [deviceListVisible, setDeviceListVisible] = useState(false);
 
     const deviceIsSelected = useSelector(deviceIsSelectedSelector);
@@ -68,15 +69,13 @@ export default ({
     const doDeselectDevice = useCallback(() => {
         onDeviceDeselected();
         dispatch(deselectDevice());
+        dispatch(clearWaitForDevice());
         dispatch(setAutoSelectDevice(undefined));
     }, [dispatch, onDeviceDeselected]);
 
-    // Ensure that useCallback is
-    // not updated frequently as this
-    // will have a side effect to stop and start the hotplug events
     const doSelectDevice = useCallback(
         (device: Device, autoReselected: boolean) => {
-            dispatch(clearWaitForDeviceTimeout());
+            dispatch(clearWaitForDevice());
             setDeviceListVisible(false);
             dispatch(selectDevice(device));
             dispatch(setAutoSelectDevice(device));
@@ -129,10 +128,10 @@ export default ({
     const toggleDeviceListVisible = () =>
         setDeviceListVisible(!deviceListVisible);
 
-    useEffect(() => {
+    if (!hotplugEventsStarted.current) {
+        hotplugEventsStarted.current = true;
         doStartWatchingDevices();
-        return stopWatchingDevices;
-    }, [doStartWatchingDevices]);
+    }
 
     useHotKey({
         hotKey: 'alt+s',

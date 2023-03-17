@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 24 - 2023-03-17
+
+### Fixed
+
+-   Safe guard against retaining stale wait for device request if a new device
+    is selected
+
 ## 23 - 2023-03-16
 
 ### Added
