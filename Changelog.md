@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 25 - UNRELEASED
+
+### Added
+
+-   `Steppers` caption can now have action buttons
+-   `Steppers` caption can now have tooltips
+
 ## 24 - 2023-03-20
 
 ### Added
