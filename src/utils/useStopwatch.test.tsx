@@ -23,7 +23,6 @@ const setup = (stopwatch: Stopwatch) => {
 
 describe('Stop Watch', () => {
     const mockNow = jest.fn(() => 0);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const mockSetTimeout = jest.fn((callback: () => void, _ms: number) => {
         appCallback = callback;
         return () => {};
