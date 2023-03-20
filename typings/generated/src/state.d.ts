@@ -2,6 +2,8 @@
 /// <reference types="react" />
 import { Device as NrfdlDevice, SerialPort } from '@nordicsemiconductor/nrf-device-lib-js';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
+import type { AutoDetectTypes } from '@serialport/bindings-cpp';
+import { SerialPortOpenOptions } from 'serialport';
 import { LogEntry } from 'winston';
 import type { DocumentationState } from './About/documentationSlice';
 import type { ShortcutState } from './About/shortcutSlice';
@@ -78,6 +80,7 @@ export interface Device extends NrfdlDevice {
     serialport?: SerialPort;
     favorite?: boolean;
     id: number;
+    persistedSerialPortOptions?: SerialPortOpenOptions<AutoDetectTypes>;
 }
 export interface BrokenDeviceDialog {
     isVisible: boolean;
