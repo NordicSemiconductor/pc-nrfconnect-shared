@@ -15,9 +15,10 @@ import {
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../logging';
-import { Device } from '../state';
+import { Device, RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import type { DeviceSetup } from './deviceSetup';
+import { selectedDevice, setReadbackProtected } from './deviceSlice';
 
 const deviceLibContext = getDeviceLibContext();
 
@@ -71,6 +72,28 @@ const program = (deviceId: number, firmware: string | Buffer) => {
 const reset = async (deviceId: number) => {
     await deviceControlReset(deviceLibContext, deviceId);
 };
+
+export const updateHasReadbackProtection =
+    () => async (dispatch: TDispatch, getState: () => RootState) => {
+        const device = selectedDevice(getState());
+
+        if (!device || !device.traits.jlink) {
+            dispatch(setReadbackProtected('unknown'));
+            return 'unknown';
+        }
+
+        try {
+            await readFwInfo(deviceLibContext, device.id);
+        } catch (error) {
+            // @ts-expect-error Wrongly typed in device lib at the moment
+            if (error.error_code === 24) {
+                dispatch(setReadbackProtected('protected'));
+                return 'protected';
+            }
+        }
+        dispatch(setReadbackProtected('unprotected'));
+        return 'unprotected';
+    };
 
 /**
  * Validate the firmware on the device whether it matches the provided firmware or not

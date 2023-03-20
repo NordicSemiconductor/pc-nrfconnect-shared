@@ -1,7 +1,8 @@
 /// <reference types="node" />
 import { FWInfo } from '@nordicsemiconductor/nrf-device-lib-js';
-import { Device } from '../state';
+import { Device, RootState, TDispatch } from '../state';
 import type { DeviceSetup } from './deviceSetup';
+export declare const updateHasReadbackProtection: () => (dispatch: TDispatch, getState: () => RootState) => Promise<"unknown" | "protected" | "unprotected">;
 /**
  * Validate the firmware on the device whether it matches the provided firmware or not
  *

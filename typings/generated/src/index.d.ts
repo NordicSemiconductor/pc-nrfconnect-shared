@@ -46,6 +46,7 @@ export { isDevelopment } from './utils/environment';
 export { currentPane, setCurrentPane } from './App/appLayout';
 export { isLoggingVerbose } from './Log/logSlice';
 export { getAppSpecificStore as getPersistentStore, persistTerminalSettings, getPersistedTerminalSettings, } from './utils/persistentStore';
+export { updateHasReadbackProtection } from './Device/jprogOperations';
 export { selectedDevice, getReadbackProtection, persistSerialPortOptions, } from './Device/deviceSlice';
 export { setWaitForDevice, clearWaitForDevice, getAutoReselect, getWaitingForDeviceTimeout, getWaitingToAutoReselect, } from './Device/deviceAutoSelectSlice';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';

@@ -79,6 +79,7 @@ export {
     getPersistedTerminalSettings,
 } from './utils/persistentStore';
 
+export { updateHasReadbackProtection } from './Device/jprogOperations';
 export {
     selectedDevice,
     getReadbackProtection,
