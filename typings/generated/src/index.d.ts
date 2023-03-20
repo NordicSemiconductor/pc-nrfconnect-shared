@@ -45,7 +45,7 @@ export { default as useHotKey } from './utils/useHotKey';
 export { isDevelopment } from './utils/environment';
 export { currentPane, setCurrentPane } from './App/appLayout';
 export { isLoggingVerbose } from './Log/logSlice';
-export { getAppSpecificStore as getPersistentStore, persistTerminalSettings, getPersistedTerminalSettings, getPersistedSerialPortOptions, } from './utils/persistentStore';
+export { getAppSpecificStore as getPersistentStore, persistTerminalSettings, getPersistedTerminalSettings, } from './utils/persistentStore';
 export { selectedDevice, getReadbackProtection, persistSerialPortOptions, } from './Device/deviceSlice';
 export { setWaitForDevice, clearWaitForDevice, getAutoReselect, getWaitingForDeviceTimeout, getWaitingToAutoReselect, } from './Device/deviceAutoSelectSlice';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
