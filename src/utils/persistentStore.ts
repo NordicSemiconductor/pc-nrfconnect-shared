@@ -13,7 +13,7 @@ import logger from '../logging';
 import packageJson from './packageJson';
 
 export interface SerialSettings {
-    serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>;
+    serialPortOptions: Omit<SerialPortOpenOptions<AutoDetectTypes>, 'path'>;
     lastUpdated: number;
     vComIndex: number;
 }
