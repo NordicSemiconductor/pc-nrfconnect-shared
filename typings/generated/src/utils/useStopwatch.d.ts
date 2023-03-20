@@ -8,7 +8,7 @@ export declare type Stopwatch = {
     timer?: ITimer;
 };
 declare const _default: ({ autoStart, timer, resolution, }: Stopwatch) => {
-    start: () => void;
+    start: (elapsedTime?: any) => void;
     pause: () => void;
     reset: () => void;
     isRunning: boolean;
