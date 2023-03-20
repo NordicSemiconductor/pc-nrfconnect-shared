@@ -39,13 +39,12 @@ export interface Steppers {
 
 const convertStepCaptionToJsx = (stepCaption: StepCaption) => {
     if (typeof stepCaption === 'string') {
-        return <span key={`caption-${stepCaption}`}>{`${stepCaption}`} </span>;
+        return <span>{`${stepCaption}`} </span>;
     }
 
     if (Object.prototype.hasOwnProperty.call(stepCaption, 'tooltip')) {
         return (
             <OverlayTrigger
-                key={`overlay-${stepCaption.caption}`}
                 placement="bottom-end"
                 overlay={
                     <Tooltip id={`tooltip-${stepCaption.caption}`}>
@@ -64,7 +63,6 @@ const convertStepCaptionToJsx = (stepCaption: StepCaption) => {
     return (
         <span>
             <Button
-                key={`action-${stepCaption.caption}`}
                 variant="custom"
                 className="action-link"
                 onClick={(stepCaption as StepAction).action}
@@ -100,7 +98,15 @@ const Steppers = ({ title, steps }: Steppers) => (
                     <div className="title">{step.title}</div>
                     <div className="caption">
                         {Array.isArray(step.caption)
-                            ? step.caption?.map(convertStepCaptionToJsx)
+                            ? step.caption?.map((caption, index) => (
+                                  <span
+                                      key={`caption-${step.title}--${
+                                          index + 0
+                                      }`}
+                                  >
+                                      {convertStepCaptionToJsx(caption)}
+                                  </span>
+                              ))
                             : convertStepCaptionToJsx(step.caption ?? '')}
                     </div>
                 </div>
