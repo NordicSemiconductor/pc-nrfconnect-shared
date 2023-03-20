@@ -164,7 +164,7 @@ const slice = createSlice({
                 .get(state.selectedSerialNumber)
                 ?.serialPorts?.findIndex(e => e.path === action.payload.path);
 
-            if (vComIndex) {
+            if (vComIndex !== undefined) {
                 persistSerialPortOptionsToStore(
                     state.selectedSerialNumber,
                     action.payload,
