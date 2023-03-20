@@ -75,13 +75,15 @@ export { isLoggingVerbose } from './Log/logSlice';
 
 export {
     getAppSpecificStore as getPersistentStore,
-    persistSerialPort,
-    getPersistedSerialPort,
     persistTerminalSettings,
     getPersistedTerminalSettings,
 } from './utils/persistentStore';
 
-export { selectedDevice, getReadbackProtection } from './Device/deviceSlice';
+export {
+    selectedDevice,
+    getReadbackProtection,
+    persistSerialPortOptions,
+} from './Device/deviceSlice';
 export {
     setWaitForDevice,
     clearWaitForDevice,

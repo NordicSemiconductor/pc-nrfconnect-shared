@@ -5,13 +5,17 @@
  */
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { AutoDetectTypes } from '@serialport/bindings-cpp';
+import { SerialPortOpenOptions } from 'serialport';
 
 import { Device, DeviceState, RootState } from '../state';
 import {
     getPersistedIsFavorite,
     getPersistedNickname,
+    getPersistedSerialPortSettings,
     persistIsFavorite,
     persistNickname,
+    persistSerialPortSettings as persistSerialPortSettingsToStore,
 } from '../utils/persistentStore';
 
 const updateDevice = (
@@ -38,6 +42,33 @@ const initialState: DeviceState = {
     isSetupWaitingForUserInput: false,
     readbackProtection: 'unknown',
     ...noDialogShown,
+};
+
+const setPersistedData = (device: Device) => {
+    const newDevice = {
+        ...device,
+        favorite: getPersistedIsFavorite(device.serialNumber),
+        nickname: getPersistedNickname(device.serialNumber),
+    };
+
+    const persistedSerialPortSettings = getPersistedSerialPortSettings(
+        newDevice.serialNumber
+    );
+
+    if (persistedSerialPortSettings) {
+        const path =
+            newDevice.serialPorts?.[persistedSerialPortSettings.vComIndex]
+                .comName;
+
+        if (path) {
+            newDevice.persistedSerialPortOptions = {
+                ...persistedSerialPortSettings.serialPortOptions,
+                path,
+            };
+        }
+    }
+
+    return newDevice;
 };
 
 const slice = createSlice({
@@ -118,16 +149,52 @@ const slice = createSlice({
         setDevices: (state, action: PayloadAction<Device[]>) => {
             state.devices.clear();
             action.payload.forEach(device => {
-                state.devices.set(device.serialNumber, device);
+                state.devices.set(
+                    device.serialNumber,
+                    setPersistedData(device)
+                );
             });
         },
 
         addDevice: (state, action: PayloadAction<Device>) => {
-            state.devices.set(action.payload.serialNumber, {
-                ...action.payload,
-                favorite: getPersistedIsFavorite(action.payload.serialNumber),
-                nickname: getPersistedNickname(action.payload.serialNumber),
-            });
+            state.devices.set(
+                action.payload.serialNumber,
+                setPersistedData(action.payload)
+            );
+        },
+
+        persistSerialPortOptions: (
+            state,
+            action: PayloadAction<SerialPortOpenOptions<AutoDetectTypes>>
+        ) => {
+            if (state.selectedSerialNumber === null) return;
+
+            const selectedDevice = state.devices.get(
+                state.selectedSerialNumber
+            );
+
+            if (selectedDevice) {
+                const vComIndex = selectedDevice.serialPorts?.findIndex(
+                    e => e.path === action.payload.path
+                );
+
+                if (vComIndex !== undefined) {
+                    const { path: _, ...serialPortOptions } = action.payload;
+
+                    persistSerialPortSettingsToStore(
+                        state.selectedSerialNumber,
+                        {
+                            serialPortOptions,
+                            vComIndex,
+                        }
+                    );
+
+                    state.devices.set(state.selectedSerialNumber, {
+                        ...selectedDevice,
+                        persistedSerialPortOptions: action.payload,
+                    });
+                }
+            }
         },
 
         removeDevice: (state, action: PayloadAction<Device>) => {
@@ -206,6 +273,7 @@ export const {
         toggleDeviceFavorited,
         closeSetupDialogVisible,
         setReadbackProtected,
+        persistSerialPortOptions,
     },
 } = slice;
 

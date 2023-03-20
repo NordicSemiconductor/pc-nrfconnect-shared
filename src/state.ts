@@ -9,6 +9,8 @@ import {
     SerialPort,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
+import type { AutoDetectTypes } from '@serialport/bindings-cpp';
+import { SerialPortOpenOptions } from 'serialport';
 import { LogEntry } from 'winston';
 
 import type { DocumentationState } from './About/documentationSlice';
@@ -98,6 +100,7 @@ export interface Device extends NrfdlDevice {
     serialport?: SerialPort;
     favorite?: boolean;
     id: number;
+    persistedSerialPortOptions?: SerialPortOpenOptions<AutoDetectTypes>;
 }
 
 export interface BrokenDeviceDialog {
