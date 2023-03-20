@@ -15,7 +15,7 @@ import {
     getWaitingToAutoReselect,
     setAutoSelectDevice,
 } from '../deviceAutoSelectSlice';
-import { startWatchingDevices } from '../deviceLister';
+import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
 import { DeviceSetup as DeviceSetupShared, setupDevice } from '../deviceSetup';
 import DeviceSetup from '../DeviceSetup/DeviceSetup';
 import {
