@@ -11,6 +11,8 @@ every new version is a new major version.
 
 ### Added
 
+-   `updateHasReadbackProtection` now checks whether the currently selected
+    device has readbackprotection enabled and updates redux store.
 -   `Device` objects now contain a `persistedSerialPortOptions` property when it
     is available.
 
