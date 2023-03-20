@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
@@ -58,7 +58,6 @@ export default ({
     deviceFilter,
 }: Props) => {
     const dispatch = useDispatch();
-    const hotplugEventsStarted = useRef(false);
     const [deviceListVisible, setDeviceListVisible] = useState(false);
 
     const deviceIsSelected = useSelector(deviceIsSelectedSelector);
@@ -73,6 +72,9 @@ export default ({
         dispatch(setAutoSelectDevice(undefined));
     }, [dispatch, onDeviceDeselected]);
 
+    // Ensure that useCallback is
+    // not updated frequently as this
+    // will have a side effect to stop and start the hotplug events
     const doSelectDevice = useCallback(
         (device: Device, autoReselected: boolean) => {
             dispatch(clearWaitForDevice());
@@ -128,10 +130,10 @@ export default ({
     const toggleDeviceListVisible = () =>
         setDeviceListVisible(!deviceListVisible);
 
-    if (!hotplugEventsStarted.current) {
-        hotplugEventsStarted.current = true;
+    useEffect(() => {
         doStartWatchingDevices();
-    }
+        return stopWatchingDevices;
+    }, [doStartWatchingDevices]);
 
     useHotKey({
         hotKey: 'alt+s',
