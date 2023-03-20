@@ -11,7 +11,7 @@ import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 import { Device } from '../../state';
 import useHotKey from '../../utils/useHotKey';
 import {
-    clearWaitForDeviceTimeout,
+    clearWaitForDevice,
     getWaitingToAutoReselect,
     setAutoSelectDevice,
 } from '../deviceAutoSelectSlice';
@@ -68,6 +68,7 @@ export default ({
     const doDeselectDevice = useCallback(() => {
         onDeviceDeselected();
         dispatch(deselectDevice());
+        dispatch(clearWaitForDevice());
         dispatch(setAutoSelectDevice(undefined));
     }, [dispatch, onDeviceDeselected]);
 
@@ -76,7 +77,7 @@ export default ({
     // will have a side effect to stop and start the hotplug events
     const doSelectDevice = useCallback(
         (device: Device, autoReselected: boolean) => {
-            dispatch(clearWaitForDeviceTimeout());
+            dispatch(clearWaitForDevice());
             setDeviceListVisible(false);
             dispatch(selectDevice(device));
             dispatch(setAutoSelectDevice(device));

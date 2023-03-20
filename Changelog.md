@@ -22,6 +22,8 @@ every new version is a new major version.
 ### Fixed
 
 -   Devices now receive persisted data on first enumation.
+-   Safe guard against retaining stale wait for device request if a new device
+    is selected
 
 ### Removed
 
