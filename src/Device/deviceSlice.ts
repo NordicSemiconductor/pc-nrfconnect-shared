@@ -5,13 +5,17 @@
  */
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { AutoDetectTypes } from '@serialport/bindings-cpp';
+import { SerialPortOpenOptions } from 'serialport';
 
 import { Device, DeviceState, RootState } from '../state';
 import {
     getPersistedIsFavorite,
     getPersistedNickname,
+    getPersistedSerialPortOptions,
     persistIsFavorite,
     persistNickname,
+    persistSerialPortOptions as persistSerialPortOptionsToStore,
 } from '../utils/persistentStore';
 
 const updateDevice = (
@@ -123,11 +127,50 @@ const slice = createSlice({
         },
 
         addDevice: (state, action: PayloadAction<Device>) => {
-            state.devices.set(action.payload.serialNumber, {
+            const device = {
                 ...action.payload,
                 favorite: getPersistedIsFavorite(action.payload.serialNumber),
                 nickname: getPersistedNickname(action.payload.serialNumber),
-            });
+            };
+
+            const persistedSerialPortOptions = getPersistedSerialPortOptions(
+                action.payload.serialNumber
+            );
+
+            if (persistedSerialPortOptions) {
+                const path =
+                    action.payload.serialPorts?.[
+                        persistedSerialPortOptions.vComIndex
+                    ].comName;
+
+                if (path) {
+                    device.persistedSerialPortOptions = {
+                        ...persistedSerialPortOptions.serialPortOptions,
+                        path,
+                    };
+                }
+            }
+
+            state.devices.set(action.payload.serialNumber, device);
+        },
+
+        persistSerialPortOptions: (
+            state,
+            action: PayloadAction<SerialPortOpenOptions<AutoDetectTypes>>
+        ) => {
+            if (state.selectedSerialNumber === null) return;
+
+            const vComIndex = state.devices
+                .get(state.selectedSerialNumber)
+                ?.serialPorts?.findIndex(e => e.path === action.payload.path);
+
+            if (vComIndex) {
+                persistSerialPortOptionsToStore(
+                    state.selectedSerialNumber,
+                    action.payload,
+                    vComIndex
+                );
+            }
         },
 
         removeDevice: (state, action: PayloadAction<Device>) => {
@@ -206,6 +249,7 @@ export const {
         toggleDeviceFavorited,
         closeSetupDialogVisible,
         setReadbackProtected,
+        persistSerialPortOptions,
     },
 } = slice;
 
