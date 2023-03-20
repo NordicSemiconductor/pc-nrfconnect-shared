@@ -44,6 +44,33 @@ const initialState: DeviceState = {
     ...noDialogShown,
 };
 
+const setPersistedData = (device: Device) => {
+    const newDevice = {
+        ...device,
+        favorite: getPersistedIsFavorite(device.serialNumber),
+        nickname: getPersistedNickname(device.serialNumber),
+    };
+
+    const persistedSerialPortSettings = getPersistedSerialPortSettings(
+        newDevice.serialNumber
+    );
+
+    if (persistedSerialPortSettings) {
+        const path =
+            newDevice.serialPorts?.[persistedSerialPortSettings.vComIndex]
+                .comName;
+
+        if (path) {
+            newDevice.persistedSerialPortOptions = {
+                ...persistedSerialPortSettings.serialPortOptions,
+                path,
+            };
+        }
+    }
+
+    return newDevice;
+};
+
 const slice = createSlice({
     name: 'device',
     initialState,
@@ -122,36 +149,18 @@ const slice = createSlice({
         setDevices: (state, action: PayloadAction<Device[]>) => {
             state.devices.clear();
             action.payload.forEach(device => {
-                state.devices.set(device.serialNumber, device);
+                state.devices.set(
+                    device.serialNumber,
+                    setPersistedData(device)
+                );
             });
         },
 
         addDevice: (state, action: PayloadAction<Device>) => {
-            const device = {
-                ...action.payload,
-                favorite: getPersistedIsFavorite(action.payload.serialNumber),
-                nickname: getPersistedNickname(action.payload.serialNumber),
-            };
-
-            const persistedSerialPortSettings = getPersistedSerialPortSettings(
-                action.payload.serialNumber
+            state.devices.set(
+                action.payload.serialNumber,
+                setPersistedData(action.payload)
             );
-
-            if (persistedSerialPortSettings) {
-                const path =
-                    action.payload.serialPorts?.[
-                        persistedSerialPortSettings.vComIndex
-                    ].comName;
-
-                if (path) {
-                    device.persistedSerialPortOptions = {
-                        ...persistedSerialPortSettings.serialPortOptions,
-                        path,
-                    };
-                }
-            }
-
-            state.devices.set(action.payload.serialNumber, device);
         },
 
         persistSerialPortOptions: (

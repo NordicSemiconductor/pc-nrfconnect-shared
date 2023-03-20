@@ -19,6 +19,10 @@ every new version is a new major version.
 -   `persistSerialPortOptions` is now a Redux Action and only requires a
     `SerialPortOpenOptions<AutoDetectTypes>` to be passed.
 
+### Fixed
+
+-   Devices now receive persisted data on first enumation.
+
 ### Removed
 
 -   `getPersistedSerialPortOptions` export has been removed as it is an optional
