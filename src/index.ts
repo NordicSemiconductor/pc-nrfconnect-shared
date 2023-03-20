@@ -77,7 +77,6 @@ export {
     getAppSpecificStore as getPersistentStore,
     persistTerminalSettings,
     getPersistedTerminalSettings,
-    getPersistedSerialPortOptions,
 } from './utils/persistentStore';
 
 export {
