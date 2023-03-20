@@ -12,10 +12,10 @@ import { Device, DeviceState, RootState } from '../state';
 import {
     getPersistedIsFavorite,
     getPersistedNickname,
-    getPersistedSerialPortOptions,
+    getPersistedSerialPortSettings,
     persistIsFavorite,
     persistNickname,
-    persistSerialPortOptions as persistSerialPortOptionsToStore,
+    persistSerialPortSettings as persistSerialPortSettingsToStore,
 } from '../utils/persistentStore';
 
 const updateDevice = (
@@ -133,19 +133,19 @@ const slice = createSlice({
                 nickname: getPersistedNickname(action.payload.serialNumber),
             };
 
-            const persistedSerialPortOptions = getPersistedSerialPortOptions(
+            const persistedSerialPortSettings = getPersistedSerialPortSettings(
                 action.payload.serialNumber
             );
 
-            if (persistedSerialPortOptions) {
+            if (persistedSerialPortSettings) {
                 const path =
                     action.payload.serialPorts?.[
-                        persistedSerialPortOptions.vComIndex
+                        persistedSerialPortSettings.vComIndex
                     ].comName;
 
                 if (path) {
                     device.persistedSerialPortOptions = {
-                        ...persistedSerialPortOptions.serialPortOptions,
+                        ...persistedSerialPortSettings.serialPortOptions,
                         path,
                     };
                 }
@@ -160,16 +160,31 @@ const slice = createSlice({
         ) => {
             if (state.selectedSerialNumber === null) return;
 
-            const vComIndex = state.devices
-                .get(state.selectedSerialNumber)
-                ?.serialPorts?.findIndex(e => e.path === action.payload.path);
+            const selectedDevice = state.devices.get(
+                state.selectedSerialNumber
+            );
 
-            if (vComIndex !== undefined) {
-                persistSerialPortOptionsToStore(
-                    state.selectedSerialNumber,
-                    action.payload,
-                    vComIndex
+            if (selectedDevice) {
+                const vComIndex = selectedDevice.serialPorts?.findIndex(
+                    e => e.path === action.payload.path
                 );
+
+                if (vComIndex !== undefined) {
+                    const { path: _, ...serialPortOptions } = action.payload;
+
+                    persistSerialPortSettingsToStore(
+                        state.selectedSerialNumber,
+                        {
+                            serialPortOptions,
+                            vComIndex,
+                        }
+                    );
+
+                    state.devices.set(state.selectedSerialNumber, {
+                        ...selectedDevice,
+                        persistedSerialPortOptions: action.payload,
+                    });
+                }
             }
         },
 

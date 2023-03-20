@@ -43,17 +43,15 @@ export const persistIsFavorite = (serialNumber: string, value: boolean) =>
 export const getPersistedIsFavorite = (serialNumber: string) =>
     sharedStore.get(`${serialNumber}.fav`, false) as boolean;
 
-export const persistSerialPortOptions = (
+export const persistSerialPortSettings = (
     serialNumber: string,
-    serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>,
-    vComIndex: number
+    serialPortSettings: Omit<SerialSettings, 'lastUpdated'>
 ) =>
     sharedStore.set(`${serialNumber}.${packageJson().name}`, {
-        serialPortOptions,
+        ...serialPortSettings,
         lastUpdated: Date.now(),
-        vComIndex,
-    } as SerialSettings);
-export const getPersistedSerialPortOptions = (
+    });
+export const getPersistedSerialPortSettings = (
     serialNumber: string
 ): SerialSettings | undefined => {
     const appName = packageJson().name;
