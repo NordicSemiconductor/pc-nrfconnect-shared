@@ -10,7 +10,19 @@
 .step {
     display: flex;
     min-height: 2.8em;
-    color: gray;
+    color: $gray-600;
+
+    .action-link {
+        color: $gray-600;
+        padding: 0;
+        border: none;
+        background: none;
+        text-decoration: underline;
+    }
+
+    .tool-tip-trigger {
+        text-decoration: underline;
+    }
 
     .circle {
         background: $tooltip-bg;
@@ -25,29 +37,47 @@
     .step-icon::after {
         font-family: 'Material Design Icons';
         color: white;
-        font-size: calc(4em/3);
+        font-size: calc(4em / 3);
         vertical-align: bottom;
     }
 
     &.step-success {
-        .circle  { background-color: $green;}
-        .step-icon::after { content: '\F012C'; }
+        .circle {
+            background-color: $green;
+        }
+        .step-icon::after {
+            content: '\F012C';
+        }
     }
 
     &.step-warning {
-        .circle  { background-color: $amber;}
-        .step-icon::after { content: '\F1238'; }
+        .circle {
+            background-color: $amber;
+        }
+        .step-icon::after {
+            content: '\F1238';
+        }
     }
 
     &.step-failure {
-        .circle  { background-color: $red;}
-        .step-icon::after { content: '\F1398'; }
+        .circle {
+            background-color: $red;
+        }
+        .step-icon::after {
+            content: '\F1398';
+        }
     }
 
     &.step-active {
-        .circle { background-color: $primary; }
-        .step-icon::after { content: '\F0450'; }
-        .step-icon { animation: rotate 3s linear infinite; }
+        .circle {
+            background-color: $primary;
+        }
+        .step-icon::after {
+            content: '\F0450';
+        }
+        .step-icon {
+            animation: rotate 3s linear infinite;
+        }
     }
 
     .line {
