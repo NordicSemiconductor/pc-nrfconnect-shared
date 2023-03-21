@@ -1,15 +1,15 @@
 /// <reference types="react" />
 import './steppers.scss';
-export declare type StepState = 'active' | 'success' | 'warning' | 'failure';
-export declare type StepAction = {
+declare type StepAction = {
     caption: string;
     action: () => void;
 };
-export declare type StepTooltip = {
+declare type StepTooltip = {
     caption: string;
     tooltip: string;
 };
-export declare type StepCaption = string | StepAction | StepTooltip;
+declare type StepState = 'active' | 'success' | 'warning' | 'failure';
+declare type StepCaption = string | StepAction | StepTooltip;
 export declare type Step = {
     title: string;
     caption?: StepCaption | StepCaption[];
