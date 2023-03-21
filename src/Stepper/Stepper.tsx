@@ -42,7 +42,7 @@ export interface Steppers {
 }
 
 const isToolTipCaption = (caption: StepCaption): caption is ActionCaption =>
-    (caption as ActionCaption).action !== undefined;
+    (caption as TooltipCaption).tooltip !== undefined;
 
 const isActionCaption = (caption: StepCaption): caption is ActionCaption =>
     (caption as ActionCaption).action !== undefined;
