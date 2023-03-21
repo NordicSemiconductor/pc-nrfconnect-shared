@@ -12,21 +12,25 @@ import classNames from '../utils/classNames';
 
 import './steppers.scss';
 
-type StepAction = {
-    caption: string;
+type StepAction = StepString & {
     action: () => void;
 };
 
-type StepTooltip = {
-    caption: string;
+type StepTooltip = StepString & {
     tooltip: string;
+};
+
+type StepString = {
+    id?: string;
+    caption: string;
 };
 
 type StepState = 'active' | 'success' | 'warning' | 'failure';
 
-type StepCaption = string | StepAction | StepTooltip;
+type StepCaption = StepString | StepAction | StepTooltip;
 
 export type Step = {
+    id?: string;
     title: string;
     caption?: StepCaption | StepCaption[];
     state?: StepState;
@@ -40,9 +44,23 @@ export interface Steppers {
 const isTooltip = (caption: StepCaption): caption is StepTooltip =>
     (caption as StepTooltip).tooltip !== undefined;
 
+const isStepAction = (caption: StepCaption): caption is StepAction =>
+    (caption as StepAction).action !== undefined;
+
 const convertStepCaptionToJsx = (stepCaption: StepCaption) => {
-    if (typeof stepCaption === 'string') {
-        return <span>{`${stepCaption}`} </span>;
+    if (isStepAction(stepCaption)) {
+        return (
+            <span>
+                <Button
+                    variant="custom"
+                    className="action-link"
+                    onClick={stepCaption.action}
+                >
+                    {`${stepCaption.caption}`}
+                </Button>
+                &nbsp;
+            </span>
+        );
     }
 
     if (isTooltip(stepCaption)) {
@@ -63,18 +81,7 @@ const convertStepCaptionToJsx = (stepCaption: StepCaption) => {
         );
     }
 
-    return (
-        <span>
-            <Button
-                variant="custom"
-                className="action-link"
-                onClick={stepCaption.action}
-            >
-                {`${stepCaption.caption}`}
-            </Button>
-            &nbsp;
-        </span>
-    );
+    return <span>{`${stepCaption.caption}`} </span>;
 };
 
 const Steppers = ({ title, steps }: Steppers) => (
@@ -82,7 +89,7 @@ const Steppers = ({ title, steps }: Steppers) => (
         {title && <div>{title}</div>}
         {steps.map(step => (
             <div
-                key={step.title}
+                key={step.id ?? step.title}
                 className={classNames(
                     'step',
                     step.state === 'active' && 'step-active',
@@ -100,13 +107,16 @@ const Steppers = ({ title, steps }: Steppers) => (
                 <div>
                     <div className="title">{step.title}</div>
                     <div className="caption">
-                        {Array.isArray(step.caption)
-                            ? step.caption?.map(caption => (
-                                  <Fragment key={step.title}>
-                                      {convertStepCaptionToJsx(caption)}
-                                  </Fragment>
-                              ))
-                            : convertStepCaptionToJsx(step.caption ?? '')}
+                        {step.caption &&
+                            (Array.isArray(step.caption)
+                                ? step.caption?.map(caption => (
+                                      <Fragment
+                                          key={caption.id ?? caption.caption}
+                                      >
+                                          {convertStepCaptionToJsx(caption)}
+                                      </Fragment>
+                                  ))
+                                : convertStepCaptionToJsx(step.caption))}
                     </div>
                 </div>
             </div>
