@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import Button from '../Button/Button';
@@ -12,19 +12,19 @@ import classNames from '../utils/classNames';
 
 import './steppers.scss';
 
-export type StepState = 'active' | 'success' | 'warning' | 'failure';
-
-export type StepAction = {
+type StepAction = {
     caption: string;
     action: () => void;
 };
 
-export type StepTooltip = {
+type StepTooltip = {
     caption: string;
     tooltip: string;
 };
 
-export type StepCaption = string | StepAction | StepTooltip;
+type StepState = 'active' | 'success' | 'warning' | 'failure';
+
+type StepCaption = string | StepAction | StepTooltip;
 
 export type Step = {
     title: string;
@@ -37,18 +37,21 @@ export interface Steppers {
     steps: Step[];
 }
 
+const isTooltip = (caption: StepCaption): caption is StepTooltip =>
+    (caption as StepTooltip).tooltip !== undefined;
+
 const convertStepCaptionToJsx = (stepCaption: StepCaption) => {
     if (typeof stepCaption === 'string') {
         return <span>{`${stepCaption}`} </span>;
     }
 
-    if (Object.prototype.hasOwnProperty.call(stepCaption, 'tooltip')) {
+    if (isTooltip(stepCaption)) {
         return (
             <OverlayTrigger
                 placement="bottom-end"
                 overlay={
                     <Tooltip id={`tooltip-${stepCaption.caption}`}>
-                        {(stepCaption as StepTooltip).tooltip}
+                        {stepCaption.tooltip}
                     </Tooltip>
                 }
             >
@@ -65,7 +68,7 @@ const convertStepCaptionToJsx = (stepCaption: StepCaption) => {
             <Button
                 variant="custom"
                 className="action-link"
-                onClick={(stepCaption as StepAction).action}
+                onClick={stepCaption.action}
             >
                 {`${stepCaption.caption}`}
             </Button>
@@ -98,14 +101,10 @@ const Steppers = ({ title, steps }: Steppers) => (
                     <div className="title">{step.title}</div>
                     <div className="caption">
                         {Array.isArray(step.caption)
-                            ? step.caption?.map((caption, index) => (
-                                  <span
-                                      key={`caption-${step.title}--${
-                                          index + 0
-                                      }`}
-                                  >
+                            ? step.caption?.map(caption => (
+                                  <Fragment key={step.title}>
                                       {convertStepCaptionToJsx(caption)}
-                                  </span>
+                                  </Fragment>
                               ))
                             : convertStepCaptionToJsx(step.caption ?? '')}
                     </div>
