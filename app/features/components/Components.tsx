@@ -19,16 +19,15 @@ import {
     Spinner,
     StartStopButton,
     StateSelector,
-    Steppers,
+    Stepper,
     Toggle,
 } from '../../../src';
 
-const AlertPage = () => {
+export default () => {
     const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
 
     return (
         <>
-            <h1>Something</h1>
             <h1>Alert</h1>
             <Alert variant="info" label="Label">
                 Alert with a label
@@ -108,7 +107,11 @@ const AlertPage = () => {
             <Logo changeWithDeviceState={false} />
 
             <h1>Slider</h1>
-            <Slider onChange={[]} values={[2]} range={{ min: 0, max: 10 }} />
+            <Slider
+                onChange={[() => {}]}
+                values={[2]}
+                range={{ min: 0, max: 10 }}
+            />
 
             <h1>StartStopButton</h1>
             <StartStopButton started={false} onClick={() => {}} />
@@ -125,20 +128,55 @@ const AlertPage = () => {
             <Toggle isToggled={false} />
             <Toggle isToggled />
 
-            <div className="my-3" />
+            <h1>Steppers</h1>
 
-            <Steppers
+            <Stepper
                 steps={[
-                    { title: 'Active', caption: 'active', state: 'active' },
-                    { title: 'Warning', caption: 'warning', state: 'warning' },
-                    { title: 'Success', caption: 'success', state: 'success' },
-                    { title: 'Failure', caption: 'failure', state: 'failure' },
-                    { title: 'Step 5', caption: 'some caption' },
-                    { title: 'Step 6', caption: 'some tooltip' },
+                    {
+                        id: '1',
+                        title: 'Active',
+                        caption: 'active',
+                        state: 'active',
+                    },
+                    {
+                        id: '2',
+                        title: 'Warning',
+                        caption: 'warning',
+                        state: 'warning',
+                    },
+                    {
+                        id: '3',
+                        title: 'Success',
+                        caption: 'success',
+                        state: 'success',
+                    },
+                    {
+                        id: '4',
+                        title: 'Failure',
+                        caption: 'failure',
+                        state: 'failure',
+                    },
+                    { id: '5', title: 'Step 5', caption: 'some caption' },
+                    {
+                        id: '6',
+                        title: 'Step 6',
+                        caption: [
+                            {
+                                id: '1',
+                                caption: 'some caption with tooltip',
+                                tooltip: 'Tooltip content',
+                            },
+                            {
+                                id: '2',
+                                caption: 'some caption with action',
+                                action() {
+                                    alert('action performed');
+                                },
+                            },
+                        ],
+                    },
                 ]}
             />
         </>
     );
 };
-
-export default AlertPage;
