@@ -18,6 +18,11 @@ every new version is a new major version.
 
 -   `Stepper` step now has an id property
 
+### Steps to upgrade when using this package
+
+-   `Steppers` has been renamed to `Stepper` rename all references to `Stepper`
+-   Add unique id to all `Step` objects
+
 ## 24 - 2023-03-20
 
 ### Added
