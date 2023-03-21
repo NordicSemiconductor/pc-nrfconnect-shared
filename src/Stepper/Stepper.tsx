@@ -12,22 +12,22 @@ import classNames from '../utils/classNames';
 
 import './stepper.scss';
 
-type StepAction = StepString & {
+type ActionCaption = StringCaption & {
     action: () => void;
 };
 
-type StepTooltip = StepString & {
+type TooltipCaption = StringCaption & {
     tooltip: string;
 };
 
-type StepString = {
+type StringCaption = {
     id: string;
     caption: string;
 };
 
 type StepState = 'active' | 'success' | 'warning' | 'failure';
 
-type StepCaption = StepString | StepAction | StepTooltip;
+type StepCaption = StringCaption | ActionCaption | TooltipCaption;
 
 export type Step = {
     id: string;
@@ -41,54 +41,69 @@ export interface Steppers {
     steps: Step[];
 }
 
-const isTooltip = (caption: StepCaption): caption is StepTooltip =>
-    (caption as StepTooltip).tooltip !== undefined;
+const isActionCaption = (caption: StepCaption): caption is ActionCaption =>
+    (caption as ActionCaption).action !== undefined;
 
-const isStepAction = (caption: StepCaption): caption is StepAction =>
-    (caption as StepAction).action !== undefined;
+const isStringCaption = (
+    caption: string | StringCaption
+): caption is string | StringCaption =>
+    typeof caption === 'string' ||
+    (caption as ActionCaption).action !== undefined;
 
-const Caption = ({ caption }: { caption: string | StepCaption }) => {
+const StepActionCaption = ({ caption }: { caption: ActionCaption }) => (
+    <span>
+        <Button
+            variant="custom"
+            className="action-link"
+            onClick={caption.action}
+        >
+            {`${caption.caption}`}
+        </Button>
+        &nbsp;
+    </span>
+);
+
+const StepTooltipCaption = ({ caption }: { caption: TooltipCaption }) => (
+    <OverlayTrigger
+        placement="bottom-end"
+        overlay={
+            <Tooltip id={`tooltip-${caption.caption}`}>
+                {caption.tooltip}
+            </Tooltip>
+        }
+    >
+        <span>
+            <span className="tool-tip-trigger">{`${caption.caption}`}</span>
+            &nbsp;
+        </span>
+    </OverlayTrigger>
+);
+
+const StepStringCaption = ({
+    caption,
+}: {
+    caption: string | StringCaption;
+}) => {
     if (typeof caption === 'string') {
         return <span>{`${caption}`} </span>;
-    }
-
-    if (isStepAction(caption)) {
-        return (
-            <span>
-                <Button
-                    variant="custom"
-                    className="action-link"
-                    onClick={caption.action}
-                >
-                    {`${caption.caption}`}
-                </Button>
-                &nbsp;
-            </span>
-        );
-    }
-
-    if (isTooltip(caption)) {
-        return (
-            <OverlayTrigger
-                placement="bottom-end"
-                overlay={
-                    <Tooltip id={`tooltip-${caption.caption}`}>
-                        {caption.tooltip}
-                    </Tooltip>
-                }
-            >
-                <span>
-                    <span className="tool-tip-trigger">{`${caption.caption}`}</span>
-                    &nbsp;
-                </span>
-            </OverlayTrigger>
-        );
     }
 
     return <span>{`${caption.caption}`} </span>;
 };
 
-const Steppers = ({ title, steps }: Steppers) => (
+const Caption = ({ caption }: { caption: string | StepCaption }) => {
+    if (isStringCaption(caption)) {
+        return <StepStringCaption caption={caption} />;
+    }
+
+    if (isActionCaption(caption)) {
+        return <StepActionCaption caption={caption} />;
+    }
+
+    return <StepTooltipCaption caption={caption} />;
+};
+
+export default ({ title, steps }: Steppers) => (
     <>
         {title && <div>{title}</div>}
         {steps.map(step => (
@@ -125,5 +140,3 @@ const Steppers = ({ title, steps }: Steppers) => (
         ))}
     </>
 );
-
-export default Steppers;
