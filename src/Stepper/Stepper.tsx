@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { Fragment } from 'react';
+import React from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import Button from '../Button/Button';
@@ -47,45 +47,45 @@ const isTooltip = (caption: StepCaption): caption is StepTooltip =>
 const isStepAction = (caption: StepCaption): caption is StepAction =>
     (caption as StepAction).action !== undefined;
 
-const convertStepCaptionToJsx = (stepCaption: string | StepCaption) => {
-    if (typeof stepCaption === 'string') {
-        return <span>{`${stepCaption}`} </span>;
+const Caption = ({ caption }: { caption: string | StepCaption }) => {
+    if (typeof caption === 'string') {
+        return <span>{`${caption}`} </span>;
     }
 
-    if (isStepAction(stepCaption)) {
+    if (isStepAction(caption)) {
         return (
             <span>
                 <Button
                     variant="custom"
                     className="action-link"
-                    onClick={stepCaption.action}
+                    onClick={caption.action}
                 >
-                    {`${stepCaption.caption}`}
+                    {`${caption.caption}`}
                 </Button>
                 &nbsp;
             </span>
         );
     }
 
-    if (isTooltip(stepCaption)) {
+    if (isTooltip(caption)) {
         return (
             <OverlayTrigger
                 placement="bottom-end"
                 overlay={
-                    <Tooltip id={`tooltip-${stepCaption.caption}`}>
-                        {stepCaption.tooltip}
+                    <Tooltip id={`tooltip-${caption.caption}`}>
+                        {caption.tooltip}
                     </Tooltip>
                 }
             >
                 <span>
-                    <span className="tool-tip-trigger">{`${stepCaption.caption}`}</span>
+                    <span className="tool-tip-trigger">{`${caption.caption}`}</span>
                     &nbsp;
                 </span>
             </OverlayTrigger>
         );
     }
 
-    return <span>{`${stepCaption.caption}`} </span>;
+    return <span>{`${caption.caption}`} </span>;
 };
 
 const Steppers = ({ title, steps }: Steppers) => (
@@ -96,10 +96,7 @@ const Steppers = ({ title, steps }: Steppers) => (
                 key={step.id}
                 className={classNames(
                     'step',
-                    step.state === 'active' && 'step-active',
-                    step.state === 'success' && 'step-success',
-                    step.state === 'failure' && 'step-failure',
-                    step.state === 'warning' && 'step-warning'
+                    step.state && `step-${step.state}`
                 )}
             >
                 <div>
@@ -112,13 +109,16 @@ const Steppers = ({ title, steps }: Steppers) => (
                     <div className="title">{step.title}</div>
                     <div className="caption">
                         {step.caption &&
-                            (Array.isArray(step.caption)
-                                ? step.caption?.map(caption => (
-                                      <Fragment key={caption.id}>
-                                          {convertStepCaptionToJsx(caption)}
-                                      </Fragment>
-                                  ))
-                                : convertStepCaptionToJsx(step.caption))}
+                            (Array.isArray(step.caption) ? (
+                                step.caption?.map(caption => (
+                                    <Caption
+                                        key={caption.id}
+                                        caption={caption}
+                                    />
+                                ))
+                            ) : (
+                                <Caption caption={step.caption} />
+                            ))}
                     </div>
                 </div>
             </div>
