@@ -7,6 +7,39 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 24 - 2023-03-20
+
+### Added
+
+-   `updateHasReadbackProtection` now checks whether the currently selected
+    device has readbackprotection enabled and updates redux store.
+-   `Device` objects now contain a `persistedSerialPortOptions` property when it
+    is available.
+
+### Changed
+
+-   `persistSerialPortOptions` is now a Redux Action and only requires a
+    `SerialPortOpenOptions<AutoDetectTypes>` to be passed.
+
+### Fixed
+
+-   Devices now receive persisted data on first enumation.
+-   Safe guard against retaining stale wait for device request if a new device
+    is selected
+
+### Removed
+
+-   `getPersistedSerialPortOptions` export has been removed as it is an optional
+    property in `Device` now.
+
+### Steps to upgrade when using this package
+
+-   Wrap `persistSerialPortOptions` in a `dispatch` call and only pass
+    `SerialPortOptions` as parameters.
+-   Replace `getPersistedSerialPortOptions` calls with the
+    `persistedSerialPortOptions` property in the `Device` type (accessible from
+    the DeviceSelector callbacks or through `dispatch(selectedDevice())`)
+
 ## 23 - 2023-03-16
 
 ### Added

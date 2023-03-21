@@ -13,7 +13,7 @@ import logger from '../logging';
 import packageJson from './packageJson';
 
 export interface SerialSettings {
-    serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>;
+    serialPortOptions: Omit<SerialPortOpenOptions<AutoDetectTypes>, 'path'>;
     lastUpdated: number;
     vComIndex: number;
 }
@@ -43,17 +43,15 @@ export const persistIsFavorite = (serialNumber: string, value: boolean) =>
 export const getPersistedIsFavorite = (serialNumber: string) =>
     sharedStore.get(`${serialNumber}.fav`, false) as boolean;
 
-export const persistSerialPort = (
+export const persistSerialPortSettings = (
     serialNumber: string,
-    serialPortOptions: SerialPortOpenOptions<AutoDetectTypes>,
-    vComIndex: number
+    serialPortSettings: Omit<SerialSettings, 'lastUpdated'>
 ) =>
     sharedStore.set(`${serialNumber}.${packageJson().name}`, {
-        serialPortOptions,
+        ...serialPortSettings,
         lastUpdated: Date.now(),
-        vComIndex,
-    } as SerialSettings);
-export const getPersistedSerialPort = (
+    });
+export const getPersistedSerialPortSettings = (
     serialNumber: string
 ): SerialSettings | undefined => {
     const appName = packageJson().name;
