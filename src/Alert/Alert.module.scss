@@ -3,13 +3,13 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
- 
+
 @import '../variables.scss';
 
 .container {
     border-radius: 0;
     color: white;
-    border: 0; 
+    margin-bottom: 8px;
 
     &.info {
         background-color: $nordic-blue;
