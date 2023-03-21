@@ -10,7 +10,7 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Button from '../Button/Button';
 import classNames from '../utils/classNames';
 
-import './steppers.scss';
+import './stepper.scss';
 
 type StepAction = StepString & {
     action: () => void;
