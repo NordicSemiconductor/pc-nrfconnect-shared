@@ -41,6 +41,9 @@ export interface Steppers {
     steps: Step[];
 }
 
+const isToolTipCaption = (caption: StepCaption): caption is ActionCaption =>
+    (caption as ActionCaption).action !== undefined;
+
 const isActionCaption = (caption: StepCaption): caption is ActionCaption =>
     (caption as ActionCaption).action !== undefined;
 
@@ -48,7 +51,7 @@ const isStringCaption = (
     caption: string | StringCaption
 ): caption is string | StringCaption =>
     typeof caption === 'string' ||
-    (caption as ActionCaption).action !== undefined;
+    (!isToolTipCaption(caption) && !isActionCaption(caption));
 
 const StepActionCaption = ({ caption }: { caption: ActionCaption }) => (
     <span>
