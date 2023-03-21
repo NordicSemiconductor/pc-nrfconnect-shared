@@ -21,7 +21,7 @@ type StepTooltip = StepString & {
 };
 
 type StepString = {
-    id?: string;
+    id: string;
     caption: string;
 };
 
@@ -30,7 +30,7 @@ type StepState = 'active' | 'success' | 'warning' | 'failure';
 type StepCaption = StepString | StepAction | StepTooltip;
 
 export type Step = {
-    id?: string;
+    id: string;
     title: string;
     caption?: string | (StepCaption | StepCaption[]);
     state?: StepState;
@@ -93,7 +93,7 @@ const Steppers = ({ title, steps }: Steppers) => (
         {title && <div>{title}</div>}
         {steps.map(step => (
             <div
-                key={step.id ?? step.title}
+                key={step.id}
                 className={classNames(
                     'step',
                     step.state === 'active' && 'step-active',
@@ -114,9 +114,7 @@ const Steppers = ({ title, steps }: Steppers) => (
                         {step.caption &&
                             (Array.isArray(step.caption)
                                 ? step.caption?.map(caption => (
-                                      <Fragment
-                                          key={caption.id ?? caption.caption}
-                                      >
+                                      <Fragment key={caption.id}>
                                           {convertStepCaptionToJsx(caption)}
                                       </Fragment>
                                   ))

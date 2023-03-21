@@ -21,6 +21,7 @@ every new version is a new major version.
 ### Steps to upgrade when using this package
 
 -   `Steppers` has been renamed to `Stepper` rename all references to `Stepper`
+-   `Step` add unique id to all steps.
 
 ## 24 - 2023-03-20
 
