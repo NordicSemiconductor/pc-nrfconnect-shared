@@ -11,8 +11,12 @@ every new version is a new major version.
 
 ### Added
 
--   `Steppers` caption can now have action buttons
--   `Steppers` caption can now have tooltips
+-   `Stepper` caption can now have action buttons
+-   `Stepper` caption can now have tooltips
+
+### Changed
+
+-   `Stepper` step now has an id property
 
 ## 24 - 2023-03-20
 
