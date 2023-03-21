@@ -19,6 +19,7 @@ import {
     Spinner,
     StartStopButton,
     StateSelector,
+    Steppers,
     Toggle,
 } from '../../../src';
 
@@ -47,6 +48,7 @@ const AlertPage = () => {
 
             <h1>Button</h1>
             <Button
+                variant="primary"
                 onClick={() => {
                     alert('Button clicked');
                 }}
@@ -58,16 +60,18 @@ const AlertPage = () => {
             <Card title="Card title">Card content</Card>
 
             <h1>Dialog</h1>
-            <Button onClick={() => setShowConfirmationDialog(true)}>
+            <Button
+                variant="primary"
+                onClick={() => setShowConfirmationDialog(true)}
+            >
                 Open dialog
             </Button>
 
             <ConfirmationDialog
                 isVisible={showConfirmationDialog}
-                okButtonText="Ok button"
-                cancelButtonText="Cancel button"
-                text="Text property"
-                onOk={() => {
+                confirmLabel="Ok button"
+                cancelLabel="Cancel button"
+                onConfirm={() => {
                     setShowConfirmationDialog(false);
                 }}
                 onCancel={() => {
@@ -107,7 +111,8 @@ const AlertPage = () => {
             <Slider onChange={[]} values={[2]} range={{ min: 0, max: 10 }} />
 
             <h1>StartStopButton</h1>
-            <StartStopButton onClick={() => {}} />
+            <StartStopButton started={false} onClick={() => {}} />
+            <StartStopButton started onClick={() => {}} />
 
             <h1>StateSelector</h1>
             <StateSelector
@@ -119,6 +124,19 @@ const AlertPage = () => {
             <h1>Toggle</h1>
             <Toggle isToggled={false} />
             <Toggle isToggled />
+
+            <div className="my-3" />
+
+            <Steppers
+                steps={[
+                    { title: 'Active', caption: 'active', state: 'active' },
+                    { title: 'Warning', caption: 'warning', state: 'warning' },
+                    { title: 'Success', caption: 'success', state: 'success' },
+                    { title: 'Failure', caption: 'failure', state: 'failure' },
+                    { title: 'Step 5', caption: 'some caption' },
+                    { title: 'Step 6', caption: 'some tooltip' },
+                ]}
+            />
         </>
     );
 };

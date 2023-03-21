@@ -11,6 +11,7 @@ const { build } = require('../scripts/esbuild-renderer');
 
 build({
     entryPoints: ['./app/index.tsx'],
+    watch: true,
     // absWorkingDir: path.resolve(__dirname, '..', '.'),
     plugins: [
         {

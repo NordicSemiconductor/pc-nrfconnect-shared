@@ -15,7 +15,8 @@
         "nrfconnect-license": "./scripts/nrfconnect-license.ts",
         "run-esbuild": "./scripts/esbuild.js"
     },
-    "main": "src",
+    "main": "dist/bundle.js",
+
     "modern": true,
     "scripts": {
         "test": "jest",
