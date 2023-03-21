@@ -32,7 +32,7 @@ type StepCaption = StepString | StepAction | StepTooltip;
 export type Step = {
     id?: string;
     title: string;
-    caption?: StepCaption | StepCaption[];
+    caption?: string | (StepCaption | StepCaption[]);
     state?: StepState;
 };
 
@@ -47,7 +47,11 @@ const isTooltip = (caption: StepCaption): caption is StepTooltip =>
 const isStepAction = (caption: StepCaption): caption is StepAction =>
     (caption as StepAction).action !== undefined;
 
-const convertStepCaptionToJsx = (stepCaption: StepCaption) => {
+const convertStepCaptionToJsx = (stepCaption: string | StepCaption) => {
+    if (typeof stepCaption === 'string') {
+        return <span>{`${stepCaption}`} </span>;
+    }
+
     if (isStepAction(stepCaption)) {
         return (
             <span>

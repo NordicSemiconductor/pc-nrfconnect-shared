@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import './steppers.scss';
+import './stepper.scss';
 declare type StepAction = StepString & {
     action: () => void;
 };
@@ -15,7 +15,7 @@ declare type StepCaption = StepString | StepAction | StepTooltip;
 export declare type Step = {
     id?: string;
     title: string;
-    caption?: StepCaption | StepCaption[];
+    caption?: string | (StepCaption | StepCaption[]);
     state?: StepState;
 };
 export interface Steppers {
