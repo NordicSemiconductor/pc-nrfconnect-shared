@@ -4,15 +4,13 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
-
-// const fs = require('fs');
 const path = require('path');
 const { build } = require('../scripts/esbuild-renderer');
 
 build({
     entryPoints: ['./app/index.tsx'],
     watch: true,
-    // absWorkingDir: path.resolve(__dirname, '..', '.'),
+
     plugins: [
         {
             name: 'rewrite',
@@ -26,13 +24,3 @@ build({
         },
     ],
 });
-
-// const distFolder = join(process.cwd(), 'dist');
-// if (!fs.existsSync(distFolder)) {
-//     fs.mkdirSync(distFolder);
-// }
-
-// fs.copyFileSync(
-//     join(process.cwd(), '../dist/bootstrap.css'),
-//     join(distFolder, 'bootstrap.css')
-// );

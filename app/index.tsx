@@ -21,12 +21,11 @@ const reducer = combineReducers({
         .reducer,
 });
 
-ReactDOM.render(
+export default () => (
     <App
         appReducer={reducer}
         deviceSelect={<BoilerplateDeviceSelector />}
         sidePanel={<SidePanel />}
         panes={[{ name: 'Components', Main: ComponentsPage }]}
-    />,
-    document.getElementById('webapp')
+    />
 );
