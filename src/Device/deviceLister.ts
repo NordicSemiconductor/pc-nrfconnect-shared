@@ -4,23 +4,105 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-/* eslint-disable @typescript-eslint/ban-types */
-
 import nrfDeviceLib, {
     Device as NrfdlDevice,
     DeviceTraits,
     HotplugEvent,
 } from '@nordicsemiconductor/nrf-device-lib-js';
-import { Device } from 'pc-nrfconnect-shared';
 
 import logger from '../logging';
-import { Devices } from '../state';
+import { Device, RootState, TDispatch, WaitForDevice } from '../state';
+import {
+    clearWaitForDevice,
+    clearWaitForDeviceTimeout,
+    setDisconnectedTime,
+    setLastArrivedDeviceId,
+    setWaitForDeviceTimeout,
+} from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import { devicesDetected } from './deviceSlice';
+import {
+    addDevice,
+    closeSetupDialogVisible,
+    removeDevice,
+    setDevices,
+} from './deviceSlice';
+import { isDeviceInDFUBootloader } from './sdfuOperations';
 
-const DEFAULT_DEVICE_WAIT_TIME = 3000;
+let autoSelectDeviceCLISerialUsed = false;
 
-let hotplugTaskId: number;
+const hasSameDeviceTraits = (
+    deviceTraits: DeviceTraits,
+    otherDeviceTraits: DeviceTraits
+) =>
+    Object.keys(otherDeviceTraits).every(
+        rule =>
+            deviceTraits[rule as keyof DeviceTraits] ===
+            otherDeviceTraits[rule as keyof DeviceTraits]
+    );
+
+const shouldAutoReselect = (
+    addedDevice: Device,
+    globalAutoReselect: boolean,
+    autoReselectDevice?: Device,
+    disconnectionTime?: number,
+    currentSelectedDevice?: Device
+): boolean => {
+    // No device was selected when disconnection occurred
+    if (!autoReselectDevice) return false;
+
+    // device is still connected
+    if (disconnectionTime === undefined) return false;
+
+    // The device that was selected when disconnection occurred is not yet connected
+    if (addedDevice.serialNumber !== autoReselectDevice.serialNumber) {
+        return false;
+    }
+
+    // The device is already selected
+    if (
+        currentSelectedDevice?.serialNumber === autoReselectDevice.serialNumber
+    ) {
+        return false;
+    }
+
+    // Device does not have the same traits
+    if (!hasSameDeviceTraits(addedDevice.traits, autoReselectDevice.traits)) {
+        return false;
+    }
+
+    return globalAutoReselect;
+};
+
+const initAutoReconnectTimeout = (
+    dispatch: TDispatch,
+    onTimeout: () => void,
+    forceAutoReselect?: WaitForDevice
+) => {
+    const timeout = forceAutoReselect?.timeout;
+    if (timeout == null) return;
+
+    dispatch(
+        setWaitForDeviceTimeout(
+            setTimeout(() => {
+                dispatch(closeSetupDialogVisible());
+                if (forceAutoReselect?.onFail)
+                    forceAutoReselect?.onFail(
+                        `Auto Reconnect failed. Device did not show up after ${
+                            timeout / 1000
+                        } seconds`
+                    );
+                onTimeout();
+                logger.warn(
+                    `Auto Reconnect failed. Device did not show up after ${
+                        timeout / 1000
+                    } seconds`
+                );
+            }, timeout)
+        )
+    );
+};
+
+let hotplugTaskId: number | null = null;
 
 /**
  * Wrap the device form nrf-device-lib to make the Device type consistent
@@ -43,42 +125,197 @@ export const wrapDeviceFromNrfdl = (device: NrfdlDevice): Device => ({
 export const wrapDevicesFromNrfdl = (devices: NrfdlDevice[]): Device[] =>
     devices.map(wrapDeviceFromNrfdl);
 
-/**
+export const hasValidDeviceTraits = (
+    deviceTraits: DeviceTraits,
+    requiredTraits: DeviceTraits
+) =>
+    Object.keys(requiredTraits).some(
+        rule =>
+            deviceTraits[rule as keyof DeviceTraits] &&
+            requiredTraits[rule as keyof DeviceTraits]
+    ) ||
+    Object.keys(requiredTraits).every(
+        rule => requiredTraits[rule as keyof DeviceTraits] === false
+    );
+
+/*
  * Starts watching for devices with the given traits. See the nrf-device-lib
  * library for available traits. Whenever devices are attached/detached, this
- * will dispatch DEVICES_DETECTED with a complete list of attached devices.
- *
- * @param {Object} deviceListing The configuration for the DeviceLister
- * @param {function(device)} doDeselectDevice Invoke to start deselect the current device
- * @returns {function(*)} Function that can be passed to redux dispatch.
+ * will dispatch AddDevice or removeDevice and trigger events.
  */
 export const startWatchingDevices =
-    (deviceListing: DeviceTraits, doDeselectDevice: Function) =>
-    async (dispatch: Function, getState: Function): Promise<void> => {
-        const updateDeviceList = async () => {
-            const { selectedSerialNumber, devices: devicesFromState } =
-                getState().device;
-            await waitForModeSwitch(devicesFromState, selectedSerialNumber);
+    (
+        deviceListing: DeviceTraits,
+        onDeviceConnected: (device: Device) => void,
+        onDeviceDisconnected: (device: Device) => void,
+        onDeviceDeselected: () => void,
+        doSelectDevice: (device: Device, autoReselected: boolean) => void
+    ) =>
+    async (dispatch: TDispatch, getState: () => RootState) => {
+        const updateDeviceList = (event: HotplugEvent) => {
+            const removeDeviceFromList = (remove: Device) => {
+                if (
+                    remove.serialNumber ===
+                    getState().device.selectedSerialNumber
+                ) {
+                    onDeviceDeselected();
+                }
+
+                if (
+                    remove.serialNumber ===
+                        getState().device.selectedSerialNumber &&
+                    !getState().deviceAutoSelect.waitForDevice
+                ) {
+                    dispatch(closeSetupDialogVisible());
+                }
+
+                dispatch(removeDevice(remove));
+                onDeviceDisconnected(remove);
+            };
+
+            switch (event.event_type) {
+                case 'NRFDL_DEVICE_EVENT_ARRIVED':
+                    if (!event.device) {
+                        return;
+                    }
+                    if (
+                        hasValidDeviceTraits(
+                            event.device?.traits,
+                            deviceListing
+                        )
+                    ) {
+                        const device = wrapDeviceFromNrfdl(event.device);
+                        if (
+                            !getState().device.devices.has(device.serialNumber)
+                        ) {
+                            onDeviceConnected(device);
+                        }
+
+                        const sn = getState().device.selectedSerialNumber;
+                        const disconnectionTime =
+                            getState().deviceAutoSelect.disconnectionTime;
+                        const autoSelectDevice =
+                            getState().deviceAutoSelect.device;
+
+                        const result = shouldAutoReselect(
+                            device,
+                            getState().deviceAutoSelect.autoReselect,
+                            autoSelectDevice,
+                            disconnectionTime,
+                            sn !== null
+                                ? getState().device.devices.get(sn)
+                                : undefined
+                        );
+
+                        if (result) {
+                            logger.info(
+                                `Auto Reconnecting Device SN: ${device.serialNumber}`
+                            );
+                            doSelectDevice(device, true);
+                        }
+
+                        if (
+                            device.serialNumber ===
+                            getState().deviceAutoSelect.device?.serialNumber
+                        ) {
+                            const waitForDevice =
+                                getState().deviceAutoSelect.waitForDevice;
+                            // Device is to be reconnected as timeout is provided
+                            if (
+                                waitForDevice &&
+                                ((disconnectionTime === undefined &&
+                                    getState().deviceAutoSelect
+                                        .lastArrivedDeviceId !== device.id) ||
+                                    (disconnectionTime ?? 0) +
+                                        waitForDevice.timeout >=
+                                        Date.now())
+                            ) {
+                                dispatch(setLastArrivedDeviceId(device.id));
+                                dispatch(setDisconnectedTime(undefined));
+                                if (
+                                    waitForDevice.when === 'always' ||
+                                    (waitForDevice.when === 'BootLoaderMode' &&
+                                        isDeviceInDFUBootloader(device)) ||
+                                    (waitForDevice.when === 'applicationMode' &&
+                                        device.dfuTriggerInfo !== null)
+                                ) {
+                                    logger.info(
+                                        'Wait For Device was successfully'
+                                    );
+
+                                    if (waitForDevice.once) {
+                                        dispatch(clearWaitForDevice());
+                                    } else {
+                                        dispatch(clearWaitForDeviceTimeout());
+                                    }
+
+                                    if (waitForDevice.onSuccess)
+                                        waitForDevice.onSuccess(device);
+                                }
+                            }
+                        }
+
+                        dispatch(addDevice(device));
+                    }
+                    break;
+                case 'NRFDL_DEVICE_EVENT_LEFT':
+                    {
+                        const devices = getState().device.devices;
+
+                        devices.forEach(device => {
+                            if (device.id === event.device_id) {
+                                const waitForDevice =
+                                    getState().deviceAutoSelect.waitForDevice;
+                                if (
+                                    device.serialNumber ===
+                                    getState().deviceAutoSelect.device
+                                        ?.serialNumber
+                                ) {
+                                    if (waitForDevice) {
+                                        initAutoReconnectTimeout(
+                                            dispatch,
+                                            () => removeDeviceFromList(device),
+                                            getState().deviceAutoSelect
+                                                .waitForDevice
+                                        );
+                                    } else {
+                                        removeDeviceFromList(device);
+                                    }
+
+                                    dispatch(setDisconnectedTime(Date.now()));
+                                } else {
+                                    removeDeviceFromList(device);
+                                }
+                            }
+                        });
+                    }
+                    break;
+            }
+        };
+
+        try {
+            stopWatchingDevices();
             const nrfdlDevices = await nrfDeviceLib.enumerate(
                 getDeviceLibContext(),
                 deviceListing
             );
-            const devices = wrapDevicesFromNrfdl(nrfdlDevices);
-            const hasSerialNumber = (d: Device) =>
-                d.serialNumber === selectedSerialNumber;
 
-            if (
-                selectedSerialNumber !== null &&
-                !devices.find(hasSerialNumber)
-            ) {
-                doDeselectDevice();
+            const currentDevices = wrapDevicesFromNrfdl(nrfdlDevices);
+            dispatch(setDevices(currentDevices));
+
+            if (!autoSelectDeviceCLISerialUsed) {
+                const autoSelectSN = getAutoSelectDeviceCLISerial();
+
+                if (autoSelectSN !== undefined) {
+                    const autoSelectDevice =
+                        getState().device.devices.get(autoSelectSN);
+
+                    if (autoSelectDevice)
+                        doSelectDevice(autoSelectDevice, true);
+                }
+                autoSelectDeviceCLISerialUsed = true;
             }
 
-            dispatch(devicesDetected(devices));
-        };
-
-        try {
-            await updateDeviceList();
             hotplugTaskId = nrfDeviceLib.startHotplugEvents(
                 getDeviceLibContext(),
                 () => {},
@@ -92,6 +329,12 @@ export const startWatchingDevices =
         }
     };
 
+const getAutoSelectDeviceCLISerial = () => {
+    const { argv } = process;
+    const serialIndex = argv.findIndex(arg => arg === '--deviceSerial');
+    return serialIndex > -1 ? argv[serialIndex + 1] : undefined;
+};
+
 /**
  * Stops watching for devices.
  *
@@ -99,96 +342,12 @@ export const startWatchingDevices =
  */
 export const stopWatchingDevices = () => {
     // Not sure, if this guard clause is really needed
-    if (getDeviceLibContext()) {
+    if (getDeviceLibContext() && hotplugTaskId !== null) {
         try {
             nrfDeviceLib.stopHotplugEvents(hotplugTaskId);
+            hotplugTaskId = null;
         } catch (error) {
             logger.logError('Error while stopping to watch devices', error);
-        }
-    }
-};
-
-const DEFAULT_TRAITS: DeviceTraits = {
-    serialPorts: true,
-};
-
-/**
- * Waits until a device (with a matching serial number) is listed by
- * nrf-device-lister, up to a maximum of `timeout` milliseconds.
- *
- * If `expectedTraits` is given, then the device must (in addition to
- * a matching serial number) also have the given traits. See the
- * nrf-device-lister library for the full list of traits.
- *
- * @param {string} serialNumber of the device expected to appear
- * @param {number} [timeout] Timeout, in milliseconds, to wait for device enumeration
- * @param {DeviceTraits} [expectedTraits] The traits that the device is expected to have
- * @returns {Promise} resolved to the expected device
- */
-export const waitForDevice = (
-    serialNumber: string,
-    timeout = DEFAULT_DEVICE_WAIT_TIME,
-    expectedTraits: DeviceTraits = DEFAULT_TRAITS
-) => {
-    logger.debug(`Will wait for device ${serialNumber}`);
-    return new Promise<Device>((resolve, reject) => {
-        let timeoutId: NodeJS.Timeout;
-
-        nrfDeviceLib.enumerate(getDeviceLibContext(), expectedTraits);
-        const hotplugEventsId = nrfDeviceLib.startHotplugEvents(
-            getDeviceLibContext(),
-            () => {},
-            (event: HotplugEvent) => {
-                const { device: nrfdlDevice } = event;
-                if (!nrfdlDevice) return;
-
-                const device = wrapDeviceFromNrfdl(nrfdlDevice);
-                const isTraitIncluded = () =>
-                    Object.keys(expectedTraits).every(
-                        trait => device.traits[trait as keyof DeviceTraits]
-                    );
-                if (
-                    device &&
-                    device.serialNumber === serialNumber &&
-                    isTraitIncluded()
-                ) {
-                    clearTimeout(timeoutId);
-                    nrfDeviceLib.stopHotplugEvents(hotplugEventsId);
-                    resolve(device);
-                }
-            }
-        );
-        timeoutId = setTimeout(() => {
-            logger.debug(
-                `Timeout when waiting for attachment of device with serial number ${serialNumber}`
-            );
-            nrfDeviceLib.stopHotplugEvents(hotplugEventsId);
-            reject(
-                new Error(
-                    `Timeout while waiting for device  ${serialNumber} to be attached and enumerated`
-                )
-            );
-        }, timeout);
-    });
-};
-
-const waitForModeSwitch = async (
-    devices: Devices,
-    selectedSerialNumber: string
-) => {
-    const hasDfuTriggerVersion =
-        devices[selectedSerialNumber]?.dfuTriggerVersion != null;
-
-    // Wait some time in case device is being put in either app or bootloader mode
-    if (hasDfuTriggerVersion) {
-        try {
-            await waitForDevice(selectedSerialNumber, DEFAULT_DEVICE_WAIT_TIME);
-        } catch (err) {
-            logger.debug(
-                `Device did not show up after ${
-                    DEFAULT_DEVICE_WAIT_TIME / 1000
-                } seconds`
-            );
         }
     }
 };

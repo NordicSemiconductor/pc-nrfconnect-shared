@@ -14,7 +14,7 @@ import {
 
 import render from '../../../test/testrenderer';
 import { Device } from '../../state';
-import { devicesDetected } from '../deviceSlice';
+import { setDevices } from '../deviceSlice';
 import DeviceSelector from './DeviceSelector';
 
 jest.mock('../sdfuOperations', () => ({}));
@@ -33,15 +33,21 @@ const testDevice: Device = {
         serialNumber: '000000001',
         manufacturer: 'testManufacturer',
         product: 'testProduct',
+        osDevicePath: '/some-path',
         device: {
             busNumber: 2,
             address: 3,
             descriptor: {
+                bcdDevice: 0,
                 bDescriptorType: 4,
                 idVendor: 5,
                 idProduct: 6,
             },
-            configurations: [],
+            configList: {
+                descriptors: [],
+                interfaceLists: [],
+                length: 0,
+            },
         },
     },
     serialNumber: '000000001',
@@ -53,9 +59,6 @@ const testDevice: Device = {
             serialNumber: '000000001',
             vendorId: 'testVendor',
             comName: 'COM1',
-            boardVersion: 'testBoardVersion',
-            pnpId: 'testPnpId',
-            locationId: 'testLocationId',
             vcom: 1,
         },
         {
@@ -65,9 +68,6 @@ const testDevice: Device = {
             serialNumber: '000000001',
             vendorId: 'testVendor',
             comName: 'COM2',
-            boardVersion: 'testBoardVersion',
-            pnpId: 'testPnpId',
-            locationId: 'testLocationId',
             vcom: 2,
         },
     ],
@@ -79,10 +79,7 @@ const testDevice: Device = {
         serialNumber: '000000001',
         vendorId: 'testVendor',
         comName: 'COM1',
-        boardVersion: null,
-        pnpId: null,
-        locationId: null,
-        vcom: null,
+        vcom: 0,
     },
     favorite: false,
     traits: {
@@ -147,7 +144,7 @@ describe('DeviceSelector', () => {
                     mcuBoot: true,
                 }}
             />,
-            [devicesDetected([testDevice])]
+            [setDevices([testDevice])]
         );
         expect(screen.getByText(testDevice.serialNumber)).toBeInTheDocument();
     });
@@ -162,7 +159,7 @@ describe('DeviceSelector', () => {
                     mcuBoot: true,
                 }}
             />,
-            [devicesDetected([testDevice]), devicesDetected([])]
+            [setDevices([testDevice]), setDevices([])]
         );
         expect(screen.queryByText(testDevice.serialNumber)).toBeNull();
     });
@@ -177,7 +174,7 @@ describe('DeviceSelector', () => {
                     mcuBoot: true,
                 }}
             />,
-            [devicesDetected([testDevice])]
+            [setDevices([testDevice])]
         );
         fireEvent.click(screen.getByText('Select device'));
         fireEvent.click(screen.getByTestId('show-more-device-info'));
@@ -194,7 +191,7 @@ describe('DeviceSelector', () => {
                     mcuBoot: true,
                 }}
             />,
-            [devicesDetected([testDevice])]
+            [setDevices([testDevice])]
         );
 
         fireEvent.click(screen.getByText('Select device'));
@@ -212,7 +209,7 @@ describe('DeviceSelector', () => {
                     mcuBoot: true,
                 }}
             />,
-            [devicesDetected([testDevice])]
+            [setDevices([testDevice])]
         );
         fireEvent.click(screen.getByText('Select device'));
         fireEvent.click(screen.getByText(testDevice.serialNumber));
@@ -242,7 +239,7 @@ describe('DeviceSelector', () => {
                     allowCustomDevice: true,
                 }}
             />,
-            [devicesDetected([testDevice])]
+            [setDevices([testDevice])]
         );
         fireEvent.click(screen.getByText('Select device'));
         fireEvent.click(screen.getByText(testDevice.serialNumber));
@@ -271,7 +268,7 @@ describe('DeviceSelector', () => {
                     allowCustomDevice: false,
                 }}
             />,
-            [devicesDetected([testDevice])]
+            [setDevices([testDevice])]
         );
 
         fireEvent.click(screen.getByText('Select device'));
@@ -297,7 +294,7 @@ describe('DeviceSelector', () => {
                 }}
                 deviceSetup={validFirmware}
             />,
-            [devicesDetected([testDevice])]
+            [setDevices([testDevice])]
         );
 
         fireEvent.click(screen.getByText('Select device'));
@@ -319,7 +316,7 @@ describe('DeviceSelector', () => {
                 }}
                 deviceSetup={validFirmware}
             />,
-            [devicesDetected([testDevice])]
+            [setDevices([testDevice])]
         );
 
         fireEvent.click(screen.getByText('Select device'));

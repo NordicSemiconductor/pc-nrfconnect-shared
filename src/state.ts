@@ -16,10 +16,15 @@ import type { ShortcutState } from './About/shortcutSlice';
 
 export type TDispatch = ThunkDispatch<RootState, null, AnyAction>;
 
+export interface NrfConnectState<AppState> extends RootState {
+    app: AppState;
+}
+
 export interface RootState {
     appLayout: AppLayout;
     errorDialog: ErrorDialog;
     log: Log;
+    deviceAutoSelect: DeviceAutoSelectState;
     device: DeviceState;
     documentation: DocumentationState;
     brokenDeviceDialog: BrokenDeviceDialog;
@@ -49,15 +54,32 @@ export interface Log {
     isLoggingVerbose: boolean;
 }
 
-export type Devices = { [key: string]: Device | undefined };
 export interface DeviceState {
-    devices: Devices;
+    devices: Map<string, Device>;
     deviceInfo: Device | null;
     isSetupDialogVisible: boolean;
     isSetupWaitingForUserInput: boolean | string;
     selectedSerialNumber: string | null;
     setupDialogChoices: readonly string[];
     setupDialogText?: string | null;
+    readbackProtection: 'unknown' | 'protected' | 'unprotected';
+}
+
+export interface DeviceAutoSelectState {
+    autoReselect: boolean;
+    device?: Device;
+    disconnectionTime?: number;
+    waitForDevice?: WaitForDevice;
+    autoReconnectTimeout?: NodeJS.Timeout;
+    lastArrivedDeviceId?: number;
+}
+
+export interface WaitForDevice {
+    timeout: number;
+    when: 'always' | 'applicationMode' | 'BootLoaderMode';
+    once: boolean;
+    onSuccess?: (device: Device) => void;
+    onFail?: (reason?: string) => void;
 }
 
 export interface DeviceInfo {
@@ -75,6 +97,7 @@ export interface Device extends NrfdlDevice {
     nickname?: string;
     serialport?: SerialPort;
     favorite?: boolean;
+    id: number;
 }
 
 export interface BrokenDeviceDialog {

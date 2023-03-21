@@ -4,40 +4,61 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-@use "sass:color";
+ @use "sass:color";
 
-@import "../../../variables";
-
-.core19-device-selector {
-    .device-list {
-        @include scrollbars($gray-50);
-        background: $gray-50;
-        color: $gray-700;
-
-        position: fixed;
-        width: $side-panel-width;
-        height: calc(100vh - #{$nav-bar-height});
-        z-index: -1;
-
-        overflow-y: overlay;
-
-        transition: transform $normal-transition;
-
-        &.hidden {
-            transform: translateY(-100%);
-        }
-
-        .no-devices-connected {
-            padding: 20px;
-        }
-
-        > ul {
-            padding: 0;
-            margin-bottom: 0;
-
-            > li {
-                border-bottom: 1px solid $gray-200;
-            }
-        }
-    }
-}
+ @import "../../../variables";
+ 
+ .core19-device-selector {
+     .device-list {
+         @include scrollbars($gray-50);
+         background: $gray-50;
+         color: $gray-700;
+         display: flex;
+     flex-direction: column;
+ 
+         position: fixed;
+         width: $side-panel-width;
+         height: calc(100vh - #{$nav-bar-height});
+         z-index: -1;
+ 
+         overflow-y: overlay;
+ 
+         transition: transform $normal-transition;
+ 
+         &.hidden {
+             transform: translateY(-100%);
+         }
+ 
+         .no-devices-connected {
+             padding: 20px;
+         }
+ 
+         > ul {
+             padding: 0;
+             margin-bottom: 0;
+ 
+             > li {
+                 border-bottom: 1px solid $gray-200;
+             }
+         }
+     }
+ }
+ 
+ .global-auto-reconnect{
+     background-color: $gray-200;
+     color: $gray-700;
+     text-transform: uppercase;
+     padding: 8px 27px;
+ 
+     .toggle-label {
+         font-size: 10px;
+     }
+ 
+     .toggle {
+         label {
+             display: flex;
+             justify-content: flex-start;
+         }
+     }
+ }
+ 

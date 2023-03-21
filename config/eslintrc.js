@@ -25,6 +25,7 @@ module.exports = {
     ignorePatterns: [
         'package-lock.json',
         'scripts/nordic-publish.js',
+        'typings/generated',
         ...entriesInGitignore,
     ],
     rules: {
@@ -36,7 +37,6 @@ module.exports = {
         '@typescript-eslint/no-empty-function': 'off',
         '@typescript-eslint/no-shadow': 'error',
         '@typescript-eslint/no-var-requires': 'off',
-        'arrow-parens': ['error', 'as-needed'],
         'import/default': 'error',
         'import/extensions': 'off',
         'import/named': 'error',
@@ -91,8 +91,6 @@ module.exports = {
             'error',
             { extensions: ['.jsx', '.tsx'] },
         ],
-        'react/jsx-indent-props': ['error', 4],
-        'react/jsx-indent': ['error', 4],
         'react/jsx-key': ['error', { checkFragmentShorthand: true }],
         'react/jsx-no-useless-fragment': ['error', { allowExpression: true }],
         'react/jsx-one-expression-per-line': 'off',

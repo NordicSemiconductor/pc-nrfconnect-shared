@@ -2,9 +2,497 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to
-[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+This project does _not_ adhere to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
+every new version is a new major version.
+
+## 23 - 2023-03-16
+
+### Added
+
+-   `getWaitingToAutoReselect` to tell when We are waiting to auto reconnect as
+    `getAutoReselect` is true
+-   `getWaitingForDeviceTimeout` to tell when `setWaitForDevice` timeout has
+    started
+-   `clearWaitForDevice` to cancel when `setWaitForDevice`
+
+### Changed
+
+-   `setWaitForDevice` with `undefined` can no longer be used to cancel timeouts
+    instead one should use `clearWaitForDevice`
+
+## 22 - 2023-03-15
+
+### Added
+
+-   Update nrf-device-lib-js to version 0.6.2.
+
+## 21 - 2023-03-15
+
+### Added
+
+-   `useStopWatch` hook
+
+### Fix
+
+-   `ErrorBoundary` `Button` are now large.
+
+## 20 - 2023-03-14
+
+### Added
+
+-   Steppers component which allows to add states for success, failure and
+    warning.
+
+## 19 - 2023-03-13
+
+### Added
+
+-   `ErrorBoundary` use the shared `Button` component
+-   Update nrf-device-lib-js to version 0.6.0.
+
+## 18 - 2023-03-09
+
+### Added
+
+-   FeedbackPane component, to be added in the `Main` entry of a panes entry.
+-   Switch to next pane left, in order to navigate both ways.
+
+### Fixed
+
+-   Switch pane hotkey crashed the applications when it was fired.
+
+### Changed
+
+-   Do not resend close() if event that port was closed externally was emitted
+-   Add retry to open port on error `PORT_IS_ALREADY_BEING_OPENED`
+-   `Button` styles match the UX design guidelines.
+-   `Button` has `variant` property to assign it the designated style
+-   `Dialogs` use the shared `Button` component
+-   `AboutButton` use the shared `Button` component
+-   `ShortcutButton` use the shared `Button` component
+-   `SupportCard` use the shared `Button` component
+-   `FactoryResetButton` use the shared `Button` component
+-   `NavMenuItem` use the shared `Button` component
+-   `FeedbackPane` use the shared `Button` component
+
+## 17 - 2023-03-08
+
+### Added
+
+-   Allow apps to see if auto-reconnect is enabled.
+
+## 16 - 2023-03-03
+
+### Fixed
+
+-   Selecting a device will no longer stop and start hotplug events
+-   Long Serial number and device names will now render correctly
+
+## 15 - 2023-03-03
+
+### Added
+
+-   `Update Bootloader` prompt and `sdfu` programming for it.
+-   Reconnecting status in device selector.
+-   `setWaitForDevice` can be dispatched by apps to wait for a temporary
+    disconnect.
+-   During device setup, if device is in bootloader mode and user declines to
+    program, device is automatically switched to Application mode
+
+### Fixed
+
+-   Blocking dialog when disconnecting a device when the Programming dialog is
+    open.
+-   No longer auto reselect to the least disconnected device if is is in the
+    device list when clicking the `Auto Reconnect` Toggle.
+-   Dispatch `deviceSetupError` when `sdfu` programming fails.
+
+### Changed
+
+-   Device Enumeration is only done once in the app life cycle
+-   Only one instance of the hot plug events.
+-   `setWaitForDevice` is callback based and this calls that reboot the device
+    do not need to be awaited.
+-   Update nrf-device-lib-js to version 0.5.0.
+
+## 14 - 2023-02-28
+
+### Fixed
+
+-   `MasonryLayout` Update layout more frequently.
+-   `MasonryLayout` Hidden items can become visible and not remain hidden for
+    the full app life cycle.
+
+## 13 - 2023-02-24
+
+### Fixed
+
+-   Wrongly import of `electron/renderer`, now changed to `electron`.
+
+## 12 - 2023-02-23
+
+### Added
+
+-   `openAppWindow` sends IPC call to launcher, in order to open an app,
+    identified by its `name` and `source`. And gives the ability to provide
+    `openAppOptions` with `device` and `serialPortPath`, in order to directly
+    connect to a device, and its serial port.
+-   Optional `className` property on `MasonryLayout`.
+
+### Changed
+
+-   Improved `MasonryLayout` algorithm
+-   `MasonryLayout` Items with no height are hidden
+
+## 11 - 2023-02-22
+
+### Changed
+
+-   `shasum` property on apps became optional.
+
+## 10 - 2023-02-16
+
+### Fixed
+
+-   Masonry layout Max height generation algorithm
+-   Regression with dropdown items on hover effect
+
+## 9 - 2023-02-16
+
+### Added
+
+-   Masonry Layout
+
+## 8 - 2023-02-15
+
+### Changed
+
+-   Better Redux dev tools configuration: More actions (100 instead of 50) and
+    show some more objects, e.g. Maps and Sets.
+-   Updated `StartStopButton` to be a controlled component
+
+## 7 - 2023-02-13
+
+### Changed
+
+-   Switched to use only major versions for releases of `shared`.
+-   Check for `Changelog.md` entry in `files` in `package.json`. We need it in
+    our tarballs and for `npm@7` and later it is not added automatically any
+    longer when running `npm pack`.
+
+## 6.18.14 - 2023-02-07
+
+### Changed
+
+-   Readback status is now maintained separate from the device itself.
+
+## 6.18.13 - 2023-02-06
+
+### Fixed
+
+-   `Button` :focus background to white
+
+## 6.18.12 - 2023-02-06
+
+### Changed
+
+-   `Button` font size to 14px
+
+## 6.18.11 - 2023-02-06
+
+### Fixed
+
+-   `Button` remain styled as `click` after key mouse key is released
+
+### Added
+
+-   `large` Property to `Button` to make its height at 32px
+-   `large` Property to `StartStopButton` to make its height at 32px
+
+### Changed
+
+-   `StartStopButton` default to large
+
+## 6.18.10 - 2023-02-04
+
+### Added
+
+-   Allow apps to see if selected device has readback protection enabled.
+
+## 6.18.9 - 2023-02-03
+
+### Fixed
+
+-   `SidePanel` bottom margin of the last component
+
+## 6.18.8 - 2023-02-03
+
+### Fixed
+
+-   `persistentStore` logging message of terminal settings, missing `vCom-`
+-   Types for bleChannels.
+
+## 6.18.7 - 2023-02-03
+
+### Fixed
+
+-   Programming DFU devices from device selector on macOS.
+
+## 6.18.6 - 2023-02-03
+
+### Fixed
+
+-   `persistentStore` logging to persistent store missing `vCom-`
+
+## 6.18.5 - 2023-02-02
+
+### Changed
+
+-   `PersistedSerialPort` takes app name fom json
+-   `TerminalSettings` vCom Index is append with `vCom-` in persist store
+
+## 6.18.4 - 2023-02-01
+
+### Changed
+
+-   Updated `serialport` to emit events and have more than one subscriber
+-   Export `DropdownItem`
+
+## 6.18.3 - 2023-02-01
+
+### Fixed
+
+-   Only auto reconnect to device if traits are the same
+
+## 6.18.2 - 2023-02-01
+
+### Fixed
+
+-   No device selected if `serialNumber` is an empty string
+
+## 6.18.1 - 2023-01-30
+
+### Fixed
+
+-   Reloading with verbose logging enabled did not enable verbose logging on
+    after restart.
+
+### Removed
+
+-   Hover colour for `Dropdown` and `StartStopButton` components.
+
+## 6.18.0 - 2023-01-26
+
+### Changed
+
+-   Updated nrf-device-lib-js to 0.5.0-pre7.
+
+### Fixed
+
+-   Some types needed by the launcher were not exported.
+
+## 6.17.3 - 2023-01-24
+
+### Fixed
+
+-   When the `dependencies` field in `package.json` is empty (which e.g. can be
+    caused by the more recent versions of `npm`), the builds failed.
+
+## 6.17.2 - 2023-01-24
+
+### Fixed
+
+-   `husky install` sometimes was ran even if `shared` was installed only as a
+    dependency. That was wrong and also failed, because it found no `.git`
+    directory.
+
+## 6.17.1 - 2023-01-19
+
+### Fixed
+
+-   The components `ErrorBoundary` and `Logo` were broken if the Redux state
+    wasn't in a supported state.
+
+## 6.17.0 - 2023-01-18
+
+### Added
+
+-   Component `RootErrorDialog` (which is the `ErrorDialog` wrongly removed in
+    6.15.0).
+
+### Changed
+
+-   Generate types automatically
+
+## 6.16.0 - 2023-01-17
+
+### Added
+
+-   OnConnect Event when device is connected via USB
+-   OnDisconnect Event when device is disconnected via USB
+-   Persistent Storage for the last Successful Serial Connection which use the
+    Device SN and app name as key
+-   Persistent Storage for the last Terminal settings use which use the Device
+    SN and vComIndex as key
+-   Add toggle to device list for apps to use and enable Auto Reconnect for that
+    session
+-   Optional auto reconnect to the last connected device for the app runtime
+    session
+
+### Fix
+
+-   Event `onDeviceDeselected` not emitted when connecting to new device without
+    eject old device
+
+### Changes
+
+-   Do nothing if the same connected device is reselected
+
+## 6.15.3 - 2023-01-13
+
+### Fixed
+
+-   `ConfirmationDialog` confirm button used wrong style.
+-   All `Dialog` related types were exported wrongly.
+
+## 6.15.2 - 2023-01-13
+
+### Changed
+
+-   Updated nrf-device-lib-js to 0.5.0-pre4.
+
+## 6.15.1 - 2023-01-13
+
+### Fix
+
+-   `SerialPort` Salt IPC channel with COM port so apps can multiplex data for
+    different COMs.
+
+## 6.15.0 - 2023-01-12
+
+### Added
+
+-   `Dialog` component with new style.
+-   Shorthand creator functions for generic dialog use cases.
+
+### Removed
+
+-   `ConfirmationDialog` component.
+-   Previous `ErrorDialog` component.
+
+### Steps to upgrade when using this package
+
+-   Any use of the `ConfirmationDialog` component has to be replaced with the
+    new `Dialog` component or one of it's creator functions.
+
+## 6.14.4 - 2023-01-11
+
+### Changed
+
+-   App check on origin url is more relaxed.
+
+## 6.14.3 - 2023-01-04
+
+### Changed
+
+-   Update electron to 22.0.0
+
+## 6.14.2 - 2023-01-04
+
+### Changed
+
+-   Update device lib to 0.5.0
+
+## 6.14.1 - 2023-01-04
+
+### Fixed
+
+-   Chevron was not visible on a Collapsible Group.
+
+## 6.14.0 - 2023-01-02
+
+### Changed
+
+-   Property `apps` in type `SourceJson` became mandatory.
+-   Renamed type `AppJson` to `AppInfo`.
+-   Renamed property `latest` to `latestVersion` in type `AppInfo`.
+-   Exported type `AppVersions` and renamed property `tarball` to `tarballUrl`.
+-   Bumped target for TypeScript to `ES2020`.
+
+## 6.13.2 - 2022-12-19
+
+### Changed
+
+-   Fix imports that were a problem for tests in some apps.
+
+## 6.13.1 - 2022-12-05
+
+### Changed
+
+-   SerialPort is initialized with an `OverwriteOption`, consisting of
+    `overwrite` and `settingsLocked`, instead of only `overwrite`. The new
+    `settingsLocked` option lets renderers to lock the settings.
+-   `onSeparateWrite` is changed into `onDataWritten` and will be the
+    recommended way of writing data to any visual terminal. This is because the
+    ipc traffic will provide the correct order of what data to write, so that if
+    two or more renderers write at the same time, they won't display the data
+    differently.
+
+## 6.13.0 - 2022-12-02
+
+### Added
+
+-   Export types `SourceJson` and `AppJson`, describing the structure of the new
+    meta data files.
+
+### Changed
+
+-   Specifying a range with explicit values for a `NumberInlineInput` or a
+    `Slider` was changed. When you before wrote an `NumberInlineInput` element
+    (same applies to a `Slider`) like this:
+
+```jsx
+<NumberInlineInput
+    values={[4]}
+    range={{ min: 3, max: 9, explicitRange: [3, 5, 6, 7, 8, 9] }}
+    onChange={[() => {}]}
+/>
+```
+
+Instead you now have to replace the whole range object with the array and write
+it like this:
+
+```jsx
+<NumberInlineInput
+    values={[4]}
+    range={[3, 5, 6, 7, 8, 9]}
+    onChange={[() => {}]}
+/>
+```
+
+It is of course still possible to specify a range without explicit values like
+this:
+
+```jsx
+<NumberInlineInput
+    values={[4]}
+    range={{ min: 3, max: 9 }}
+    onChange={[() => {}]}
+/>
+```
+
+### Fixed
+
+-   A `Slider` with ticks but without a defined step displayed the ticks
+    wrongly.
+
+### Steps to upgrade when using this package
+
+-   If you are using a `NumberInlineInput` or `Slider` with a range with the
+    `explicitRange` property, then you have to replace the whole range with the
+    array of the `explicitRange` property, as shown above.
 
 ## 6.12.1 - 2022-11-29
 

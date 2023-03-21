@@ -145,6 +145,7 @@ const allSourceFiles = () =>
             ignore: [
                 ...entriesInGitignore,
                 'scripts/nordic-publish.js',
+                'typings/generated',
                 '.git',
             ],
             baseNameMatch: true,

@@ -10,13 +10,13 @@ import { execSync } from 'child_process';
 import { program } from 'commander';
 import fs from 'fs';
 import FtpClient from 'ftp';
-import { PackageJson } from 'pc-nrfconnect-shared';
 import semver from 'semver';
 import calculateShasum from 'shasum';
 
+import { AppInfo, PackageJson, SourceJson } from '../src/utils/AppTypes';
 import checkAppProperties from './check-app-properties';
 
-interface AppInfo {
+interface LegacyAppInfo {
     ['dist-tags']?: {
         latest?: string;
     };
@@ -36,32 +36,11 @@ interface App {
     version: string;
     shasum: string;
     sourceUrl: string;
-    appJsonName: string;
+    appInfoName: string;
     releaseNotesFilename: string;
     iconFilename: string;
     isOfficial: boolean;
     packageJson: PackageJson;
-}
-
-interface SourceJson {
-    name: string;
-    apps?: string[];
-}
-
-interface AppJson {
-    name: string;
-    displayName: string;
-    description: string;
-    homepage?: string;
-    iconUrl: string;
-    releaseNotesUrl: string;
-    latest: string;
-    versions: {
-        [version: string]: {
-            shasum: string;
-            tarball: string;
-        };
-    };
 }
 
 const client = new FtpClient();
@@ -142,7 +121,9 @@ const getShasum = (filePath: string) => {
         return calculateShasum(fs.readFileSync(filePath));
     } catch (error) {
         throw new Error(
-            `Unable to read file when verifying shasum: ${filePath}`
+            `Unable to read file when verifying shasum: ${filePath}. \nError: ${errorAsString(
+                error
+            )}`
         );
     }
 };
@@ -168,7 +149,7 @@ const packOrReadPackage = (options: Options): App => {
         shasum,
         sourceUrl: options.sourceUrl,
         isOfficial: options.deployOfficial,
-        appJsonName: `${name}.json`,
+        appInfoName: `${name}.json`,
         releaseNotesFilename: `${name}-Changelog.md`,
         iconFilename: `${name}.svg`,
         packageJson,
@@ -226,7 +207,7 @@ const downloadFileContent = (filename: string) =>
         });
     });
 
-const downloadAppInfo = async (name: string): Promise<AppInfo> => {
+const downloadLegacyAppInfo = async (name: string): Promise<LegacyAppInfo> => {
     try {
         const content = await downloadFileContent(name);
         return JSON.parse(content);
@@ -240,7 +221,7 @@ const downloadAppInfo = async (name: string): Promise<AppInfo> => {
     }
 };
 
-const updateLocalAppInfo = (appInfo: AppInfo, app: App) => {
+const updateLegacyAppInfo = (appInfo: LegacyAppInfo, app: App) => {
     const latest = appInfo['dist-tags']?.latest;
     if (latest != null) {
         console.log(`Latest published version ${latest}`);
@@ -282,16 +263,16 @@ const uploadFile: UploadLocalFile & UploadBufferContent = (
         client.put(local, remote, err => (err ? reject(err) : resolve()));
     });
 
-const getUpdatedAppInfo = async (app: App) => {
-    const appInfo = await downloadAppInfo(app.name);
-    return updateLocalAppInfo(appInfo, app);
+const getUpdatedLegacyAppInfo = async (app: App) => {
+    const appInfo = await downloadLegacyAppInfo(app.name);
+    return updateLegacyAppInfo(appInfo, app);
 };
 
 const downloadSourceJson = async () => {
+    let sourceJsonContent;
     try {
-        const sourceJson = <SourceJson>(
-            JSON.parse(await downloadFileContent('source.json'))
-        );
+        sourceJsonContent = await downloadFileContent('source.json');
+        const sourceJson = <SourceJson>JSON.parse(sourceJsonContent);
         if (
             sourceJson == null ||
             typeof sourceJson !== 'object' ||
@@ -299,13 +280,20 @@ const downloadSourceJson = async () => {
             (sourceJson.apps !== undefined && !Array.isArray(sourceJson.apps))
         ) {
             throw new Error(
-                `\`source.json\` does not have the expected content: ${sourceJson}`
+                '`source.json` does not have the expected content.'
             );
         }
 
         return sourceJson;
     } catch (error) {
-        throw new Error('Unable to read `source.json` on the server.');
+        const message = 'Unable to read `source.json` on the server.\nError: ';
+        const caughtError = errorAsString(error);
+        const maybeSourceJsonContent =
+            sourceJsonContent == null
+                ? ''
+                : `Content: \`${sourceJsonContent}\``;
+
+        throw new Error(message + caughtError + maybeSourceJsonContent);
     }
 };
 
@@ -315,7 +303,7 @@ const getUpdatedSourceJson = async (app: App): Promise<SourceJson> => {
         name: sourceJson.name,
         apps: [
             ...new Set(sourceJson.apps).add(
-                `${app.sourceUrl}/${app.appJsonName}`
+                `${app.sourceUrl}/${app.appInfoName}`
             ),
         ].sort(),
     };
@@ -323,11 +311,13 @@ const getUpdatedSourceJson = async (app: App): Promise<SourceJson> => {
 
 const downloadExistingVersions = async (app: App) => {
     try {
-        const appJson = <AppJson>(
-            JSON.parse(await downloadFileContent(app.appJsonName))
-        );
-        return appJson.versions;
+        const appInfoContent = await downloadFileContent(app.appInfoName);
+        return (JSON.parse(appInfoContent) as AppInfo).versions;
     } catch (error) {
+        console.log(
+            `No previous app versions found due to: ${errorAsString(error)}`
+        );
+
         return {};
     }
 };
@@ -338,7 +328,7 @@ const failBecauseOfMissingProperty = () => {
     );
 };
 
-const getUpdatedAppJson = async (app: App): Promise<AppJson> => {
+const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
     const versions = await downloadExistingVersions(app);
 
     const { name, displayName, description, homepage, version } =
@@ -351,22 +341,19 @@ const getUpdatedAppJson = async (app: App): Promise<AppJson> => {
         homepage,
         iconUrl: `${app.sourceUrl}/${app.iconFilename}`,
         releaseNotesUrl: `${app.sourceUrl}/${app.releaseNotesFilename}`,
-        latest: version,
+        latestVersion: version,
         versions: {
             ...versions,
             [version]: {
-                tarball: `${app.sourceUrl}/${app.filename}`,
+                tarballUrl: `${app.sourceUrl}/${app.filename}`,
                 shasum: app.shasum,
             },
         },
     };
 };
 
-const uploadAppInfo = (app: App, updatedAppInfo: AppInfo) =>
-    uploadFile(
-        Buffer.from(JSON.stringify(updatedAppInfo, undefined, 2)),
-        app.name
-    );
+const uploadLegacyAppInfo = (app: App, appInfo: LegacyAppInfo) =>
+    uploadFile(Buffer.from(JSON.stringify(appInfo, undefined, 2)), app.name);
 
 const uploadSourceJson = (sourceJson: SourceJson) =>
     uploadFile(
@@ -374,10 +361,10 @@ const uploadSourceJson = (sourceJson: SourceJson) =>
         'source.json'
     );
 
-const uploadAppJson = (app: App, appJson: AppJson) =>
+const uploadAppInfo = (app: App, appInfo: AppInfo) =>
     uploadFile(
-        Buffer.from(JSON.stringify(appJson, undefined, 2)),
-        app.appJsonName
+        Buffer.from(JSON.stringify(appInfo, undefined, 2)),
+        app.appInfoName
     );
 
 const uploadPackage = (app: App) => uploadFile(app.filename, app.filename);
@@ -425,15 +412,15 @@ const main = async () => {
         await connect(config);
         await changeWorkingDirectory(options.sourceDir);
 
-        const appInfo = await getUpdatedAppInfo(app);
+        const legacyAppInfo = await getUpdatedLegacyAppInfo(app);
         const sourceJson = await getUpdatedSourceJson(app);
-        const appJson = await getUpdatedAppJson(app);
+        const appInfo = await getUpdatedAppInfo(app);
 
         await uploadChangelog(app);
         await uploadIcon(app);
         await uploadPackage(app);
+        await uploadLegacyAppInfo(app, legacyAppInfo);
         await uploadAppInfo(app, appInfo);
-        await uploadAppJson(app, appJson);
         await uploadSourceJson(sourceJson);
 
         console.log('Done');

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { RangeProp } from './rangeShape';
+import { getMax, getMin, isValues, RangeOrValues } from './range';
 
 export const constrainedToPercentage = (percentage: number) => {
     if (percentage < 0) return 0;
@@ -12,22 +12,28 @@ export const constrainedToPercentage = (percentage: number) => {
     return percentage;
 };
 
-export const toPercentage = (value: number, { min, max }: RangeProp) =>
-    ((value - min) * 100) / (max - min);
+export const toPercentage = (value: number, rangeOrValues: RangeOrValues) => {
+    const min = getMin(rangeOrValues);
+    const max = getMax(rangeOrValues);
+
+    return ((value - min) * 100) / (max - min);
+};
 
 export const fromPercentage = (
     lastValue: number,
     value: number,
-    { min, max, decimals = 0, step = 0, explicitRange = [] }: RangeProp,
+    rangeOrValues: RangeOrValues,
     directionForward: boolean
 ) => {
-    if (explicitRange.length > 0) {
-        const noOfIndexes = explicitRange.length - 1;
-        const computedValue = Number(
-            ((value * (max - min)) / 100 + min).toFixed(decimals)
-        );
+    const min = getMin(rangeOrValues);
+    const max = getMax(rangeOrValues);
 
-        const lastValueIndex = explicitRange.indexOf(lastValue);
+    if (isValues(rangeOrValues)) {
+        const values = rangeOrValues;
+        const noOfIndexes = values.length - 1;
+        const computedValue = (value * (max - min)) / 100 + min;
+
+        const lastValueIndex = values.indexOf(lastValue);
         const closestPrevIndex = lastValueIndex === 0 ? 0 : lastValueIndex - 1;
         const closestNextIndex =
             lastValueIndex === noOfIndexes ? noOfIndexes : lastValueIndex + 1;
@@ -36,25 +42,26 @@ export const fromPercentage = (
 
         if (directionForward) {
             closestIndex =
-                explicitRange[closestNextIndex] > computedValue
+                values[closestNextIndex] > computedValue
                     ? lastValueIndex
                     : closestNextIndex;
         } else {
             closestIndex =
-                explicitRange[closestPrevIndex] < computedValue
+                values[closestPrevIndex] < computedValue
                     ? lastValueIndex
                     : closestPrevIndex;
         }
 
-        return Number(explicitRange[closestIndex].toFixed(decimals));
+        return values[closestIndex];
     }
 
-    if (step > 0) {
-        const noOfSteps = (max - min) / step;
+    const range = rangeOrValues;
+    if (range.step != null) {
+        const noOfSteps = (max - min) / range.step;
         const closestStep = Math.round((value / 100) * noOfSteps);
 
-        return Number((min + closestStep * step).toFixed(decimals));
+        return Number((min + closestStep * range.step).toFixed(range.decimals));
     }
 
-    return Number(((value * (max - min)) / 100 + min).toFixed(decimals));
+    return Number(((value * (max - min)) / 100 + min).toFixed(range.decimals));
 };

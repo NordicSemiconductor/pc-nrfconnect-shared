@@ -20,3 +20,12 @@ export const SERIALPORT_CHANNEL = {
 
     IS_OPEN: 'serialport:is-open',
 };
+
+export type OverwriteOptions = {
+    overwrite?: boolean;
+    settingsLocked?: boolean;
+};
+
+export type OpenAppOptions = {
+    device?: { serialNumber: string; serialPortPath?: string };
+};

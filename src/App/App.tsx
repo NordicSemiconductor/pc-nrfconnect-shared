@@ -16,6 +16,12 @@ import { Reducer } from 'redux';
 import About from '../About/About';
 import { setDocumentationSections } from '../About/documentationSlice';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
+import { setAutoReselect } from '../Device/deviceAutoSelectSlice';
+import {
+    getDevices,
+    selectedDevice as selectedDeviceSelector,
+    selectedSerialNumber as selectedSerialNumberSelector,
+} from '../Device/deviceSlice';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import LogViewer from '../Log/LogViewer';
@@ -73,9 +79,13 @@ const initialiseUsageData = () => {
     }
 };
 
+export interface PaneProps {
+    active: boolean;
+}
+
 export interface Pane {
     name: string;
-    Main: FC<{ active: boolean }>;
+    Main: FC<PaneProps>;
     SidePanel?: FC;
 }
 
@@ -87,6 +97,7 @@ interface ConnectedAppProps {
     reportUsageData?: boolean;
     documentation?: ReactNode[];
     children?: ReactNode;
+    autoReselectByDefault?: boolean;
 }
 
 const ConnectedApp: FC<ConnectedAppProps> = ({
@@ -97,6 +108,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     reportUsageData = false,
     documentation,
     children,
+    autoReselectByDefault = false,
 }) => {
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
@@ -110,6 +122,10 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
         isGlobal: true,
         action: () => ipcRenderer.send('open-app-launcher'),
     });
+
+    useEffect(() => {
+        dispatch(setAutoReselect(autoReselectByDefault));
+    }, [dispatch, autoReselectByDefault]);
 
     useEffect(() => {
         if (!showLogByDefault) {
@@ -182,14 +198,30 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     );
 };
 
+const ConnectedErrorBoundary: React.FC = ({ children }) => {
+    const devices = useSelector(getDevices);
+    const selectedDevice = useSelector(selectedDeviceSelector);
+    const selectedSerialNumber = useSelector(selectedSerialNumberSelector);
+
+    return (
+        <ErrorBoundary
+            devices={[...devices.values()]}
+            selectedDevice={selectedDevice}
+            selectedSerialNumber={selectedSerialNumber ?? undefined}
+        >
+            {children}
+        </ErrorBoundary>
+    );
+};
+
 const App = ({
     appReducer,
     ...props
 }: { appReducer?: Reducer } & ConnectedAppProps) => (
     <ConnectedToStore appReducer={appReducer}>
-        <ErrorBoundary>
+        <ConnectedErrorBoundary>
             <ConnectedApp {...props} />
-        </ErrorBoundary>
+        </ConnectedErrorBoundary>
     </ConnectedToStore>
 );
 

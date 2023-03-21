@@ -5,11 +5,10 @@
  */
 
 import React, { FC } from 'react';
-import Button from 'react-bootstrap/Button';
 import { useDispatch } from 'react-redux';
-import { bool, number, string } from 'prop-types';
 
 import { setCurrentPane } from '../App/appLayout';
+import Button from '../Button/Button';
 import classNames from '../utils/classNames';
 
 import './nav-menu-item.scss';
@@ -26,26 +25,17 @@ const NavMenuItem: FC<Props> = ({ index, isFirst, isSelected, label }) => {
 
     return (
         <Button
-            variant="link"
-            active={false}
+            variant="custom"
             className={classNames(
                 'core19-nav-menu-item',
                 isSelected && 'selected',
                 isFirst && 'first'
             )}
             onClick={() => dispatch(setCurrentPane(index))}
-            type="button"
         >
             {label}
         </Button>
     );
-};
-
-NavMenuItem.propTypes = {
-    index: number.isRequired,
-    isFirst: bool.isRequired,
-    isSelected: bool.isRequired,
-    label: string.isRequired,
 };
 
 export default NavMenuItem;

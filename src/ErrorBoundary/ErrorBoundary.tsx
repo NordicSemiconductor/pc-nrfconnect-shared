@@ -5,15 +5,13 @@
  */
 
 import React, { ReactNode } from 'react';
-import { Button } from 'react-bootstrap';
-import { connect } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
-import { Device } from 'pc-nrfconnect-shared';
 
+import Button from '../Button/Button';
 import Spinner from '../Dialog/Spinner';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { CollapsibleGroup } from '../SidePanel/Group';
-import { Devices, RootState } from '../state';
+import { Device } from '../state';
 import { openUrl } from '../utils/open';
 import packageJson from '../utils/packageJson';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
@@ -41,7 +39,8 @@ const sendGAEvent = (error: string) => {
 interface Props {
     children: ReactNode;
     selectedSerialNumber?: string;
-    devices: Devices;
+    selectedDevice?: Device;
+    devices?: Device[];
     appName?: string;
     restoreDefaults?: () => void;
     sendUsageData?: (message: string) => void;
@@ -73,19 +72,15 @@ class ErrorBoundary extends React.Component<
     }
 
     componentDidCatch(error: Error) {
-        const { devices, selectedSerialNumber, sendUsageData } = this.props;
+        const { devices, selectedDevice, selectedSerialNumber, sendUsageData } =
+            this.props;
         sendUsageData != null
             ? sendUsageData(error.message)
             : sendGAEvent(error.message);
 
-        const selectedDevice =
-            selectedSerialNumber == null
-                ? undefined
-                : devices[selectedSerialNumber];
-
         generateSystemReport(
             new Date().toISOString().replace(/:/g, '-'),
-            Object.values(devices) as Device[],
+            devices,
             selectedDevice,
             selectedSerialNumber
         ).then(report => {
@@ -121,6 +116,7 @@ class ErrorBoundary extends React.Component<
                             problem we recommend restarting the application.
                         </p>
                         <Button
+                            large
                             variant="primary"
                             onClick={() => getCurrentWindow().reload()}
                         >
@@ -131,6 +127,7 @@ class ErrorBoundary extends React.Component<
                             restoring to default values.
                         </p>
                         <FactoryResetButton
+                            large
                             resetFn={restoreDefaults || genericRestoreDefaults}
                             label="Restore default settings"
                             variant="primary"
@@ -170,6 +167,7 @@ class ErrorBoundary extends React.Component<
                         experienced it multiple times
                     </p>
                     <Button
+                        large
                         variant="primary"
                         onClick={() =>
                             openUrl(
@@ -185,9 +183,4 @@ class ErrorBoundary extends React.Component<
     }
 }
 
-const mapStateToProps = (state: RootState) => ({
-    devices: state.device?.devices ?? {},
-    selectedSerialNumber: state.device?.selectedSerialNumber ?? undefined,
-});
-
-export default connect(mapStateToProps)(ErrorBoundary);
+export default ErrorBoundary;

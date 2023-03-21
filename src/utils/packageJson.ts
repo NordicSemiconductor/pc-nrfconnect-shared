@@ -5,7 +5,6 @@
  */
 
 import { readFileSync } from 'fs';
-import { PackageJson } from 'pc-nrfconnect-shared';
 
 /* Explanation for that cascade of eslint-disable-next-line and @ts-ignore:
    '../../../../package.json' will resolve correctly when `shared` is used in
@@ -34,6 +33,7 @@ import { PackageJson } from 'pc-nrfconnect-shared';
 // @ts-ignore This will be available when the app uses it.
 // eslint-disable-next-line import/no-unresolved
 import packageJsons from '../../../../package.json';
+import type { PackageJson } from './AppTypes';
 
 let packageJson: PackageJson = packageJsons;
 

@@ -39,33 +39,18 @@ describe('ErrorDialog', () => {
         expect(screen.getByText('Another error occured')).toBeInTheDocument();
     });
 
-    describe('has 2 close buttons', () => {
+    describe('has a close button', () => {
         it('with the text "Close"', () => {
             render(<ErrorDialog />, [showDialog('An error occured')]);
 
-            const buttons = screen.getAllByRole('button');
-            expect(buttons.length).toBe(2);
-            expect(buttons[0]).toHaveTextContent('Close');
-            expect(buttons[1]).toHaveTextContent('Close');
+            expect(screen.getByRole('button')).toHaveTextContent('Close');
         });
-
-        const dialogAfterClickingButton = (buttonNumber: number) => {
-            render(<ErrorDialog />, [showDialog('An error occured')]);
-
-            const buttons = screen.getAllByRole('button');
-            fireEvent.click(buttons[buttonNumber]);
-
-            return () => screen.getByRole('dialog');
-        };
 
         it('of which the first closes the dialog', async () => {
-            const getDialog = dialogAfterClickingButton(0);
-            await waitForElementToBeRemoved(getDialog);
-        });
+            render(<ErrorDialog />, [showDialog('An error occured')]);
+            fireEvent.click(screen.getByRole('button'));
 
-        it('of which the second closes the dialog', async () => {
-            const getDialog = dialogAfterClickingButton(1);
-            await waitForElementToBeRemoved(getDialog);
+            await waitForElementToBeRemoved(screen.queryByRole('dialog'));
         });
     });
 

@@ -4,13 +4,15 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
-import { bool, func } from 'prop-types';
+import React, { FC, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Device as DeviceProps } from '../../../state';
+import { Toggle } from '../../../Toggle/Toggle';
 import classNames from '../../../utils/classNames';
-import { sortedDevices } from '../../deviceSlice';
+import { getAutoReselect, setAutoReselect } from '../../deviceAutoSelectSlice';
+import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
+import { getDevices } from '../../deviceSlice';
 import { AnimatedItem, AnimatedList } from './AnimatedList';
 import BrokenDevice from './BrokenDevice';
 import Device from './Device';
@@ -37,8 +39,16 @@ const NoSupportedDevicesConnected = () => (
 
 const showAllDevices = () => true;
 
+const sorted = (devices: DeviceProps[]) =>
+    [...devices].sort((a, b) => {
+        if (a.favorite !== b.favorite) {
+            return a.favorite ? -1 : 1;
+        }
+
+        return displayedDeviceName(a) < displayedDeviceName(b) ? -1 : 1;
+    });
 interface Props {
-    doSelectDevice: (device: DeviceProps) => void;
+    doSelectDevice: (device: DeviceProps, autoReselected: boolean) => void;
     isVisible: boolean;
     deviceFilter?: (device: DeviceProps) => boolean;
 }
@@ -48,16 +58,37 @@ const DeviceList: FC<Props> = ({
     doSelectDevice,
     deviceFilter = showAllDevices,
 }) => {
-    const devices = useSelector(sortedDevices);
-    const filteredDevices = devices.filter(deviceFilter);
+    const dispatch = useDispatch();
+    const autoReconnect = useSelector(getAutoReselect);
+    const devices = useSelector(getDevices);
+
+    const sortedDevices = useMemo(
+        () => sorted([...devices.values()]),
+        [devices]
+    );
+
+    const filteredDevices = useMemo(
+        () => sortedDevices.filter(deviceFilter),
+        [deviceFilter, sortedDevices]
+    );
 
     return (
         <div className={classNames('device-list', isVisible || 'hidden')}>
-            {devices.length === 0 && <NoDevicesConnected />}
-            {devices.length > 0 && filteredDevices.length === 0 ? (
+            <div className="global-auto-reconnect">
+                <Toggle
+                    id="toggle-global-auto-reconnect"
+                    label="Auto Reconnect"
+                    isToggled={autoReconnect}
+                    onToggle={value => {
+                        dispatch(setAutoReselect(value));
+                    }}
+                />
+            </div>
+            {sortedDevices.length === 0 && <NoDevicesConnected />}
+            {sortedDevices.length > 0 && filteredDevices.length === 0 ? (
                 <NoSupportedDevicesConnected />
             ) : (
-                <AnimatedList devices={devices}>
+                <AnimatedList devices={sortedDevices}>
                     {filteredDevices.map(device => (
                         <AnimatedItem
                             key={device.serialNumber}
@@ -78,11 +109,6 @@ const DeviceList: FC<Props> = ({
             )}
         </div>
     );
-};
-DeviceList.propTypes = {
-    doSelectDevice: func.isRequired,
-    isVisible: bool.isRequired,
-    deviceFilter: func, // (device) => boolean
 };
 
 export default DeviceList;

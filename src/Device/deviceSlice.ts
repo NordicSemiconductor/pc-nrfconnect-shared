@@ -6,37 +6,20 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { Device, Devices, DeviceState, RootState } from '../state';
+import { Device, DeviceState, RootState } from '../state';
 import {
     getPersistedIsFavorite,
     getPersistedNickname,
     persistIsFavorite,
     persistNickname,
 } from '../utils/persistentStore';
-import { displayedDeviceName } from './deviceInfo/deviceInfo';
-
-const withPersistedData = (devices: Device[]) =>
-    devices.map((device: Device) => ({
-        ...device,
-        favorite: getPersistedIsFavorite(device.serialNumber),
-        nickname: getPersistedNickname(device.serialNumber),
-    }));
-
-const bySerialNumber = (devices: Device[]) => {
-    const devicesBySerialNumber: Devices = {};
-    devices.forEach(device => {
-        devicesBySerialNumber[device.serialNumber] = device;
-    });
-
-    return devicesBySerialNumber;
-};
 
 const updateDevice = (
     state: DeviceState,
     serialNumber: string,
     updateToMergeIn: Partial<Device>
 ) => {
-    const device = state.devices[serialNumber];
+    const device = state.devices.get(serialNumber);
     if (device) {
         Object.assign(device, updateToMergeIn);
     }
@@ -49,10 +32,11 @@ const noDialogShown = {
 };
 
 const initialState: DeviceState = {
-    devices: {},
+    devices: new Map(),
     selectedSerialNumber: null,
     deviceInfo: null,
     isSetupWaitingForUserInput: false,
+    readbackProtection: 'unknown',
     ...noDialogShown,
 };
 
@@ -62,8 +46,6 @@ const slice = createSlice({
     reducers: {
         /*
          * Indicates that a device has been selected.
-         *
-         * @param {Device} device Device object as given by nrf-device-lib.
          */
         selectDevice: (state, action: PayloadAction<Device>) => {
             state.selectedSerialNumber = action.payload.serialNumber;
@@ -75,14 +57,13 @@ const slice = createSlice({
         deselectDevice: state => {
             state.selectedSerialNumber = null;
             state.deviceInfo = null;
+            state.readbackProtection = 'unknown';
         },
 
         /*
          * Indicates that device setup is complete. This means that the device is
          * ready for use according to the `config.deviceSetup` configuration provided
          * by the app.
-         *
-         * @param {Object} device Device object as given by nrf-device-lib.
          */
         deviceSetupComplete: (state, action: PayloadAction<Device>) => ({
             ...state,
@@ -90,25 +71,19 @@ const slice = createSlice({
             deviceInfo: action.payload,
         }),
 
-        // /**
-        //  * Indicates that device setup failed.
-        //  *
-        //  * @param {Object} device Device object as given by nrf-device-lib.
-        //  * @param {Object} error Error object describing the error.
-        //  */
+        /*
+         * Indicates that device setup failed.
+         */
         deviceSetupError: state => ({
             ...state,
             ...noDialogShown,
         }),
 
-        // /**
-        //  * Indicates that some part of the device setup operation requires input
-        //  * from the user. When the user has provided the required input, then
-        //  * DEVICE_SETUP_INPUT_RECEIVED is dispatched with the given input.
-        //  *
-        //  * @param {String} message The message to display to the user.
-        //  * @param {Array<String>} [choices] Values that the user can choose from (optional).
-        //  */
+        /*
+         * Indicates that some part of the device setup operation requires input
+         * from the user. When the user has provided the required input, then
+         * DEVICE_SETUP_INPUT_RECEIVED is dispatched with the given input.
+         */
         deviceSetupInputRequired: {
             reducer: (
                 state,
@@ -131,28 +106,42 @@ const slice = createSlice({
             }),
         },
 
-        // /**
-        //  * Indicates that the user has provided input to the device setup operation.
-        //  * This action is dispatched after DEVICE_SETUP_INPUT_REQUIRED.
-        //  *
-        //  */
+        /*
+         * Indicates that the user has provided input to the device setup operation.
+         * This action is dispatched after DEVICE_SETUP_INPUT_REQUIRED.
+         *
+         */
         deviceSetupInputReceived: state => {
             state.isSetupWaitingForUserInput = false;
         },
 
-        // /**
-        //  * Indicates that devices have been detected. This is triggered by default at
-        //  * startup, and whenever a device is attached/detached. The app can configure
-        //  * which devices to look for by providing a `config.selectorTraits` property.
-        //  *
-        //  * @param {Array} devices Array of all attached devices, ref. nrf-device-lib.
-        //  */
-        devicesDetected: (state, action: PayloadAction<Device[]>) => {
-            state.devices = bySerialNumber(withPersistedData(action.payload));
+        setDevices: (state, action: PayloadAction<Device[]>) => {
+            state.devices.clear();
+            action.payload.forEach(device => {
+                state.devices.set(device.serialNumber, device);
+            });
+        },
+
+        addDevice: (state, action: PayloadAction<Device>) => {
+            state.devices.set(action.payload.serialNumber, {
+                ...action.payload,
+                favorite: getPersistedIsFavorite(action.payload.serialNumber),
+                nickname: getPersistedNickname(action.payload.serialNumber),
+            });
+        },
+
+        removeDevice: (state, action: PayloadAction<Device>) => {
+            state.devices.delete(action.payload.serialNumber);
+
+            if (state.selectedSerialNumber === action.payload.serialNumber) {
+                state.selectedSerialNumber = null;
+                state.deviceInfo = null;
+            }
         },
 
         toggleDeviceFavorited: (state, action: PayloadAction<string>) => {
-            const newFavoriteState = !state.devices[action.payload]?.favorite;
+            const newFavoriteState = !state.devices.get(action.payload)
+                ?.favorite;
             persistIsFavorite(action.payload, newFavoriteState);
             updateDevice(state, action.payload, {
                 favorite: newFavoriteState,
@@ -186,6 +175,17 @@ const slice = createSlice({
                 nickname: '',
             });
         },
+
+        closeSetupDialogVisible: state => {
+            state.isSetupDialogVisible = false;
+        },
+
+        setReadbackProtected: (
+            state,
+            action: PayloadAction<DeviceState['readbackProtection']>
+        ) => {
+            state.readbackProtection = action.payload;
+        },
     },
 });
 
@@ -197,35 +197,34 @@ export const {
         deviceSetupError,
         deviceSetupInputReceived,
         deviceSetupInputRequired,
-        devicesDetected,
         resetDeviceNickname,
         selectDevice,
+        addDevice,
+        removeDevice,
+        setDevices,
         setDeviceNickname,
         toggleDeviceFavorited,
+        closeSetupDialogVisible,
+        setReadbackProtected,
     },
 } = slice;
 
-const sorted = (devices: Device[]) =>
-    [...devices].sort((a, b) => {
-        if (a.favorite !== b.favorite) {
-            return a.favorite ? -1 : 1;
-        }
-
-        return displayedDeviceName(a) < displayedDeviceName(b) ? -1 : 1;
-    });
-
 export const getDevice = (serialNumber: string) => (state: RootState) =>
-    state.device?.devices[serialNumber];
+    state.device.devices.get(serialNumber);
 
-export const sortedDevices = (state: RootState) =>
-    sorted(Object.values(<Device[]>(<unknown>state.device.devices)));
+export const getDevices = (state: RootState) => state.device.devices;
 
 export const deviceIsSelected = (state: RootState) =>
-    state.device?.selectedSerialNumber != null;
+    state.device.selectedSerialNumber != null;
 
 export const selectedDevice = (state: RootState) =>
-    state.device.devices[state.device.selectedSerialNumber as string];
+    state.device.selectedSerialNumber !== null
+        ? state.device.devices.get(state.device.selectedSerialNumber)
+        : undefined;
 
 export const deviceInfo = (state: RootState) => state.device.deviceInfo;
 export const selectedSerialNumber = (state: RootState) =>
     state.device.selectedSerialNumber;
+
+export const getReadbackProtection = (state: RootState) =>
+    state.device.readbackProtection;

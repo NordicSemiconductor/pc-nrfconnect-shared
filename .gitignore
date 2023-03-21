@@ -3,3 +3,4 @@
 /coverage
 /scripts/nordic-publish.js
 /dist
+/typings/generated/tsconfig.tsbuildinfo

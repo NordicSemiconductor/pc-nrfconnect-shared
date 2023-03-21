@@ -10,14 +10,7 @@ import { execSync } from 'child_process';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import property from 'lodash/property';
 
-export interface PackageJson {
-    version?: string;
-    files?: string[];
-    repository?: {
-        type: string;
-        url: string;
-    };
-}
+import { PackageJson } from '../src/utils/AppTypes';
 
 const format = (strings: string[]) =>
     strings.map(string => `\`${string}\``).join(', ');
@@ -43,7 +36,7 @@ const mustBeEmpty = (array: string[], errorMessage: string) => {
 };
 
 const mustContain = (
-    existingEntries: string[],
+    existingEntries: readonly string[],
     mandatoryEntries: string[],
     errorMessage: string
 ) => {
@@ -55,7 +48,7 @@ const mustContain = (
 };
 
 const mustContainOneOf = (
-    existingEntries: string[],
+    existingEntries: readonly string[],
     oneOfTheseEntriesIsMandatory: string[],
     errorMessage: string
 ) => {
@@ -103,7 +96,15 @@ const checkOptionalProperties = (packageJson: PackageJson) => {
         const withoutPostfix = (gitUrl?: string) =>
             gitUrl?.replace(/\.git$/, '');
 
-        if (withoutPostfix(realGitUrl) !== withoutPostfix(declaredGitUrl)) {
+        const withoutProtocol = (gitUrl?: string) =>
+            gitUrl
+                ?.replace(/^git@github\.com:/, 'github.com/')
+                .replace(/^https:\/\//, '');
+
+        const stripped = (gitUrl?: string) =>
+            withoutProtocol(withoutPostfix(gitUrl));
+
+        if (stripped(realGitUrl) !== stripped(declaredGitUrl)) {
             fail(
                 `package.json says the repository is located at \`${declaredGitUrl}\` but \`git remote get-url origin\` says it is at \`${realGitUrl}\`.`
             );
@@ -114,7 +115,7 @@ const checkOptionalProperties = (packageJson: PackageJson) => {
 const checkFileProperty = (packageJson: PackageJson) => {
     mustContain(
         packageJson.files ?? [],
-        ['LICENSE', 'dist/'],
+        ['LICENSE', 'dist/', 'Changelog.md'],
         'These entries are missing in the property `files` in package.json'
     );
 

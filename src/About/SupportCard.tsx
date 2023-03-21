@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
 
@@ -13,8 +13,8 @@ import Card from '../Card/Card';
 import { setVerboseDeviceLibLogging } from '../Device/deviceLibWrapper';
 import {
     deviceInfo,
+    getDevices,
     selectedSerialNumber,
-    sortedDevices,
 } from '../Device/deviceSlice';
 import {
     isLoggingVerboseSelector,
@@ -28,18 +28,10 @@ import Section from './Section';
 
 export default () => {
     const dispatch = useDispatch();
-    const devices = useSelector(sortedDevices);
+    const devices = useSelector(getDevices);
     const currentSerialNumber = useSelector(selectedSerialNumber);
     const verboseLogging = useSelector(isLoggingVerboseSelector);
     const currentDevice = useSelector(deviceInfo);
-
-    useEffect(() => {
-        persistIsLoggingVerbose(false);
-    }, []);
-
-    useEffect(() => {
-        setVerboseDeviceLibLogging(verboseLogging);
-    }, [verboseLogging]);
 
     return (
         <Card title="Support">
@@ -63,7 +55,7 @@ export default () => {
                 <AboutButton
                     onClick={() =>
                         systemReport(
-                            devices,
+                            [...devices.values()],
                             currentSerialNumber as string,
                             currentDevice
                         )
@@ -79,12 +71,16 @@ export default () => {
                 <Toggle
                     id="enableVerboseLoggin"
                     label="VERBOSE LOGGING"
-                    onToggle={() => dispatch(toggleIsLoggingVerbose())}
+                    onToggle={() => {
+                        setVerboseDeviceLibLogging(!verboseLogging);
+                        dispatch(toggleIsLoggingVerbose());
+                    }}
                     isToggled={verboseLogging}
                     variant="primary"
                 />
                 <Section>
                     <Button
+                        variant="secondary"
                         onClick={() => {
                             persistIsLoggingVerbose(true);
                             getCurrentWindow().reload();

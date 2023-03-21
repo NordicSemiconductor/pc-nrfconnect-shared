@@ -8,8 +8,7 @@ const fs = require('fs');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 
-// eslint-disable-next-line import/no-dynamic-require
-const { dependencies } = require(path.join(process.cwd(), 'package.json'));
+const { dependencies } = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 
 const appDirectory = fs.realpathSync(process.cwd());
 
@@ -25,7 +24,7 @@ const externals = Object.fromEntries(
         'serialport',
         '@nordicsemiconductor/nrf-device-lib-js',
         'osx-temperature-sensor',
-        ...Object.keys(dependencies),
+        ...Object.keys(dependencies ?? {}),
     ].map(lib => [lib, lib])
 );
 

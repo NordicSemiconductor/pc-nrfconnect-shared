@@ -52,26 +52,25 @@ $dropdown-item-height: 24px; //px unit dependency in dropdown.tsx
     border-top: solid 2px $gray-600;
     z-index: 2;
 
-    &[data-height=true] {
+    &[data-height='true'] {
         overflow-y: scroll; // Make Scroll Fixed Height Scrolable
 
         /* Works on Chrome, Edge, and Safari */
         &::-webkit-scrollbar {
             width: 12px;
         }
-        
+
         &::-webkit-scrollbar-track {
             background: $gray-700;
         }
-        
+
         &::-webkit-scrollbar-thumb {
             background-color: $gray-600;
             border-radius: 20px;
-            border: 3px solid  $gray-700;
+            border: 3px solid $gray-700;
         }
     }
 }
-
 
 .itemsInactive {
     display: none;
@@ -91,8 +90,6 @@ $dropdown-item-height: 24px; //px unit dependency in dropdown.tsx
     white-space: nowrap;
 }
 
-.btn:hover,
-.btn:focus,
 .item:hover,
 .item:focus {
     background: $gray-600;
