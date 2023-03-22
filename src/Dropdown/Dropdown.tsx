@@ -31,17 +31,11 @@ export default ({
     selectedItem,
     numItemsBeforeScroll = 0,
 }: DropdownProps) => {
-    const isActiveRef = useRef(false);
-    const [isActive, setIsActive] = useState(isActiveRef.current);
-
-    const updateIsActive = (state: boolean) => {
-        isActiveRef.current = state;
-        setIsActive(isActiveRef.current);
-    };
+    const [isActive, setIsActive] = useState(false);
 
     const onClickItem = (item: DropdownItem) => {
         onSelect(item);
-        updateIsActive(false);
+        setIsActive(false);
     };
 
     return (
@@ -49,7 +43,7 @@ export default ({
             className={styles.container}
             onBlur={event => {
                 if (!event.currentTarget.contains(event.relatedTarget)) {
-                    updateIsActive(false);
+                    setIsActive(false);
                 }
             }}
         >
@@ -59,7 +53,7 @@ export default ({
                 className={`${styles.btn} ${
                     isActive ? styles.btnActive : styles.btnInactive
                 }`}
-                onClick={() => updateIsActive(!isActive)}
+                onClick={() => setIsActive(!isActive)}
                 disabled={disabled}
             >
                 <span>
