@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import FormLabel from 'react-bootstrap/FormLabel';
 
 import styles from './Dropdown.module.scss';
@@ -23,43 +23,37 @@ export interface DropdownProps {
     numItemsBeforeScroll?: number;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({
+export default ({
     label,
     items,
     onSelect,
     disabled = false,
     selectedItem,
     numItemsBeforeScroll = 0,
-}) => {
+}: DropdownProps) => {
     const [isActive, setIsActive] = useState(false);
-
-    useEffect(() => {
-        const clickEvent = () => setIsActive(!isActive);
-
-        if (isActive) {
-            window.addEventListener('click', clickEvent);
-        }
-
-        return () => {
-            window.removeEventListener('click', clickEvent);
-        };
-    }, [isActive]);
-
-    const onClick = () => setIsActive(!isActive);
 
     const onClickItem = (item: DropdownItem) => {
         onSelect(item);
+        setIsActive(false);
     };
 
     return (
-        <div className={styles.container}>
+        <div
+            className={styles.container}
+            onBlur={event => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                    setIsActive(false);
+                }
+            }}
+        >
             {label && <FormLabel className={styles.label}>{label}</FormLabel>}
             <button
                 type="button"
                 className={`${styles.btn} ${
                     isActive ? styles.btnActive : styles.btnInactive
                 }`}
-                onClick={onClick}
+                onClick={() => setIsActive(!isActive)}
                 disabled={disabled}
             >
                 <span>
@@ -102,5 +96,3 @@ const Dropdown: React.FC<DropdownProps> = ({
         </div>
     );
 };
-
-export default Dropdown;

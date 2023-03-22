@@ -24,6 +24,10 @@ every new version is a new major version.
 -   `Steppers` has been renamed to `Stepper` rename all references to `Stepper`
 -   `Step` add unique id to all steps.
 
+### Fixed
+
+-   `Dropdown` will keep the list open if rerendered
+
 ## 24 - 2023-03-20
 
 ### Added
