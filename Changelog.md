@@ -17,7 +17,6 @@ every new version is a new major version.
 ### Changed
 
 -   `Stepper` step now has an id property
--   `Alert` margin-bottom is now 8px.
 
 ### Steps to upgrade when using this package
 
