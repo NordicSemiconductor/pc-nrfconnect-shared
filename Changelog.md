@@ -24,6 +24,11 @@ every new version is a new major version.
 -   `Steppers` has been renamed to `Stepper` rename all references to `Stepper`
 -   `Step` add unique id to all steps.
 
+### Fixed
+
+-   `MasonryLayout` adapts to child elements changes that do not resize the main
+    DOM element.
+
 ## 24 - 2023-03-20
 
 ### Added
