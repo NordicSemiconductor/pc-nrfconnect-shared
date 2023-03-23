@@ -54,16 +54,9 @@ const isStringCaption = (
     (!isToolTipCaption(caption) && !isActionCaption(caption));
 
 const StepActionCaption = ({ caption }: { caption: ActionCaption }) => (
-    <span>
-        <Button
-            variant="custom"
-            className="action-link"
-            onClick={caption.action}
-        >
-            {`${caption.caption}`}
-        </Button>
-        &nbsp;
-    </span>
+    <Button variant="custom" className="action-link" onClick={caption.action}>
+        {`${caption.caption}`}
+    </Button>
 );
 
 const StepTooltipCaption = ({ caption }: { caption: TooltipCaption }) => (
@@ -108,6 +101,7 @@ const Caption = ({ caption }: { caption: string | StepCaption }) => {
 
 export default ({ title, steps }: Steppers) => (
     <>
+        <div className="stepper-reset" />
         {title && <div>{title}</div>}
         {steps.map(step => (
             <div
@@ -119,7 +113,7 @@ export default ({ title, steps }: Steppers) => (
             >
                 <div>
                     <div className="circle">
-                        {step.state && <div className="step-icon" />}
+                        <div className="step-icon" />
                     </div>
                     <div className="line" />
                 </div>
