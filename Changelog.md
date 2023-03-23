@@ -17,7 +17,6 @@ every new version is a new major version.
 ### Changed
 
 -   `Stepper` step now has an id property
--   `Alert` margin-bottom is now 8px.
 
 ### Steps to upgrade when using this package
 
@@ -28,6 +27,7 @@ every new version is a new major version.
 
 -   `MasonryLayout` adapts to child elements changes that do not resize the main
     DOM element.
+-   `Dropdown` will keep the list open if rerendered
 
 ## 24 - 2023-03-20
 

@@ -1,4 +1,4 @@
-import React from 'react';
+/// <reference types="react" />
 export interface DropdownItem {
     label: string;
     value: string;
@@ -11,5 +11,5 @@ export interface DropdownProps {
     selectedItem: DropdownItem;
     numItemsBeforeScroll?: number;
 }
-declare const Dropdown: React.FC<DropdownProps>;
-export default Dropdown;
+declare const _default: ({ label, items, onSelect, disabled, selectedItem, numItemsBeforeScroll, }: DropdownProps) => JSX.Element;
+export default _default;
