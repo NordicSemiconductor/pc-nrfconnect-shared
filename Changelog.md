@@ -25,6 +25,8 @@ every new version is a new major version.
 
 ### Fixed
 
+-   `MasonryLayout` adapts to child elements changes that do not resize the main
+    DOM element.
 -   `Dropdown` will keep the list open if rerendered
 
 ## 24 - 2023-03-20

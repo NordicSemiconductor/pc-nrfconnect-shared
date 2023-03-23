@@ -1,7 +1,7 @@
-import React from 'react';
+import { PropsWithChildren } from 'react';
 interface MasonryLayoutProperties {
     minWidth: number;
     className?: string;
 }
-declare const MasonryLayout: React.FC<MasonryLayoutProperties>;
-export default MasonryLayout;
+declare const _default: ({ children, minWidth, className, }: PropsWithChildren<MasonryLayoutProperties>) => JSX.Element;
+export default _default;

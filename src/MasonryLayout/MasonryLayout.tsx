@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 
 import classNames from '../utils/classNames';
 
@@ -14,13 +14,75 @@ interface MasonryLayoutProperties {
     className?: string;
 }
 
-const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
+interface WrappedChildrenProperties {
+    hiddenChildren: boolean[];
+    width: number;
+    columns: number;
+    minWidth: number;
+    orders: number[];
+}
+
+const WrappedChildren = ({
+    children,
+    hiddenChildren,
+    width,
+    columns,
+    minWidth,
+    orders,
+}: PropsWithChildren<WrappedChildrenProperties>) => (
+    <>
+        {React.Children.map(children, (child, i) => (
+            <div
+                data-hidden={hiddenChildren[i] === true ? 'true' : 'false'}
+                style={{
+                    width: `${width / columns}px`,
+                    minWidth,
+                    order: `${orders[i] ?? 1}`,
+                    pageBreakBefore: `${i < columns ? 'always' : 'auto'}`,
+                }}
+            >
+                {child}
+            </div>
+        ))}
+    </>
+);
+
+interface FillersProperties {
+    maxHeight: number;
+    columns: number;
+    width: number;
+    columnHeights: number[];
+}
+
+const Fillers = ({
+    maxHeight,
+    columns,
+    width,
+    columnHeights,
+}: FillersProperties) => (
+    <>
+        {columnHeights.map((h, i) =>
+            h !== maxHeight ? (
+                <div
+                    data-filler="true"
+                    key={`filler_${i + 0}`}
+                    style={{
+                        height: `${maxHeight - h}px`,
+                        order: `${i + 1}`,
+                        width: `${width / columns}px`,
+                    }}
+                />
+            ) : null
+        )}
+    </>
+);
+export default ({
     children,
     minWidth,
     className,
-}) => {
+}: PropsWithChildren<MasonryLayoutProperties>) => {
     const [width, setWidth] = useState(-1);
-    const [maxHeight, setMaxHeight] = useState(-1);
+    const [maxHeight, setMaxHeight] = useState(0);
     const [columns, setColumns] = useState(-1);
     const [orders, setOrders] = useState<number[]>([]);
     const [hiddenChildren, setHiddenChildren] = useState<boolean[]>([]);
@@ -28,47 +90,48 @@ const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
 
     const masonryLayoutRef = useRef<HTMLDivElement>(null);
 
-    const generateMetaData = useCallback((col: number) => {
-        let child = masonryLayoutRef.current?.firstElementChild;
-        const heightMatrix: number[][] = [];
-        const zeroHeightChildren: boolean[] = [];
+    useEffect(() => {
+        if (masonryLayoutRef.current === null) return;
 
-        let i = 0;
-        while (child) {
-            if (child instanceof HTMLElement) {
-                if (!child.hasAttribute('data-filler')) {
-                    const rowIndex = Math.floor(i / col);
+        const generateMetaData = (col: number) => {
+            let child = masonryLayoutRef.current?.firstElementChild;
+            const heightMatrix: number[][] = [];
+            const zeroHeightChildren: boolean[] = [];
 
-                    if (heightMatrix[rowIndex] === undefined) {
-                        heightMatrix[rowIndex] = [];
+            let i = 0;
+            while (child) {
+                if (child instanceof HTMLElement) {
+                    if (!child.hasAttribute('data-filler')) {
+                        const rowIndex = Math.floor(i / col);
+
+                        if (heightMatrix[rowIndex] === undefined) {
+                            heightMatrix[rowIndex] = [];
+                        }
+
+                        const row = heightMatrix[rowIndex];
+                        const columnIndex = i % col;
+
+                        i += 1;
+                        if (
+                            child.offsetHeight <=
+                            Number.parseInt(styles.margin, 10)
+                        ) {
+                            row[columnIndex] = 0;
+                            zeroHeightChildren.push(true);
+                        } else {
+                            row[columnIndex] = child.offsetHeight + 1;
+                            zeroHeightChildren.push(false);
+                        }
                     }
 
-                    const row = heightMatrix[rowIndex];
-                    const columnIndex = i % col;
-
-                    i += 1;
-                    if (
-                        child.offsetHeight <= Number.parseInt(styles.margin, 10)
-                    ) {
-                        row[columnIndex] = 0;
-                        zeroHeightChildren.push(true);
-                    } else {
-                        row[columnIndex] = child.offsetHeight + 1;
-                        zeroHeightChildren.push(false);
-                    }
+                    child = child.nextElementSibling;
                 }
-
-                child = child.nextElementSibling;
             }
-        }
 
-        return { heightMatrix, hiddenChildren: zeroHeightChildren };
-    }, []);
+            return { heightMatrix, hiddenChildren: zeroHeightChildren };
+        };
 
-    const calcData = useCallback(
-        (col: number) => {
-            if (!masonryLayoutRef.current) return null;
-
+        const calcData = (col: number) => {
             const metaData = generateMetaData(col);
             const heights: number[] = Array(col).fill(0);
             const newOrder: number[] = [];
@@ -83,7 +146,10 @@ const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
             });
 
             return {
-                maxHeight: Math.max(...heights),
+                maxHeight: Math.max(
+                    ...heights,
+                    masonryLayoutRef.current?.scrollHeight ?? 0
+                ),
                 order: newOrder,
                 columnHeights: heights,
                 columns: Math.min(
@@ -93,16 +159,9 @@ const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
                 maxColums: col,
                 hiddenChildren: metaData.hiddenChildren,
             };
-        },
-        [generateMetaData]
-    );
+        };
 
-    useEffect(() => {
-        if (masonryLayoutRef.current === null) return;
-
-        const current = masonryLayoutRef.current;
-
-        const observer = new ResizeObserver(() => {
+        const action = () => {
             const noOfColumns = Math.floor(
                 current.clientWidth /
                     (minWidth + Number.parseInt(styles.margin, 10))
@@ -120,13 +179,24 @@ const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
                 setHiddenChildren(data.hiddenChildren);
                 setColumns(data.columns);
             }
-        });
+        };
+
+        const current = masonryLayoutRef.current;
+
+        const observer = new ResizeObserver(action);
         observer.observe(masonryLayoutRef.current);
+        const mutationObserver = new MutationObserver(action);
+        mutationObserver.observe(masonryLayoutRef.current, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+        });
 
         return () => {
             current && observer.unobserve(current);
+            current && mutationObserver.disconnect();
         };
-    }, [calcData, columns, minWidth, width]);
+    }, [columns, maxHeight, minWidth, width]);
 
     return (
         <div className={styles.masonryLayoutOut}>
@@ -135,39 +205,22 @@ const MasonryLayout: React.FC<MasonryLayoutProperties> = ({
                 className={classNames(styles.masonryLayout, className)}
                 style={{ maxHeight: `${maxHeight}px` }}
             >
-                {React.Children.map(children, (child, i) => (
-                    <div
-                        data-hidden={
-                            hiddenChildren[i] === true ? 'true' : 'false'
-                        }
-                        style={{
-                            width: `${width / columns}px`,
-                            minWidth,
-                            order: `${orders[i] ?? 1}`,
-                            pageBreakBefore: `${
-                                i < columns ? 'always' : 'auto'
-                            }`,
-                        }}
-                    >
-                        {child}
-                    </div>
-                ))}
-                {columnHeights.map((h, i) =>
-                    h !== maxHeight ? (
-                        <div
-                            data-filler="true"
-                            key={`filler_${h + i}`}
-                            style={{
-                                height: `${maxHeight - h}px`,
-                                order: `${i + 1}`,
-                                width: `${width / columns}px`,
-                            }}
-                        />
-                    ) : null
-                )}
+                <WrappedChildren
+                    hiddenChildren={hiddenChildren}
+                    width={width}
+                    columns={columns}
+                    minWidth={minWidth}
+                    orders={orders}
+                >
+                    {children}
+                </WrappedChildren>
+                <Fillers
+                    maxHeight={maxHeight}
+                    columns={columns}
+                    width={width}
+                    columnHeights={columnHeights}
+                />
             </div>
         </div>
     );
 };
-
-export default MasonryLayout;
