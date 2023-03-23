@@ -34,7 +34,7 @@ const WrappedChildren = ({
     <>
         {flattenChildren(children).map((child, i) => (
             <div
-                key={`wrapper-${(child as React.ReactElement).key ?? i + 0}`}
+                key={`wrapper-${i + 0}`}
                 data-hidden={hiddenChildren[i] === true ? 'true' : 'false'}
                 style={{
                     width: `${width / columns}px`,
