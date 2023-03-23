@@ -27,6 +27,7 @@ every new version is a new major version.
 
 -   `MasonryLayout` adapts to child elements changes that do not resize the main
     DOM element.
+-   `MasonryLayout` renders children in fragment properly
 -   `Dropdown` will keep the list open if rerendered
 
 ## 24 - 2023-03-20

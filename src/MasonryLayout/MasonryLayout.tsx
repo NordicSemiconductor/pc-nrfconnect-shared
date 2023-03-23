@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import flattenChildren from 'react-keyed-flatten-children';
 
 import classNames from '../utils/classNames';
 
@@ -31,8 +32,9 @@ const WrappedChildren = ({
     orders,
 }: PropsWithChildren<WrappedChildrenProperties>) => (
     <>
-        {React.Children.map(children, (child, i) => (
+        {flattenChildren(children).map((child, i) => (
             <div
+                key={`wrapper-${(child as React.ReactElement).key ?? i + 0}`}
                 data-hidden={hiddenChildren[i] === true ? 'true' : 'false'}
                 style={{
                     width: `${width / columns}px`,
