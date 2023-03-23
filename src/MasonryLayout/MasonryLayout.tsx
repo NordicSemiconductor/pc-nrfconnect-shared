@@ -76,6 +76,14 @@ const Fillers = ({
         )}
     </>
 );
+
+/**
+ * Builds a masonry layout around all depth 1 child components.
+ * Note: only depth 1 children are considered for the layout.
+ * This also applies for React.Fragment wrapped components.
+ * @param {number} minWidth minimum width of every item in this layout.
+ * @returns {React.FC<MasonryLayoutProperties>} React Component.
+ */
 export default ({
     children,
     minWidth,
