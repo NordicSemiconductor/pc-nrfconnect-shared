@@ -4,18 +4,24 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { func } from 'prop-types';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
+import {
+    getAutoReselectDevice,
+    getWaitingForDeviceTimeout,
+    getWaitingToAutoReselect,
+} from '../deviceAutoSelectSlice';
 import { selectedDevice } from '../deviceSlice';
 import BasicDeviceInfo from './BasicDeviceInfo';
 
 import './selected-device.scss';
 
-const DisconnectDevice: FC<{ doDeselectDevice: () => void }> = ({
+const DisconnectDevice = ({
     doDeselectDevice,
+}: {
+    doDeselectDevice: () => void;
 }) => (
     <PseudoButton
         className="mdi mdi-24px mdi-eject disconnect"
@@ -24,19 +30,25 @@ const DisconnectDevice: FC<{ doDeselectDevice: () => void }> = ({
         testId="disconnect-device"
     />
 );
-DisconnectDevice.propTypes = {
-    doDeselectDevice: func.isRequired,
-};
 
-const SelectedDevice: FC<{
+export default ({
+    doDeselectDevice,
+    toggleDeviceListVisible,
+}: {
     doDeselectDevice: () => void;
     toggleDeviceListVisible: () => void;
-}> = ({ doDeselectDevice, toggleDeviceListVisible }) => {
-    const device = useSelector(selectedDevice);
+}) => {
+    const waitingForAutoReselect = useSelector(getWaitingToAutoReselect);
+    const waitingForDevice = useSelector(getWaitingForDeviceTimeout);
+    const selDevice = useSelector(selectedDevice);
+    const autoReconnectDevice = useSelector(getAutoReselectDevice);
+    const device = selDevice ?? autoReconnectDevice;
 
     return (
         <PseudoButton
-            className="selected-device"
+            className={`selected-device ${
+                waitingForAutoReselect || waitingForDevice ? 'reconnecting' : ''
+            }`}
             onClick={toggleDeviceListVisible}
         >
             {device && (
@@ -45,14 +57,9 @@ const SelectedDevice: FC<{
                     toggles={
                         <DisconnectDevice doDeselectDevice={doDeselectDevice} />
                     }
+                    showWaitingStatus
                 />
             )}
         </PseudoButton>
     );
 };
-SelectedDevice.propTypes = {
-    doDeselectDevice: func.isRequired,
-    toggleDeviceListVisible: func.isRequired,
-};
-
-export default SelectedDevice;

@@ -16,3 +16,9 @@ export declare type OverwriteOptions = {
     overwrite?: boolean;
     settingsLocked?: boolean;
 };
+export declare type OpenAppOptions = {
+    device?: {
+        serialNumber: string;
+        serialPortPath?: string;
+    };
+};

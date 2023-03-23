@@ -1,7 +1,7 @@
-import { FC } from 'react';
+/// <reference types="react" />
 import './selected-device.scss';
-declare const SelectedDevice: FC<{
+declare const _default: ({ doDeselectDevice, toggleDeviceListVisible, }: {
     doDeselectDevice: () => void;
     toggleDeviceListVisible: () => void;
-}>;
-export default SelectedDevice;
+}) => JSX.Element;
+export default _default;

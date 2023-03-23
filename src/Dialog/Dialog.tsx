@@ -7,7 +7,7 @@
 import React, { ReactNode } from 'react';
 import Modal from 'react-bootstrap/Modal';
 
-import Button from '../Button/Button';
+import Button, { ButtonVariants } from '../Button/Button';
 import Spinner from './Spinner';
 
 import './dialog.scss';
@@ -75,19 +75,21 @@ Dialog.Footer = ({
 export const DialogButton = ({
     variant = 'secondary',
     onClick,
-    className,
+    className = '',
     disabled = false,
     children,
 }: {
-    variant?: 'primary' | 'secondary';
     onClick: React.MouseEventHandler<HTMLButtonElement>;
+    variant?: ButtonVariants;
     className?: string;
     disabled?: boolean;
     children: ReactNode | string;
 }) => (
     <Button
+        large
+        variant={variant}
         onClick={onClick}
-        className={`${className} btn-${variant}`}
+        className={className}
         disabled={disabled}
     >
         {children}

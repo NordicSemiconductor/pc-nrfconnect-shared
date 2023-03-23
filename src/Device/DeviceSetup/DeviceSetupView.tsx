@@ -104,7 +104,7 @@ export default class DeviceSetupDialog extends React.Component<
                         onClick={() => onOk(false)}
                         disabled={isInProgress}
                     >
-                        Cancel
+                        No
                     </DialogButton>
                 </Dialog.Footer>
             </Dialog>

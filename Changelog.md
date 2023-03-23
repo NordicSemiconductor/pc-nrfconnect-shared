@@ -2,9 +2,330 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to
-[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+This project does _not_ adhere to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
+every new version is a new major version.
+
+## 25 - UNRELEASED
+
+### Added
+
+-   `Stepper` caption can now have action buttons
+-   `Stepper` caption can now have tooltips
+
+### Changed
+
+-   `Stepper` step now has an id property
+
+### Steps to upgrade when using this package
+
+-   `Steppers` has been renamed to `Stepper` rename all references to `Stepper`
+-   `Step` add unique id to all steps.
+
+### Fixed
+
+-   `MasonryLayout` adapts to child elements changes that do not resize the main
+    DOM element.
+-   `Dropdown` will keep the list open if rerendered
+
+## 24 - 2023-03-20
+
+### Added
+
+-   `updateHasReadbackProtection` now checks whether the currently selected
+    device has readbackprotection enabled and updates redux store.
+-   `Device` objects now contain a `persistedSerialPortOptions` property when it
+    is available.
+
+### Changed
+
+-   `persistSerialPortOptions` is now a Redux Action and only requires a
+    `SerialPortOpenOptions<AutoDetectTypes>` to be passed.
+
+### Fixed
+
+-   Devices now receive persisted data on first enumation.
+-   Safe guard against retaining stale wait for device request if a new device
+    is selected
+
+### Removed
+
+-   `getPersistedSerialPortOptions` export has been removed as it is an optional
+    property in `Device` now.
+
+### Steps to upgrade when using this package
+
+-   Wrap `persistSerialPortOptions` in a `dispatch` call and only pass
+    `SerialPortOptions` as parameters.
+-   Replace `getPersistedSerialPortOptions` calls with the
+    `persistedSerialPortOptions` property in the `Device` type (accessible from
+    the DeviceSelector callbacks or through `dispatch(selectedDevice())`)
+
+## 23 - 2023-03-16
+
+### Added
+
+-   `getWaitingToAutoReselect` to tell when We are waiting to auto reconnect as
+    `getAutoReselect` is true
+-   `getWaitingForDeviceTimeout` to tell when `setWaitForDevice` timeout has
+    started
+-   `clearWaitForDevice` to cancel when `setWaitForDevice`
+
+### Changed
+
+-   `setWaitForDevice` with `undefined` can no longer be used to cancel timeouts
+    instead one should use `clearWaitForDevice`
+
+## 22 - 2023-03-15
+
+### Added
+
+-   Update nrf-device-lib-js to version 0.6.2.
+
+## 21 - 2023-03-15
+
+### Added
+
+-   `useStopWatch` hook
+
+### Fix
+
+-   `ErrorBoundary` `Button` are now large.
+
+## 20 - 2023-03-14
+
+### Added
+
+-   Steppers component which allows to add states for success, failure and
+    warning.
+
+## 19 - 2023-03-13
+
+### Added
+
+-   `ErrorBoundary` use the shared `Button` component
+-   Update nrf-device-lib-js to version 0.6.0.
+
+## 18 - 2023-03-09
+
+### Added
+
+-   FeedbackPane component, to be added in the `Main` entry of a panes entry.
+-   Switch to next pane left, in order to navigate both ways.
+
+### Fixed
+
+-   Switch pane hotkey crashed the applications when it was fired.
+
+### Changed
+
+-   Do not resend close() if event that port was closed externally was emitted
+-   Add retry to open port on error `PORT_IS_ALREADY_BEING_OPENED`
+-   `Button` styles match the UX design guidelines.
+-   `Button` has `variant` property to assign it the designated style
+-   `Dialogs` use the shared `Button` component
+-   `AboutButton` use the shared `Button` component
+-   `ShortcutButton` use the shared `Button` component
+-   `SupportCard` use the shared `Button` component
+-   `FactoryResetButton` use the shared `Button` component
+-   `NavMenuItem` use the shared `Button` component
+-   `FeedbackPane` use the shared `Button` component
+
+## 17 - 2023-03-08
+
+### Added
+
+-   Allow apps to see if auto-reconnect is enabled.
+
+## 16 - 2023-03-03
+
+### Fixed
+
+-   Selecting a device will no longer stop and start hotplug events
+-   Long Serial number and device names will now render correctly
+
+## 15 - 2023-03-03
+
+### Added
+
+-   `Update Bootloader` prompt and `sdfu` programming for it.
+-   Reconnecting status in device selector.
+-   `setWaitForDevice` can be dispatched by apps to wait for a temporary
+    disconnect.
+-   During device setup, if device is in bootloader mode and user declines to
+    program, device is automatically switched to Application mode
+
+### Fixed
+
+-   Blocking dialog when disconnecting a device when the Programming dialog is
+    open.
+-   No longer auto reselect to the least disconnected device if is is in the
+    device list when clicking the `Auto Reconnect` Toggle.
+-   Dispatch `deviceSetupError` when `sdfu` programming fails.
+
+### Changed
+
+-   Device Enumeration is only done once in the app life cycle
+-   Only one instance of the hot plug events.
+-   `setWaitForDevice` is callback based and this calls that reboot the device
+    do not need to be awaited.
+-   Update nrf-device-lib-js to version 0.5.0.
+
+## 14 - 2023-02-28
+
+### Fixed
+
+-   `MasonryLayout` Update layout more frequently.
+-   `MasonryLayout` Hidden items can become visible and not remain hidden for
+    the full app life cycle.
+
+## 13 - 2023-02-24
+
+### Fixed
+
+-   Wrongly import of `electron/renderer`, now changed to `electron`.
+
+## 12 - 2023-02-23
+
+### Added
+
+-   `openAppWindow` sends IPC call to launcher, in order to open an app,
+    identified by its `name` and `source`. And gives the ability to provide
+    `openAppOptions` with `device` and `serialPortPath`, in order to directly
+    connect to a device, and its serial port.
+-   Optional `className` property on `MasonryLayout`.
+
+### Changed
+
+-   Improved `MasonryLayout` algorithm
+-   `MasonryLayout` Items with no height are hidden
+
+## 11 - 2023-02-22
+
+### Changed
+
+-   `shasum` property on apps became optional.
+
+## 10 - 2023-02-16
+
+### Fixed
+
+-   Masonry layout Max height generation algorithm
+-   Regression with dropdown items on hover effect
+
+## 9 - 2023-02-16
+
+### Added
+
+-   Masonry Layout
+
+## 8 - 2023-02-15
+
+### Changed
+
+-   Better Redux dev tools configuration: More actions (100 instead of 50) and
+    show some more objects, e.g. Maps and Sets.
+-   Updated `StartStopButton` to be a controlled component
+
+## 7 - 2023-02-13
+
+### Changed
+
+-   Switched to use only major versions for releases of `shared`.
+-   Check for `Changelog.md` entry in `files` in `package.json`. We need it in
+    our tarballs and for `npm@7` and later it is not added automatically any
+    longer when running `npm pack`.
+
+## 6.18.14 - 2023-02-07
+
+### Changed
+
+-   Readback status is now maintained separate from the device itself.
+
+## 6.18.13 - 2023-02-06
+
+### Fixed
+
+-   `Button` :focus background to white
+
+## 6.18.12 - 2023-02-06
+
+### Changed
+
+-   `Button` font size to 14px
+
+## 6.18.11 - 2023-02-06
+
+### Fixed
+
+-   `Button` remain styled as `click` after key mouse key is released
+
+### Added
+
+-   `large` Property to `Button` to make its height at 32px
+-   `large` Property to `StartStopButton` to make its height at 32px
+
+### Changed
+
+-   `StartStopButton` default to large
+
+## 6.18.10 - 2023-02-04
+
+### Added
+
+-   Allow apps to see if selected device has readback protection enabled.
+
+## 6.18.9 - 2023-02-03
+
+### Fixed
+
+-   `SidePanel` bottom margin of the last component
+
+## 6.18.8 - 2023-02-03
+
+### Fixed
+
+-   `persistentStore` logging message of terminal settings, missing `vCom-`
+-   Types for bleChannels.
+
+## 6.18.7 - 2023-02-03
+
+### Fixed
+
+-   Programming DFU devices from device selector on macOS.
+
+## 6.18.6 - 2023-02-03
+
+### Fixed
+
+-   `persistentStore` logging to persistent store missing `vCom-`
+
+## 6.18.5 - 2023-02-02
+
+### Changed
+
+-   `PersistedSerialPort` takes app name fom json
+-   `TerminalSettings` vCom Index is append with `vCom-` in persist store
+
+## 6.18.4 - 2023-02-01
+
+### Changed
+
+-   Updated `serialport` to emit events and have more than one subscriber
+-   Export `DropdownItem`
+
+## 6.18.3 - 2023-02-01
+
+### Fixed
+
+-   Only auto reconnect to device if traits are the same
+
+## 6.18.2 - 2023-02-01
+
+### Fixed
+
+-   No device selected if `serialNumber` is an empty string
 
 ## 6.18.1 - 2023-01-30
 

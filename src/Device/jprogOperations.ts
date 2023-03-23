@@ -13,12 +13,12 @@ import {
     Progress,
     readFwInfo,
 } from '@nordicsemiconductor/nrf-device-lib-js';
-import { SerialPort } from 'serialport';
 
 import logger from '../logging';
-import { Device } from '../state';
+import { Device, RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import type { DeviceSetup } from './deviceSetup';
+import { selectedDevice, setReadbackProtected } from './deviceSlice';
 
 const deviceLibContext = getDeviceLibContext();
 
@@ -73,52 +73,27 @@ const reset = async (deviceId: number) => {
     await deviceControlReset(deviceLibContext, deviceId);
 };
 
-/**
- * Try to open and close the given serial port to see if it is available. This
- * is needed to identify if a SEGGER J-Link device is in a bad state. If
- * pc-nrfjprog-js tries to interact with a device in bad state, it will hang
- * indefinitely.
- *
- * @param {object} device Device object, ref. nrf-device-lister.
- * @returns {Promise} Promise that resolves if available, and rejects if not.
- */
-export const verifySerialPortAvailable = (device: Device) => {
-    if (!device.serialport) {
-        return Promise.reject(
-            new Error(
-                'No serial port available for device with ' +
-                    `serial number ${device.serialNumber}`
-            )
-        );
-    }
-    return new Promise<void>((resolve, reject) => {
-        if (!device.serialport?.comName) {
-            reject();
-            return;
+export const updateHasReadbackProtection =
+    () => async (dispatch: TDispatch, getState: () => RootState) => {
+        const device = selectedDevice(getState());
+
+        if (!device || !device.traits.jlink) {
+            dispatch(setReadbackProtected('unknown'));
+            return 'unknown';
         }
-        const serialPort = new SerialPort({
-            path: device.serialport.comName,
-            // The BaudRate should not matter in this case, but as of serialport v10 it is required.
-            // To be sure to keep the code as similar as possible, baudRate is set to the same as the
-            // default baudRate in serialport v8.
-            baudRate: 9600,
-            autoOpen: false,
-        });
-        serialPort.open(openErr => {
-            if (openErr) {
-                reject(openErr);
-            } else {
-                serialPort.close(closeErr => {
-                    if (closeErr) {
-                        reject(closeErr);
-                    } else {
-                        resolve();
-                    }
-                });
+
+        try {
+            await readFwInfo(deviceLibContext, device.id);
+        } catch (error) {
+            // @ts-expect-error Wrongly typed in device lib at the moment
+            if (error.error_code === 24) {
+                dispatch(setReadbackProtected('protected'));
+                return 'protected';
             }
-        });
-    });
-};
+        }
+        dispatch(setReadbackProtected('unprotected'));
+        return 'unprotected';
+    };
 
 /**
  * Validate the firmware on the device whether it matches the provided firmware or not
@@ -143,6 +118,13 @@ export async function validateFirmware(
     try {
         fwInfo = await readFwInfo(deviceLibContext, device.id);
     } catch (error) {
+        // @ts-expect-error Wrongly typed in device lib at the moment
+        if (error.error_code === 24) {
+            logger.warn(
+                'Readback protection on device enabled. Unable to verify that the firmware version is correct.'
+            );
+            return 'READBACK_PROTECTION_ENABLED';
+        }
         return false;
     }
     if (

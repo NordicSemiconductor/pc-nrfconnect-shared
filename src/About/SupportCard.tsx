@@ -13,8 +13,8 @@ import Card from '../Card/Card';
 import { setVerboseDeviceLibLogging } from '../Device/deviceLibWrapper';
 import {
     deviceInfo,
+    getDevices,
     selectedSerialNumber,
-    sortedDevices,
 } from '../Device/deviceSlice';
 import {
     isLoggingVerboseSelector,
@@ -28,7 +28,7 @@ import Section from './Section';
 
 export default () => {
     const dispatch = useDispatch();
-    const devices = useSelector(sortedDevices);
+    const devices = useSelector(getDevices);
     const currentSerialNumber = useSelector(selectedSerialNumber);
     const verboseLogging = useSelector(isLoggingVerboseSelector);
     const currentDevice = useSelector(deviceInfo);
@@ -55,7 +55,7 @@ export default () => {
                 <AboutButton
                     onClick={() =>
                         systemReport(
-                            devices,
+                            [...devices.values()],
                             currentSerialNumber as string,
                             currentDevice
                         )
@@ -80,6 +80,7 @@ export default () => {
                 />
                 <Section>
                     <Button
+                        variant="secondary"
                         onClick={() => {
                             persistIsLoggingVerbose(true);
                             getCurrentWindow().reload();

@@ -11,7 +11,7 @@ export interface SourceJson {
 
 export type AppVersions = {
     [version: string]: {
-        shasum: string;
+        shasum?: string;
         tarballUrl: string;
     };
 };
@@ -27,7 +27,7 @@ export interface AppInfo {
     versions: AppVersions;
     installed?: {
         path: string;
-        shasum: string;
+        shasum?: string;
     };
 }
 

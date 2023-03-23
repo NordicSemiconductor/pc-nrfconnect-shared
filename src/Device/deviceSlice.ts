@@ -5,15 +5,18 @@
  */
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { AutoDetectTypes } from '@serialport/bindings-cpp';
+import { SerialPortOpenOptions } from 'serialport';
 
 import { Device, DeviceState, RootState } from '../state';
 import {
     getPersistedIsFavorite,
     getPersistedNickname,
+    getPersistedSerialPortSettings,
     persistIsFavorite,
     persistNickname,
+    persistSerialPortSettings as persistSerialPortSettingsToStore,
 } from '../utils/persistentStore';
-import { displayedDeviceName } from './deviceInfo/deviceInfo';
 
 const updateDevice = (
     state: DeviceState,
@@ -37,8 +40,35 @@ const initialState: DeviceState = {
     selectedSerialNumber: null,
     deviceInfo: null,
     isSetupWaitingForUserInput: false,
-    autoReconnect: false,
+    readbackProtection: 'unknown',
     ...noDialogShown,
+};
+
+const setPersistedData = (device: Device) => {
+    const newDevice = {
+        ...device,
+        favorite: getPersistedIsFavorite(device.serialNumber),
+        nickname: getPersistedNickname(device.serialNumber),
+    };
+
+    const persistedSerialPortSettings = getPersistedSerialPortSettings(
+        newDevice.serialNumber
+    );
+
+    if (persistedSerialPortSettings) {
+        const path =
+            newDevice.serialPorts?.[persistedSerialPortSettings.vComIndex]
+                .comName;
+
+        if (path) {
+            newDevice.persistedSerialPortOptions = {
+                ...persistedSerialPortSettings.serialPortOptions,
+                path,
+            };
+        }
+    }
+
+    return newDevice;
 };
 
 const slice = createSlice({
@@ -50,9 +80,6 @@ const slice = createSlice({
          */
         selectDevice: (state, action: PayloadAction<Device>) => {
             state.selectedSerialNumber = action.payload.serialNumber;
-            state.autoReconnectDevice = {
-                device: { ...action.payload },
-            };
         },
 
         /*
@@ -61,7 +88,7 @@ const slice = createSlice({
         deselectDevice: state => {
             state.selectedSerialNumber = null;
             state.deviceInfo = null;
-            state.autoReconnectDevice = null;
+            state.readbackProtection = 'unknown';
         },
 
         /*
@@ -122,26 +149,58 @@ const slice = createSlice({
         setDevices: (state, action: PayloadAction<Device[]>) => {
             state.devices.clear();
             action.payload.forEach(device => {
-                state.devices.set(device.serialNumber, device);
+                state.devices.set(
+                    device.serialNumber,
+                    setPersistedData(device)
+                );
             });
         },
 
         addDevice: (state, action: PayloadAction<Device>) => {
-            state.devices.set(action.payload.serialNumber, {
-                ...action.payload,
-                favorite: getPersistedIsFavorite(action.payload.serialNumber),
-                nickname: getPersistedNickname(action.payload.serialNumber),
-            });
+            state.devices.set(
+                action.payload.serialNumber,
+                setPersistedData(action.payload)
+            );
+        },
+
+        persistSerialPortOptions: (
+            state,
+            action: PayloadAction<SerialPortOpenOptions<AutoDetectTypes>>
+        ) => {
+            if (state.selectedSerialNumber === null) return;
+
+            const selectedDevice = state.devices.get(
+                state.selectedSerialNumber
+            );
+
+            if (selectedDevice) {
+                const vComIndex = selectedDevice.serialPorts?.findIndex(
+                    e => e.path === action.payload.path
+                );
+
+                if (vComIndex !== undefined) {
+                    const { path: _, ...serialPortOptions } = action.payload;
+
+                    persistSerialPortSettingsToStore(
+                        state.selectedSerialNumber,
+                        {
+                            serialPortOptions,
+                            vComIndex,
+                        }
+                    );
+
+                    state.devices.set(state.selectedSerialNumber, {
+                        ...selectedDevice,
+                        persistedSerialPortOptions: action.payload,
+                    });
+                }
+            }
         },
 
         removeDevice: (state, action: PayloadAction<Device>) => {
             state.devices.delete(action.payload.serialNumber);
 
-            if (
-                state.autoReconnectDevice?.device.serialNumber ===
-                action.payload.serialNumber
-            ) {
-                state.autoReconnectDevice.disconnectionTime = Date.now();
+            if (state.selectedSerialNumber === action.payload.serialNumber) {
                 state.selectedSerialNumber = null;
                 state.deviceInfo = null;
             }
@@ -184,8 +243,15 @@ const slice = createSlice({
             });
         },
 
-        setGlobalAutoReconnect: (state, action: PayloadAction<boolean>) => {
-            state.autoReconnect = action.payload;
+        closeSetupDialogVisible: state => {
+            state.isSetupDialogVisible = false;
+        },
+
+        setReadbackProtected: (
+            state,
+            action: PayloadAction<DeviceState['readbackProtection']>
+        ) => {
+            state.readbackProtection = action.payload;
         },
     },
 });
@@ -205,36 +271,22 @@ export const {
         setDevices,
         setDeviceNickname,
         toggleDeviceFavorited,
-        setGlobalAutoReconnect,
+        closeSetupDialogVisible,
+        setReadbackProtected,
+        persistSerialPortOptions,
     },
 } = slice;
-
-const sorted = (devices: Device[]) =>
-    [...devices].sort((a, b) => {
-        if (a.favorite !== b.favorite) {
-            return a.favorite ? -1 : 1;
-        }
-
-        return displayedDeviceName(a) < displayedDeviceName(b) ? -1 : 1;
-    });
 
 export const getDevice = (serialNumber: string) => (state: RootState) =>
     state.device.devices.get(serialNumber);
 
-export const sortedDevices = (state: RootState) =>
-    sorted([...state.device.devices.values()]);
+export const getDevices = (state: RootState) => state.device.devices;
 
 export const deviceIsSelected = (state: RootState) =>
     state.device.selectedSerialNumber != null;
 
-export const getAutoReconnectDevice = (state: RootState) =>
-    state.device.autoReconnect ||
-    state.device.autoReconnectDevice?.device.dfuTriggerVersion != null
-        ? state.device.autoReconnectDevice
-        : null;
-
 export const selectedDevice = (state: RootState) =>
-    state.device.selectedSerialNumber
+    state.device.selectedSerialNumber !== null
         ? state.device.devices.get(state.device.selectedSerialNumber)
         : undefined;
 
@@ -242,5 +294,5 @@ export const deviceInfo = (state: RootState) => state.device.deviceInfo;
 export const selectedSerialNumber = (state: RootState) =>
     state.device.selectedSerialNumber;
 
-export const getGlobalAutoReconnect = (state: RootState) =>
-    state.device.autoReconnect;
+export const getReadbackProtection = (state: RootState) =>
+    state.device.readbackProtection;

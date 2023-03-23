@@ -89,3 +89,8 @@ $dropdown-item-height: 24px; //px unit dependency in dropdown.tsx
     font-weight: 400;
     white-space: nowrap;
 }
+
+.item:hover,
+.item:focus {
+    background: $gray-600;
+}

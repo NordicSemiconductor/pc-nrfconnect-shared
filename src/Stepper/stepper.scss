@@ -1,0 +1,127 @@
+/*
+ * Copyright (c) 2023 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
+@import '../../styles.scss';
+@import '../variables';
+
+.stepper-reset {
+    counter-reset: stepper;
+}
+
+.step {
+    display: flex;
+    min-height: 36px;
+    color: $gray-600;
+
+    .action-link {
+        color: $gray-600;
+        padding: 0;
+        border: none;
+        background: none;
+        text-decoration: underline;
+    }
+
+    .tool-tip-trigger {
+        text-decoration: underline;
+    }
+
+    .circle {
+        background: $tooltip-bg;
+        position: relative;
+        width: 13px;
+        height: 13px;
+        line-height: 13px;
+        border-radius: 100%;
+        text-align: center;
+    }
+
+    .step-icon::after {
+        counter-increment: stepper;
+        font-family: 'Material Design Icons', 'Roboto';
+        color: white;
+        font-size: 10px;
+        vertical-align: bottom;
+        content: counter(stepper);
+    }
+
+    &.step-success {
+        .circle {
+            background-color: $green;
+        }
+        .step-icon::after {
+            content: '\F012C';
+        }
+    }
+
+    &.step-warning {
+        .circle {
+            background-color: $amber;
+        }
+        .step-icon::after {
+            content: '\F1238';
+        }
+    }
+
+    &.step-failure {
+        .circle {
+            background-color: $red;
+        }
+        .step-icon::after {
+            content: '\F1398';
+        }
+    }
+
+    &.step-active {
+        .step-icon::after {
+            content: '\F0450';
+        }
+        .step-icon {
+            animation: rotate 3s linear infinite;
+        }
+    }
+
+    .line {
+        height: 100%;
+        left: 50%;
+        position: relative;
+        width: 2px;
+        background: #90a4ae;
+        margin-left: -1px;
+    }
+
+    &:last-child .line {
+        display: none;
+    }
+
+    & > div:not(:first-child) {
+        flex-grow: 1;
+        padding-left: 1em;
+    }
+}
+
+@keyframes rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.title {
+    line-height: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.caption {
+    font-size: 12px;
+
+    .action-link {
+        font-style: italic;
+    }
+
+    .action-link+.action-link  {
+        margin-left: 4px;
+    }
+}

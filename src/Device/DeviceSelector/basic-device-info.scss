@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-@import "../../variables";
+@import '../../variables';
 
 .core19-device-selector {
     .basic-device-info {
@@ -24,10 +24,29 @@
             .name {
                 font-size: 14px;
                 font-weight: $font-weight-bold;
+                text-overflow: ellipsis;
 
                 &:not(:focus) {
                     pointer-events: none;
                 }
+            }
+            .reconnecting {
+                border-bottom-style: solid;
+                border-bottom-width: 1px;
+                border-bottom-color: transparent;
+
+                font-size: 14px;
+                font-weight: $font-weight-bold;
+
+                &:not(:focus) {
+                    pointer-events: none;
+                }
+            }
+
+            .serial-number {
+                overflow-wrap: break-word;
+                max-width: 155px;
+                text-overflow: ellipsis;
             }
         }
 

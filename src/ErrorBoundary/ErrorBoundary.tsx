@@ -5,9 +5,9 @@
  */
 
 import React, { ReactNode } from 'react';
-import { Button } from 'react-bootstrap';
 import { getCurrentWindow } from '@electron/remote';
 
+import Button from '../Button/Button';
 import Spinner from '../Dialog/Spinner';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { CollapsibleGroup } from '../SidePanel/Group';
@@ -116,6 +116,7 @@ class ErrorBoundary extends React.Component<
                             problem we recommend restarting the application.
                         </p>
                         <Button
+                            large
                             variant="primary"
                             onClick={() => getCurrentWindow().reload()}
                         >
@@ -126,6 +127,7 @@ class ErrorBoundary extends React.Component<
                             restoring to default values.
                         </p>
                         <FactoryResetButton
+                            large
                             resetFn={restoreDefaults || genericRestoreDefaults}
                             label="Restore default settings"
                             variant="primary"
@@ -165,6 +167,7 @@ class ErrorBoundary extends React.Component<
                         experienced it multiple times
                     </p>
                     <Button
+                        large
                         variant="primary"
                         onClick={() =>
                             openUrl(

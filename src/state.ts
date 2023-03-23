@@ -9,6 +9,8 @@ import {
     SerialPort,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
+import type { AutoDetectTypes } from '@serialport/bindings-cpp';
+import { SerialPortOpenOptions } from 'serialport';
 import { LogEntry } from 'winston';
 
 import type { DocumentationState } from './About/documentationSlice';
@@ -24,6 +26,7 @@ export interface RootState {
     appLayout: AppLayout;
     errorDialog: ErrorDialog;
     log: Log;
+    deviceAutoSelect: DeviceAutoSelectState;
     device: DeviceState;
     documentation: DocumentationState;
     brokenDeviceDialog: BrokenDeviceDialog;
@@ -61,13 +64,24 @@ export interface DeviceState {
     selectedSerialNumber: string | null;
     setupDialogChoices: readonly string[];
     setupDialogText?: string | null;
-    autoReconnectDevice?: AutoReconnectDevice | null;
-    autoReconnect: boolean;
+    readbackProtection: 'unknown' | 'protected' | 'unprotected';
 }
 
-export interface AutoReconnectDevice {
-    device: Device;
+export interface DeviceAutoSelectState {
+    autoReselect: boolean;
+    device?: Device;
     disconnectionTime?: number;
+    waitForDevice?: WaitForDevice;
+    autoReconnectTimeout?: NodeJS.Timeout;
+    lastArrivedDeviceId?: number;
+}
+
+export interface WaitForDevice {
+    timeout: number;
+    when: 'always' | 'applicationMode' | 'BootLoaderMode';
+    once: boolean;
+    onSuccess?: (device: Device) => void;
+    onFail?: (reason?: string) => void;
 }
 
 export interface DeviceInfo {
@@ -86,6 +100,7 @@ export interface Device extends NrfdlDevice {
     serialport?: SerialPort;
     favorite?: boolean;
     id: number;
+    persistedSerialPortOptions?: SerialPortOpenOptions<AutoDetectTypes>;
 }
 
 export interface BrokenDeviceDialog {

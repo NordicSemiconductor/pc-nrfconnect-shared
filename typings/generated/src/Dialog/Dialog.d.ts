@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import { ButtonVariants } from '../Button/Button';
 import './dialog.scss';
 export declare const Dialog: {
     ({ isVisible, closeOnUnfocus, onHide, className, children, }: {
@@ -21,8 +22,8 @@ export declare const Dialog: {
     }): JSX.Element;
 };
 export declare const DialogButton: ({ variant, onClick, className, disabled, children, }: {
-    variant?: "primary" | "secondary" | undefined;
     onClick: React.MouseEventHandler<HTMLButtonElement>;
+    variant?: ButtonVariants | undefined;
     className?: string | undefined;
     disabled?: boolean | undefined;
     children: ReactNode | string;

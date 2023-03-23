@@ -10,55 +10,48 @@ import type {
     UpdateOptions,
 } from '@serialport/bindings-cpp';
 import { ipcRenderer } from 'electron';
+import EventEmitter from 'events';
 import type { SerialPortOpenOptions } from 'serialport';
 
 import { OverwriteOptions, SERIALPORT_CHANNEL } from '../../main';
 import logger from '../logging';
 
-export const SerialPort = async (
+export type SerialPort = Awaited<ReturnType<typeof createSerialPort>>;
+
+export const createSerialPort = async (
     options: SerialPortOpenOptions<AutoDetectTypes>,
     overwriteOptions: OverwriteOptions = {
         overwrite: false,
         settingsLocked: false,
-    },
-    {
-        onData = () => {},
-        onClosed = () => {},
-        onUpdate = () => {},
-        onSet = () => {},
-        onChange = () => {},
-        onDataWritten = () => {},
-    }: {
-        onData?: (data: Uint8Array) => void;
-        onClosed?: () => void;
-        onUpdate?: (newOptions: UpdateOptions) => void;
-        onSet?: (newOptions: SetOptions) => void;
-        onChange?: (newOptions: SerialPortOpenOptions<AutoDetectTypes>) => void;
-        onDataWritten?: (data: Uint8Array) => void;
-    } = {}
+    }
 ) => {
     const { path } = options;
+    const eventEmitter = new EventEmitter();
+    let closed = false;
 
     ipcRenderer.on(`${SERIALPORT_CHANNEL.ON_DATA}_${path}`, (_event, data) =>
-        onData(data)
+        eventEmitter.emit('onData', data)
     );
-    ipcRenderer.on(`${SERIALPORT_CHANNEL.ON_CLOSED}_${path}`, onClosed);
+    ipcRenderer.on(`${SERIALPORT_CHANNEL.ON_CLOSED}_${path}`, () => {
+        eventEmitter.emit('onClosed');
+        closed = true;
+    });
     ipcRenderer.on(
         `${SERIALPORT_CHANNEL.ON_UPDATE}_${path}`,
-        (_event, newOptions) => onUpdate(newOptions)
+        (_event, newOptions) => eventEmitter.emit('onUpdate', newOptions)
     );
     ipcRenderer.on(
         `${SERIALPORT_CHANNEL.ON_SET}_${path}`,
-        (_event, newOptions) => onSet(newOptions)
+        (_event, newOptions) => eventEmitter.emit('onSet', newOptions)
     );
     ipcRenderer.on(
         `${SERIALPORT_CHANNEL.ON_CHANGED}_${path}`,
-        (_event, newOptions) => onChange(newOptions)
+        (_event, newOptions) => eventEmitter.emit('onChange', newOptions)
     );
 
     // The origin of this event is emitted when a renderer writes to the port.
     ipcRenderer.on(`${SERIALPORT_CHANNEL.ON_WRITE}_${path}`, (_event, data) =>
-        onDataWritten(data)
+        eventEmitter.emit('onDataWritten', data)
     );
 
     const write = (data: string | number[] | Buffer): void => {
@@ -69,6 +62,7 @@ export const SerialPort = async (
         ipcRenderer.invoke(SERIALPORT_CHANNEL.IS_OPEN, path);
 
     const close = async () => {
+        if (closed) return;
         const error = await ipcRenderer.invoke(SERIALPORT_CHANNEL.CLOSE, path);
         if (error) {
             // IPC only carries the error message, that's why we throw new Error.
@@ -95,11 +89,33 @@ export const SerialPort = async (
         ipcRenderer.invoke(SERIALPORT_CHANNEL.SET, path, newOptions);
     };
 
-    const error = await ipcRenderer.invoke(
-        SERIALPORT_CHANNEL.OPEN,
-        options,
-        overwriteOptions
-    );
+    const openWithRetries = async (retryCount: number) => {
+        try {
+            return (await ipcRenderer.invoke(
+                SERIALPORT_CHANNEL.OPEN,
+                options,
+                overwriteOptions
+            )) as string;
+        } catch (error) {
+            if (
+                (error as Error).message.includes(
+                    'PORT_IS_ALREADY_BEING_OPENED'
+                ) &&
+                retryCount > 0
+            ) {
+                return new Promise<string>(resolve => {
+                    setTimeout(async () => {
+                        resolve(
+                            (await openWithRetries(retryCount - 1)) as string
+                        );
+                    }, 50 + Math.random() * 100);
+                });
+            }
+            return Promise.resolve<string>((error as Error).message);
+        }
+    };
+
+    const error = await openWithRetries(3);
 
     if (error) {
         logger.error(
@@ -117,5 +133,45 @@ export const SerialPort = async (
         isOpen,
         update,
         set,
+        onData: (handler: (data: Uint8Array) => void) => {
+            eventEmitter.on('onData', handler);
+            return () => {
+                eventEmitter.removeListener('onData', handler);
+            };
+        },
+        onClosed: (handler: () => void) => {
+            eventEmitter.on('onClosed', handler);
+            return () => {
+                eventEmitter.removeListener('onClosed', handler);
+            };
+        },
+        onUpdate: (handler: (newOptions: UpdateOptions) => void) => {
+            eventEmitter.on('onUpdate', handler);
+            return () => {
+                eventEmitter.removeListener('onUpdate', handler);
+            };
+        },
+        onSet: (handler: (newOptions: SetOptions) => void) => {
+            eventEmitter.on('onSet', handler);
+            return () => {
+                eventEmitter.removeListener('onSet', handler);
+            };
+        },
+        onChange: (
+            handler: (
+                newOptions: SerialPortOpenOptions<AutoDetectTypes>
+            ) => void
+        ) => {
+            eventEmitter.on('onChange', handler);
+            return () => {
+                eventEmitter.removeListener('onChange', handler);
+            };
+        },
+        onDataWritten: (handler: (data: Uint8Array) => void) => {
+            eventEmitter.on('onDataWritten', handler);
+            return () => {
+                eventEmitter.removeListener('onDataWritten', handler);
+            };
+        },
     };
 };

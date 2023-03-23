@@ -4,7 +4,19 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-@import "../../variables";
+@import '../../variables';
+
+@keyframes alert {
+    0% {
+        background: $white;
+    }
+    50% {
+        background: $gray-100;
+    }
+    100% {
+        background: $white;
+    }
+}
 
 .core19-device-selector {
     .selected-device {
@@ -13,6 +25,11 @@
         font-size: 16px;
         color: $gray-700;
         background: $white;
+
+        &.reconnecting {
+            background: $gray-100;
+            animation: alert 2s infinite;
+        }
 
         display: flex;
         flex-direction: row;
@@ -23,11 +40,17 @@
             font-size: 11px;
         }
 
+        .waiting-to-reconnect {
+            font-weight: $font-weight-light;
+            font-size: 11px;
+        }
+
         .disconnect {
             color: $gray-700;
         }
 
-        &:hover, *:hover {
+        &:hover,
+        *:hover {
             color: $primary;
         }
     }

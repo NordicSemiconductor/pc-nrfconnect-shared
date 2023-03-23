@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, useState } from 'react';
-import { bool, func, string } from 'prop-types';
+import React, { FC } from 'react';
 
-import Button from '../Button/Button';
+import Button, { ButtonVariants } from '../Button/Button';
+import classNames from '../utils/classNames';
 import playSvg from './play-circle.svg';
 import stopSvg from './stop-circle.svg';
 
@@ -17,27 +17,37 @@ interface Props {
     startText?: string;
     stopText?: string;
     onClick: () => void;
+    started: boolean;
     disabled?: boolean;
+    large?: boolean;
+    variant?: ButtonVariants;
+    className?: string;
 }
 
 const StartStopButton: FC<Props> = ({
     startText = 'Start',
     stopText = 'Stop',
     onClick,
+    started,
     disabled = false,
+    variant = 'secondary',
+    className,
+    large = true,
 }) => {
-    const [showStart, setShowStart] = useState(true);
-    const label = showStart ? startText : stopText;
-    const src = showStart ? playSvg : stopSvg;
+    const label = started ? stopText : startText;
+    const src = started ? stopSvg : playSvg;
 
     return (
         <Button
-            className={`start-stop  ${showStart ? '' : 'active-animation'}`}
+            className={classNames(
+                'start-stop',
+                `${started ? 'active-animation' : ''}`,
+                className
+            )}
             disabled={disabled}
-            onClick={() => {
-                setShowStart(!showStart);
-                onClick();
-            }}
+            large={large}
+            onClick={() => onClick()}
+            variant={variant}
         >
             <img alt="" src={src} />
             {label}
@@ -45,10 +55,4 @@ const StartStopButton: FC<Props> = ({
     );
 };
 
-StartStopButton.propTypes = {
-    startText: string,
-    stopText: string,
-    onClick: func.isRequired,
-    disabled: bool,
-};
 export default StartStopButton;
