@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 26 - 2023-03-24
+
+### Fixed
+
+-   Retrieving persisted serialport options on windows would lead to crashes.
+
 ## 25 - 2023-03-23
 
 ### Added
@@ -17,10 +23,6 @@ every new version is a new major version.
 ### Changed
 
 -   `Stepper` step now has an id property
-
-### Fixed
-
--   Persisting the serialport on windows would lead to crashes.
 
 ### Steps to upgrade when using this package
 
