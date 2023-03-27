@@ -7,9 +7,13 @@
 @import '../../styles.scss';
 @import '../variables';
 
+.stepper-reset {
+    counter-reset: stepper;
+}
+
 .step {
     display: flex;
-    min-height: 2.8em;
+    min-height: 36px;
     color: $gray-600;
 
     .action-link {
@@ -27,18 +31,20 @@
     .circle {
         background: $tooltip-bg;
         position: relative;
-        width: 1.5em;
-        height: 1.5em;
+        width: 13px;
+        height: 13px;
+        line-height: 13px;
         border-radius: 100%;
         text-align: center;
-        line-height: 1.5em;
     }
 
     .step-icon::after {
-        font-family: 'Material Design Icons';
+        counter-increment: stepper;
+        font-family: 'Material Design Icons', 'Roboto';
         color: white;
-        font-size: calc(4em / 3);
+        font-size: 10px;
         vertical-align: bottom;
+        content: counter(stepper);
     }
 
     &.step-success {
@@ -69,9 +75,6 @@
     }
 
     &.step-active {
-        .circle {
-            background-color: $primary;
-        }
         .step-icon::after {
             content: '\F0450';
         }
@@ -106,10 +109,19 @@
 }
 
 .title {
-    line-height: 1.5em;
+    line-height: 12px;
+    font-size: 12px;
     font-weight: bold;
 }
 
 .caption {
-    font-size: 0.8em;
+    font-size: 12px;
+
+    .action-link {
+        font-style: italic;
+    }
+
+    .action-link+.action-link  {
+        margin-left: 4px;
+    }
 }

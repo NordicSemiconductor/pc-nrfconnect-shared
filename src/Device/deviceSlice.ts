@@ -58,7 +58,7 @@ const setPersistedData = (device: Device) => {
     if (persistedSerialPortSettings) {
         const path =
             newDevice.serialPorts?.[persistedSerialPortSettings.vComIndex]
-                .comName;
+                ?.comName;
 
         if (path) {
             newDevice.persistedSerialPortOptions = {
@@ -175,10 +175,10 @@ const slice = createSlice({
 
             if (selectedDevice) {
                 const vComIndex = selectedDevice.serialPorts?.findIndex(
-                    e => e.path === action.payload.path
+                    e => e.comName === action.payload.path
                 );
 
-                if (vComIndex !== undefined) {
+                if (vComIndex !== undefined && vComIndex !== -1) {
                     const { path: _, ...serialPortOptions } = action.payload;
 
                     persistSerialPortSettingsToStore(

@@ -7,7 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 25 - UNRELEASED
+## 26 - 2023-03-24
+
+### Fixed
+
+-   Retrieving persisted serialport options on windows would lead to crashes.
+
+## 25 - 2023-03-23
 
 ### Added
 
@@ -22,6 +28,12 @@ every new version is a new major version.
 
 -   `Steppers` has been renamed to `Stepper` rename all references to `Stepper`
 -   `Step` add unique id to all steps.
+
+### Fixed
+
+-   `MasonryLayout` adapts to child elements changes that do not resize the main
+    DOM element.
+-   `Dropdown` will keep the list open if rerendered
 
 ## 24 - 2023-03-20
 
