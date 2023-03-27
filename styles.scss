@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-@use "sass:color";
+@use 'sass:color';
 
 $nordic-blue: #00a9ce;
 $blue-slate: #0033a0;
@@ -58,30 +58,41 @@ $normal-transition: 0.2s ease-in-out;
 
 $disabled-opacity: 0.38;
 
-@mixin scrollbars-helper($background-color, $scrollbar-color, $scrollbar-hover-color) {
-    &::-webkit-scrollbar, &::-webkit-scrollbar-corner {
+@mixin scrollbars-helper($scrollbar-color, $scrollbar-hover-color) {
+    &::-webkit-scrollbar,
+    &::-webkit-scrollbar-corner {
         width: 14px;
         height: 14px;
+    }
+
+    &::-webkit-scrollbar-track {
+        width: 10px;
+        background: transparent;
     }
 
     &::-webkit-scrollbar-thumb {
         background: $scrollbar-color;
         border-radius: 14px;
-        border: 5px solid $background-color;
+        border: 5px solid transparent;
+        background-clip: padding-box;
     }
 
-    &::-webkit-scrollbar-thumb:hover  {
+    &::-webkit-scrollbar-thumb:hover {
         background: $scrollbar-hover-color;
     }
 }
 
 @mixin scrollbars($background-color) {
-    @if $background-color == $gray-50 or
-        $background-color == $gray-100 or
-        $background-color == $white {
-        @include scrollbars-helper($background-color, $gray-500, $gray-700);
+    @if $background-color ==
+        $gray-50 or
+        $background-color ==
+        $gray-100 or
+        $background-color ==
+        $white
+    {
+        @include scrollbars-helper($gray-500, $gray-700);
     } @else if $background-color == $gray-900 {
-        @include scrollbars-helper($background-color, $gray-400, $gray-200);
+        @include scrollbars-helper($gray-400, $gray-200);
     } @else {
         @error "Unable to configure scrollbars for background color #{$background-color}. You must add a configuration for it.";
     }
