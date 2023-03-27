@@ -8,13 +8,15 @@
 @import '../variables.scss';
 
 .button {
-    font-size: 14px;
+    font-size: 12px;
+    line-height: 1em;
     height: 24px;
     border: 1px;
     border-style: solid;
 
     &.large {
         height: 32px;
+        font-size: 14px;
     }
 
     &.primary {
