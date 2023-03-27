@@ -73,34 +73,33 @@ const shouldAutoReselect = (
     return globalAutoReselect;
 };
 
-const initAutoReconnectTimeout = (
-    dispatch: TDispatch,
-    onTimeout: () => void,
-    forceAutoReselect?: WaitForDevice
-) => {
-    const timeout = forceAutoReselect?.timeout;
-    if (timeout == null) return;
+const initAutoReconnectTimeout =
+    (onTimeout: () => void, waitForDevice?: WaitForDevice) =>
+    (dispatch: TDispatch) => {
+        const timeout = waitForDevice?.timeout;
+        if (timeout == null) return;
 
-    dispatch(
-        setWaitForDeviceTimeout(
-            setTimeout(() => {
-                dispatch(closeSetupDialogVisible());
-                if (forceAutoReselect?.onFail)
-                    forceAutoReselect?.onFail(
+        dispatch(
+            setWaitForDeviceTimeout(
+                setTimeout(() => {
+                    dispatch(closeSetupDialogVisible());
+                    if (waitForDevice?.onFail)
+                        waitForDevice?.onFail(
+                            `Auto Reconnect failed. Device did not show up after ${
+                                timeout / 1000
+                            } seconds`
+                        );
+                    dispatch(clearWaitForDeviceTimeout());
+                    onTimeout();
+                    logger.warn(
                         `Auto Reconnect failed. Device did not show up after ${
                             timeout / 1000
                         } seconds`
                     );
-                onTimeout();
-                logger.warn(
-                    `Auto Reconnect failed. Device did not show up after ${
-                        timeout / 1000
-                    } seconds`
-                );
-            }, timeout)
-        )
-    );
-};
+                }, timeout)
+            )
+        );
+    };
 
 let hotplugTaskId: number | null = null;
 
@@ -272,11 +271,15 @@ export const startWatchingDevices =
                                         ?.serialNumber
                                 ) {
                                     if (waitForDevice) {
-                                        initAutoReconnectTimeout(
-                                            dispatch,
-                                            () => removeDeviceFromList(device),
-                                            getState().deviceAutoSelect
-                                                .waitForDevice
+                                        dispatch(
+                                            initAutoReconnectTimeout(
+                                                () =>
+                                                    removeDeviceFromList(
+                                                        device
+                                                    ),
+                                                getState().deviceAutoSelect
+                                                    .waitForDevice
+                                            )
                                         );
                                     } else {
                                         removeDeviceFromList(device);

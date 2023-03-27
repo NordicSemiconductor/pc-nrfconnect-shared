@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 27 - 2023-03-27
+
+### Fixed
+
+-   Clear timeout state after timeout has elapsed.
+
 ## 26 - 2023-03-24
 
 ### Fixed
