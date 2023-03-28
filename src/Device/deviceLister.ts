@@ -85,16 +85,16 @@ const initAutoReconnectTimeout =
                     dispatch(closeSetupDialogVisible());
                     if (waitForDevice?.onFail)
                         waitForDevice?.onFail(
-                            `Auto Reconnect failed. Device did not show up after ${
+                            `Failed to detect device after reboot. Timed out after ${
                                 timeout / 1000
-                            } seconds`
+                            } seconds.`
                         );
                     dispatch(clearWaitForDeviceTimeout());
                     onTimeout();
                     logger.warn(
-                        `Auto Reconnect failed. Device did not show up after ${
+                        `Failed to detect device after reboot. Timed out after ${
                             timeout / 1000
-                        } seconds`
+                        } seconds.`
                     );
                 }, timeout)
             )
