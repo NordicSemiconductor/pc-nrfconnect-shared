@@ -27,6 +27,7 @@
    through CSS, e.g. to change the colours.
 */
 
+import logger from '../../logging';
 import { Device, DeviceInfo } from '../../state';
 
 import nrf51logo from '!!@svgr/webpack!./nRF51-Series-logo.svg';
@@ -190,18 +191,32 @@ const deviceByUsb = (device: Device) => {
         if (device.usb?.product?.startsWith('PPK')) {
             return ppkDeviceInfo(device);
         }
-        if (device.serialNumber.startsWith('THINGY91')) {
+        if (device.serialNumber?.startsWith('THINGY91')) {
             return devicesByPca.PCA20035;
         }
     }
     return null;
 };
 
-const unknownDevice = (device: Device): DeviceInfo => ({
-    name: device.usb?.product,
-    icon: isNordicDevice(device) ? unknownNordicLogo : unknownLogo,
-    website: {},
-});
+let hasShownUdevWarning = false;
+const unknownDevice = (device: Device): DeviceInfo => {
+    if (
+        isNordicDevice(device) &&
+        process.platform === 'linux' &&
+        !hasShownUdevWarning
+    ) {
+        logger.warn(
+            'Could not properly detect an unknown device. Please make sure you have nrf-udev installed: https://github.com/NordicSemiconductor/nrf-udev'
+        );
+        hasShownUdevWarning = true;
+    }
+
+    return {
+        name: device.usb?.product,
+        icon: isNordicDevice(device) ? unknownNordicLogo : unknownLogo,
+        website: {},
+    };
+};
 
 export const deviceInfo = (device: Device): DeviceInfo =>
     deviceByPca(device) || deviceByUsb(device) || unknownDevice(device);

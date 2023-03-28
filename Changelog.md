@@ -7,6 +7,18 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 28 - 2023-03-28
+
+### Added
+
+-   Linux: If a device fails to be identified based on parameters which point to
+    a missing nrf-udev installation, recommend user to install nrf-udev.
+
+### Fixed
+
+-   Linux: Apps would crash when identifying certain devices if nrf-udev
+    installation was missing.
+
 ## 27 - 2023-03-27
 
 ### Fixed
