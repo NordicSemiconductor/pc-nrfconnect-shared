@@ -34,14 +34,16 @@ interface Props {
     headerIcon?: string;
     onClose: () => void;
     children: ReactNode | string;
+    className?: string;
 }
-export declare const InfoDialog: ({ isVisible, title, headerIcon, children, onClose, }: Props) => JSX.Element;
+export declare const InfoDialog: ({ isVisible, title, headerIcon, children, onClose, className, }: Props) => JSX.Element;
 export declare const ErrorDialog: (props: Omit<Props, 'headerIcon'>) => JSX.Element;
 interface ConfirmationDialogProps {
     isVisible: boolean;
     title?: string;
     headerIcon?: string;
     children: ReactNode | string;
+    className?: string;
     confirmLabel?: string;
     onConfirm: () => void;
     cancelLabel?: string;
@@ -49,5 +51,5 @@ interface ConfirmationDialogProps {
     optionalLabel?: string;
     onOptional?: () => void;
 }
-export declare const ConfirmationDialog: ({ isVisible, title, headerIcon, children, confirmLabel, onConfirm, cancelLabel, onCancel, optionalLabel, onOptional, }: ConfirmationDialogProps) => JSX.Element;
+export declare const ConfirmationDialog: ({ isVisible, title, headerIcon, children, className, confirmLabel, onConfirm, cancelLabel, onCancel, optionalLabel, onOptional, }: ConfirmationDialogProps) => JSX.Element;
 export {};

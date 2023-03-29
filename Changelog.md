@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 29 - 2023-03-29
+
+### Added
+
+-   Dialog helpers (`InfoDialog`, `ErrorDialog`, `ConfirmationDialog`) all
+    expose the `className` property now.
+
 ## 28 - 2023-03-28
 
 ### Added
