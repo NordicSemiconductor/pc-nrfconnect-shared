@@ -102,6 +102,7 @@ interface Props {
     headerIcon?: string;
     onClose: () => void;
     children: ReactNode | string;
+    className?: string;
 }
 
 export const InfoDialog = ({
@@ -110,8 +111,14 @@ export const InfoDialog = ({
     headerIcon,
     children,
     onClose,
+    className,
 }: Props) => (
-    <Dialog isVisible={isVisible} closeOnUnfocus onHide={onClose}>
+    <Dialog
+        isVisible={isVisible}
+        closeOnUnfocus
+        onHide={onClose}
+        className={className}
+    >
         <Dialog.Header title={title} headerIcon={headerIcon} />
         <Dialog.Body>{children}</Dialog.Body>
         <Dialog.Footer>
@@ -132,6 +139,7 @@ interface ConfirmationDialogProps {
     title?: string;
     headerIcon?: string;
     children: ReactNode | string;
+    className?: string;
     confirmLabel?: string;
     onConfirm: () => void;
     cancelLabel?: string;
@@ -145,6 +153,7 @@ export const ConfirmationDialog = ({
     title = 'Confirm',
     headerIcon,
     children,
+    className,
     confirmLabel = 'Confirm',
     onConfirm,
     cancelLabel = 'Cancel',
@@ -152,7 +161,7 @@ export const ConfirmationDialog = ({
     optionalLabel,
     onOptional,
 }: ConfirmationDialogProps) => (
-    <Dialog isVisible={isVisible}>
+    <Dialog isVisible={isVisible} className={className}>
         <Dialog.Header title={title} headerIcon={headerIcon} />
         <Dialog.Body>{children}</Dialog.Body>
         <Dialog.Footer>
