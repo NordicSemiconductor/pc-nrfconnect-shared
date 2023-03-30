@@ -42,4 +42,5 @@ module.exports = (disabledMocks = []) => ({
     setupFilesAfterEnv: [`${__dirname}/../test/setupTests.ts`],
     snapshotSerializers: ['enzyme-to-json/serializer'],
     resolver: `${__dirname}/../test/jestResolver.js`,
+    modulePathIgnorePatterns: ['dist'],
 });
