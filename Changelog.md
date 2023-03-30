@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 30 - 2023-03-30
+
+### Changed
+
+-   Update `nrf-device-lib-js` to version 0.6.5.
+
 ## 29 - 2023-03-29
 
 ### Added
@@ -110,9 +116,9 @@ every new version is a new major version.
 
 ## 22 - 2023-03-15
 
-### Added
+### Changed
 
--   Update nrf-device-lib-js to version 0.6.2.
+-   Update `nrf-device-lib-js` to version 0.6.2.
 
 ## 21 - 2023-03-15
 
@@ -136,7 +142,10 @@ every new version is a new major version.
 ### Added
 
 -   `ErrorBoundary` use the shared `Button` component
--   Update nrf-device-lib-js to version 0.6.0.
+
+### Changed
+
+-   Update `nrf-device-lib-js` to version 0.6.0.
 
 ## 18 - 2023-03-09
 
@@ -201,7 +210,7 @@ every new version is a new major version.
 -   Only one instance of the hot plug events.
 -   `setWaitForDevice` is callback based and this calls that reboot the device
     do not need to be awaited.
--   Update nrf-device-lib-js to version 0.5.0.
+-   Update `nrf-device-lib-js` to version 0.5.0.
 
 ## 14 - 2023-02-28
 
