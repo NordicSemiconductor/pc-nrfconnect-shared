@@ -6,8 +6,14 @@
 
 // Allows jest to test files that import the electron-store package.
 
-export default jest.fn(() => ({
-    get: jest.fn(),
-    set: jest.fn(),
-    clear: jest.fn(),
-}));
+export default jest.fn(() => {
+    const cache = new Map();
+    return {
+        get: jest.fn(
+            (key: string, defaultValue?: unknown) =>
+                cache.get(key) ?? defaultValue
+        ),
+        set: jest.fn(cache.set.bind(cache)),
+        clear: jest.fn(cache.clear.bind(cache)),
+    };
+});
