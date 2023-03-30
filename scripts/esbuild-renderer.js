@@ -74,8 +74,8 @@ module.exports.build = options => {
         plugins: [
             sassPlugin({
                 filter: /\.(module|icss)\.scss/,
-                quietDeps: false,
                 cssImports: true,
+                quietDeps: false,
 
                 transform: postcssModules({}),
             }),
@@ -87,7 +87,7 @@ module.exports.build = options => {
             {
                 name: 'svgr',
                 setup(builder) {
-                    const filter = /^!!@svgr\/webpack!(.*\.svg)$/;
+                    const filter = /^!!@svgr!(.*\.svg)$/;
 
                     builder.onResolve({ filter }, args => {
                         // Rename file to .svgr to let this plugin handle it.
