@@ -9,6 +9,10 @@ every new version is a new major version.
 
 ## Unreleased
 
+### Changed
+
+-   `nrf-device-lib-js` became a peer dependency.
+
 ### Removed
 
 -   Support for buiding apps with webpack. If you want to continue to use
