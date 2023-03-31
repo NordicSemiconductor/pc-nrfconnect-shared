@@ -19,6 +19,7 @@ every new version is a new major version.
 -   Update TypeScript to 4.9.
 -   Update Prettier to 2.8.7.
 -   Allow setting more sizes in dialogs.
+-   Use swc instead of babel to transform code for jest.
 
 ### Removed
 
