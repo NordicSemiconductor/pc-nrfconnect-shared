@@ -14,6 +14,11 @@ every new version is a new major version.
 -   `nrf-device-lib-js` became a peer dependency.
 -   `npm@7` or later must now be used when developing `shared`.
 
+### Fixed
+
+-   Autoreconnected devices were not passed with persisted data to the
+    `onDeviceSelected`/`onDeviceIsReady` callbacks.
+
 ### Removed
 
 -   Support for buiding apps with webpack. If you want to continue to use
