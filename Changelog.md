@@ -7,6 +7,27 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 31 - 2023-04-03
+
+### Changed
+
+-   `nrf-device-lib-js` became a peer dependency.
+-   `npm@7` or later must now be used when developing `shared`.
+
+### Removed
+
+-   Support for buiding apps with webpack. If you want to continue to use
+    webpack, you now have to provide the configuration and install the needed
+    dependencies yourself.
+
+### Steps to upgrade when using this package
+
+-   If your app declared an ambient module declaration for
+    `!!@svgr/webpack!_.svg` you now have to change it to `!!@svgr!_.svg`.
+-   You should use at least version 7 of `npm` starting with this version of
+    shared, otherwise not all needed peer dependencies are installed and you
+    need to provide them yourself.
+
 ## 30 - 2023-03-30
 
 ### Changed

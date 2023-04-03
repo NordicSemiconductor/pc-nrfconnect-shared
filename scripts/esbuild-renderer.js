@@ -10,28 +10,24 @@ const { sassPlugin, postcssModules } = require('esbuild-sass-plugin');
 const esbuild = require('esbuild');
 const svgr = require('@svgr/core').transform;
 
-/**
- * @param {esbuild.BuildOptions} options Esbuild options
- * @param {'iife'|'cjs'|'esm'} format Cjs for require() renderers
- * @returns {void}
- */
-module.exports.build = options => {
+function options(additionalOptions) {
     const { dependencies } = JSON.parse(
         fs.readFileSync('package.json', 'utf8')
     );
 
     const outfile =
-        options.entryPoints.length === 1 ? './dist/bundle.js' : undefined;
+        additionalOptions.entryPoints.length === 1
+            ? './dist/bundle.js'
+            : undefined;
     const outdir = outfile ? undefined : './dist';
 
-    esbuild.build({
+    return {
         format: 'cjs',
         outfile,
         outdir,
         target: 'chrome89',
         sourcemap: true,
         metafile: false,
-        watch: process.argv.includes('--watch'),
         minify: process.argv.includes('--prod'),
         bundle: true,
         logLevel: 'info',
@@ -74,8 +70,8 @@ module.exports.build = options => {
         plugins: [
             sassPlugin({
                 filter: /\.(module|icss)\.scss/,
-                quietDeps: false,
                 cssImports: true,
+                quietDeps: false,
 
                 transform: postcssModules({}),
             }),
@@ -87,7 +83,7 @@ module.exports.build = options => {
             {
                 name: 'svgr',
                 setup(builder) {
-                    const filter = /^!!@svgr\/webpack!(.*\.svg)$/;
+                    const filter = /^!!@svgr!(.*\.svg)$/;
 
                     builder.onResolve({ filter }, args => {
                         // Rename file to .svgr to let this plugin handle it.
@@ -111,6 +107,23 @@ module.exports.build = options => {
                 },
             },
         ],
-        ...options,
-    });
+        ...additionalOptions,
+    };
+}
+
+const build = additionalOptions => esbuild.build(options(additionalOptions));
+
+const watch = async additionalOptions => {
+    const context = await esbuild.context(options(additionalOptions));
+
+    await context.rebuild();
+    await context.watch();
+};
+
+module.exports.build = additionalOptions => {
+    if (process.argv.includes('--watch')) {
+        watch(additionalOptions);
+    } else {
+        build(additionalOptions);
+    }
 };
