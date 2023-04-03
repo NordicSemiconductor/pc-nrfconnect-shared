@@ -206,15 +206,19 @@ export const startWatchingDevices =
                                 : undefined
                         );
 
+                        dispatch(addDevice(device));
+                        const deviceWithPersistedData =
+                            getState().device.devices.get(device.serialNumber);
+
+                        if (!deviceWithPersistedData) return;
+
                         if (result) {
                             logger.info(
-                                `Auto Reconnecting Device SN: ${device.serialNumber}`
+                                `Auto Reconnecting Device SN: ${deviceWithPersistedData.serialNumber}`
                             );
-                            doSelectDevice(device, true);
-                        }
-
-                        if (
-                            device.serialNumber ===
+                            doSelectDevice(deviceWithPersistedData, true);
+                        } else if (
+                            deviceWithPersistedData.serialNumber ===
                             getState().deviceAutoSelect.device?.serialNumber
                         ) {
                             const waitForDevice =
@@ -224,19 +228,27 @@ export const startWatchingDevices =
                                 waitForDevice &&
                                 ((disconnectionTime === undefined &&
                                     getState().deviceAutoSelect
-                                        .lastArrivedDeviceId !== device.id) ||
+                                        .lastArrivedDeviceId !==
+                                        deviceWithPersistedData.id) ||
                                     (disconnectionTime ?? 0) +
                                         waitForDevice.timeout >=
                                         Date.now())
                             ) {
-                                dispatch(setLastArrivedDeviceId(device.id));
+                                dispatch(
+                                    setLastArrivedDeviceId(
+                                        deviceWithPersistedData.id
+                                    )
+                                );
                                 dispatch(setDisconnectedTime(undefined));
                                 if (
                                     waitForDevice.when === 'always' ||
                                     (waitForDevice.when === 'BootLoaderMode' &&
-                                        isDeviceInDFUBootloader(device)) ||
+                                        isDeviceInDFUBootloader(
+                                            deviceWithPersistedData
+                                        )) ||
                                     (waitForDevice.when === 'applicationMode' &&
-                                        device.dfuTriggerInfo !== null)
+                                        deviceWithPersistedData.dfuTriggerInfo !==
+                                            null)
                                 ) {
                                     logger.info(
                                         'Wait For Device was successfully'
@@ -249,12 +261,12 @@ export const startWatchingDevices =
                                     }
 
                                     if (waitForDevice.onSuccess)
-                                        waitForDevice.onSuccess(device);
+                                        waitForDevice.onSuccess(
+                                            deviceWithPersistedData
+                                        );
                                 }
                             }
                         }
-
-                        dispatch(addDevice(device));
                     }
                     break;
                 case 'NRFDL_DEVICE_EVENT_LEFT':
