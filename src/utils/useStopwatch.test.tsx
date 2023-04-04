@@ -23,7 +23,7 @@ const setup = (stopwatch: Stopwatch) => {
 
 describe('Stop Watch', () => {
     const mockNow = jest.fn(() => 0);
-    const mockSetTimeout = jest.fn((callback: () => void, _ms: number) => {
+    const mockSetTimeout = jest.fn((callback: () => void) => {
         appCallback = callback;
         return () => {};
     });
