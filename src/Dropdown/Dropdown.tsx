@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import FormLabel from 'react-bootstrap/FormLabel';
 
 import styles from './Dropdown.module.scss';
