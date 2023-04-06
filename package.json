@@ -64,7 +64,7 @@
         "assert": "2.0.0",
         "babel-eslint": "10.1.0",
         "bootstrap": "4.6.2",
-        "commander": "9.5.0",
+        "commander": "10.0.0",
         "date-fns": "2.29.3",
         "electron": "22.3.5",
         "electron-store": "8.1.0",
