@@ -13,6 +13,10 @@ every new version is a new major version.
 
 -   Update TypeScript to 4.9.
 
+### Removed
+
+-   Unused dependency camelcase-keys.
+
 ## 31 - 2023-04-03
 
 ### Changed
