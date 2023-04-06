@@ -1,6 +1,6 @@
 import React from 'react';
-export declare type ButtonVariants = 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'danger' | 'link' | 'custom';
-declare type ButtonProps = {
+export type ButtonVariants = 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'danger' | 'link' | 'custom';
+type ButtonProps = {
     id?: string;
     variant: ButtonVariants;
     className?: string;

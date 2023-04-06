@@ -2,7 +2,7 @@
 import type { AutoDetectTypes, SetOptions, UpdateOptions } from '@serialport/bindings-cpp';
 import type { SerialPortOpenOptions } from 'serialport';
 import { OverwriteOptions } from '../../main';
-export declare type SerialPort = Awaited<ReturnType<typeof createSerialPort>>;
+export type SerialPort = Awaited<ReturnType<typeof createSerialPort>>;
 export declare const createSerialPort: (options: SerialPortOpenOptions<AutoDetectTypes>, overwriteOptions?: OverwriteOptions) => Promise<{
     path: string;
     write: (data: string | number[] | Buffer) => void;

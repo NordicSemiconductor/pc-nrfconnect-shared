@@ -1,5 +1,5 @@
 import type { OpenAppOptions } from '../../main';
-declare type AppSpec = {
+type AppSpec = {
     name: string;
     source: string;
 };

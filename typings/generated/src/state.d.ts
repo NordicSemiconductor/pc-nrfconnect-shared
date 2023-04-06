@@ -7,7 +7,7 @@ import { SerialPortOpenOptions } from 'serialport';
 import { LogEntry } from 'winston';
 import type { DocumentationState } from './About/documentationSlice';
 import type { ShortcutState } from './About/shortcutSlice';
-export declare type TDispatch = ThunkDispatch<RootState, null, AnyAction>;
+export type TDispatch = ThunkDispatch<RootState, null, AnyAction>;
 export interface NrfConnectState<AppState> extends RootState {
     app: AppState;
 }

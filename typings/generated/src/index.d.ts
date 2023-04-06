@@ -1,9 +1,9 @@
 declare const ErrorDialogActions: {
-    hideDialog: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<string>;
+    hideDialog: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"errorDialog/hideDialog">;
     showDialog: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[message: string, errorResolutions?: import("./state").ErrorResolutions | undefined], {
         message: string;
         errorResolutions: import("./state").ErrorResolutions | undefined;
-    }, string, never, never>;
+    }, "errorDialog/showDialog", never, never>;
 };
 export { ErrorDialogActions };
 export { default as App } from './App/App';

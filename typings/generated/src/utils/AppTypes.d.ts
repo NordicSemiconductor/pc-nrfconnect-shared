@@ -2,7 +2,7 @@ export interface SourceJson {
     name: string;
     apps: string[];
 }
-export declare type AppVersions = {
+export type AppVersions = {
     [version: string]: {
         shasum?: string;
         tarballUrl: string;
