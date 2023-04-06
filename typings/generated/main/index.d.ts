@@ -12,11 +12,11 @@ export declare const SERIALPORT_CHANNEL: {
     ON_WRITE: string;
     IS_OPEN: string;
 };
-export declare type OverwriteOptions = {
+export type OverwriteOptions = {
     overwrite?: boolean;
     settingsLocked?: boolean;
 };
-export declare type OpenAppOptions = {
+export type OpenAppOptions = {
     device?: {
         serialNumber: string;
         serialPortPath?: string;
