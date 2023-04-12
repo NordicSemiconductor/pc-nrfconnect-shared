@@ -218,6 +218,7 @@ export const ProgressDialog = ({
         size={size}
     >
         <>
+            {children}
             <Form.Group>
                 {progressMsg && (
                     <Form.Label>
@@ -232,7 +233,6 @@ export const ProgressDialog = ({
                     label={`${progress}%`}
                 />
             </Form.Group>
-            {children}
         </>
     </ConfirmationDialog>
 );
