@@ -6,8 +6,8 @@ interface Props {
     isValid?: (value: string) => boolean;
     onChange: (value: string) => void;
     onChangeComplete?: (value: string) => void;
-    onKeyboardIncrementAction?: () => void;
-    onKeyboardDecrementAction?: () => void;
+    onKeyboardIncrementAction?: () => string;
+    onKeyboardDecrementAction?: () => string;
     className?: string;
 }
 declare const InlineInput: React.ForwardRefExoticComponent<Props & React.RefAttributes<HTMLInputElement>>;
