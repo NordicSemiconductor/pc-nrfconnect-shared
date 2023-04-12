@@ -585,5 +585,5 @@ export const performDFU = (
 };
 
 export default {
-    createDfuZipBuffer,
+    createDfuZipBufferFromImages,
 };
