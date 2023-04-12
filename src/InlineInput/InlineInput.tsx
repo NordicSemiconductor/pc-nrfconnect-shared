@@ -74,8 +74,6 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
         ref
     ) => {
         const [internalValue, setInternalValue] = useState(externalValue);
-        const [beforeChangeValue, setBeforeChangeValue] =
-            useState(externalValue);
         const [initialValue, setInitialValue] = useState(externalValue);
         useSynchronisationIfChangedFromOutside(externalValue, setInternalValue);
         const onChangeIfValid = (newValue: string) => {
@@ -85,8 +83,7 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
 
             setInternalValue(newValue);
             if (isValid(newValue)) {
-                if (beforeChangeValue !== newValue) {
-                    setBeforeChangeValue(newValue);
+                if (externalValue !== newValue) {
                     onChange(newValue);
                 }
             }
@@ -159,7 +156,6 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
                 value={internalValue}
                 onFocus={() => {
                     setInitialValue(internalValue);
-                    setBeforeChangeValue(internalValue);
                 }}
                 onChange={event => onChangeIfValid(event.target.value)}
                 onBlur={resetToExternalValueOrOnChangeCompleteIfValid}
