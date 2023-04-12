@@ -9,7 +9,7 @@ export { ErrorDialogActions };
 export { default as App } from './App/App';
 export { default as Logo } from './Logo/Logo';
 export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
-export { Dialog, ConfirmationDialog, InfoDialog, ErrorDialog, DialogButton, } from './Dialog/Dialog';
+export { Dialog, ConfirmationDialog, InfoDialog, ErrorDialog, DialogButton, ProgressDialog, } from './Dialog/Dialog';
 export { default as Spinner } from './Dialog/Spinner';
 export { default as Slider } from './Slider/Slider';
 export { Toggle } from './Toggle/Toggle';

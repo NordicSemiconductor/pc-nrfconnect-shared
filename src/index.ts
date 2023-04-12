@@ -18,6 +18,7 @@ export {
     InfoDialog,
     ErrorDialog,
     DialogButton,
+    ProgressDialog,
 } from './Dialog/Dialog';
 export { default as Spinner } from './Dialog/Spinner';
 export { default as Slider } from './Slider/Slider';
