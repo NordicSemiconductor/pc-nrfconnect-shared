@@ -114,7 +114,7 @@ export const InfoDialog = ({
     title = 'Info',
     headerIcon,
     children,
-    onHide,
+    onHide = () => {},
     size = 'lg',
     className,
 }: InfoProps) => (
@@ -128,7 +128,7 @@ export const InfoDialog = ({
         <Dialog.Header title={title} headerIcon={headerIcon} />
         <Dialog.Body>{children}</Dialog.Body>
         <Dialog.Footer>
-            <DialogButton onClick={() => onHide}>Close</DialogButton>
+            <DialogButton onClick={() => onHide()}>Close</DialogButton>
         </Dialog.Footer>
     </Dialog>
 );
