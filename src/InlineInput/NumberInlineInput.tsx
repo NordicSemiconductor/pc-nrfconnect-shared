@@ -64,16 +64,17 @@ const nextInRange = (current: number, range: Range, steps: number) => {
 const changeValueStepwise = (
     current: number,
     rangeOrValues: RangeOrValues,
-    steps: number,
-    action: (v: number) => void
+    steps: number
 ) => {
     const nextValue = isValues(rangeOrValues)
         ? nextInValues(current, rangeOrValues, steps)
         : nextInRange(current, rangeOrValues, steps);
 
     if (nextValue != null) {
-        action(nextValue);
+        return nextValue;
     }
+
+    return nextValue != null ? nextValue : current;
 };
 
 const NumberInlineInput: FC<Props> = ({
@@ -94,10 +95,10 @@ const NumberInlineInput: FC<Props> = ({
             onChange={newValue => onChange(Number(newValue))}
             onChangeComplete={newValue => onChangeComplete(Number(newValue))}
             onKeyboardIncrementAction={() =>
-                changeValueStepwise(value, range, 1, onChange)
+                changeValueStepwise(value, range, 1).toString()
             }
             onKeyboardDecrementAction={() =>
-                changeValueStepwise(value, range, -1, onChange)
+                changeValueStepwise(value, range, -1).toString()
             }
         />
     );
