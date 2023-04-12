@@ -384,6 +384,117 @@ const createDfuZip = (dfuImages: DfuImage[]) =>
         resolve(zip);
     });
 
+const createDfuZipBufferFromImages = async (dfuImages: DfuImage[]) => {
+    const applicationDfuImage = dfuImages.find(
+        dfuImage => dfuImage.initPacket.fwType == FwType.APPLICATION
+    );
+    const softDeviceDfuImage = dfuImages.find(
+        dfuImage => dfuImage.initPacket.fwType == FwType.SOFTDEVICE
+    );
+    const bootloaderDfuImage = dfuImages.find(
+        dfuImage => dfuImage.initPacket.fwType == FwType.BOOTLOADER
+    );
+
+    const application = applicationDfuImage
+        ? {
+              data: applicationDfuImage,
+              spec: dfu.ApplicationSpec.copyFromBuffer({
+                  name: applicationDfuImage.name,
+                  version: applicationDfuImage.initPacket.fwVersion || 4,
+                  buffer: applicationDfuImage.firmwareImage,
+              }),
+          }
+        : null;
+
+    const bootloader = bootloaderDfuImage
+        ? {
+              data: bootloaderDfuImage,
+              spec: dfu.BootloaderSpec.copyFromBuffer({
+                  name: bootloaderDfuImage.name,
+                  buffer: bootloaderDfuImage.firmwareImage,
+                  version: bootloaderDfuImage.initPacket.fwVersion || 4,
+              }),
+          }
+        : null;
+
+    const softDevice = softDeviceDfuImage
+        ? {
+              data: softDeviceDfuImage,
+              spec: dfu.SoftDeviceSpec.copyFromBuffer({
+                  name: softDeviceDfuImage.name,
+                  buffer: softDeviceDfuImage.firmwareImage,
+              }),
+          }
+        : null;
+
+    const hwVersion = application
+        ? application.data.initPacket.hwVersion
+        : bootloader
+        ? bootloader.data.initPacket.hwVersion
+        : softDevice
+        ? softDevice.data.initPacket.hwVersion
+        : undefined;
+
+    let input;
+
+    if (application && softDevice && bootloader) {
+        input = dfu.softDeviceApplicationBootloaderInput({
+            applicationSpec: application.spec,
+            softDeviceSpec: softDevice.spec,
+            bootloaderSpec: bootloader.spec,
+            // @ts-expect-error This parameter is set.
+            sdId: params.sdId || [],
+            sdReq: params.sdReq || [],
+        });
+    } else if (application && softDevice) {
+        input = dfu.applicationSoftDeviceInput({
+            applicationSpec: application.spec,
+            softDeviceSpec: softDevice.spec,
+            // @ts-expect-error This parameter is set.
+            sdId: params.sdId || [],
+            sdReq: params.sdReq || [],
+        });
+    } else if (bootloader && softDevice) {
+        input = dfu.bootloaderSoftDeviceInput({
+            bootloaderSpec: bootloader.spec,
+            softDeviceSpec: softDevice.spec,
+            // @ts-expect-error This parameter is set.
+            sdId: params.sdId || [],
+            sdReq: params.sdReq || [],
+        });
+    } else if (application && bootloader) {
+        throw Error('Cannot process combination of application and bootloader');
+    } else if (application) {
+        input = dfu.applicationInput({
+            spec: application.spec,
+            // @ts-expect-error This parameter is set.
+            sdId: params.sdId || [],
+        });
+    } else if (bootloader) {
+        input = dfu.bootloaderInput({
+            spec: bootloader.spec,
+            // @ts-expect-error This parameter is set.
+            sdId: params.sdId || [],
+            sdReq: params.sdReq || [],
+        });
+    } else if (softDevice) {
+        input = dfu.softDeviceInput({
+            spec: softDevice.spec,
+            // @ts-expect-error This parameter is set.
+            sdId: params.sdId || [],
+            sdReq: params.sdReq || [],
+        });
+    } else {
+        throw Error('Unable to find any valid images in the DFU image array');
+    }
+
+    if (hwVersion === undefined) {
+        throw Error('Unable to extract hwVersion from DFU image array');
+    }
+
+    return dfu.generate(hwVersion, input);
+};
+
 const createDfuZipBuffer = async (
     params: Partial<InitPacket>,
     application: string,
@@ -415,6 +526,7 @@ const createDfuZipBuffer = async (
         input = dfu.applicationSoftDeviceInput({
             applicationSpec,
             softDeviceSpec,
+            // @ts-expect-error This parameter is set.
             sdId: params.sdId || [],
             sdReq: params.sdReq || [],
         });
