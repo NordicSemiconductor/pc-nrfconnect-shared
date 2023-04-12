@@ -9,9 +9,20 @@ every new version is a new major version.
 
 ## Unreleased
 
+### Changed
+
+-   Update TypeScript to 4.9.
+-   Update Prettier to 2.8.7.
+-   Allow setting more sizes in dialogs.
+
+### Removed
+
+-   Unused dependency camelcase-keys.
+
 ### Fixed
 
--   `InlineInput` only emits `onChange` and `onChangeComplete` if value has
+-   Error loading SVGs introduced in v31.
+-   InlineInput` only emits `onChange` and `onChangeComplete` if value has
     changed
 
 ## 31 - 2023-04-03
