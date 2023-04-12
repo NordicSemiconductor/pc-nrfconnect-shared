@@ -49,4 +49,9 @@ interface ConfirmationDialogProps extends Omit<CoreProps, 'onHide'> {
     onOptional?: () => void;
 }
 export declare const ConfirmationDialog: ({ isVisible, title, headerIcon, children, className, confirmLabel, onConfirm, cancelLabel, onCancel, optionalLabel, onOptional, size, }: ConfirmationDialogProps) => JSX.Element;
+interface ProgressDialogProps extends ConfirmationDialogProps {
+    progressMsg?: string;
+    progress?: number;
+}
+export declare const ProgressDialog: ({ isVisible, title, headerIcon, children, className, confirmLabel, onConfirm, cancelLabel, onCancel, optionalLabel, onOptional, size, progressMsg, progress, }: ProgressDialogProps) => JSX.Element;
 export {};

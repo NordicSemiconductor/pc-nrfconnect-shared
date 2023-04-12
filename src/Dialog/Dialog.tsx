@@ -5,6 +5,7 @@
  */
 
 import React, { ReactNode } from 'react';
+import { Form, ProgressBar } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 
 import Button, { ButtonVariants } from '../Button/Button';
@@ -180,4 +181,58 @@ export const ConfirmationDialog = ({
             <DialogButton onClick={onCancel}>{cancelLabel}</DialogButton>
         </Dialog.Footer>
     </Dialog>
+);
+
+interface ProgressDialogProps extends ConfirmationDialogProps {
+    progressMsg?: string;
+    progress?: number;
+}
+
+export const ProgressDialog = ({
+    isVisible,
+    title = 'Confirm',
+    headerIcon,
+    children,
+    className,
+    confirmLabel = 'Confirm',
+    onConfirm,
+    cancelLabel = 'Cancel',
+    onCancel,
+    optionalLabel,
+    onOptional,
+    size = 'lg',
+    progressMsg,
+    progress,
+}: ProgressDialogProps) => (
+    <ConfirmationDialog
+        isVisible={isVisible}
+        title={title}
+        headerIcon={headerIcon}
+        className={className}
+        confirmLabel={confirmLabel}
+        onConfirm={onConfirm}
+        cancelLabel={cancelLabel}
+        onCancel={onCancel}
+        optionalLabel={optionalLabel}
+        onOptional={onOptional}
+        size={size}
+    >
+        <>
+            <Form.Group>
+                {progressMsg && (
+                    <Form.Label>
+                        <strong>Status:</strong>
+                        <span>{` ${progressMsg}`}</span>
+                    </Form.Label>
+                )}
+                <ProgressBar
+                    hidden={progress === undefined}
+                    animated
+                    now={progress}
+                    label={`${progress}%`}
+                />
+            </Form.Group>
+            {children}
+        </>
+    </ConfirmationDialog>
 );

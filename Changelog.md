@@ -9,6 +9,10 @@ every new version is a new major version.
 
 ## Unreleased
 
+### Added
+
+-   Generic progress dialog
+
 ### Changed
 
 -   Update TypeScript to 4.9.
