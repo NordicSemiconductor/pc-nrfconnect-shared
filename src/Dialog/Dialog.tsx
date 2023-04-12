@@ -213,7 +213,7 @@ export const ProgressDialog = ({
         <Dialog.Body>
             <>
                 {children}
-                {progress === undefined && (
+                {progress !== undefined && (
                     <Form.Group>
                         <br />
                         <ProgressBar
