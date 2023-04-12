@@ -19,6 +19,10 @@ every new version is a new major version.
 
 -   Unused dependency camelcase-keys.
 
+### Fixed
+
+-   Error loading SVGs introduced in v31.
+
 ## 31 - 2023-04-03
 
 ### Changed

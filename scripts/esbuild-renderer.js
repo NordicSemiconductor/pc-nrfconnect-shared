@@ -98,7 +98,8 @@ function options(additionalOptions) {
                             filePath,
                             'utf8'
                         );
-                        const contents = await svgr(svg, { filePath });
+                        const plugins = ['@svgr/plugin-jsx'];
+                        const contents = await svgr(svg, { filePath, plugins });
                         return {
                             contents,
                             loader: 'jsx',
