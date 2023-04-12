@@ -50,7 +50,7 @@ describe('Dialog', () => {
 
 describe('InfoDialog creator', () => {
     const dialog = (isVisible = true) => (
-        <InfoDialog isVisible={isVisible} onClose={noop}>
+        <InfoDialog isVisible={isVisible} onHide={noop}>
             Test Body
         </InfoDialog>
     );
@@ -75,7 +75,7 @@ describe('InfoDialog creator', () => {
 
 describe('ErrorDialog creator', () => {
     const dialog = (isVisible = true) => (
-        <ErrorDialog isVisible={isVisible} onClose={noop}>
+        <ErrorDialog isVisible={isVisible} onHide={noop}>
             Test Body
         </ErrorDialog>
     );

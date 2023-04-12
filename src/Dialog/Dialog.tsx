@@ -16,7 +16,7 @@ type CoreProps = {
     isVisible: boolean;
     onHide?: () => void;
     className?: string;
-    size: 'sm' | 'lg' | 'xl';
+    size?: 'sm' | 'lg' | 'xl';
     children: ReactNode | string;
 };
 
