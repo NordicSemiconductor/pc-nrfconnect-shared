@@ -52,6 +52,9 @@ export declare const ConfirmationDialog: ({ isVisible, title, headerIcon, childr
 interface ProgressDialogProps extends ConfirmationDialogProps {
     progressMsg?: string;
     progress?: number;
+    confirmDisabled?: boolean;
+    cancelDisabled?: boolean;
+    optionalDisabled?: boolean;
 }
-export declare const ProgressDialog: ({ isVisible, title, headerIcon, children, className, confirmLabel, onConfirm, cancelLabel, onCancel, optionalLabel, onOptional, size, progressMsg, progress, }: ProgressDialogProps) => JSX.Element;
+export declare const ProgressDialog: ({ isVisible, title, headerIcon, children, className, confirmLabel, confirmDisabled, onConfirm, cancelLabel, cancelDisabled, onCancel, optionalLabel, optionalDisabled, onOptional, size, progressMsg, progress, }: ProgressDialogProps) => JSX.Element;
 export {};
