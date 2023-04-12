@@ -186,6 +186,9 @@ export const ConfirmationDialog = ({
 interface ProgressDialogProps extends ConfirmationDialogProps {
     progressMsg?: string;
     progress?: number;
+    confirmDisabled?: boolean;
+    cancelDisabled?: boolean;
+    optionalDisabled?: boolean;
 }
 
 export const ProgressDialog = ({
@@ -195,44 +198,55 @@ export const ProgressDialog = ({
     children,
     className,
     confirmLabel = 'Confirm',
+    confirmDisabled,
     onConfirm,
     cancelLabel = 'Cancel',
+    cancelDisabled,
     onCancel,
     optionalLabel,
+    optionalDisabled,
     onOptional,
     size = 'lg',
     progressMsg,
     progress,
 }: ProgressDialogProps) => (
-    <ConfirmationDialog
-        isVisible={isVisible}
-        title={title}
-        headerIcon={headerIcon}
-        className={className}
-        confirmLabel={confirmLabel}
-        onConfirm={onConfirm}
-        cancelLabel={cancelLabel}
-        onCancel={onCancel}
-        optionalLabel={optionalLabel}
-        onOptional={onOptional}
-        size={size}
-    >
-        <>
-            {children}
-            <Form.Group>
-                {progressMsg && (
-                    <Form.Label>
-                        <strong>Status:</strong>
-                        <span>{` ${progressMsg}`}</span>
-                    </Form.Label>
-                )}
-                <ProgressBar
-                    hidden={progress === undefined}
-                    animated
-                    now={progress}
-                    label={`${progress}%`}
-                />
-            </Form.Group>
-        </>
-    </ConfirmationDialog>
+    <Dialog isVisible={isVisible} className={className} size={size}>
+        <Dialog.Header title={title} headerIcon={headerIcon} />
+        <Dialog.Body>
+            <>
+                {children}
+                <Form.Group>
+                    {progressMsg && (
+                        <Form.Label>
+                            <strong>Status:</strong>
+                            <span>{` ${progressMsg}`}</span>
+                        </Form.Label>
+                    )}
+                    <ProgressBar
+                        hidden={progress === undefined}
+                        animated
+                        now={progress}
+                        label={`${progress}%`}
+                    />
+                </Form.Group>
+            </>
+        </Dialog.Body>
+        <Dialog.Footer>
+            {onOptional && optionalLabel && (
+                <DialogButton disabled={optionalDisabled} onClick={onOptional}>
+                    {optionalLabel}
+                </DialogButton>
+            )}
+            <DialogButton
+                disabled={confirmDisabled}
+                onClick={onConfirm}
+                variant="primary"
+            >
+                {confirmLabel}
+            </DialogButton>
+            <DialogButton disabled={cancelDisabled} onClick={onCancel}>
+                {cancelLabel}
+            </DialogButton>
+        </Dialog.Footer>
+    </Dialog>
 );
