@@ -13,6 +13,7 @@ every new version is a new major version.
 
 -   Update TypeScript to 4.9.
 -   Update Prettier to 2.8.7.
+-   Allow setting more sizes in dialogs.
 
 ### Removed
 

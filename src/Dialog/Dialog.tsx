@@ -12,21 +12,29 @@ import Spinner from './Spinner';
 
 import './dialog.scss';
 
+type CoreProps = {
+    isVisible: boolean;
+    onHide?: () => void;
+    className?: string;
+    size?: 'sm' | 'lg' | 'xl';
+    children: ReactNode | string;
+};
+
+type DialogProps = CoreProps & {
+    closeOnUnfocus?: boolean;
+};
+
 export const Dialog = ({
     isVisible,
     closeOnUnfocus = false,
     onHide = () => {},
     className = '',
+    size = 'lg',
     children,
-}: {
-    isVisible: boolean;
-    closeOnUnfocus?: boolean;
-    onHide?: () => void;
-    className?: string;
-    children: ReactNode;
-}) => (
+}: DialogProps) => (
     <Modal
         show={isVisible}
+        size={size}
         backdrop={closeOnUnfocus ? true : 'static'}
         onHide={() => {
             if (closeOnUnfocus && onHide) {
@@ -96,13 +104,9 @@ export const DialogButton = ({
     </Button>
 );
 
-interface Props {
-    isVisible: boolean;
+interface InfoProps extends CoreProps {
     title?: string;
     headerIcon?: string;
-    onClose: () => void;
-    children: ReactNode | string;
-    className?: string;
 }
 
 export const InfoDialog = ({
@@ -110,36 +114,35 @@ export const InfoDialog = ({
     title = 'Info',
     headerIcon,
     children,
-    onClose,
+    onHide = () => {},
+    size = 'lg',
     className,
-}: Props) => (
+}: InfoProps) => (
     <Dialog
         isVisible={isVisible}
         closeOnUnfocus
-        onHide={onClose}
+        onHide={onHide}
         className={className}
+        size={size}
     >
         <Dialog.Header title={title} headerIcon={headerIcon} />
         <Dialog.Body>{children}</Dialog.Body>
         <Dialog.Footer>
-            <DialogButton onClick={onClose}>Close</DialogButton>
+            <DialogButton onClick={() => onHide()}>Close</DialogButton>
         </Dialog.Footer>
     </Dialog>
 );
 
-export const ErrorDialog = (props: Omit<Props, 'headerIcon'>) =>
+export const ErrorDialog = (props: Omit<InfoProps, 'headerIcon'>) =>
     InfoDialog({
         ...props,
         title: props.title ?? 'Error',
         headerIcon: 'alert',
     });
 
-interface ConfirmationDialogProps {
-    isVisible: boolean;
+interface ConfirmationDialogProps extends Omit<CoreProps, 'onHide'> {
     title?: string;
     headerIcon?: string;
-    children: ReactNode | string;
-    className?: string;
     confirmLabel?: string;
     onConfirm: () => void;
     cancelLabel?: string;
@@ -160,8 +163,9 @@ export const ConfirmationDialog = ({
     onCancel,
     optionalLabel,
     onOptional,
+    size = 'lg',
 }: ConfirmationDialogProps) => (
-    <Dialog isVisible={isVisible} className={className}>
+    <Dialog isVisible={isVisible} className={className} size={size}>
         <Dialog.Header title={title} headerIcon={headerIcon} />
         <Dialog.Body>{children}</Dialog.Body>
         <Dialog.Footer>

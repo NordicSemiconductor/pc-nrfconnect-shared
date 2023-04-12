@@ -1,14 +1,18 @@
 import React, { ReactNode } from 'react';
 import { ButtonVariants } from '../Button/Button';
 import './dialog.scss';
+type CoreProps = {
+    isVisible: boolean;
+    onHide?: () => void;
+    className?: string;
+    size?: 'sm' | 'lg' | 'xl';
+    children: ReactNode | string;
+};
+type DialogProps = CoreProps & {
+    closeOnUnfocus?: boolean;
+};
 export declare const Dialog: {
-    ({ isVisible, closeOnUnfocus, onHide, className, children, }: {
-        isVisible: boolean;
-        closeOnUnfocus?: boolean | undefined;
-        onHide?: (() => void) | undefined;
-        className?: string | undefined;
-        children: ReactNode;
-    }): JSX.Element;
+    ({ isVisible, closeOnUnfocus, onHide, className, size, children, }: DialogProps): JSX.Element;
     Header({ title, headerIcon, }: {
         title: string;
         headerIcon?: string | undefined;
@@ -28,22 +32,15 @@ export declare const DialogButton: ({ variant, onClick, className, disabled, chi
     disabled?: boolean | undefined;
     children: ReactNode | string;
 }) => JSX.Element;
-interface Props {
-    isVisible: boolean;
+interface InfoProps extends CoreProps {
     title?: string;
     headerIcon?: string;
-    onClose: () => void;
-    children: ReactNode | string;
-    className?: string;
 }
-export declare const InfoDialog: ({ isVisible, title, headerIcon, children, onClose, className, }: Props) => JSX.Element;
-export declare const ErrorDialog: (props: Omit<Props, 'headerIcon'>) => JSX.Element;
-interface ConfirmationDialogProps {
-    isVisible: boolean;
+export declare const InfoDialog: ({ isVisible, title, headerIcon, children, onHide, size, className, }: InfoProps) => JSX.Element;
+export declare const ErrorDialog: (props: Omit<InfoProps, 'headerIcon'>) => JSX.Element;
+interface ConfirmationDialogProps extends Omit<CoreProps, 'onHide'> {
     title?: string;
     headerIcon?: string;
-    children: ReactNode | string;
-    className?: string;
     confirmLabel?: string;
     onConfirm: () => void;
     cancelLabel?: string;
@@ -51,5 +48,5 @@ interface ConfirmationDialogProps {
     optionalLabel?: string;
     onOptional?: () => void;
 }
-export declare const ConfirmationDialog: ({ isVisible, title, headerIcon, children, className, confirmLabel, onConfirm, cancelLabel, onCancel, optionalLabel, onOptional, }: ConfirmationDialogProps) => JSX.Element;
+export declare const ConfirmationDialog: ({ isVisible, title, headerIcon, children, className, confirmLabel, onConfirm, cancelLabel, onCancel, optionalLabel, onOptional, size, }: ConfirmationDialogProps) => JSX.Element;
 export {};
