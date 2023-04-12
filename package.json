@@ -97,6 +97,7 @@
         "mousetrap": "1.6.5",
         "npm-run-all2": "5.0.2",
         "nrf-intel-hex": "^1.3.0",
+        "nrf-fw-update-bundle-lib": "file:../nrf-fw-update-bundle-lib/js",
         "postcss-modules": "^6.0.0",
         "prettier": "2.8.7",
         "prettysize": "2.0.0",

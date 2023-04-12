@@ -9,6 +9,7 @@ import AdmZip from 'adm-zip';
 import { createHash } from 'crypto';
 import fs from 'fs';
 import MemoryMap from 'nrf-intel-hex';
+import * as dfu from 'nrf-fw-update-bundle-lib';
 
 import logger from '../logging';
 import { Device, TDispatch } from '../state';
@@ -383,10 +384,49 @@ const createDfuZip = (dfuImages: DfuImage[]) =>
         resolve(zip);
     });
 
-const createDfuZipBuffer = async (dfuImages: DfuImage[]) => {
-    const zip = await createDfuZip(dfuImages);
-    const buffer = zip.toBuffer();
-    return buffer;
+const createDfuZipBuffer = async (
+    params: Partial<InitPacket>,
+    application: string,
+    softDevice?: string | Buffer
+) => {
+    const hwVersion = params.hwVersion || 52;
+
+    const appHex = fs.readFileSync(application);
+    const appBinary = dfu.intelHexToBuffer(appHex);
+    const applicationSpec = dfu.ApplicationSpec.copyFromBuffer({
+        name: 'Application',
+        version: params.fwVersion || 4,
+        buffer: appBinary,
+    });
+
+    let input;
+    if (softDevice) {
+        // If we have a softdevice then include that too and create a joint application_softDevice input
+        const softDeviceHexBuffer =
+            softDevice instanceof Buffer
+                ? softDevice
+                : fs.readFileSync(softDevice);
+        const softDeviceBinary = dfu.intelHexToBuffer(softDeviceHexBuffer);
+        const softDeviceSpec = dfu.SoftDeviceSpec.copyFromBuffer({
+            name: 'SoftDevice',
+            buffer: softDeviceBinary,
+        });
+
+        input = dfu.applicationSoftDeviceInput({
+            applicationSpec,
+            softDeviceSpec,
+            sdId: params.sdId || [],
+            sdReq: params.sdReq || [],
+        });
+    } else {
+        input = dfu.applicationInput({
+            spec: applicationSpec,
+            // @ts-expect-error This parameter is set.
+            sdId: params.sdId || [],
+        });
+    }
+
+    return dfu.generate(hwVersion, input);
 };
 
 const programInDFUBootloader = async (
@@ -402,48 +442,7 @@ const programInDFUBootloader = async (
     const { application, softdevice } = dfu;
     const params: Partial<InitPacket> = dfu.params || {};
 
-    const dfuImages: DfuImage[] = [];
-    if (softdevice) {
-        const firmwareImage = parseFirmwareImage(softdevice);
-
-        const initPacketParams = {
-            fwType: FwType.SOFTDEVICE,
-            fwVersion: 0xffffffff,
-            hwVersion: params.hwVersion || 52,
-            hashType: HashType.SHA256,
-            hash: calculateSHA256Hash(firmwareImage),
-            sdSize: firmwareImage.length,
-            sdReq: params.sdReq || [],
-        };
-
-        const packet: InitPacket = {
-            ...defaultInitPacket,
-            ...initPacketParams,
-        };
-        dfuImages.push({
-            name: 'SoftDevice',
-            initPacket: packet,
-            firmwareImage,
-        });
-    }
-
-    const firmwareImage = parseFirmwareImage(application);
-
-    const initPacketParams = {
-        fwType: FwType.APPLICATION,
-        fwVersion: params.fwVersion || 4,
-        hwVersion: params.hwVersion || 52,
-        hashType: HashType.SHA256,
-        hash: calculateSHA256Hash(firmwareImage),
-        appSize: firmwareImage.length,
-        // @ts-expect-error This parameter is set.
-        sdReq: params.sdId || [],
-    };
-
-    const packet = { ...defaultInitPacket, ...initPacketParams };
-    dfuImages.push({ name: 'Application', initPacket: packet, firmwareImage });
-
-    const zipBuffer = await createDfuZipBuffer(dfuImages);
+    const zipBuffer = await createDfuZipBuffer(params, application, softdevice);
 
     logger.debug('Starting DFU');
 
