@@ -427,72 +427,37 @@ const createDfuZipBufferFromImages = async (dfuImages: DfuImage[]) => {
           }
         : null;
 
-    const hwVersion = application
-        ? application.data.initPacket.hwVersion
-        : bootloader
-        ? bootloader.data.initPacket.hwVersion
-        : softDevice
-        ? softDevice.data.initPacket.hwVersion
+    const hwVersion = applicationDfuImage
+        ? applicationDfuImage.initPacket.hwVersion
+        : bootloaderDfuImage
+        ? bootloaderDfuImage.initPacket.hwVersion
+        : softDeviceDfuImage
+        ? softDeviceDfuImage.initPacket.hwVersion
         : undefined;
 
-    let input;
-
-    if (application && softDevice && bootloader) {
-        input = dfu.softDeviceApplicationBootloaderInput({
-            applicationSpec: application.spec,
-            softDeviceSpec: softDevice.spec,
-            bootloaderSpec: bootloader.spec,
-            // @ts-expect-error This parameter is set.
-            sdId: params.sdId || [],
-            sdReq: params.sdReq || [],
-        });
-    } else if (application && softDevice) {
-        input = dfu.applicationSoftDeviceInput({
-            applicationSpec: application.spec,
-            softDeviceSpec: softDevice.spec,
-            // @ts-expect-error This parameter is set.
-            sdId: params.sdId || [],
-            sdReq: params.sdReq || [],
-        });
-    } else if (bootloader && softDevice) {
-        input = dfu.bootloaderSoftDeviceInput({
-            bootloaderSpec: bootloader.spec,
-            softDeviceSpec: softDevice.spec,
-            // @ts-expect-error This parameter is set.
-            sdId: params.sdId || [],
-            sdReq: params.sdReq || [],
-        });
-    } else if (application && bootloader) {
-        throw Error('Cannot process combination of application and bootloader');
-    } else if (application) {
-        input = dfu.applicationInput({
-            spec: application.spec,
-            // @ts-expect-error This parameter is set.
-            sdId: params.sdId || [],
-        });
-    } else if (bootloader) {
-        input = dfu.bootloaderInput({
-            spec: bootloader.spec,
-            // @ts-expect-error This parameter is set.
-            sdId: params.sdId || [],
-            sdReq: params.sdReq || [],
-        });
-    } else if (softDevice) {
-        input = dfu.softDeviceInput({
-            spec: softDevice.spec,
-            // @ts-expect-error This parameter is set.
-            sdId: params.sdId || [],
-            sdReq: params.sdReq || [],
-        });
-    } else {
-        throw Error('Unable to find any valid images in the DFU image array');
-    }
+    let input = dfu.input({
+        applicationSpec: application?.spec,
+        softDeviceSpec: softDevice?.spec,
+        bootloaderSpec: bootloader?.spec,
+        // @ts-expect-error This parameter is set.
+        sdId: applicationDfuImage?.initPacket.sdId,
+        sdReq: unique(
+            (applicationDfuImage?.initPacket.sdReq ?? []).concat(
+                bootloaderDfuImage?.initPacket.sdReq ?? [],
+                softDeviceDfuImage?.initPacket.sdReq ?? []
+            )
+        ),
+    });
 
     if (hwVersion === undefined) {
         throw Error('Unable to extract hwVersion from DFU image array');
     }
 
     return dfu.generate(hwVersion, input);
+};
+
+const unique = (entries: number[]) => {
+    return Array.from(new Set(entries));
 };
 
 const createDfuZipBuffer = async (
@@ -510,7 +475,7 @@ const createDfuZipBuffer = async (
         buffer: appBinary,
     });
 
-    let input;
+    let softDeviceSpec;
     if (softDevice) {
         // If we have a softdevice then include that too and create a joint application_softDevice input
         const softDeviceHexBuffer =
@@ -518,25 +483,19 @@ const createDfuZipBuffer = async (
                 ? softDevice
                 : fs.readFileSync(softDevice);
         const softDeviceBinary = dfu.intelHexToBuffer(softDeviceHexBuffer);
-        const softDeviceSpec = dfu.SoftDeviceSpec.copyFromBuffer({
+        softDeviceSpec = dfu.SoftDeviceSpec.copyFromBuffer({
             name: 'SoftDevice',
             buffer: softDeviceBinary,
         });
-
-        input = dfu.applicationSoftDeviceInput({
-            applicationSpec,
-            softDeviceSpec,
-            // @ts-expect-error This parameter is set.
-            sdId: params.sdId || [],
-            sdReq: params.sdReq || [],
-        });
-    } else {
-        input = dfu.applicationInput({
-            spec: applicationSpec,
-            // @ts-expect-error This parameter is set.
-            sdId: params.sdId || [],
-        });
     }
+
+    const input = dfu.input({
+        applicationSpec,
+        softDeviceSpec,
+        // @ts-expect-error This parameter is set.
+        sdId: params.sdId || [],
+        sdReq: params.sdReq || [],
+    });
 
     return dfu.generate(hwVersion, input);
 };
