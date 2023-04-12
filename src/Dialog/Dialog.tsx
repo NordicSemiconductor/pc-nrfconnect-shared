@@ -184,7 +184,6 @@ export const ConfirmationDialog = ({
 );
 
 interface ProgressDialogProps extends ConfirmationDialogProps {
-    progressMsg?: string;
     progress?: number;
     confirmDisabled?: boolean;
     cancelDisabled?: boolean;
@@ -207,7 +206,6 @@ export const ProgressDialog = ({
     optionalDisabled,
     onOptional,
     size = 'lg',
-    progressMsg,
     progress,
 }: ProgressDialogProps) => (
     <Dialog isVisible={isVisible} className={className} size={size}>
@@ -215,20 +213,16 @@ export const ProgressDialog = ({
         <Dialog.Body>
             <>
                 {children}
-                <Form.Group>
-                    {progressMsg && (
-                        <Form.Label>
-                            <strong>Status:</strong>
-                            <span>{` ${progressMsg}`}</span>
-                        </Form.Label>
-                    )}
-                    <ProgressBar
-                        hidden={progress === undefined}
-                        animated
-                        now={progress}
-                        label={`${progress}%`}
-                    />
-                </Form.Group>
+                {progress === undefined && (
+                    <Form.Group>
+                        <br />
+                        <ProgressBar
+                            animated
+                            now={progress}
+                            label={`${progress}%`}
+                        />
+                    </Form.Group>
+                )}
             </>
         </Dialog.Body>
         <Dialog.Footer>
