@@ -22,7 +22,8 @@ every new version is a new major version.
 ### Fixed
 
 -   Error loading SVGs introduced in v31.
--   InlineInput`only emits`onChange`and`onChangeComplete` if value has changed
+-   `InlineInput` only calls `onChange` and `onChangeComplete` if value has
+    changed.
 
 ## 31 - 2023-04-03
 
