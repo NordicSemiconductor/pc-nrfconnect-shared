@@ -276,15 +276,15 @@ export const choiceHelper = (
     return choices.slice(-1)[0];
 };
 
-const createDfuZipBufferFromImages = async (dfuImages: DfuImage[]) => {
+const createDfuZipBufferFromImages = (dfuImages: DfuImage[]) => {
     const applicationDfuImage = dfuImages.find(
-        dfuImage => dfuImage.initPacket.fwType == FwType.APPLICATION
+        dfuImage => dfuImage.initPacket.fwType === FwType.APPLICATION
     );
     const softDeviceDfuImage = dfuImages.find(
-        dfuImage => dfuImage.initPacket.fwType == FwType.SOFTDEVICE
+        dfuImage => dfuImage.initPacket.fwType === FwType.SOFTDEVICE
     );
     const bootloaderDfuImage = dfuImages.find(
-        dfuImage => dfuImage.initPacket.fwType == FwType.BOOTLOADER
+        dfuImage => dfuImage.initPacket.fwType === FwType.BOOTLOADER
     );
 
     const applicationSpec = applicationDfuImage
@@ -310,15 +310,21 @@ const createDfuZipBufferFromImages = async (dfuImages: DfuImage[]) => {
           })
         : undefined;
 
-    const hwVersion = applicationDfuImage
+    let hwVersion = applicationDfuImage
         ? applicationDfuImage.initPacket.hwVersion
-        : bootloaderDfuImage
-        ? bootloaderDfuImage.initPacket.hwVersion
-        : softDeviceDfuImage
-        ? softDeviceDfuImage.initPacket.hwVersion
         : undefined;
+    hwVersion =
+        hwVersion ??
+        (bootloaderDfuImage
+            ? bootloaderDfuImage.initPacket.hwVersion
+            : undefined);
+    hwVersion =
+        hwVersion ??
+        (softDeviceDfuImage
+            ? softDeviceDfuImage.initPacket.hwVersion
+            : undefined);
 
-    let input = dfu.input({
+    const input = dfu.input({
         applicationSpec,
         softDeviceSpec,
         bootloaderSpec,
@@ -339,11 +345,9 @@ const createDfuZipBufferFromImages = async (dfuImages: DfuImage[]) => {
     return dfu.generate(hwVersion, input);
 };
 
-const unique = (entries: number[]) => {
-    return Array.from(new Set(entries));
-};
+const unique = (entries: number[]) => Array.from(new Set(entries));
 
-const createDfuZipBuffer = async (
+const createDfuZipBuffer = (
     params: Partial<InitPacket>,
     application: string,
     softDevice?: string | Buffer
@@ -385,7 +389,7 @@ const createDfuZipBuffer = async (
 
 const programInDFUBootloader = async (
     device: Device,
-    dfu: DfuEntry,
+    dfuEntry: DfuEntry,
     dispatch: TDispatch,
     onSuccess: (device: Device) => void,
     onFail: (reason?: unknown) => void
@@ -393,8 +397,8 @@ const programInDFUBootloader = async (
     logger.debug(
         `${device.serialNumber} on ${device.serialport?.comName} is now in DFU-Bootloader...`
     );
-    const { application, softdevice } = dfu;
-    const params: Partial<InitPacket> = dfu.params || {};
+    const { application, softdevice } = dfuEntry;
+    const params: Partial<InitPacket> = dfuEntry.params || {};
 
     const zipBuffer = await createDfuZipBuffer(params, application, softdevice);
 
@@ -441,16 +445,22 @@ export const performDFU = (
     onSuccess: (device: Device) => void,
     onFail: (reason?: unknown) => void
 ) => {
-    const { dfu, promiseConfirm, promiseChoice } = options;
+    const { dfu: dfuLookup, promiseConfirm, promiseChoice } = options;
 
-    if (dfu == null) {
+    if (dfuLookup == null) {
         logger.error('Must never be called without DFU options.');
         throw new Error('Must never be called without DFU options.');
     }
 
     const action = async (d: Device) => {
         const choice = await choiceHelper(Object.keys(dfu), promiseChoice);
-        programInDFUBootloader(d, dfu[choice], dispatch, onSuccess, onFail);
+        programInDFUBootloader(
+            d,
+            dfuLookup[choice],
+            dispatch,
+            onSuccess,
+            onFail
+        );
         logger.debug('DFU finished: ', d);
     };
 
