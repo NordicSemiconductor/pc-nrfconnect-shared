@@ -72,9 +72,11 @@ const getSourceUrl = (deployOfficial: boolean, sourceName: string) => {
 
 interface Options {
     doPack: boolean;
+    doCreateSource: boolean;
     deployOfficial: boolean;
     sourceDir: string;
     sourceUrl: string;
+    sourceName?: string;
 }
 
 const parseOptions = (): Options => {
@@ -88,6 +90,12 @@ const parseOptions = (): Options => {
             '-n, --no-pack',
             'Publish existing .tgz file at the root directory without npm pack.'
         )
+        .option(
+            '--create-source <source name>',
+            'Do not fail if the source specifiec with --source does not yet ' +
+                'exist but instead create a new source with this name ' +
+                '(e.g. "Release Test").'
+        )
         .parse();
 
     const options = program.opts();
@@ -96,6 +104,8 @@ const parseOptions = (): Options => {
 
     return {
         doPack: options.pack,
+        doCreateSource: options.createSource != null,
+        sourceName: options.createSource,
         deployOfficial,
         sourceDir: getSourceDir(deployOfficial, options.source),
         sourceUrl: getSourceUrl(deployOfficial, options.source),
@@ -177,6 +187,18 @@ const connect = (config: {
         client.connect(config);
     });
 
+const createSourceDirectory = (dir: string) =>
+    new Promise<void>((resolve, reject) => {
+        console.log(`Creating source directory ${dir}`);
+        client.mkdir(dir, true, err => {
+            if (err) {
+                reject(new Error(`Failed to create source directory.`));
+            } else {
+                resolve();
+            }
+        });
+    });
+
 const changeWorkingDirectory = (dir: string) =>
     new Promise<void>((resolve, reject) => {
         console.log(`Changing to directory ${dir}`);
@@ -184,7 +206,10 @@ const changeWorkingDirectory = (dir: string) =>
             if (err) {
                 reject(
                     new Error(
-                        `Failed to change to directory. Check whether it exists on the FTP server.`
+                        '\nError: Failed to change to directory. ' +
+                            'Check whether it exists on the FTP server.\n' +
+                            'If you want to create a new source, use the ' +
+                            '--create-source option.'
                     )
                 );
             } else {
@@ -268,6 +293,23 @@ const getUpdatedLegacyAppInfo = async (app: App) => {
     return updateLegacyAppInfo(appInfo, app);
 };
 
+const createBlankSourceJson = async (name: string) => {
+    try {
+        await downloadFileContent('source.json');
+    } catch {
+        // Expected that the download throws an exception,
+        // because the file is supposed to not exist yet
+        return {
+            name,
+            apps: [],
+        };
+    }
+
+    throw new Error(
+        '`--create-source` given, but a `source.json` already exists on the server.'
+    );
+};
+
 const downloadSourceJson = async () => {
     let sourceJsonContent;
     try {
@@ -297,8 +339,13 @@ const downloadSourceJson = async () => {
     }
 };
 
-const getUpdatedSourceJson = async (app: App): Promise<SourceJson> => {
-    const sourceJson = await downloadSourceJson();
+const getUpdatedSourceJson = async (
+    app: App,
+    options: Options
+): Promise<SourceJson> => {
+    const sourceJson = await (options.doCreateSource
+        ? createBlankSourceJson(options.sourceName!) // eslint-disable-line @typescript-eslint/no-non-null-assertion -- Can never be null because of the control flow
+        : downloadSourceJson());
     return {
         name: sourceJson.name,
         apps: [
@@ -410,10 +457,13 @@ const main = async () => {
         const app = packOrReadPackage(options);
 
         await connect(config);
+        if (options.doCreateSource) {
+            await createSourceDirectory(options.sourceDir);
+        }
         await changeWorkingDirectory(options.sourceDir);
 
         const legacyAppInfo = await getUpdatedLegacyAppInfo(app);
-        const sourceJson = await getUpdatedSourceJson(app);
+        const sourceJson = await getUpdatedSourceJson(app, options);
         const appInfo = await getUpdatedAppInfo(app);
 
         await uploadChangelog(app);

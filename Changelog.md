@@ -9,6 +9,11 @@ every new version is a new major version.
 
 ## Unreleased
 
+### Added
+
+-   New option `--create-source` to script `nordic-publish` to create a new
+    source when publishing an app.
+
 ### Changed
 
 -   Update TypeScript to 4.9.
