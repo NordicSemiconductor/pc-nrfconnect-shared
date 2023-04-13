@@ -395,37 +395,28 @@ const createDfuZipBufferFromImages = async (dfuImages: DfuImage[]) => {
         dfuImage => dfuImage.initPacket.fwType == FwType.BOOTLOADER
     );
 
-    const application = applicationDfuImage
-        ? {
-              data: applicationDfuImage,
-              spec: dfu.ApplicationSpec.copyFromBuffer({
-                  name: applicationDfuImage.name,
-                  version: applicationDfuImage.initPacket.fwVersion || 4,
-                  buffer: applicationDfuImage.firmwareImage,
-              }),
-          }
-        : null;
+    const applicationSpec = applicationDfuImage
+        ? dfu.ApplicationSpec.copyFromBuffer({
+              name: applicationDfuImage.name,
+              version: applicationDfuImage.initPacket.fwVersion || 4,
+              buffer: applicationDfuImage.firmwareImage,
+          })
+        : undefined;
 
-    const bootloader = bootloaderDfuImage
-        ? {
-              data: bootloaderDfuImage,
-              spec: dfu.BootloaderSpec.copyFromBuffer({
-                  name: bootloaderDfuImage.name,
-                  buffer: bootloaderDfuImage.firmwareImage,
-                  version: bootloaderDfuImage.initPacket.fwVersion || 4,
-              }),
-          }
-        : null;
+    const bootloaderSpec = bootloaderDfuImage
+        ? dfu.BootloaderSpec.copyFromBuffer({
+              name: bootloaderDfuImage.name,
+              buffer: bootloaderDfuImage.firmwareImage,
+              version: bootloaderDfuImage.initPacket.fwVersion || 4,
+          })
+        : undefined;
 
-    const softDevice = softDeviceDfuImage
-        ? {
-              data: softDeviceDfuImage,
-              spec: dfu.SoftDeviceSpec.copyFromBuffer({
-                  name: softDeviceDfuImage.name,
-                  buffer: softDeviceDfuImage.firmwareImage,
-              }),
-          }
-        : null;
+    const softDeviceSpec = softDeviceDfuImage
+        ? dfu.SoftDeviceSpec.copyFromBuffer({
+              name: softDeviceDfuImage.name,
+              buffer: softDeviceDfuImage.firmwareImage,
+          })
+        : undefined;
 
     const hwVersion = applicationDfuImage
         ? applicationDfuImage.initPacket.hwVersion
@@ -436,9 +427,9 @@ const createDfuZipBufferFromImages = async (dfuImages: DfuImage[]) => {
         : undefined;
 
     let input = dfu.input({
-        applicationSpec: application?.spec,
-        softDeviceSpec: softDevice?.spec,
-        bootloaderSpec: bootloader?.spec,
+        applicationSpec,
+        softDeviceSpec,
+        bootloaderSpec,
         // @ts-expect-error This parameter is set.
         sdId: applicationDfuImage?.initPacket.sdId,
         sdReq: unique(
