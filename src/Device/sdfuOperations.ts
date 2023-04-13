@@ -6,9 +6,7 @@
 
 import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js';
 import AdmZip from 'adm-zip';
-import { createHash } from 'crypto';
 import fs from 'fs';
-import MemoryMap from 'nrf-intel-hex';
 import * as dfu from 'nrf-fw-update-bundle-lib';
 
 import logger from '../logging';
@@ -17,14 +15,7 @@ import { getAppFile } from '../utils/appDirs';
 import { setWaitForDevice } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import type { DeviceSetup, DfuEntry } from './deviceSetup';
-import {
-    createInitPacketBuffer,
-    defaultInitPacket,
-    DfuImage,
-    FwType,
-    HashType,
-    InitPacket,
-} from './initPacket';
+import { DfuImage, FwType, InitPacket } from './initPacket';
 
 export type PromiseConfirm = (message: string) => Promise<boolean>;
 export type PromiseChoice = (
@@ -284,105 +275,6 @@ export const choiceHelper = (
     }
     return choices.slice(-1)[0];
 };
-
-/**
- * Loads firmware image from HEX file
- *
- * @param {Buffer|string} firmware contents of HEX file if Buffer otherwise path of HEX file
- * @returns {Uint8Array} the loaded firmware
- */
-function parseFirmwareImage(firmware: Buffer | string) {
-    const contents =
-        firmware instanceof Buffer ? firmware : fs.readFileSync(firmware);
-
-    const memMap = MemoryMap.fromHex(contents.toString());
-    let startAddress = 0;
-    let endAddress = 0;
-    memMap.forEach((block, address) => {
-        startAddress = !startAddress ? address : startAddress;
-        endAddress = address + block.length;
-    });
-    return memMap.slicePad(
-        startAddress,
-        Math.ceil((endAddress - startAddress) / 4) * 4
-    ) as Buffer;
-}
-
-function calculateSHA256Hash(image: Uint8Array) {
-    const digest = createHash('sha256');
-    digest.update(image);
-    return Buffer.from(digest.digest().reverse());
-}
-
-interface DfuData {
-    application?: { bin: Buffer; dat: Buffer };
-    softdevice?: { bin: Uint8Array; dat: Uint8Array };
-    params?: InitPacket;
-}
-
-const createDfuDataFromImages = (dfuImages: DfuImage[]): DfuData => {
-    const extract = (image: DfuImage) => ({
-        bin: image.firmwareImage,
-        dat: createInitPacketBuffer(
-            image.initPacket.fwVersion as number,
-            image.initPacket.hwVersion as number,
-            image.initPacket.sdReq as number[],
-            image.initPacket.fwType as number,
-            image.initPacket.sdSize,
-            image.initPacket.blSize,
-            image.initPacket.appSize,
-            image.initPacket.hashType,
-            image.initPacket.hash as Buffer,
-            image.initPacket.isDebug,
-            image.initPacket.signatureType as number,
-            image.initPacket.signature as []
-        ),
-    });
-
-    const application = dfuImages.find(i => i.name === 'Application');
-    const softdevice = dfuImages.find(i => i.name === 'SoftDevice');
-
-    return {
-        application: application && extract(application),
-        softdevice: softdevice && extract(softdevice),
-    };
-};
-
-interface Manifest {
-    application?: { bin_file: string; dat_file: string };
-    softdevice?: { bin_file: string; dat_file: string };
-}
-
-const createDfuZip = (dfuImages: DfuImage[]) =>
-    new Promise<AdmZip>(resolve => {
-        const data = createDfuDataFromImages(dfuImages);
-        const zip = new AdmZip();
-        const manifest: Manifest = {};
-
-        if (data.application) {
-            manifest.application = {
-                bin_file: 'application.bin',
-                dat_file: 'application.dat',
-            };
-            zip.addFile('application.bin', data.application.bin);
-            zip.addFile('application.dat', data.application.dat);
-        }
-
-        if (data.softdevice) {
-            manifest.softdevice = {
-                bin_file: 'softdevice.bin',
-                dat_file: 'softdevice.dat',
-            };
-            zip.addFile('softdevice.bin', data.softdevice.bin as Buffer);
-            zip.addFile('softdevice.dat', data.softdevice.dat as Buffer);
-        }
-
-        const manifestJson = JSON.stringify({ manifest });
-        const manifestBuffer = Buffer.alloc(manifestJson.length, manifestJson);
-        zip.addFile('manifest.json', manifestBuffer);
-
-        resolve(zip);
-    });
 
 const createDfuZipBufferFromImages = async (dfuImages: DfuImage[]) => {
     const applicationDfuImage = dfuImages.find(
