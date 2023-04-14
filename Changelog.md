@@ -7,7 +7,7 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## Unreleased
+## 32 - 2023-04-14
 
 ### Added
 
@@ -19,6 +19,7 @@ every new version is a new major version.
 -   Update TypeScript to 4.9.
 -   Update Prettier to 2.8.7.
 -   Allow setting more sizes in dialogs.
+-   Use swc instead of babel to transform code for jest.
 
 ### Removed
 
