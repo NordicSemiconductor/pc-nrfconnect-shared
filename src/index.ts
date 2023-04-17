@@ -14,6 +14,7 @@ export { default as Logo } from './Logo/Logo';
 export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
 export {
     Dialog,
+    GenericDialog,
     ConfirmationDialog,
     InfoDialog,
     ErrorDialog,
