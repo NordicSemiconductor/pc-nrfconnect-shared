@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { ButtonVariants } from '../Button/Button';
 import './dialog.scss';
 type CoreProps = {
@@ -25,13 +25,22 @@ export declare const Dialog: {
         children: ReactNode;
     }): JSX.Element;
 };
-export declare const DialogButton: ({ variant, onClick, className, disabled, children, }: {
-    onClick: React.MouseEventHandler<HTMLButtonElement>;
-    variant?: ButtonVariants | undefined;
-    className?: string | undefined;
-    disabled?: boolean | undefined;
+export interface DialogButtonProps {
+    onClick: () => void;
+    variant?: ButtonVariants;
+    className?: string;
+    disabled?: boolean;
     children: ReactNode | string;
-}) => JSX.Element;
+    progressButton?: boolean;
+    inProgress?: boolean;
+}
+export declare const DialogButton: ({ variant, onClick, className, disabled, children, progressButton, inProgress, }: DialogButtonProps) => JSX.Element;
+interface GenericDialogProps extends Omit<CoreProps, 'onHide'> {
+    title: string;
+    headerIcon?: string;
+    dialogButtons: DialogButtonProps[];
+}
+export declare const GenericDialog: ({ isVisible, title, headerIcon, children, className, dialogButtons, size, }: GenericDialogProps) => JSX.Element;
 interface InfoProps extends CoreProps {
     title?: string;
     headerIcon?: string;

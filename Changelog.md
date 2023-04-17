@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## Unreleased
+
+### Added
+
+-   Generic progress dialog
+
 ## 32 - 2023-04-14
 
 ### Added

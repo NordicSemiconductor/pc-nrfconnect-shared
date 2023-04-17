@@ -8,6 +8,7 @@ import React, { ReactNode } from 'react';
 import Modal from 'react-bootstrap/Modal';
 
 import Button, { ButtonVariants } from '../Button/Button';
+import StartStopButton from '../StartStopButton/StartStopButton';
 import Spinner from './Spinner';
 
 import './dialog.scss';
@@ -80,28 +81,87 @@ Dialog.Footer = ({
     </Modal.Footer>
 );
 
+export interface DialogButtonProps {
+    onClick: () => void;
+    variant?: ButtonVariants;
+    className?: string;
+    disabled?: boolean;
+    children: ReactNode | string;
+    progressButton?: boolean;
+    inProgress?: boolean;
+}
+
 export const DialogButton = ({
     variant = 'secondary',
     onClick,
     className = '',
     disabled = false,
     children,
-}: {
-    onClick: React.MouseEventHandler<HTMLButtonElement>;
-    variant?: ButtonVariants;
-    className?: string;
-    disabled?: boolean;
-    children: ReactNode | string;
-}) => (
-    <Button
-        large
-        variant={variant}
-        onClick={onClick}
-        className={className}
-        disabled={disabled}
-    >
-        {children}
-    </Button>
+    progressButton = false,
+    inProgress = false,
+}: DialogButtonProps) =>
+    progressButton ? (
+        <StartStopButton
+            large
+            variant={variant}
+            startText={children}
+            stopText={children}
+            started={inProgress}
+            onClick={onClick}
+            className={className}
+            disabled={disabled}
+            showIcon={false}
+        />
+    ) : (
+        <Button
+            large
+            variant={variant}
+            onClick={onClick}
+            className={className}
+            disabled={disabled}
+        >
+            {children}
+        </Button>
+    );
+
+interface GenericDialogProps extends Omit<CoreProps, 'onHide'> {
+    title: string;
+    headerIcon?: string;
+    dialogButtons: DialogButtonProps[];
+}
+
+export const GenericDialog = ({
+    isVisible,
+    title,
+    headerIcon,
+    children,
+    className,
+    dialogButtons,
+    size = 'lg',
+}: GenericDialogProps) => (
+    <Dialog isVisible={isVisible} className={className} size={size}>
+        <Dialog.Header title={title} headerIcon={headerIcon} />
+        <Dialog.Body>{children}</Dialog.Body>
+        <Dialog.Footer>
+            {dialogButtons.map((dialogButton, index) => (
+                <DialogButton
+                    key={`${dialogButton.children?.toString()}`}
+                    disabled={dialogButton.disabled}
+                    variant={
+                        dialogButton.variant ?? index === 0
+                            ? 'primary'
+                            : 'secondary'
+                    }
+                    className={dialogButton.className}
+                    onClick={dialogButton.onClick}
+                    progressButton={dialogButton.progressButton}
+                    inProgress={dialogButton.inProgress}
+                >
+                    {dialogButton.children}
+                </DialogButton>
+            ))}
+        </Dialog.Footer>
+    </Dialog>
 );
 
 interface InfoProps extends CoreProps {
@@ -112,25 +172,27 @@ interface InfoProps extends CoreProps {
 export const InfoDialog = ({
     isVisible,
     title = 'Info',
-    headerIcon,
+    headerIcon = 'info',
     children,
     onHide = () => {},
     size = 'lg',
     className,
 }: InfoProps) => (
-    <Dialog
+    <GenericDialog
         isVisible={isVisible}
-        closeOnUnfocus
-        onHide={onHide}
+        headerIcon={headerIcon}
+        title={title}
         className={className}
         size={size}
+        dialogButtons={[
+            {
+                onClick: onHide,
+                children: 'Close',
+            },
+        ]}
     >
-        <Dialog.Header title={title} headerIcon={headerIcon} />
-        <Dialog.Body>{children}</Dialog.Body>
-        <Dialog.Footer>
-            <DialogButton onClick={() => onHide()}>Close</DialogButton>
-        </Dialog.Footer>
-    </Dialog>
+        {children}
+    </GenericDialog>
 );
 
 export const ErrorDialog = (props: Omit<InfoProps, 'headerIcon'>) =>
@@ -162,22 +224,37 @@ export const ConfirmationDialog = ({
     cancelLabel = 'Cancel',
     onCancel,
     optionalLabel,
-    onOptional,
+    onOptional = () => {},
     size = 'lg',
-}: ConfirmationDialogProps) => (
-    <Dialog isVisible={isVisible} className={className} size={size}>
-        <Dialog.Header title={title} headerIcon={headerIcon} />
-        <Dialog.Body>{children}</Dialog.Body>
-        <Dialog.Footer>
-            {onOptional && optionalLabel && (
-                <DialogButton onClick={onOptional}>
-                    {optionalLabel}
-                </DialogButton>
-            )}
-            <DialogButton onClick={onConfirm} variant="primary">
-                {confirmLabel}
-            </DialogButton>
-            <DialogButton onClick={onCancel}>{cancelLabel}</DialogButton>
-        </Dialog.Footer>
-    </Dialog>
-);
+}: ConfirmationDialogProps) => {
+    const buttons = [
+        {
+            onClick: onConfirm,
+            children: confirmLabel,
+        },
+        {
+            onClick: onCancel,
+            children: cancelLabel,
+        },
+    ];
+
+    if (optionalLabel) {
+        buttons.push({
+            onClick: onOptional,
+            children: optionalLabel,
+        });
+    }
+
+    return (
+        <GenericDialog
+            isVisible={isVisible}
+            headerIcon={headerIcon}
+            title={title}
+            className={className}
+            size={size}
+            dialogButtons={buttons}
+        >
+            {children}
+        </GenericDialog>
+    );
+};
