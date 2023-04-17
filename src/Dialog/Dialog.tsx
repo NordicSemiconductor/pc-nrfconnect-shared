@@ -145,7 +145,7 @@ export const GenericDialog = ({
         <Dialog.Footer>
             {dialogButtons.map((dialogButton, index) => (
                 <DialogButton
-                    key={`${dialogButton.children?.toString()}`}
+                    key={`${index + 0}`}
                     disabled={dialogButton.disabled}
                     variant={
                         dialogButton.variant ?? index === 0
