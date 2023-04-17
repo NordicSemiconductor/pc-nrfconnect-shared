@@ -148,7 +148,8 @@ export const GenericDialog = ({
                     key={`${index + 0}`}
                     disabled={dialogButton.disabled}
                     variant={
-                        dialogButton.variant ?? index === 0
+                        dialogButton.variant ??
+                        index === dialogButtons.length - 1
                             ? 'primary'
                             : 'secondary'
                     }
