@@ -52,11 +52,16 @@ export const Dialog = ({
 Dialog.Header = ({
     title,
     headerIcon,
+    inProgress,
 }: {
     title: string;
     headerIcon?: string;
+    inProgress?: boolean;
 }) => (
-    <Modal.Header closeButton={false}>
+    <Modal.Header
+        closeButton={false}
+        className={inProgress ? 'processing-animation' : ''}
+    >
         <p>
             <b>{title}</b>
         </p>
@@ -126,8 +131,9 @@ export const DialogButton = ({
 
 interface GenericDialogProps extends Omit<CoreProps, 'onHide'> {
     title: string;
-    headerIcon?: string;
     dialogButtons: DialogButtonProps[];
+    headerIcon?: string;
+    inProgress?: boolean;
 }
 
 export const GenericDialog = ({
@@ -137,10 +143,15 @@ export const GenericDialog = ({
     children,
     className,
     dialogButtons,
+    inProgress = false,
     size = 'lg',
 }: GenericDialogProps) => (
     <Dialog isVisible={isVisible} className={className} size={size}>
-        <Dialog.Header title={title} headerIcon={headerIcon} />
+        <Dialog.Header
+            title={title}
+            headerIcon={headerIcon}
+            inProgress={inProgress}
+        />
         <Dialog.Body>{children}</Dialog.Body>
         <Dialog.Footer>
             {dialogButtons.reverse().map((dialogButton, index) => (

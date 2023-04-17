@@ -13,9 +13,10 @@ type DialogProps = CoreProps & {
 };
 export declare const Dialog: {
     ({ isVisible, closeOnUnfocus, onHide, className, size, children, }: DialogProps): JSX.Element;
-    Header({ title, headerIcon, }: {
+    Header({ title, headerIcon, inProgress, }: {
         title: string;
         headerIcon?: string | undefined;
+        inProgress?: boolean | undefined;
     }): JSX.Element;
     Body({ children }: {
         children: ReactNode | string;
@@ -37,10 +38,11 @@ export interface DialogButtonProps {
 export declare const DialogButton: ({ variant, onClick, className, disabled, children, progressButton, inProgress, }: DialogButtonProps) => JSX.Element;
 interface GenericDialogProps extends Omit<CoreProps, 'onHide'> {
     title: string;
-    headerIcon?: string;
     dialogButtons: DialogButtonProps[];
+    headerIcon?: string;
+    inProgress?: boolean;
 }
-export declare const GenericDialog: ({ isVisible, title, headerIcon, children, className, dialogButtons, size, }: GenericDialogProps) => JSX.Element;
+export declare const GenericDialog: ({ isVisible, title, headerIcon, children, className, dialogButtons, inProgress, size, }: GenericDialogProps) => JSX.Element;
 interface InfoProps extends CoreProps {
     title?: string;
     headerIcon?: string;
