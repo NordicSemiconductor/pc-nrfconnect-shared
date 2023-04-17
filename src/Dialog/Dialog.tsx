@@ -143,7 +143,7 @@ export const GenericDialog = ({
         <Dialog.Header title={title} headerIcon={headerIcon} />
         <Dialog.Body>{children}</Dialog.Body>
         <Dialog.Footer>
-            {dialogButtons.map((dialogButton, index) => (
+            {dialogButtons.reverse().map((dialogButton, index) => (
                 <DialogButton
                     key={`${index + 0}`}
                     disabled={dialogButton.disabled}
