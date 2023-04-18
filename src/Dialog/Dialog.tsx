@@ -67,7 +67,7 @@ Dialog.Header = ({
     <Modal.Header closeButton={false}>
         <p>
             <b>{title}</b>
-            {showSpinner && <Spinner animation="border" />}
+            {showSpinner && <Spinner size="sm" animation="border" />}
         </p>
         {headerIcon && <span className={`mdi mdi-${headerIcon}`} />}
     </Modal.Header>
