@@ -217,7 +217,9 @@ export const ConfirmationDialog = ({
         size={size}
         footer={
             <>
-                <DialogButton onClick={onConfirm}>{confirmLabel}</DialogButton>
+                <DialogButton variant="primary" onClick={onConfirm}>
+                    {confirmLabel}
+                </DialogButton>
                 <DialogButton onClick={onCancel}>{cancelLabel}</DialogButton>
                 {optionalLabel && (
                     <DialogButton onClick={onOptional}>
