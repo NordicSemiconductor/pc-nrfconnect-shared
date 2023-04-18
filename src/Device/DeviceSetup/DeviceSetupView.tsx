@@ -55,7 +55,11 @@ export default class DeviceSetupDialog extends React.Component<
         if (choices && choices.length > 0) {
             return (
                 <Dialog isVisible={isVisible}>
-                    <Dialog.Header title="Confirm" headerIcon="" />
+                    <Dialog.Header
+                        showSpinner={isInProgress}
+                        title="Confirm"
+                        headerIcon=""
+                    />
                     <Dialog.Body>
                         <p>{text}</p>
                         <Form.Group>
@@ -71,7 +75,7 @@ export default class DeviceSetupDialog extends React.Component<
                             ))}
                         </Form.Group>
                     </Dialog.Body>
-                    <Dialog.Footer showSpinner={isInProgress}>
+                    <Dialog.Footer>
                         <DialogButton
                             onClick={() => onOk(selectedChoice ?? false)}
                             disabled={!selectedChoice || isInProgress}
@@ -90,9 +94,13 @@ export default class DeviceSetupDialog extends React.Component<
         }
         return (
             <Dialog isVisible={isVisible}>
-                <Dialog.Header title="Program device" headerIcon="" />
+                <Dialog.Header
+                    showSpinner={isInProgress}
+                    title="Program device"
+                    headerIcon=""
+                />
                 <Dialog.Body>{text}</Dialog.Body>
-                <Dialog.Footer showSpinner={isInProgress}>
+                <Dialog.Footer>
                     <DialogButton
                         onClick={() => onOk(true)}
                         disabled={isInProgress}

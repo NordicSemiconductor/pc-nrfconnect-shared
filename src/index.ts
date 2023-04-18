@@ -21,7 +21,6 @@ export {
     DialogButton,
 } from './Dialog/Dialog';
 export type { DialogButtonProps } from './Dialog/Dialog';
-export { default as Spinner } from './Dialog/Spinner';
 export { default as Slider } from './Slider/Slider';
 export { Toggle } from './Toggle/Toggle';
 export { default as RootErrorDialog } from './ErrorDialog/ErrorDialog';

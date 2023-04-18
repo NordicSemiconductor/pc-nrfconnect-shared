@@ -1,28 +1,28 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { ButtonVariants } from '../Button/Button';
 import './dialog.scss';
 type CoreProps = {
     isVisible: boolean;
     onHide?: () => void;
     className?: string;
-    size?: 'sm' | 'lg' | 'xl';
+    size?: 'sm' | 'm' | 'lg' | 'xl';
     children: ReactNode | string;
 };
 type DialogProps = CoreProps & {
     closeOnUnfocus?: boolean;
+    closeOnEsc?: boolean;
 };
 export declare const Dialog: {
-    ({ isVisible, closeOnUnfocus, onHide, className, size, children, }: DialogProps): JSX.Element;
-    Header({ title, headerIcon, inProgress, }: {
+    ({ isVisible, closeOnUnfocus, closeOnEsc, onHide, className, size, children, }: DialogProps): JSX.Element;
+    Header({ title, headerIcon, showSpinner, }: {
         title: string;
         headerIcon?: string | undefined;
-        inProgress?: boolean | undefined;
+        showSpinner?: boolean | undefined;
     }): JSX.Element;
     Body({ children }: {
         children: ReactNode | string;
     }): JSX.Element;
-    Footer({ showSpinner, children, }: {
-        showSpinner?: boolean | undefined;
+    Footer({ children }: {
         children: ReactNode;
     }): JSX.Element;
 };
@@ -32,17 +32,17 @@ export interface DialogButtonProps {
     className?: string;
     disabled?: boolean;
     children: ReactNode | string;
-    progressButton?: boolean;
-    inProgress?: boolean;
 }
-export declare const DialogButton: ({ variant, onClick, className, disabled, children, progressButton, inProgress, }: DialogButtonProps) => JSX.Element;
-interface GenericDialogProps extends Omit<CoreProps, 'onHide'> {
+export declare const DialogButton: ({ variant, onClick, className, disabled, children, }: DialogButtonProps) => JSX.Element;
+interface GenericDialogProps extends CoreProps {
     title: string;
-    dialogButtons: DialogButtonProps[];
+    footer: React.ReactNode;
     headerIcon?: string;
-    inProgress?: boolean;
+    showSpinner?: boolean;
+    closeOnUnfocus?: boolean;
+    closeOnEsc?: boolean;
 }
-export declare const GenericDialog: ({ isVisible, title, headerIcon, children, className, dialogButtons, inProgress, size, }: GenericDialogProps) => JSX.Element;
+export declare const GenericDialog: ({ isVisible, onHide, title, headerIcon, children, className, footer, showSpinner, closeOnUnfocus, closeOnEsc, size, }: GenericDialogProps) => JSX.Element;
 interface InfoProps extends CoreProps {
     title?: string;
     headerIcon?: string;

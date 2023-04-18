@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 
 import Button, { ButtonVariants } from '../Button/Button';
 import classNames from '../utils/classNames';
@@ -14,15 +14,14 @@ import stopSvg from './stop-circle.svg';
 import './start-stop-button.scss';
 
 interface Props {
-    startText?: ReactNode | string;
-    stopText?: ReactNode | string;
+    startText?: string;
+    stopText?: string;
     onClick: () => void;
     started: boolean;
     disabled?: boolean;
     large?: boolean;
     variant?: ButtonVariants;
     className?: string;
-    showIcon?: boolean;
 }
 
 const StartStopButton: FC<Props> = ({
@@ -34,7 +33,6 @@ const StartStopButton: FC<Props> = ({
     variant = 'secondary',
     className,
     large = true,
-    showIcon = true,
 }) => {
     const label = started ? stopText : startText;
     const src = started ? stopSvg : playSvg;
@@ -51,7 +49,7 @@ const StartStopButton: FC<Props> = ({
             onClick={() => onClick()}
             variant={variant}
         >
-            {showIcon && <img alt="" src={src} />}
+            <img alt="" src={src} />
             {label}
         </Button>
     );

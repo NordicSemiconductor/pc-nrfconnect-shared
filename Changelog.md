@@ -13,6 +13,15 @@ every new version is a new major version.
 
 -   Generic progress dialog
 
+### Changed
+
+-   Dialog spinner has moved next to the title
+
+### Fixed
+
+-   Confirmation dialog closes on ESC
+-   Information dialog closes on ESC
+
 ## 32 - 2023-04-14
 
 ### Added

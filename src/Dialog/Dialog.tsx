@@ -5,11 +5,10 @@
  */
 
 import React, { ReactNode } from 'react';
+import { Spinner } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 
 import Button, { ButtonVariants } from '../Button/Button';
-import StartStopButton from '../StartStopButton/StartStopButton';
-import Spinner from './Spinner';
 
 import './dialog.scss';
 
@@ -17,25 +16,32 @@ type CoreProps = {
     isVisible: boolean;
     onHide?: () => void;
     className?: string;
-    size?: 'sm' | 'lg' | 'xl';
+    size?: 'sm' | 'm' | 'lg' | 'xl';
     children: ReactNode | string;
 };
 
 type DialogProps = CoreProps & {
     closeOnUnfocus?: boolean;
+    closeOnEsc?: boolean;
 };
 
 export const Dialog = ({
     isVisible,
     closeOnUnfocus = false,
+    closeOnEsc = false,
     onHide = () => {},
     className = '',
-    size = 'lg',
+    size = 'm',
     children,
 }: DialogProps) => (
     <Modal
+        onEscapeKeyDown={() => {
+            if (closeOnEsc && onHide) {
+                onHide();
+            }
+        }}
         show={isVisible}
-        size={size}
+        size={size === 'm' ? undefined : size}
         backdrop={closeOnUnfocus ? true : 'static'}
         onHide={() => {
             if (closeOnUnfocus && onHide) {
@@ -52,18 +58,16 @@ export const Dialog = ({
 Dialog.Header = ({
     title,
     headerIcon,
-    inProgress,
+    showSpinner,
 }: {
     title: string;
     headerIcon?: string;
-    inProgress?: boolean;
+    showSpinner?: boolean;
 }) => (
-    <Modal.Header
-        closeButton={false}
-        className={inProgress ? 'processing-animation' : ''}
-    >
+    <Modal.Header closeButton={false}>
         <p>
             <b>{title}</b>
+            {showSpinner && <Spinner animation="border" />}
         </p>
         {headerIcon && <span className={`mdi mdi-${headerIcon}`} />}
     </Modal.Header>
@@ -73,17 +77,8 @@ Dialog.Body = ({ children }: { children: ReactNode | string }) => (
     <Modal.Body>{children}</Modal.Body>
 );
 
-Dialog.Footer = ({
-    showSpinner = false,
-    children,
-}: {
-    showSpinner?: boolean;
-    children: ReactNode;
-}) => (
-    <Modal.Footer>
-        {showSpinner && <Spinner />}
-        {children}
-    </Modal.Footer>
+Dialog.Footer = ({ children }: { children: ReactNode }) => (
+    <Modal.Footer>{children}</Modal.Footer>
 );
 
 export interface DialogButtonProps {
@@ -92,8 +87,6 @@ export interface DialogButtonProps {
     className?: string;
     disabled?: boolean;
     children: ReactNode | string;
-    progressButton?: boolean;
-    inProgress?: boolean;
 }
 
 export const DialogButton = ({
@@ -102,77 +95,55 @@ export const DialogButton = ({
     className = '',
     disabled = false,
     children,
-    progressButton = false,
-    inProgress = false,
-}: DialogButtonProps) =>
-    progressButton ? (
-        <StartStopButton
-            large
-            variant={variant}
-            startText={children}
-            stopText={children}
-            started={inProgress}
-            onClick={onClick}
-            className={className}
-            disabled={disabled}
-            showIcon={false}
-        />
-    ) : (
-        <Button
-            large
-            variant={variant}
-            onClick={onClick}
-            className={className}
-            disabled={disabled}
-        >
-            {children}
-        </Button>
-    );
+}: DialogButtonProps) => (
+    <Button
+        large
+        variant={variant}
+        onClick={onClick}
+        className={className}
+        disabled={disabled}
+    >
+        {children}
+    </Button>
+);
 
-interface GenericDialogProps extends Omit<CoreProps, 'onHide'> {
+interface GenericDialogProps extends CoreProps {
     title: string;
-    dialogButtons: DialogButtonProps[];
+    footer: React.ReactNode;
     headerIcon?: string;
-    inProgress?: boolean;
+    showSpinner?: boolean;
+    closeOnUnfocus?: boolean;
+    closeOnEsc?: boolean;
 }
 
 export const GenericDialog = ({
     isVisible,
+    onHide,
     title,
     headerIcon,
     children,
     className,
-    dialogButtons,
-    inProgress = false,
-    size = 'lg',
+    footer,
+    showSpinner = false,
+    closeOnUnfocus,
+    closeOnEsc,
+    size,
 }: GenericDialogProps) => (
-    <Dialog isVisible={isVisible} className={className} size={size}>
+    <Dialog
+        onHide={onHide}
+        closeOnUnfocus={closeOnUnfocus}
+        closeOnEsc={closeOnEsc}
+        isVisible={isVisible}
+        className={className}
+        size={size}
+    >
         <Dialog.Header
             title={title}
             headerIcon={headerIcon}
-            inProgress={inProgress}
+            showSpinner={showSpinner}
         />
         <Dialog.Body>{children}</Dialog.Body>
-        <Dialog.Footer>
-            {dialogButtons.reverse().map((dialogButton, index) => (
-                <DialogButton
-                    key={`${index + 0}`}
-                    disabled={dialogButton.disabled}
-                    variant={
-                        dialogButton.variant ??
-                        index === dialogButtons.length - 1
-                            ? 'primary'
-                            : 'secondary'
-                    }
-                    className={dialogButton.className}
-                    onClick={dialogButton.onClick}
-                    progressButton={dialogButton.progressButton}
-                    inProgress={dialogButton.inProgress}
-                >
-                    {dialogButton.children}
-                </DialogButton>
-            ))}
-        </Dialog.Footer>
+        <Dialog.Footer>{footer}</Dialog.Footer>
     </Dialog>
 );
 
@@ -187,21 +158,18 @@ export const InfoDialog = ({
     headerIcon = 'info',
     children,
     onHide = () => {},
-    size = 'lg',
+    size,
     className,
 }: InfoProps) => (
     <GenericDialog
+        closeOnEsc
+        onHide={onHide}
         isVisible={isVisible}
         headerIcon={headerIcon}
         title={title}
         className={className}
         size={size}
-        dialogButtons={[
-            {
-                onClick: onHide,
-                children: 'Close',
-            },
-        ]}
+        footer={<DialogButton onClick={onHide}>Close</DialogButton>}
     >
         {children}
     </GenericDialog>
@@ -237,36 +205,28 @@ export const ConfirmationDialog = ({
     onCancel,
     optionalLabel,
     onOptional = () => {},
-    size = 'lg',
-}: ConfirmationDialogProps) => {
-    const buttons = [
-        {
-            onClick: onConfirm,
-            children: confirmLabel,
-        },
-        {
-            onClick: onCancel,
-            children: cancelLabel,
-        },
-    ];
-
-    if (optionalLabel) {
-        buttons.push({
-            onClick: onOptional,
-            children: optionalLabel,
-        });
-    }
-
-    return (
-        <GenericDialog
-            isVisible={isVisible}
-            headerIcon={headerIcon}
-            title={title}
-            className={className}
-            size={size}
-            dialogButtons={buttons}
-        >
-            {children}
-        </GenericDialog>
-    );
-};
+    size,
+}: ConfirmationDialogProps) => (
+    <GenericDialog
+        onHide={onCancel}
+        closeOnEsc
+        isVisible={isVisible}
+        headerIcon={headerIcon}
+        title={title}
+        className={className}
+        size={size}
+        footer={
+            <>
+                <DialogButton onClick={onConfirm}>{confirmLabel}</DialogButton>
+                <DialogButton onClick={onCancel}>{cancelLabel}</DialogButton>
+                {optionalLabel && (
+                    <DialogButton onClick={onOptional}>
+                        {optionalLabel}
+                    </DialogButton>
+                )}
+            </>
+        }
+    >
+        {children}
+    </GenericDialog>
+);
