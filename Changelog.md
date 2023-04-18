@@ -24,7 +24,7 @@ every new version is a new major version.
 
 ### Steps to upgrade when using this package
 
--   Move the showSpinner from Dialog.Footer to Dialog.Header
+-   Move the showSpinner property from Dialog.Footer to Dialog.Header
 
 ## 32 - 2023-04-14
 
