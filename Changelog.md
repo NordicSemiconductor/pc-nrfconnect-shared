@@ -22,6 +22,10 @@ every new version is a new major version.
 -   Confirmation dialog closes on ESC
 -   Information dialog closes on ESC
 
+### Steps to upgrade when using this package
+
+-   Move the showSpinner from Dialog.Footer to Dialog.Header
+
 ## 32 - 2023-04-14
 
 ### Added

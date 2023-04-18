@@ -43,11 +43,12 @@ interface GenericDialogProps extends CoreProps {
     closeOnEsc?: boolean;
 }
 export declare const GenericDialog: ({ isVisible, onHide, title, headerIcon, children, className, footer, showSpinner, closeOnUnfocus, closeOnEsc, size, }: GenericDialogProps) => JSX.Element;
-interface InfoProps extends CoreProps {
+interface InfoProps extends Omit<CoreProps, 'onHide'> {
     title?: string;
     headerIcon?: string;
+    onClose: () => void;
 }
-export declare const InfoDialog: ({ isVisible, title, headerIcon, children, onHide, size, className, }: InfoProps) => JSX.Element;
+export declare const InfoDialog: ({ isVisible, title, headerIcon, children, onClose, size, className, }: InfoProps) => JSX.Element;
 export declare const ErrorDialog: (props: Omit<InfoProps, 'headerIcon'>) => JSX.Element;
 interface ConfirmationDialogProps extends Omit<CoreProps, 'onHide'> {
     title?: string;

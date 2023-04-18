@@ -147,9 +147,10 @@ export const GenericDialog = ({
     </Dialog>
 );
 
-interface InfoProps extends CoreProps {
+interface InfoProps extends Omit<CoreProps, 'onHide'> {
     title?: string;
     headerIcon?: string;
+    onClose: () => void;
 }
 
 export const InfoDialog = ({
@@ -157,19 +158,19 @@ export const InfoDialog = ({
     title = 'Info',
     headerIcon = 'info',
     children,
-    onHide = () => {},
+    onClose,
     size,
     className,
 }: InfoProps) => (
     <GenericDialog
         closeOnEsc
-        onHide={onHide}
+        onHide={onClose}
         isVisible={isVisible}
         headerIcon={headerIcon}
         title={title}
         className={className}
         size={size}
-        footer={<DialogButton onClick={onHide}>Close</DialogButton>}
+        footer={<DialogButton onClick={onClose}>Close</DialogButton>}
     >
         {children}
     </GenericDialog>
