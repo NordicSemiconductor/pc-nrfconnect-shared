@@ -30,6 +30,11 @@
         .mdi {
             font-size: 20px;
         }
+
+        .spinner-border {
+            margin-left: 16px;
+            border-width: 1px;
+        }
     }
 
     .modal-body {
@@ -43,6 +48,9 @@
     .modal-footer {
         padding: 16px;
         border: 0 transparent;
+        flex-direction: row-reverse;
+        justify-content: end;
+        display: flex;
 
         button {
             padding: 0 16px;

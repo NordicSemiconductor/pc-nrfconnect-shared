@@ -7,6 +7,25 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## Unreleased
+
+### Added
+
+-   Generic progress dialog
+
+### Changed
+
+-   Dialog spinner has moved next to the title
+
+### Fixed
+
+-   Confirmation dialog closes on ESC
+-   Information dialog closes on ESC
+
+### Steps to upgrade when using this package
+
+-   Move the showSpinner property from Dialog.Footer to Dialog.Header
+
 ## 32 - 2023-04-14
 
 ### Added

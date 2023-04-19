@@ -5,10 +5,10 @@
  */
 
 import React, { ReactNode } from 'react';
+import { Spinner } from 'react-bootstrap';
 import { getCurrentWindow } from '@electron/remote';
 
 import Button from '../Button/Button';
-import Spinner from '../Dialog/Spinner';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { CollapsibleGroup } from '../SidePanel/Group';
 import { Device } from '../state';
@@ -159,7 +159,7 @@ class ErrorBoundary extends React.Component<
                             <h2 className="loading-header">
                                 Generating system report...
                             </h2>
-                            <Spinner />
+                            <Spinner size="sm" animation="border" />
                         </div>
                     )}
                     <p>

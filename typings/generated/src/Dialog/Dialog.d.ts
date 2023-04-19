@@ -5,36 +5,48 @@ type CoreProps = {
     isVisible: boolean;
     onHide?: () => void;
     className?: string;
-    size?: 'sm' | 'lg' | 'xl';
+    size?: 'sm' | 'm' | 'lg' | 'xl';
     children: ReactNode | string;
 };
 type DialogProps = CoreProps & {
     closeOnUnfocus?: boolean;
+    closeOnEsc?: boolean;
 };
 export declare const Dialog: {
-    ({ isVisible, closeOnUnfocus, onHide, className, size, children, }: DialogProps): JSX.Element;
-    Header({ title, headerIcon, }: {
+    ({ isVisible, closeOnUnfocus, closeOnEsc, onHide, className, size, children, }: DialogProps): JSX.Element;
+    Header({ title, headerIcon, showSpinner, }: {
         title: string;
         headerIcon?: string | undefined;
+        showSpinner?: boolean | undefined;
     }): JSX.Element;
     Body({ children }: {
         children: ReactNode | string;
     }): JSX.Element;
-    Footer({ showSpinner, children, }: {
-        showSpinner?: boolean | undefined;
+    Footer({ children }: {
         children: ReactNode;
     }): JSX.Element;
 };
-export declare const DialogButton: ({ variant, onClick, className, disabled, children, }: {
-    onClick: React.MouseEventHandler<HTMLButtonElement>;
-    variant?: ButtonVariants | undefined;
-    className?: string | undefined;
-    disabled?: boolean | undefined;
+export interface DialogButtonProps {
+    onClick: () => void;
+    variant?: ButtonVariants;
+    className?: string;
+    disabled?: boolean;
     children: ReactNode | string;
-}) => JSX.Element;
+}
+export declare const DialogButton: ({ variant, onClick, className, disabled, children, }: DialogButtonProps) => JSX.Element;
+interface GenericDialogProps extends CoreProps {
+    title: string;
+    footer: React.ReactNode;
+    headerIcon?: string;
+    showSpinner?: boolean;
+    closeOnUnfocus?: boolean;
+    closeOnEsc?: boolean;
+}
+export declare const GenericDialog: ({ isVisible, onHide, title, headerIcon, children, className, footer, showSpinner, closeOnUnfocus, closeOnEsc, size, }: GenericDialogProps) => JSX.Element;
 interface InfoProps extends CoreProps {
     title?: string;
     headerIcon?: string;
+    onHide: () => void;
 }
 export declare const InfoDialog: ({ isVisible, title, headerIcon, children, onHide, size, className, }: InfoProps) => JSX.Element;
 export declare const ErrorDialog: (props: Omit<InfoProps, 'headerIcon'>) => JSX.Element;
