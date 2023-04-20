@@ -7,7 +7,7 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 34 - 2023-04-20
+## 35 - 2023-04-20
 
 ### Fixed
 
@@ -20,6 +20,8 @@ every new version is a new major version.
 
 -   Made `InfoDialog` close when unfocusing again, which was removed during the
     previous version.
+
+## 33 - 2023-04-19
 
 ### Added
 
