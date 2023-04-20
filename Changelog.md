@@ -11,7 +11,8 @@ every new version is a new major version.
 
 ### Fixed
 
--   "Warning: validateDOMNesting(...): <div> cannot appear as a descendant of <p>."
+-   "Warning: validateDOMNesting(...): <div> cannot appear as a descendant of
+    <p>."
 
 ## 34 - 2023-04-19
 
