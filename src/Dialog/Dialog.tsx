@@ -164,6 +164,7 @@ export const InfoDialog = ({
 }: InfoProps) => (
     <GenericDialog
         closeOnEsc
+        closeOnUnfocus
         onHide={onHide}
         isVisible={isVisible}
         headerIcon={headerIcon}
