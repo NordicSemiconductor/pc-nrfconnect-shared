@@ -9,6 +9,12 @@ every new version is a new major version.
 
 ## Unreleased
 
+### Fixed
+
+-   "Warning: validateDOMNesting(...): <div> cannot appear as a descendant of <p>."
+    
+## Unreleased
+
 ### Added
 
 -   Generic progress dialog
