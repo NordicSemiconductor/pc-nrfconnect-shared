@@ -7,19 +7,20 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## Unreleased
+## 36 - 2023-04-26
 
 ### Added
 
--   Scripts `prepare-shared-release` and `release-shared`to ease releasing new
+-   Scripts `prepare-shared-release` and `release-shared` to ease releasing new
     versions of shared.
+-   Property `id` to `Dropdown` component.
 
 ## 35 - 2023-04-20
 
 ### Fixed
 
--   "Warning: validateDOMNesting(...): <div> cannot appear as a descendant of
-    <p>."
+-   "Warning: validateDOMNesting(...): `<div>` cannot appear as a descendant of
+    `<p>`."
 
 ## 34 - 2023-04-19
 
@@ -32,20 +33,24 @@ every new version is a new major version.
 
 ### Added
 
--   Generic progress dialog
+-   Generic progress dialog.
 
 ### Changed
 
--   Dialog spinner has moved next to the title
+-   Dialog spinner has moved next to the title.
 
 ### Fixed
 
--   Confirmation dialog closes on ESC
--   Information dialog closes on ESC
+-   Confirmation dialog closes on ESC.
+-   Information dialog closes on ESC.
+
+### Removed
+
+-   Exported component `Spinner`.
 
 ### Steps to upgrade when using this package
 
--   Move the showSpinner property from Dialog.Footer to Dialog.Header
+-   Move the `showSpinner` property from `Dialog.Footer` to `Dialog.Header`.
 
 ## 32 - 2023-04-14
 
