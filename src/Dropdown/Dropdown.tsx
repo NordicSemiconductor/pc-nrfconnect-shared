@@ -15,6 +15,7 @@ export interface DropdownItem {
 }
 
 export interface DropdownProps {
+    id?: string;
     label?: string;
     items: DropdownItem[];
     onSelect: (item: DropdownItem) => void;
@@ -24,6 +25,7 @@ export interface DropdownProps {
 }
 
 export default ({
+    id,
     label,
     items,
     onSelect,
@@ -49,6 +51,7 @@ export default ({
         >
             {label && <FormLabel className={styles.label}>{label}</FormLabel>}
             <button
+                id={id}
                 type="button"
                 className={`${styles.btn} ${
                     isActive ? styles.btnActive : styles.btnInactive

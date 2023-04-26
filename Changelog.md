@@ -11,8 +11,9 @@ every new version is a new major version.
 
 ### Added
 
--   Scripts `prepare-shared-release` and `release-shared`to ease releasing new
+-   Scripts `prepare-shared-release` and `release-shared` to ease releasing new
     versions of shared.
+-   Property `id` to `Dropdown` component.
 
 ## 35 - 2023-04-20
 
