@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## Unreleased
+
+### Added
+
+-   Scripts `prepare-shared-release` and `release-shared`to ease releasing new
+    versions of shared.
+
 ## 35 - 2023-04-20
 
 ### Fixed

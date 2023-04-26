@@ -26,6 +26,8 @@
         "prepare": "ts-node scripts/installHusky.ts",
         "compile:publish": "esbuild scripts/nordic-publish.ts --bundle --outfile=scripts/nordic-publish.js --platform=node --log-level=warning --minify",
         "compile:bootstrap": "node scripts/esbuild-bootstrap.js",
+        "release-shared": "ts-node scripts/release-shared.ts",
+        "prepare-shared-release": "ts-node scripts/prepare-shared-release.ts",
         "postinstall": "run-p compile:*"
     },
     "peerDependencies": {
