@@ -12,14 +12,14 @@ export interface TerminalSettings {
     lineEnding: string;
     clearOnSend: boolean;
 }
-export declare const persistNickname: (serialNumber: string, nickname: string) => void;
-export declare const getPersistedNickname: (serialNumber: string) => string;
-export declare const persistIsFavorite: (serialNumber: string, value: boolean) => void;
-export declare const getPersistedIsFavorite: (serialNumber: string) => boolean;
-export declare const persistSerialPortSettings: (serialNumber: string, serialPortSettings: Omit<SerialSettings, 'lastUpdated'>) => void;
-export declare const getPersistedSerialPortSettings: (serialNumber: string) => SerialSettings | undefined;
-export declare const persistTerminalSettings: (serialNumber: string, vComIndex: number, terminalSettings: TerminalSettings) => void;
-export declare const getPersistedTerminalSettings: (serialNumber: string, vComIndex: number) => TerminalSettings | undefined;
+export declare const persistNickname: (key: string, nickname: string) => void;
+export declare const getPersistedNickname: (key: string) => string;
+export declare const persistIsFavorite: (key: string, value: boolean) => void;
+export declare const getPersistedIsFavorite: (key: string) => boolean;
+export declare const persistSerialPortSettings: (key: string, serialPortSettings: Omit<SerialSettings, 'lastUpdated'>) => void;
+export declare const getPersistedSerialPortSettings: (key: string) => SerialSettings | undefined;
+export declare const persistTerminalSettings: (key: string, vComIndex: number, terminalSettings: TerminalSettings) => void;
+export declare const getPersistedTerminalSettings: (key: string, vComIndex: number) => TerminalSettings | undefined;
 export declare const persistIsSendingUsageData: (value: boolean) => void;
 export declare const getIsSendingUsageData: () => boolean | undefined;
 export declare const deleteIsSendingUsageData: () => void;

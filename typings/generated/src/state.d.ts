@@ -45,7 +45,7 @@ export interface DeviceState {
     deviceInfo: Device | null;
     isSetupDialogVisible: boolean;
     isSetupWaitingForUserInput: boolean | string;
-    selectedSerialNumber: string | null;
+    selectedKey: string | null;
     setupDialogChoices: readonly string[];
     setupDialogText?: string | null;
     readbackProtection: 'unknown' | 'protected' | 'unprotected';
@@ -66,7 +66,7 @@ export interface WaitForDevice {
     onFail?: (reason?: string) => void;
 }
 export interface DeviceInfo {
-    name?: string;
+    name?: string | null;
     cores?: number;
     icon: React.ElementType;
     website: {
@@ -79,7 +79,6 @@ export interface Device extends NrfdlDevice {
     nickname?: string;
     serialport?: SerialPort;
     favorite?: boolean;
-    id: number;
     persistedSerialPortOptions?: SerialPortOpenOptions<AutoDetectTypes>;
 }
 export interface BrokenDeviceDialog {
