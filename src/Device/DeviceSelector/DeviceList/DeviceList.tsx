@@ -12,7 +12,7 @@ import { Toggle } from '../../../Toggle/Toggle';
 import classNames from '../../../utils/classNames';
 import { getAutoReselect, setAutoReselect } from '../../deviceAutoSelectSlice';
 import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
-import { getDevices } from '../../deviceSlice';
+import { deviceKey, getDevices } from '../../deviceSlice';
 import { AnimatedItem, AnimatedList } from './AnimatedList';
 import BrokenDevice from './BrokenDevice';
 import Device from './Device';
@@ -92,7 +92,7 @@ const DeviceList: FC<Props> = ({
                     {filteredDevices.map(device => (
                         <AnimatedItem
                             key={device.serialNumber}
-                            itemKey={device.serialNumber}
+                            itemKey={deviceKey(device)}
                         >
                             {device.traits.broken ? (
                                 <BrokenDevice device={device} />

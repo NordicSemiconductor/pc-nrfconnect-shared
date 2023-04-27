@@ -23,6 +23,7 @@ import { getDeviceLibContext } from './deviceLibWrapper';
 import {
     addDevice,
     closeSetupDialogVisible,
+    deviceKey,
     removeDevice,
     setDevices,
 } from './deviceSlice';
@@ -101,7 +102,7 @@ const initAutoReconnectTimeout =
         );
     };
 
-let hotplugTaskId: number | null = null;
+let hotplugTaskId: bigint | null = null;
 
 /**
  * Wrap the device form nrf-device-lib to make the Device type consistent
@@ -153,16 +154,12 @@ export const startWatchingDevices =
     async (dispatch: TDispatch, getState: () => RootState) => {
         const updateDeviceList = (event: HotplugEvent) => {
             const removeDeviceFromList = (remove: Device) => {
-                if (
-                    remove.serialNumber ===
-                    getState().device.selectedSerialNumber
-                ) {
+                if (remove.serialNumber === getState().device.selectedKey) {
                     onDeviceDeselected();
                 }
 
                 if (
-                    remove.serialNumber ===
-                        getState().device.selectedSerialNumber &&
+                    remove.serialNumber === getState().device.selectedKey &&
                     !getState().deviceAutoSelect.waitForDevice
                 ) {
                     dispatch(closeSetupDialogVisible());
@@ -184,13 +181,11 @@ export const startWatchingDevices =
                         )
                     ) {
                         const device = wrapDeviceFromNrfdl(event.device);
-                        if (
-                            !getState().device.devices.has(device.serialNumber)
-                        ) {
+                        if (!getState().device.devices.has(deviceKey(device))) {
                             onDeviceConnected(device);
                         }
 
-                        const sn = getState().device.selectedSerialNumber;
+                        const sn = getState().device.selectedKey;
                         const disconnectionTime =
                             getState().deviceAutoSelect.disconnectionTime;
                         const autoSelectDevice =
@@ -208,7 +203,7 @@ export const startWatchingDevices =
 
                         dispatch(addDevice(device));
                         const deviceWithPersistedData =
-                            getState().device.devices.get(device.serialNumber);
+                            getState().device.devices.get(deviceKey(device));
 
                         if (!deviceWithPersistedData) return;
 
@@ -359,6 +354,7 @@ export const stopWatchingDevices = () => {
     // Not sure, if this guard clause is really needed
     if (getDeviceLibContext() && hotplugTaskId !== null) {
         try {
+            // @ts-expect-error Typing will be updated in device-lib
             nrfDeviceLib.stopHotplugEvents(hotplugTaskId);
             hotplugTaskId = null;
         } catch (error) {

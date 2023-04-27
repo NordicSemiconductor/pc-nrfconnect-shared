@@ -33,52 +33,50 @@ const sharedStore = new Store<{
     name: 'pc-nrfconnect-shared',
 });
 
-export const persistNickname = (serialNumber: string, nickname: string) =>
-    sharedStore.set(`${serialNumber}.name`, nickname);
-export const getPersistedNickname = (serialNumber: string) =>
-    sharedStore.get(`${serialNumber}.name`, '') as string;
+export const persistNickname = (key: string, nickname: string) =>
+    sharedStore.set(`${key}.name`, nickname);
+export const getPersistedNickname = (key: string) =>
+    sharedStore.get(`${key}.name`, '') as string;
 
-export const persistIsFavorite = (serialNumber: string, value: boolean) =>
-    sharedStore.set(`${serialNumber}.fav`, value);
-export const getPersistedIsFavorite = (serialNumber: string) =>
-    sharedStore.get(`${serialNumber}.fav`, false) as boolean;
+export const persistIsFavorite = (key: string, value: boolean) =>
+    sharedStore.set(`${key}.fav`, value);
+export const getPersistedIsFavorite = (key: string) =>
+    sharedStore.get(`${key}.fav`, false) as boolean;
 
 export const persistSerialPortSettings = (
-    serialNumber: string,
+    key: string,
     serialPortSettings: Omit<SerialSettings, 'lastUpdated'>
 ) =>
-    sharedStore.set(`${serialNumber}.${packageJson().name}`, {
+    sharedStore.set(`${key}.${packageJson().name}`, {
         ...serialPortSettings,
         lastUpdated: Date.now(),
     });
 export const getPersistedSerialPortSettings = (
-    serialNumber: string
+    key: string
 ): SerialSettings | undefined => {
     const appName = packageJson().name;
     logger.info(
-        `Getting serialport options from persistent store ${serialNumber}.${appName}`
+        `Getting serialport options from persistent store ${key}.${appName}`
     );
-    return sharedStore.get(`${serialNumber}.${appName}`);
+    return sharedStore.get(`${key}.${appName}`);
 };
 export const persistTerminalSettings = (
-    serialNumber: string,
+    key: string,
     vComIndex: number,
     terminalSettings: TerminalSettings
 ) =>
     sharedStore.set(
-        `${serialNumber}.vCom-${vComIndex}.TerminalSettings`,
+        `${key}.vCom-${vComIndex}.TerminalSettings`,
         terminalSettings
     );
 export const getPersistedTerminalSettings = (
-    serialNumber: string,
+    key: string,
     vComIndex: number
 ): TerminalSettings | undefined => {
     logger.info(
-        `Get terminal settings from persistent store ${serialNumber}.vCom-${vComIndex}.TerminalSettings`
+        `Get terminal settings from persistent store ${key}.vCom-${vComIndex}.TerminalSettings`
     );
-    return sharedStore.get(
-        `${serialNumber}.vCom-${vComIndex}.TerminalSettings`
-    );
+    return sharedStore.get(`${key}.vCom-${vComIndex}.TerminalSettings`);
 };
 
 export const persistIsSendingUsageData = (value: boolean) =>

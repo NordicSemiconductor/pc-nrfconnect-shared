@@ -25,9 +25,9 @@ import {
     persistIsLoggingVerbose,
 } from '../utils/persistentStore';
 
-let deviceLibContext = 0;
+let deviceLibContext = 0n;
 export const getDeviceLibContext = () => {
-    if (deviceLibContext === 0) initDeviceLib();
+    if (deviceLibContext === 0n) initDeviceLib();
 
     return deviceLibContext;
 };
@@ -98,6 +98,7 @@ export const forwardLogEventsFromDeviceLib = () => {
         (evt: LogEvent) => logNrfdlLogs(evt)
     );
     return () => {
+        // @ts-expect-error Typing will be fixed in device lib
         stopLogEvents(taskId);
     };
 };

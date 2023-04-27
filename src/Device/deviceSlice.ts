@@ -20,10 +20,10 @@ import {
 
 const updateDevice = (
     state: DeviceState,
-    serialNumber: string,
+    key: string,
     updateToMergeIn: Partial<Device>
 ) => {
-    const device = state.devices.get(serialNumber);
+    const device = state.devices.get(key);
     if (device) {
         Object.assign(device, updateToMergeIn);
     }
@@ -37,22 +37,25 @@ const noDialogShown = {
 
 const initialState: DeviceState = {
     devices: new Map(),
-    selectedSerialNumber: null,
+    selectedKey: null,
     deviceInfo: null,
     isSetupWaitingForUserInput: false,
     readbackProtection: 'unknown',
     ...noDialogShown,
 };
 
+export const deviceKey = (device: Device) =>
+    device.serialNumber ?? `${device.id}`;
+
 const setPersistedData = (device: Device) => {
     const newDevice = {
         ...device,
-        favorite: getPersistedIsFavorite(device.serialNumber),
-        nickname: getPersistedNickname(device.serialNumber),
+        favorite: getPersistedIsFavorite(deviceKey(device)),
+        nickname: getPersistedNickname(deviceKey(device)),
     };
 
     const persistedSerialPortSettings = getPersistedSerialPortSettings(
-        newDevice.serialNumber
+        deviceKey(newDevice)
     );
 
     if (persistedSerialPortSettings) {
@@ -79,14 +82,14 @@ const slice = createSlice({
          * Indicates that a device has been selected.
          */
         selectDevice: (state, action: PayloadAction<Device>) => {
-            state.selectedSerialNumber = action.payload.serialNumber;
+            state.selectedKey = deviceKey(action.payload);
         },
 
         /*
          * Indicates that the currently selected device has been deselected.
          */
         deselectDevice: state => {
-            state.selectedSerialNumber = null;
+            state.selectedKey = null;
             state.deviceInfo = null;
             state.readbackProtection = 'unknown';
         },
@@ -149,16 +152,13 @@ const slice = createSlice({
         setDevices: (state, action: PayloadAction<Device[]>) => {
             state.devices.clear();
             action.payload.forEach(device => {
-                state.devices.set(
-                    device.serialNumber,
-                    setPersistedData(device)
-                );
+                state.devices.set(deviceKey(device), setPersistedData(device));
             });
         },
 
         addDevice: (state, action: PayloadAction<Device>) => {
             state.devices.set(
-                action.payload.serialNumber,
+                deviceKey(action.payload),
                 setPersistedData(action.payload)
             );
         },
@@ -167,11 +167,9 @@ const slice = createSlice({
             state,
             action: PayloadAction<SerialPortOpenOptions<AutoDetectTypes>>
         ) => {
-            if (state.selectedSerialNumber === null) return;
+            if (state.selectedKey === null) return;
 
-            const selectedDevice = state.devices.get(
-                state.selectedSerialNumber
-            );
+            const selectedDevice = state.devices.get(state.selectedKey);
 
             if (selectedDevice) {
                 const vComIndex = selectedDevice.serialPorts?.findIndex(
@@ -182,15 +180,12 @@ const slice = createSlice({
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars -- used to filter out the path property
                     const { path: _, ...serialPortOptions } = action.payload;
 
-                    persistSerialPortSettingsToStore(
-                        state.selectedSerialNumber,
-                        {
-                            serialPortOptions,
-                            vComIndex,
-                        }
-                    );
+                    persistSerialPortSettingsToStore(state.selectedKey, {
+                        serialPortOptions,
+                        vComIndex,
+                    });
 
-                    state.devices.set(state.selectedSerialNumber, {
+                    state.devices.set(state.selectedKey, {
                         ...selectedDevice,
                         persistedSerialPortOptions: action.payload,
                     });
@@ -199,47 +194,44 @@ const slice = createSlice({
         },
 
         removeDevice: (state, action: PayloadAction<Device>) => {
-            state.devices.delete(action.payload.serialNumber);
+            state.devices.delete(deviceKey(action.payload));
 
-            if (state.selectedSerialNumber === action.payload.serialNumber) {
-                state.selectedSerialNumber = null;
+            if (state.selectedKey === deviceKey(action.payload)) {
+                state.selectedKey = null;
                 state.deviceInfo = null;
             }
         },
 
-        toggleDeviceFavorited: (state, action: PayloadAction<string>) => {
-            const newFavoriteState = !state.devices.get(action.payload)
-                ?.favorite;
-            persistIsFavorite(action.payload, newFavoriteState);
-            updateDevice(state, action.payload, {
+        toggleDeviceFavorited: (state, action: PayloadAction<Device>) => {
+            const key = deviceKey(action.payload);
+            const newFavoriteState = !state.devices.get(key)?.favorite;
+            persistIsFavorite(key, newFavoriteState);
+            updateDevice(state, key, {
                 favorite: newFavoriteState,
             });
         },
 
         setDeviceNickname: {
-            prepare: (serialNumber: string, nickname: string) => ({
-                payload: { serialNumber, nickname },
+            prepare: (device: Device, nickname: string) => ({
+                payload: { key: deviceKey(device), nickname },
             }),
             reducer: (
                 state,
                 action: PayloadAction<{
-                    serialNumber: string;
+                    key: string;
                     nickname: string;
                 }>
             ) => {
-                persistNickname(
-                    action.payload.serialNumber,
-                    action.payload.nickname
-                );
-                updateDevice(state, action.payload.serialNumber, {
+                persistNickname(action.payload.key, action.payload.nickname);
+                updateDevice(state, action.payload.key, {
                     nickname: action.payload.nickname,
                 });
             },
         },
 
-        resetDeviceNickname: (state, action: PayloadAction<string>) => {
-            persistNickname(action.payload, '');
-            updateDevice(state, action.payload, {
+        resetDeviceNickname: (state, action: PayloadAction<Device>) => {
+            persistNickname(deviceKey(action.payload), '');
+            updateDevice(state, deviceKey(action.payload), {
                 nickname: '',
             });
         },
@@ -278,22 +270,21 @@ export const {
     },
 } = slice;
 
-export const getDevice = (serialNumber: string) => (state: RootState) =>
-    state.device.devices.get(serialNumber);
+export const getDevice = (key: string) => (state: RootState) =>
+    state.device.devices.get(key);
 
 export const getDevices = (state: RootState) => state.device.devices;
 
 export const deviceIsSelected = (state: RootState) =>
-    state.device.selectedSerialNumber != null;
+    state.device.selectedKey != null;
 
 export const selectedDevice = (state: RootState) =>
-    state.device.selectedSerialNumber !== null
-        ? state.device.devices.get(state.device.selectedSerialNumber)
+    state.device.selectedKey !== null
+        ? state.device.devices.get(state.device.selectedKey)
         : undefined;
 
 export const deviceInfo = (state: RootState) => state.device.deviceInfo;
-export const selectedSerialNumber = (state: RootState) =>
-    state.device.selectedSerialNumber;
+export const selectedKey = (state: RootState) => state.device.selectedKey;
 
 export const getReadbackProtection = (state: RootState) =>
     state.device.readbackProtection;

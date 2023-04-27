@@ -22,7 +22,7 @@ import {
     deselectDevice,
     deviceIsSelected as deviceIsSelectedSelector,
     selectDevice,
-    selectedSerialNumber,
+    selectedKey,
 } from '../deviceSlice';
 import DeviceList from './DeviceList/DeviceList';
 import SelectDevice from './SelectDevice';
@@ -61,7 +61,7 @@ export default ({
     const [deviceListVisible, setDeviceListVisible] = useState(false);
 
     const deviceIsSelected = useSelector(deviceIsSelectedSelector);
-    const selectedSN = useSelector(selectedSerialNumber);
+    const selectedSN = useSelector(selectedKey);
     const waitingToAutoReconnect = useSelector(getWaitingToAutoReselect);
     const showSelectedDevice = deviceIsSelected || waitingToAutoReconnect;
 

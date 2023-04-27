@@ -20,7 +20,7 @@ import { setAutoReselect } from '../Device/deviceAutoSelectSlice';
 import {
     getDevices,
     selectedDevice as selectedDeviceSelector,
-    selectedSerialNumber as selectedSerialNumberSelector,
+    selectedKey,
 } from '../Device/deviceSlice';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
@@ -201,13 +201,13 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
 const ConnectedErrorBoundary: React.FC = ({ children }) => {
     const devices = useSelector(getDevices);
     const selectedDevice = useSelector(selectedDeviceSelector);
-    const selectedSerialNumber = useSelector(selectedSerialNumberSelector);
+    const selectedDeviceKey = useSelector(selectedKey);
 
     return (
         <ErrorBoundary
             devices={[...devices.values()]}
             selectedDevice={selectedDevice}
-            selectedSerialNumber={selectedSerialNumber ?? undefined}
+            selectedSerialNumber={selectedDeviceKey ?? undefined}
         >
             {children}
         </ErrorBoundary>

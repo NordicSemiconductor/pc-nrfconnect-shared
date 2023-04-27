@@ -33,19 +33,17 @@ const DeviceName = ({ device, inputRef, messageType }: Props) => {
             name === displayedDeviceName(device, { respectNickname: false });
 
         if (newNameIsEqualToDefaultName) {
-            dispatch(resetDeviceNickname(device.serialNumber));
+            dispatch(resetDeviceNickname(device));
         } else {
-            dispatch(setDeviceNickname(device.serialNumber, name));
+            dispatch(setDeviceNickname(device, name));
         }
     };
 
     switch (messageType) {
         case 'AutoReselect':
             return <div className="reconnecting">Reconnecting...</div>;
-            break;
         case 'WaitingForDevice':
             return <div className="reconnecting">Rebooting...</div>;
-            break;
         case 'DeviceName':
             return (
                 <InlineInput

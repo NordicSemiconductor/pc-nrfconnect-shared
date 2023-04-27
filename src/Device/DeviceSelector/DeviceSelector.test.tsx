@@ -14,7 +14,7 @@ import {
 
 import render from '../../../test/testrenderer';
 import { Device } from '../../state';
-import { setDevices } from '../deviceSlice';
+import { deviceKey, setDevices } from '../deviceSlice';
 import DeviceSelector from './DeviceSelector';
 
 jest.mock('../sdfuOperations', () => ({}));
@@ -146,7 +146,7 @@ describe('DeviceSelector', () => {
             />,
             [setDevices([testDevice])]
         );
-        expect(screen.getByText(testDevice.serialNumber)).toBeInTheDocument();
+        expect(screen.getByText(deviceKey(testDevice))).toBeInTheDocument();
     });
 
     it('should unlist disconnected devices', () => {
@@ -161,7 +161,7 @@ describe('DeviceSelector', () => {
             />,
             [setDevices([testDevice]), setDevices([])]
         );
-        expect(screen.queryByText(testDevice.serialNumber)).toBeNull();
+        expect(screen.queryByText(deviceKey(testDevice))).toBeNull();
     });
 
     it('should show more device info when selecting the expand button', () => {
@@ -195,8 +195,8 @@ describe('DeviceSelector', () => {
         );
 
         fireEvent.click(screen.getByText('Select device'));
-        fireEvent.click(screen.getByText(testDevice.serialNumber));
-        expect(screen.getAllByText(testDevice.serialNumber)).toHaveLength(2);
+        fireEvent.click(screen.getByText(deviceKey(testDevice)));
+        expect(screen.getAllByText(deviceKey(testDevice))).toHaveLength(2);
     });
 
     it('can deselect selected devices', async () => {
@@ -212,10 +212,10 @@ describe('DeviceSelector', () => {
             [setDevices([testDevice])]
         );
         fireEvent.click(screen.getByText('Select device'));
-        fireEvent.click(screen.getByText(testDevice.serialNumber));
+        fireEvent.click(screen.getByText(deviceKey(testDevice)));
         await screen.findByTestId('disconnect-device');
         fireEvent.click(screen.getByTestId('disconnect-device'));
-        expect(screen.getAllByText(testDevice.serialNumber)).toHaveLength(1);
+        expect(screen.getAllByText(deviceKey(testDevice))).toHaveLength(1);
         expect(screen.getByText('Select device')).toBeInTheDocument();
     });
 
@@ -242,10 +242,10 @@ describe('DeviceSelector', () => {
             [setDevices([testDevice])]
         );
         fireEvent.click(screen.getByText('Select device'));
-        fireEvent.click(screen.getByText(testDevice.serialNumber));
+        fireEvent.click(screen.getByText(deviceKey(testDevice)));
 
         expect(screen.queryByText('OK')).toBeNull();
-        expect(screen.getAllByText(testDevice.serialNumber)).toHaveLength(2);
+        expect(screen.getAllByText(deviceKey(testDevice))).toHaveLength(2);
     });
 
     it('should deselect device when custom devices are disabled and no valid firmware is defined', async () => {
@@ -272,13 +272,11 @@ describe('DeviceSelector', () => {
         );
 
         fireEvent.click(screen.getByText('Select device'));
-        fireEvent.click(screen.getByText(testDevice.serialNumber));
+        fireEvent.click(screen.getByText(deviceKey(testDevice)));
 
         expect(screen.queryByText('OK')).toBeNull();
         await waitFor(() => {
-            expect(screen.getAllByText(testDevice.serialNumber)).toHaveLength(
-                1
-            );
+            expect(screen.getAllByText(deviceKey(testDevice))).toHaveLength(1);
         });
         await screen.findByText('Select device');
     });
@@ -298,7 +296,7 @@ describe('DeviceSelector', () => {
         );
 
         fireEvent.click(screen.getByText('Select device'));
-        fireEvent.click(screen.getByText(testDevice.serialNumber));
+        fireEvent.click(screen.getByText(deviceKey(testDevice)));
 
         await screen.findByText(
             'Device must be programmed, do you want to proceed?'
@@ -320,7 +318,7 @@ describe('DeviceSelector', () => {
         );
 
         fireEvent.click(screen.getByText('Select device'));
-        fireEvent.click(screen.getByText(testDevice.serialNumber));
+        fireEvent.click(screen.getByText(deviceKey(testDevice)));
         await screen.findByText('No');
         fireEvent.click(screen.getByText('No'));
 
@@ -329,6 +327,6 @@ describe('DeviceSelector', () => {
                 'Device must be programmed, do you want to proceed?'
             )
         );
-        expect(screen.getAllByText(testDevice.serialNumber)).toHaveLength(2);
+        expect(screen.getAllByText(deviceKey(testDevice))).toHaveLength(2);
     });
 });

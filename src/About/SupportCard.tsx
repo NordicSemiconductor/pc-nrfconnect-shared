@@ -11,11 +11,7 @@ import { getCurrentWindow } from '@electron/remote';
 import Button from '../Button/Button';
 import Card from '../Card/Card';
 import { setVerboseDeviceLibLogging } from '../Device/deviceLibWrapper';
-import {
-    deviceInfo,
-    getDevices,
-    selectedSerialNumber,
-} from '../Device/deviceSlice';
+import { deviceInfo, getDevices, selectedKey } from '../Device/deviceSlice';
 import {
     isLoggingVerboseSelector,
     toggleIsLoggingVerbose,
@@ -29,7 +25,7 @@ import Section from './Section';
 export default () => {
     const dispatch = useDispatch();
     const devices = useSelector(getDevices);
-    const currentSerialNumber = useSelector(selectedSerialNumber);
+    const currentDeviceKey = useSelector(selectedKey);
     const verboseLogging = useSelector(isLoggingVerboseSelector);
     const currentDevice = useSelector(deviceInfo);
 
@@ -56,7 +52,7 @@ export default () => {
                     onClick={() =>
                         systemReport(
                             [...devices.values()],
-                            currentSerialNumber as string,
+                            currentDeviceKey as string,
                             currentDevice
                         )
                     }
