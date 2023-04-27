@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 38 - 2023-04-28
+
+### Fixed
+
+-   Dropdowns allow using their scrollbars by clicking and dragging.
+-   Dropdown scrollbars are styled correctly.
+
 ## 37 - 2023-04-28
 
 ### Changed
