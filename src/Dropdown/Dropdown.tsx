@@ -66,7 +66,12 @@ export default ({
                 </span>
                 <span className={`mdi mdi-chevron-down ${styles.mdi}`} />
             </button>
+            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions -- We need an interactive handler as described below */}
             <div
+                onMouseDown={ev => {
+                    // To prevent the dropdown from closing when users click on the scrollbar of the items
+                    ev.preventDefault();
+                }}
                 style={
                     numItemsBeforeScroll > 0
                         ? {
