@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 37 - 2023-04-28
+
+### Changed
+
+-   Updated `nrf-device-lib-js` to version 0.6.8.
+-   Introduced a `key` for devices, since serialNumbers now might be empty.
+
 ## 36 - 2023-04-26
 
 ### Added
