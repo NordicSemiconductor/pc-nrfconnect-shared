@@ -110,7 +110,7 @@ const ConflictingSettingsDialog = ({
             </p>
 
             <DisplayConflictingSettings
-                appliedSettings={activeSettings}
+                activeSettings={activeSettings}
                 localSettings={localSettings}
             />
         </ConfirmationDialog>
@@ -118,18 +118,18 @@ const ConflictingSettingsDialog = ({
 };
 
 type DisplayConflictingSettings = {
-    appliedSettings?: SerialPortOpenOptions<AutoDetectTypes>;
+    activeSettings?: SerialPortOpenOptions<AutoDetectTypes>;
     localSettings: SerialPortOpenOptions<AutoDetectTypes>;
 };
 
 const DisplayConflictingSettings = ({
-    appliedSettings,
+    activeSettings,
     localSettings,
 }: DisplayConflictingSettings) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const conflictingSettings: { [key: string]: any } = {};
-    if (appliedSettings) {
-        Object.entries(appliedSettings).forEach(([key, value]) => {
+    if (activeSettings) {
+        Object.entries(activeSettings).forEach(([key, value]) => {
             if (
                 localSettings[
                     key as keyof SerialPortOpenOptions<AutoDetectTypes>
@@ -140,7 +140,7 @@ const DisplayConflictingSettings = ({
         });
         Object.entries(localSettings).forEach(([key, value]) => {
             if (
-                appliedSettings[
+                activeSettings[
                     key as keyof SerialPortOpenOptions<AutoDetectTypes>
                 ] !== value
             ) {
@@ -159,9 +159,9 @@ const DisplayConflictingSettings = ({
         >
             <div>
                 <h4>Applied settings</h4>
-                {appliedSettings ? (
+                {activeSettings ? (
                     <ul style={listStyle}>
-                        {Object.entries(appliedSettings).map(([key, value]) => (
+                        {Object.entries(activeSettings).map(([key, value]) => (
                             <li key={key}>
                                 {key}: {JSON.stringify(value)}
                             </li>
