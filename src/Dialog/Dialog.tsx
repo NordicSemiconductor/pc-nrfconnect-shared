@@ -222,12 +222,12 @@ export const ConfirmationDialog = ({
                 <DialogButton variant="primary" onClick={onConfirm}>
                     {confirmLabel}
                 </DialogButton>
-                <DialogButton onClick={onCancel}>{cancelLabel}</DialogButton>
                 {optionalLabel && (
                     <DialogButton onClick={onOptional}>
                         {optionalLabel}
                     </DialogButton>
                 )}
+                <DialogButton onClick={onCancel}>{cancelLabel}</DialogButton>
             </>
         }
     >

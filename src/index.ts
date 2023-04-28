@@ -110,6 +110,7 @@ export {
     createSerialPort,
     getSerialPortOptions,
 } from './SerialPort/SerialPort';
+export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSettingsDialog';
 export type { SerialPort } from './SerialPort/SerialPort';
 
 export { openAppWindow } from './OpenApp/openApp';
