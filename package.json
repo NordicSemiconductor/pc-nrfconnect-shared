@@ -91,7 +91,7 @@
         "husky": "8.0.3",
         "jest": "29.5.0",
         "jest-environment-jsdom": "29.5.0",
-        "klaw": "3.0.0",
+        "klaw": "4.1.0",
         "lodash.range": "3.2.0",
         "mousetrap": "1.6.5",
         "npm-run-all2": "5.0.2",
