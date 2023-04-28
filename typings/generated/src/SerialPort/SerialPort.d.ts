@@ -18,3 +18,4 @@ export declare const createSerialPort: (options: SerialPortOpenOptions<AutoDetec
     onChange: (handler: (newOptions: SerialPortOpenOptions<AutoDetectTypes>) => void) => () => void;
     onDataWritten: (handler: (data: Uint8Array) => void) => () => void;
 }>;
+export declare const getSerialPortOptions: (path: string) => Promise<SerialPortOpenOptions<AutoDetectTypes> | undefined>;

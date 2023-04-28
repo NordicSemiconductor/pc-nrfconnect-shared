@@ -179,3 +179,17 @@ export const createSerialPort = async (
         },
     };
 };
+
+export const getSerialPortOptions = async (
+    path: string
+): Promise<SerialPortOpenOptions<AutoDetectTypes> | undefined> => {
+    try {
+        console.log('will fetch options from path=', path);
+        return (await ipcRenderer.invoke(
+            SERIALPORT_CHANNEL.GET_OPTIONS,
+            path
+        )) as SerialPortOpenOptions<AutoDetectTypes> | undefined;
+    } catch (error) {
+        logger.error(`Failed to get options for port: ${path}`);
+    }
+};
