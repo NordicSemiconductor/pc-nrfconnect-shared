@@ -101,7 +101,7 @@ const initAutoReconnectTimeout =
         );
     };
 
-let hotplugTaskId: number | null = null;
+let hotplugTaskId: bigint | null = null;
 
 /**
  * Wrap the device form nrf-device-lib to make the Device type consistent
@@ -113,6 +113,7 @@ export const wrapDeviceFromNrfdl = (device: NrfdlDevice): Device => ({
     ...device,
     boardVersion: device.jlink?.boardVersion ?? undefined,
     serialport: device.serialPorts?.[0] ?? undefined,
+    serialNumber: device.serialNumber ?? `fallback-serialnumber-${device.id}`,
 });
 
 /**
@@ -359,6 +360,7 @@ export const stopWatchingDevices = () => {
     // Not sure, if this guard clause is really needed
     if (getDeviceLibContext() && hotplugTaskId !== null) {
         try {
+            // @ts-expect-error Type will be updated in device-lib-js
             nrfDeviceLib.stopHotplugEvents(hotplugTaskId);
             hotplugTaskId = null;
         } catch (error) {
