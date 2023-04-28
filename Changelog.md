@@ -7,6 +7,14 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## Unreleased
+
+### Changed
+
+-   Updated `eslint-plugin-simple-import-sort`. This might lead to linting
+    errors but they should be resolvable automatically by running autofix on
+    them.
+
 ## 40 - 2023-04-28
 
 ### Added
