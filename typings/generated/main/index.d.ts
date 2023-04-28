@@ -11,6 +11,7 @@ export declare const SERIALPORT_CHANNEL: {
     ON_CHANGED: string;
     ON_WRITE: string;
     IS_OPEN: string;
+    GET_OPTIONS: string;
 };
 export type OverwriteOptions = {
     overwrite?: boolean;

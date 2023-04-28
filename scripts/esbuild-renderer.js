@@ -46,6 +46,7 @@ function options(additionalOptions) {
             'url',
             'module',
             'constants',
+            'buffer',
 
             // launcher includes
             'electron',

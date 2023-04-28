@@ -106,7 +106,10 @@ export { defaultInitPacket, HashType, FwType } from './Device/initPacket';
 
 export { default as describeError } from './logging/describeError';
 
-export { createSerialPort } from './SerialPort/SerialPort';
+export {
+    createSerialPort,
+    getSerialPortOptions,
+} from './SerialPort/SerialPort';
 export type { SerialPort } from './SerialPort/SerialPort';
 
 export { openAppWindow } from './OpenApp/openApp';
