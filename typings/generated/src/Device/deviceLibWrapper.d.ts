@@ -1,5 +1,5 @@
 import { LogEvent, ModuleVersion } from '@nordicsemiconductor/nrf-device-lib-js';
-export declare const getDeviceLibContext: () => number;
+export declare const getDeviceLibContext: () => bigint;
 export declare const logNrfdlLogs: (evt: LogEvent) => void;
 export declare const forwardLogEventsFromDeviceLib: () => () => void;
 export declare const setVerboseDeviceLibLogging: (verboseLogging: boolean) => void;

@@ -66,7 +66,7 @@ export interface WaitForDevice {
     onFail?: (reason?: string) => void;
 }
 export interface DeviceInfo {
-    name?: string;
+    name?: string | null;
     cores?: number;
     icon: React.ElementType;
     website: {
@@ -75,6 +75,7 @@ export interface DeviceInfo {
     };
 }
 export interface Device extends NrfdlDevice {
+    serialNumber: string;
     boardVersion?: string;
     nickname?: string;
     serialport?: SerialPort;
