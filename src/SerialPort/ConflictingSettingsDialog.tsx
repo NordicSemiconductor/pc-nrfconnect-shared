@@ -45,14 +45,14 @@ const ConflictingSettingsDialog = ({
     localSettings,
     setSerialPortCallback,
 }: ConflictingSettingsDialog) => {
-    const [appliedSettings, setSettings] =
+    const [activeSettings, setSettings] =
         useState<SerialPortOpenOptions<AutoDetectTypes>>();
 
     useEffect(() => {
-        if (!appliedSettings) {
+        if (!activeSettings) {
             getCurrentOptions(localSettings.path, setSettings);
         }
-    }, [isVisible, appliedSettings, localSettings.path]);
+    }, [isVisible, activeSettings, localSettings.path]);
 
     const connectToSelectedSerialPort = async (
         overwrite: boolean,
@@ -87,8 +87,8 @@ const ConflictingSettingsDialog = ({
             confirmLabel="Continue with active settings"
             onConfirm={() => {
                 onCancel();
-                if (appliedSettings) {
-                    connectToSelectedSerialPort(true, appliedSettings);
+                if (activeSettings) {
+                    connectToSelectedSerialPort(true, activeSettings);
                 } else {
                     logger.error(
                         'Could not get the active serial port settings.'
@@ -110,7 +110,7 @@ const ConflictingSettingsDialog = ({
             </p>
 
             <DisplayConflictingSettings
-                appliedSettings={appliedSettings}
+                appliedSettings={activeSettings}
                 localSettings={localSettings}
             />
         </ConfirmationDialog>

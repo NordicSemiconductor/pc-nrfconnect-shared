@@ -7,6 +7,14 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 40 - 2023-04-28
+
+### Added
+
+-   ConflictingSettingsDialog component to be utilized when SerialPort from
+    pc-nrfconnect-shared is used, and the serial port may have been claimed by
+    another app.
+
 ## 39 - 2023-04-28
 
 ### Added
