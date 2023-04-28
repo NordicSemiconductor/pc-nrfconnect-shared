@@ -89,6 +89,9 @@ export const createSerialPort = async (
         ipcRenderer.invoke(SERIALPORT_CHANNEL.SET, path, newOptions);
     };
 
+    const getOptions = (): Promise<SerialPortOpenOptions<AutoDetectTypes>> =>
+        ipcRenderer.invoke(SERIALPORT_CHANNEL.GET_OPTIONS, path);
+
     const openWithRetries = async (retryCount: number) => {
         try {
             return (await ipcRenderer.invoke(
@@ -133,6 +136,7 @@ export const createSerialPort = async (
         isOpen,
         update,
         set,
+        getOptions,
         onData: (handler: (data: Uint8Array) => void) => {
             eventEmitter.on('onData', handler);
             return () => {

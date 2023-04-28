@@ -10,6 +10,7 @@ export declare const createSerialPort: (options: SerialPortOpenOptions<AutoDetec
     isOpen: () => Promise<boolean>;
     update: (newOptions: UpdateOptions) => void;
     set: (newOptions: SetOptions) => void;
+    getOptions: () => Promise<SerialPortOpenOptions<AutoDetectTypes>>;
     onData: (handler: (data: Uint8Array) => void) => () => void;
     onClosed: (handler: () => void) => () => void;
     onUpdate: (handler: (newOptions: UpdateOptions) => void) => () => void;

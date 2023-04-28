@@ -7,6 +7,14 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 39 - 2023-04-28
+
+### Added
+
+-   SerialPort `getOptions` function in order to request the settings that was
+    used to open the serial port.
+-   Extended SERIALPORT_CHANNEL with entry GET_OPTIONS.
+
 ## 38 - 2023-04-28
 
 ### Fixed
