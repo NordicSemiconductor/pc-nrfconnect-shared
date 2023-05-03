@@ -82,9 +82,9 @@ const ConflictingSettingsDialog = ({
             isVisible={isVisible}
             size="lg"
             onCancel={onCancel}
-            optionalLabel="Continue by overwriting settings"
+            optionalLabel="Overwrite with Selected"
             onOptional={onOverwrite}
-            confirmLabel="Continue with active settings"
+            confirmLabel="Continue with Active"
             onConfirm={() => {
                 onCancel();
                 if (activeSettings) {
@@ -97,9 +97,10 @@ const ConflictingSettingsDialog = ({
             }}
         >
             <p>
-                You are about to connect to {localSettings.path}. This port is
-                already active with different serial settings - most likely it
-                is opened by another nRF Connect app running on your computer.
+                You are about to connect to <code>{localSettings.path}</code>.
+                This port is already active with different serial settings -
+                most likely it is opened by another nRF Connect app running on
+                your computer.
             </p>
             <p>
                 You may continue with the active serial port settings or choose
@@ -107,6 +108,11 @@ const ConflictingSettingsDialog = ({
                 choose to overwrite the active settings, the port will be closed
                 and reopened with the new settings. Alternatively, you can close
                 the port in the other app and try again.
+            </p>
+            <p>
+                The serial settings depend on the attached device and it&apos;s
+                embedded application, and normally the serial port settings for
+                all nRF Connect apps should be the same for a given serial port.
             </p>
 
             <DisplayConflictingSettings
@@ -126,44 +132,53 @@ const DisplayConflictingSettings = ({
     activeSettings,
     localSettings,
 }: DisplayConflictingSettings) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const conflictingSettings: { [key: string]: any } = {};
+    const allKeys = Object.keys(localSettings);
     if (activeSettings) {
-        Object.entries(activeSettings).forEach(([key, value]) => {
-            if (
-                localSettings[
-                    key as keyof SerialPortOpenOptions<AutoDetectTypes>
-                ] !== value
-            ) {
-                conflictingSettings[key] = value;
-            }
-        });
-        Object.entries(localSettings).forEach(([key, value]) => {
-            if (
-                activeSettings[
-                    key as keyof SerialPortOpenOptions<AutoDetectTypes>
-                ] !== value
-            ) {
-                conflictingSettings[key] = value;
+        Object.keys(activeSettings).forEach(key => {
+            if (!allKeys.includes(key)) {
+                allKeys.push(key);
             }
         });
     }
+
+    const conflictingSettings = activeSettings
+        ? allKeys.filter(
+              key =>
+                  activeSettings[key as keyof typeof activeSettings] !==
+                  localSettings[key as keyof typeof localSettings]
+          )
+        : [];
 
     return (
         <div
             style={{
                 width: '100%',
                 display: 'flex',
-                justifyContent: 'space-around',
+                justifyContent: 'flex-start',
+                margin: '32px 0',
             }}
         >
-            <div>
-                <h4>Applied settings</h4>
+            <div style={{ marginRight: '128px' }}>
+                <b>Active settings</b>
                 {activeSettings ? (
                     <ul style={listStyle}>
-                        {Object.entries(activeSettings).map(([key, value]) => (
-                            <li key={key}>
-                                {key}: {JSON.stringify(value)}
+                        {allKeys.map(key => (
+                            <li
+                                key={key}
+                                style={{
+                                    ...listItemStyle,
+                                    backgroundColor:
+                                        conflictingSettings.includes(key)
+                                            ? '#FFCDD2'
+                                            : undefined,
+                                }}
+                            >
+                                {key}:
+                                {prettifyValue(
+                                    activeSettings[
+                                        key as keyof typeof activeSettings
+                                    ]
+                                )}
                             </li>
                         ))}
                     </ul>
@@ -172,35 +187,46 @@ const DisplayConflictingSettings = ({
                 )}
             </div>
             <div>
-                <h4>Serial Terminal settings</h4>
-                <p>
-                    <ul style={listStyle}>
-                        {Object.entries(localSettings).map(([key, value]) => (
-                            <li key={key}>
-                                {key}: {JSON.stringify(value)}
-                            </li>
-                        ))}
-                    </ul>
-                </p>
-            </div>
-            <div>
-                <h4>Conflicting settings</h4>
-                {Object.entries(conflictingSettings).length > 0 ? (
-                    <ul style={listStyle}>
-                        {Object.entries(conflictingSettings).map(
-                            ([key, value]) => (
-                                <li key={key}>
-                                    {key}: {JSON.stringify(value)}
-                                </li>
-                            )
-                        )}
-                    </ul>
-                ) : (
-                    <p>Could not find the conflicting settings</p>
-                )}
+                <b>Selected settings</b>
+                <ul style={listStyle}>
+                    {allKeys.map(key => (
+                        <li
+                            key={key}
+                            style={{
+                                ...listItemStyle,
+                                backgroundColor: conflictingSettings.includes(
+                                    key
+                                )
+                                    ? '#FFCDD2'
+                                    : undefined,
+                            }}
+                        >
+                            {key}:
+                            {prettifyValue(
+                                localSettings[key as keyof typeof localSettings]
+                            )}
+                        </li>
+                    ))}
+                </ul>
             </div>
         </div>
     );
+};
+
+const prettifyValue = (value: unknown) => {
+    if (typeof value === 'boolean') {
+        return value ? 'on' : 'off';
+    }
+
+    if (typeof value === 'string' || typeof value === 'number') {
+        return value;
+    }
+
+    if (value == null) {
+        return 'N/A';
+    }
+
+    return JSON.stringify(value);
 };
 
 export default ConflictingSettingsDialog;
@@ -209,4 +235,8 @@ const listStyle: React.CSSProperties = {
     listStyleType: 'none',
     margin: 0,
     padding: 0,
+};
+
+const listItemStyle: React.CSSProperties = {
+    padding: '4px 0',
 };
