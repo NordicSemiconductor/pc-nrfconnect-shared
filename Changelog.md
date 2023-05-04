@@ -7,6 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 42 - 2023-05-04
+
+### Changed
+
+-   Updated `swc/core`. This was done to fix issues related to npm run check
+    resulting in Error: @swc/core threw an error when attempting to validate swc
+    compiler option. You may be using an old version of swc which does not
+    support the options used by ts-node.
+
 ## 41 - 2023-05-03
 
 ### Changed
