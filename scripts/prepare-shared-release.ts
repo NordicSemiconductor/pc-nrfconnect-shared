@@ -25,8 +25,9 @@ import { getNextReleaseNumber } from './release-shared';
 const parseJson = <Result>(jsonString: string) =>
     JSON.parse(jsonString) as Result;
 
+const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const npm = (...commands) =>
-    spawnSync('npm', commands, {
+    spawnSync(npmCommand, commands, {
         stdio: ['inherit', 'pipe', 'inherit'],
         encoding: 'utf-8',
     }).stdout;
