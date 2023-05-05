@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 43 - 2023-05-05
+
+### Changed
+
+-   Use the new property from launcher ipc to determine the app path. This is
+    used for logging when the application starts up.
+
 ## 42 - 2023-05-04
 
 ### Changed
