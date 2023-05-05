@@ -29,7 +29,7 @@ export declare const getIsLoggingVerbose: () => boolean;
 interface SharedAppSpecificStoreSchema {
     currentPane?: number;
 }
-export declare const getAppSpecificStore: <StoreSchema extends Record<string, any>>() => Store<StoreSchema & SharedAppSpecificStoreSchema>;
+export declare const getAppSpecificStore: <StoreSchema extends Record<string, any>>(options?: Store.Options<any>) => Store<StoreSchema & SharedAppSpecificStoreSchema>;
 export declare const persistCurrentPane: (currentPane: number) => void;
 export declare const getPersistedCurrentPane: () => number | undefined;
 export {};

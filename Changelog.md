@@ -13,6 +13,10 @@ every new version is a new major version.
 
 -   Feedback pane link to Nordiv DevZone did not open in the browser.
 
+### Changed
+
+-   Persistent store now allows to send more options to the internal store.
+
 ## 43 - 2023-05-05
 
 ### Changed

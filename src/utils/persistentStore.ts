@@ -114,11 +114,15 @@ interface SharedAppSpecificStoreSchema {
 export const getAppSpecificStore = <
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     StoreSchema extends Record<string, any>
->() => {
+>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    options?: Store.Options<any>
+) => {
     if (appSpecificStore == null) {
         appSpecificStore = new Store({
             name: packageJson().name,
             clearInvalidConfig: true,
+            ...options,
         });
     }
 
