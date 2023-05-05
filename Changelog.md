@@ -7,11 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 44 - Unreleased
+## 44 - 2023-05-05
 
 ### Fixed
 
 -   Feedback pane link to Nordiv DevZone did not open in the browser.
+-   Properly update package version when running the prepare script on windows.
 
 ### Changed
 
