@@ -122,6 +122,8 @@ export const getAppSpecificStore = <
         appSpecificStore = new Store({
             name: packageJson().name,
             clearInvalidConfig: true,
+            // @ts-expect-error `electron-store` assumes the app is the version of the launcher, override this to be the same as the app version
+            projectVersion: packageJson().version,
             ...options,
         });
     }
