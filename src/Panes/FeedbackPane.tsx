@@ -9,7 +9,6 @@ import React, { useState } from 'react';
 import Button from '../Button/Button';
 import logger from '../logging';
 import { isDevelopment } from '../utils/environment';
-import { openUrl } from '../utils/open';
 import packageJson from '../utils/packageJson';
 
 export default () => {
@@ -59,7 +58,11 @@ export default () => {
                     <p>
                         Note: this is not a support channel, and you will not
                         receive a response. For help and support, visit the{' '}
-                        <a href="https://devzone.nordicsemi.com/">
+                        <a
+                            href="https://devzone.nordicsemi.com/"
+                            target="_blank"
+                            rel="noreferrer noopener"
+                        >
                             Nordic DevZone
                         </a>
                         .
@@ -87,12 +90,9 @@ export default () => {
                         <li>Your feedback</li>
                         <li>
                             <a
-                                onClick={() =>
-                                    openUrl(
-                                        'https://nodejs.org/api/process.html#processplatform'
-                                    )
-                                }
                                 href="https://nodejs.org/api/process.html#processplatform"
+                                target="_blank"
+                                rel="noreferrer noopener"
                             >
                                 Platform
                             </a>
