@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 45 - 2023-05-09
+
+### Fixed
+
+-   useStopwatch unmount clean up
+
 ## 44 - 2023-05-05
 
 ### Fixed
