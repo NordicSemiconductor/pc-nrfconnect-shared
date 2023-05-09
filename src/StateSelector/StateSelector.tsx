@@ -17,7 +17,7 @@ interface ComplexItem {
 type SelectItem = string | ComplexItem;
 
 const convertToComplex = (item: SelectItem): ComplexItem => {
-    if (item instanceof String) {
+    if (typeof item === 'string') {
         return {
             key: item,
             renderItem: item,
