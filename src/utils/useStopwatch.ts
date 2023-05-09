@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export interface ITimer {
     now: () => number;
@@ -114,6 +114,16 @@ export default ({
         setTime(0);
         start(0);
     }, [pause, start]);
+
+    useEffect(
+        () => () => {
+            if (pauseTimeout.current) {
+                pauseTimeout.current();
+                pauseTimeout.current = null;
+            }
+        },
+        []
+    );
 
     if (autoStart && !autoStarted.current) {
         autoStarted.current = true;
