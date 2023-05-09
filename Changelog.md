@@ -13,6 +13,13 @@ every new version is a new major version.
 
 -   useStopwatch unmount clean up
 
+### Changed
+
+-   StateSelector property `items` now allows {key: string , renderItem:
+    React.ReactElement} as content in addition to string
+-   StateSelector property `selectedItem` now allows {key: string , renderItem:
+    React.ReactElement} as content in addition to string
+
 ## 44 - 2023-05-05
 
 ### Fixed
