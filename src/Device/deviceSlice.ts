@@ -33,6 +33,8 @@ const noDialogShown = {
     isSetupDialogVisible: false,
     setupDialogText: null,
     setupDialogChoices: [],
+    progress: undefined,
+    progressMessage: undefined,
 };
 
 const initialState: DeviceState = {
@@ -144,6 +146,17 @@ const slice = createSlice({
          */
         deviceSetupInputReceived: state => {
             state.isSetupWaitingForUserInput = false;
+        },
+
+        setDeviceSetupProgress: (state, action: PayloadAction<number>) => {
+            state.progress = action.payload;
+        },
+
+        setDeviceSetupProgressMessage: (
+            state,
+            action: PayloadAction<string>
+        ) => {
+            state.progressMessage = action.payload;
         },
 
         setDevices: (state, action: PayloadAction<Device[]>) => {
@@ -265,6 +278,8 @@ export const {
         deviceSetupError,
         deviceSetupInputReceived,
         deviceSetupInputRequired,
+        setDeviceSetupProgress,
+        setDeviceSetupProgressMessage,
         resetDeviceNickname,
         selectDevice,
         addDevice,

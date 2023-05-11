@@ -16,12 +16,16 @@ const mapStateToProps = ({
         isSetupWaitingForUserInput,
         setupDialogText,
         setupDialogChoices,
+        progress,
+        progressMessage,
     },
 }: RootState) => ({
     isVisible: isSetupDialogVisible,
     isInProgress: isSetupDialogVisible && !isSetupWaitingForUserInput,
     text: setupDialogText,
     choices: setupDialogChoices,
+    progress,
+    progressMessage,
 });
 
 const mapDispatchToProps = (dispatch: TDispatch) => ({

@@ -5,9 +5,11 @@
  */
 
 import React from 'react';
+import { ProgressBar } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 
 import { Dialog, DialogButton } from '../../Dialog/Dialog';
+import { Group } from '../../SidePanel/Group';
 
 export interface DeviceSetupViewProps {
     isVisible: boolean;
@@ -16,6 +18,8 @@ export interface DeviceSetupViewProps {
     choices: readonly string[];
     onOk: (choice: string | boolean) => void;
     onCancel: () => void;
+    progress?: number;
+    progressMessage?: string;
 }
 
 interface State {
@@ -48,8 +52,16 @@ export default class DeviceSetupDialog extends React.Component<
     }
 
     render() {
-        const { isVisible, isInProgress, text, choices, onOk, onCancel } =
-            this.props;
+        const {
+            isVisible,
+            isInProgress,
+            text,
+            choices,
+            onOk,
+            onCancel,
+            progress,
+            progressMessage,
+        } = this.props;
         const { selectedChoice } = this.state;
 
         if (choices && choices.length > 0) {
@@ -99,7 +111,23 @@ export default class DeviceSetupDialog extends React.Component<
                     title="Program device"
                     headerIcon=""
                 />
-                <Dialog.Body>{text}</Dialog.Body>
+                <Dialog.Body>
+                    <Group>
+                        <div>{text}</div>
+                        {progressMessage !== undefined && (
+                            <Form.Label>
+                                <strong>Status:</strong>
+                                <span>{` ${progressMessage}`}</span>
+                            </Form.Label>
+                        )}
+                        {progress !== undefined && (
+                            <ProgressBar
+                                now={progress}
+                                style={{ height: '4px' }}
+                            />
+                        )}
+                    </Group>
+                </Dialog.Body>
                 <Dialog.Footer>
                     <DialogButton
                         onClick={() => onOk(true)}

@@ -188,7 +188,7 @@ const prepareJProgDevice = async (
     if (valid) {
         onSuccess(device);
     } else {
-        programFirmware(device, fw, deviceSetupConfig)
+        programFirmware(device, fw, deviceSetupConfig, dispatch)
             .then(() => onSuccess(device))
             .catch(() => onFail(new Error('Failed to program firmware')));
     }

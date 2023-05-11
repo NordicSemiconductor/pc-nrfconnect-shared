@@ -4,13 +4,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import {
+import nrfDeviceLib, {
     deviceControlReset,
     Error as nrfError,
     firmwareProgram,
     FirmwareStreamType,
     FWInfo,
-    Progress,
     readFwInfo,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
@@ -18,19 +17,38 @@ import logger from '../logging';
 import { Device, RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import type { DeviceSetup } from './deviceSetup';
-import { selectedDevice, setReadbackProtected } from './deviceSlice';
+import {
+    selectedDevice,
+    setDeviceSetupProgress,
+    setDeviceSetupProgressMessage,
+    setReadbackProtected,
+} from './deviceSlice';
 
 const deviceLibContext = getDeviceLibContext();
 
-/**
- * Program the device with the given serial number with the given firmware
- * using nrf-device-lib-js
- *
- * @param {String|Number} deviceId The Id of the device.
- * @param {String|Buffer} firmware Firmware path or firmware contents as buffer.
- * @returns {Promise} Promise that resolves if successful or rejects with error.
- */
-const program = (deviceId: number, firmware: string | Buffer) => {
+let lastMSG = '';
+const progressJson =
+    ({ progressJson: progress }: nrfDeviceLib.Progress.CallbackParameters) =>
+    (dispatch: TDispatch) => {
+        const message = progress.message || '';
+
+        const status = `${message.replace('.', ':')} ${
+            progress.progressPercentage
+        }%`;
+
+        if (status !== lastMSG) {
+            dispatch(setDeviceSetupProgress(progress.progressPercentage));
+            dispatch(setDeviceSetupProgressMessage(status));
+            logger.info(status);
+            lastMSG = status;
+        }
+    };
+
+const program = (
+    deviceId: number,
+    firmware: string | Buffer,
+    dispatch: TDispatch
+) => {
     let fwFormat: FirmwareStreamType;
     if (firmware instanceof Buffer) {
         fwFormat = 'NRFDL_FW_BUFFER';
@@ -49,14 +67,7 @@ const program = (deviceId: number, firmware: string | Buffer) => {
                 logger.info('Device programming completed.');
                 resolve();
             },
-            ({ progressJson: progress }: Progress.CallbackParameters) => {
-                const message = progress.message || '';
-
-                const status = `${message.replace('.', ':')} ${
-                    progress.progressPercentage
-                }%`;
-                logger.info(status);
-            },
+            progress => dispatch(progressJson(progress)),
             null,
             'NRFDL_DEVICE_CORE_APPLICATION'
         );
@@ -160,25 +171,18 @@ const confirmHelper = async (
     }
 };
 
-/**
- * Program the device with the given serial number with the given firmware with provided configuration
- *
- * @param {Device} device The device to be programmed.
- * @param {Object} fw Firmware path or firmware contents as buffer.
- * @param {Object} deviceSetupConfig The configuration provided.
- * @returns {Promise} Promise that resolves if successful or rejects with error.
- */
 export async function programFirmware(
     device: Device,
     fw: string | Buffer,
-    deviceSetupConfig: DeviceSetup
+    deviceSetupConfig: DeviceSetup,
+    dispatch: TDispatch
 ) {
     try {
         const confirmed = await confirmHelper(deviceSetupConfig.promiseConfirm);
         if (!confirmed) return device;
 
         logger.debug(`Programming ${device.serialNumber} with ${fw}`);
-        await program(device.id, fw);
+        await program(device.id, fw, dispatch);
         logger.debug(`Resetting ${device.serialNumber}`);
         await reset(device.id);
     } catch (programError) {

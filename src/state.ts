@@ -65,6 +65,8 @@ export interface DeviceState {
     setupDialogChoices: readonly string[];
     setupDialogText?: string | null;
     readbackProtection: 'unknown' | 'protected' | 'unprotected';
+    progress?: number;
+    progressMessage?: string;
 }
 
 export interface DeviceAutoSelectState {
