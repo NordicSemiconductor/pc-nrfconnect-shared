@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## Unreleased
+
+### Changed
+
+-   FeedbackPane headers is now 14px, similar to all text, but is bold.
+-   FeedbackPane Buttons are moved to the bottom right corner, from bottom left.
+
 ## 45 - 2023-05-09
 
 ### Fixed
