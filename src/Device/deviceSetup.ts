@@ -17,6 +17,7 @@ import { InitPacket } from './initPacket';
 import { PromiseChoice } from './sdfuOperations';
 
 export interface DfuEntry {
+    key: string;
     application: string;
     semver: string;
     softdevice?: string | Buffer;
@@ -37,7 +38,9 @@ export interface IDeviceSetup {
     // isSupportedDevice: () => boolean;
     getFirmwareOptions: (device: Device) => {
         key: string;
-        programDevice: () => (dispatch: TDispatch) => Promise<Device>;
+        programDevice: (
+            promiseConfirm?: PromiseConfirm
+        ) => (dispatch: TDispatch) => Promise<Device>;
     }[];
     isExpectedFirmware: (device: Device) => (dispatch: TDispatch) => Promise<{
         device: Device;
@@ -253,7 +256,11 @@ const prepareDevice = async (
         if (!selectedDeviceSetup) {
             onFail('No firmware was selected'); // Should never happen
         } else {
-            dispatch(selectedDeviceSetup.programDevice())
+            dispatch(
+                selectedDeviceSetup.programDevice(
+                    deviceSetupConfig.promiseConfirm
+                )
+            )
                 .then(programmedDevice => {
                     if (deviceSetupConfig.needSerialport) {
                         verifySerialPortAvailableAndFree(programmedDevice)

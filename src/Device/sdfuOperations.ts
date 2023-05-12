@@ -258,10 +258,9 @@ const isLatestBootloader = async (device: Device) => {
 const askAndUpdateBootloader =
     (
         device: Device,
-
-        promiseConfirm: PromiseConfirm,
         onSuccess: (device: Device) => void,
-        onFail: (reason?: unknown) => void
+        onFail: (reason?: unknown) => void,
+        promiseConfirm?: PromiseConfirm
     ) =>
     (dispatch: TDispatch) => {
         switchToBootloaderMode(
@@ -269,6 +268,7 @@ const askAndUpdateBootloader =
             async d => {
                 if (!(await isLatestBootloader(d))) {
                     if (
+                        promiseConfirm &&
                         !(await promiseConfirm(
                             'Device will be programmed. A Newer version of the bootloader is available, do you want to update it as well?'
                         ))
@@ -489,14 +489,12 @@ const programInDFUBootloader = async (
     );
 };
 
-export const sDFUDeviceSetup = (
-    dfuFirmware: DfuEntry[],
-    promiseConfirm: PromiseConfirm
-): IDeviceSetup => {
+export const sDFUDeviceSetup = (dfuFirmware: DfuEntry[]): IDeviceSetup => {
     const programDeviceWithFw = (
         device: Device,
         selectedFw: DfuEntry,
-        dispatch: TDispatch
+        dispatch: TDispatch,
+        promiseConfirm?: PromiseConfirm
     ) =>
         new Promise<Device>((resolve, reject) => {
             const action = (d: Device) => {
@@ -511,7 +509,7 @@ export const sDFUDeviceSetup = (
             };
 
             dispatch(
-                askAndUpdateBootloader(device, promiseConfirm, action, reject)
+                askAndUpdateBootloader(device, action, reject, promiseConfirm)
             );
         });
     return {
@@ -521,9 +519,16 @@ export const sDFUDeviceSetup = (
             isDeviceInDFUBootloader(device),
         getFirmwareOptions: device =>
             dfuFirmware.map(firmwareOption => ({
-                key: firmwareOption.semver,
-                programDevice: () => (dispatch: TDispatch) =>
-                    programDeviceWithFw(device, firmwareOption, dispatch),
+                key: firmwareOption.key,
+                programDevice:
+                    (promiseConfirm?: PromiseConfirm) =>
+                    (dispatch: TDispatch) =>
+                        programDeviceWithFw(
+                            device,
+                            firmwareOption,
+                            dispatch,
+                            promiseConfirm
+                        ),
             })),
         isExpectedFirmware: (device: Device) => () =>
             new Promise<{

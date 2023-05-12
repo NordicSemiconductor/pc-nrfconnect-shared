@@ -3,6 +3,7 @@ import { Device, TDispatch } from '../state';
 import { InitPacket } from './initPacket';
 import { PromiseChoice } from './sdfuOperations';
 export interface DfuEntry {
+    key: string;
     application: string;
     semver: string;
     softdevice?: string | Buffer;
@@ -19,7 +20,7 @@ export interface IDeviceSetup {
     supportsProgrammingMode: (device: Device) => boolean;
     getFirmwareOptions: (device: Device) => {
         key: string;
-        programDevice: () => (dispatch: TDispatch) => Promise<Device>;
+        programDevice: (promiseConfirm?: PromiseConfirm) => (dispatch: TDispatch) => Promise<Device>;
     }[];
     isExpectedFirmware: (device: Device) => (dispatch: TDispatch) => Promise<{
         device: Device;
