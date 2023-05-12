@@ -19,7 +19,7 @@ export default () => {
         return (
             <div className="w-100 d-flex justify-content-center">
                 <div className="d-flex flex-column justify-content-center align-items-start bg-white px-3 py-4">
-                    <h2 className="mb-3">Thank you!</h2>
+                    <b className="mb-3">Thank you!</b>
                     <section>
                         <p>
                             We value your feedback and any ideas you may have
@@ -32,6 +32,7 @@ export default () => {
                     </section>
                     <Button
                         large
+                        className="align-self-end"
                         onClick={() => {
                             setSayThankYou(false);
                             setFeedback('');
@@ -48,7 +49,7 @@ export default () => {
     return (
         <div className="w-100 d-flex justify-content-center">
             <div className="d-flex flex-column justify-content-center align-items-start bg-white px-3 py-4">
-                <h2 className="mb-3">Give Feedback</h2>
+                <b className="mb-3">Give Feedback</b>
                 <section>
                     <p>
                         We value your feedback and any ideas you may have for
@@ -101,6 +102,7 @@ export default () => {
                 </section>
                 <Button
                     large
+                    className="align-self-end"
                     variant="primary"
                     onClick={() => handleFormData(feedback, setSayThankYou)}
                     disabled={feedback === ''}
