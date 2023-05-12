@@ -120,6 +120,16 @@ const updateBootloader =
         logger.debug('Starting Bootloader Update');
 
         dispatch(setDeviceSetupProgress(0));
+
+        dispatch(
+            setWaitForDevice({
+                timeout: DEFAULT_DEVICE_WAIT_TIME,
+                when: 'always',
+                once: false,
+                onSuccess,
+                onFail,
+            })
+        );
         await nrfDeviceLib.firmwareProgram(
             getDeviceLibContext(),
             device.id,
@@ -461,6 +471,16 @@ const programInDFUBootloader = async (
     logger.debug('Starting DFU');
 
     dispatch(setDeviceSetupProgress(0));
+
+    dispatch(
+        setWaitForDevice({
+            timeout: DEFAULT_DEVICE_WAIT_TIME,
+            when: 'always',
+            once: false,
+            onSuccess,
+            onFail,
+        })
+    );
     nrfDeviceLib.firmwareProgram(
         getDeviceLibContext(),
         device.id,
