@@ -165,7 +165,7 @@ export const prepareDevice =
         deviceSetupConfig: DeviceSetup,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void,
-        checkCurrentFirmwareVersion: true
+        checkCurrentFirmwareVersion: boolean
     ) =>
     async (dispatch: TDispatch) => {
         const validDeviceSetups = deviceSetupConfig.deviceSetups.filter(

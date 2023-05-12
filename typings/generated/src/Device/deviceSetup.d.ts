@@ -36,5 +36,5 @@ export interface DeviceSetup {
     promiseConfirm?: PromiseConfirm;
 }
 export declare const receiveDeviceSetupInput: (input: boolean | string) => (dispatch: TDispatch) => void;
-export declare const prepareDevice: (device: Device, deviceSetupConfig: DeviceSetup, onSuccess: (device: Device) => void, onFail: (reason?: unknown) => void, checkCurrentFirmwareVersion: true) => (dispatch: TDispatch) => Promise<void>;
+export declare const prepareDevice: (device: Device, deviceSetupConfig: DeviceSetup, onSuccess: (device: Device) => void, onFail: (reason?: unknown) => void, checkCurrentFirmwareVersion: boolean) => (dispatch: TDispatch) => Promise<void>;
 export declare const setupDevice: (device: Device, deviceSetup: DeviceSetup, releaseCurrentDevice: () => void, onDeviceIsReady: (device: Device) => void, doDeselectDevice: () => void) => (dispatch: TDispatch) => void;
