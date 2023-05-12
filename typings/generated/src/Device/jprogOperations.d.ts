@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { FWInfo } from '@nordicsemiconductor/nrf-device-lib-js';
 import { Device, RootState, TDispatch } from '../state';
-import type { DeviceSetup } from './deviceSetup';
+import type { DeviceSetup, IDeviceSetup, JprogEntry } from './deviceSetup';
 export declare const updateHasReadbackProtection: () => (dispatch: TDispatch, getState: () => RootState) => Promise<"unknown" | "protected" | "unprotected">;
 /**
  * Validate the firmware on the device whether it matches the provided firmware or not
@@ -13,4 +13,5 @@ export declare const updateHasReadbackProtection: () => (dispatch: TDispatch, ge
 export declare function validateFirmware(device: Device, fwVersion: string | {
     validator: (imageInfoList: FWInfo.Image[], fromDeviceLib: boolean) => boolean;
 }): Promise<boolean | FWInfo.Image | "READBACK_PROTECTION_ENABLED" | undefined>;
+export declare const JProgDeviceSetup: (firmware: JprogEntry[]) => IDeviceSetup;
 export declare function programFirmware(device: Device, fw: string | Buffer, deviceSetupConfig: DeviceSetup, dispatch: TDispatch): Promise<Device>;

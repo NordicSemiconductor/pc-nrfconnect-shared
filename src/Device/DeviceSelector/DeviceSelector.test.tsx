@@ -15,6 +15,7 @@ import {
 import render from '../../../test/testrenderer';
 import { Device } from '../../state';
 import { setDevices } from '../deviceSlice';
+import { JProgDeviceSetup } from '../jprogOperations';
 import DeviceSelector from './DeviceSelector';
 
 jest.mock('../sdfuOperations', () => ({}));
@@ -95,13 +96,18 @@ const testDevice: Device = {
 };
 
 const validFirmware = {
-    jprog: {
-        PCATest: {
-            fw: 'firmware/PCATest.hex',
-            fwVersion: 'test-fw-1.0.0',
-            fwIdAddress: 0x6000,
-        },
-    },
+    deviceSetups: [
+        JProgDeviceSetup([
+            {
+                key: 'PCATest',
+                fw: 'firmware/invalidDevice.hex',
+                fwVersion: 'fw-1.0.0',
+                fwIdAddress: 0x6000,
+            },
+        ]),
+    ],
+    allowCustomDevice: false,
+    needSerialport: false,
 };
 
 describe('DeviceSelector', () => {
@@ -229,14 +235,18 @@ describe('DeviceSelector', () => {
                     mcuBoot: true,
                 }}
                 deviceSetup={{
-                    jprog: {
-                        invalidDevice: {
-                            fw: 'firmware/invalidDevice.hex',
-                            fwVersion: 'fw-1.0.0',
-                            fwIdAddress: 0x6000,
-                        },
-                    },
+                    deviceSetups: [
+                        JProgDeviceSetup([
+                            {
+                                key: 'firmware_1',
+                                fw: 'firmware/invalidDevice.hex',
+                                fwVersion: 'fw-1.0.0',
+                                fwIdAddress: 0x6000,
+                            },
+                        ]),
+                    ],
                     allowCustomDevice: true,
+                    needSerialport: false,
                 }}
             />,
             [setDevices([testDevice])]
@@ -258,14 +268,18 @@ describe('DeviceSelector', () => {
                     mcuBoot: true,
                 }}
                 deviceSetup={{
-                    jprog: {
-                        invalidDevice: {
-                            fw: 'firmware/invalidDevice.hex',
-                            fwVersion: 'fw-1.0.0',
-                            fwIdAddress: 0x6000,
-                        },
-                    },
+                    deviceSetups: [
+                        JProgDeviceSetup([
+                            {
+                                key: 'invalidDevice',
+                                fw: 'firmware/invalidDevice.hex',
+                                fwVersion: 'fw-1.0.0',
+                                fwIdAddress: 0x6000,
+                            },
+                        ]),
+                    ],
                     allowCustomDevice: false,
+                    needSerialport: false,
                 }}
             />,
             [setDevices([testDevice])]

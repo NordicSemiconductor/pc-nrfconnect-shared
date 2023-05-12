@@ -9,14 +9,13 @@ import nrfDeviceLib, {
     Error as nrfError,
     firmwareProgram,
     FirmwareStreamType,
-    FWInfo,
     readFwInfo,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../logging';
 import { Device, RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import type { DeviceSetup } from './deviceSetup';
+import type { DeviceSetup, IDeviceSetup, JprogEntry } from './deviceSetup';
 import {
     selectedDevice,
     setDeviceSetupProgress,
@@ -107,51 +106,109 @@ export const updateHasReadbackProtection =
         return 'unprotected';
     };
 
-/**
- * Validate the firmware on the device whether it matches the provided firmware or not
- *
- * @param {Device} device The device to be validated.
- * @param {String} fwVersion The firmware version to be matched.
- * @returns {Promise} Promise that resolves if successful or rejects with error.
- */
-export async function validateFirmware(
-    device: Device,
-    fwVersion:
-        | string
-        | {
-              validator: (
-                  imageInfoList: FWInfo.Image[],
-                  fromDeviceLib: boolean
-              ) => boolean;
-          }
-) {
-    let valid: boolean | FWInfo.Image | undefined = false;
-    let fwInfo: FWInfo.ReadResult;
-    try {
-        fwInfo = await readFwInfo(deviceLibContext, device.id);
-    } catch (error) {
-        // @ts-expect-error Wrongly typed in device lib at the moment
-        if (error.error_code === 24) {
-            logger.warn(
-                'Readback protection on device enabled. Unable to verify that the firmware version is correct.'
+export const JProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
+    const firmwareOptions = (device: Device) =>
+        firmware.filter(fw => {
+            const family = (device.jlink?.deviceFamily || '').toLowerCase();
+            const deviceType = (
+                device.jlink?.deviceVersion || ''
+            ).toLowerCase();
+            const shortDeviceType = deviceType.split('_').shift();
+            const boardVersion = (
+                device.jlink?.boardVersion || ''
+            ).toLowerCase();
+
+            const key = fw.key.toLowerCase();
+            return (
+                key === deviceType ||
+                key === shortDeviceType ||
+                key === boardVersion ||
+                key === family
             );
-            return 'READBACK_PROTECTION_ENABLED';
-        }
-        return false;
-    }
-    if (
-        typeof fwVersion === 'object' &&
-        typeof fwVersion.validator === 'function'
-    ) {
-        valid = fwVersion.validator(fwInfo.imageInfoList, true);
-    } else if (typeof fwVersion === 'string') {
-        valid = fwInfo.imageInfoList.find(imageInfo => {
-            if (typeof imageInfo.version !== 'string') return false;
-            return imageInfo.version.includes(fwVersion);
         });
-    }
-    return valid;
-}
+
+    const programDeviceWithFw = async (
+        device: Device,
+        selectedFw: JprogEntry,
+        dispatch: TDispatch
+    ) => {
+        try {
+            logger.debug(
+                `Programming ${device.serialNumber} with ${selectedFw.fw}`
+            );
+            await program(device.id, selectedFw.fw, dispatch);
+            logger.debug(`Resetting ${device.serialNumber}`);
+            await reset(device.id);
+        } catch (programError) {
+            if (programError instanceof Error) {
+                logger.error(programError);
+                throw new Error(
+                    `Error when programming ${programError.message}`
+                );
+            }
+        }
+        return device;
+    };
+    return {
+        supportsProgrammingMode: (device: Device) =>
+            device.traits.jlink === true,
+        getFirmwareOptions: device =>
+            firmwareOptions(device).map(firmwareOption => ({
+                key: firmwareOption.key,
+                programDevice: () => (dispatch: TDispatch) =>
+                    programDeviceWithFw(device, firmwareOption, dispatch),
+            })),
+        isExpectedFirmware: (device: Device) => async (dispatch: TDispatch) => {
+            const fwVersions = firmwareOptions(device);
+            if (fwVersions.length === 0) {
+                return Promise.resolve({
+                    device,
+                    validFirmware: false,
+                });
+            }
+
+            try {
+                const fwInfo = await readFwInfo(deviceLibContext, device.id);
+                dispatch(setReadbackProtected('unprotected'));
+
+                if (fwInfo.imageInfoList.length > 0) {
+                    const fw = fwVersions.find(version =>
+                        fwInfo.imageInfoList.find(
+                            imageInfo =>
+                                typeof imageInfo.version === 'string' &&
+                                imageInfo.version.includes(version.key)
+                        )
+                    );
+
+                    return Promise.resolve({
+                        device,
+                        validFirmware: fw !== undefined,
+                    });
+                }
+            } catch (error) {
+                // @ts-expect-error Wrongly typed in device lib at the moment
+                if (error.error_code === 24) {
+                    logger.warn(
+                        'Readback protection on device enabled. Unable to verify that the firmware version is correct.'
+                    );
+                    dispatch(setReadbackProtected('protected'));
+                    return Promise.reject(new Error('protected'));
+                }
+                dispatch(setReadbackProtected('unknown'));
+                return Promise.resolve({
+                    device,
+                    validFirmware: false,
+                });
+            }
+
+            return Promise.resolve({
+                device,
+                validFirmware: false,
+            });
+        },
+        tryToSwitchToApplicationMode: () => () => Promise.resolve(null),
+    };
+};
 
 /**
  * Helper function that calls optional user defined confirmation e.g. dialog or inquirer.
