@@ -159,12 +159,13 @@ const confirmHelper = async (promiseConfirm?: PromiseConfirm) => {
     }
 };
 
-const prepareDevice =
+export const prepareDevice =
     (
         device: Device,
         deviceSetupConfig: DeviceSetup,
         onSuccess: (device: Device) => void,
-        onFail: (reason?: unknown) => void
+        onFail: (reason?: unknown) => void,
+        checkCurrentFirmwareVersion: true
     ) =>
     async (dispatch: TDispatch) => {
         const validDeviceSetups = deviceSetupConfig.deviceSetups.filter(
@@ -196,7 +197,7 @@ const prepareDevice =
             return;
         }
 
-        {
+        if (checkCurrentFirmwareVersion) {
             let validFirmware = false;
             let i = 0;
             do {
@@ -342,7 +343,8 @@ export const setupDevice =
                         if (error instanceof Error) logger.error(error.message);
                         doDeselectDevice();
                     }
-                }
+                },
+                true
             )
         );
     };

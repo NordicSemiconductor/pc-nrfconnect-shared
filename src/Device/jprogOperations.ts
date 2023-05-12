@@ -5,6 +5,7 @@
  */
 
 import nrfDeviceLib, {
+    deviceControlRecover,
     deviceControlReset,
     Error as nrfError,
     firmwareProgram,
@@ -22,8 +23,6 @@ import {
     setDeviceSetupProgressMessage,
     setReadbackProtected,
 } from './deviceSlice';
-
-const deviceLibContext = getDeviceLibContext();
 
 let lastMSG = '';
 const progressJson =
@@ -57,7 +56,7 @@ const program = (
     return new Promise<void>((resolve, reject) => {
         dispatch(setDeviceSetupProgress(0));
         firmwareProgram(
-            deviceLibContext,
+            getDeviceLibContext(),
             deviceId,
             fwFormat,
             'NRFDL_FW_INTEL_HEX',
@@ -81,7 +80,7 @@ const program = (
  * @returns {Promise} Promise that resolves if successful or rejects with error.
  */
 const reset = async (deviceId: number) => {
-    await deviceControlReset(deviceLibContext, deviceId);
+    await deviceControlReset(getDeviceLibContext(), deviceId);
 };
 
 export const updateHasReadbackProtection =
@@ -94,7 +93,7 @@ export const updateHasReadbackProtection =
         }
 
         try {
-            await readFwInfo(deviceLibContext, device.id);
+            await readFwInfo(getDeviceLibContext(), device.id);
         } catch (error) {
             // @ts-expect-error Wrongly typed in device lib at the moment
             if (error.error_code === 24) {
@@ -127,28 +126,66 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
             );
         });
 
-    const programDeviceWithFw = async (
-        device: Device,
-        selectedFw: JprogEntry,
-        dispatch: TDispatch
-    ) => {
-        try {
-            logger.debug(
-                `Programming ${device.serialNumber} with ${selectedFw.fw}`
-            );
-            await program(device.id, selectedFw.fw, dispatch);
-            logger.debug(`Resetting ${device.serialNumber}`);
-            await reset(device.id);
-        } catch (programError) {
-            if (programError instanceof Error) {
-                logger.error(programError);
-                throw new Error(
-                    `Error when programming ${programError.message}`
+    const programDeviceWithFw =
+        (device: Device, selectedFw: JprogEntry) =>
+        async (dispatch: TDispatch, getState: () => RootState) => {
+            try {
+                if (getState().device.readbackProtection === 'protected') {
+                    logger.info('Recovering device');
+                    await deviceControlRecover(
+                        getDeviceLibContext(),
+                        device.id,
+                        'NRFDL_DEVICE_CORE_APPLICATION'
+                    );
+                }
+
+                logger.debug(
+                    `Programming ${device.serialNumber} with ${selectedFw.fw}`
                 );
+                await program(device.id, selectedFw.fw, dispatch);
+                logger.debug(`Resetting ${device.serialNumber}`);
+                await reset(device.id);
+            } catch (programError) {
+                if (programError instanceof Error) {
+                    logger.error(programError);
+                    throw new Error(
+                        `Error when programming ${programError.message}`
+                    );
+                }
             }
+            return device;
+        };
+
+    const getDeviceReadProtection = async (
+        device: Device
+    ): Promise<{
+        fwInfo: nrfDeviceLib.FWInfo.ReadResult | null;
+        readbackProtection: 'unknown' | 'protected' | 'unprotected';
+    }> => {
+        try {
+            const fwInfo = await readFwInfo(getDeviceLibContext(), device.id);
+            return Promise.resolve({
+                fwInfo,
+                readbackProtection: 'unprotected',
+            });
+        } catch (error) {
+            // @ts-expect-error Wrongly typed in device lib at the moment
+            if (error.error_code === 24) {
+                logger.warn(
+                    'Readback protection on device enabled. Unable to verify that the firmware version is correct.'
+                );
+                return Promise.resolve({
+                    fwInfo: null,
+                    readbackProtection: 'protected',
+                });
+            }
+            return Promise.resolve({
+                fwInfo: null,
+                readbackProtection: 'unknown',
+            });
         }
-        return device;
     };
+
     return {
         supportsProgrammingMode: (device: Device) =>
             device.traits.jlink === true,
@@ -156,7 +193,7 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
             firmwareOptions(device).map(firmwareOption => ({
                 key: firmwareOption.key,
                 programDevice: () => (dispatch: TDispatch) =>
-                    programDeviceWithFw(device, firmwareOption, dispatch),
+                    dispatch(programDeviceWithFw(device, firmwareOption)),
             })),
         isExpectedFirmware: (device: Device) => async (dispatch: TDispatch) => {
             const fwVersions = firmwareOptions(device);
@@ -167,8 +204,35 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
                 });
             }
 
+            await getDeviceReadProtection(device).then(
+                ({ fwInfo, readbackProtection }) => {
+                    dispatch(setReadbackProtected(readbackProtection));
+                    if (fwInfo && fwInfo.imageInfoList.length > 0) {
+                        const fw = fwVersions.find(version =>
+                            fwInfo.imageInfoList.find(
+                                imageInfo =>
+                                    typeof imageInfo.version === 'string' &&
+                                    imageInfo.version.includes(version.key)
+                            )
+                        );
+
+                        return Promise.resolve({
+                            device,
+                            validFirmware: fw !== undefined,
+                        });
+                    }
+
+                    return Promise.resolve({
+                        device,
+                        validFirmware: false,
+                    });
+                }
+            );
             try {
-                const fwInfo = await readFwInfo(deviceLibContext, device.id);
+                const fwInfo = await readFwInfo(
+                    getDeviceLibContext(),
+                    device.id
+                );
                 dispatch(setReadbackProtected('unprotected'));
 
                 if (fwInfo.imageInfoList.length > 0) {

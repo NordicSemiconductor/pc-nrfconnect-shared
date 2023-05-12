@@ -128,7 +128,11 @@ export type { Props as DeviceSelectorProps } from './Device/DeviceSelector/Devic
 
 export type { PaneProps } from './App/App';
 export type { DfuImage } from './Device/initPacket';
-export type { DeviceSetup, IDeviceSetup } from './Device/deviceSetup';
+export type {
+    DeviceSetup,
+    IDeviceSetup,
+    prepareDevice,
+} from './Device/deviceSetup';
 export type {
     AppInfo,
     AppVersions,
