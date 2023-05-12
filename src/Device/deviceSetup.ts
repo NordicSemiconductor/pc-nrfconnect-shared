@@ -177,13 +177,11 @@ export const prepareDevice =
             .flat();
 
         if (possibleFirmware.length === 0) {
+            logger.info(
+                `Connected to device with serial number: ${device.serialNumber} ` +
+                    `and family: ${device.jlink?.deviceFamily || 'Unknown'} `
+            );
             if (deviceSetupConfig.allowCustomDevice) {
-                logger.info(
-                    `Connected to device with serial number: ${device.serialNumber} ` +
-                        `and family: ${
-                            device.jlink?.deviceFamily || 'Unknown'
-                        } `
-                );
                 logger.info(
                     'Note: no pre-compiled firmware is available for the selected device. ' +
                         'You may still use the app if you have programmed the device ' +
@@ -191,6 +189,9 @@ export const prepareDevice =
                 );
                 onSuccess(device);
             } else {
+                logger.info(
+                    'Note: no pre-compiled firmware is available for the selected device. '
+                );
                 onFail('No device setup found');
             }
 
