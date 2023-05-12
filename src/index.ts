@@ -81,10 +81,7 @@ export {
     getPersistedTerminalSettings,
 } from './utils/persistentStore';
 
-export {
-    updateHasReadbackProtection,
-    jProgDeviceSetup,
-} from './Device/jprogOperations';
+export { jProgDeviceSetup } from './Device/jprogOperations';
 
 export { sDFUDeviceSetup } from './Device/sdfuOperations';
 

@@ -18,7 +18,6 @@ import { Device, RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import type { DeviceSetup, IDeviceSetup, JprogEntry } from './deviceSetup';
 import {
-    selectedDevice,
     setDeviceSetupProgress,
     setDeviceSetupProgressMessage,
     setReadbackProtected,
@@ -83,28 +82,6 @@ const reset = async (deviceId: number) => {
     await deviceControlReset(getDeviceLibContext(), deviceId);
 };
 
-export const updateHasReadbackProtection =
-    () => async (dispatch: TDispatch, getState: () => RootState) => {
-        const device = selectedDevice(getState());
-
-        if (!device || !device.traits.jlink) {
-            dispatch(setReadbackProtected('unknown'));
-            return 'unknown';
-        }
-
-        try {
-            await readFwInfo(getDeviceLibContext(), device.id);
-        } catch (error) {
-            // @ts-expect-error Wrongly typed in device lib at the moment
-            if (error.error_code === 24) {
-                dispatch(setReadbackProtected('protected'));
-                return 'protected';
-            }
-        }
-        dispatch(setReadbackProtected('unprotected'));
-        return 'unprotected';
-    };
-
 export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
     const firmwareOptions = (device: Device) =>
         firmware.filter(fw => {
@@ -145,6 +122,10 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
                 await program(device.id, selectedFw.fw, dispatch);
                 logger.debug(`Resetting ${device.serialNumber}`);
                 await reset(device.id);
+                const { readbackProtection } = await getDeviceReadProtection(
+                    device
+                );
+                dispatch(setReadbackProtected(readbackProtection));
             } catch (programError) {
                 if (programError instanceof Error) {
                     logger.error(programError);
