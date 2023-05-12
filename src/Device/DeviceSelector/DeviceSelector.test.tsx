@@ -15,7 +15,7 @@ import {
 import render from '../../../test/testrenderer';
 import { Device } from '../../state';
 import { setDevices } from '../deviceSlice';
-import { JProgDeviceSetup } from '../jprogOperations';
+import { jProgDeviceSetup } from '../jprogOperations';
 import DeviceSelector from './DeviceSelector';
 
 jest.mock('../sdfuOperations', () => ({}));
@@ -97,7 +97,7 @@ const testDevice: Device = {
 
 const validFirmware = {
     deviceSetups: [
-        JProgDeviceSetup([
+        jProgDeviceSetup([
             {
                 key: 'PCATest',
                 fw: 'firmware/invalidDevice.hex',
@@ -236,7 +236,7 @@ describe('DeviceSelector', () => {
                 }}
                 deviceSetup={{
                     deviceSetups: [
-                        JProgDeviceSetup([
+                        jProgDeviceSetup([
                             {
                                 key: 'firmware_1',
                                 fw: 'firmware/invalidDevice.hex',
@@ -269,7 +269,7 @@ describe('DeviceSelector', () => {
                 }}
                 deviceSetup={{
                     deviceSetups: [
-                        JProgDeviceSetup([
+                        jProgDeviceSetup([
                             {
                                 key: 'invalidDevice',
                                 fw: 'firmware/invalidDevice.hex',

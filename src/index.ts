@@ -81,7 +81,13 @@ export {
     getPersistedTerminalSettings,
 } from './utils/persistentStore';
 
-export { updateHasReadbackProtection } from './Device/jprogOperations';
+export {
+    updateHasReadbackProtection,
+    jProgDeviceSetup,
+} from './Device/jprogOperations';
+
+export { sDFUDeviceSetup } from './Device/sdfuOperations';
+
 export {
     selectedDevice,
     getReadbackProtection,
@@ -122,7 +128,7 @@ export type { Props as DeviceSelectorProps } from './Device/DeviceSelector/Devic
 
 export type { PaneProps } from './App/App';
 export type { DfuImage } from './Device/initPacket';
-export type { DeviceSetup } from './Device/deviceSetup';
+export type { DeviceSetup, IDeviceSetup } from './Device/deviceSetup';
 export type {
     AppInfo,
     AppVersions,

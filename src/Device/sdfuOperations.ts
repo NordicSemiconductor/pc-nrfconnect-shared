@@ -489,7 +489,7 @@ const programInDFUBootloader = async (
     );
 };
 
-export const DFUDeviceSetup = (
+export const sDFUDeviceSetup = (
     dfuFirmware: DfuEntry[],
     promiseConfirm: PromiseConfirm
 ): IDeviceSetup => {

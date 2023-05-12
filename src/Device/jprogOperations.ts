@@ -106,7 +106,7 @@ export const updateHasReadbackProtection =
         return 'unprotected';
     };
 
-export const JProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
+export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
     const firmwareOptions = (device: Device) =>
         firmware.filter(fw => {
             const family = (device.jlink?.deviceFamily || '').toLowerCase();

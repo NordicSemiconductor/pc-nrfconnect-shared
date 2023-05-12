@@ -25,7 +25,7 @@ export interface IDeviceSetup {
         device: Device;
         validFirmware: boolean;
     }>;
-    tryToApplicationMode: (device: Device) => (dispatch: TDispatch) => Promise<Device>;
+    tryToSwitchToApplicationMode: (device: Device) => (dispatch: TDispatch) => Promise<Device | null>;
 }
 export interface DeviceSetup {
     deviceSetups: IDeviceSetup[];
