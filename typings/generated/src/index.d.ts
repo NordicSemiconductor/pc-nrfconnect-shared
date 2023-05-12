@@ -66,6 +66,7 @@ export type { Device, NrfConnectState } from './state';
 export type { Props as DeviceSelectorProps } from './Device/DeviceSelector/DeviceSelector';
 export type { PaneProps } from './App/App';
 export type { DfuImage } from './Device/initPacket';
-export type { DeviceSetup, IDeviceSetup, prepareDevice, } from './Device/deviceSetup';
+export type { DeviceSetup, IDeviceSetup } from './Device/deviceSetup';
+export { prepareDevice } from './Device/deviceSetup';
 export type { AppInfo, AppVersions, PackageJson, SourceJson, } from './utils/AppTypes';
 export { default as FeedbackPane } from './Panes/FeedbackPane';
