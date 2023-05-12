@@ -159,130 +159,135 @@ const confirmHelper = async (promiseConfirm?: PromiseConfirm) => {
     }
 };
 
-const prepareDevice = async (
-    device: Device,
-    deviceSetupConfig: DeviceSetup,
-    dispatch: TDispatch,
-    onSuccess: (device: Device) => void,
-    onFail: (reason?: unknown) => void
-) => {
-    const validDeviceSetups = deviceSetupConfig.deviceSetups.filter(
-        deviceSetups => deviceSetups.supportsProgrammingMode(device)
-    );
-
-    const possibleFirmware = validDeviceSetups
-        .map(deviceSetup => deviceSetup.getFirmwareOptions(device))
-        .flat();
-
-    if (possibleFirmware.length === 0) {
-        if (deviceSetupConfig.allowCustomDevice) {
-            logger.info(
-                `Connected to device with serial number: ${device.serialNumber} ` +
-                    `and family: ${device.jlink?.deviceFamily || 'Unknown'} `
-            );
-            logger.info(
-                'Note: no pre-compiled firmware is available for the selected device. ' +
-                    'You may still use the app if you have programmed the device ' +
-                    'with a compatible firmware.'
-            );
-            onSuccess(device);
-        } else {
-            onFail('No device setup found');
-        }
-
-        return;
-    }
-
-    {
-        let validFirmware = false;
-        let i = 0;
-        do {
-            const deviceSetup = validDeviceSetups[i];
-            // eslint-disable-next-line no-await-in-loop
-            const result = await dispatch(
-                deviceSetup.isExpectedFirmware(device)
-            );
-            device = result.device;
-            validFirmware = result.validFirmware;
-            i += 1;
-        } while (!validFirmware && i < validDeviceSetups.length);
-
-        if (validFirmware) {
-            onSuccess(device);
-            return;
-        }
-    }
-
-    const choices = possibleFirmware.map(fw => fw.key).flat();
-
-    let choice: string | null = null;
-    if (choices.length === 1) {
-        const isConfirmed = await confirmHelper(
-            deviceSetupConfig.promiseConfirm
+const prepareDevice =
+    (
+        device: Device,
+        deviceSetupConfig: DeviceSetup,
+        onSuccess: (device: Device) => void,
+        onFail: (reason?: unknown) => void
+    ) =>
+    async (dispatch: TDispatch) => {
+        const validDeviceSetups = deviceSetupConfig.deviceSetups.filter(
+            deviceSetups => deviceSetups.supportsProgrammingMode(device)
         );
-        if (isConfirmed) {
-            choice = choices[0];
-        }
-    } else {
-        choice = await choiceHelper(choices, deviceSetupConfig.promiseChoice);
-    }
 
-    if (choice === null) {
-        let i = 0;
-        do {
-            const deviceSetup = validDeviceSetups[i];
-            try {
-                // eslint-disable-next-line no-await-in-loop
-                const result = await dispatch(
-                    deviceSetup.tryToSwitchToApplicationMode(device)
+        const possibleFirmware = validDeviceSetups
+            .map(deviceSetup => deviceSetup.getFirmwareOptions(device))
+            .flat();
+
+        if (possibleFirmware.length === 0) {
+            if (deviceSetupConfig.allowCustomDevice) {
+                logger.info(
+                    `Connected to device with serial number: ${device.serialNumber} ` +
+                        `and family: ${
+                            device.jlink?.deviceFamily || 'Unknown'
+                        } `
                 );
-                if (result) {
-                    onSuccess(device);
-                    return;
-                }
-            } catch (error) {
-                onFail(error);
+                logger.info(
+                    'Note: no pre-compiled firmware is available for the selected device. ' +
+                        'You may still use the app if you have programmed the device ' +
+                        'with a compatible firmware.'
+                );
+                onSuccess(device);
+            } else {
+                onFail('No device setup found');
             }
 
-            i += 1;
-        } while (i < validDeviceSetups.length);
-
-        onSuccess(device);
-    } else {
-        const selectedDeviceSetup = possibleFirmware.find(
-            fw => fw.key === choice
-        );
-
-        if (!selectedDeviceSetup) {
-            onFail('No firmware was selected'); // Should never happen
-        } else {
-            dispatch(
-                selectedDeviceSetup.programDevice(
-                    deviceSetupConfig.promiseConfirm
-                )
-            )
-                .then(programmedDevice => {
-                    if (deviceSetupConfig.needSerialport) {
-                        verifySerialPortAvailableAndFree(programmedDevice)
-                            .then(() => onSuccess(programmedDevice))
-                            .catch(onFail);
-                    } else {
-                        onSuccess(device);
-                    }
-                })
-                .catch(onFail);
+            return;
         }
-    }
-};
 
-const onSuccessfulDeviceSetup = (
-    dispatch: TDispatch,
-    device: Device,
-    onDeviceIsReady: (device: Device) => void
-) => {
-    dispatch(deviceSetupComplete(device));
-    onDeviceIsReady(device);
-};
+        {
+            let validFirmware = false;
+            let i = 0;
+            do {
+                const deviceSetup = validDeviceSetups[i];
+                // eslint-disable-next-line no-await-in-loop
+                const result = await dispatch(
+                    deviceSetup.isExpectedFirmware(device)
+                );
+                device = result.device;
+                validFirmware = result.validFirmware;
+                i += 1;
+            } while (!validFirmware && i < validDeviceSetups.length);
+
+            if (validFirmware) {
+                onSuccess(device);
+                return;
+            }
+        }
+
+        const choices = possibleFirmware.map(fw => fw.key).flat();
+
+        let choice: string | null = null;
+        if (choices.length === 1) {
+            const isConfirmed = await confirmHelper(
+                deviceSetupConfig.promiseConfirm
+            );
+            if (isConfirmed) {
+                choice = choices[0];
+            }
+        } else {
+            choice = await choiceHelper(
+                choices,
+                deviceSetupConfig.promiseChoice
+            );
+        }
+
+        if (choice === null) {
+            let i = 0;
+            do {
+                const deviceSetup = validDeviceSetups[i];
+                try {
+                    // eslint-disable-next-line no-await-in-loop
+                    const result = await dispatch(
+                        deviceSetup.tryToSwitchToApplicationMode(device)
+                    );
+                    if (result) {
+                        onSuccess(device);
+                        return;
+                    }
+                } catch (error) {
+                    onFail(error);
+                    return;
+                }
+
+                i += 1;
+            } while (i < validDeviceSetups.length);
+
+            onSuccess(device);
+        } else {
+            const selectedDeviceSetup = possibleFirmware.find(
+                fw => fw.key === choice
+            );
+
+            if (!selectedDeviceSetup) {
+                onFail('No firmware was selected'); // Should never happen
+            } else {
+                dispatch(
+                    selectedDeviceSetup.programDevice(
+                        deviceSetupConfig.promiseConfirm
+                    )
+                )
+                    .then(programmedDevice => {
+                        if (deviceSetupConfig.needSerialport) {
+                            verifySerialPortAvailableAndFree(programmedDevice)
+                                .then(() => onSuccess(programmedDevice))
+                                .catch(onFail);
+                        } else {
+                            onSuccess(device);
+                        }
+                    })
+                    .catch(onFail);
+            }
+        }
+    };
+
+const onSuccessfulDeviceSetup =
+    (device: Device, onDeviceIsReady: (device: Device) => void) =>
+    (dispatch: TDispatch) => {
+        dispatch(deviceSetupComplete(device));
+        onDeviceIsReady(device);
+    };
 
 export const setupDevice =
     (
@@ -292,8 +297,8 @@ export const setupDevice =
         onDeviceIsReady: (device: Device) => void,
         doDeselectDevice: () => void
     ) =>
-    async (dispatch: TDispatch) => {
-        await releaseCurrentDevice();
+    (dispatch: TDispatch) => {
+        releaseCurrentDevice();
         const deviceSetupConfig = {
             promiseConfirm: getDeviceSetupUserInput(dispatch) as PromiseConfirm,
             promiseChoice: getDeviceSetupUserInput(dispatch) as PromiseChoice,
@@ -301,40 +306,43 @@ export const setupDevice =
             ...deviceSetup,
         };
 
-        await prepareDevice(
-            device,
-            deviceSetupConfig,
-            dispatch,
-            d => {
-                onSuccessfulDeviceSetup(dispatch, d, onDeviceIsReady);
-            },
-            error => {
-                if (
-                    deviceSetupConfig.allowCustomDevice &&
-                    error instanceof Error &&
-                    error.message.includes('No firmware defined')
-                ) {
-                    logger.info(
-                        `Connected to device with serial number: ${device.serialNumber} ` +
-                            `and family: ${
-                                device.jlink?.deviceFamily || 'Unknown'
-                            } `
-                    );
-                    logger.info(
-                        'Note: no pre-compiled firmware is available for the selected device. ' +
-                            'You may still use the app if you have programmed the device ' +
-                            'with a compatible firmware.'
-                    );
+        dispatch(
+            prepareDevice(
+                device,
+                deviceSetupConfig,
+                d => {
+                    dispatch(onSuccessfulDeviceSetup(d, onDeviceIsReady));
+                },
+                error => {
+                    if (
+                        deviceSetupConfig.allowCustomDevice &&
+                        error instanceof Error &&
+                        error.message.includes('No firmware defined')
+                    ) {
+                        logger.info(
+                            `Connected to device with serial number: ${device.serialNumber} ` +
+                                `and family: ${
+                                    device.jlink?.deviceFamily || 'Unknown'
+                                } `
+                        );
+                        logger.info(
+                            'Note: no pre-compiled firmware is available for the selected device. ' +
+                                'You may still use the app if you have programmed the device ' +
+                                'with a compatible firmware.'
+                        );
 
-                    onSuccessfulDeviceSetup(dispatch, device, onDeviceIsReady);
-                } else {
-                    dispatch(deviceSetupError());
-                    logger.error(
-                        `Error while setting up device ${device.serialNumber}`
-                    );
-                    if (error instanceof Error) logger.error(error.message);
-                    doDeselectDevice();
+                        dispatch(
+                            onSuccessfulDeviceSetup(device, onDeviceIsReady)
+                        );
+                    } else {
+                        dispatch(deviceSetupError());
+                        logger.error(
+                            `Error while setting up device ${device.serialNumber}`
+                        );
+                        if (error instanceof Error) logger.error(error.message);
+                        doDeselectDevice();
+                    }
                 }
-            }
+            )
         );
     };

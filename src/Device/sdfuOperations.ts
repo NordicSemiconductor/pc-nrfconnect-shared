@@ -263,31 +263,37 @@ const askAndUpdateBootloader =
         promiseConfirm?: PromiseConfirm
     ) =>
     (dispatch: TDispatch) => {
-        switchToBootloaderMode(
-            device,
-            async d => {
-                if (!(await isLatestBootloader(d))) {
-                    if (
-                        promiseConfirm &&
-                        !(await promiseConfirm(
-                            'Device will be programmed. A Newer version of the bootloader is available, do you want to update it as well?'
-                        ))
-                    ) {
-                        logger.info('Continuing with old bootloader');
-                        onSuccess(d);
+        dispatch(
+            switchToBootloaderMode(
+                device,
+                async d => {
+                    if (!(await isLatestBootloader(d))) {
+                        if (
+                            promiseConfirm &&
+                            !(await promiseConfirm(
+                                'Device will be programmed. A Newer version of the bootloader is available, do you want to update it as well?'
+                            ))
+                        ) {
+                            logger.info('Continuing with old bootloader');
+                            onSuccess(d);
+                        } else {
+                            const action = (dd: Device) => {
+                                dispatch(
+                                    switchToBootloaderMode(
+                                        dd,
+                                        onSuccess,
+                                        onFail
+                                    )
+                                );
+                            };
+                            dispatch(updateBootloader(d, action, onFail));
+                        }
                     } else {
-                        const action = (dd: Device) => {
-                            dispatch(
-                                switchToBootloaderMode(dd, onSuccess, onFail)
-                            );
-                        };
-                        dispatch(updateBootloader(d, action, onFail));
+                        onSuccess(d);
                     }
-                } else {
-                    onSuccess(d);
-                }
-            },
-            onFail
+                },
+                onFail
+            )
         );
     };
 
