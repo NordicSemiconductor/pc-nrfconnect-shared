@@ -6,6 +6,8 @@ export interface DeviceSetupViewProps {
     choices: readonly string[];
     onOk: (choice: string | boolean) => void;
     onCancel: () => void;
+    progress?: number;
+    progressMessage?: string;
 }
 interface State {
     selectedChoice: null | string;
