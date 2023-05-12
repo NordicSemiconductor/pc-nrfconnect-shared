@@ -244,7 +244,7 @@ export const prepareDevice =
                         deviceSetup.tryToSwitchToApplicationMode(device)
                     );
                     if (result) {
-                        onSuccess(device);
+                        onSuccess(result);
                         return;
                     }
                 } catch (error) {
