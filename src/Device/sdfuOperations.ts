@@ -541,6 +541,7 @@ export const sDFUDeviceSetup = (dfuFirmware: DfuEntry[]): IDeviceSetup => {
         getFirmwareOptions: device =>
             dfuFirmware.map(firmwareOption => ({
                 key: firmwareOption.key,
+                description: firmwareOption.description,
                 programDevice:
                     (promiseConfirm?: PromiseConfirm) =>
                     (dispatch: TDispatch) =>

@@ -17,6 +17,7 @@ import { InitPacket } from './initPacket';
 
 export interface DfuEntry {
     key: string;
+    description?: string;
     application: string;
     semver: string;
     softdevice?: string | Buffer;
@@ -25,6 +26,7 @@ export interface DfuEntry {
 
 export interface JprogEntry {
     key: string;
+    description?: string;
     fw: string;
     fwIdAddress: number;
     fwVersion: string;
@@ -42,6 +44,7 @@ export interface IDeviceSetup {
     // isSupportedDevice: () => boolean;
     getFirmwareOptions: (device: Device) => {
         key: string;
+        description?: string;
         programDevice: (
             promiseConfirm?: PromiseConfirm
         ) => (dispatch: TDispatch) => Promise<Device>;
@@ -229,7 +232,11 @@ export const prepareDevice =
             }
         }
 
-        const choices = possibleFirmware.map(fw => fw.key).flat();
+        const choices = possibleFirmware
+            .map(
+                fw => `${fw.key}${fw.description ? `- ${fw.description}` : ''}`
+            )
+            .flat();
 
         let choice: string | null = null;
         if (choices.length === 1) {

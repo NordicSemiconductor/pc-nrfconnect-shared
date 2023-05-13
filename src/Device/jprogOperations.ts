@@ -173,6 +173,7 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
         getFirmwareOptions: device =>
             firmwareOptions(device).map(firmwareOption => ({
                 key: firmwareOption.key,
+                description: firmwareOption.description,
                 programDevice: () => (dispatch: TDispatch) =>
                     dispatch(programDeviceWithFw(device, firmwareOption)),
             })),
