@@ -73,26 +73,43 @@ export default class DeviceSetupDialog extends React.Component<
                         headerIcon=""
                     />
                     <Dialog.Body>
-                        <p>{text}</p>
-                        <Form.Group>
-                            {choices.map(choice => (
-                                <Form.Check
-                                    key={choice}
-                                    name="radioGroup"
-                                    type="radio"
-                                    disabled={isInProgress}
-                                    onClick={() => this.onSelectChoice(choice)}
-                                    label={choice}
+                        <Group>
+                            <div>{text}</div>
+                            <Form.Group>
+                                {choices.map(choice => (
+                                    <Form.Check
+                                        key={choice}
+                                        name="radioGroup"
+                                        type="radio"
+                                        disabled={isInProgress}
+                                        onClick={() =>
+                                            this.onSelectChoice(choice)
+                                        }
+                                        label={choice}
+                                    />
+                                ))}
+                            </Form.Group>
+                            {progressMessage !== undefined && (
+                                <Form.Label>
+                                    <strong>Status:</strong>
+                                    <span>{` ${progressMessage}`}</span>
+                                </Form.Label>
+                            )}
+                            {progress !== undefined && (
+                                <ProgressBar
+                                    now={progress}
+                                    style={{ height: '4px' }}
                                 />
-                            ))}
-                        </Form.Group>
+                            )}
+                        </Group>
                     </Dialog.Body>
                     <Dialog.Footer>
                         <DialogButton
+                            variant="primary"
                             onClick={() => onOk(selectedChoice ?? false)}
                             disabled={!selectedChoice || isInProgress}
                         >
-                            Ok
+                            Program
                         </DialogButton>
                         <DialogButton
                             onClick={onCancel}
