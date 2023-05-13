@@ -229,10 +229,14 @@ export const prepareDevice =
                 choice = choices[0];
             }
         } else {
-            choice = await choiceHelper(
-                choices,
-                deviceSetupConfig.promiseChoice
-            );
+            try {
+                choice = await choiceHelper(
+                    choices,
+                    deviceSetupConfig.promiseChoice
+                );
+            } catch (_) {
+                choice = null;
+            }
         }
 
         if (choice === null) {
