@@ -14,7 +14,6 @@ import {
     deviceSetupInputRequired,
 } from './deviceSlice';
 import { InitPacket } from './initPacket';
-import { PromiseChoice } from './sdfuOperations';
 
 export interface DfuEntry {
     key: string;
@@ -30,6 +29,11 @@ export interface JprogEntry {
     fwIdAddress: number;
     fwVersion: string;
 }
+
+type PromiseChoice = (
+    question: string,
+    choices: string[]
+) => Promise<{ choice: string; index: number }>;
 
 export type PromiseConfirm = (message: string) => Promise<boolean>;
 
@@ -62,7 +66,9 @@ export interface DeviceSetup {
 // Defined when user input is required during device setup. When input is
 // received from the user, this callback is invoked with the confirmation
 // (Boolean) or choice (String) that the user provided as input.
-let deviceSetupCallback: ((choice: string | boolean) => void) | undefined;
+let deviceSetupCallback:
+    | ((choice: { choice: string; index: number } | boolean) => void)
+    | undefined;
 
 /*
  * Asks the user to provide input during device setup. If a list of choices are
@@ -72,26 +78,31 @@ let deviceSetupCallback: ((choice: string | boolean) => void) | undefined;
  */
 const getDeviceSetupUserInput =
     (dispatch: TDispatch) => (message: string, choices: string[]) =>
-        new Promise<boolean | string>((resolve, reject) => {
-            deviceSetupCallback = (choice: boolean | string) => {
-                if (!choices) {
-                    // for confirmation resolve with boolean
-                    resolve(!!choice);
-                } else if (choice) {
-                    resolve(choice);
-                } else {
-                    reject(new Error('Cancelled by user.'));
-                }
-            };
-            dispatch(deviceSetupInputRequired(message, choices));
-        });
+        new Promise<boolean | { choice: string; index: number }>(
+            (resolve, reject) => {
+                deviceSetupCallback = (
+                    choice: boolean | { choice: string; index: number }
+                ) => {
+                    if (!choices) {
+                        // for confirmation resolve with boolean
+                        resolve(!!choice);
+                    } else if (choice) {
+                        resolve(choice);
+                    } else {
+                        reject(new Error('Cancelled by user.'));
+                    }
+                };
+                dispatch(deviceSetupInputRequired(message, choices));
+            }
+        );
 
 /*
  * Responds to a device setup confirmation request with the given input
  * as provided by the user.
  */
 export const receiveDeviceSetupInput =
-    (input: boolean | string) => (dispatch: TDispatch) => {
+    (input: boolean | { choice: string; index: number }) =>
+    (dispatch: TDispatch) => {
         dispatch(deviceSetupInputReceived());
         if (deviceSetupCallback) {
             deviceSetupCallback(input);
@@ -145,7 +156,7 @@ const choiceHelper = (choices: string[], promiseChoice?: PromiseChoice) => {
     if (choices.length > 1 && promiseChoice) {
         return promiseChoice('Which firmware do you want to program?', choices);
     }
-    return choices.slice(-1)[0];
+    return { choice: choices.slice(-1)[0], index: 0 };
 };
 
 const confirmHelper = async (promiseConfirm?: PromiseConfirm) => {
@@ -230,10 +241,11 @@ export const prepareDevice =
             }
         } else {
             try {
-                choice = await choiceHelper(
+                const { index } = await choiceHelper(
                     choices,
                     deviceSetupConfig.promiseChoice
                 );
+                choice = choices[index];
             } catch (_) {
                 choice = null;
             }

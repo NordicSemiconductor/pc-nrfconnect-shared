@@ -16,14 +16,14 @@ export interface DeviceSetupViewProps {
     isInProgress: boolean;
     text?: string | null;
     choices: readonly string[];
-    onOk: (choice: string | boolean) => void;
+    onOk: (choice: { choice: string; index: number } | boolean) => void;
     onCancel: () => void;
     progress?: number;
     progressMessage?: string;
 }
 
 interface State {
-    selectedChoice: null | string;
+    selectedChoice: null | { choice: string; index: number };
 }
 
 /**
@@ -47,8 +47,8 @@ export default class DeviceSetupDialog extends React.Component<
         };
     }
 
-    onSelectChoice(choice: string) {
-        this.setState({ selectedChoice: choice });
+    onSelectChoice(choice: string, index: number) {
+        this.setState({ selectedChoice: { choice, index } });
     }
 
     render() {
@@ -76,14 +76,14 @@ export default class DeviceSetupDialog extends React.Component<
                         <Group>
                             <div>{text}</div>
                             <Form.Group>
-                                {choices.map(choice => (
+                                {choices.map((choice, index) => (
                                     <Form.Check
                                         key={choice}
                                         name="radioGroup"
                                         type="radio"
                                         disabled={isInProgress}
                                         onClick={() =>
-                                            this.onSelectChoice(choice)
+                                            this.onSelectChoice(choice, index)
                                         }
                                         label={choice}
                                     />

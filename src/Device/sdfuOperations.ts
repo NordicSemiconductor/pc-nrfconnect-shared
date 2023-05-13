@@ -29,11 +29,6 @@ import {
     InitPacket,
 } from './initPacket';
 
-export type PromiseChoice = (
-    question: string,
-    choices: string[]
-) => Promise<string>;
-
 let lastMSG = '';
 const progressJson =
     ({ progressJson: progress }: nrfDeviceLib.Progress.CallbackParameters) =>

@@ -29,7 +29,8 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = (dispatch: TDispatch) => ({
-    onOk: (input: string | boolean) => dispatch(receiveDeviceSetupInput(input)),
+    onOk: (input: { choice: string; index: number } | boolean) =>
+        dispatch(receiveDeviceSetupInput(input)),
     onCancel: () => dispatch(receiveDeviceSetupInput(false)),
 });
 
