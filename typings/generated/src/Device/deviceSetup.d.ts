@@ -1,9 +1,9 @@
 /// <reference types="node" />
 import { Device, TDispatch } from '../state';
 import { InitPacket } from './initPacket';
-import { PromiseChoice } from './sdfuOperations';
 export interface DfuEntry {
     key: string;
+    description?: string;
     application: string;
     semver: string;
     softdevice?: string | Buffer;
@@ -11,15 +11,21 @@ export interface DfuEntry {
 }
 export interface JprogEntry {
     key: string;
+    description?: string;
     fw: string;
     fwIdAddress: number;
     fwVersion: string;
 }
+type PromiseChoice = (question: string, choices: string[]) => Promise<{
+    choice: string;
+    index: number;
+}>;
 export type PromiseConfirm = (message: string) => Promise<boolean>;
 export interface IDeviceSetup {
     supportsProgrammingMode: (device: Device) => boolean;
     getFirmwareOptions: (device: Device) => {
         key: string;
+        description?: string;
         programDevice: (promiseConfirm?: PromiseConfirm) => (dispatch: TDispatch) => Promise<Device>;
     }[];
     isExpectedFirmware: (device: Device) => (dispatch: TDispatch) => Promise<{
@@ -35,6 +41,10 @@ export interface DeviceSetup {
     promiseChoice?: PromiseChoice;
     promiseConfirm?: PromiseConfirm;
 }
-export declare const receiveDeviceSetupInput: (input: boolean | string) => (dispatch: TDispatch) => void;
+export declare const receiveDeviceSetupInput: (input: boolean | {
+    choice: string;
+    index: number;
+}) => (dispatch: TDispatch) => void;
 export declare const prepareDevice: (device: Device, deviceSetupConfig: DeviceSetup, onSuccess: (device: Device) => void, onFail: (reason?: unknown) => void, checkCurrentFirmwareVersion: boolean) => (dispatch: TDispatch) => Promise<void>;
 export declare const setupDevice: (device: Device, deviceSetup: DeviceSetup, releaseCurrentDevice: () => void, onDeviceIsReady: (device: Device) => void, doDeselectDevice: () => void) => (dispatch: TDispatch) => void;
+export {};

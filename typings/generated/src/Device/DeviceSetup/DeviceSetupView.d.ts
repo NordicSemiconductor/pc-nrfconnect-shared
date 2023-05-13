@@ -4,13 +4,19 @@ export interface DeviceSetupViewProps {
     isInProgress: boolean;
     text?: string | null;
     choices: readonly string[];
-    onOk: (choice: string | boolean) => void;
+    onOk: (choice: {
+        choice: string;
+        index: number;
+    } | boolean) => void;
     onCancel: () => void;
     progress?: number;
     progressMessage?: string;
 }
 interface State {
-    selectedChoice: null | string;
+    selectedChoice: null | {
+        choice: string;
+        index: number;
+    };
 }
 /**
  * Dialog that allows the user to provide input that is required during device setup
@@ -23,7 +29,7 @@ interface State {
  */
 export default class DeviceSetupDialog extends React.Component<DeviceSetupViewProps, State> {
     constructor(props: DeviceSetupViewProps);
-    onSelectChoice(choice: string): void;
+    onSelectChoice(choice: string, index: number): void;
     render(): JSX.Element;
 }
 export {};

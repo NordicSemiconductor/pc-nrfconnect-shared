@@ -2,7 +2,6 @@
 import { Device, TDispatch } from '../state';
 import type { DfuEntry, IDeviceSetup } from './deviceSetup';
 import { DfuImage } from './initPacket';
-export type PromiseChoice = (question: string, choices: string[]) => Promise<string>;
 export declare const isDeviceInDFUBootloader: (device: Device) => boolean;
 export declare const ensureBootloaderMode: (device: Device) => boolean;
 export declare const switchToBootloaderMode: (device: Device, onSuccess: (device: Device) => void, onFail: (reason?: unknown) => void) => (dispatch: TDispatch) => void;
