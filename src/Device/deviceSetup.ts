@@ -234,17 +234,17 @@ export const prepareDevice =
 
         const choices = possibleFirmware
             .map(
-                fw => `${fw.key}${fw.description ? `- ${fw.description}` : ''}`
+                fw => `${fw.key}${fw.description ? ` - ${fw.description}` : ''}`
             )
             .flat();
 
-        let choice: string | null = null;
+        let choice: number | null = null;
         if (choices.length === 1) {
             const isConfirmed = await confirmHelper(
                 deviceSetupConfig.promiseConfirm
             );
             if (isConfirmed) {
-                choice = choices[0];
+                choice = 0;
             }
         } else {
             try {
@@ -252,7 +252,7 @@ export const prepareDevice =
                     choices,
                     deviceSetupConfig.promiseChoice
                 );
-                choice = choices[index];
+                choice = index;
             } catch (_) {
                 choice = null;
             }
@@ -281,9 +281,7 @@ export const prepareDevice =
 
             onSuccess(device);
         } else {
-            const selectedDeviceSetup = possibleFirmware.find(
-                fw => fw.key === choice
-            );
+            const selectedDeviceSetup = possibleFirmware[choice];
 
             if (!selectedDeviceSetup) {
                 onFail('No firmware was selected'); // Should never happen
