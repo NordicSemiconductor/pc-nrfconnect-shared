@@ -29,15 +29,15 @@ const progressJson =
     (dispatch: TDispatch) => {
         const message = progress.message || '';
 
-        const status = `${message.replace('.', ':')} ${
+        const loggingMessage = `${message.replace('.', ':')} ${
             progress.progressPercentage
         }%`;
 
-        if (status !== lastMSG) {
+        if (loggingMessage !== lastMSG) {
             dispatch(setDeviceSetupProgress(progress.progressPercentage));
-            dispatch(setDeviceSetupProgressMessage(status));
-            logger.info(status);
-            lastMSG = status;
+            dispatch(setDeviceSetupProgressMessage(message));
+            logger.info(loggingMessage);
+            lastMSG = loggingMessage;
         }
     };
 
