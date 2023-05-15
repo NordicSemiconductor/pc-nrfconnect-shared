@@ -16,12 +16,7 @@ import nrfDeviceLib, {
 import logger from '../logging';
 import { Device, RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import {
-    DeviceSetup,
-    IDeviceSetup,
-    JprogEntry,
-    progressJson,
-} from './deviceSetup';
+import { IDeviceSetup, JprogEntry } from './deviceSetup';
 import {
     setDeviceSetupProgress,
     setDeviceSetupProgressMessage,
@@ -52,7 +47,19 @@ const program = (
                 logger.info('Device programming completed.');
                 resolve();
             },
-            progress => dispatch(progressJson(progress)),
+            progress => () => {
+                dispatch(
+                    setDeviceSetupProgress(
+                        progress.progressJson.progressPercentage
+                    )
+                );
+                if (progress.progressJson.message)
+                    dispatch(
+                        setDeviceSetupProgressMessage(
+                            progress.progressJson.message
+                        )
+                    );
+            },
             null,
             'NRFDL_DEVICE_CORE_APPLICATION'
         );
@@ -209,44 +216,3 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
         tryToSwitchToApplicationMode: () => () => Promise.resolve(null),
     };
 };
-
-/**
- * Helper function that calls optional user defined confirmation e.g. dialog or inquirer.
- *
- * @param {function} promiseConfirm Promise returning function
- * @returns {Promise} resolves to boolean
- */
-const confirmHelper = async (
-    promiseConfirm?: (message: string) => Promise<boolean>
-) => {
-    if (!promiseConfirm) return true;
-    try {
-        return await promiseConfirm(
-            'Device must be programmed, do you want to proceed?'
-        );
-    } catch (err) {
-        throw new Error('Preparation cancelled by user');
-    }
-};
-
-export async function programFirmware(
-    device: Device,
-    fw: string | Buffer,
-    deviceSetupConfig: DeviceSetup,
-    dispatch: TDispatch
-) {
-    try {
-        const confirmed = await confirmHelper(deviceSetupConfig.promiseConfirm);
-        if (!confirmed) return device;
-
-        logger.debug(`Programming ${device.serialNumber} with ${fw}`);
-        await program(device.id, fw, dispatch);
-        logger.debug(`Resetting ${device.serialNumber}`);
-    } catch (programError) {
-        if (programError instanceof Error) {
-            logger.error(programError);
-            throw new Error(`Error when programming ${programError.message}`);
-        }
-    }
-    return device;
-}

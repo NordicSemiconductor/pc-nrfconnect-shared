@@ -15,13 +15,11 @@ import { Device, TDispatch } from '../state';
 import { getAppFile } from '../utils/appDirs';
 import { setWaitForDevice } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
+import { DfuEntry, IDeviceSetup, PromiseConfirm } from './deviceSetup';
 import {
-    DfuEntry,
-    IDeviceSetup,
-    progressJson,
-    PromiseConfirm,
-} from './deviceSetup';
-import { setDeviceSetupProgress } from './deviceSlice';
+    setDeviceSetupProgress,
+    setDeviceSetupProgressMessage,
+} from './deviceSlice';
 import {
     createInitPacketBuffer,
     defaultInitPacket,
@@ -140,7 +138,19 @@ const updateBootloader =
                     logger.debug('Bootloader DFU completed successfully!');
                 }
             },
-            progress => dispatch(progressJson(progress))
+            progress => () => {
+                dispatch(
+                    setDeviceSetupProgress(
+                        progress.progressJson.progressPercentage
+                    )
+                );
+                if (progress.progressJson.message)
+                    dispatch(
+                        setDeviceSetupProgressMessage(
+                            progress.progressJson.message
+                        )
+                    );
+            }
         );
     };
 
@@ -490,7 +500,15 @@ const programInDFUBootloader = async (
                 );
             }
         },
-        progress => dispatch(progressJson(progress))
+        progress => () => {
+            dispatch(
+                setDeviceSetupProgress(progress.progressJson.progressPercentage)
+            );
+            if (progress.progressJson.message)
+                dispatch(
+                    setDeviceSetupProgressMessage(progress.progressJson.message)
+                );
+        }
     );
 };
 
@@ -526,15 +544,13 @@ export const sDFUDeviceSetup = (dfuFirmware: DfuEntry[]): IDeviceSetup => {
             dfuFirmware.map(firmwareOption => ({
                 key: firmwareOption.key,
                 description: firmwareOption.description,
-                programDevice:
-                    (promiseConfirm?: PromiseConfirm) =>
-                    (dispatch: TDispatch) =>
-                        programDeviceWithFw(
-                            device,
-                            firmwareOption,
-                            dispatch,
-                            promiseConfirm
-                        ),
+                programDevice: (_, promiseConfirm) => (dispatch: TDispatch) =>
+                    programDeviceWithFw(
+                        device,
+                        firmwareOption,
+                        dispatch,
+                        promiseConfirm
+                    ),
             })),
         isExpectedFirmware: (device: Device) => () =>
             new Promise<{

@@ -1,5 +1,4 @@
 /// <reference types="node" />
-import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js';
 import { Device, RootState, TDispatch } from '../state';
 import { InitPacket } from './initPacket';
 export interface DfuEntry {
@@ -21,14 +20,13 @@ type PromiseChoice = (question: string, choices: string[]) => Promise<{
     choice: string;
     index: number;
 }>;
-export declare const progressJson: ({ progressJson: progress }: nrfDeviceLib.Progress.CallbackParameters) => (dispatch: TDispatch) => void;
 export type PromiseConfirm = (message: string) => Promise<boolean>;
 export interface IDeviceSetup {
     supportsProgrammingMode: (device: Device) => boolean;
     getFirmwareOptions: (device: Device) => {
         key: string;
         description?: string;
-        programDevice: (promiseConfirm?: PromiseConfirm) => (dispatch: TDispatch) => Promise<Device>;
+        programDevice: (onProgress: (progress: number, message?: string) => void, promiseConfirm?: PromiseConfirm) => (dispatch: TDispatch, getState: () => RootState) => Promise<Device>;
     }[];
     isExpectedFirmware: (device: Device) => (dispatch: TDispatch, getState: () => RootState) => Promise<{
         device: Device;
