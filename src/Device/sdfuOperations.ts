@@ -17,6 +17,10 @@ import { setWaitForDevice } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import type { DeviceSetup, DfuEntry } from './deviceSetup';
 import {
+    setDeviceSetupProgress,
+    setDeviceSetupProgressMessage,
+} from './deviceSlice';
+import {
     createInitPacketBuffer,
     defaultInitPacket,
     DfuImage,
@@ -32,18 +36,22 @@ export type PromiseChoice = (
 ) => Promise<string>;
 
 let lastMSG = '';
-const progressJson = ({
-    progressJson: progress,
-}: nrfDeviceLib.Progress.CallbackParameters) => {
-    const message = progress.message || '';
+const progressJson =
+    ({ progressJson: progress }: nrfDeviceLib.Progress.CallbackParameters) =>
+    (dispatch: TDispatch) => {
+        const message = progress.message || '';
 
-    const status = `${message.replace('.', ':')} ${
-        progress.progressPercentage
-    }%`;
+        const status = `${message.replace('.', ':')} ${
+            progress.progressPercentage
+        }%`;
 
-    if (status !== lastMSG) logger.info(status);
-    lastMSG = status;
-};
+        if (status !== lastMSG) {
+            dispatch(setDeviceSetupProgress(progress.progressPercentage));
+            dispatch(setDeviceSetupProgressMessage(status));
+            logger.info(status);
+            lastMSG = status;
+        }
+    };
 
 const NORDIC_DFU_PRODUCT_ID = 0x521f;
 const NORDIC_VENDOR_ID = 0x1915;
@@ -111,6 +119,7 @@ const updateBootloader = async (
 
     logger.debug('Starting Bootloader Update');
 
+    dispatch(setDeviceSetupProgress(0));
     await nrfDeviceLib.firmwareProgram(
         getDeviceLibContext(),
         device.id,
@@ -140,7 +149,7 @@ const updateBootloader = async (
                 logger.debug('Bootloader DFU completed successfully!');
             }
         },
-        progressJson
+        progress => dispatch(progressJson(progress))
     );
 };
 
@@ -222,7 +231,8 @@ const isLatestBootloader = async (device: Device) => {
     if (
         !bootloaderInfo ||
         bootloaderInfo.bootloaderType !== 'NRFDL_BOOTLOADER_TYPE_SDFU' ||
-        bootloaderInfo.version >= LATEST_BOOTLOADER_VERSION
+        bootloaderInfo.version.toString() >=
+            LATEST_BOOTLOADER_VERSION.toString()
     ) {
         return true;
     }
@@ -447,6 +457,7 @@ const programInDFUBootloader = async (
 
     logger.debug('Starting DFU');
 
+    dispatch(setDeviceSetupProgress(0));
     nrfDeviceLib.firmwareProgram(
         getDeviceLibContext(),
         device.id,
@@ -477,7 +488,7 @@ const programInDFUBootloader = async (
                 );
             }
         },
-        progressJson
+        progress => dispatch(progressJson(progress))
     );
 };
 
