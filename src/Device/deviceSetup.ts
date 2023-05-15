@@ -182,6 +182,10 @@ export const prepareDevice =
         checkCurrentFirmwareVersion: boolean
     ) =>
     async (dispatch: TDispatch) => {
+        const onSuccessWrapper = (d: Device) => {
+            onSuccess(d);
+            dispatch(deviceSetupComplete(d));
+        };
         const validDeviceSetups = deviceSetupConfig.deviceSetups.filter(
             deviceSetups => deviceSetups.supportsProgrammingMode(device)
         );
@@ -201,7 +205,7 @@ export const prepareDevice =
                         'You may still use the app if you have programmed the device ' +
                         'with a compatible firmware.'
                 );
-                onSuccess(device);
+                onSuccessWrapper(device);
             } else {
                 logger.info(
                     'Note: no pre-compiled firmware is available for the selected device. '
@@ -227,7 +231,7 @@ export const prepareDevice =
             } while (!validFirmware && i < validDeviceSetups.length);
 
             if (validFirmware) {
-                onSuccess(device);
+                onSuccessWrapper(device);
                 return;
             }
         }
@@ -268,7 +272,7 @@ export const prepareDevice =
                         deviceSetup.tryToSwitchToApplicationMode(device)
                     );
                     if (result) {
-                        onSuccess(result);
+                        onSuccessWrapper(result);
                         return;
                     }
                 } catch (error) {
@@ -279,7 +283,7 @@ export const prepareDevice =
                 i += 1;
             } while (i < validDeviceSetups.length);
 
-            onSuccess(device);
+            onSuccessWrapper(device);
         } else {
             const selectedDeviceSetup = possibleFirmware[choice];
 
@@ -294,22 +298,15 @@ export const prepareDevice =
                     .then(programmedDevice => {
                         if (deviceSetupConfig.needSerialport) {
                             verifySerialPortAvailableAndFree(programmedDevice)
-                                .then(() => onSuccess(programmedDevice))
+                                .then(() => onSuccessWrapper(programmedDevice))
                                 .catch(onFail);
                         } else {
-                            onSuccess(device);
+                            onSuccessWrapper(device);
                         }
                     })
                     .catch(onFail);
             }
         }
-    };
-
-const onSuccessfulDeviceSetup =
-    (device: Device, onDeviceIsReady: (device: Device) => void) =>
-    (dispatch: TDispatch) => {
-        dispatch(deviceSetupComplete(device));
-        onDeviceIsReady(device);
     };
 
 export const setupDevice =
@@ -334,37 +331,15 @@ export const setupDevice =
                 device,
                 deviceSetupConfig,
                 d => {
-                    dispatch(onSuccessfulDeviceSetup(d, onDeviceIsReady));
+                    onDeviceIsReady(d);
                 },
                 error => {
-                    if (
-                        deviceSetupConfig.allowCustomDevice &&
-                        error instanceof Error &&
-                        error.message.includes('No firmware defined')
-                    ) {
-                        logger.info(
-                            `Connected to device with serial number: ${device.serialNumber} ` +
-                                `and family: ${
-                                    device.jlink?.deviceFamily || 'Unknown'
-                                } `
-                        );
-                        logger.info(
-                            'Note: no pre-compiled firmware is available for the selected device. ' +
-                                'You may still use the app if you have programmed the device ' +
-                                'with a compatible firmware.'
-                        );
-
-                        dispatch(
-                            onSuccessfulDeviceSetup(device, onDeviceIsReady)
-                        );
-                    } else {
-                        dispatch(deviceSetupError());
-                        logger.error(
-                            `Error while setting up device ${device.serialNumber}`
-                        );
-                        if (error instanceof Error) logger.error(error.message);
-                        doDeselectDevice();
-                    }
+                    dispatch(deviceSetupError());
+                    logger.error(
+                        `Error while setting up device ${device.serialNumber}`
+                    );
+                    if (error instanceof Error) logger.error(error.message);
+                    doDeselectDevice();
                 },
                 true
             )

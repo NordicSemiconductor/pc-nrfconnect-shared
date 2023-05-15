@@ -109,6 +109,10 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
             try {
                 if (getState().device.readbackProtection === 'protected') {
                     logger.info('Recovering device');
+                    dispatch(setDeviceSetupProgress(0));
+                    dispatch(
+                        setDeviceSetupProgressMessage('Recovering device')
+                    );
                     await deviceControlRecover(
                         getDeviceLibContext(),
                         device.id,
@@ -121,11 +125,13 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
                 );
                 await program(device.id, selectedFw.fw, dispatch);
                 logger.debug(`Resetting ${device.serialNumber}`);
+                dispatch(setDeviceSetupProgressMessage('Resetting device'));
                 await reset(device.id);
                 const { readbackProtection } = await getDeviceReadProtection(
                     device
                 );
                 dispatch(setReadbackProtected(readbackProtection));
+                dispatch(setDeviceSetupProgressMessage('Connecing to device'));
             } catch (programError) {
                 if (programError instanceof Error) {
                     logger.error(programError);
@@ -238,7 +244,10 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
                         'Readback protection on device enabled. Unable to verify that the firmware version is correct.'
                     );
                     dispatch(setReadbackProtected('protected'));
-                    return Promise.reject(new Error('protected'));
+                    return Promise.resolve({
+                        device,
+                        validFirmware: false,
+                    });
                 }
                 dispatch(setReadbackProtected('unknown'));
                 return Promise.resolve({
@@ -288,7 +297,6 @@ export async function programFirmware(
         logger.debug(`Programming ${device.serialNumber} with ${fw}`);
         await program(device.id, fw, dispatch);
         logger.debug(`Resetting ${device.serialNumber}`);
-        await reset(device.id);
     } catch (programError) {
         if (programError instanceof Error) {
             logger.error(programError);

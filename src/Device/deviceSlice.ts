@@ -150,6 +150,7 @@ const slice = createSlice({
 
         setDeviceSetupProgress: (state, action: PayloadAction<number>) => {
             state.progress = action.payload;
+            state.isSetupDialogVisible = true;
         },
 
         setDeviceSetupProgressMessage: (
