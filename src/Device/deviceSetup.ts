@@ -7,7 +7,7 @@ import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js';
 import { SerialPort } from 'serialport';
 
 import logger from '../logging';
-import { Device, TDispatch } from '../state';
+import { Device, RootState, TDispatch } from '../state';
 import {
     deviceSetupComplete,
     deviceSetupError,
@@ -338,7 +338,7 @@ export const setupDevice =
         onDeviceIsReady: (device: Device) => void,
         doDeselectDevice: () => void
     ) =>
-    (dispatch: TDispatch) => {
+    (dispatch: TDispatch, getState: () => RootState) => {
         releaseCurrentDevice();
         const deviceSetupConfig = {
             promiseConfirm: getDeviceSetupUserInput(dispatch) as PromiseConfirm,
@@ -352,7 +352,12 @@ export const setupDevice =
                 device,
                 deviceSetupConfig,
                 d => {
-                    onDeviceIsReady(d);
+                    if (
+                        getState().device.selectedSerialNumber ===
+                        d.serialNumber
+                    ) {
+                        onDeviceIsReady(d);
+                    }
                 },
                 error => {
                     dispatch(deviceSetupError());
