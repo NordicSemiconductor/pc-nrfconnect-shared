@@ -30,11 +30,11 @@ export interface IDeviceSetup {
         description?: string;
         programDevice: (promiseConfirm?: PromiseConfirm) => (dispatch: TDispatch) => Promise<Device>;
     }[];
-    isExpectedFirmware: (device: Device) => (dispatch: TDispatch) => Promise<{
+    isExpectedFirmware: (device: Device) => (dispatch: TDispatch, getState: () => RootState) => Promise<{
         device: Device;
         validFirmware: boolean;
     }>;
-    tryToSwitchToApplicationMode: (device: Device) => (dispatch: TDispatch) => Promise<Device | null>;
+    tryToSwitchToApplicationMode: (device: Device) => (dispatch: TDispatch, getState: () => RootState) => Promise<Device | null>;
 }
 export interface DeviceSetup {
     deviceSetups: IDeviceSetup[];

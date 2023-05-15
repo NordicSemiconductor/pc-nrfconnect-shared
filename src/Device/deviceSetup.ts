@@ -70,13 +70,19 @@ export interface IDeviceSetup {
             promiseConfirm?: PromiseConfirm
         ) => (dispatch: TDispatch) => Promise<Device>;
     }[];
-    isExpectedFirmware: (device: Device) => (dispatch: TDispatch) => Promise<{
+    isExpectedFirmware: (device: Device) => (
+        dispatch: TDispatch,
+        getState: () => RootState
+    ) => Promise<{
         device: Device;
         validFirmware: boolean;
     }>;
     tryToSwitchToApplicationMode: (
         device: Device
-    ) => (dispatch: TDispatch) => Promise<Device | null>;
+    ) => (
+        dispatch: TDispatch,
+        getState: () => RootState
+    ) => Promise<Device | null>;
 }
 
 export interface DeviceSetup {
