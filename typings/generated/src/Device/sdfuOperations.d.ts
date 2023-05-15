@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { Device, TDispatch } from '../state';
-import type { DfuEntry, IDeviceSetup } from './deviceSetup';
+import { DfuEntry, IDeviceSetup } from './deviceSetup';
 import { DfuImage } from './initPacket';
 export declare const isDeviceInDFUBootloader: (device: Device) => boolean;
 export declare const ensureBootloaderMode: (device: Device) => boolean;
