@@ -26,6 +26,26 @@ interface State {
     selectedChoice: null | { choice: string; index: number };
 }
 
+const Progress = ({
+    progress,
+    progressMessage,
+}: {
+    progress?: number;
+    progressMessage?: string;
+}) => (
+    <>
+        {progressMessage !== undefined && (
+            <Form.Label>
+                <strong>Status:</strong>
+                <span>{` ${progressMessage}`}</span>
+            </Form.Label>
+        )}
+        {progress !== undefined && (
+            <ProgressBar now={progress} animated label={`${progress}%`} />
+        )}
+    </>
+);
+
 /**
  * Dialog that allows the user to provide input that is required during device setup
  * (programming/DFU). If the 'choices' prop is provided, then the user will see a
@@ -89,18 +109,10 @@ export default class DeviceSetupDialog extends React.Component<
                                     />
                                 ))}
                             </Form.Group>
-                            {progressMessage !== undefined && (
-                                <Form.Label>
-                                    <strong>Status:</strong>
-                                    <span>{` ${progressMessage}`}</span>
-                                </Form.Label>
-                            )}
-                            {progress !== undefined && (
-                                <ProgressBar
-                                    now={progress}
-                                    style={{ height: '4px' }}
-                                />
-                            )}
+                            <Progress
+                                progress={progress}
+                                progressMessage={progressMessage}
+                            />
                         </Group>
                     </Dialog.Body>
                     <Dialog.Footer>
@@ -131,18 +143,10 @@ export default class DeviceSetupDialog extends React.Component<
                 <Dialog.Body>
                     <Group>
                         <div>{text}</div>
-                        {progressMessage !== undefined && (
-                            <Form.Label>
-                                <strong>Status:</strong>
-                                <span>{` ${progressMessage}`}</span>
-                            </Form.Label>
-                        )}
-                        {progress !== undefined && (
-                            <ProgressBar
-                                now={progress}
-                                style={{ height: '4px' }}
-                            />
-                        )}
+                        <Progress
+                            progress={progress}
+                            progressMessage={progressMessage}
+                        />
                     </Group>
                 </Dialog.Body>
                 <Dialog.Footer>

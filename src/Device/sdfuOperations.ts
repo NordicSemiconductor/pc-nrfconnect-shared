@@ -15,11 +15,13 @@ import { Device, TDispatch } from '../state';
 import { getAppFile } from '../utils/appDirs';
 import { setWaitForDevice } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import type { DfuEntry, IDeviceSetup, PromiseConfirm } from './deviceSetup';
 import {
-    setDeviceSetupProgress,
-    setDeviceSetupProgressMessage,
-} from './deviceSlice';
+    DfuEntry,
+    IDeviceSetup,
+    progressJson,
+    PromiseConfirm,
+} from './deviceSetup';
+import { setDeviceSetupProgress } from './deviceSlice';
 import {
     createInitPacketBuffer,
     defaultInitPacket,
@@ -28,24 +30,6 @@ import {
     HashType,
     InitPacket,
 } from './initPacket';
-
-let lastMSG = '';
-const progressJson =
-    ({ progressJson: progress }: nrfDeviceLib.Progress.CallbackParameters) =>
-    (dispatch: TDispatch) => {
-        const message = progress.message || '';
-
-        const loggingMessage = `${message.replace('.', ':')} ${
-            progress.progressPercentage
-        }%`;
-
-        if (loggingMessage !== lastMSG) {
-            dispatch(setDeviceSetupProgress(progress.progressPercentage));
-            dispatch(setDeviceSetupProgressMessage(message));
-            logger.info(loggingMessage);
-            lastMSG = loggingMessage;
-        }
-    };
 
 const NORDIC_DFU_PRODUCT_ID = 0x521f;
 const NORDIC_VENDOR_ID = 0x1915;

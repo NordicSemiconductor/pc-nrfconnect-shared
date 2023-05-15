@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
+import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js';
 import { SerialPort } from 'serialport';
 
 import logger from '../logging';
@@ -12,6 +13,8 @@ import {
     deviceSetupError,
     deviceSetupInputReceived,
     deviceSetupInputRequired,
+    setDeviceSetupProgress,
+    setDeviceSetupProgressMessage,
 } from './deviceSlice';
 import { InitPacket } from './initPacket';
 
@@ -36,6 +39,24 @@ type PromiseChoice = (
     question: string,
     choices: string[]
 ) => Promise<{ choice: string; index: number }>;
+
+let lastMSG = '';
+export const progressJson =
+    ({ progressJson: progress }: nrfDeviceLib.Progress.CallbackParameters) =>
+    (dispatch: TDispatch) => {
+        const message = progress.message || '';
+
+        const loggingMessage = `${message.replace('.', ':')} ${
+            progress.progressPercentage
+        }%`;
+
+        if (loggingMessage !== lastMSG) {
+            dispatch(setDeviceSetupProgress(progress.progressPercentage));
+            dispatch(setDeviceSetupProgressMessage(message));
+            logger.info(loggingMessage);
+            lastMSG = loggingMessage;
+        }
+    };
 
 export type PromiseConfirm = (message: string) => Promise<boolean>;
 

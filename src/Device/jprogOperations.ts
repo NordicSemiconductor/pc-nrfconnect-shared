@@ -16,30 +16,17 @@ import nrfDeviceLib, {
 import logger from '../logging';
 import { Device, RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import type { DeviceSetup, IDeviceSetup, JprogEntry } from './deviceSetup';
+import {
+    DeviceSetup,
+    IDeviceSetup,
+    JprogEntry,
+    progressJson,
+} from './deviceSetup';
 import {
     setDeviceSetupProgress,
     setDeviceSetupProgressMessage,
     setReadbackProtected,
 } from './deviceSlice';
-
-let lastMSG = '';
-const progressJson =
-    ({ progressJson: progress }: nrfDeviceLib.Progress.CallbackParameters) =>
-    (dispatch: TDispatch) => {
-        const message = progress.message || '';
-
-        const loggingMessage = `${message.replace('.', ':')} ${
-            progress.progressPercentage
-        }%`;
-
-        if (loggingMessage !== lastMSG) {
-            dispatch(setDeviceSetupProgress(progress.progressPercentage));
-            dispatch(setDeviceSetupProgressMessage(message));
-            logger.info(loggingMessage);
-            lastMSG = loggingMessage;
-        }
-    };
 
 const program = (
     deviceId: number,
