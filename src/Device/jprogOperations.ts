@@ -170,7 +170,7 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
                 programDevice: () => (dispatch: TDispatch) =>
                     dispatch(programDeviceWithFw(device, firmwareOption)),
             })),
-        isExpectedFirmware: (device: Device) => async (dispatch: TDispatch) => {
+        isExpectedFirmware: (device: Device) => (dispatch: TDispatch) => {
             const fwVersions = firmwareOptions(device);
             if (fwVersions.length === 0) {
                 return Promise.resolve({
@@ -179,7 +179,7 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
                 });
             }
 
-            await getDeviceReadProtection(device).then(
+            return getDeviceReadProtection(device).then(
                 ({ fwInfo, readbackProtection }) => {
                     dispatch(setReadbackProtected(readbackProtection));
                     if (fwInfo && fwInfo.imageInfoList.length > 0) {
@@ -187,7 +187,9 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
                             fwInfo.imageInfoList.find(
                                 imageInfo =>
                                     typeof imageInfo.version === 'string' &&
-                                    imageInfo.version.includes(version.key)
+                                    imageInfo.version.includes(
+                                        version.fwVersion
+                                    )
                             )
                         );
 
@@ -203,50 +205,6 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
                     });
                 }
             );
-            try {
-                const fwInfo = await readFwInfo(
-                    getDeviceLibContext(),
-                    device.id
-                );
-                dispatch(setReadbackProtected('unprotected'));
-
-                if (fwInfo.imageInfoList.length > 0) {
-                    const fw = fwVersions.find(version =>
-                        fwInfo.imageInfoList.find(
-                            imageInfo =>
-                                typeof imageInfo.version === 'string' &&
-                                imageInfo.version.includes(version.key)
-                        )
-                    );
-
-                    return Promise.resolve({
-                        device,
-                        validFirmware: fw !== undefined,
-                    });
-                }
-            } catch (error) {
-                // @ts-expect-error Wrongly typed in device lib at the moment
-                if (error.error_code === 24) {
-                    logger.warn(
-                        'Readback protection on device enabled. Unable to verify that the firmware version is correct.'
-                    );
-                    dispatch(setReadbackProtected('protected'));
-                    return Promise.resolve({
-                        device,
-                        validFirmware: false,
-                    });
-                }
-                dispatch(setReadbackProtected('unknown'));
-                return Promise.resolve({
-                    device,
-                    validFirmware: false,
-                });
-            }
-
-            return Promise.resolve({
-                device,
-                validFirmware: false,
-            });
         },
         tryToSwitchToApplicationMode: () => () => Promise.resolve(null),
     };
