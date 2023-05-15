@@ -56,6 +56,7 @@ const program = (
         fwFormat = 'NRFDL_FW_FILE';
     }
     return new Promise<void>((resolve, reject) => {
+        dispatch(setDeviceSetupProgress(0));
         firmwareProgram(
             deviceLibContext,
             deviceId,
