@@ -233,13 +233,17 @@ export const prepareDevice =
             let i = 0;
             do {
                 const deviceSetup = validDeviceSetups[i];
-                // eslint-disable-next-line no-await-in-loop
-                const result = await dispatch(
-                    deviceSetup.isExpectedFirmware(device)
-                );
-                device = result.device;
-                validFirmware = result.validFirmware;
-                i += 1;
+                try {
+                    // eslint-disable-next-line no-await-in-loop
+                    const result = await dispatch(
+                        deviceSetup.isExpectedFirmware(device)
+                    );
+                    device = result.device;
+                    validFirmware = result.validFirmware;
+                    i += 1;
+                } catch (error) {
+                    onFail(error);
+                }
             } while (!validFirmware && i < validDeviceSetups.length);
 
             if (validFirmware) {
@@ -255,23 +259,24 @@ export const prepareDevice =
             .flat();
 
         let choice: number | null = null;
-        if (choices.length === 1) {
-            const isConfirmed = await confirmHelper(
-                deviceSetupConfig.promiseConfirm
-            );
-            if (isConfirmed) {
-                choice = 0;
-            }
-        } else {
-            try {
+
+        try {
+            if (choices.length === 1) {
+                const isConfirmed = await confirmHelper(
+                    deviceSetupConfig.promiseConfirm
+                );
+                if (isConfirmed) {
+                    choice = 0;
+                }
+            } else {
                 const { index } = await choiceHelper(
                     choices,
                     deviceSetupConfig.promiseChoice
                 );
                 choice = index;
-            } catch (_) {
-                choice = null;
             }
+        } catch (_) {
+            choice = null;
         }
 
         if (choice === null) {
