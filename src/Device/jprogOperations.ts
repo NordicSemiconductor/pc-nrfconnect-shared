@@ -17,16 +17,12 @@ import logger from '../logging';
 import { Device, RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import { IDeviceSetup, JprogEntry } from './deviceSetup';
-import {
-    setDeviceSetupProgress,
-    setDeviceSetupProgressMessage,
-    setReadbackProtected,
-} from './deviceSlice';
+import { setReadbackProtected } from './deviceSlice';
 
 const program = (
     deviceId: number,
     firmware: string | Buffer,
-    dispatch: TDispatch
+    onProgress: (progress: number, message?: string) => void
 ) => {
     let fwFormat: FirmwareStreamType;
     if (firmware instanceof Buffer) {
@@ -35,7 +31,7 @@ const program = (
         fwFormat = 'NRFDL_FW_FILE';
     }
     return new Promise<void>((resolve, reject) => {
-        dispatch(setDeviceSetupProgress(0));
+        onProgress(0, 'Preparing to program');
         firmwareProgram(
             getDeviceLibContext(),
             deviceId,
@@ -48,17 +44,10 @@ const program = (
                 resolve();
             },
             progress => () => {
-                dispatch(
-                    setDeviceSetupProgress(
-                        progress.progressJson.progressPercentage
-                    )
+                onProgress(
+                    progress.progressJson.progressPercentage,
+                    progress.progressJson.message ?? 'programming'
                 );
-                if (progress.progressJson.message)
-                    dispatch(
-                        setDeviceSetupProgressMessage(
-                            progress.progressJson.message
-                        )
-                    );
             },
             null,
             'NRFDL_DEVICE_CORE_APPLICATION'
@@ -98,15 +87,16 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
         });
 
     const programDeviceWithFw =
-        (device: Device, selectedFw: JprogEntry) =>
+        (
+            device: Device,
+            selectedFw: JprogEntry,
+            onProgress: (progress: number, message?: string) => void
+        ) =>
         async (dispatch: TDispatch, getState: () => RootState) => {
             try {
                 if (getState().device.readbackProtection === 'protected') {
                     logger.info('Recovering device');
-                    dispatch(setDeviceSetupProgress(0));
-                    dispatch(
-                        setDeviceSetupProgressMessage('Recovering device')
-                    );
+                    onProgress(0, 'Recovering device');
                     await deviceControlRecover(
                         getDeviceLibContext(),
                         device.id,
@@ -117,15 +107,15 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
                 logger.debug(
                     `Programming ${device.serialNumber} with ${selectedFw.fw}`
                 );
-                await program(device.id, selectedFw.fw, dispatch);
+                await program(device.id, selectedFw.fw, onProgress);
                 logger.debug(`Resetting ${device.serialNumber}`);
-                dispatch(setDeviceSetupProgressMessage('Resetting device'));
+                onProgress(0, 'Resetting device');
                 await reset(device.id);
                 const { readbackProtection } = await getDeviceReadProtection(
                     device
                 );
                 dispatch(setReadbackProtected(readbackProtection));
-                dispatch(setDeviceSetupProgressMessage('Connecing to device'));
+                onProgress(0, 'Connecting to device');
             } catch (programError) {
                 if (programError instanceof Error) {
                     logger.error(programError);
@@ -174,8 +164,10 @@ export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
             firmwareOptions(device).map(firmwareOption => ({
                 key: firmwareOption.key,
                 description: firmwareOption.description,
-                programDevice: () => (dispatch: TDispatch) =>
-                    dispatch(programDeviceWithFw(device, firmwareOption)),
+                programDevice: onProgress => (dispatch: TDispatch) =>
+                    dispatch(
+                        programDeviceWithFw(device, firmwareOption, onProgress)
+                    ),
             })),
         isExpectedFirmware: (device: Device) => (dispatch: TDispatch) => {
             const fwVersions = firmwareOptions(device);
