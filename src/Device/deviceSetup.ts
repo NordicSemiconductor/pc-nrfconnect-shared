@@ -368,6 +368,7 @@ export const setupDevice =
                         `Error while setting up device ${device.serialNumber}`
                     );
                     if (error instanceof Error) logger.error(error.message);
+                    else if (typeof error === 'string') logger.error(error);
                     doDeselectDevice();
                 },
                 true
