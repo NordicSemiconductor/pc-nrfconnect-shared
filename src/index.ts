@@ -91,10 +91,6 @@ export {
     persistSerialPortOptions,
 } from './Device/deviceSlice';
 export {
-    openDeviceSetupDialog,
-    closeDeviceSetupDialog,
-} from './Device/deviceSetupSlice';
-export {
     setWaitForDevice,
     clearWaitForDevice,
     getAutoReselect,
