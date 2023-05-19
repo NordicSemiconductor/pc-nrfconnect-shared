@@ -83,7 +83,7 @@ export {
 
 export { jprogDeviceSetup } from './Device/jprogOperations';
 
-export { sDFUDeviceSetup } from './Device/sdfuOperations';
+export { sdfuDeviceSetup } from './Device/sdfuOperations';
 
 export {
     selectedDevice,
