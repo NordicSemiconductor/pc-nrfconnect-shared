@@ -118,7 +118,7 @@ const programDeviceWithFw =
             );
             await program(device.id, selectedFw.fw, onProgress);
             logger.debug(`Resetting ${device.serialNumber}`);
-            onProgress(0, 'Resetting device');
+            onProgress(100, 'Resetting device');
             await reset(device.id);
             const { readbackProtection } = await getDeviceReadProtection(
                 device
