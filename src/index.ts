@@ -81,7 +81,7 @@ export {
     getPersistedTerminalSettings,
 } from './utils/persistentStore';
 
-export { jProgDeviceSetup } from './Device/jprogOperations';
+export { jprogDeviceSetup } from './Device/jprogOperations';
 
 export { sDFUDeviceSetup } from './Device/sdfuOperations';
 
