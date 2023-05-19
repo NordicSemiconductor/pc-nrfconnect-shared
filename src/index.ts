@@ -91,6 +91,10 @@ export {
     persistSerialPortOptions,
 } from './Device/deviceSlice';
 export {
+    openDeviceSetupDialog,
+    closeDeviceSetupDialog,
+} from './Device/deviceSetupSlice';
+export {
     setWaitForDevice,
     clearWaitForDevice,
     getAutoReselect,
@@ -125,11 +129,7 @@ export type { Props as DeviceSelectorProps } from './Device/DeviceSelector/Devic
 
 export type { PaneProps } from './App/App';
 export type { DfuImage } from './Device/initPacket';
-export type {
-    DeviceSetup,
-    IDeviceSetup,
-    PromiseConfirm as DeviceSetupPromiseConfirm,
-} from './Device/deviceSetup';
+export type { DeviceSetup, IDeviceSetup } from './Device/deviceSetup';
 export { prepareDevice } from './Device/deviceSetup';
 export type {
     AppInfo,

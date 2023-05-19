@@ -15,7 +15,8 @@ import { Device, TDispatch } from '../state';
 import { getAppFile } from '../utils/appDirs';
 import { setWaitForDevice } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import { DfuEntry, IDeviceSetup, PromiseConfirm } from './deviceSetup';
+import { DfuEntry, IDeviceSetup } from './deviceSetup';
+import { openDeviceSetupDialog } from './deviceSetupSlice';
 import {
     createInitPacketBuffer,
     defaultInitPacket,
@@ -250,8 +251,7 @@ const askAndUpdateBootloader =
         device: Device,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void,
-        onProgress: (progress: number, message?: string) => void,
-        promiseConfirm?: PromiseConfirm
+        onProgress: (progress: number, message?: string) => void
     ) =>
     (dispatch: TDispatch) => {
         dispatch(
@@ -259,28 +259,38 @@ const askAndUpdateBootloader =
                 device,
                 async d => {
                     if (!(await isLatestBootloader(d))) {
-                        if (
-                            promiseConfirm &&
-                            !(await promiseConfirm(
-                                'Device will be programmed. A Newer version of the bootloader is available, do you want to update it as well?'
-                            ))
-                        ) {
-                            logger.info('Continuing with old bootloader');
-                            onSuccess(d);
-                        } else {
-                            const action = (dd: Device) => {
-                                dispatch(
-                                    switchToBootloaderMode(
-                                        dd,
-                                        onSuccess,
-                                        onFail
-                                    )
-                                );
-                            };
-                            dispatch(
-                                updateBootloader(d, action, onFail, onProgress)
-                            );
-                        }
+                        dispatch(
+                            openDeviceSetupDialog({
+                                onUserInput: isConfirmed => {
+                                    if (isConfirmed) {
+                                        logger.info(
+                                            'Continuing with old bootloader'
+                                        );
+                                        onSuccess(d);
+                                    } else {
+                                        const action = (dd: Device) => {
+                                            dispatch(
+                                                switchToBootloaderMode(
+                                                    dd,
+                                                    onSuccess,
+                                                    onFail
+                                                )
+                                            );
+                                        };
+                                        dispatch(
+                                            updateBootloader(
+                                                d,
+                                                action,
+                                                onFail,
+                                                onProgress
+                                            )
+                                        );
+                                    }
+                                },
+                                message:
+                                    'Device will be programmed. A Newer version of the bootloader is available, do you want to update it as well?',
+                            })
+                        );
                     } else {
                         onSuccess(d);
                     }
@@ -510,93 +520,76 @@ const programInDFUBootloader =
         );
     };
 
-export const sDFUDeviceSetup = (dfuFirmware: DfuEntry[]): IDeviceSetup => {
-    const programDeviceWithFw =
-        (
-            device: Device,
-            selectedFw: DfuEntry,
-            onProgress: (progress: number, message?: string) => void,
-            promiseConfirm?: PromiseConfirm
-        ) =>
-        (dispatch: TDispatch) =>
-            new Promise<Device>((resolve, reject) => {
-                const action = (d: Device) => {
-                    dispatch(
-                        programInDFUBootloader(
-                            d,
-                            selectedFw,
-                            onProgress,
-                            resolve,
-                            reject
-                        )
-                    );
-                    logger.debug('DFU finished: ', d);
-                };
-
+const programDeviceWithFw =
+    (
+        device: Device,
+        selectedFw: DfuEntry,
+        onProgress: (progress: number, message?: string) => void
+    ) =>
+    (dispatch: TDispatch) =>
+        new Promise<Device>((resolve, reject) => {
+            const action = (d: Device) => {
                 dispatch(
-                    askAndUpdateBootloader(
-                        device,
-                        action,
-                        reject,
+                    programInDFUBootloader(
+                        d,
+                        selectedFw,
                         onProgress,
-                        promiseConfirm
+                        resolve,
+                        reject
                     )
                 );
-            });
-    return {
-        supportsProgrammingMode: (device: Device) =>
-            (device.dfuTriggerVersion !== undefined &&
-                device.dfuTriggerVersion.semVer.length > 0) ||
-            isDeviceInDFUBootloader(device),
-        getFirmwareOptions: device =>
-            dfuFirmware.map(firmwareOption => ({
-                key: firmwareOption.key,
-                description: firmwareOption.description,
-                programDevice:
-                    (onProgress, promiseConfirm) => (dispatch: TDispatch) =>
-                        dispatch(
-                            programDeviceWithFw(
-                                device,
-                                firmwareOption,
-                                onProgress,
-                                promiseConfirm
-                            )
-                        ),
-            })),
-        isExpectedFirmware: (device: Device) => () =>
-            new Promise<{
-                device: Device;
-                validFirmware: boolean;
-            }>(resolve => {
-                if (device.dfuTriggerVersion) {
-                    logger.debug(
-                        'Device has DFU trigger interface, the device is in Application mode'
-                    );
+                logger.debug('DFU finished: ', d);
+            };
 
-                    const { semVer } = device.dfuTriggerVersion;
+            dispatch(
+                askAndUpdateBootloader(device, action, reject, onProgress)
+            );
+        });
 
-                    if (
-                        dfuFirmware.filter(fw => fw.semver === semVer).length >
-                        0
-                    ) {
-                        resolve({
-                            device,
-                            validFirmware: true,
-                        });
-                    }
-                } else {
+export const sdfuDeviceSetup = (dfuFirmware: DfuEntry[]): IDeviceSetup => ({
+    supportsProgrammingMode: (device: Device) =>
+        (device.dfuTriggerVersion !== undefined &&
+            device.dfuTriggerVersion.semVer.length > 0) ||
+        isDeviceInDFUBootloader(device),
+    getFirmwareOptions: device =>
+        dfuFirmware.map(firmwareOption => ({
+            key: firmwareOption.key,
+            description: firmwareOption.description,
+            programDevice: onProgress => (dispatch: TDispatch) =>
+                dispatch(
+                    programDeviceWithFw(device, firmwareOption, onProgress)
+                ),
+        })),
+    isExpectedFirmware: (device: Device) => () =>
+        new Promise<{
+            device: Device;
+            validFirmware: boolean;
+        }>(resolve => {
+            if (device.dfuTriggerVersion) {
+                logger.debug(
+                    'Device has DFU trigger interface, the device is in Application mode'
+                );
+
+                const { semVer } = device.dfuTriggerVersion;
+
+                if (dfuFirmware.filter(fw => fw.semver === semVer).length > 0) {
                     resolve({
                         device,
-                        validFirmware: false,
+                        validFirmware: true,
                     });
                 }
-            }),
-        tryToSwitchToApplicationMode: device => (dispatch: TDispatch) =>
-            new Promise<Device>((resolve, reject) => {
-                dispatch(switchToApplicationMode(device, resolve, reject));
-            }),
-    };
-};
+            } else {
+                resolve({
+                    device,
+                    validFirmware: false,
+                });
+            }
+        }),
+    tryToSwitchToApplicationMode: device => (dispatch: TDispatch) =>
+        new Promise<Device>((resolve, reject) => {
+            dispatch(switchToApplicationMode(device, resolve, reject));
+        }),
+});
 
 export default {
     createDfuZipBuffer,

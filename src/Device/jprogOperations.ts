@@ -65,146 +65,137 @@ const reset = async (deviceId: number) => {
     await deviceControlReset(getDeviceLibContext(), deviceId);
 };
 
-export const jProgDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => {
-    const firmwareOptions = (device: Device) =>
-        firmware.filter(fw => {
-            const family = (device.jlink?.deviceFamily || '').toLowerCase();
-            const deviceType = (
-                device.jlink?.deviceVersion || ''
-            ).toLowerCase();
-            const shortDeviceType = deviceType.split('_').shift();
-            const boardVersion = (
-                device.jlink?.boardVersion || ''
-            ).toLowerCase();
-
-            const key = fw.key.toLowerCase();
-            return (
-                key === deviceType ||
-                key === shortDeviceType ||
-                key === boardVersion ||
-                key === family
-            );
-        });
-
-    const programDeviceWithFw =
-        (
-            device: Device,
-            selectedFw: JprogEntry,
-            onProgress: (progress: number, message?: string) => void
-        ) =>
-        async (dispatch: TDispatch, getState: () => RootState) => {
-            try {
-                if (getState().device.readbackProtection === 'protected') {
-                    logger.info('Recovering device');
-                    onProgress(0, 'Recovering device');
-                    await deviceControlRecover(
-                        getDeviceLibContext(),
-                        device.id,
-                        'NRFDL_DEVICE_CORE_APPLICATION'
-                    );
-                }
-
-                logger.debug(
-                    `Programming ${device.serialNumber} with ${selectedFw.fw}`
-                );
-                await program(device.id, selectedFw.fw, onProgress);
-                logger.debug(`Resetting ${device.serialNumber}`);
-                onProgress(0, 'Resetting device');
-                await reset(device.id);
-                const { readbackProtection } = await getDeviceReadProtection(
-                    device
-                );
-                dispatch(setReadbackProtected(readbackProtection));
-                onProgress(0, 'Connecting to device');
-            } catch (programError) {
-                if (programError instanceof Error) {
-                    logger.error(programError);
-                    throw new Error(
-                        `Error when programming ${programError.message}`
-                    );
-                }
-            }
-            return device;
+const getDeviceReadProtection = async (
+    device: Device
+): Promise<{
+    fwInfo: nrfDeviceLib.FWInfo.ReadResult | null;
+    readbackProtection: 'unknown' | 'protected' | 'unprotected';
+}> => {
+    try {
+        const fwInfo = await readFwInfo(getDeviceLibContext(), device.id);
+        return {
+            fwInfo,
+            readbackProtection: 'unprotected',
         };
-
-    const getDeviceReadProtection = async (
-        device: Device
-    ): Promise<{
-        fwInfo: nrfDeviceLib.FWInfo.ReadResult | null;
-        readbackProtection: 'unknown' | 'protected' | 'unprotected';
-    }> => {
-        try {
-            const fwInfo = await readFwInfo(getDeviceLibContext(), device.id);
-            return Promise.resolve({
-                fwInfo,
-                readbackProtection: 'unprotected',
-            });
-        } catch (error) {
-            // @ts-expect-error Wrongly typed in device lib at the moment
-            if (error.error_code === 24) {
-                logger.warn(
-                    'Readback protection on device enabled. Unable to verify that the firmware version is correct.'
-                );
-                return Promise.resolve({
-                    fwInfo: null,
-                    readbackProtection: 'protected',
-                });
-            }
-            return Promise.resolve({
+    } catch (error) {
+        // @ts-expect-error Wrongly typed in device lib at the moment
+        if (error.error_code === 24) {
+            logger.warn(
+                'Readback protection on device enabled. Unable to verify that the firmware version is correct.'
+            );
+            return {
                 fwInfo: null,
-                readbackProtection: 'unknown',
-            });
+                readbackProtection: 'protected',
+            };
         }
+        return {
+            fwInfo: null,
+            readbackProtection: 'unknown',
+        };
+    }
+};
+
+const programDeviceWithFw =
+    (
+        device: Device,
+        selectedFw: JprogEntry,
+        onProgress: (progress: number, message?: string) => void
+    ) =>
+    async (dispatch: TDispatch, getState: () => RootState) => {
+        try {
+            if (getState().device.readbackProtection === 'protected') {
+                logger.info('Recovering device');
+                onProgress(0, 'Recovering device');
+                await deviceControlRecover(
+                    getDeviceLibContext(),
+                    device.id,
+                    'NRFDL_DEVICE_CORE_APPLICATION'
+                );
+            }
+
+            logger.debug(
+                `Programming ${device.serialNumber} with ${selectedFw.fw}`
+            );
+            await program(device.id, selectedFw.fw, onProgress);
+            logger.debug(`Resetting ${device.serialNumber}`);
+            onProgress(0, 'Resetting device');
+            await reset(device.id);
+            const { readbackProtection } = await getDeviceReadProtection(
+                device
+            );
+            dispatch(setReadbackProtected(readbackProtection));
+            onProgress(0, 'Connecting to device');
+        } catch (programError) {
+            if (programError instanceof Error) {
+                logger.error(programError);
+                throw new Error(
+                    `Error when programming ${programError.message}`
+                );
+            }
+        }
+        return device;
     };
 
-    return {
-        supportsProgrammingMode: (device: Device) =>
-            device.traits.jlink === true,
-        getFirmwareOptions: device =>
-            firmwareOptions(device).map(firmwareOption => ({
-                key: firmwareOption.key,
-                description: firmwareOption.description,
-                programDevice: onProgress => (dispatch: TDispatch) =>
-                    dispatch(
-                        programDeviceWithFw(device, firmwareOption, onProgress)
-                    ),
-            })),
-        isExpectedFirmware: (device: Device) => (dispatch: TDispatch) => {
-            const fwVersions = firmwareOptions(device);
-            if (fwVersions.length === 0) {
+const firmwareOptions = (device: Device, firmware: JprogEntry[]) =>
+    firmware.filter(fw => {
+        const family = (device.jlink?.deviceFamily || '').toLowerCase();
+        const deviceType = (device.jlink?.deviceVersion || '').toLowerCase();
+        const shortDeviceType = deviceType.split('_').shift();
+        const boardVersion = (device.jlink?.boardVersion || '').toLowerCase();
+
+        const key = fw.key.toLowerCase();
+        return (
+            key === deviceType ||
+            key === shortDeviceType ||
+            key === boardVersion ||
+            key === family
+        );
+    });
+
+export const jprogDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => ({
+    supportsProgrammingMode: (device: Device) => device.traits.jlink === true,
+    getFirmwareOptions: device =>
+        firmwareOptions(device, firmware).map(firmwareOption => ({
+            key: firmwareOption.key,
+            description: firmwareOption.description,
+            programDevice: onProgress => (dispatch: TDispatch) =>
+                dispatch(
+                    programDeviceWithFw(device, firmwareOption, onProgress)
+                ),
+        })),
+    isExpectedFirmware: (device: Device) => (dispatch: TDispatch) => {
+        const fwVersions = firmwareOptions(device, firmware);
+        if (fwVersions.length === 0) {
+            return Promise.resolve({
+                device,
+                validFirmware: false,
+            });
+        }
+
+        return getDeviceReadProtection(device).then(
+            ({ fwInfo, readbackProtection }) => {
+                dispatch(setReadbackProtected(readbackProtection));
+                if (fwInfo && fwInfo.imageInfoList.length > 0) {
+                    const fw = fwVersions.find(version =>
+                        fwInfo.imageInfoList.find(
+                            imageInfo =>
+                                typeof imageInfo.version === 'string' &&
+                                imageInfo.version.includes(version.fwVersion)
+                        )
+                    );
+
+                    return Promise.resolve({
+                        device,
+                        validFirmware: fw !== undefined,
+                    });
+                }
+
                 return Promise.resolve({
                     device,
                     validFirmware: false,
                 });
             }
-
-            return getDeviceReadProtection(device).then(
-                ({ fwInfo, readbackProtection }) => {
-                    dispatch(setReadbackProtected(readbackProtection));
-                    if (fwInfo && fwInfo.imageInfoList.length > 0) {
-                        const fw = fwVersions.find(version =>
-                            fwInfo.imageInfoList.find(
-                                imageInfo =>
-                                    typeof imageInfo.version === 'string' &&
-                                    imageInfo.version.includes(
-                                        version.fwVersion
-                                    )
-                            )
-                        );
-
-                        return Promise.resolve({
-                            device,
-                            validFirmware: fw !== undefined,
-                        });
-                    }
-
-                    return Promise.resolve({
-                        device,
-                        validFirmware: false,
-                    });
-                }
-            );
-        },
-        tryToSwitchToApplicationMode: () => () => Promise.resolve(null),
-    };
-};
+        );
+    },
+    tryToSwitchToApplicationMode: () => () => Promise.resolve(null),
+});
