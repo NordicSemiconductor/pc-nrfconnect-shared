@@ -18,8 +18,6 @@ import { setDevices } from '../deviceSlice';
 import { jprogDeviceSetup } from '../jprogOperations';
 import DeviceSelector from './DeviceSelector';
 
-jest.mock('../sdfuOperations', () => ({}));
-
 const testDevice: Device = {
     id: 1,
     hwInfo: {

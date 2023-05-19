@@ -92,12 +92,12 @@ export default () => {
                     onClick={() => {
                         if (onUserInput) {
                             dispatch(deviceSetupUserInputReceived());
-                            onUserInput(true);
+                            onUserInput(false);
                         }
                     }}
                     disabled={isInProgress}
                 >
-                    Cancel
+                    {choices ? 'Cancel' : 'No'}
                 </DialogButton>
             </Dialog.Footer>
         </Dialog>

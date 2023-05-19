@@ -238,6 +238,8 @@ export const prepareDevice =
                             'Device must be programmed, do you want to proceed?',
                     })
                 );
+            } else {
+                proceedAction(0);
             }
         } else {
             dispatch(
