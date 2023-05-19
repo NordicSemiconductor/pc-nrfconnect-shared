@@ -14,7 +14,7 @@ every new version is a new major version.
 -   Progress bar to device setup dialog
 -   Prepare device can be used from apps to be able program device at any point
     such as Recover Hex for readback protected devices
--   Custom devices setups can be now done by implementing IDeviceSetup and
+-   Custom devices setups can be now done by implementing `IDeviceSetup` and
     passing it to `deviceSetup` array in `DeviceSetup`
 
 ### Changed
