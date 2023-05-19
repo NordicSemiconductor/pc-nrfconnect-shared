@@ -137,7 +137,7 @@ const updateBootloader =
                     logger.debug('Bootloader DFU completed successfully!');
                 }
             },
-            progress => () => {
+            progress => {
                 onProgress(
                     progress.progressJson.progressPercentage,
                     progress.progressJson.message ?? 'Programming bootloader'

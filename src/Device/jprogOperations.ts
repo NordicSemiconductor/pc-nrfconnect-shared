@@ -43,7 +43,7 @@ const program = (
                 logger.info('Device programming completed.');
                 resolve();
             },
-            progress => () => {
+            progress => {
                 onProgress(
                     progress.progressJson.progressPercentage,
                     progress.progressJson.message ?? 'programming'
