@@ -24,7 +24,7 @@ const slice = createSlice({
         openDeviceSetupDialog: (
             state,
             action: PayloadAction<{
-                onUserInput: (canceled: boolean, choice?: number) => void;
+                onUserInput?: (canceled: boolean, choice?: number) => void;
                 message: string;
                 choices?: string[];
             }>

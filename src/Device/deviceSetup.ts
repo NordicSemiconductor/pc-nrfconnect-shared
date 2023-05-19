@@ -239,6 +239,12 @@ export const prepareDevice =
                     })
                 );
             } else {
+                dispatch(
+                    openDeviceSetupDialog({
+                        message:
+                            'Device must be programmed, do you want to proceed?',
+                    })
+                );
                 proceedAction(0);
             }
         } else {
