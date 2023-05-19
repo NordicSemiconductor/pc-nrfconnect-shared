@@ -268,12 +268,10 @@ export const setupDevice =
     (
         device: Device,
         deviceSetup: DeviceSetup,
-        releaseCurrentDevice: () => void,
         onDeviceIsReady: (device: Device) => void,
         doDeselectDevice: () => void
     ) =>
     (dispatch: TDispatch, getState: () => RootState) => {
-        releaseCurrentDevice();
         const deviceSetupConfig = {
             allowCustomDevice: false,
             ...deviceSetup,

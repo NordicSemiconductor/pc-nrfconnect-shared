@@ -35,4 +35,4 @@ export interface DeviceSetup {
     allowCustomDevice?: boolean;
 }
 export declare const prepareDevice: (device: Device, deviceSetupConfig: DeviceSetup, onSuccess: (device: Device) => void, onFail: (reason?: unknown) => void, checkCurrentFirmwareVersion?: boolean, requireUserConfirmation?: boolean) => (dispatch: TDispatch) => Promise<void>;
-export declare const setupDevice: (device: Device, deviceSetup: DeviceSetup, releaseCurrentDevice: () => void, onDeviceIsReady: (device: Device) => void, doDeselectDevice: () => void) => (dispatch: TDispatch, getState: () => RootState) => void;
+export declare const setupDevice: (device: Device, deviceSetup: DeviceSetup, onDeviceIsReady: (device: Device) => void, doDeselectDevice: () => void) => (dispatch: TDispatch, getState: () => RootState) => void;

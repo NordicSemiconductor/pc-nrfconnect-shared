@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 47 - Unreleased
+
+### Removed
+
+-   `releaseCurrentDevice` callback from `DeviceSelector`.
+
 ## 46 - 2023-05-19
 
 ### Added

@@ -36,7 +36,6 @@ interface OutdatedDeviceTraits {
 export interface Props {
     deviceListing: DeviceTraits & OutdatedDeviceTraits;
     deviceSetup?: DeviceSetupShared;
-    releaseCurrentDevice?: () => void;
     onDeviceSelected?: (device: Device, autoReselected: boolean) => void;
     onDeviceDeselected?: () => void;
     onDeviceConnected?: (device: Device) => void;
@@ -49,7 +48,6 @@ const noop = () => {};
 export default ({
     deviceListing,
     deviceSetup,
-    releaseCurrentDevice = noop,
     onDeviceSelected = noop,
     onDeviceDeselected = noop,
     onDeviceConnected = noop,
@@ -87,7 +85,6 @@ export default ({
                     setupDevice(
                         device,
                         deviceSetup,
-                        releaseCurrentDevice,
                         onDeviceIsReady,
                         doDeselectDevice
                     )
@@ -100,7 +97,6 @@ export default ({
             doDeselectDevice,
             onDeviceIsReady,
             onDeviceSelected,
-            releaseCurrentDevice,
         ]
     );
 
