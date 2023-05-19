@@ -92,7 +92,7 @@ export default () => {
                     onClick={() => {
                         if (onUserInput) {
                             dispatch(deviceSetupUserInputReceived());
-                            onUserInput(false);
+                            onUserInput(true);
                         }
                     }}
                     disabled={isInProgress}

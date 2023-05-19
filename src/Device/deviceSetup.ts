@@ -227,11 +227,11 @@ export const prepareDevice =
             if (requireUserConfirmation) {
                 dispatch(
                     openDeviceSetupDialog({
-                        onUserInput: isConfirmed => {
-                            if (isConfirmed) {
-                                proceedAction(0);
-                            } else {
+                        onUserInput: isCanceled => {
+                            if (isCanceled) {
                                 cancelAction();
+                            } else {
+                                proceedAction(0);
                             }
                         },
                         message:
@@ -250,11 +250,11 @@ export const prepareDevice =
         } else {
             dispatch(
                 openDeviceSetupDialog({
-                    onUserInput: (isConfirmed, index) => {
-                        if (isConfirmed) {
-                            proceedAction(index ?? 0);
-                        } else {
+                    onUserInput: (isCanceled, index) => {
+                        if (isCanceled) {
                             cancelAction();
+                        } else {
+                            proceedAction(index ?? 0);
                         }
                     },
                     message: 'Which firmware do you want to program?',
