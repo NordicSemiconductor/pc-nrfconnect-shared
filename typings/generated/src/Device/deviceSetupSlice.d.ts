@@ -1,6 +1,6 @@
 import { DeviceSetupState, RootState } from '../state';
 export declare const reducer: import("redux").Reducer<DeviceSetupState, import("redux").AnyAction>, openDeviceSetupDialog: import("@reduxjs/toolkit").ActionCreatorWithPayload<{
-    onUserInput: (canceled: boolean, choice?: number) => void;
+    onUserInput?: ((canceled: boolean, choice?: number) => void) | undefined;
     message: string;
     choices?: string[] | undefined;
 }, "deviceSetup/openDeviceSetupDialog">, closeDeviceSetupDialog: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"deviceSetup/closeDeviceSetupDialog">, setDeviceSetupProgress: import("@reduxjs/toolkit").ActionCreatorWithPayload<number, "deviceSetup/setDeviceSetupProgress">, setDeviceSetupMessage: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "deviceSetup/setDeviceSetupMessage">, setDeviceSetupProgressMessage: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "deviceSetup/setDeviceSetupProgressMessage">, deviceSetupUserInputReceived: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"deviceSetup/deviceSetupUserInputReceived">;
