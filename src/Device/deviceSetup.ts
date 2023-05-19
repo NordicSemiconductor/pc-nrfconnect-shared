@@ -33,7 +33,7 @@ export interface JprogEntry {
 }
 
 export interface IDeviceSetup {
-    supportsProgrammingMode: (device: Device) => boolean;
+    supportsProgrammingMode: (device: Device) => boolean; // Return true if this device can be programed using this interface e.g. MCU Boot or DFU
     // isSupportedDevice: () => boolean;
     getFirmwareOptions: (device: Device) => {
         key: string;
@@ -44,20 +44,20 @@ export interface IDeviceSetup {
             dispatch: TDispatch,
             getState: () => RootState
         ) => Promise<Device>;
-    }[];
+    }[]; // The list of all firmware that can be applied for this device with the program function for that fw item
     isExpectedFirmware: (device: Device) => (
         dispatch: TDispatch,
         getState: () => RootState
     ) => Promise<{
         device: Device;
         validFirmware: boolean;
-    }>;
+    }>; // returns true if device has one of the expected firmware returned by getFirmwareOptions
     tryToSwitchToApplicationMode: (
         device: Device
     ) => (
         dispatch: TDispatch,
         getState: () => RootState
-    ) => Promise<Device | null>;
+    ) => Promise<Device | null>; // returns the device after switched to app mode. If this is not possible or not relevant return null
 }
 
 export interface DeviceSetup {

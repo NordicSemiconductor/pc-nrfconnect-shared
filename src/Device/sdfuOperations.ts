@@ -511,7 +511,7 @@ const programInDFUBootloader =
                     onProgress(100, 'Waiting for device to reboot');
                 }
             },
-            progress => () => {
+            progress => {
                 onProgress(
                     progress.progressJson.progressPercentage,
                     progress.progressJson.message ?? ''
