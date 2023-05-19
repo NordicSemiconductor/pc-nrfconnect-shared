@@ -28,6 +28,7 @@ export interface RootState {
     log: Log;
     deviceAutoSelect: DeviceAutoSelectState;
     device: DeviceState;
+    deviceSetup: DeviceSetupState;
     documentation: DocumentationState;
     brokenDeviceDialog: BrokenDeviceDialog;
     shortcuts: ShortcutState;
@@ -59,14 +60,17 @@ export interface Log {
 export interface DeviceState {
     devices: Map<string, Device>;
     deviceInfo: Device | null;
-    isSetupDialogVisible: boolean;
-    isSetupWaitingForUserInput: boolean | string;
     selectedSerialNumber: string | null;
-    setupDialogChoices: readonly string[];
-    setupDialogText?: string | null;
     readbackProtection: 'unknown' | 'protected' | 'unprotected';
-    progress?: number;
+}
+
+export interface DeviceSetupState {
+    visible: boolean;
+    onUserInput?: (canceled: boolean, choice?: number) => void;
+    message: string;
     progressMessage?: string;
+    choices?: string[];
+    progress?: number;
 }
 
 export interface DeviceAutoSelectState {

@@ -6,202 +6,68 @@
 import { SerialPort } from 'serialport';
 
 import logger from '../logging';
-import { Device, TDispatch } from '../state';
+import describeError from '../logging/describeError';
+import { Device, RootState, TDispatch } from '../state';
 import {
-    deviceSetupComplete,
-    deviceSetupError,
-    deviceSetupInputReceived,
-    deviceSetupInputRequired,
-    setReadbackProtected,
-} from './deviceSlice';
+    closeDeviceSetupDialog,
+    openDeviceSetupDialog,
+    setDeviceSetupProgress,
+    setDeviceSetupProgressMessage,
+} from './deviceSetupSlice';
 import { InitPacket } from './initPacket';
-import { programFirmware, validateFirmware } from './jprogOperations';
-import {
-    confirmHelper,
-    isDeviceInDFUBootloader,
-    performDFU,
-    PromiseChoice,
-    PromiseConfirm,
-    switchToApplicationMode,
-} from './sdfuOperations';
 
 export interface DfuEntry {
+    key: string;
+    description?: string;
     application: string;
     semver: string;
     softdevice?: string | Buffer;
     params: Partial<InitPacket>;
 }
-export interface DeviceSetup {
-    dfu?: {
-        [key: string]: DfuEntry;
-    };
-    jprog?: {
-        [key: string]: {
-            fw: string;
-            fwIdAddress: number;
-            fwVersion: string;
-        };
-    };
-    needSerialport?: boolean; // only used if dfu OR jprog available in the `DeviceSetup`
-    allowCustomDevice?: boolean; // allow custom J-Link device
-    promiseChoice?: PromiseChoice;
-    promiseConfirm?: PromiseConfirm;
+
+export interface JprogEntry {
+    key: string;
+    description?: string;
+    fw: string;
+    fwIdAddress: number;
+    fwVersion: string;
 }
 
-// Defined when user input is required during device setup. When input is
-// received from the user, this callback is invoked with the confirmation
-// (Boolean) or choice (String) that the user provided as input.
-let deviceSetupCallback: ((choice: string | boolean) => void) | undefined;
+export interface IDeviceSetup {
+    supportsProgrammingMode: (device: Device) => boolean; // Return true if this device can be programed using this interface e.g. MCU Boot or DFU
+    // isSupportedDevice: () => boolean;
+    getFirmwareOptions: (device: Device) => {
+        key: string;
+        description?: string;
+        programDevice: (
+            onProgress: (progress: number, message?: string) => void
+        ) => (
+            dispatch: TDispatch,
+            getState: () => RootState
+        ) => Promise<Device>;
+    }[]; // The list of all firmware that can be applied for this device with the program function for that fw item
+    isExpectedFirmware: (device: Device) => (
+        dispatch: TDispatch,
+        getState: () => RootState
+    ) => Promise<{
+        device: Device;
+        validFirmware: boolean;
+    }>; // returns true if device has one of the expected firmware returned by getFirmwareOptions
+    tryToSwitchToApplicationMode: (
+        device: Device
+    ) => (
+        dispatch: TDispatch,
+        getState: () => RootState
+    ) => Promise<Device | null>; // returns the device after switched to app mode. If this is not possible or not relevant return null
+}
 
-/*
- * Asks the user to provide input during device setup. If a list of choices are
- * given, and the user selects one of them, then then promise will resolve with
- * the selected value. If no choices are given, and the user confirms, then the
- * promise will just resolve with true. Will reject if the user cancels.
- */
-const getDeviceSetupUserInput =
-    (dispatch: TDispatch) => (message: string, choices: string[]) =>
-        new Promise<boolean | string>((resolve, reject) => {
-            deviceSetupCallback = (choice: boolean | string) => {
-                if (!choices) {
-                    // for confirmation resolve with boolean
-                    resolve(!!choice);
-                } else if (choice) {
-                    resolve(choice);
-                } else {
-                    reject(new Error('Cancelled by user.'));
-                }
-            };
-            dispatch(deviceSetupInputRequired(message, choices));
-        });
+export interface DeviceSetup {
+    deviceSetups: IDeviceSetup[];
+    needSerialport: boolean; // only used if dfu OR jprog available in the `DeviceSetup`
+    allowCustomDevice?: boolean; // allow custom J-Link device
+}
 
-/*
- * Responds to a device setup confirmation request with the given input
- * as provided by the user.
- */
-export const receiveDeviceSetupInput =
-    (input: boolean | string) => (dispatch: TDispatch) => {
-        dispatch(deviceSetupInputReceived());
-        if (deviceSetupCallback) {
-            deviceSetupCallback(input);
-            deviceSetupCallback = undefined;
-        } else {
-            logger.error(
-                'Received device setup input, but no callback exists.'
-            );
-        }
-    };
-
-type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
-
-const prepareDFUDevice = async (
-    device: Device,
-    deviceSetupConfig: WithRequired<DeviceSetup, 'dfu'>,
-    dispatch: TDispatch,
-    onSuccess: (device: Device) => void,
-    onFail: (reason?: unknown) => void
-) => {
-    // Check if device is in DFU-Bootloader, it might only have serialport
-    if (isDeviceInDFUBootloader(device)) {
-        logger.debug('Device is in DFU-Bootloader, DFU is defined');
-
-        const isConfirmed = await confirmHelper(
-            deviceSetupConfig.promiseConfirm
-        );
-        if (!isConfirmed) {
-            switchToApplicationMode(device, dispatch, onSuccess, onFail);
-        } else {
-            performDFU(device, deviceSetupConfig, dispatch, onSuccess, onFail);
-        }
-    } else if (device.dfuTriggerVersion) {
-        logger.debug(
-            'Device has DFU trigger interface, the device is in Application mode'
-        );
-
-        const { semVer } = device.dfuTriggerVersion;
-
-        if (
-            Object.keys(deviceSetupConfig.dfu)
-                .map(key => deviceSetupConfig.dfu[key].semver)
-                .includes(semVer)
-        ) {
-            onSuccess(device);
-            return;
-        }
-        const isConfirmed = await confirmHelper(
-            deviceSetupConfig.promiseConfirm
-        );
-        if (!isConfirmed) {
-            onSuccess(device);
-            return;
-        }
-
-        performDFU(device, deviceSetupConfig, dispatch, onSuccess, onFail);
-    } else {
-        onSuccess(device);
-    }
-};
-
-const prepareJProgDevice = async (
-    device: Device,
-    deviceSetupConfig: WithRequired<DeviceSetup, 'jprog'>,
-    dispatch: TDispatch,
-    onSuccess: (device: Device) => void,
-    onFail: (reason?: unknown) => void
-) => {
-    const family = (device.jlink?.deviceFamily || '').toLowerCase();
-    const deviceType = (device.jlink?.deviceVersion || '').toLowerCase();
-    const shortDeviceType = deviceType.split('_').shift();
-    const boardVersion = (device.jlink?.boardVersion || '').toLowerCase();
-
-    const key =
-        Object.keys(deviceSetupConfig.jprog).find(
-            k => k.toLowerCase() === deviceType
-        ) ||
-        Object.keys(deviceSetupConfig.jprog).find(
-            k => k.toLowerCase() === shortDeviceType
-        ) ||
-        Object.keys(deviceSetupConfig.jprog).find(
-            k => k.toLowerCase() === boardVersion
-        ) ||
-        Object.keys(deviceSetupConfig.jprog).find(
-            k => k.toLowerCase() === family
-        );
-
-    if (!key) {
-        onFail(new Error('No firmware defined for selected device'));
-        return;
-    }
-
-    logger.debug('Found matching firmware definition', key);
-    const { fw, fwVersion } = deviceSetupConfig.jprog[key];
-    const valid = await validateFirmware(device, fwVersion);
-
-    dispatch(
-        setReadbackProtected(
-            valid === 'READBACK_PROTECTION_ENABLED'
-                ? 'protected'
-                : 'unprotected'
-        )
-    );
-
-    if (valid) {
-        onSuccess(device);
-    } else {
-        programFirmware(device, fw, deviceSetupConfig, dispatch)
-            .then(() => onSuccess(device))
-            .catch(() => onFail(new Error('Failed to program firmware')));
-    }
-};
-
-const verifySerialPortAvailableAndFree = (
-    device: Device,
-    needSerialport?: boolean
-) => {
-    if (!needSerialport) {
-        return Promise.resolve();
-    }
-
+const verifySerialPortAvailableAndFree = (device: Device) => {
     if (!device.serialport) {
         return Promise.reject(
             new Error(
@@ -239,59 +105,164 @@ const verifySerialPortAvailableAndFree = (
     });
 };
 
-const prepareDevice = (
-    device: Device,
-    deviceSetupConfig: DeviceSetup,
-    dispatch: TDispatch,
-    onSuccess: (device: Device) => void,
-    onFail: (reason?: unknown) => void
-) => {
-    if (deviceSetupConfig.jprog && device.traits.jlink) {
-        verifySerialPortAvailableAndFree(
-            device,
-            deviceSetupConfig.needSerialport
-        )
-            .then(() => {
-                prepareJProgDevice(
-                    device,
-                    deviceSetupConfig as WithRequired<DeviceSetup, 'jprog'>,
-                    dispatch,
-                    onSuccess,
-                    onFail
-                );
-            })
-            .catch(onFail);
-    } else if (
-        deviceSetupConfig.dfu &&
-        Object.keys(deviceSetupConfig.dfu).length > 0
-    ) {
-        verifySerialPortAvailableAndFree(
-            device,
-            deviceSetupConfig.needSerialport
-        )
-            .then(() => {
-                prepareDFUDevice(
-                    device,
-                    deviceSetupConfig as WithRequired<DeviceSetup, 'dfu'>,
-                    dispatch,
-                    onSuccess,
-                    onFail
-                );
-            })
-            .catch(onFail);
-    } else {
-        onSuccess(device);
-    }
-};
+export const prepareDevice =
+    (
+        device: Device,
+        deviceSetupConfig: DeviceSetup,
+        onSuccess: (device: Device) => void,
+        onFail: (reason?: unknown) => void,
+        checkCurrentFirmwareVersion = true,
+        requireUserConfirmation = true
+    ) =>
+    async (dispatch: TDispatch) => {
+        const onSuccessWrapper = (d: Device) => {
+            onSuccess(d);
+            dispatch(closeDeviceSetupDialog());
+        };
+        const validDeviceSetups = deviceSetupConfig.deviceSetups.filter(
+            deviceSetups => deviceSetups.supportsProgrammingMode(device)
+        );
 
-const onSuccessfulDeviceSetup = (
-    dispatch: TDispatch,
-    device: Device,
-    onDeviceIsReady: (device: Device) => void
-) => {
-    dispatch(deviceSetupComplete(device));
-    onDeviceIsReady(device);
-};
+        const possibleFirmware = validDeviceSetups
+            .map(deviceSetup => deviceSetup.getFirmwareOptions(device))
+            .flat();
+
+        if (possibleFirmware.length === 0) {
+            logger.info(
+                `Connected to device with serial number: ${device.serialNumber} ` +
+                    `and family: ${device.jlink?.deviceFamily || 'Unknown'} `
+            );
+            if (deviceSetupConfig.allowCustomDevice) {
+                logger.info(
+                    'Note: no pre-compiled firmware is available for the selected device. ' +
+                        'You may still use the app if you have programmed the device ' +
+                        'with a compatible firmware.'
+                );
+                onSuccessWrapper(device);
+            } else {
+                logger.info(
+                    'Note: no pre-compiled firmware is available for the selected device. '
+                );
+                onFail('No device setup found');
+            }
+
+            return;
+        }
+
+        if (checkCurrentFirmwareVersion) {
+            // eslint-disable-next-line no-restricted-syntax
+            for (const deviceSetup of validDeviceSetups) {
+                // eslint-disable-next-line no-await-in-loop
+                const result = await dispatch(
+                    deviceSetup.isExpectedFirmware(device)
+                );
+                device = result.device;
+                if (result.validFirmware) {
+                    onSuccessWrapper(device);
+                    return;
+                }
+            }
+        }
+
+        const choices = possibleFirmware
+            .map(
+                fw => `${fw.key}${fw.description ? ` - ${fw.description}` : ''}`
+            )
+            .flat();
+
+        const proceedAction = (choice: number) => {
+            const selectedDeviceSetup = possibleFirmware[choice];
+
+            if (!selectedDeviceSetup) {
+                onFail('No firmware was selected'); // Should never happen
+            } else {
+                dispatch(
+                    selectedDeviceSetup.programDevice(
+                        (progress: number, message?: string) => {
+                            dispatch(setDeviceSetupProgress(progress));
+                            if (message)
+                                dispatch(
+                                    setDeviceSetupProgressMessage(message)
+                                );
+                        }
+                    )
+                )
+                    .then(programmedDevice => {
+                        if (deviceSetupConfig.needSerialport) {
+                            verifySerialPortAvailableAndFree(programmedDevice)
+                                .then(() => onSuccessWrapper(programmedDevice))
+                                .catch(onFail);
+                        } else {
+                            onSuccessWrapper(device);
+                        }
+                    })
+                    .catch(onFail);
+            }
+        };
+
+        const cancelAction = async () => {
+            let i = 0;
+            do {
+                const deviceSetup = validDeviceSetups[i];
+                try {
+                    // eslint-disable-next-line no-await-in-loop
+                    const result = await dispatch(
+                        deviceSetup.tryToSwitchToApplicationMode(device)
+                    );
+                    if (result) {
+                        onSuccessWrapper(result);
+                        return;
+                    }
+                } catch (error) {
+                    onFail(error);
+                    return;
+                }
+
+                i += 1;
+            } while (i < validDeviceSetups.length);
+
+            onSuccessWrapper(device);
+        };
+
+        if (choices.length === 1) {
+            if (requireUserConfirmation) {
+                dispatch(
+                    openDeviceSetupDialog({
+                        onUserInput: isCanceled => {
+                            if (isCanceled) {
+                                cancelAction();
+                            } else {
+                                proceedAction(0);
+                            }
+                        },
+                        message:
+                            'Device must be programmed, do you want to proceed?',
+                    })
+                );
+            } else {
+                dispatch(
+                    openDeviceSetupDialog({
+                        message:
+                            'Device must be programmed, do you want to proceed?',
+                    })
+                );
+                proceedAction(0);
+            }
+        } else {
+            dispatch(
+                openDeviceSetupDialog({
+                    onUserInput: (isCanceled, index) => {
+                        if (isCanceled) {
+                            cancelAction();
+                        } else {
+                            proceedAction(index ?? 0);
+                        }
+                    },
+                    message: 'Which firmware do you want to program?',
+                })
+            );
+        }
+    };
 
 export const setupDevice =
     (
@@ -301,49 +272,36 @@ export const setupDevice =
         onDeviceIsReady: (device: Device) => void,
         doDeselectDevice: () => void
     ) =>
-    async (dispatch: TDispatch) => {
-        await releaseCurrentDevice();
+    (dispatch: TDispatch, getState: () => RootState) => {
+        releaseCurrentDevice();
         const deviceSetupConfig = {
-            promiseConfirm: getDeviceSetupUserInput(dispatch) as PromiseConfirm,
-            promiseChoice: getDeviceSetupUserInput(dispatch) as PromiseChoice,
             allowCustomDevice: false,
             ...deviceSetup,
         };
 
-        prepareDevice(
-            device,
-            deviceSetupConfig,
-            dispatch,
-            d => {
-                onSuccessfulDeviceSetup(dispatch, d, onDeviceIsReady);
-            },
-            error => {
-                if (
-                    deviceSetupConfig.allowCustomDevice &&
-                    error instanceof Error &&
-                    error.message.includes('No firmware defined')
-                ) {
-                    logger.info(
-                        `Connected to device with serial number: ${device.serialNumber} ` +
-                            `and family: ${
-                                device.jlink?.deviceFamily || 'Unknown'
-                            } `
-                    );
-                    logger.info(
-                        'Note: no pre-compiled firmware is available for the selected device. ' +
-                            'You may still use the app if you have programmed the device ' +
-                            'with a compatible firmware.'
-                    );
-
-                    onSuccessfulDeviceSetup(dispatch, device, onDeviceIsReady);
-                } else {
-                    dispatch(deviceSetupError());
+        dispatch(
+            prepareDevice(
+                device,
+                deviceSetupConfig,
+                d => {
+                    // Given that this task has async elements to it one might call setupDevice and
+                    // while that is still in progress select some other device
+                    // if both were to call onDeviceIsReady the app might have unexpected side effects
+                    if (
+                        getState().device.selectedSerialNumber ===
+                        d.serialNumber
+                    ) {
+                        onDeviceIsReady(d);
+                    }
+                },
+                error => {
+                    dispatch(closeDeviceSetupDialog());
                     logger.error(
                         `Error while setting up device ${device.serialNumber}`
                     );
-                    if (error instanceof Error) logger.error(error.message);
+                    logger.error(describeError(error));
                     doDeselectDevice();
                 }
-            }
+            )
         );
     };

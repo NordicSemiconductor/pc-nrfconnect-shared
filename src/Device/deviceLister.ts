@@ -20,12 +20,8 @@ import {
     setWaitForDeviceTimeout,
 } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import {
-    addDevice,
-    closeSetupDialogVisible,
-    removeDevice,
-    setDevices,
-} from './deviceSlice';
+import { closeDeviceSetupDialog } from './deviceSetupSlice';
+import { addDevice, removeDevice, setDevices } from './deviceSlice';
 import { isDeviceInDFUBootloader } from './sdfuOperations';
 
 let autoSelectDeviceCLISerialUsed = false;
@@ -82,7 +78,7 @@ const initAutoReconnectTimeout =
         dispatch(
             setWaitForDeviceTimeout(
                 setTimeout(() => {
-                    dispatch(closeSetupDialogVisible());
+                    dispatch(closeDeviceSetupDialog());
                     if (waitForDevice?.onFail)
                         waitForDevice?.onFail(
                             `Failed to detect device after reboot. Timed out after ${
@@ -166,7 +162,7 @@ export const startWatchingDevices =
                         getState().device.selectedSerialNumber &&
                     !getState().deviceAutoSelect.waitForDevice
                 ) {
-                    dispatch(closeSetupDialogVisible());
+                    dispatch(closeDeviceSetupDialog());
                 }
 
                 dispatch(removeDevice(remove));

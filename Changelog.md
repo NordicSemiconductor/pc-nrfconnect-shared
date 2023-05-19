@@ -7,16 +7,33 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 46 - UNRELEASED
+## 46 - 2023-05-19
 
 ### Added
 
 -   Progress bar to device setup dialog
+-   `prepareDevice` function is now and can be used to program devices on demand
+-   Custom device setups can be now done by implementing `IDeviceSetup` and
+    passing it as the `deviceSetup` array in `DeviceSetup`
 
 ### Changed
 
 -   FeedbackPane headers is now 14px, similar to all text, but is bold.
 -   FeedbackPane Buttons are moved to the bottom right corner, from bottom left.
+-   API for device Setup has been reworked
+
+### Steps to upgrade when using this package
+
+-   Device Setup no longer accepts dfu and jprog instead deviceSetups are to be
+    used. Examples:
+    -   To replace dfu look at this example:
+        `dfu: { pca10059: { application: getAppFile('fw/rssi-10059.hex'), semver: 'rssi_cdc_acm 2.0.0+dfuMay-22-2018-10-43-22', params: {}, }, }`
+        is to be replaced by:
+        `sdfuDeviceSetup([ { key: 'pca10059', application: getAppFile('fw/rssi-10059.hex'), semver: 'rssi_cdc_acm 2.0.0+dfuMay-22-2018-10-43-22', params: {}, }, ])`
+    -   To replace jprog look at this example:
+        `jprog: { nrf52_family: { fw: getAppFile('fw/rssi-10040.hex'), fwVersion: 'rssi-fw-1.0.0', fwIdAddress: 0x2000, }, }`
+        is to be replaced by:
+        `jprogDeviceSetup([ { key: 'nrf52_family', fw: getAppFile('fw/rssi-10040.hex'), fwVersion: 'rssi-fw-1.0.0', fwIdAddress: 0x2000, }, ])`
 
 ## 45 - 2023-05-09
 

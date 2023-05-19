@@ -17,7 +17,7 @@ import {
 } from '../deviceAutoSelectSlice';
 import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
 import { DeviceSetup as DeviceSetupShared, setupDevice } from '../deviceSetup';
-import DeviceSetup from '../DeviceSetup/DeviceSetup';
+import DeviceSetupView from '../DeviceSetup/DeviceSetupView';
 import {
     deselectDevice,
     deviceIsSelected as deviceIsSelectedSelector,
@@ -171,7 +171,7 @@ export default ({
                 }}
                 deviceFilter={deviceFilter}
             />
-            <DeviceSetup />
+            <DeviceSetupView />
         </div>
     );
 };

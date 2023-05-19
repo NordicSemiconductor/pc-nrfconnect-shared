@@ -1,28 +1,38 @@
 /// <reference types="node" />
-import { Device, TDispatch } from '../state';
+import { Device, RootState, TDispatch } from '../state';
 import { InitPacket } from './initPacket';
-import { PromiseChoice, PromiseConfirm } from './sdfuOperations';
 export interface DfuEntry {
+    key: string;
+    description?: string;
     application: string;
     semver: string;
     softdevice?: string | Buffer;
     params: Partial<InitPacket>;
 }
-export interface DeviceSetup {
-    dfu?: {
-        [key: string]: DfuEntry;
-    };
-    jprog?: {
-        [key: string]: {
-            fw: string;
-            fwIdAddress: number;
-            fwVersion: string;
-        };
-    };
-    needSerialport?: boolean;
-    allowCustomDevice?: boolean;
-    promiseChoice?: PromiseChoice;
-    promiseConfirm?: PromiseConfirm;
+export interface JprogEntry {
+    key: string;
+    description?: string;
+    fw: string;
+    fwIdAddress: number;
+    fwVersion: string;
 }
-export declare const receiveDeviceSetupInput: (input: boolean | string) => (dispatch: TDispatch) => void;
-export declare const setupDevice: (device: Device, deviceSetup: DeviceSetup, releaseCurrentDevice: () => void, onDeviceIsReady: (device: Device) => void, doDeselectDevice: () => void) => (dispatch: TDispatch) => Promise<void>;
+export interface IDeviceSetup {
+    supportsProgrammingMode: (device: Device) => boolean;
+    getFirmwareOptions: (device: Device) => {
+        key: string;
+        description?: string;
+        programDevice: (onProgress: (progress: number, message?: string) => void) => (dispatch: TDispatch, getState: () => RootState) => Promise<Device>;
+    }[];
+    isExpectedFirmware: (device: Device) => (dispatch: TDispatch, getState: () => RootState) => Promise<{
+        device: Device;
+        validFirmware: boolean;
+    }>;
+    tryToSwitchToApplicationMode: (device: Device) => (dispatch: TDispatch, getState: () => RootState) => Promise<Device | null>;
+}
+export interface DeviceSetup {
+    deviceSetups: IDeviceSetup[];
+    needSerialport: boolean;
+    allowCustomDevice?: boolean;
+}
+export declare const prepareDevice: (device: Device, deviceSetupConfig: DeviceSetup, onSuccess: (device: Device) => void, onFail: (reason?: unknown) => void, checkCurrentFirmwareVersion?: boolean, requireUserConfirmation?: boolean) => (dispatch: TDispatch) => Promise<void>;
+export declare const setupDevice: (device: Device, deviceSetup: DeviceSetup, releaseCurrentDevice: () => void, onDeviceIsReady: (device: Device) => void, doDeselectDevice: () => void) => (dispatch: TDispatch, getState: () => RootState) => void;

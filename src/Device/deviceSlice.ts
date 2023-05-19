@@ -29,21 +29,11 @@ const updateDevice = (
     }
 };
 
-const noDialogShown = {
-    isSetupDialogVisible: false,
-    setupDialogText: null,
-    setupDialogChoices: [],
-    progress: undefined,
-    progressMessage: undefined,
-};
-
 const initialState: DeviceState = {
     devices: new Map(),
     selectedSerialNumber: null,
     deviceInfo: null,
-    isSetupWaitingForUserInput: false,
     readbackProtection: 'unknown',
-    ...noDialogShown,
 };
 
 const setPersistedData = (device: Device) => {
@@ -91,72 +81,6 @@ const slice = createSlice({
             state.selectedSerialNumber = null;
             state.deviceInfo = null;
             state.readbackProtection = 'unknown';
-        },
-
-        /*
-         * Indicates that device setup is complete. This means that the device is
-         * ready for use according to the `config.deviceSetup` configuration provided
-         * by the app.
-         */
-        deviceSetupComplete: (state, action: PayloadAction<Device>) => ({
-            ...state,
-            ...noDialogShown,
-            deviceInfo: action.payload,
-        }),
-
-        /*
-         * Indicates that device setup failed.
-         */
-        deviceSetupError: state => ({
-            ...state,
-            ...noDialogShown,
-        }),
-
-        /*
-         * Indicates that some part of the device setup operation requires input
-         * from the user. When the user has provided the required input, then
-         * DEVICE_SETUP_INPUT_RECEIVED is dispatched with the given input.
-         */
-        deviceSetupInputRequired: {
-            reducer: (
-                state,
-                action: PayloadAction<{ message: string; choices: string[] }>
-            ) => ({
-                ...state,
-                isSetupDialogVisible: true,
-                isSetupWaitingForUserInput: true,
-                setupDialogText: action.payload.message,
-                setupDialogChoices:
-                    action.payload.choices == null
-                        ? []
-                        : [...action.payload.choices],
-            }),
-            prepare: (message: string, choices: string[]) => ({
-                payload: {
-                    message,
-                    choices,
-                },
-            }),
-        },
-
-        /*
-         * Indicates that the user has provided input to the device setup operation.
-         * This action is dispatched after DEVICE_SETUP_INPUT_REQUIRED.
-         *
-         */
-        deviceSetupInputReceived: state => {
-            state.isSetupWaitingForUserInput = false;
-        },
-
-        setDeviceSetupProgress: (state, action: PayloadAction<number>) => {
-            state.progress = action.payload;
-        },
-
-        setDeviceSetupProgressMessage: (
-            state,
-            action: PayloadAction<string>
-        ) => {
-            state.progressMessage = action.payload;
         },
 
         setDevices: (state, action: PayloadAction<Device[]>) => {
@@ -257,10 +181,6 @@ const slice = createSlice({
             });
         },
 
-        closeSetupDialogVisible: state => {
-            state.isSetupDialogVisible = false;
-        },
-
         setReadbackProtected: (
             state,
             action: PayloadAction<DeviceState['readbackProtection']>
@@ -274,12 +194,6 @@ export const {
     reducer,
     actions: {
         deselectDevice,
-        deviceSetupComplete,
-        deviceSetupError,
-        deviceSetupInputReceived,
-        deviceSetupInputRequired,
-        setDeviceSetupProgress,
-        setDeviceSetupProgressMessage,
         resetDeviceNickname,
         selectDevice,
         addDevice,
@@ -287,7 +201,6 @@ export const {
         setDevices,
         setDeviceNickname,
         toggleDeviceFavorited,
-        closeSetupDialogVisible,
         setReadbackProtected,
         persistSerialPortOptions,
     },
