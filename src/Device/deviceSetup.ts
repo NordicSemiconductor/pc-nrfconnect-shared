@@ -6,6 +6,7 @@
 import { SerialPort } from 'serialport';
 
 import logger from '../logging';
+import describeError from '../logging/describeError';
 import { Device, RootState, TDispatch } from '../state';
 import {
     closeDeviceSetupDialog,
@@ -298,8 +299,7 @@ export const setupDevice =
                     logger.error(
                         `Error while setting up device ${device.serialNumber}`
                     );
-                    if (error instanceof Error) logger.error(error.message);
-                    else if (typeof error === 'string') logger.error(error);
+                    logger.error(describeError(error));
                     doDeselectDevice();
                 }
             )
