@@ -54,6 +54,7 @@ function options(additionalOptions) {
             '@electron/remote',
             'react',
             '@nordicsemiconductor/nrf-device-lib-js',
+            'systeminformation',
 
             // App dependencies
             ...Object.keys(dependencies ?? {}),
