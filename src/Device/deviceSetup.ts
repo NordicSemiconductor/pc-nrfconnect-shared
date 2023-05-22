@@ -60,7 +60,7 @@ export interface DeviceSetup {
 
 export interface DeviceSetupConfig {
     deviceSetups: DeviceSetup[];
-    allowCustomDevice?: boolean; // allow custom J-Link device
+    allowCustomDevice?: boolean;
     confirmMessage?: string;
     choiceMessage?: string;
 }
