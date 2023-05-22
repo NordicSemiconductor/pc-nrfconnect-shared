@@ -546,11 +546,15 @@ const programDeviceWithFw =
             );
         });
 
-export const sdfuDeviceSetup = (dfuFirmware: DfuEntry[]): IDeviceSetup => ({
+export const sdfuDeviceSetup = (
+    dfuFirmware: DfuEntry[],
+    needSerialport = false
+): IDeviceSetup => ({
     supportsProgrammingMode: (device: Device) =>
-        (device.dfuTriggerVersion !== undefined &&
+        ((!!device.dfuTriggerVersion &&
             device.dfuTriggerVersion.semVer.length > 0) ||
-        isDeviceInDFUBootloader(device),
+            isDeviceInDFUBootloader(device)) &&
+        (needSerialport === device.traits.serialPorts || !needSerialport),
     getFirmwareOptions: device =>
         dfuFirmware.map(firmwareOption => ({
             key: firmwareOption.key,

@@ -31,7 +31,6 @@ export interface IDeviceSetup {
 }
 export interface DeviceSetup {
     deviceSetups: IDeviceSetup[];
-    needSerialport: boolean;
     allowCustomDevice?: boolean;
 }
 export declare const prepareDevice: (device: Device, deviceSetupConfig: DeviceSetup, onSuccess: (device: Device) => void, onFail: (reason?: unknown) => void, checkCurrentFirmwareVersion?: boolean, requireUserConfirmation?: boolean) => (dispatch: TDispatch) => Promise<void>;
