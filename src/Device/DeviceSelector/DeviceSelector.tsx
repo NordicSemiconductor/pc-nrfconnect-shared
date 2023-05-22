@@ -16,7 +16,7 @@ import {
     setAutoSelectDevice,
 } from '../deviceAutoSelectSlice';
 import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
-import { DeviceSetup as DeviceSetupShared, setupDevice } from '../deviceSetup';
+import { DeviceSetupConfig, setupDevice } from '../deviceSetup';
 import DeviceSetupView from '../DeviceSetup/DeviceSetupView';
 import {
     deselectDevice,
@@ -35,7 +35,7 @@ interface OutdatedDeviceTraits {
 
 export interface Props {
     deviceListing: DeviceTraits & OutdatedDeviceTraits;
-    deviceSetup?: DeviceSetupShared;
+    deviceSetupConfig?: DeviceSetupConfig;
     onDeviceSelected?: (device: Device, autoReselected: boolean) => void;
     onDeviceDeselected?: () => void;
     onDeviceConnected?: (device: Device) => void;
@@ -47,7 +47,7 @@ export interface Props {
 const noop = () => {};
 export default ({
     deviceListing,
-    deviceSetup,
+    deviceSetupConfig,
     onDeviceSelected = noop,
     onDeviceDeselected = noop,
     onDeviceConnected = noop,
@@ -80,11 +80,11 @@ export default ({
             dispatch(selectDevice(device));
             dispatch(setAutoSelectDevice(device));
             onDeviceSelected(device, autoReselected);
-            if (deviceSetup) {
+            if (deviceSetupConfig) {
                 dispatch(
                     setupDevice(
                         device,
-                        deviceSetup,
+                        deviceSetupConfig,
                         onDeviceIsReady,
                         doDeselectDevice
                     )
@@ -92,7 +92,7 @@ export default ({
             }
         },
         [
-            deviceSetup,
+            deviceSetupConfig,
             dispatch,
             doDeselectDevice,
             onDeviceIsReady,

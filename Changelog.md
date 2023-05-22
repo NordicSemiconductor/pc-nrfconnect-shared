@@ -16,6 +16,11 @@ every new version is a new major version.
 -   Optional `choiceMessage` to `DeviceSetup`
 -   `react-dom` is now listed as an external package.
 
+### Changed
+
+-   `IDeviceSetup` renamed to `DeviceSetup`
+-   `DeviceSetup` renamed to `DeviceSetupConfig`
+
 ### Removed
 
 -   `needSerialport` property from `DeviceSetup`.
@@ -26,6 +31,8 @@ every new version is a new major version.
 -   `needSerialport` has been removed from `IDeviceSetup`. If needed, it should
     be placed into the `supportsProgrammingMode` callback or can be passed as a
     parameter to the `jprogDeviceSetup` or `sdfuDeviceSetup` wrappers.
+-   Replace type `DeviceSetup` with `DeviceSetupConfig`
+-   Replace type `IDeviceSetup` with `DeviceSetup`
 
 ## 46 - 2023-05-19
 

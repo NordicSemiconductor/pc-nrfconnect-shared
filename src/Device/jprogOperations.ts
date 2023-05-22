@@ -16,7 +16,7 @@ import nrfDeviceLib, {
 import logger from '../logging';
 import { Device, RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import { IDeviceSetup, JprogEntry } from './deviceSetup';
+import { DeviceSetup, JprogEntry } from './deviceSetup';
 import { setReadbackProtected } from './deviceSlice';
 
 const program = (
@@ -155,7 +155,7 @@ const firmwareOptions = (device: Device, firmware: JprogEntry[]) =>
 export const jprogDeviceSetup = (
     firmware: JprogEntry[],
     needSerialport = false
-): IDeviceSetup => ({
+): DeviceSetup => ({
     supportsProgrammingMode: (device: Device) =>
         (needSerialport === !!device.traits.serialPorts || !needSerialport) &&
         !!device.traits.jlink,

@@ -16,7 +16,7 @@ export interface JprogEntry {
     fwIdAddress: number;
     fwVersion: string;
 }
-export interface IDeviceSetup {
+export interface DeviceSetup {
     supportsProgrammingMode: (device: Device) => boolean;
     getFirmwareOptions: (device: Device) => {
         key: string;
@@ -29,11 +29,11 @@ export interface IDeviceSetup {
     }>;
     tryToSwitchToApplicationMode: (device: Device) => (dispatch: TDispatch, getState: () => RootState) => Promise<Device | null>;
 }
-export interface DeviceSetup {
-    deviceSetups: IDeviceSetup[];
+export interface DeviceSetupConfig {
+    deviceSetups: DeviceSetup[];
     allowCustomDevice?: boolean;
     confirmMessage?: string;
     choiceMessage?: string;
 }
-export declare const prepareDevice: (device: Device, deviceSetupConfig: DeviceSetup, onSuccess: (device: Device) => void, onFail: (reason?: unknown) => void, checkCurrentFirmwareVersion?: boolean, requireUserConfirmation?: boolean) => (dispatch: TDispatch) => Promise<void>;
-export declare const setupDevice: (device: Device, deviceSetup: DeviceSetup, onDeviceIsReady: (device: Device) => void, doDeselectDevice: () => void) => (dispatch: TDispatch, getState: () => RootState) => void;
+export declare const prepareDevice: (device: Device, deviceSetupConfig: DeviceSetupConfig, onSuccess: (device: Device) => void, onFail: (reason?: unknown) => void, checkCurrentFirmwareVersion?: boolean, requireUserConfirmation?: boolean) => (dispatch: TDispatch) => Promise<void>;
+export declare const setupDevice: (device: Device, deviceSetupConfig: DeviceSetupConfig, onDeviceIsReady: (device: Device) => void, doDeselectDevice: () => void) => (dispatch: TDispatch, getState: () => RootState) => Promise<void>;
