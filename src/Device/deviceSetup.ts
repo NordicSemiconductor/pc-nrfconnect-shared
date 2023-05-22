@@ -3,8 +3,6 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
-import { SerialPort } from 'serialport';
-
 import logger from '../logging';
 import describeError from '../logging/describeError';
 import { Device, RootState, TDispatch } from '../state';
@@ -33,7 +31,7 @@ export interface JprogEntry {
     fwVersion: string;
 }
 
-export interface IDeviceSetup {
+export interface DeviceSetup {
     supportsProgrammingMode: (device: Device) => boolean; // Return true if this device can be programed using this interface e.g. MCU Boot or DFU
     getFirmwareOptions: (device: Device) => {
         key: string;
@@ -60,9 +58,9 @@ export interface IDeviceSetup {
     ) => Promise<Device | null>; // returns the device after switched to app mode. If this is not possible or not relevant return null
 }
 
-export interface DeviceSetup {
-    deviceSetups: IDeviceSetup[];
-    allowCustomDevice?: boolean; // allow custom J-Link device
+export interface DeviceSetupConfig {
+    deviceSetups: DeviceSetup[];
+    allowCustomDevice?: boolean;
     confirmMessage?: string;
     choiceMessage?: string;
 }
@@ -70,7 +68,7 @@ export interface DeviceSetup {
 export const prepareDevice =
     (
         device: Device,
-        deviceSetupConfig: DeviceSetup,
+        deviceSetupConfig: DeviceSetupConfig,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void,
         checkCurrentFirmwareVersion = true,
@@ -225,20 +223,18 @@ export const prepareDevice =
 export const setupDevice =
     (
         device: Device,
-        deviceSetup: DeviceSetup,
+        deviceSetupConfig: DeviceSetupConfig,
         onDeviceIsReady: (device: Device) => void,
         doDeselectDevice: () => void
     ) =>
-    (dispatch: TDispatch, getState: () => RootState) => {
-        const deviceSetupConfig = {
-            allowCustomDevice: false,
-            ...deviceSetup,
-        };
-
+    (dispatch: TDispatch, getState: () => RootState) =>
         dispatch(
             prepareDevice(
                 device,
-                deviceSetupConfig,
+                {
+                    allowCustomDevice: false,
+                    ...deviceSetupConfig,
+                },
                 d => {
                     // Given that this task has async elements to it one might call setupDevice and
                     // while that is still in progress select some other device
@@ -260,4 +256,3 @@ export const setupDevice =
                 }
             )
         );
-    };

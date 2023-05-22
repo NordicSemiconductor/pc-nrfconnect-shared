@@ -15,7 +15,7 @@ import { Device, TDispatch } from '../state';
 import { getAppFile } from '../utils/appDirs';
 import { setWaitForDevice } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import { DfuEntry, IDeviceSetup } from './deviceSetup';
+import { DeviceSetup, DfuEntry } from './deviceSetup';
 import { openDeviceSetupDialog } from './deviceSetupSlice';
 import {
     createInitPacketBuffer,
@@ -549,7 +549,7 @@ const programDeviceWithFw =
 export const sdfuDeviceSetup = (
     dfuFirmware: DfuEntry[],
     needSerialport = false
-): IDeviceSetup => ({
+): DeviceSetup => ({
     supportsProgrammingMode: (device: Device) =>
         ((!!device.dfuTriggerVersion &&
             device.dfuTriggerVersion.semVer.length > 0) ||

@@ -231,7 +231,7 @@ describe('DeviceSelector', () => {
                     jlink: true,
                     mcuBoot: true,
                 }}
-                deviceSetup={{
+                deviceSetupConfig={{
                     deviceSetups: [
                         jprogDeviceSetup([
                             {
@@ -263,7 +263,7 @@ describe('DeviceSelector', () => {
                     jlink: true,
                     mcuBoot: true,
                 }}
-                deviceSetup={{
+                deviceSetupConfig={{
                     deviceSetups: [
                         jprogDeviceSetup([
                             {
@@ -301,7 +301,7 @@ describe('DeviceSelector', () => {
                     jlink: true,
                     mcuBoot: true,
                 }}
-                deviceSetup={validFirmware}
+                deviceSetupConfig={validFirmware}
             />,
             [setDevices([testDevice])]
         );
@@ -323,7 +323,7 @@ describe('DeviceSelector', () => {
                     jlink: true,
                     mcuBoot: true,
                 }}
-                deviceSetup={validFirmware}
+                deviceSetupConfig={validFirmware}
             />,
             [setDevices([testDevice])]
         );
