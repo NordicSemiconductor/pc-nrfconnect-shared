@@ -9,7 +9,6 @@ interface OutdatedDeviceTraits {
 export interface Props {
     deviceListing: DeviceTraits & OutdatedDeviceTraits;
     deviceSetup?: DeviceSetupShared;
-    releaseCurrentDevice?: () => void;
     onDeviceSelected?: (device: Device, autoReselected: boolean) => void;
     onDeviceDeselected?: () => void;
     onDeviceConnected?: (device: Device) => void;
@@ -17,5 +16,5 @@ export interface Props {
     onDeviceIsReady?: (device: Device) => void;
     deviceFilter?: (device: Device) => boolean;
 }
-declare const _default: ({ deviceListing, deviceSetup, releaseCurrentDevice, onDeviceSelected, onDeviceDeselected, onDeviceConnected, onDeviceDisconnected, onDeviceIsReady, deviceFilter, }: Props) => JSX.Element;
+declare const _default: ({ deviceListing, deviceSetup, onDeviceSelected, onDeviceDeselected, onDeviceConnected, onDeviceDisconnected, onDeviceIsReady, deviceFilter, }: Props) => JSX.Element;
 export default _default;

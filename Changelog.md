@@ -16,6 +16,7 @@ every new version is a new major version.
 ### Removed
 
 -   `needSerialport` property from `DeviceSetup`.
+-   `releaseCurrentDevice` callback from `DeviceSelector`.
 
 ### Steps to upgrade when using this package
 
