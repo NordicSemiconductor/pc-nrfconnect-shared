@@ -65,6 +65,8 @@ export interface DeviceSetup {
     deviceSetups: IDeviceSetup[];
     needSerialport: boolean; // only used if dfu OR jprog available in the `DeviceSetup`
     allowCustomDevice?: boolean; // allow custom J-Link device
+    confirmMessage?: string;
+    choiceMessage?: string;
 }
 
 const verifySerialPortAvailableAndFree = (device: Device) => {
@@ -120,7 +122,7 @@ export const prepareDevice =
             dispatch(closeDeviceSetupDialog());
         };
         const validDeviceSetups = deviceSetupConfig.deviceSetups.filter(
-            deviceSetups => deviceSetups.supportsProgrammingMode(device)
+            deviceSetup => deviceSetup.supportsProgrammingMode(device)
         );
 
         const possibleFirmware = validDeviceSetups
@@ -236,6 +238,7 @@ export const prepareDevice =
                             }
                         },
                         message:
+                            deviceSetupConfig.confirmMessage ??
                             'Device must be programmed, do you want to proceed?',
                     })
                 );
@@ -243,6 +246,7 @@ export const prepareDevice =
                 dispatch(
                     openDeviceSetupDialog({
                         message:
+                            deviceSetupConfig.confirmMessage ??
                             'Device must be programmed, do you want to proceed?',
                     })
                 );
@@ -258,7 +262,9 @@ export const prepareDevice =
                             proceedAction(index ?? 0);
                         }
                     },
-                    message: 'Which firmware do you want to program?',
+                    message:
+                        deviceSetupConfig.choiceMessage ??
+                        'Which firmware do you want to program?',
                 })
             );
         }
