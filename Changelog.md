@@ -14,6 +14,7 @@ every new version is a new major version.
 -   `needSerialport` parameter for `jprogDeviceSetup` and `sdfuDeviceSetup`.
 -   Optional `confirmMessage` to `DeviceSetup`
 -   Optional `choiceMessage` to `DeviceSetup`
+-   `react-dom` is now listed as an external package.
 
 ### Removed
 
