@@ -7,11 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 47 - Unreleased
+## 47 - 2023-05-22
 
 ### Added
 
 -   `needSerialport` parameter for `jprogDeviceSetup` and `sdfuDeviceSetup`.
+-   Optional `confirmMessage` to `DeviceSetup`
+-   Optional `choiceMessage` to `DeviceSetup`
 
 ### Removed
 
