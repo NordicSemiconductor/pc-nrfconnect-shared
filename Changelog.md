@@ -9,9 +9,20 @@ every new version is a new major version.
 
 ## 47 - Unreleased
 
+### Added
+
+-   `needSerialport` parameter for `jprogDeviceSetup` and `sdfuDeviceSetup`.
+
 ### Removed
 
+-   `needSerialport` property from `DeviceSetup`.
 -   `releaseCurrentDevice` callback from `DeviceSelector`.
+
+### Steps to upgrade when using this package
+
+-   `needSerialport` has been removed from `IDeviceSetup`. If needed, it should
+    be placed into the `supportsProgrammingMode` callback or can be passed as a
+    parameter to the `jprogDeviceSetup` or `sdfuDeviceSetup` wrappers.
 
 ## 46 - 2023-05-19
 

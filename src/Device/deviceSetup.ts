@@ -35,7 +35,6 @@ export interface JprogEntry {
 
 export interface IDeviceSetup {
     supportsProgrammingMode: (device: Device) => boolean; // Return true if this device can be programed using this interface e.g. MCU Boot or DFU
-    // isSupportedDevice: () => boolean;
     getFirmwareOptions: (device: Device) => {
         key: string;
         description?: string;
@@ -63,47 +62,8 @@ export interface IDeviceSetup {
 
 export interface DeviceSetup {
     deviceSetups: IDeviceSetup[];
-    needSerialport: boolean; // only used if dfu OR jprog available in the `DeviceSetup`
     allowCustomDevice?: boolean; // allow custom J-Link device
 }
-
-const verifySerialPortAvailableAndFree = (device: Device) => {
-    if (!device.serialport) {
-        return Promise.reject(
-            new Error(
-                'No serial port available for device with ' +
-                    `serial number ${device.serialNumber}`
-            )
-        );
-    }
-    return new Promise<void>((resolve, reject) => {
-        if (!device.serialport?.comName) {
-            reject();
-            return;
-        }
-        const serialPort = new SerialPort({
-            path: device.serialport.comName,
-            // The BaudRate should not matter in this case, but as of serialport v10 it is required.
-            // To be sure to keep the code as similar as possible, baudRate is set to the same as the
-            // default baudRate in serialport v8.
-            baudRate: 9600,
-            autoOpen: false,
-        });
-        serialPort.open(openErr => {
-            if (openErr) {
-                reject(openErr);
-            } else {
-                serialPort.close(closeErr => {
-                    if (closeErr) {
-                        reject(closeErr);
-                    } else {
-                        resolve();
-                    }
-                });
-            }
-        });
-    });
-};
 
 export const prepareDevice =
     (
@@ -187,15 +147,7 @@ export const prepareDevice =
                         }
                     )
                 )
-                    .then(programmedDevice => {
-                        if (deviceSetupConfig.needSerialport) {
-                            verifySerialPortAvailableAndFree(programmedDevice)
-                                .then(() => onSuccessWrapper(programmedDevice))
-                                .catch(onFail);
-                        } else {
-                            onSuccessWrapper(device);
-                        }
-                    })
+                    .then(onSuccessWrapper)
                     .catch(onFail);
             }
         };

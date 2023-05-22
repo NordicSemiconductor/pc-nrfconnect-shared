@@ -105,7 +105,6 @@ const validFirmware = {
         ]),
     ],
     allowCustomDevice: false,
-    needSerialport: false,
 };
 
 describe('DeviceSelector', () => {
@@ -244,7 +243,6 @@ describe('DeviceSelector', () => {
                         ]),
                     ],
                     allowCustomDevice: true,
-                    needSerialport: false,
                 }}
             />,
             [setDevices([testDevice])]
@@ -277,7 +275,6 @@ describe('DeviceSelector', () => {
                         ]),
                     ],
                     allowCustomDevice: false,
-                    needSerialport: false,
                 }}
             />,
             [setDevices([testDevice])]

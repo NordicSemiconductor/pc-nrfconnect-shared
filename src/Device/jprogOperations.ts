@@ -152,8 +152,13 @@ const firmwareOptions = (device: Device, firmware: JprogEntry[]) =>
         );
     });
 
-export const jprogDeviceSetup = (firmware: JprogEntry[]): IDeviceSetup => ({
-    supportsProgrammingMode: (device: Device) => device.traits.jlink === true,
+export const jprogDeviceSetup = (
+    firmware: JprogEntry[],
+    needSerialport = false
+): IDeviceSetup => ({
+    supportsProgrammingMode: (device: Device) =>
+        (needSerialport === !!device.traits.serialPorts || !needSerialport) &&
+        !!device.traits.jlink,
     getFirmwareOptions: device =>
         firmwareOptions(device, firmware).map(firmwareOption => ({
             key: firmwareOption.key,
