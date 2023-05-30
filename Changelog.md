@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 50 - 2023-05-30
+
+### Fixed
+
+-   `dialog` text wrapping opts to keep words as whole of possible
+
 ## 49 - 2023-05-30
 
 ### Fixed
