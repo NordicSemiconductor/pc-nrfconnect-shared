@@ -10,7 +10,7 @@ import FormLabel from 'react-bootstrap/FormLabel';
 import styles from './Dropdown.module.scss';
 
 export interface DropdownItem {
-    label: string;
+    label: string | React.ReactNode;
     value: string;
 }
 
