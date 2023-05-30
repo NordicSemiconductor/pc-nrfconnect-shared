@@ -1,8 +1,7 @@
-import { FC } from 'react';
+/// <reference types="react" />
 import { Device as DeviceProps } from '../../../state';
 import './broken-device.scss';
-interface Props {
+declare const _default: ({ device }: {
     device: DeviceProps;
-}
-declare const Device: FC<Props>;
-export default Device;
+}) => JSX.Element;
+export default _default;

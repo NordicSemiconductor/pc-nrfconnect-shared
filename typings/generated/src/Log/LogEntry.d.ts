@@ -1,8 +1,7 @@
-import { FC } from 'react';
-import { LogEntry as winstonLogEntry } from 'winston';
+/// <reference types="react" />
+import { LogEntry } from 'winston';
 import './log-entry.scss';
-interface Props {
-    entry: winstonLogEntry;
-}
-declare const LogEntry: FC<Props>;
-export default LogEntry;
+declare const _default: ({ entry }: {
+    entry: LogEntry;
+}) => JSX.Element;
+export default _default;

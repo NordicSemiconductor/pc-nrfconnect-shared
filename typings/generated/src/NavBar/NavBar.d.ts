@@ -1,6 +1,6 @@
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import './nav-bar.scss';
-declare const NavBar: FC<{
+declare const _default: ({ deviceSelect }: {
     deviceSelect?: ReactNode;
-}>;
-export default NavBar;
+}) => JSX.Element;
+export default _default;

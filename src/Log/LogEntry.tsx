@@ -4,10 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC } from 'react';
+import React from 'react';
 import formatDate from 'date-fns/format';
-import { number, shape, string } from 'prop-types';
-import { LogEntry as winstonLogEntry } from 'winston';
+import { LogEntry } from 'winston';
 
 import { openUrl } from '../utils/open';
 
@@ -50,11 +49,7 @@ function hrefReplacer(str: string) {
     return message;
 }
 
-interface Props {
-    entry: winstonLogEntry;
-}
-
-const LogEntry: FC<Props> = ({ entry }) => {
+export default ({ entry }: { entry: LogEntry }) => {
     const className = `core19-log-entry core19-log-level-${entry.level}`;
     const time = formatDate(new Date(entry.timestamp), 'HH:mm:ss.SSS');
 
@@ -65,16 +60,3 @@ const LogEntry: FC<Props> = ({ entry }) => {
         </div>
     );
 };
-
-const entryShape = shape({
-    id: number.isRequired,
-    timestamp: string.isRequired,
-    level: string.isRequired,
-    message: string.isRequired,
-});
-
-LogEntry.propTypes = {
-    entry: entryShape.isRequired,
-};
-
-export default LogEntry;

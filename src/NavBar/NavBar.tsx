@@ -4,15 +4,14 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, ReactNode } from 'react';
-import { node } from 'prop-types';
+import React, { ReactNode } from 'react';
 
 import Logo from '../Logo/Logo';
 import NavMenu from './NavMenu';
 
 import './nav-bar.scss';
 
-const NavBar: FC<{ deviceSelect?: ReactNode }> = ({ deviceSelect }) => (
+export default ({ deviceSelect }: { deviceSelect?: ReactNode }) => (
     <div className="core19-nav-bar">
         {deviceSelect && (
             <div className="core19-nav-bar-device-selector">{deviceSelect}</div>
@@ -21,9 +20,3 @@ const NavBar: FC<{ deviceSelect?: ReactNode }> = ({ deviceSelect }) => (
         <Logo changeWithDeviceState />
     </div>
 );
-
-NavBar.propTypes = {
-    deviceSelect: node,
-};
-
-export default NavBar;

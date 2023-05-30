@@ -1,7 +1,7 @@
-import { FC } from 'react';
+/// <reference types="react" />
 import { Device } from '../../../state';
 import './more-device-info.scss';
-declare const MoreDeviceInfo: FC<{
+declare const _default: ({ device }: {
     device: Device;
-}>;
-export default MoreDeviceInfo;
+}) => JSX.Element;
+export default _default;

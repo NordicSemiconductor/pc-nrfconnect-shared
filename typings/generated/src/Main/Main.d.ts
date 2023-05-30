@@ -1,6 +1,6 @@
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import './main.scss';
-declare const Main: FC<{
+declare const _default: ({ children }: {
     children?: ReactNode;
-}>;
-export default Main;
+}) => JSX.Element;
+export default _default;
