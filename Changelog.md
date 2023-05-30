@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 49 - 2023-05-30
+
+### Fixed
+
+-   `dialog` body text can now wrap and not overflow.
+
 ## 48 - 2023-05-30
 
 ### Added
