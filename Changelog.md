@@ -66,6 +66,10 @@ every new version is a new major version.
 -   FeedbackPane headers is now 14px, similar to all text, but is bold.
 -   FeedbackPane Buttons are moved to the bottom right corner, from bottom left.
 -   API for device Setup has been reworked
+-   `switchToBootloaderMode` no longer take dispatch as a parameter and it is
+    directly dispatch-able
+-   `switchToApplicationMode` no longer take dispatch as a parameter and it is
+    directly dispatch-able
 
 ### Steps to upgrade when using this package
 
@@ -79,6 +83,12 @@ every new version is a new major version.
         `jprog: { nrf52_family: { fw: getAppFile('fw/rssi-10040.hex'), fwVersion: 'rssi-fw-1.0.0', fwIdAddress: 0x2000, }, }`
         is to be replaced by:
         `jprogDeviceSetup([ { key: 'nrf52_family', fw: getAppFile('fw/rssi-10040.hex'), fwVersion: 'rssi-fw-1.0.0', fwIdAddress: 0x2000, }, ])`
+-   `switchToBootloaderMode` remove the second parameter `dispatch` and call
+    this function using the dispatch function i.e
+    `dispatch(switchToBootloaderMode(...`
+-   `switchToApplicationMode ` remove the second parameter `dispatch` and call
+    this function using the dispatch function i.e
+    `dispatch(switchToApplicationMode(...`
 
 ## 45 - 2023-05-09
 
