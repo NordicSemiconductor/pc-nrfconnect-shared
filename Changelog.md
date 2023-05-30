@@ -11,7 +11,7 @@ every new version is a new major version.
 
 ### Added
 
--   `DropdownItem` parameter `label` now allows string or React.ReactElement.
+-   `DropdownItem` parameter `label` now allows string or React.ReactNode.
 
 ## 47 - 2023-05-22
 

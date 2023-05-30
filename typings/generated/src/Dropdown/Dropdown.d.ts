@@ -1,6 +1,6 @@
 import React from 'react';
 export interface DropdownItem {
-    label: string | React.ReactElement;
+    label: string | React.ReactNode;
     value: string;
 }
 export interface DropdownProps {
