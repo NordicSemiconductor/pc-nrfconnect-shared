@@ -1,6 +1,6 @@
 import React from 'react';
 export interface DropdownItem {
-    label: string | React.ReactNode;
+    label: React.ReactNode;
     value: string;
 }
 export interface DropdownProps {
@@ -12,5 +12,6 @@ export interface DropdownProps {
     selectedItem: DropdownItem;
     numItemsBeforeScroll?: number;
 }
-declare const _default: ({ id, label, items, onSelect, disabled, selectedItem, numItemsBeforeScroll, }: DropdownProps) => JSX.Element;
-export default _default;
+export declare const X: () => JSX.Element;
+declare const Dropdown: ({ id, label, items, onSelect, disabled, selectedItem, numItemsBeforeScroll, }: DropdownProps) => JSX.Element;
+export default Dropdown;

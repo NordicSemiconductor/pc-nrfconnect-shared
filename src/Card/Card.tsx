@@ -11,7 +11,7 @@ import { element, oneOfType, string } from 'prop-types';
 import styles from './card.module.scss';
 
 type NrfCardProps = {
-    title: React.ReactElement | string;
+    title: React.ReactNode;
 };
 
 const NrfCard: React.FC<NrfCardProps> = ({ children, title }) => (

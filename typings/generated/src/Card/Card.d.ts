@@ -1,6 +1,6 @@
 import React from 'react';
 type NrfCardProps = {
-    title: React.ReactElement | string;
+    title: React.ReactNode;
 };
 declare const NrfCard: React.FC<NrfCardProps>;
 export default NrfCard;
