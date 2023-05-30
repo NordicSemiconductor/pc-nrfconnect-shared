@@ -1,6 +1,6 @@
-import { FC } from 'react';
+/// <reference types="react" />
 import './visibility-bar.scss';
-declare const VisibilityBar: FC<{
+declare const _default: ({ isSidePanelEnabled }: {
     isSidePanelEnabled: boolean;
-}>;
-export default VisibilityBar;
+}) => JSX.Element;
+export default _default;

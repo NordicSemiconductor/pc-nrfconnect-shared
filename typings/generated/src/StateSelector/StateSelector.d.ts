@@ -2,7 +2,7 @@ import React from 'react';
 import './state-selector.scss';
 interface ComplexItem {
     key: string;
-    renderItem: string | React.ReactElement;
+    renderItem: React.ReactNode;
 }
 type SelectItem = string | ComplexItem;
 export interface Props {

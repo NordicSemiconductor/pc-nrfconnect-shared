@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, useRef, useState } from 'react';
-import { bool, func } from 'prop-types';
+import React, { useRef, useState } from 'react';
 
 import PseudoButton from '../../../PseudoButton/PseudoButton';
 import { Device as DeviceProps } from '../../../state';
@@ -17,9 +16,12 @@ import MoreDeviceInfo from './MoreDeviceInfo';
 
 import './device.scss';
 
-const ShowMoreInfo: FC<{ isVisible: boolean; toggleVisible: () => void }> = ({
+const ShowMoreInfo = ({
     isVisible,
     toggleVisible,
+}: {
+    isVisible: boolean;
+    toggleVisible: () => void;
 }) => (
     <PseudoButton
         className={`show-more mdi mdi-chevron-${isVisible ? 'up' : 'down'}`}
@@ -28,22 +30,13 @@ const ShowMoreInfo: FC<{ isVisible: boolean; toggleVisible: () => void }> = ({
     />
 );
 
-ShowMoreInfo.propTypes = {
-    isVisible: bool.isRequired,
-    toggleVisible: func.isRequired,
-};
-
 interface Props {
     device: DeviceProps;
     doSelectDevice: (device: DeviceProps, autoReselected: boolean) => void;
     allowMoreInfoVisible: boolean;
 }
 
-const Device: FC<Props> = ({
-    device,
-    doSelectDevice,
-    allowMoreInfoVisible,
-}) => {
+export default ({ device, doSelectDevice, allowMoreInfoVisible }: Props) => {
     const [moreVisible, setMoreVisible] = useState(false);
     const toggleMoreVisible = () => setMoreVisible(!moreVisible);
 
@@ -89,5 +82,3 @@ const Device: FC<Props> = ({
         </PseudoButton>
     );
 };
-
-export default Device;

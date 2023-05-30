@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { ButtonVariants } from '../Button/Button';
 import './dialog.scss';
 type CoreProps = {
@@ -6,7 +6,7 @@ type CoreProps = {
     onHide?: () => void;
     className?: string;
     size?: 'sm' | 'm' | 'lg' | 'xl';
-    children: ReactNode | string;
+    children: ReactNode;
 };
 type DialogProps = CoreProps & {
     closeOnUnfocus?: boolean;
@@ -20,7 +20,7 @@ export declare const Dialog: {
         showSpinner?: boolean | undefined;
     }): JSX.Element;
     Body({ children }: {
-        children: ReactNode | string;
+        children: ReactNode;
     }): JSX.Element;
     Footer({ children }: {
         children: ReactNode;
@@ -31,12 +31,12 @@ export interface DialogButtonProps {
     variant?: ButtonVariants;
     className?: string;
     disabled?: boolean;
-    children: ReactNode | string;
+    children: ReactNode;
 }
 export declare const DialogButton: ({ variant, onClick, className, disabled, children, }: DialogButtonProps) => JSX.Element;
 interface GenericDialogProps extends CoreProps {
     title: string;
-    footer: React.ReactNode;
+    footer: ReactNode;
     headerIcon?: string;
     showSpinner?: boolean;
     closeOnUnfocus?: boolean;

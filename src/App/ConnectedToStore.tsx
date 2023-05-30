@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { Provider } from 'react-redux';
-import { func, node } from 'prop-types';
 import { applyMiddleware, createStore, Reducer } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
@@ -21,10 +20,13 @@ const composeEnhancers = composeWithDevTools({
     serialize: ifBuiltForDevelopment(true),
 });
 
-const ConnectedToStore: FC<{
+export default ({
+    appReducer,
+    children,
+}: {
     appReducer?: Reducer;
     children: ReactNode;
-}> = ({ appReducer, children }) => (
+}) => (
     <Provider
         store={createStore(
             rootReducer(appReducer),
@@ -34,9 +36,3 @@ const ConnectedToStore: FC<{
         {children}
     </Provider>
 );
-ConnectedToStore.propTypes = {
-    appReducer: func,
-    children: node.isRequired,
-};
-
-export default ConnectedToStore;

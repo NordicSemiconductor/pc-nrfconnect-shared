@@ -17,7 +17,7 @@ type CoreProps = {
     onHide?: () => void;
     className?: string;
     size?: 'sm' | 'm' | 'lg' | 'xl';
-    children: ReactNode | string;
+    children: ReactNode;
 };
 
 type DialogProps = CoreProps & {
@@ -73,7 +73,7 @@ Dialog.Header = ({
     </Modal.Header>
 );
 
-Dialog.Body = ({ children }: { children: ReactNode | string }) => (
+Dialog.Body = ({ children }: { children: ReactNode }) => (
     <Modal.Body>{children}</Modal.Body>
 );
 
@@ -86,7 +86,7 @@ export interface DialogButtonProps {
     variant?: ButtonVariants;
     className?: string;
     disabled?: boolean;
-    children: ReactNode | string;
+    children: ReactNode;
 }
 
 export const DialogButton = ({
@@ -109,7 +109,7 @@ export const DialogButton = ({
 
 interface GenericDialogProps extends CoreProps {
     title: string;
-    footer: React.ReactNode;
+    footer: ReactNode;
     headerIcon?: string;
     showSpinner?: boolean;
     closeOnUnfocus?: boolean;

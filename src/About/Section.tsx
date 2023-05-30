@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, ReactNode } from 'react';
-import { node, string } from 'prop-types';
+import React, { ReactNode } from 'react';
 
 import './section.scss';
 
@@ -14,15 +13,9 @@ interface Props {
     children?: ReactNode;
 }
 
-const Section: FC<Props> = ({ children, title }) => (
+export default ({ children, title }: Props) => (
     <div className="about-section">
         {title != null && <h3 className="about-section-title">{title}</h3>}
         {children}
     </div>
 );
-Section.propTypes = {
-    title: string,
-    children: node,
-};
-
-export default Section;

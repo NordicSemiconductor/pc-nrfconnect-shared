@@ -10,7 +10,6 @@ import React, { FC, ReactNode, useEffect, useMemo } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import { useDispatch, useSelector } from 'react-redux';
 import { ipcRenderer } from 'electron';
-import { func } from 'prop-types';
 import { Reducer } from 'redux';
 
 import About from '../About/About';
@@ -214,7 +213,7 @@ const ConnectedErrorBoundary: React.FC = ({ children }) => {
     );
 };
 
-const App = ({
+export default ({
     appReducer,
     ...props
 }: { appReducer?: Reducer } & ConnectedAppProps) => (
@@ -224,12 +223,6 @@ const App = ({
         </ConnectedErrorBoundary>
     </ConnectedToStore>
 );
-
-App.propTypes = {
-    appReducer: func,
-};
-
-export default App;
 
 const usePersistedPane = () => {
     const dispatch = useDispatch();

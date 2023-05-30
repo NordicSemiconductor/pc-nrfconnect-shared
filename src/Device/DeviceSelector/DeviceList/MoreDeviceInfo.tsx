@@ -4,26 +4,22 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { SerialPort } from '@nordicsemiconductor/nrf-device-lib-js';
-import { node } from 'prop-types';
 
 import { Device } from '../../../state';
 import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
 
 import './more-device-info.scss';
 
-const Row: FC<{ children: ReactNode }> = ({ children }) => (
+const Row = ({ children }: { children: ReactNode }) => (
     <div className="info-row">
         <div className="flex-space" />
         {children}
     </div>
 );
-Row.propTypes = {
-    children: node.isRequired,
-};
 
-const PcaNumber: FC<{ device: Device }> = ({ device }) => {
+const PcaNumber = ({ device }: { device: Device }) => {
     if (device.boardVersion == null) {
         return null;
     }
@@ -31,7 +27,7 @@ const PcaNumber: FC<{ device: Device }> = ({ device }) => {
     return <div>{device.boardVersion}</div>;
 };
 
-const MaybeDeviceName: FC<{ device: Device }> = ({ device }) => {
+const MaybeDeviceName = ({ device }: { device: Device }) => {
     const hasNickname = device.nickname !== '';
     if (!hasNickname) {
         return null;
@@ -44,7 +40,7 @@ const MaybeDeviceName: FC<{ device: Device }> = ({ device }) => {
     );
 };
 
-const Serialports: FC<{ ports: SerialPort[] }> = ({ ports }) => (
+const Serialports = ({ ports }: { ports: SerialPort[] }) => (
     <ul className="ports">
         {ports.map(port => (
             <li key={port.path}>{port.comName}</li>
@@ -52,7 +48,7 @@ const Serialports: FC<{ ports: SerialPort[] }> = ({ ports }) => (
     </ul>
 );
 
-const MoreDeviceInfo: FC<{ device: Device }> = ({ device }) => (
+export default ({ device }: { device: Device }) => (
     <div className="more-infos">
         <Row>
             <PcaNumber device={device} />
@@ -67,5 +63,3 @@ const MoreDeviceInfo: FC<{ device: Device }> = ({ device }) => (
         )}
     </div>
 );
-
-export default MoreDeviceInfo;

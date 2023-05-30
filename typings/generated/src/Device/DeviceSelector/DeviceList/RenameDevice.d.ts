@@ -1,6 +1,6 @@
-import { FC } from 'react';
+/// <reference types="react" />
 import './rename-device.scss';
-declare const RenameDevice: FC<{
+declare const _default: ({ startEditingDeviceName, }: {
     startEditingDeviceName: () => void;
-}>;
-export default RenameDevice;
+}) => JSX.Element;
+export default _default;

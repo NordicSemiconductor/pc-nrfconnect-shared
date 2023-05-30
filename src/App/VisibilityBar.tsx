@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { bool } from 'prop-types';
 
 import {
     autoScroll as autoScrollSelector,
@@ -25,9 +24,7 @@ import {
 
 import './visibility-bar.scss';
 
-const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
-    isSidePanelEnabled,
-}) => {
+export default ({ isSidePanelEnabled }: { isSidePanelEnabled: boolean }) => {
     const dispatch = useDispatch();
     const isSidePanelVisible = useSelector(isSidePanelVisibleSelector);
     const isLogVisible = useSelector(isLogVisibleSelector);
@@ -104,9 +101,3 @@ const VisibilityBar: FC<{ isSidePanelEnabled: boolean }> = ({
         </div>
     );
 };
-
-VisibilityBar.propTypes = {
-    isSidePanelEnabled: bool.isRequired,
-};
-
-export default VisibilityBar;

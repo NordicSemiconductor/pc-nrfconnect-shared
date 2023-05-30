@@ -1,4 +1,4 @@
-import { FC } from 'react';
+/// <reference types="react" />
 import { Device as DeviceProps } from '../../../state';
 import './device.scss';
 interface Props {
@@ -6,5 +6,5 @@ interface Props {
     doSelectDevice: (device: DeviceProps, autoReselected: boolean) => void;
     allowMoreInfoVisible: boolean;
 }
-declare const Device: FC<Props>;
-export default Device;
+declare const _default: ({ device, doSelectDevice, allowMoreInfoVisible }: Props) => JSX.Element;
+export default _default;
