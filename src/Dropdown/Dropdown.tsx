@@ -16,7 +16,7 @@ export interface DropdownItem {
 
 export interface DropdownProps {
     id?: string;
-    label?: string;
+    label?: React.ReactNode;
     items: DropdownItem[];
     onSelect: (item: DropdownItem) => void;
     disabled?: boolean;
