@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 51 - 2023-05-3
+
+### Added
+
+-   `Dropdown` parameter `label` now allows React.ReactNode.
+
 ## 50 - 2023-05-30
 
 ### Fixed
@@ -23,7 +29,7 @@ every new version is a new major version.
 
 ### Added
 
--   `DropdownItem` parameter `label` now allows string or React.ReactNode.
+-   `DropdownItem` parameter `label` now allows React.ReactNode.
 
 ## 47 - 2023-05-22
 
