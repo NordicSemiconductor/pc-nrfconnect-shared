@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import reactGA from 'react-ga';
+import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import type Systeminformation from 'systeminformation';
 
 import logger from '../logging';
@@ -17,7 +17,7 @@ import {
     persistIsSendingUsageData,
 } from './persistentStore';
 
-const trackId = 'UA-22498474-5';
+const instrumentationKey = '6a75f7f5-dfe5-412f-a996-28a4b7f479c0';
 const categoryName = () =>
     isDevelopment ? `${appJson.name}-dev` : appJson.name;
 
@@ -29,6 +29,8 @@ interface EventAction {
 let initialized = false;
 let appJson: PackageJson;
 let eventQueue: EventAction[] = [];
+
+let insights: ApplicationInsights;
 
 /**
  * Initialize instance to send user data
@@ -46,26 +48,14 @@ export const init = (packageJson: PackageJson) => {
 
         logger.debug(`Client Id: ${clientId}`);
 
-        reactGA.initialize(trackId, {
-            debug: false,
-            titleCase: false,
-            gaOptions: {
-                storage: 'none',
-                storeGac: false,
-                clientId,
+        insights = new ApplicationInsights({
+            config: {
+                instrumentationKey,
             },
         });
 
-        reactGA.set({
-            checkProtocolTask: null,
-            // According to Nordic Personal Data Processing Protocol for nRF Connect for Desktop
-            // https://projecttools.nordicsemi.no/confluence/display/ISMS/nRF+Connect+for+Desktop
-            // we set ip as anonymized in Google Analytics as described on page
-            // https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#anonymizeIp
-            anonymizeIp: true,
-        });
-
-        reactGA.pageview(appJson.name);
+        insights.loadAppInsights();
+        insights.trackPageView({ name: appJson.name });
 
         // eslint-disable-next-line global-require
         const si = require('systeminformation') as typeof Systeminformation;
@@ -73,7 +63,7 @@ export const init = (packageJson: PackageJson) => {
 
         initialized = true;
         logger.debug(
-            `Google Analytics for category ${categoryName()} has initialized`
+            `Application Insights for category ${categoryName()} has initialized`
         );
     }, 5000); // Add 5 second delay to prevent inital rendering from beeing frozen.
 };
@@ -145,12 +135,12 @@ const sendEvent = ({ action, label }: EventAction) => {
     if (isSendingUsageData) {
         const data = JSON.stringify({ category, action, label });
         logger.debug(`Sending usage data ${data}`);
-        reactGA.event({ category, action, label });
+        insights.trackEvent({ name: category, properties: { action, label } });
     }
 };
 
 /**
- * Send usage data event to Google Analytics
+ * Send usage data event to Application Insights
  * @param {string} action The event action
  * @param {string} label The event label
  * @returns {void}
@@ -165,7 +155,7 @@ export const sendUsageData = <T extends string>(action: T, label?: string) => {
 };
 
 /**
- * Send error usage data event to Google Analytics and also show it in the logger view
+ * Send error usage data event to Application Insights and also show it in the logger view
  * @param {string} error The event action
  * @returns {void}
  */
