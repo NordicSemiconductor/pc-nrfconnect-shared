@@ -22,7 +22,9 @@ describe('errorDialogReducer', () => {
             showDialog(anErrorMessage, {}),
         ]);
         expect(withAnError.isVisible).toEqual(true);
-        expect(withAnError.messages).toContain(anErrorMessage);
+        expect(withAnError.messages).toContainEqual({
+            message: 'An error occurred',
+        });
     });
 
     it('should be visible and have all messages after multiple show actions have been dispatched', () => {
@@ -31,8 +33,12 @@ describe('errorDialogReducer', () => {
             showDialog(anotherErrorMessage, {}),
         ]);
         expect(withTwoErrors.isVisible).toEqual(true);
-        expect(withTwoErrors.messages).toContain(anErrorMessage);
-        expect(withTwoErrors.messages).toContain(anotherErrorMessage);
+        expect(withTwoErrors.messages).toContainEqual({
+            message: anErrorMessage,
+        });
+        expect(withTwoErrors.messages).toContainEqual({
+            message: anotherErrorMessage,
+        });
     });
 
     it('should not add message if it already exists in list', () => {
@@ -41,7 +47,9 @@ describe('errorDialogReducer', () => {
             showDialog(anErrorMessage, {}),
         ]);
 
-        expect(withAnError.messages).toEqual([anErrorMessage]);
+        expect(withAnError.messages).toEqual([
+            expect.objectContaining({ message: anErrorMessage }),
+        ]);
     });
 
     it('should set dialog to invisible and clear message list when hide action has been dispatched', () => {

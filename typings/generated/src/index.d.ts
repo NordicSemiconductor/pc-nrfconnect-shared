@@ -1,7 +1,10 @@
 declare const ErrorDialogActions: {
     hideDialog: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"errorDialog/hideDialog">;
-    showDialog: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[message: string, errorResolutions?: import("./state").ErrorResolutions | undefined], {
-        message: string;
+    showDialog: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[message: string, errorResolutions?: import("./state").ErrorResolutions | undefined, detail?: string | undefined], {
+        message: {
+            message: string;
+            detail: string | undefined;
+        };
         errorResolutions: import("./state").ErrorResolutions | undefined;
     }, "errorDialog/showDialog", never, never>;
 };

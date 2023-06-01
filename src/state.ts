@@ -41,9 +41,14 @@ export interface AppLayout {
     paneNames: string[];
 }
 
+export interface ErrorMessage {
+    message: string;
+    detail?: string;
+}
+
 export interface ErrorDialog {
     isVisible: boolean;
-    messages: string[];
+    messages: ErrorMessage[];
     errorResolutions?: ErrorResolutions;
 }
 

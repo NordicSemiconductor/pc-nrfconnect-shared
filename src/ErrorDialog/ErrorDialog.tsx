@@ -9,6 +9,7 @@ import ReactMarkdown from 'react-markdown';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Dialog, DialogButton } from '../Dialog/Dialog';
+import { ErrorMessage } from '../state';
 import {
     errorResolutions as errorResolutionsSelector,
     hideDialog,
@@ -18,17 +19,29 @@ import {
 
 import './error.scss';
 
-const ErrorMessage = ({ message }: { message: string }) => (
-    <ReactMarkdown source={message} linkTarget="_blank" />
+const ErrorMessage = ({
+    error: { message, detail },
+}: {
+    error: ErrorMessage;
+}) => (
+    <>
+        <ReactMarkdown source={message} linkTarget="_blank" />
+        {detail != null && (
+            <details className="details">
+                <summary>Show technical details</summary>
+                <pre>{detail}</pre>
+            </details>
+        )}
+    </>
 );
 
-const MultipleErrorMessages = ({ messages }: { messages: string[] }) => (
+const MultipleErrorMessages = ({ messages }: { messages: ErrorMessage[] }) => (
     <>
         There are multiple errors:
         <ul>
             {messages.map(message => (
-                <li key={message}>
-                    <ErrorMessage message={message} />
+                <li key={message.message}>
+                    <ErrorMessage error={message} />
                 </li>
             ))}
         </ul>
@@ -56,7 +69,7 @@ const ErrorDialog = () => {
             <Dialog.Header title="Error" headerIcon="alert" />
             <Dialog.Body>
                 {messages.length === 1 ? (
-                    <ErrorMessage message={messages[0]} />
+                    <ErrorMessage error={messages[0]} />
                 ) : (
                     <MultipleErrorMessages messages={messages} />
                 )}

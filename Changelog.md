@@ -12,6 +12,9 @@ every new version is a new major version.
 ### Changed
 
 -   Error dialog: If there are multiple errors, state so more clearly.
+-   Error dialog: Add the option to provide details to each error. To use this,
+    pass a third parameter to the action creator
+    `ErrorDialogActions.showDialog`.
 
 ## 51 - 2023-05-31
 
@@ -23,7 +26,7 @@ every new version is a new major version.
 
 ### Fixed
 
--   `dialog` text wrapping opts to keep words as whole of possible
+-   `dialog` text wrapping opts to keep words as whole of possible.
 
 ## 49 - 2023-05-30
 
