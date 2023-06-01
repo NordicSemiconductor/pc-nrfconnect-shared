@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -17,6 +17,23 @@ import {
 } from './errorDialogSlice';
 
 import './error.scss';
+
+const ErrorMessage = ({ message }: { message: string }) => (
+    <ReactMarkdown source={message} linkTarget="_blank" />
+);
+
+const MultipleErrorMessages = ({ messages }: { messages: string[] }) => (
+    <>
+        There are multiple errors:
+        <ul>
+            {messages.map(message => (
+                <li key={message}>
+                    <ErrorMessage message={message} />
+                </li>
+            ))}
+        </ul>
+    </>
+);
 
 const ErrorDialog = () => {
     const dispatch = useDispatch();
@@ -38,13 +55,11 @@ const ErrorDialog = () => {
         >
             <Dialog.Header title="Error" headerIcon="alert" />
             <Dialog.Body>
-                {messages.map(message => (
-                    <ReactMarkdown
-                        key={message}
-                        source={message}
-                        linkTarget="_blank"
-                    />
-                ))}
+                {messages.length === 1 ? (
+                    <ErrorMessage message={messages[0]} />
+                ) : (
+                    <MultipleErrorMessages messages={messages} />
+                )}
             </Dialog.Body>
             <Dialog.Footer>
                 {Object.entries(errorResolutions).map(
