@@ -7,6 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 52 - 2023-06-02
+
+### Changed
+
+-   Error dialog: If there are multiple errors, state so more clearly.
+-   Error dialog: Add the option to provide details to each error. To use this,
+    pass a third parameter to the action creator
+    `ErrorDialogActions.showDialog`.
+
 ## 51 - 2023-05-31
 
 ### Added
@@ -17,7 +26,7 @@ every new version is a new major version.
 
 ### Fixed
 
--   `dialog` text wrapping opts to keep words as whole of possible
+-   `dialog` text wrapping opts to keep words as whole of possible.
 
 ## 49 - 2023-05-30
 

@@ -6,4 +6,9 @@
 
 .core19-error-body {
     user-select: text;
+
+    .details {
+        margin-bottom: 1rem;
+        font-size: 14px;
+    }
 }

@@ -4,11 +4,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Dialog, DialogButton } from '../Dialog/Dialog';
+import { ErrorMessage } from '../state';
 import {
     errorResolutions as errorResolutionsSelector,
     hideDialog,
@@ -17,6 +18,35 @@ import {
 } from './errorDialogSlice';
 
 import './error.scss';
+
+const ErrorMessage = ({
+    error: { message, detail },
+}: {
+    error: ErrorMessage;
+}) => (
+    <>
+        <ReactMarkdown source={message} linkTarget="_blank" />
+        {detail != null && (
+            <details className="details">
+                <summary>Show technical details</summary>
+                <pre>{detail}</pre>
+            </details>
+        )}
+    </>
+);
+
+const MultipleErrorMessages = ({ messages }: { messages: ErrorMessage[] }) => (
+    <>
+        There are multiple errors:
+        <ul>
+            {messages.map(message => (
+                <li key={message.message}>
+                    <ErrorMessage error={message} />
+                </li>
+            ))}
+        </ul>
+    </>
+);
 
 const ErrorDialog = () => {
     const dispatch = useDispatch();
@@ -38,13 +68,11 @@ const ErrorDialog = () => {
         >
             <Dialog.Header title="Error" headerIcon="alert" />
             <Dialog.Body>
-                {messages.map(message => (
-                    <ReactMarkdown
-                        key={message}
-                        source={message}
-                        linkTarget="_blank"
-                    />
-                ))}
+                {messages.length === 1 ? (
+                    <ErrorMessage error={messages[0]} />
+                ) : (
+                    <MultipleErrorMessages messages={messages} />
+                )}
             </Dialog.Body>
             <Dialog.Footer>
                 {Object.entries(errorResolutions).map(
