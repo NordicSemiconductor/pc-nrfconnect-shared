@@ -12,6 +12,8 @@ every new version is a new major version.
 ### Added
 
 -   `Toggle` parameter `label` now allows React.ReactNode.
+-   `StartStop` parameter `startText` now allows React.ReactNode.
+-   `StartStop` parameter `stopText` now allows React.ReactNode.
 
 ## 52 - 2023-06-02
 
