@@ -51,6 +51,7 @@ export const init = (packageJson: PackageJson) => {
         insights = new ApplicationInsights({
             config: {
                 instrumentationKey,
+                disableExceptionTracking: false,
             },
         });
 
@@ -161,6 +162,9 @@ export const sendUsageData = <T extends string>(action: T, label?: string) => {
  */
 export const sendErrorReport = (error: string) => {
     logger.error(error);
+    insights.trackException({
+        exception: new Error(error),
+    });
     sendUsageData(
         'Report error',
         `${process.platform}; ${process.arch}; v${appJson?.version}; ${error}`
