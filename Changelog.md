@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 54 - 2023-06-05
+
+### Removed
+
+-   `react-dom` is no longer listed as an external package due to launcher
+    requiring it for bundling.
+
 ## 53 - 2023-06-05
 
 ### Added

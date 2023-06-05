@@ -54,7 +54,6 @@ function options(additionalOptions) {
             '@electron/remote',
             'react',
             '@nordicsemiconductor/nrf-device-lib-js',
-            'react-dom',
 
             // App dependencies
             ...Object.keys(dependencies ?? {}),
