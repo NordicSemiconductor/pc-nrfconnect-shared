@@ -89,7 +89,7 @@ export interface DeviceAutoSelectState {
 
 export interface WaitForDevice {
     timeout: number;
-    when: 'always' | 'applicationMode' | 'dfuBootLoaderMode';
+    when: 'always' | 'applicationMode' | 'dfuBootLoaderMode' | 'sameTraits';
     once: boolean;
     onSuccess?: (device: Device) => void;
     onFail?: (reason?: string) => void;

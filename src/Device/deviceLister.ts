@@ -192,15 +192,17 @@ export const startWatchingDevices =
                             getState().deviceAutoSelect.disconnectionTime;
                         const autoSelectDevice =
                             getState().deviceAutoSelect.device;
+                        const selectedDevice =
+                            sn !== null
+                                ? getState().device.devices.get(sn)
+                                : undefined;
 
                         const result = shouldAutoReselect(
                             device,
                             getState().deviceAutoSelect.autoReselect,
                             autoSelectDevice,
                             disconnectionTime,
-                            sn !== null
-                                ? getState().device.devices.get(sn)
-                                : undefined
+                            selectedDevice
                         );
 
                         dispatch(addDevice(device));
@@ -246,7 +248,13 @@ export const startWatchingDevices =
                                         )) ||
                                     (waitForDevice.when === 'applicationMode' &&
                                         deviceWithPersistedData.dfuTriggerInfo !==
-                                            null)
+                                            null) ||
+                                    (selectedDevice &&
+                                        waitForDevice.when === 'sameTraits' &&
+                                        hasSameDeviceTraits(
+                                            device.traits,
+                                            selectedDevice.traits
+                                        ))
                                 ) {
                                     logger.info(
                                         'Wait For Device was successfully'
