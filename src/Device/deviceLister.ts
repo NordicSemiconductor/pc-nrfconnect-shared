@@ -239,7 +239,8 @@ export const startWatchingDevices =
                                 dispatch(setDisconnectedTime(undefined));
                                 if (
                                     waitForDevice.when === 'always' ||
-                                    (waitForDevice.when === 'BootLoaderMode' &&
+                                    (waitForDevice.when ===
+                                        'dfuBootLoaderMode' &&
                                         isDeviceInDFUBootloader(
                                             deviceWithPersistedData
                                         )) ||

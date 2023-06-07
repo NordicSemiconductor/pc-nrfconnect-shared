@@ -167,7 +167,7 @@ const switchToDeviceMode =
                         when:
                             mcuState === 'NRFDL_MCU_STATE_APPLICATION'
                                 ? 'applicationMode'
-                                : 'BootLoaderMode',
+                                : 'dfuBootLoaderMode',
                         once: true,
                         onSuccess,
                         onFail,

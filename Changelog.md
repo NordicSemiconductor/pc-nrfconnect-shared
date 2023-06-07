@@ -7,6 +7,18 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 55 - 2023-06-07
+
+### Changed
+
+-   AutoReconnect Mode `WaitForDevice.when` mode `BootLoaderMode` has been
+    renamed to `dfuBootLoaderMode`
+
+### Steps to upgrade when using this package
+
+-   Replace all instances of `BootLoaderMode` to `dfuBootLoaderMode` in all
+    `WaitForDevice.when`
+
 ## 54 - 2023-06-05
 
 ### Removed
