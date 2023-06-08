@@ -9,9 +9,12 @@ const ErrorDialogActions = { hideDialog, showDialog };
 
 export { ErrorDialogActions };
 
-export { default as App } from './App/App';
+export { default as App, type PaneProps } from './App/App';
 export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector } from './Device/DeviceSelector/DeviceSelector';
+export {
+    default as DeviceSelector,
+    type Props as DeviceSelectorProps,
+} from './Device/DeviceSelector/DeviceSelector';
 export {
     Dialog,
     GenericDialog,
@@ -31,7 +34,7 @@ export type { ButtonVariants } from './Button/Button';
 export { default as Card } from './Card/Card';
 export { default as ErrorBoundary } from './ErrorBoundary/ErrorBoundary';
 export { default as StateSelector } from './StateSelector/StateSelector';
-export { default as Dropdown } from './Dropdown/Dropdown';
+export { default as Dropdown, type DropdownItem } from './Dropdown/Dropdown';
 export { default as StartStopButton } from './StartStopButton/StartStopButton';
 export { default as DocumentationSection } from './About/DocumentationSection';
 export { default as Stepper } from './Stepper/Stepper';
@@ -106,28 +109,32 @@ export {
     switchToBootloaderMode,
     switchToApplicationMode,
 } from './Device/sdfuOperations';
-export { defaultInitPacket, HashType, FwType } from './Device/initPacket';
+export {
+    defaultInitPacket,
+    type DfuImage,
+    FwType,
+    HashType,
+} from './Device/initPacket';
 
 export { default as describeError } from './logging/describeError';
 
 export {
     createSerialPort,
     getSerialPortOptions,
+    type SerialPort,
 } from './SerialPort/SerialPort';
 export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSettingsDialog';
-export type { SerialPort } from './SerialPort/SerialPort';
 
 export { openAppWindow } from './OpenApp/openApp';
 
-export type { DropdownItem } from './Dropdown/Dropdown';
-
 export type { NrfConnectState } from './state';
-export type { Props as DeviceSelectorProps } from './Device/DeviceSelector/DeviceSelector';
 
-export type { PaneProps } from './App/App';
-export type { DfuImage } from './Device/initPacket';
-export type { DeviceSetupConfig, DeviceSetup } from './Device/deviceSetup';
-export { prepareDevice } from './Device/deviceSetup';
+export {
+    type DeviceSetupConfig,
+    type DeviceSetup,
+    prepareDevice,
+} from './Device/deviceSetup';
+
 export type {
     AppInfo,
     AppVersions,
