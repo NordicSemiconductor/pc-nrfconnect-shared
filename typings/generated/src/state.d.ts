@@ -66,6 +66,7 @@ export interface DeviceAutoSelectState {
     waitForDevice?: WaitForDevice;
     autoReconnectTimeout?: NodeJS.Timeout;
     lastArrivedDeviceId?: number;
+    arrivedButWrongWhen?: boolean;
 }
 export interface WaitForDevice {
     timeout: number;

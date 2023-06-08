@@ -76,6 +76,12 @@ const slice = createSlice({
         ) => {
             if (state.device) state.lastArrivedDeviceId = action.payload;
         },
+        setArrivedButWrongWhen: (
+            state,
+            action: PayloadAction<boolean | undefined>
+        ) => {
+            state.arrivedButWrongWhen = action.payload;
+        },
     },
 });
 
@@ -90,6 +96,7 @@ export const {
         setWaitForDevice,
         clearWaitForDevice,
         setLastArrivedDeviceId,
+        setArrivedButWrongWhen,
     },
 } = slice;
 
@@ -114,3 +121,5 @@ export const getWaitForDevice = (state: RootState) =>
 
 export const getLastArrivedDeviceId = (state: RootState) =>
     state.deviceAutoSelect.lastArrivedDeviceId;
+export const getArrivedButWrongWhen = (state: RootState) =>
+    state.deviceAutoSelect.arrivedButWrongWhen;

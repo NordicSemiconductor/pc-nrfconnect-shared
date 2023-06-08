@@ -15,6 +15,7 @@ import { Device, RootState, TDispatch, WaitForDevice } from '../state';
 import {
     clearWaitForDevice,
     clearWaitForDeviceTimeout,
+    setArrivedButWrongWhen,
     setDisconnectedTime,
     setLastArrivedDeviceId,
     setWaitForDeviceTimeout,
@@ -165,8 +166,10 @@ export const startWatchingDevices =
                     dispatch(closeDeviceSetupDialog());
                 }
 
-                dispatch(removeDevice(remove));
-                onDeviceDisconnected(remove);
+                if (!getState().deviceAutoSelect.arrivedButWrongWhen) {
+                    dispatch(removeDevice(remove));
+                    onDeviceDisconnected(remove);
+                }
             };
 
             switch (event.event_type) {
@@ -222,6 +225,16 @@ export const startWatchingDevices =
                         ) {
                             const waitForDevice =
                                 getState().deviceAutoSelect.waitForDevice;
+
+                            // Device lib might fail to advertise that a device has left before it rejoins (Mainly OSx)
+                            // but we still need to trigger the onSuccess if a device 'reappeared' with a different 'id'
+                            // and there is an outstanding waitForDevice Request. In this case the disconnectionTime was
+                            // never set (as NRFDL_DEVICE_EVENT_LEFT was never sent) This created an additional problem as device
+                            // lib may advertise the the same device with a single connect event. Hance we are keeping track of
+                            // the device ID which is guaranteed to be change if a is disconnected and reconnected (for the
+                            // same hotplug event listener) to ensure we only call the onSuccess once for every reconnect event.
+                            // This is mostly relevant when 'when' is always
+
                             // Device is to be reconnected as timeout is provided
                             if (
                                 waitForDevice &&
@@ -233,12 +246,6 @@ export const startWatchingDevices =
                                         waitForDevice.timeout >=
                                         Date.now())
                             ) {
-                                dispatch(
-                                    setLastArrivedDeviceId(
-                                        deviceWithPersistedData.id
-                                    )
-                                );
-                                dispatch(setDisconnectedTime(undefined));
                                 if (
                                     waitForDevice.when === 'always' ||
                                     (waitForDevice.when ===
@@ -256,6 +263,13 @@ export const startWatchingDevices =
                                             selectedDevice.traits
                                         ))
                                 ) {
+                                    dispatch(
+                                        setLastArrivedDeviceId(
+                                            deviceWithPersistedData.id
+                                        )
+                                    );
+                                    dispatch(setDisconnectedTime(undefined));
+
                                     logger.info(
                                         'Wait For Device was successfully'
                                     );
@@ -270,6 +284,8 @@ export const startWatchingDevices =
                                         waitForDevice.onSuccess(
                                             deviceWithPersistedData
                                         );
+                                } else {
+                                    dispatch(setArrivedButWrongWhen(true));
                                 }
                             }
                         }
@@ -289,6 +305,10 @@ export const startWatchingDevices =
                                         ?.serialNumber
                                 ) {
                                     if (waitForDevice) {
+                                        dispatch(
+                                            setArrivedButWrongWhen(undefined)
+                                        );
+
                                         dispatch(
                                             initAutoReconnectTimeout(
                                                 () =>
