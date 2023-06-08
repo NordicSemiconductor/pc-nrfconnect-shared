@@ -1,4 +1,4 @@
-import { RootState } from '../state';
+import type { RootState } from '../store';
 export interface DeviceSetupState {
     visible: boolean;
     onUserInput?: (canceled: boolean, choice?: number) => void;

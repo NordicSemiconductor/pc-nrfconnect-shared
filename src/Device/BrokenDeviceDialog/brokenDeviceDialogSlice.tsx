@@ -6,7 +6,7 @@
 
 import { createSlice } from '@reduxjs/toolkit';
 
-import { RootState } from '../../state';
+import type { RootState } from '../../store';
 
 export interface BrokenDeviceDialog {
     isVisible: boolean;

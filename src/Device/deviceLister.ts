@@ -11,7 +11,7 @@ import nrfDeviceLib, {
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../logging';
-import { RootState, TDispatch } from '../state';
+import type { AppDispatch, RootState } from '../store';
 import {
     clearWaitForDevice,
     clearWaitForDeviceTimeout,
@@ -73,7 +73,7 @@ const shouldAutoReselect = (
 
 const initAutoReconnectTimeout =
     (onTimeout: () => void, waitForDevice?: WaitForDevice) =>
-    (dispatch: TDispatch) => {
+    (dispatch: AppDispatch) => {
         const timeout = waitForDevice?.timeout;
         if (timeout == null) return;
 
@@ -149,7 +149,7 @@ export const startWatchingDevices =
         onDeviceDeselected: () => void,
         doSelectDevice: (device: Device, autoReselected: boolean) => void
     ) =>
-    async (dispatch: TDispatch, getState: () => RootState) => {
+    async (dispatch: AppDispatch, getState: () => RootState) => {
         const updateDeviceList = (event: HotplugEvent) => {
             const removeDeviceFromList = (remove: Device) => {
                 if (

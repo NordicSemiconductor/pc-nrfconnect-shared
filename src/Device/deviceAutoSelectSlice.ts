@@ -6,8 +6,8 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { RootState } from '../state';
-import { Device } from './deviceSlice';
+import type { RootState } from '../store';
+import type { Device } from './deviceSlice';
 
 export interface WaitForDevice {
     timeout: number;

@@ -1,5 +1,5 @@
 import { Device as NrfdlDevice, DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
-import { RootState, TDispatch } from '../state';
+import type { AppDispatch, RootState } from '../store';
 import { Device } from './deviceSlice';
 /**
  * Wrap the device form nrf-device-lib to make the Device type consistent
@@ -16,7 +16,7 @@ export declare const wrapDeviceFromNrfdl: (device: NrfdlDevice) => Device;
  */
 export declare const wrapDevicesFromNrfdl: (devices: NrfdlDevice[]) => Device[];
 export declare const hasValidDeviceTraits: (deviceTraits: DeviceTraits, requiredTraits: DeviceTraits) => boolean;
-export declare const startWatchingDevices: (deviceListing: DeviceTraits, onDeviceConnected: (device: Device) => void, onDeviceDisconnected: (device: Device) => void, onDeviceDeselected: () => void, doSelectDevice: (device: Device, autoReselected: boolean) => void) => (dispatch: TDispatch, getState: () => RootState) => Promise<void>;
+export declare const startWatchingDevices: (deviceListing: DeviceTraits, onDeviceConnected: (device: Device) => void, onDeviceDisconnected: (device: Device) => void, onDeviceDeselected: () => void, doSelectDevice: (device: Device, autoReselected: boolean) => void) => (dispatch: AppDispatch, getState: () => RootState) => Promise<void>;
 /**
  * Stops watching for devices.
  *

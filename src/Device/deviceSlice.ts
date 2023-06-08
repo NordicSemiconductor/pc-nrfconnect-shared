@@ -12,7 +12,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 import { SerialPortOpenOptions } from 'serialport';
 
-import { RootState } from '../state';
+import type { RootState } from '../store';
 import {
     getPersistedIsFavorite,
     getPersistedNickname,

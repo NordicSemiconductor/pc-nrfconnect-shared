@@ -63,7 +63,7 @@ export { default as describeError } from './logging/describeError';
 export { createSerialPort, getSerialPortOptions, type SerialPort, } from './SerialPort/SerialPort';
 export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSettingsDialog';
 export { openAppWindow } from './OpenApp/openApp';
-export type { NrfConnectState } from './state';
+export type { NrfConnectState } from './store';
 export { type DeviceSetupConfig, type DeviceSetup, prepareDevice, } from './Device/deviceSetup';
 export type { AppInfo, AppVersions, PackageJson, SourceJson, } from './utils/AppTypes';
 export { default as FeedbackPane } from './Panes/FeedbackPane';

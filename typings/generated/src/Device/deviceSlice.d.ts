@@ -1,7 +1,7 @@
 import type { Device as NrfdlDevice, SerialPort } from '@nordicsemiconductor/nrf-device-lib-js';
 import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 import { SerialPortOpenOptions } from 'serialport';
-import { RootState } from '../state';
+import type { RootState } from '../store';
 export interface Device extends NrfdlDevice {
     serialNumber: string;
     boardVersion?: string;

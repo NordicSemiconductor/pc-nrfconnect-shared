@@ -1,6 +1,6 @@
 /// <reference types="node" />
-import { RootState } from '../state';
-import { Device } from './deviceSlice';
+import type { RootState } from '../store';
+import type { Device } from './deviceSlice';
 export interface WaitForDevice {
     timeout: number;
     when: 'always' | 'applicationMode' | 'dfuBootLoaderMode' | 'sameTraits';

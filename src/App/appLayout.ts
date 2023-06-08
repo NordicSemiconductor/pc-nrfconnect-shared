@@ -6,7 +6,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { RootState } from '../state';
+import type { RootState } from '../store';
 import { persistCurrentPane } from '../utils/persistentStore';
 
 export interface AppLayout {

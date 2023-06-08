@@ -1,5 +1,5 @@
 import { LogEntry } from 'winston';
-import { RootState } from '../state';
+import type { RootState } from '../store';
 export interface Log {
     autoScroll: boolean;
     logEntries: LogEntry[];

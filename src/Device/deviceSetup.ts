@@ -5,7 +5,7 @@
  */
 import logger from '../logging';
 import describeError from '../logging/describeError';
-import { RootState, TDispatch } from '../state';
+import { AppDispatch, RootState } from '../store';
 import {
     closeDeviceSetupDialog,
     openDeviceSetupDialog,
@@ -40,12 +40,12 @@ export interface DeviceSetup {
         programDevice: (
             onProgress: (progress: number, message?: string) => void
         ) => (
-            dispatch: TDispatch,
+            dispatch: AppDispatch,
             getState: () => RootState
         ) => Promise<Device>;
     }[]; // The list of all firmware that can be applied for this device with the program function for that fw item
     isExpectedFirmware: (device: Device) => (
-        dispatch: TDispatch,
+        dispatch: AppDispatch,
         getState: () => RootState
     ) => Promise<{
         device: Device;
@@ -54,7 +54,7 @@ export interface DeviceSetup {
     tryToSwitchToApplicationMode: (
         device: Device
     ) => (
-        dispatch: TDispatch,
+        dispatch: AppDispatch,
         getState: () => RootState
     ) => Promise<Device | null>; // returns the device after switched to app mode. If this is not possible or not relevant return null
 }
@@ -75,7 +75,7 @@ export const prepareDevice =
         checkCurrentFirmwareVersion = true,
         requireUserConfirmation = true
     ) =>
-    async (dispatch: TDispatch) => {
+    async (dispatch: AppDispatch) => {
         const onSuccessWrapper = (d: Device) => {
             onSuccess(d);
             dispatch(closeDeviceSetupDialog());
@@ -228,7 +228,7 @@ export const setupDevice =
         onDeviceIsReady: (device: Device) => void,
         doDeselectDevice: () => void
     ) =>
-    (dispatch: TDispatch, getState: () => RootState) =>
+    (dispatch: AppDispatch, getState: () => RootState) =>
         dispatch(
             prepareDevice(
                 device,

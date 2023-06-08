@@ -7,7 +7,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { LogEntry } from 'winston';
 
-import { RootState } from '../state';
+import type { RootState } from '../store';
 import { getIsLoggingVerbose } from '../utils/persistentStore';
 
 const MAX_ENTRIES = 1000;
