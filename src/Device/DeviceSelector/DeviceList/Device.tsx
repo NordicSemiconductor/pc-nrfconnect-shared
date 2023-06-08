@@ -7,8 +7,8 @@
 import React, { useRef, useState } from 'react';
 
 import PseudoButton from '../../../PseudoButton/PseudoButton';
-import { Device as DeviceProps } from '../../../state';
 import classNames from '../../../utils/classNames';
+import { Device as DeviceProps } from '../../deviceSlice';
 import BasicDeviceInfo from '../BasicDeviceInfo';
 import { FavoriteIndicator } from '../Favorite';
 import EditDeviceButtons from './EditDeviceButtons';

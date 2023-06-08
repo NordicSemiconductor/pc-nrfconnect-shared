@@ -11,7 +11,7 @@ import nrfDeviceLib, {
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../logging';
-import { Device, RootState, TDispatch, WaitForDevice } from '../state';
+import { RootState, TDispatch } from '../state';
 import {
     clearWaitForDevice,
     clearWaitForDeviceTimeout,
@@ -19,10 +19,11 @@ import {
     setDisconnectedTime,
     setLastArrivedDeviceId,
     setWaitForDeviceTimeout,
+    WaitForDevice,
 } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import { closeDeviceSetupDialog } from './deviceSetupSlice';
-import { addDevice, removeDevice, setDevices } from './deviceSlice';
+import { addDevice, Device, removeDevice, setDevices } from './deviceSlice';
 import { isDeviceInDFUBootloader } from './sdfuOperations';
 
 let autoSelectDeviceCLISerialUsed = false;

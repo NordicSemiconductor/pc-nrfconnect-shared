@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { Device as DeviceProps } from '../../../state';
+import { Device as DeviceProps } from '../../deviceSlice';
 import './device.scss';
 interface Props {
     device: DeviceProps;

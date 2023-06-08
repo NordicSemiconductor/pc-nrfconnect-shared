@@ -5,13 +5,14 @@
  */
 import logger from '../logging';
 import describeError from '../logging/describeError';
-import { Device, RootState, TDispatch } from '../state';
+import { RootState, TDispatch } from '../state';
 import {
     closeDeviceSetupDialog,
     openDeviceSetupDialog,
     setDeviceSetupProgress,
     setDeviceSetupProgressMessage,
 } from './deviceSetupSlice';
+import { Device } from './deviceSlice';
 import { InitPacket } from './initPacket';
 
 export interface DfuEntry {

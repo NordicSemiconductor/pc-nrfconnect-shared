@@ -1,11 +1,11 @@
 declare const ErrorDialogActions: {
     hideDialog: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"errorDialog/hideDialog">;
-    showDialog: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[message: string, errorResolutions?: import("./state").ErrorResolutions | undefined, detail?: string | undefined], {
+    showDialog: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[message: string, errorResolutions?: import("./ErrorDialog/errorDialogSlice").ErrorResolutions | undefined, detail?: string | undefined], {
         message: {
             message: string;
             detail: string | undefined;
         };
-        errorResolutions: import("./state").ErrorResolutions | undefined;
+        errorResolutions: import("./ErrorDialog/errorDialogSlice").ErrorResolutions | undefined;
     }, "errorDialog/showDialog", never, never>;
 };
 export { ErrorDialogActions };
@@ -52,7 +52,7 @@ export { isLoggingVerbose } from './Log/logSlice';
 export { getAppSpecificStore as getPersistentStore, persistTerminalSettings, getPersistedTerminalSettings, } from './utils/persistentStore';
 export { jprogDeviceSetup } from './Device/jprogOperations';
 export { sdfuDeviceSetup } from './Device/sdfuOperations';
-export { selectedDevice, getReadbackProtection, persistSerialPortOptions, } from './Device/deviceSlice';
+export { selectedDevice, getReadbackProtection, persistSerialPortOptions, type Device, } from './Device/deviceSlice';
 export { setWaitForDevice, clearWaitForDevice, getAutoReselect, getWaitingForDeviceTimeout, getWaitingToAutoReselect, } from './Device/deviceAutoSelectSlice';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
 export { getDeviceLibContext } from './Device/deviceLibWrapper';
@@ -65,7 +65,7 @@ export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSe
 export type { SerialPort } from './SerialPort/SerialPort';
 export { openAppWindow } from './OpenApp/openApp';
 export type { DropdownItem } from './Dropdown/Dropdown';
-export type { Device, NrfConnectState } from './state';
+export type { NrfConnectState } from './state';
 export type { Props as DeviceSelectorProps } from './Device/DeviceSelector/DeviceSelector';
 export type { PaneProps } from './App/App';
 export type { DfuImage } from './Device/initPacket';

@@ -14,10 +14,10 @@ import nrfDeviceLib, {
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../logging';
-import { Device, RootState, TDispatch } from '../state';
+import { RootState, TDispatch } from '../state';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import { DeviceSetup, JprogEntry } from './deviceSetup';
-import { setReadbackProtected } from './deviceSlice';
+import { Device, setReadbackProtected } from './deviceSlice';
 
 const program = (
     deviceId: number,

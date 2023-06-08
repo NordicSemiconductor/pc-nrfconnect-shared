@@ -89,6 +89,7 @@ export {
     selectedDevice,
     getReadbackProtection,
     persistSerialPortOptions,
+    type Device,
 } from './Device/deviceSlice';
 export {
     setWaitForDevice,
@@ -120,7 +121,7 @@ export { openAppWindow } from './OpenApp/openApp';
 
 export type { DropdownItem } from './Dropdown/Dropdown';
 
-export type { Device, NrfConnectState } from './state';
+export type { NrfConnectState } from './state';
 export type { Props as DeviceSelectorProps } from './Device/DeviceSelector/DeviceSelector';
 
 export type { PaneProps } from './App/App';

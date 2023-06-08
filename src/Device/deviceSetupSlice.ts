@@ -6,7 +6,16 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { DeviceSetupState, RootState } from '../state';
+import { RootState } from '../state';
+
+export interface DeviceSetupState {
+    visible: boolean;
+    onUserInput?: (canceled: boolean, choice?: number) => void;
+    message: string;
+    progressMessage?: string;
+    choices?: string[];
+    progress?: number;
+}
 
 const initialState: DeviceSetupState = {
     visible: false,

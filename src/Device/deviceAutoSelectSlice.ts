@@ -6,12 +6,26 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import {
-    Device,
-    DeviceAutoSelectState,
-    RootState,
-    WaitForDevice,
-} from '../state';
+import { RootState } from '../state';
+import { Device } from './deviceSlice';
+
+export interface WaitForDevice {
+    timeout: number;
+    when: 'always' | 'applicationMode' | 'dfuBootLoaderMode' | 'sameTraits';
+    once: boolean;
+    onSuccess?: (device: Device) => void;
+    onFail?: (reason?: string) => void;
+}
+
+export interface DeviceAutoSelectState {
+    autoReselect: boolean;
+    device?: Device;
+    disconnectionTime?: number;
+    waitForDevice?: WaitForDevice;
+    autoReconnectTimeout?: NodeJS.Timeout;
+    lastArrivedDeviceId?: number;
+    arrivedButWrongWhen?: boolean;
+}
 
 const initialState: DeviceAutoSelectState = {
     autoReselect: false,

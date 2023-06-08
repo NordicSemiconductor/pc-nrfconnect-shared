@@ -1,5 +1,6 @@
 import { Device as NrfdlDevice, DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
-import { Device, RootState, TDispatch } from '../state';
+import { RootState, TDispatch } from '../state';
+import { Device } from './deviceSlice';
 /**
  * Wrap the device form nrf-device-lib to make the Device type consistent
  *

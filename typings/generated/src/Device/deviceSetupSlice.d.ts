@@ -1,4 +1,12 @@
-import { DeviceSetupState, RootState } from '../state';
+import { RootState } from '../state';
+export interface DeviceSetupState {
+    visible: boolean;
+    onUserInput?: (canceled: boolean, choice?: number) => void;
+    message: string;
+    progressMessage?: string;
+    choices?: string[];
+    progress?: number;
+}
 export declare const reducer: import("redux").Reducer<DeviceSetupState, import("redux").AnyAction>, openDeviceSetupDialog: import("@reduxjs/toolkit").ActionCreatorWithPayload<{
     onUserInput?: ((canceled: boolean, choice?: number) => void) | undefined;
     message: string;
@@ -9,4 +17,4 @@ export declare const getDeviceSetupProgress: (state: RootState) => number | unde
 export declare const getDeviceSetupMessage: (state: RootState) => string;
 export declare const getDeviceSetupProgressMessage: (state: RootState) => string | undefined;
 export declare const getDeviceSetupChoices: (state: RootState) => string[] | undefined;
-export declare const getDeviceSetupUserInputCallback: (state: RootState) => ((canceled: boolean, choice?: number | undefined) => void) | undefined;
+export declare const getDeviceSetupUserInputCallback: (state: RootState) => ((canceled: boolean, choice?: number) => void) | undefined;

@@ -6,12 +6,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import {
-    ErrorDialog,
-    ErrorMessage,
-    ErrorResolutions,
-    RootState,
-} from '../state';
+import { RootState } from '../state';
 
 const appendIfNew = (messages: ErrorMessage[], message: ErrorMessage) => {
     const messageExists = messages.some(
@@ -22,6 +17,21 @@ const appendIfNew = (messages: ErrorMessage[], message: ErrorMessage) => {
 
     return messageExists ? messages : [...messages, message];
 };
+
+export interface ErrorResolutions {
+    [key: string]: () => void;
+}
+
+export interface ErrorMessage {
+    message: string;
+    detail?: string;
+}
+
+export interface ErrorDialog {
+    isVisible: boolean;
+    messages: ErrorMessage[];
+    errorResolutions?: ErrorResolutions;
+}
 
 const initialState: ErrorDialog = {
     messages: [],

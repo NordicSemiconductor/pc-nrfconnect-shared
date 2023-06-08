@@ -1,5 +1,6 @@
 /// <reference types="node" />
-import { Device, RootState, TDispatch } from '../state';
+import { RootState, TDispatch } from '../state';
+import { Device } from './deviceSlice';
 import { InitPacket } from './initPacket';
 export interface DfuEntry {
     key: string;

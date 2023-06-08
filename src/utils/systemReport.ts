@@ -19,8 +19,8 @@ import {
     getDeviceLibContext,
     getModuleVersion,
 } from '../Device/deviceLibWrapper';
+import { Device } from '../Device/deviceSlice';
 import logger from '../logging';
-import { Device } from '../state';
 import { getAppDataDir } from './appDirs';
 import describeVersion from './describeVersion';
 import { openFile } from './open';

@@ -11,12 +11,13 @@ import fs from 'fs';
 import MemoryMap from 'nrf-intel-hex';
 
 import logger from '../logging';
-import { Device, TDispatch } from '../state';
+import { TDispatch } from '../state';
 import { getAppFile } from '../utils/appDirs';
 import { setWaitForDevice } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import { DeviceSetup, DfuEntry } from './deviceSetup';
 import { openDeviceSetupDialog } from './deviceSetupSlice';
+import { Device } from './deviceSlice';
 import {
     createInitPacketBuffer,
     defaultInitPacket,
