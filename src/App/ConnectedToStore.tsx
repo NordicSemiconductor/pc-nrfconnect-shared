@@ -6,19 +6,13 @@
 
 import React, { ReactNode } from 'react';
 import { Provider } from 'react-redux';
-import { applyMiddleware, createStore, Reducer } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import thunk from 'redux-thunk';
+import { configureStore } from '@reduxjs/toolkit';
+import { Reducer } from 'redux';
 
 import rootReducer from '../rootReducer';
 
 const ifBuiltForDevelopment = <X,>(value: X) =>
     process.env.NODE_ENV === 'development' ? value : undefined;
-
-const composeEnhancers = composeWithDevTools({
-    maxAge: ifBuiltForDevelopment(100),
-    serialize: ifBuiltForDevelopment(true),
-});
 
 export default ({
     appReducer,
@@ -28,10 +22,17 @@ export default ({
     children: ReactNode;
 }) => (
     <Provider
-        store={createStore(
-            rootReducer(appReducer),
-            composeEnhancers(applyMiddleware(thunk))
-        )}
+        store={configureStore({
+            reducer: rootReducer(appReducer),
+            devTools: {
+                maxAge: ifBuiltForDevelopment(100),
+                serialize: ifBuiltForDevelopment(true),
+            },
+            middleware: getDefaultMiddleware =>
+                getDefaultMiddleware({
+                    serializableCheck: false,
+                }),
+        })}
     >
         {children}
     </Provider>
