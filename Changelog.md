@@ -9,11 +9,14 @@ every new version is a new major version.
 
 ## 55 - 2023-06-08
 
+### Added
+
+-   AutoReconnect Mode `WaitForDevice.when` now support an new mode `sameTraits`
+
 ### Changed
 
 -   AutoReconnect Mode `WaitForDevice.when` mode `BootLoaderMode` has been
     renamed to `dfuBootLoaderMode`
--   AutoReconnect Mode `WaitForDevice.when` now support an new mode `sameTraits`
 
 ### Steps to upgrade when using this package
 
