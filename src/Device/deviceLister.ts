@@ -262,7 +262,9 @@ export const startWatchingDevices =
                                         hasSameDeviceTraits(
                                             device.traits,
                                             selectedDevice.traits
-                                        ))
+                                        )) ||
+                                    (typeof waitForDevice.when === 'function' &&
+                                        waitForDevice.when(device))
                                 ) {
                                     dispatch(
                                         setLastArrivedDeviceId(
