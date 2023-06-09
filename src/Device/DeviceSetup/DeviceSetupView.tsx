@@ -10,7 +10,6 @@ import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Dialog, DialogButton } from '../../Dialog/Dialog';
-import { Group } from '../../SidePanel/Group';
 import {
     deviceSetupUserInputReceived,
     getDeviceSetupChoices,
@@ -41,22 +40,24 @@ export default () => {
                 headerIcon=""
             />
             <Dialog.Body>
-                <Group>
+                <Form.Group>
                     <div>{message}</div>
-                    {choices && (
-                        <Form.Group>
-                            {choices.map((choice, index) => (
-                                <Form.Check
-                                    key={choice}
-                                    name="radioGroup"
-                                    type="radio"
-                                    disabled={isInProgress}
-                                    onClick={() => setSelectedChoices(index)}
-                                    label={choice}
-                                />
-                            ))}
-                        </Form.Group>
-                    )}
+                </Form.Group>
+                {choices && (
+                    <Form.Group>
+                        {choices.map((choice, index) => (
+                            <Form.Check
+                                key={choice}
+                                name="radioGroup"
+                                type="radio"
+                                disabled={isInProgress}
+                                onClick={() => setSelectedChoices(index)}
+                                label={choice}
+                            />
+                        ))}
+                    </Form.Group>
+                )}
+                <Form.Group>
                     {progressMessage !== undefined && (
                         <Form.Label>
                             <strong>Status:</strong>
@@ -66,7 +67,7 @@ export default () => {
                     {progress !== undefined && (
                         <ProgressBar now={progress} style={{ height: '4px' }} />
                     )}
-                </Group>
+                </Form.Group>
             </Dialog.Body>
             <Dialog.Footer>
                 <DialogButton
