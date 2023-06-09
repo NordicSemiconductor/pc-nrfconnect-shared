@@ -3,7 +3,7 @@ import type { RootState } from '../store';
 import type { Device } from './deviceSlice';
 export interface WaitForDevice {
     timeout: number;
-    when: 'always' | 'applicationMode' | 'dfuBootLoaderMode' | 'sameTraits';
+    when: 'always' | 'applicationMode' | 'dfuBootLoaderMode' | 'sameTraits' | ((device: Device) => boolean);
     once: boolean;
     onSuccess?: (device: Device) => void;
     onFail?: (reason?: string) => void;
