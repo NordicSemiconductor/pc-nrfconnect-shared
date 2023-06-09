@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { Device as DeviceProps } from '../../../state';
+import { Device as DeviceProps } from '../../deviceSlice';
 import './broken-device.scss';
 declare const _default: ({ device }: {
     device: DeviceProps;

@@ -29,7 +29,7 @@
 */
 
 import logger from '../../logging';
-import { Device, DeviceInfo } from '../../state';
+import { Device } from '../deviceSlice';
 
 import nrf51logo from '!!@svgr!./nRF51-Series-logo.svg';
 import nrf52logo from '!!@svgr!./nRF52-Series-logo.svg';
@@ -53,6 +53,16 @@ type DevicePCA =
     | 'PCA20020'
     | 'PCA20035'
     | 'PCA10143';
+
+interface DeviceInfo {
+    name?: string | null;
+    cores?: number;
+    icon: React.ElementType;
+    website: {
+        productPagePath?: string;
+        buyOnlineParams?: string;
+    };
+}
 
 const devicesByPca: { [P in DevicePCA]: DeviceInfo } = {
     PCA10028: {

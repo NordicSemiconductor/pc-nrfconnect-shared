@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Device } from '../../../state';
+import { Device } from '../../deviceSlice';
 import './edit-device-buttons.scss';
 interface Props {
     device: Device;

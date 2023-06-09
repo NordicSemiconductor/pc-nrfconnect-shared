@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { Device } from '../../../state';
+import { Device } from '../../deviceSlice';
 export declare const AnimatedList: FC<{
     children: ReactNode;
     devices: Device[];

@@ -1,4 +1,4 @@
-import { RootState } from '../state';
+import type { RootState } from '../store';
 export interface Shortcut {
     hotKey: string[] | string;
     title: string;

@@ -11,7 +11,7 @@ import nrfDeviceLib, {
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../logging';
-import { Device, RootState, TDispatch, WaitForDevice } from '../state';
+import type { AppDispatch, RootState } from '../store';
 import {
     clearWaitForDevice,
     clearWaitForDeviceTimeout,
@@ -19,10 +19,11 @@ import {
     setDisconnectedTime,
     setLastArrivedDeviceId,
     setWaitForDeviceTimeout,
+    WaitForDevice,
 } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import { closeDeviceSetupDialog } from './deviceSetupSlice';
-import { addDevice, removeDevice, setDevices } from './deviceSlice';
+import { addDevice, Device, removeDevice, setDevices } from './deviceSlice';
 import { isDeviceInDFUBootloader } from './sdfuOperations';
 
 let autoSelectDeviceCLISerialUsed = false;
@@ -72,7 +73,7 @@ const shouldAutoReselect = (
 
 const initAutoReconnectTimeout =
     (onTimeout: () => void, waitForDevice?: WaitForDevice) =>
-    (dispatch: TDispatch) => {
+    (dispatch: AppDispatch) => {
         const timeout = waitForDevice?.timeout;
         if (timeout == null) return;
 
@@ -148,7 +149,7 @@ export const startWatchingDevices =
         onDeviceDeselected: () => void,
         doSelectDevice: (device: Device, autoReselected: boolean) => void
     ) =>
-    async (dispatch: TDispatch, getState: () => RootState) => {
+    async (dispatch: AppDispatch, getState: () => RootState) => {
         const updateDeviceList = (event: HotplugEvent) => {
             const removeDeviceFromList = (remove: Device) => {
                 if (

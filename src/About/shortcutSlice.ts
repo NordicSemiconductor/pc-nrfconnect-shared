@@ -7,7 +7,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { enableMapSet } from 'immer';
 
-import { RootState } from '../state';
+import type { RootState } from '../store';
 
 enableMapSet();
 

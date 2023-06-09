@@ -1,4 +1,16 @@
-import { ErrorDialog, ErrorMessage, ErrorResolutions, RootState } from '../state';
+import type { RootState } from '../store';
+export interface ErrorResolutions {
+    [key: string]: () => void;
+}
+export interface ErrorMessage {
+    message: string;
+    detail?: string;
+}
+export interface ErrorDialog {
+    isVisible: boolean;
+    messages: ErrorMessage[];
+    errorResolutions?: ErrorResolutions;
+}
 export declare const reducer: import("redux").Reducer<ErrorDialog, import("redux").AnyAction>, hideDialog: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"errorDialog/hideDialog">, showDialog: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[message: string, errorResolutions?: ErrorResolutions | undefined, detail?: string | undefined], {
     message: {
         message: string;

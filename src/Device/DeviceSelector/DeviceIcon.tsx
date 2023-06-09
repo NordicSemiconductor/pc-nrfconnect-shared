@@ -6,8 +6,8 @@
 
 import React, { FC } from 'react';
 
-import { Device } from '../../state';
 import { deviceInfo } from '../deviceInfo/deviceInfo';
+import { Device } from '../deviceSlice';
 
 import './device-icon.scss';
 
