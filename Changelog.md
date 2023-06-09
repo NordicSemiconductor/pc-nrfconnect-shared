@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 56 - 2023-06-09
+
+### Changed
+
+-   Device setup progress bar style
+
 ## 55 - 2023-06-08
 
 ### Added

@@ -64,11 +64,7 @@ export default () => {
                         </Form.Label>
                     )}
                     {progress !== undefined && (
-                        <ProgressBar
-                            now={progress}
-                            animated
-                            label={`${progress}%`}
-                        />
+                        <ProgressBar now={progress} style={{ height: '4px' }} />
                     )}
                 </Group>
             </Dialog.Body>
