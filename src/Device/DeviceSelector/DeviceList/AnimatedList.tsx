@@ -7,7 +7,7 @@
 import React, { FC, ReactNode } from 'react';
 import { Flipped, Flipper, spring } from 'react-flip-toolkit';
 
-import { Device } from '../../../state';
+import { Device } from '../../deviceSlice';
 
 const changesOnReorder = (devices: Device[]) =>
     devices.map(device => device.serialNumber).join('\n');

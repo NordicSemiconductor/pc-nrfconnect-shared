@@ -4,9 +4,14 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import rootReducer from '../src/rootReducer';
+import { combineReducers, Reducer } from 'redux';
+
+import { rootReducerSpec } from '../src/store';
 import dispatchTo from './dispatchTo';
 import { testRendererForApps } from './testrenderer';
+
+const rootReducer = <AppState>(appReducer?: Reducer<AppState>) =>
+    combineReducers(rootReducerSpec(appReducer));
 
 export const testUtils = {
     dispatchTo,

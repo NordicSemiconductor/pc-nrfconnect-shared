@@ -1,4 +1,10 @@
-import { AppLayout, RootState } from '../state';
+import type { RootState } from '../store';
+export interface AppLayout {
+    isSidePanelVisible: boolean;
+    isLogVisible: boolean;
+    currentPane: number;
+    paneNames: string[];
+}
 interface PaneSpec {
     name: string;
     Main: unknown;

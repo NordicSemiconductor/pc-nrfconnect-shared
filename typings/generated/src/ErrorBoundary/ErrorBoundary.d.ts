@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Device } from '../state';
+import { Device } from '../Device/deviceSlice';
 import './error-boundary.scss';
 interface Props {
     children: ReactNode;

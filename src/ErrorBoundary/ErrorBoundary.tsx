@@ -9,9 +9,9 @@ import { Spinner } from 'react-bootstrap';
 import { getCurrentWindow } from '@electron/remote';
 
 import Button from '../Button/Button';
+import { Device } from '../Device/deviceSlice';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { CollapsibleGroup } from '../SidePanel/Group';
-import { Device } from '../state';
 import { openUrl } from '../utils/open';
 import packageJson from '../utils/packageJson';
 import { getAppSpecificStore as store } from '../utils/persistentStore';

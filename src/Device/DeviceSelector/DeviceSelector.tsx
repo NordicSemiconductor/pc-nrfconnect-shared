@@ -8,7 +8,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
-import { Device } from '../../state';
 import useHotKey from '../../utils/useHotKey';
 import {
     clearWaitForDevice,
@@ -20,6 +19,7 @@ import { DeviceSetupConfig, setupDevice } from '../deviceSetup';
 import DeviceSetupView from '../DeviceSetup/DeviceSetupView';
 import {
     deselectDevice,
+    Device,
     deviceIsSelected as deviceIsSelectedSelector,
     selectDevice,
     selectedSerialNumber,

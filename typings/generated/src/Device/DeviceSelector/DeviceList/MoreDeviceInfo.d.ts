@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { Device } from '../../../state';
+import { Device } from '../../deviceSlice';
 import './more-device-info.scss';
 declare const _default: ({ device }: {
     device: Device;

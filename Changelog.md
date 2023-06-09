@@ -12,6 +12,10 @@ every new version is a new major version.
 ### Changed
 
 -   Device setup progress bar style
+-   The internal handling of the Redux store shaped was changed. Because apps
+    should not make any assumptions about that, this should not break any apps
+    that only go through the API. If it still breaks something, feel free to
+    reach out to Marko. :-)
 
 ## 55 - 2023-06-08
 

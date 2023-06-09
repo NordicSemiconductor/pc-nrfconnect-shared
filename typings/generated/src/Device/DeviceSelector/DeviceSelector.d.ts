@@ -1,7 +1,7 @@
 /// <reference types="react" />
 import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
-import { Device } from '../../state';
 import { DeviceSetupConfig } from '../deviceSetup';
+import { Device } from '../deviceSlice';
 interface OutdatedDeviceTraits {
     serialPort?: boolean;
     serialport?: boolean;

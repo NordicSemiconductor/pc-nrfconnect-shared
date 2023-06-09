@@ -1,4 +1,4 @@
-import { TDispatch } from '../state';
+import { AppDispatch } from '../store';
 /**
  * Starts syncing to new log entries from the application's log buffer.
  * Incoming entries are added to the state, so that they can be displayed
@@ -7,5 +7,5 @@ import { TDispatch } from '../state';
  * @param {function} dispatch The redux dispatch function.
  * @returns {function(*)} Function that stops the listener.
  */
-declare const _default: (dispatch: TDispatch) => () => void;
+declare const _default: (dispatch: AppDispatch) => () => void;
 export default _default;

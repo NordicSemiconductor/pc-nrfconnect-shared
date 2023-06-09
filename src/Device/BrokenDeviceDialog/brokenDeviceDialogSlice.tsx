@@ -6,7 +6,13 @@
 
 import { createSlice } from '@reduxjs/toolkit';
 
-import { BrokenDeviceDialog, RootState } from '../../state';
+import type { RootState } from '../../store';
+
+export interface BrokenDeviceDialog {
+    isVisible: boolean;
+    description: string;
+    url: string;
+}
 
 const initialState: BrokenDeviceDialog = {
     isVisible: false,

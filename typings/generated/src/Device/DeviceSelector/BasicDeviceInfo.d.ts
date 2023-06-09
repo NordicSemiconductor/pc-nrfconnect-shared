@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Device } from '../../state';
+import { Device } from '../deviceSlice';
 import './basic-device-info.scss';
 interface BasicDeviceProps {
     device: Device;

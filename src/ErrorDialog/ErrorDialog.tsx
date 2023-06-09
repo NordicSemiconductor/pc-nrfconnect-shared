@@ -9,8 +9,8 @@ import ReactMarkdown from 'react-markdown';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Dialog, DialogButton } from '../Dialog/Dialog';
-import { ErrorMessage } from '../state';
 import {
+    ErrorMessage,
     errorResolutions as errorResolutionsSelector,
     hideDialog,
     isVisible as isVisibleSelector,
