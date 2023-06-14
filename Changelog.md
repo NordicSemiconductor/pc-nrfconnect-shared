@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 58 - 2023-06-14
+
+### Changed
+
+-   Opening port with error `FAILED_DIFFERENT_SETTINGS` will now log a warning
+    not error
+
 ## 57 - 2023-06-09
 
 ### Added

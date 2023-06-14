@@ -122,9 +122,15 @@ export const createSerialPort = async (
     const error = await openWithRetries(3);
 
     if (error) {
-        logger.error(
-            `Failed to connect to port: ${path}. Make sure the port is not already taken, if you are not sure, try to power cycle the device and try to connect again.`
-        );
+        if (error.includes('FAILED_DIFFERENT_SETTINGS')) {
+            logger.warn(
+                `Failed to connect to port: ${path}. Port is open with different settings.`
+            );
+        } else {
+            logger.error(
+                `Failed to connect to port: ${path}. Make sure the port is not already taken, if you are not sure, try to power cycle the device and try to connect again.`
+            );
+        }
         throw new Error(error);
     } else {
         logger.info(`Opened port with options: ${JSON.stringify(options)}`);
