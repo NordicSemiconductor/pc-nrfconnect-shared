@@ -43,6 +43,7 @@ import VisibilityBar from './VisibilityBar';
 
 import './app.scss';
 import './shared.scss';
+import './tailwind.css';
 
 type LegacyPane = [string, FC];
 let warnedAboutLegacyPanes = false;
