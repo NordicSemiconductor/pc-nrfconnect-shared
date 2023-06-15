@@ -33,6 +33,8 @@ const sharedStore = new Store<{
     name: 'pc-nrfconnect-shared',
 });
 
+/* These nicknames are also read by the VS Code extension,
+  so changing e.g. the keys here would break the usage there. */
 export const persistNickname = (serialNumber: string, nickname: string) =>
     sharedStore.set(`${serialNumber}.name`, nickname);
 export const getPersistedNickname = (serialNumber: string) =>
