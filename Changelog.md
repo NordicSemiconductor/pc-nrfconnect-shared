@@ -7,6 +7,16 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 59 - 2023-06-16
+
+### Added
+
+-   `StartStopButton` added new optional property `showIcon`
+
+### Fixed
+
+-   `StartSop` button `large` false not working
+
 ## 58 - 2023-06-14
 
 ### Changed
