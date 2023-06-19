@@ -14,6 +14,15 @@ every new version is a new major version.
 -   FeedbackPane: Change **Platform** to **Operating system**, and remove the
     link, which opened nodejs documentation.
 
+### Removed
+
+-   Support for `LegacyPane`
+
+### Steps to upgrade when using this package
+
+-   Replace all instances of `LegacyPane` with `Pane` in the `panes` property of
+    `App`.
+
 ## 59 - 2023-06-16
 
 ### Added
