@@ -4,38 +4,17 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
-import { bool, func } from 'prop-types';
 
 import PseudoButton from '../../../PseudoButton/PseudoButton';
-import { Device as DeviceProps } from '../../../state';
 import { showDialog } from '../../BrokenDeviceDialog/brokenDeviceDialogSlice';
+import { Device as DeviceProps } from '../../deviceSlice';
 import BasicDeviceInfo from '../BasicDeviceInfo';
 
 import './broken-device.scss';
 
-const ShowMoreInfo: FC<{ isVisible: boolean; toggleVisible: () => void }> = ({
-    isVisible,
-    toggleVisible,
-}) => (
-    <PseudoButton
-        className={`show-more mdi mdi-chevron-${isVisible ? 'up' : 'down'}`}
-        testId="show-more-device-info"
-        onClick={toggleVisible}
-    />
-);
-
-ShowMoreInfo.propTypes = {
-    isVisible: bool.isRequired,
-    toggleVisible: func.isRequired,
-};
-
-interface Props {
-    device: DeviceProps;
-}
-
-const Device: FC<Props> = ({ device }) => {
+export default ({ device }: { device: DeviceProps }) => {
     const dispatch = useDispatch();
 
     return (
@@ -53,5 +32,3 @@ const Device: FC<Props> = ({ device }) => {
         </PseudoButton>
     );
 };
-
-export default Device;

@@ -8,33 +8,30 @@ import React, { useContext, useRef } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import AccordionContext from 'react-bootstrap/AccordionContext';
 import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
-import { bool, func, string } from 'prop-types';
 
 import PseudoButton from '../PseudoButton/PseudoButton';
 import classNames from '../utils/classNames';
 
 import './group.scss';
 
-const Heading: React.FC<{
-    label?: string;
-    title?: string;
-}> = ({ label, title }) =>
+const Heading = ({ label, title }: { label?: string; title?: string }) =>
     label == null ? null : (
         <h2 className="heading" title={title}>
             {label}
         </h2>
     );
-Heading.propTypes = {
-    label: string,
-    title: string,
-};
 
-const ContextAwareToggle: React.FC<{
+const ContextAwareToggle = ({
+    heading,
+    title,
+    eventKey,
+    onToggled,
+}: {
     heading: string;
     title?: string;
     eventKey: string;
     onToggled?: ((isNowExpanded: boolean) => void) | null;
-}> = ({ heading, title, eventKey, onToggled }) => {
+}) => {
     const currentEventKey = useContext(AccordionContext);
     const isCurrentEventKey = currentEventKey === eventKey;
     const decoratedOnClick = useAccordionToggle(
@@ -52,26 +49,21 @@ const ContextAwareToggle: React.FC<{
         </PseudoButton>
     );
 };
-ContextAwareToggle.propTypes = {
-    heading: string.isRequired,
-    title: string,
-    eventKey: string.isRequired,
-    onToggled: func,
-};
 
-export const CollapsibleGroup: React.FC<{
-    className?: string;
-    heading: string;
-    title?: string;
-    defaultCollapsed?: boolean | null;
-    onToggled?: ((isNowExpanded: boolean) => void) | null;
-}> = ({
+export const CollapsibleGroup = ({
     className = '',
     heading,
     title,
     children = null,
     defaultCollapsed = true,
     onToggled,
+}: {
+    className?: string;
+    heading: string;
+    title?: string;
+    children?: React.ReactNode;
+    defaultCollapsed?: boolean | null;
+    onToggled?: ((isNowExpanded: boolean) => void) | null;
 }) => {
     const eventKey = useRef(Math.random().toString());
 
@@ -96,26 +88,19 @@ export const CollapsibleGroup: React.FC<{
     );
 };
 
-CollapsibleGroup.propTypes = {
-    className: string,
-    heading: string.isRequired,
-    title: string,
-    defaultCollapsed: bool,
-    onToggled: func,
-};
-
-export const Group: React.FC<{
+export const Group = ({
+    className = '',
+    heading,
+    title,
+    children,
+}: {
     className?: string;
     heading?: string;
     title?: string;
-}> = ({ className = '', heading, title, children }) => (
+    children?: React.ReactNode;
+}) => (
     <div className={`sidepanel-group ${className}`}>
         <Heading label={heading} title={title} />
         <div className="body">{children}</div>
     </div>
 );
-Group.propTypes = {
-    className: string,
-    heading: string,
-    title: string,
-};

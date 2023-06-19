@@ -1,15 +1,16 @@
-/// <reference types="react" />
+import React from 'react';
 export interface DropdownItem {
-    label: string;
+    label: React.ReactNode;
     value: string;
 }
 export interface DropdownProps {
-    label?: string;
+    id?: string;
+    label?: React.ReactNode;
     items: DropdownItem[];
     onSelect: (item: DropdownItem) => void;
     disabled?: boolean;
     selectedItem: DropdownItem;
     numItemsBeforeScroll?: number;
 }
-declare const _default: ({ label, items, onSelect, disabled, selectedItem, numItemsBeforeScroll, }: DropdownProps) => JSX.Element;
+declare const _default: ({ id, label, items, onSelect, disabled, selectedItem, numItemsBeforeScroll, }: DropdownProps) => JSX.Element;
 export default _default;

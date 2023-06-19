@@ -4,11 +4,15 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import type {
+    Device as NrfdlDevice,
+    SerialPort,
+} from '@nordicsemiconductor/nrf-device-lib-js';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 import { SerialPortOpenOptions } from 'serialport';
 
-import { Device, DeviceState, RootState } from '../state';
+import type { RootState } from '../store';
 import {
     getPersistedIsFavorite,
     getPersistedNickname,
@@ -17,6 +21,16 @@ import {
     persistNickname,
     persistSerialPortSettings as persistSerialPortSettingsToStore,
 } from '../utils/persistentStore';
+
+export interface Device extends NrfdlDevice {
+    serialNumber: string;
+    boardVersion?: string;
+    nickname?: string;
+    serialport?: SerialPort;
+    favorite?: boolean;
+    id: number;
+    persistedSerialPortOptions?: SerialPortOpenOptions<AutoDetectTypes>;
+}
 
 const updateDevice = (
     state: DeviceState,
@@ -29,19 +43,18 @@ const updateDevice = (
     }
 };
 
-const noDialogShown = {
-    isSetupDialogVisible: false,
-    setupDialogText: null,
-    setupDialogChoices: [],
-};
+export interface DeviceState {
+    devices: Map<string, Device>;
+    deviceInfo: Device | null;
+    selectedSerialNumber: string | null;
+    readbackProtection: 'unknown' | 'protected' | 'unprotected';
+}
 
 const initialState: DeviceState = {
     devices: new Map(),
     selectedSerialNumber: null,
     deviceInfo: null,
-    isSetupWaitingForUserInput: false,
     readbackProtection: 'unknown',
-    ...noDialogShown,
 };
 
 const setPersistedData = (device: Device) => {
@@ -91,61 +104,6 @@ const slice = createSlice({
             state.readbackProtection = 'unknown';
         },
 
-        /*
-         * Indicates that device setup is complete. This means that the device is
-         * ready for use according to the `config.deviceSetup` configuration provided
-         * by the app.
-         */
-        deviceSetupComplete: (state, action: PayloadAction<Device>) => ({
-            ...state,
-            ...noDialogShown,
-            deviceInfo: action.payload,
-        }),
-
-        /*
-         * Indicates that device setup failed.
-         */
-        deviceSetupError: state => ({
-            ...state,
-            ...noDialogShown,
-        }),
-
-        /*
-         * Indicates that some part of the device setup operation requires input
-         * from the user. When the user has provided the required input, then
-         * DEVICE_SETUP_INPUT_RECEIVED is dispatched with the given input.
-         */
-        deviceSetupInputRequired: {
-            reducer: (
-                state,
-                action: PayloadAction<{ message: string; choices: string[] }>
-            ) => ({
-                ...state,
-                isSetupDialogVisible: true,
-                isSetupWaitingForUserInput: true,
-                setupDialogText: action.payload.message,
-                setupDialogChoices:
-                    action.payload.choices == null
-                        ? []
-                        : [...action.payload.choices],
-            }),
-            prepare: (message: string, choices: string[]) => ({
-                payload: {
-                    message,
-                    choices,
-                },
-            }),
-        },
-
-        /*
-         * Indicates that the user has provided input to the device setup operation.
-         * This action is dispatched after DEVICE_SETUP_INPUT_REQUIRED.
-         *
-         */
-        deviceSetupInputReceived: state => {
-            state.isSetupWaitingForUserInput = false;
-        },
-
         setDevices: (state, action: PayloadAction<Device[]>) => {
             state.devices.clear();
             action.payload.forEach(device => {
@@ -179,6 +137,7 @@ const slice = createSlice({
                 );
 
                 if (vComIndex !== undefined && vComIndex !== -1) {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- used to filter out the path property
                     const { path: _, ...serialPortOptions } = action.payload;
 
                     persistSerialPortSettingsToStore(
@@ -243,10 +202,6 @@ const slice = createSlice({
             });
         },
 
-        closeSetupDialogVisible: state => {
-            state.isSetupDialogVisible = false;
-        },
-
         setReadbackProtected: (
             state,
             action: PayloadAction<DeviceState['readbackProtection']>
@@ -260,10 +215,6 @@ export const {
     reducer,
     actions: {
         deselectDevice,
-        deviceSetupComplete,
-        deviceSetupError,
-        deviceSetupInputReceived,
-        deviceSetupInputRequired,
         resetDeviceNickname,
         selectDevice,
         addDevice,
@@ -271,7 +222,6 @@ export const {
         setDevices,
         setDeviceNickname,
         toggleDeviceFavorited,
-        closeSetupDialogVisible,
         setReadbackProtected,
         persistSerialPortOptions,
     },

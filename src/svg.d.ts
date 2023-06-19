@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-declare module '!!@svgr/webpack!*.svg' {
+declare module '!!@svgr!*.svg' {
     const svg: React.ElementType;
     export default svg;
 }

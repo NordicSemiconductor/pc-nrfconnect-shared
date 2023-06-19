@@ -16,7 +16,6 @@ import {
     Logo,
     NumberInlineInput,
     Slider,
-    Spinner,
     StartStopButton,
     StateSelector,
     Stepper,
@@ -81,7 +80,6 @@ export default () => {
             </ConfirmationDialog>
 
             <h1>Spinner</h1>
-            <Spinner />
 
             <h1>Drowdown</h1>
 

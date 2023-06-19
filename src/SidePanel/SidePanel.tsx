@@ -5,18 +5,15 @@
  */
 
 import React from 'react';
-import { string } from 'prop-types';
 
 import './sidepanel.scss';
 
-const SidePanel: React.FC<{
+const SidePanel = ({
+    children,
+    className = '',
+}: {
+    children?: React.ReactNode;
     className?: string;
-}> = ({ children, className = '' }) => (
-    <div className={`core19-side-panel ${className}`}>{children}</div>
-);
-
-SidePanel.propTypes = {
-    className: string,
-};
+}) => <div className={`core19-side-panel ${className}`}>{children}</div>;
 
 export default SidePanel;

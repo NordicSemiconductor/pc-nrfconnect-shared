@@ -1,7 +1,7 @@
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Reducer } from 'redux';
-declare const ConnectedToStore: FC<{
-    appReducer?: Reducer;
+declare const _default: ({ appReducer, children, }: {
+    appReducer?: Reducer<any, import("redux").AnyAction> | undefined;
     children: ReactNode;
-}>;
-export default ConnectedToStore;
+}) => JSX.Element;
+export default _default;

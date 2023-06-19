@@ -33,6 +33,8 @@ const sharedStore = new Store<{
     name: 'pc-nrfconnect-shared',
 });
 
+/* These nicknames are also read by the VS Code extension,
+  so changing e.g. the keys here would break the usage there. */
 export const persistNickname = (serialNumber: string, nickname: string) =>
     sharedStore.set(`${serialNumber}.name`, nickname);
 export const getPersistedNickname = (serialNumber: string) =>
@@ -114,11 +116,17 @@ interface SharedAppSpecificStoreSchema {
 export const getAppSpecificStore = <
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     StoreSchema extends Record<string, any>
->() => {
+>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    options?: Store.Options<any>
+) => {
     if (appSpecificStore == null) {
         appSpecificStore = new Store({
             name: packageJson().name,
             clearInvalidConfig: true,
+            // @ts-expect-error `electron-store` assumes the app is the version of the launcher, override this to be the same as the app version
+            projectVersion: packageJson().version,
+            ...options,
         });
     }
 

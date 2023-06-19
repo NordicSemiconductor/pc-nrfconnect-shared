@@ -1,14 +1,16 @@
 import React from 'react';
 import './group.scss';
-export declare const CollapsibleGroup: React.FC<{
-    className?: string;
+export declare const CollapsibleGroup: ({ className, heading, title, children, defaultCollapsed, onToggled, }: {
+    className?: string | undefined;
     heading: string;
-    title?: string;
-    defaultCollapsed?: boolean | null;
-    onToggled?: ((isNowExpanded: boolean) => void) | null;
-}>;
-export declare const Group: React.FC<{
-    className?: string;
-    heading?: string;
-    title?: string;
-}>;
+    title?: string | undefined;
+    children?: React.ReactNode;
+    defaultCollapsed?: boolean | null | undefined;
+    onToggled?: ((isNowExpanded: boolean) => void) | null | undefined;
+}) => JSX.Element;
+export declare const Group: ({ className, heading, title, children, }: {
+    className?: string | undefined;
+    heading?: string | undefined;
+    title?: string | undefined;
+    children?: React.ReactNode;
+}) => JSX.Element;

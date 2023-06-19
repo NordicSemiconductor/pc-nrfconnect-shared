@@ -7,12 +7,11 @@
 import React, { FC, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Device as DeviceProps } from '../../../state';
 import { Toggle } from '../../../Toggle/Toggle';
 import classNames from '../../../utils/classNames';
 import { getAutoReselect, setAutoReselect } from '../../deviceAutoSelectSlice';
 import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
-import { getDevices } from '../../deviceSlice';
+import { Device as DeviceProps, getDevices } from '../../deviceSlice';
 import { AnimatedItem, AnimatedList } from './AnimatedList';
 import BrokenDevice from './BrokenDevice';
 import Device from './Device';

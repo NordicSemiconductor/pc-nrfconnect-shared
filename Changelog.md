@@ -7,6 +7,377 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 59 - 2023-06-16
+
+### Added
+
+-   `StartStopButton` added new optional property `showIcon`
+
+### Fixed
+
+-   `StartSop` button `large` false not working
+
+## 58 - 2023-06-14
+
+### Changed
+
+-   Opening port with error `FAILED_DIFFERENT_SETTINGS` will now log a warning
+    not error
+
+## 57 - 2023-06-09
+
+### Added
+
+-   AutoReconnect Mode `WaitForDevice.when` now support an new mode a custom
+    function for more flexibility
+
+## 56 - 2023-06-09
+
+### Changed
+
+-   Device setup progress bar style
+-   The internal handling of the Redux store shaped was changed. Because apps
+    should not make any assumptions about that, this should not break any apps
+    that only go through the API. If it still breaks something, feel free to
+    reach out to Marko. :-)
+
+## 55 - 2023-06-08
+
+### Added
+
+-   AutoReconnect Mode `WaitForDevice.when` now support an new mode `sameTraits`
+
+### Changed
+
+-   AutoReconnect Mode `WaitForDevice.when` mode `BootLoaderMode` has been
+    renamed to `dfuBootLoaderMode`
+
+### Steps to upgrade when using this package
+
+-   Replace all instances of `BootLoaderMode` to `dfuBootLoaderMode` in all
+    `WaitForDevice.when`
+
+## 54 - 2023-06-05
+
+### Removed
+
+-   `react-dom` is no longer listed as an external package due to launcher
+    requiring it for bundling.
+
+## 53 - 2023-06-05
+
+### Added
+
+-   `Toggle` parameter `label` now allows React.ReactNode.
+-   `StartStop` parameter `startText` now allows React.ReactNode.
+-   `StartStop` parameter `stopText` now allows React.ReactNode.
+
+## 52 - 2023-06-02
+
+### Changed
+
+-   Error dialog: If there are multiple errors, state so more clearly.
+-   Error dialog: Add the option to provide details to each error. To use this,
+    pass a third parameter to the action creator
+    `ErrorDialogActions.showDialog`.
+
+## 51 - 2023-05-31
+
+### Added
+
+-   `Dropdown` parameter `label` now allows React.ReactNode.
+
+## 50 - 2023-05-30
+
+### Fixed
+
+-   `dialog` text wrapping opts to keep words as whole of possible.
+
+## 49 - 2023-05-30
+
+### Fixed
+
+-   `dialog` body text can now wrap and not overflow.
+
+## 48 - 2023-05-30
+
+### Added
+
+-   `DropdownItem` parameter `label` now allows React.ReactNode.
+
+## 47 - 2023-05-22
+
+### Added
+
+-   `needSerialport` parameter for `jprogDeviceSetup` and `sdfuDeviceSetup`.
+-   Optional `confirmMessage` to `DeviceSetup`
+-   Optional `choiceMessage` to `DeviceSetup`
+-   `react-dom` is now listed as an external package.
+
+### Changed
+
+-   `IDeviceSetup` renamed to `DeviceSetup`
+-   `DeviceSetup` renamed to `DeviceSetupConfig`
+
+### Removed
+
+-   `needSerialport` property from `DeviceSetup`.
+-   `releaseCurrentDevice` callback from `DeviceSelector`.
+
+### Steps to upgrade when using this package
+
+-   `needSerialport` has been removed from `IDeviceSetup`. If needed, it should
+    be placed into the `supportsProgrammingMode` callback or can be passed as a
+    parameter to the `jprogDeviceSetup` or `sdfuDeviceSetup` wrappers.
+-   Replace type `DeviceSetup` with `DeviceSetupConfig`
+-   Replace type `IDeviceSetup` with `DeviceSetup`
+
+## 46 - 2023-05-19
+
+### Added
+
+-   Progress bar to device setup dialog
+-   `prepareDevice` function is now and can be used to program devices on demand
+-   Custom device setups can be now done by implementing `IDeviceSetup` and
+    passing it as the `deviceSetup` array in `DeviceSetup`
+
+### Changed
+
+-   FeedbackPane headers is now 14px, similar to all text, but is bold.
+-   FeedbackPane Buttons are moved to the bottom right corner, from bottom left.
+-   API for device Setup has been reworked
+-   `switchToBootloaderMode` no longer take dispatch as a parameter and it is
+    directly dispatch-able
+-   `switchToApplicationMode` no longer take dispatch as a parameter and it is
+    directly dispatch-able
+
+### Steps to upgrade when using this package
+
+-   Device Setup no longer accepts dfu and jprog instead deviceSetups are to be
+    used. Examples:
+    -   To replace dfu look at this example:
+        `dfu: { pca10059: { application: getAppFile('fw/rssi-10059.hex'), semver: 'rssi_cdc_acm 2.0.0+dfuMay-22-2018-10-43-22', params: {}, }, }`
+        is to be replaced by:
+        `sdfuDeviceSetup([ { key: 'pca10059', application: getAppFile('fw/rssi-10059.hex'), semver: 'rssi_cdc_acm 2.0.0+dfuMay-22-2018-10-43-22', params: {}, }, ])`
+    -   To replace jprog look at this example:
+        `jprog: { nrf52_family: { fw: getAppFile('fw/rssi-10040.hex'), fwVersion: 'rssi-fw-1.0.0', fwIdAddress: 0x2000, }, }`
+        is to be replaced by:
+        `jprogDeviceSetup([ { key: 'nrf52_family', fw: getAppFile('fw/rssi-10040.hex'), fwVersion: 'rssi-fw-1.0.0', fwIdAddress: 0x2000, }, ])`
+-   `switchToBootloaderMode` remove the second parameter `dispatch` and call
+    this function using the dispatch function i.e
+    `dispatch(switchToBootloaderMode(...`
+-   `switchToApplicationMode ` remove the second parameter `dispatch` and call
+    this function using the dispatch function i.e
+    `dispatch(switchToApplicationMode(...`
+
+## 45 - 2023-05-09
+
+### Fixed
+
+-   useStopwatch unmount clean up
+
+### Changed
+
+-   StateSelector property `items` now allows {key: string , renderItem:
+    React.ReactElement} as content in addition to string
+-   StateSelector property `selectedItem` now allows {key: string , renderItem:
+    React.ReactElement} as content in addition to string
+
+## 44 - 2023-05-05
+
+### Fixed
+
+-   Feedback pane link to Nordiv DevZone did not open in the browser.
+-   Properly update package version when running the prepare script on windows.
+
+### Changed
+
+-   Persistent store now allows to send more options to the internal store.
+
+## 43 - 2023-05-05
+
+### Changed
+
+-   Use the new property from launcher ipc to determine the app path. This is
+    used for logging when the application starts up.
+
+## 42 - 2023-05-04
+
+### Changed
+
+-   Updated `swc/core`. This was done to fix issues related to npm run check
+    resulting in Error: @swc/core threw an error when attempting to validate swc
+    compiler option. You may be using an old version of swc which does not
+    support the options used by ts-node.
+
+## 41 - 2023-05-03
+
+### Changed
+
+-   Updated `eslint-plugin-simple-import-sort`. This might lead to linting
+    errors but they should be resolvable automatically by running autofix on
+    them.
+
+### Fixed
+
+-   `ConflictingSettingsDialog` displayed wrong app name in the conflict
+    overview. Now it will only display Active- and Selected settings.
+
+## 40 - 2023-04-28
+
+### Added
+
+-   ConflictingSettingsDialog component to be utilized when SerialPort from
+    pc-nrfconnect-shared is used, and the serial port may have been claimed by
+    another app.
+
+## 39 - 2023-04-28
+
+### Added
+
+-   SerialPort `getOptions` function in order to request the settings that was
+    used to open the serial port.
+-   Extended SERIALPORT_CHANNEL with entry GET_OPTIONS.
+
+## 38 - 2023-04-28
+
+### Fixed
+
+-   Dropdowns allow using their scrollbars by clicking and dragging.
+-   Dropdown scrollbars are styled correctly.
+
+## 37 - 2023-04-28
+
+### Changed
+
+-   Updated `nrf-device-lib-js` to version 0.6.8.
+
+## 36 - 2023-04-26
+
+### Added
+
+-   Scripts `prepare-shared-release` and `release-shared` to ease releasing new
+    versions of shared.
+-   Property `id` to `Dropdown` component.
+
+## 35 - 2023-04-20
+
+### Fixed
+
+-   "Warning: validateDOMNesting(...): `<div>` cannot appear as a descendant of
+    `<p>`."
+
+## 34 - 2023-04-19
+
+### Fixed
+
+-   Made `InfoDialog` close when unfocusing again, which was removed during the
+    previous version.
+
+## 33 - 2023-04-19
+
+### Added
+
+-   Generic progress dialog.
+
+### Changed
+
+-   Dialog spinner has moved next to the title.
+
+### Fixed
+
+-   Confirmation dialog closes on ESC.
+-   Information dialog closes on ESC.
+
+### Removed
+
+-   Exported component `Spinner`.
+
+### Steps to upgrade when using this package
+
+-   Move the `showSpinner` property from `Dialog.Footer` to `Dialog.Header`.
+
+## 32 - 2023-04-14
+
+### Added
+
+-   New option `--create-source` to script `nordic-publish` to create a new
+    source when publishing an app.
+
+### Changed
+
+-   Update TypeScript to 4.9.
+-   Update Prettier to 2.8.7.
+-   Allow setting more sizes in dialogs.
+-   Use swc instead of babel to transform code for jest.
+
+### Removed
+
+-   Unused dependency camelcase-keys.
+
+### Fixed
+
+-   Error loading SVGs introduced in v31.
+-   `InlineInput` only calls `onChange` and `onChangeComplete` if value has
+    changed.
+
+## 31 - 2023-04-03
+
+### Changed
+
+-   `nrf-device-lib-js` became a peer dependency.
+-   `npm@7` or later must now be used when developing `shared`.
+
+### Fixed
+
+-   Autoreconnected devices were not passed with persisted data to the
+    `onDeviceSelected`/`onDeviceIsReady` callbacks.
+
+### Removed
+
+-   Support for buiding apps with webpack. If you want to continue to use
+    webpack, you now have to provide the configuration and install the needed
+    dependencies yourself.
+
+### Steps to upgrade when using this package
+
+-   If your app declared an ambient module declaration for
+    `!!@svgr/webpack!_.svg` you now have to change it to `!!@svgr!_.svg`.
+-   You should use at least version 7 of `npm` starting with this version of
+    shared, otherwise not all needed peer dependencies are installed and you
+    need to provide them yourself.
+
+## 30 - 2023-03-30
+
+### Changed
+
+-   Update `nrf-device-lib-js` to version 0.6.5.
+
+## 29 - 2023-03-29
+
+### Added
+
+-   Dialog helpers (`InfoDialog`, `ErrorDialog`, `ConfirmationDialog`) all
+    expose the `className` property now.
+
+## 28 - 2023-03-28
+
+### Added
+
+-   Linux: If a device fails to be identified based on parameters which point to
+    a missing nrf-udev installation, recommend user to install nrf-udev.
+
+### Fixed
+
+-   Linux: Apps would crash when identifying certain devices if nrf-udev
+    installation was missing.
+
+## 27 - 2023-03-27
+
+### Fixed
+
+-   Clear timeout state after timeout has elapsed.
+
 ## 26 - 2023-03-24
 
 ### Fixed
@@ -85,9 +456,9 @@ every new version is a new major version.
 
 ## 22 - 2023-03-15
 
-### Added
+### Changed
 
--   Update nrf-device-lib-js to version 0.6.2.
+-   Update `nrf-device-lib-js` to version 0.6.2.
 
 ## 21 - 2023-03-15
 
@@ -111,7 +482,10 @@ every new version is a new major version.
 ### Added
 
 -   `ErrorBoundary` use the shared `Button` component
--   Update nrf-device-lib-js to version 0.6.0.
+
+### Changed
+
+-   Update `nrf-device-lib-js` to version 0.6.0.
 
 ## 18 - 2023-03-09
 
@@ -176,7 +550,7 @@ every new version is a new major version.
 -   Only one instance of the hot plug events.
 -   `setWaitForDevice` is callback based and this calls that reboot the device
     do not need to be awaited.
--   Update nrf-device-lib-js to version 0.5.0.
+-   Update `nrf-device-lib-js` to version 0.5.0.
 
 ## 14 - 2023-02-28
 

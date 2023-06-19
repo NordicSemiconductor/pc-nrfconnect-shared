@@ -1,11 +1,12 @@
 import { Reducer } from 'redux';
 declare const _default: <AppState>(appReducer?: Reducer<AppState, import("redux").AnyAction>) => Reducer<import("redux").CombinedState<{
-    appLayout: import("./state").AppLayout;
-    device: import("./state").DeviceState;
-    deviceAutoSelect: import("./state").DeviceAutoSelectState;
-    brokenDeviceDialog: import("./state").BrokenDeviceDialog;
-    errorDialog: import("./state").ErrorDialog;
-    log: import("./state").Log;
+    appLayout: import("./App/appLayout").AppLayout;
+    device: import("./Device/deviceSlice").DeviceState;
+    deviceSetup: import("./Device/deviceSetupSlice").DeviceSetupState;
+    deviceAutoSelect: import("./Device/deviceAutoSelectSlice").DeviceAutoSelectState;
+    brokenDeviceDialog: import("./Device/BrokenDeviceDialog/brokenDeviceDialogSlice").BrokenDeviceDialog;
+    errorDialog: import("./ErrorDialog/errorDialogSlice").ErrorDialog;
+    log: import("./Log/logSlice").Log;
     documentation: import("./About/documentationSlice").DocumentationState;
     shortcuts: import("./About/shortcutSlice").ShortcutState;
     app: AppState;

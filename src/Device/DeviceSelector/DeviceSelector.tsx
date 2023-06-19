@@ -8,7 +8,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
-import { Device } from '../../state';
 import useHotKey from '../../utils/useHotKey';
 import {
     clearWaitForDevice,
@@ -16,10 +15,11 @@ import {
     setAutoSelectDevice,
 } from '../deviceAutoSelectSlice';
 import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
-import { DeviceSetup as DeviceSetupShared, setupDevice } from '../deviceSetup';
-import DeviceSetup from '../DeviceSetup/DeviceSetup';
+import { DeviceSetupConfig, setupDevice } from '../deviceSetup';
+import DeviceSetupView from '../DeviceSetup/DeviceSetupView';
 import {
     deselectDevice,
+    Device,
     deviceIsSelected as deviceIsSelectedSelector,
     selectDevice,
     selectedSerialNumber,
@@ -35,8 +35,7 @@ interface OutdatedDeviceTraits {
 
 export interface Props {
     deviceListing: DeviceTraits & OutdatedDeviceTraits;
-    deviceSetup?: DeviceSetupShared;
-    releaseCurrentDevice?: () => void;
+    deviceSetupConfig?: DeviceSetupConfig;
     onDeviceSelected?: (device: Device, autoReselected: boolean) => void;
     onDeviceDeselected?: () => void;
     onDeviceConnected?: (device: Device) => void;
@@ -48,8 +47,7 @@ export interface Props {
 const noop = () => {};
 export default ({
     deviceListing,
-    deviceSetup,
-    releaseCurrentDevice = noop,
+    deviceSetupConfig,
     onDeviceSelected = noop,
     onDeviceDeselected = noop,
     onDeviceConnected = noop,
@@ -82,12 +80,11 @@ export default ({
             dispatch(selectDevice(device));
             dispatch(setAutoSelectDevice(device));
             onDeviceSelected(device, autoReselected);
-            if (deviceSetup) {
+            if (deviceSetupConfig) {
                 dispatch(
                     setupDevice(
                         device,
-                        deviceSetup,
-                        releaseCurrentDevice,
+                        deviceSetupConfig,
                         onDeviceIsReady,
                         doDeselectDevice
                     )
@@ -95,12 +92,11 @@ export default ({
             }
         },
         [
-            deviceSetup,
+            deviceSetupConfig,
             dispatch,
             doDeselectDevice,
             onDeviceIsReady,
             onDeviceSelected,
-            releaseCurrentDevice,
         ]
     );
 
@@ -171,7 +167,7 @@ export default ({
                 }}
                 deviceFilter={deviceFilter}
             />
-            <DeviceSetup />
+            <DeviceSetupView />
         </div>
     );
 };

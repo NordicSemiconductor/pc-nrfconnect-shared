@@ -4,12 +4,10 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
-const path = require('path');
 const { build } = require('../scripts/esbuild-renderer');
 
 build({
     entryPoints: ['./app/index.tsx'],
-    watch: true,
 
     plugins: [
         {

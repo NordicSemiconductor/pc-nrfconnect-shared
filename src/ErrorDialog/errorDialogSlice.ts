@@ -6,10 +6,32 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ErrorDialog, ErrorResolutions, RootState } from '../state';
+import type { RootState } from '../store';
 
-const appendIfNew = (messages: string[], message: string) =>
-    messages.includes(message) ? messages : [...messages, message];
+const appendIfNew = (messages: ErrorMessage[], message: ErrorMessage) => {
+    const messageExists = messages.some(
+        existingMessage =>
+            existingMessage.message === message.message &&
+            existingMessage.detail === message.detail
+    );
+
+    return messageExists ? messages : [...messages, message];
+};
+
+export interface ErrorResolutions {
+    [key: string]: () => void;
+}
+
+export interface ErrorMessage {
+    message: string;
+    detail?: string;
+}
+
+export interface ErrorDialog {
+    isVisible: boolean;
+    messages: ErrorMessage[];
+    errorResolutions?: ErrorResolutions;
+}
 
 const initialState: ErrorDialog = {
     messages: [],
@@ -24,23 +46,23 @@ const slice = createSlice({
         showDialog: {
             prepare: (
                 message: string,
-                errorResolutions?: ErrorResolutions
+                errorResolutions?: ErrorResolutions,
+                detail?: string
             ) => ({
-                payload: { message, errorResolutions },
+                payload: { message: { message, detail }, errorResolutions },
             }),
             reducer: (
                 state,
-                action: PayloadAction<{
-                    message: string;
+                {
+                    payload: error,
+                }: PayloadAction<{
+                    message: ErrorMessage;
                     errorResolutions?: ErrorResolutions;
                 }>
             ) => {
                 state.isVisible = true;
-                state.errorResolutions = action.payload.errorResolutions;
-                state.messages = appendIfNew(
-                    state.messages,
-                    action.payload.message
-                );
+                state.errorResolutions = error.errorResolutions;
+                state.messages = appendIfNew(state.messages, error.message);
             },
         },
         hideDialog: () => initialState,

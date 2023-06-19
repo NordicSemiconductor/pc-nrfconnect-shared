@@ -8,14 +8,13 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import InlineInput from '../../InlineInput/InlineInput';
-import { Device } from '../../state';
 import {
     getAutoReselectDevice,
     getWaitingForDeviceTimeout,
     getWaitingToAutoReselect,
 } from '../deviceAutoSelectSlice';
 import { displayedDeviceName } from '../deviceInfo/deviceInfo';
-import { resetDeviceNickname, setDeviceNickname } from '../deviceSlice';
+import { Device, resetDeviceNickname, setDeviceNickname } from '../deviceSlice';
 import DeviceIcon from './DeviceIcon';
 
 import './basic-device-info.scss';
@@ -42,10 +41,8 @@ const DeviceName = ({ device, inputRef, messageType }: Props) => {
     switch (messageType) {
         case 'AutoReselect':
             return <div className="reconnecting">Reconnecting...</div>;
-            break;
         case 'WaitingForDevice':
             return <div className="reconnecting">Rebooting...</div>;
-            break;
         case 'DeviceName':
             return (
                 <InlineInput

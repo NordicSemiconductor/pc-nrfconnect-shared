@@ -7,36 +7,38 @@
 /*
    eslint-disable import/no-webpack-loader-syntax,import/no-unresolved --
 
-   It would be nice to add @svgr/webpack to the webpack configuration, which would make the two
-   disables above unnecessary, but that would be a breaking change for all apps that rely
-   on the current configuration, which uses url-loader to load SVGs.
+   It would be nice to process all SVGs with svgr, which would make the two
+   disables above unnecessary, but that would be a breaking change for all
+   apps that rely on the current configuration, which uses the file loader
+   to load SVGs.
 
-   The difference between url-loader and @svgr/webpack:
+   The difference between the file loader and using svgr:
 
-   - With url-loader an URL is returned which then can be used (e.g. in an img tag) like this:
+   - With the file loaded an URL is returned which then can be used (e.g. in an img tag) like this:
 
        import chipIconUrl from './chipIconUrl.svg';
        const Icon = () => <img src={chipIconUrl} />
 
-   - With @svgr/webpack a react component is returned, which then can be rendered like this:
+   - With svgr a react component is returned, which then can be rendered like this:
 
-       import ChipIcon from '!!@svgr/webpack!./chipIconUrl.svg';
+       import ChipIcon from '!!@svgr!./chipIconUrl.svg';
        const Icon = () => <ChipIcon />
 
-   One of the advantages of @svgr/webpack is, that it includes the SVG inline, so it can be styled
+   One of the advantages of svgr is, that it includes the SVG inline, so it can be styled
    through CSS, e.g. to change the colours.
 */
 
-import { Device, DeviceInfo } from '../../state';
+import logger from '../../logging';
+import { Device } from '../deviceSlice';
 
-import nrf51logo from '!!@svgr/webpack!./nRF51-Series-logo.svg';
-import nrf52logo from '!!@svgr/webpack!./nRF52-Series-logo.svg';
-import nrf53logo from '!!@svgr/webpack!./nRF53-Series-logo.svg';
-import nrf7002logo from '!!@svgr/webpack!./nRF70-Series_no-background_RGB.svg';
-import nrf91logo from '!!@svgr/webpack!./nRF91-Series-logo.svg';
-import ppkLogo from '!!@svgr/webpack!./ppk-logo.svg';
-import unknownLogo from '!!@svgr/webpack!./unknown-logo.svg';
-import unknownNordicLogo from '!!@svgr/webpack!./unknown-nordic-logo.svg';
+import nrf51logo from '!!@svgr!./nRF51-Series-logo.svg';
+import nrf52logo from '!!@svgr!./nRF52-Series-logo.svg';
+import nrf53logo from '!!@svgr!./nRF53-Series-logo.svg';
+import nrf7002logo from '!!@svgr!./nRF70-Series_no-background_RGB.svg';
+import nrf91logo from '!!@svgr!./nRF91-Series-logo.svg';
+import ppkLogo from '!!@svgr!./ppk-logo.svg';
+import unknownLogo from '!!@svgr!./unknown-logo.svg';
+import unknownNordicLogo from '!!@svgr!./unknown-nordic-logo.svg';
 
 type DevicePCA =
     | 'PCA10028'
@@ -51,6 +53,16 @@ type DevicePCA =
     | 'PCA20020'
     | 'PCA20035'
     | 'PCA10143';
+
+interface DeviceInfo {
+    name?: string | null;
+    cores?: number;
+    icon: React.ElementType;
+    website: {
+        productPagePath?: string;
+        buyOnlineParams?: string;
+    };
+}
 
 const devicesByPca: { [P in DevicePCA]: DeviceInfo } = {
     PCA10028: {
@@ -190,18 +202,32 @@ const deviceByUsb = (device: Device) => {
         if (device.usb?.product?.startsWith('PPK')) {
             return ppkDeviceInfo(device);
         }
-        if (device.serialNumber.startsWith('THINGY91')) {
+        if (device.serialNumber?.startsWith('THINGY91')) {
             return devicesByPca.PCA20035;
         }
     }
     return null;
 };
 
-const unknownDevice = (device: Device): DeviceInfo => ({
-    name: device.usb?.product,
-    icon: isNordicDevice(device) ? unknownNordicLogo : unknownLogo,
-    website: {},
-});
+let hasShownUdevWarning = false;
+const unknownDevice = (device: Device): DeviceInfo => {
+    if (
+        isNordicDevice(device) &&
+        process.platform === 'linux' &&
+        !hasShownUdevWarning
+    ) {
+        logger.warn(
+            'Could not properly detect an unknown device. Please make sure you have nrf-udev installed: https://github.com/NordicSemiconductor/nrf-udev'
+        );
+        hasShownUdevWarning = true;
+    }
+
+    return {
+        name: device.usb?.product,
+        icon: isNordicDevice(device) ? unknownNordicLogo : unknownLogo,
+        website: {},
+    };
+};
 
 export const deviceInfo = (device: Device): DeviceInfo =>
     deviceByPca(device) || deviceByUsb(device) || unknownDevice(device);

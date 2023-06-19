@@ -6,8 +6,15 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { AppLayout, RootState } from '../state';
+import type { RootState } from '../store';
 import { persistCurrentPane } from '../utils/persistentStore';
+
+export interface AppLayout {
+    isSidePanelVisible: boolean;
+    isLogVisible: boolean;
+    currentPane: number;
+    paneNames: string[];
+}
 
 const initialState: AppLayout = {
     isSidePanelVisible: true,

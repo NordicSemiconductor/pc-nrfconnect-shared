@@ -1,8 +1,8 @@
 import React from 'react';
-declare type Variant = 'info' | 'warning' | 'success' | 'danger';
+type Variant = 'info' | 'warning' | 'success' | 'danger';
 export interface AlertProps {
     variant: Variant;
-    label?: React.ReactElement | string;
+    label?: React.ReactNode;
     dismissable?: boolean;
     onClose?: () => void;
 }

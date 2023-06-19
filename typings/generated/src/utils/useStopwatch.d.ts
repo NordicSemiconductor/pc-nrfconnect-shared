@@ -2,7 +2,7 @@ export interface ITimer {
     now: () => number;
     setTimeout: (callback: () => void, ms: number) => () => void;
 }
-export declare type Stopwatch = {
+export type Stopwatch = {
     autoStart: boolean;
     resolution?: number;
     timer?: ITimer;

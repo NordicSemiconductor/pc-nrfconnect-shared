@@ -1,47 +1,58 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { ButtonVariants } from '../Button/Button';
 import './dialog.scss';
+type CoreProps = {
+    isVisible: boolean;
+    onHide?: () => void;
+    className?: string;
+    size?: 'sm' | 'm' | 'lg' | 'xl';
+    children: ReactNode;
+};
+type DialogProps = CoreProps & {
+    closeOnUnfocus?: boolean;
+    closeOnEsc?: boolean;
+};
 export declare const Dialog: {
-    ({ isVisible, closeOnUnfocus, onHide, className, children, }: {
-        isVisible: boolean;
-        closeOnUnfocus?: boolean | undefined;
-        onHide?: (() => void) | undefined;
-        className?: string | undefined;
-        children: ReactNode;
-    }): JSX.Element;
-    Header({ title, headerIcon, }: {
+    ({ isVisible, closeOnUnfocus, closeOnEsc, onHide, className, size, children, }: DialogProps): JSX.Element;
+    Header({ title, headerIcon, showSpinner, }: {
         title: string;
         headerIcon?: string | undefined;
+        showSpinner?: boolean | undefined;
     }): JSX.Element;
     Body({ children }: {
-        children: ReactNode | string;
+        children: ReactNode;
     }): JSX.Element;
-    Footer({ showSpinner, children, }: {
-        showSpinner?: boolean | undefined;
+    Footer({ children }: {
         children: ReactNode;
     }): JSX.Element;
 };
-export declare const DialogButton: ({ variant, onClick, className, disabled, children, }: {
-    onClick: React.MouseEventHandler<HTMLButtonElement>;
-    variant?: ButtonVariants | undefined;
-    className?: string | undefined;
-    disabled?: boolean | undefined;
-    children: ReactNode | string;
-}) => JSX.Element;
-interface Props {
-    isVisible: boolean;
-    title?: string;
-    headerIcon?: string;
-    onClose: () => void;
-    children: ReactNode | string;
+export interface DialogButtonProps {
+    onClick: () => void;
+    variant?: ButtonVariants;
+    className?: string;
+    disabled?: boolean;
+    children: ReactNode;
 }
-export declare const InfoDialog: ({ isVisible, title, headerIcon, children, onClose, }: Props) => JSX.Element;
-export declare const ErrorDialog: (props: Omit<Props, 'headerIcon'>) => JSX.Element;
-interface ConfirmationDialogProps {
-    isVisible: boolean;
+export declare const DialogButton: ({ variant, onClick, className, disabled, children, }: DialogButtonProps) => JSX.Element;
+interface GenericDialogProps extends CoreProps {
+    title: string;
+    footer: ReactNode;
+    headerIcon?: string;
+    showSpinner?: boolean;
+    closeOnUnfocus?: boolean;
+    closeOnEsc?: boolean;
+}
+export declare const GenericDialog: ({ isVisible, onHide, title, headerIcon, children, className, footer, showSpinner, closeOnUnfocus, closeOnEsc, size, }: GenericDialogProps) => JSX.Element;
+interface InfoProps extends CoreProps {
     title?: string;
     headerIcon?: string;
-    children: ReactNode | string;
+    onHide: () => void;
+}
+export declare const InfoDialog: ({ isVisible, title, headerIcon, children, onHide, size, className, }: InfoProps) => JSX.Element;
+export declare const ErrorDialog: (props: Omit<InfoProps, 'headerIcon'>) => JSX.Element;
+interface ConfirmationDialogProps extends Omit<CoreProps, 'onHide'> {
+    title?: string;
+    headerIcon?: string;
     confirmLabel?: string;
     onConfirm: () => void;
     cancelLabel?: string;
@@ -49,5 +60,5 @@ interface ConfirmationDialogProps {
     optionalLabel?: string;
     onOptional?: () => void;
 }
-export declare const ConfirmationDialog: ({ isVisible, title, headerIcon, children, confirmLabel, onConfirm, cancelLabel, onCancel, optionalLabel, onOptional, }: ConfirmationDialogProps) => JSX.Element;
+export declare const ConfirmationDialog: ({ isVisible, title, headerIcon, children, className, confirmLabel, onConfirm, cancelLabel, onCancel, optionalLabel, onOptional, size, }: ConfirmationDialogProps) => JSX.Element;
 export {};

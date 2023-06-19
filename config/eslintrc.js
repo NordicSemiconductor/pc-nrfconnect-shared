@@ -75,8 +75,6 @@ module.exports = {
         'no-shadow': 'off',
         'no-undef': 'error',
         'no-unused-expressions': 'off',
-        '@typescript-eslint/no-unused-vars': 'off',
-        'no-unused-vars': 'off',
         'no-use-before-define': 'off',
         'prettier/prettier': 'error',
         'react-hooks/exhaustive-deps': 'error',

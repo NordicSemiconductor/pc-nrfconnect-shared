@@ -15,7 +15,7 @@ export interface Props {
     title?: string;
     isToggled: boolean;
     onToggle?: (isToggled: boolean) => void;
-    label?: string;
+    label?: ReactNode;
     labelRight?: boolean;
     variant?: 'primary' | 'secondary';
     barColor?: string;

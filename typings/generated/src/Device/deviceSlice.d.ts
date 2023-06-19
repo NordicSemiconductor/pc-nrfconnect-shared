@@ -1,13 +1,26 @@
+import type { Device as NrfdlDevice, SerialPort } from '@nordicsemiconductor/nrf-device-lib-js';
 import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 import { SerialPortOpenOptions } from 'serialport';
-import { Device, DeviceState, RootState } from '../state';
-export declare const reducer: import("redux").Reducer<DeviceState, import("redux").AnyAction>, deselectDevice: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<string>, deviceSetupComplete: import("@reduxjs/toolkit").ActionCreatorWithPayload<Device, string>, deviceSetupError: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<string>, deviceSetupInputReceived: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<string>, deviceSetupInputRequired: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[message: string, choices: string[]], {
-    message: string;
-    choices: string[];
-}, string, never, never>, resetDeviceNickname: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, string>, selectDevice: import("@reduxjs/toolkit").ActionCreatorWithPayload<Device, string>, addDevice: import("@reduxjs/toolkit").ActionCreatorWithPayload<Device, string>, removeDevice: import("@reduxjs/toolkit").ActionCreatorWithPayload<Device, string>, setDevices: import("@reduxjs/toolkit").ActionCreatorWithPayload<Device[], string>, setDeviceNickname: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[serialNumber: string, nickname: string], {
+import type { RootState } from '../store';
+export interface Device extends NrfdlDevice {
+    serialNumber: string;
+    boardVersion?: string;
+    nickname?: string;
+    serialport?: SerialPort;
+    favorite?: boolean;
+    id: number;
+    persistedSerialPortOptions?: SerialPortOpenOptions<AutoDetectTypes>;
+}
+export interface DeviceState {
+    devices: Map<string, Device>;
+    deviceInfo: Device | null;
+    selectedSerialNumber: string | null;
+    readbackProtection: 'unknown' | 'protected' | 'unprotected';
+}
+export declare const reducer: import("redux").Reducer<DeviceState, import("redux").AnyAction>, deselectDevice: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"device/deselectDevice">, resetDeviceNickname: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "device/resetDeviceNickname">, selectDevice: import("@reduxjs/toolkit").ActionCreatorWithPayload<Device, "device/selectDevice">, addDevice: import("@reduxjs/toolkit").ActionCreatorWithPayload<Device, "device/addDevice">, removeDevice: import("@reduxjs/toolkit").ActionCreatorWithPayload<Device, "device/removeDevice">, setDevices: import("@reduxjs/toolkit").ActionCreatorWithPayload<Device[], "device/setDevices">, setDeviceNickname: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[serialNumber: string, nickname: string], {
     serialNumber: string;
     nickname: string;
-}, string, never, never>, toggleDeviceFavorited: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, string>, closeSetupDialogVisible: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<string>, setReadbackProtected: import("@reduxjs/toolkit").ActionCreatorWithPayload<"unknown" | "protected" | "unprotected", string>, persistSerialPortOptions: import("@reduxjs/toolkit").ActionCreatorWithPayload<SerialPortOpenOptions<AutoDetectTypes>, string>;
+}, "device/setDeviceNickname", never, never>, toggleDeviceFavorited: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "device/toggleDeviceFavorited">, setReadbackProtected: import("@reduxjs/toolkit").ActionCreatorWithPayload<"unknown" | "protected" | "unprotected", "device/setReadbackProtected">, persistSerialPortOptions: import("@reduxjs/toolkit").ActionCreatorWithPayload<SerialPortOpenOptions<AutoDetectTypes>, "device/persistSerialPortOptions">;
 export declare const getDevice: (serialNumber: string) => (state: RootState) => Device | undefined;
 export declare const getDevices: (state: RootState) => Map<string, Device>;
 export declare const deviceIsSelected: (state: RootState) => boolean;

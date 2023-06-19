@@ -31,15 +31,11 @@ module.exports = (disabledMocks = []) => ({
             : { serialport: `${mockDir}/emptyMock.ts` }),
     },
     transform: {
-        '^.+\\.[jt]sx?$': [
-            'babel-jest',
-            {
-                configFile: `${__dirname}/babel.config.js`,
-            },
-        ],
+        '^.+\\.[jt]sx?$': '@swc/jest',
     },
     transformIgnorePatterns: ['node_modules/(?!(pc-nrfconnect-shared)/)'],
     setupFilesAfterEnv: [`${__dirname}/../test/setupTests.ts`],
     snapshotSerializers: ['enzyme-to-json/serializer'],
     resolver: `${__dirname}/../test/jestResolver.js`,
+    modulePathIgnorePatterns: ['dist'],
 });

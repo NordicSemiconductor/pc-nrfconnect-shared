@@ -11,11 +11,13 @@ import fs from 'fs';
 import MemoryMap from 'nrf-intel-hex';
 
 import logger from '../logging';
-import { Device, TDispatch } from '../state';
+import { AppDispatch } from '../store';
 import { getAppFile } from '../utils/appDirs';
 import { setWaitForDevice } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
-import type { DeviceSetup, DfuEntry } from './deviceSetup';
+import { DeviceSetup, DfuEntry } from './deviceSetup';
+import { openDeviceSetupDialog } from './deviceSetupSlice';
+import { Device } from './deviceSlice';
 import {
     createInitPacketBuffer,
     defaultInitPacket,
@@ -24,26 +26,6 @@ import {
     HashType,
     InitPacket,
 } from './initPacket';
-
-export type PromiseConfirm = (message: string) => Promise<boolean>;
-export type PromiseChoice = (
-    question: string,
-    choices: string[]
-) => Promise<string>;
-
-let lastMSG = '';
-const progressJson = ({
-    progressJson: progress,
-}: nrfDeviceLib.Progress.CallbackParameters) => {
-    const message = progress.message || '';
-
-    const status = `${message.replace('.', ':')} ${
-        progress.progressPercentage
-    }%`;
-
-    if (status !== lastMSG) logger.info(status);
-    lastMSG = status;
-};
 
 const NORDIC_DFU_PRODUCT_ID = 0x521f;
 const NORDIC_VENDOR_ID = 0x1915;
@@ -99,118 +81,152 @@ const getBootloaderInformation = async (device: Device) => {
     return null;
 };
 
-const updateBootloader = async (
-    device: Device,
-    dispatch: TDispatch,
-    onSuccess: (device: Device) => void,
-    onFail: (reason?: unknown) => void
-) => {
-    logger.info(`Update Bootloader ${device}`);
-    const zip = new AdmZip(getAppFile(LATEST_BOOTLOADER));
-    const zipBuffer = zip.toBuffer();
+const updateBootloader =
+    (
+        device: Device,
+        onSuccess: (device: Device) => void,
+        onFail: (reason?: unknown) => void,
+        onProgress: (progress: number, message?: string) => void
+    ) =>
+    async (dispatch: AppDispatch) => {
+        logger.info(`Update Bootloader ${device}`);
+        const zip = new AdmZip(getAppFile(LATEST_BOOTLOADER));
+        const zipBuffer = zip.toBuffer();
 
-    logger.debug('Starting Bootloader Update');
+        logger.debug('Starting Bootloader Update');
 
-    await nrfDeviceLib.firmwareProgram(
-        getDeviceLibContext(),
-        device.id,
-        'NRFDL_FW_BUFFER',
-        'NRFDL_FW_SDFU_ZIP',
-        zipBuffer,
-        err => {
-            if (err) {
-                logger.error(
-                    `Failed to write bootloader to the target device: ${
-                        err.message || err
-                    }`
+        onProgress(0, 'Updating Bootloader');
+
+        dispatch(
+            setWaitForDevice({
+                timeout: DEFAULT_DEVICE_WAIT_TIME,
+                when: 'always',
+                once: false,
+                onSuccess,
+                onFail,
+            })
+        );
+        await nrfDeviceLib.firmwareProgram(
+            getDeviceLibContext(),
+            device.id,
+            'NRFDL_FW_BUFFER',
+            'NRFDL_FW_SDFU_ZIP',
+            zipBuffer,
+            err => {
+                if (err) {
+                    logger.error(
+                        `Failed to write bootloader to the target device: ${
+                            err.message || err
+                        }`
+                    );
+                    onFail(err.message);
+                } else {
+                    dispatch(
+                        setWaitForDevice({
+                            timeout: DEFAULT_DEVICE_WAIT_TIME,
+                            when: 'always',
+                            once: true,
+                            onSuccess,
+                            onFail,
+                        })
+                    );
+
+                    onProgress(100, 'Bootloader updated');
+                    logger.info(
+                        'Bootloader has been written to the target device'
+                    );
+                    logger.debug('Bootloader DFU completed successfully!');
+                }
+            },
+            progress => {
+                onProgress(
+                    progress.progressJson.progressPercentage,
+                    progress.progressJson.message ?? 'Programming bootloader'
                 );
-                onFail(err.message);
-            } else {
+            }
+        );
+    };
+
+const switchToDeviceMode =
+    (
+        device: Device,
+        mcuState: nrfDeviceLib.MCUState,
+        onSuccess: (device: Device) => void,
+        onFail: (reason?: unknown) => void
+    ) =>
+    (dispatch: AppDispatch) => {
+        nrfDeviceLib
+            .deviceControlSetMcuState(
+                getDeviceLibContext(),
+                device.id,
+                mcuState
+            )
+            .then(() => {
                 dispatch(
                     setWaitForDevice({
-                        timeout: DEFAULT_DEVICE_WAIT_TIME,
-                        when: 'always',
+                        timeout: 10000,
+                        when:
+                            mcuState === 'NRFDL_MCU_STATE_APPLICATION'
+                                ? 'applicationMode'
+                                : 'dfuBootLoaderMode',
                         once: true,
                         onSuccess,
                         onFail,
                     })
                 );
+            })
+            .catch(err => onFail(err));
+    };
 
-                logger.info('Bootloader has been written to the target device');
-                logger.debug('Bootloader DFU completed successfully!');
-            }
-        },
-        progressJson
-    );
-};
-
-const switchToDeviceMode = (
-    device: Device,
-    mcuState: nrfDeviceLib.MCUState,
-    dispatch: TDispatch,
-    onSuccess: (device: Device) => void,
-    onFail: (reason?: unknown) => void
-) => {
-    nrfDeviceLib
-        .deviceControlSetMcuState(getDeviceLibContext(), device.id, mcuState)
-        .then(() => {
+export const switchToBootloaderMode =
+    (
+        device: Device,
+        onSuccess: (device: Device) => void,
+        onFail: (reason?: unknown) => void
+    ) =>
+    (dispatch: AppDispatch) => {
+        if (!isDeviceInDFUBootloader(device)) {
             dispatch(
-                setWaitForDevice({
-                    timeout: 10000,
-                    when:
-                        mcuState === 'NRFDL_MCU_STATE_APPLICATION'
-                            ? 'applicationMode'
-                            : 'BootLoaderMode',
-                    once: true,
-                    onSuccess,
-                    onFail,
-                })
+                switchToDeviceMode(
+                    device,
+                    'NRFDL_MCU_STATE_PROGRAMMING',
+                    d => {
+                        if (!isDeviceInDFUBootloader(d))
+                            onFail(
+                                new Error('Failed to switch To Bootloader Mode')
+                            );
+                        else onSuccess(d);
+                    },
+                    onFail
+                )
             );
-        })
-        .catch(err => onFail(err));
-};
+        } else if (onSuccess) {
+            onSuccess(device);
+        }
+    };
 
-export const switchToBootloaderMode = (
-    device: Device,
-    dispatch: TDispatch,
-    onSuccess: (device: Device) => void,
-    onFail: (reason?: unknown) => void
-) => {
-    if (!isDeviceInDFUBootloader(device)) {
-        switchToDeviceMode(
-            device,
-            'NRFDL_MCU_STATE_PROGRAMMING',
-            dispatch,
-            d => {
-                if (!isDeviceInDFUBootloader(d))
-                    onFail(new Error('Failed to switch To Bootloader Mode'));
-                else onSuccess(d);
-            },
-            onFail
+export const switchToApplicationMode =
+    (
+        device: Device,
+        onSuccess: (device: Device) => void,
+        onFail: (reason?: unknown) => void
+    ) =>
+    (dispatch: AppDispatch) => {
+        dispatch(
+            switchToDeviceMode(
+                device,
+                'NRFDL_MCU_STATE_APPLICATION',
+                d => {
+                    if (isDeviceInDFUBootloader(d))
+                        onFail(
+                            new Error('Failed to switch to Application Mode')
+                        );
+                    else onSuccess(d);
+                },
+                onFail
+            )
         );
-    } else if (onSuccess) {
-        onSuccess(device);
-    }
-};
-
-export const switchToApplicationMode = (
-    device: Device,
-    dispatch: TDispatch,
-    onSuccess: (device: Device) => void,
-    onFail: (reason?: unknown) => void
-) => {
-    switchToDeviceMode(
-        device,
-        'NRFDL_MCU_STATE_APPLICATION',
-        dispatch,
-        d => {
-            if (isDeviceInDFUBootloader(d))
-                onFail(new Error('Failed to switch to Application Mode'));
-            else onSuccess(d);
-        },
-        onFail
-    );
-};
+    };
 
 const isLatestBootloader = async (device: Device) => {
     if (!isDeviceInDFUBootloader(device)) {
@@ -222,7 +238,8 @@ const isLatestBootloader = async (device: Device) => {
     if (
         !bootloaderInfo ||
         bootloaderInfo.bootloaderType !== 'NRFDL_BOOTLOADER_TYPE_SDFU' ||
-        bootloaderInfo.version >= LATEST_BOOTLOADER_VERSION
+        bootloaderInfo.version.toString() >=
+            LATEST_BOOTLOADER_VERSION.toString()
     ) {
         return true;
     }
@@ -230,59 +247,59 @@ const isLatestBootloader = async (device: Device) => {
     return false;
 };
 
-const askAndUpdateBootloader = (
-    device: Device,
-    dispatch: TDispatch,
-    promiseConfirm: PromiseConfirm,
-    onSuccess: (device: Device) => void,
-    onFail: (reason?: unknown) => void
-) => {
-    switchToBootloaderMode(
-        device,
-        dispatch,
-        async d => {
-            if (!(await isLatestBootloader(d))) {
-                if (
-                    !(await promiseConfirm(
-                        'Device will be programmed. A Newer version of the bootloader is available, do you want to update it as well?'
-                    ))
-                ) {
-                    logger.info('Continuing with old bootloader');
-                    onSuccess(d);
-                } else {
-                    const action = (dd: Device) => {
-                        switchToBootloaderMode(dd, dispatch, onSuccess, onFail);
-                    };
-                    updateBootloader(d, dispatch, action, onFail);
-                }
-            } else {
-                onSuccess(d);
-            }
-        },
-        onFail
-    );
-};
-
-export const confirmHelper = async (promiseConfirm?: PromiseConfirm) => {
-    if (!promiseConfirm) return true;
-    try {
-        return await promiseConfirm(
-            'Device must be programmed, do you want to proceed?'
+const askAndUpdateBootloader =
+    (
+        device: Device,
+        onSuccess: (device: Device) => void,
+        onFail: (reason?: unknown) => void,
+        onProgress: (progress: number, message?: string) => void
+    ) =>
+    (dispatch: AppDispatch) => {
+        dispatch(
+            switchToBootloaderMode(
+                device,
+                async d => {
+                    if (!(await isLatestBootloader(d))) {
+                        dispatch(
+                            openDeviceSetupDialog({
+                                onUserInput: isConfirmed => {
+                                    if (isConfirmed) {
+                                        logger.info(
+                                            'Continuing with old bootloader'
+                                        );
+                                        onSuccess(d);
+                                    } else {
+                                        const action = (dd: Device) => {
+                                            dispatch(
+                                                switchToBootloaderMode(
+                                                    dd,
+                                                    onSuccess,
+                                                    onFail
+                                                )
+                                            );
+                                        };
+                                        dispatch(
+                                            updateBootloader(
+                                                d,
+                                                action,
+                                                onFail,
+                                                onProgress
+                                            )
+                                        );
+                                    }
+                                },
+                                message:
+                                    'Device will be programmed. A Newer version of the bootloader is available, do you want to update it as well?',
+                            })
+                        );
+                    } else {
+                        onSuccess(d);
+                    }
+                },
+                onFail
+            )
         );
-    } catch (err) {
-        throw new Error('Preparation cancelled by user');
-    }
-};
-
-export const choiceHelper = (
-    choices: string[],
-    promiseChoice?: PromiseChoice
-) => {
-    if (choices.length > 1 && promiseChoice) {
-        return promiseChoice('Which firmware do you want to program?', choices);
-    }
-    return choices.slice(-1)[0];
-};
+    };
 
 /**
  * Loads firmware image from HEX file
@@ -389,130 +406,195 @@ const createDfuZipBuffer = async (dfuImages: DfuImage[]) => {
     return buffer;
 };
 
-const programInDFUBootloader = async (
-    device: Device,
-    dfu: DfuEntry,
-    dispatch: TDispatch,
-    onSuccess: (device: Device) => void,
-    onFail: (reason?: unknown) => void
-) => {
-    logger.debug(
-        `${device.serialNumber} on ${device.serialport?.comName} is now in DFU-Bootloader...`
-    );
-    const { application, softdevice } = dfu;
-    const params: Partial<InitPacket> = dfu.params || {};
+const programInDFUBootloader =
+    (
+        device: Device,
+        dfu: DfuEntry,
+        onProgress: (progress: number, message?: string) => void,
+        onSuccess: (device: Device) => void,
+        onFail: (reason?: unknown) => void
+    ) =>
+    async (dispatch: AppDispatch) => {
+        logger.debug(
+            `${device.serialNumber} on ${device.serialport?.comName} is now in DFU-Bootloader...`
+        );
+        const { application, softdevice } = dfu;
+        const params: Partial<InitPacket> = dfu.params || {};
 
-    const dfuImages: DfuImage[] = [];
-    if (softdevice) {
-        const firmwareImage = parseFirmwareImage(softdevice);
+        const dfuImages: DfuImage[] = [];
+        if (softdevice) {
+            const firmwareImage = parseFirmwareImage(softdevice);
+
+            const initPacketParams = {
+                fwType: FwType.SOFTDEVICE,
+                fwVersion: 0xffffffff,
+                hwVersion: params.hwVersion || 52,
+                hashType: HashType.SHA256,
+                hash: calculateSHA256Hash(firmwareImage),
+                sdSize: firmwareImage.length,
+                sdReq: params.sdReq || [],
+            };
+
+            const packet: InitPacket = {
+                ...defaultInitPacket,
+                ...initPacketParams,
+            };
+            dfuImages.push({
+                name: 'SoftDevice',
+                initPacket: packet,
+                firmwareImage,
+            });
+        }
+
+        const firmwareImage = parseFirmwareImage(application);
 
         const initPacketParams = {
-            fwType: FwType.SOFTDEVICE,
-            fwVersion: 0xffffffff,
+            fwType: FwType.APPLICATION,
+            fwVersion: params.fwVersion || 4,
             hwVersion: params.hwVersion || 52,
             hashType: HashType.SHA256,
             hash: calculateSHA256Hash(firmwareImage),
-            sdSize: firmwareImage.length,
-            sdReq: params.sdReq || [],
+            appSize: firmwareImage.length,
+            // @ts-expect-error This parameter is set.
+            sdReq: params.sdId || [],
         };
 
-        const packet: InitPacket = {
-            ...defaultInitPacket,
-            ...initPacketParams,
-        };
+        const packet = { ...defaultInitPacket, ...initPacketParams };
         dfuImages.push({
-            name: 'SoftDevice',
+            name: 'Application',
             initPacket: packet,
             firmwareImage,
         });
-    }
 
-    const firmwareImage = parseFirmwareImage(application);
+        const zipBuffer = await createDfuZipBuffer(dfuImages);
 
-    const initPacketParams = {
-        fwType: FwType.APPLICATION,
-        fwVersion: params.fwVersion || 4,
-        hwVersion: params.hwVersion || 52,
-        hashType: HashType.SHA256,
-        hash: calculateSHA256Hash(firmwareImage),
-        appSize: firmwareImage.length,
-        // @ts-expect-error This parameter is set.
-        sdReq: params.sdId || [],
-    };
+        logger.debug('Starting DFU');
 
-    const packet = { ...defaultInitPacket, ...initPacketParams };
-    dfuImages.push({ name: 'Application', initPacket: packet, firmwareImage });
+        onProgress(0, 'Preparing to program');
 
-    const zipBuffer = await createDfuZipBuffer(dfuImages);
-
-    logger.debug('Starting DFU');
-
-    nrfDeviceLib.firmwareProgram(
-        getDeviceLibContext(),
-        device.id,
-        'NRFDL_FW_BUFFER',
-        'NRFDL_FW_SDFU_ZIP',
-        zipBuffer,
-        err => {
-            if (err) {
-                logger.error(
-                    `Failed to write to the target device: ${
-                        err.message || err
-                    }`
-                );
-                onFail(err);
-            } else {
-                logger.info(
-                    'All dfu images have been written to the target device'
-                );
-                logger.debug('DFU completed successfully!');
-                dispatch(
-                    setWaitForDevice({
-                        timeout: DEFAULT_DEVICE_WAIT_TIME,
-                        when: 'applicationMode',
-                        once: true,
-                        onSuccess,
-                        onFail,
-                    })
+        dispatch(
+            setWaitForDevice({
+                timeout: DEFAULT_DEVICE_WAIT_TIME,
+                when: 'always',
+                once: false,
+                onSuccess,
+                onFail,
+            })
+        );
+        nrfDeviceLib.firmwareProgram(
+            getDeviceLibContext(),
+            device.id,
+            'NRFDL_FW_BUFFER',
+            'NRFDL_FW_SDFU_ZIP',
+            zipBuffer,
+            err => {
+                if (err) {
+                    logger.error(
+                        `Failed to write to the target device: ${
+                            err.message || err
+                        }`
+                    );
+                    onFail(err);
+                } else {
+                    logger.info(
+                        'All dfu images have been written to the target device'
+                    );
+                    logger.debug('DFU completed successfully!');
+                    dispatch(
+                        setWaitForDevice({
+                            timeout: DEFAULT_DEVICE_WAIT_TIME,
+                            when: 'applicationMode',
+                            once: true,
+                            onSuccess,
+                            onFail,
+                        })
+                    );
+                    onProgress(100, 'Waiting for device to reboot');
+                }
+            },
+            progress => {
+                onProgress(
+                    progress.progressJson.progressPercentage,
+                    progress.progressJson.message ?? ''
                 );
             }
-        },
-        progressJson
-    );
-};
-
-export const performDFU = (
-    selectedDevice: Device,
-    options: DeviceSetup,
-    dispatch: TDispatch,
-    onSuccess: (device: Device) => void,
-    onFail: (reason?: unknown) => void
-) => {
-    const { dfu, promiseConfirm, promiseChoice } = options;
-
-    if (dfu == null) {
-        logger.error('Must never be called without DFU options.');
-        throw new Error('Must never be called without DFU options.');
-    }
-
-    const action = async (d: Device) => {
-        const choice = await choiceHelper(Object.keys(dfu), promiseChoice);
-        programInDFUBootloader(d, dfu[choice], dispatch, onSuccess, onFail);
-        logger.debug('DFU finished: ', d);
+        );
     };
 
-    if (promiseConfirm) {
-        askAndUpdateBootloader(
-            selectedDevice,
-            dispatch,
-            promiseConfirm,
-            action,
-            onFail
-        );
-    } else {
-        action(selectedDevice);
-    }
-};
+const programDeviceWithFw =
+    (
+        device: Device,
+        selectedFw: DfuEntry,
+        onProgress: (progress: number, message?: string) => void
+    ) =>
+    (dispatch: AppDispatch) =>
+        new Promise<Device>((resolve, reject) => {
+            const action = (d: Device) => {
+                dispatch(
+                    programInDFUBootloader(
+                        d,
+                        selectedFw,
+                        onProgress,
+                        resolve,
+                        reject
+                    )
+                );
+                logger.debug('DFU finished: ', d);
+            };
+
+            dispatch(
+                askAndUpdateBootloader(device, action, reject, onProgress)
+            );
+        });
+
+export const sdfuDeviceSetup = (
+    dfuFirmware: DfuEntry[],
+    needSerialport = false
+): DeviceSetup => ({
+    supportsProgrammingMode: (device: Device) =>
+        ((!!device.dfuTriggerVersion &&
+            device.dfuTriggerVersion.semVer.length > 0) ||
+            isDeviceInDFUBootloader(device)) &&
+        (needSerialport === device.traits.serialPorts || !needSerialport),
+    getFirmwareOptions: device =>
+        dfuFirmware.map(firmwareOption => ({
+            key: firmwareOption.key,
+            description: firmwareOption.description,
+            programDevice: onProgress => (dispatch: AppDispatch) =>
+                dispatch(
+                    programDeviceWithFw(device, firmwareOption, onProgress)
+                ),
+        })),
+    isExpectedFirmware: (device: Device) => () =>
+        new Promise<{
+            device: Device;
+            validFirmware: boolean;
+        }>(resolve => {
+            if (device.dfuTriggerVersion) {
+                logger.debug(
+                    'Device has DFU trigger interface, the device is in Application mode'
+                );
+
+                const { semVer } = device.dfuTriggerVersion;
+
+                if (dfuFirmware.filter(fw => fw.semver === semVer).length > 0) {
+                    resolve({
+                        device,
+                        validFirmware: true,
+                    });
+                }
+            } else {
+                resolve({
+                    device,
+                    validFirmware: false,
+                });
+            }
+        }),
+    tryToSwitchToApplicationMode: device => (dispatch: AppDispatch) =>
+        new Promise<Device>((resolve, reject) => {
+            dispatch(switchToApplicationMode(device, resolve, reject));
+        }),
+});
 
 export default {
     createDfuZipBuffer,

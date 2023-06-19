@@ -9,7 +9,6 @@ import React, { useState } from 'react';
 import Button from '../Button/Button';
 import logger from '../logging';
 import { isDevelopment } from '../utils/environment';
-import { openUrl } from '../utils/open';
 import packageJson from '../utils/packageJson';
 
 export default () => {
@@ -20,7 +19,7 @@ export default () => {
         return (
             <div className="w-100 d-flex justify-content-center">
                 <div className="d-flex flex-column justify-content-center align-items-start bg-white px-3 py-4">
-                    <h2 className="mb-3">Thank you!</h2>
+                    <b className="mb-3">Thank you!</b>
                     <section>
                         <p>
                             We value your feedback and any ideas you may have
@@ -33,6 +32,7 @@ export default () => {
                     </section>
                     <Button
                         large
+                        className="align-self-end"
                         onClick={() => {
                             setSayThankYou(false);
                             setFeedback('');
@@ -49,7 +49,7 @@ export default () => {
     return (
         <div className="w-100 d-flex justify-content-center">
             <div className="d-flex flex-column justify-content-center align-items-start bg-white px-3 py-4">
-                <h2 className="mb-3">Give Feedback</h2>
+                <b className="mb-3">Give Feedback</b>
                 <section>
                     <p>
                         We value your feedback and any ideas you may have for
@@ -59,7 +59,11 @@ export default () => {
                     <p>
                         Note: this is not a support channel, and you will not
                         receive a response. For help and support, visit the{' '}
-                        <a href="https://devzone.nordicsemi.com/">
+                        <a
+                            href="https://devzone.nordicsemi.com/"
+                            target="_blank"
+                            rel="noreferrer noopener"
+                        >
                             Nordic DevZone
                         </a>
                         .
@@ -87,12 +91,9 @@ export default () => {
                         <li>Your feedback</li>
                         <li>
                             <a
-                                onClick={() =>
-                                    openUrl(
-                                        'https://nodejs.org/api/process.html#processplatform'
-                                    )
-                                }
                                 href="https://nodejs.org/api/process.html#processplatform"
+                                target="_blank"
+                                rel="noreferrer noopener"
                             >
                                 Platform
                             </a>
@@ -101,6 +102,7 @@ export default () => {
                 </section>
                 <Button
                     large
+                    className="align-self-end"
                     variant="primary"
                     onClick={() => handleFormData(feedback, setSayThankYou)}
                     disabled={feedback === ''}

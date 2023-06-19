@@ -19,7 +19,7 @@ const ShortcutButton: FC<Props> = ({ label }) => {
     const toggleModalVisible = () => setIsModalVisible(!isModalVisible);
 
     useHotKey({
-        hotKey: '?',
+        hotKey: 'shift+?',
         title: 'Open shortcut overview',
         isGlobal: true,
         action: () => toggleModalVisible(),

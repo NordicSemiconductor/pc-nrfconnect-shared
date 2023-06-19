@@ -5,7 +5,6 @@
  */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { createSlice } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 
@@ -21,11 +20,19 @@ const reducer = combineReducers({
         .reducer,
 });
 
+const EmptyDiv = () => <div />;
+
 export default () => (
     <App
         appReducer={reducer}
         deviceSelect={<BoilerplateDeviceSelector />}
         sidePanel={<SidePanel />}
-        panes={[{ name: 'Components', Main: ComponentsPage }]}
+        panes={[
+            { name: 'Components', Main: ComponentsPage },
+            {
+                name: 'Empty Pane',
+                Main: EmptyDiv,
+            },
+        ]}
     />
 );

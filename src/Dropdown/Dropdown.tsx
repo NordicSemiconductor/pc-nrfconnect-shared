@@ -4,18 +4,19 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import FormLabel from 'react-bootstrap/FormLabel';
 
 import styles from './Dropdown.module.scss';
 
 export interface DropdownItem {
-    label: string;
+    label: React.ReactNode;
     value: string;
 }
 
 export interface DropdownProps {
-    label?: string;
+    id?: string;
+    label?: React.ReactNode;
     items: DropdownItem[];
     onSelect: (item: DropdownItem) => void;
     disabled?: boolean;
@@ -24,6 +25,7 @@ export interface DropdownProps {
 }
 
 export default ({
+    id,
     label,
     items,
     onSelect,
@@ -49,6 +51,7 @@ export default ({
         >
             {label && <FormLabel className={styles.label}>{label}</FormLabel>}
             <button
+                id={id}
                 type="button"
                 className={`${styles.btn} ${
                     isActive ? styles.btnActive : styles.btnInactive
@@ -63,7 +66,12 @@ export default ({
                 </span>
                 <span className={`mdi mdi-chevron-down ${styles.mdi}`} />
             </button>
+            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions -- We need an interactive handler as described below */}
             <div
+                onMouseDown={ev => {
+                    // To prevent the dropdown from closing when users click on the scrollbar of the items
+                    ev.preventDefault();
+                }}
                 style={
                     numItemsBeforeScroll > 0
                         ? {

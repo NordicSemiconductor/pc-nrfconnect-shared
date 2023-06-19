@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Device as DeviceProps } from '../../../state';
+import { Device as DeviceProps } from '../../deviceSlice';
 import './device-list.scss';
 interface Props {
     doSelectDevice: (device: DeviceProps, autoReselected: boolean) => void;

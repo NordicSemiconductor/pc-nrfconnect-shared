@@ -5,28 +5,43 @@
  */
 
 import React, { ReactNode } from 'react';
+import { Spinner } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 
 import Button, { ButtonVariants } from '../Button/Button';
-import Spinner from './Spinner';
 
 import './dialog.scss';
+
+type CoreProps = {
+    isVisible: boolean;
+    onHide?: () => void;
+    className?: string;
+    size?: 'sm' | 'm' | 'lg' | 'xl';
+    children: ReactNode;
+};
+
+type DialogProps = CoreProps & {
+    closeOnUnfocus?: boolean;
+    closeOnEsc?: boolean;
+};
 
 export const Dialog = ({
     isVisible,
     closeOnUnfocus = false,
+    closeOnEsc = false,
     onHide = () => {},
     className = '',
+    size = 'm',
     children,
-}: {
-    isVisible: boolean;
-    closeOnUnfocus?: boolean;
-    onHide?: () => void;
-    className?: string;
-    children: ReactNode;
-}) => (
+}: DialogProps) => (
     <Modal
+        onEscapeKeyDown={() => {
+            if (closeOnEsc && onHide) {
+                onHide();
+            }
+        }}
         show={isVisible}
+        size={size === 'm' ? undefined : size}
         backdrop={closeOnUnfocus ? true : 'static'}
         onHide={() => {
             if (closeOnUnfocus && onHide) {
@@ -43,34 +58,36 @@ export const Dialog = ({
 Dialog.Header = ({
     title,
     headerIcon,
+    showSpinner,
 }: {
     title: string;
     headerIcon?: string;
+    showSpinner?: boolean;
 }) => (
     <Modal.Header closeButton={false}>
-        <p>
+        <div>
             <b>{title}</b>
-        </p>
+            {showSpinner && <Spinner size="sm" animation="border" />}
+        </div>
         {headerIcon && <span className={`mdi mdi-${headerIcon}`} />}
     </Modal.Header>
 );
 
-Dialog.Body = ({ children }: { children: ReactNode | string }) => (
+Dialog.Body = ({ children }: { children: ReactNode }) => (
     <Modal.Body>{children}</Modal.Body>
 );
 
-Dialog.Footer = ({
-    showSpinner = false,
-    children,
-}: {
-    showSpinner?: boolean;
-    children: ReactNode;
-}) => (
-    <Modal.Footer>
-        {showSpinner && <Spinner />}
-        {children}
-    </Modal.Footer>
+Dialog.Footer = ({ children }: { children: ReactNode }) => (
+    <Modal.Footer>{children}</Modal.Footer>
 );
+
+export interface DialogButtonProps {
+    onClick: () => void;
+    variant?: ButtonVariants;
+    className?: string;
+    disabled?: boolean;
+    children: ReactNode;
+}
 
 export const DialogButton = ({
     variant = 'secondary',
@@ -78,13 +95,7 @@ export const DialogButton = ({
     className = '',
     disabled = false,
     children,
-}: {
-    onClick: React.MouseEventHandler<HTMLButtonElement>;
-    variant?: ButtonVariants;
-    className?: string;
-    disabled?: boolean;
-    children: ReactNode | string;
-}) => (
+}: DialogButtonProps) => (
     <Button
         large
         variant={variant}
@@ -96,42 +107,86 @@ export const DialogButton = ({
     </Button>
 );
 
-interface Props {
-    isVisible: boolean;
+interface GenericDialogProps extends CoreProps {
+    title: string;
+    footer: ReactNode;
+    headerIcon?: string;
+    showSpinner?: boolean;
+    closeOnUnfocus?: boolean;
+    closeOnEsc?: boolean;
+}
+
+export const GenericDialog = ({
+    isVisible,
+    onHide,
+    title,
+    headerIcon,
+    children,
+    className,
+    footer,
+    showSpinner = false,
+    closeOnUnfocus,
+    closeOnEsc,
+    size,
+}: GenericDialogProps) => (
+    <Dialog
+        onHide={onHide}
+        closeOnUnfocus={closeOnUnfocus}
+        closeOnEsc={closeOnEsc}
+        isVisible={isVisible}
+        className={className}
+        size={size}
+    >
+        <Dialog.Header
+            title={title}
+            headerIcon={headerIcon}
+            showSpinner={showSpinner}
+        />
+        <Dialog.Body>{children}</Dialog.Body>
+        <Dialog.Footer>{footer}</Dialog.Footer>
+    </Dialog>
+);
+
+interface InfoProps extends CoreProps {
     title?: string;
     headerIcon?: string;
-    onClose: () => void;
-    children: ReactNode | string;
+    onHide: () => void;
 }
 
 export const InfoDialog = ({
     isVisible,
     title = 'Info',
-    headerIcon,
+    headerIcon = 'info',
     children,
-    onClose,
-}: Props) => (
-    <Dialog isVisible={isVisible} closeOnUnfocus onHide={onClose}>
-        <Dialog.Header title={title} headerIcon={headerIcon} />
-        <Dialog.Body>{children}</Dialog.Body>
-        <Dialog.Footer>
-            <DialogButton onClick={onClose}>Close</DialogButton>
-        </Dialog.Footer>
-    </Dialog>
+    onHide,
+    size,
+    className,
+}: InfoProps) => (
+    <GenericDialog
+        closeOnEsc
+        closeOnUnfocus
+        onHide={onHide}
+        isVisible={isVisible}
+        headerIcon={headerIcon}
+        title={title}
+        className={className}
+        size={size}
+        footer={<DialogButton onClick={onHide}>Close</DialogButton>}
+    >
+        {children}
+    </GenericDialog>
 );
 
-export const ErrorDialog = (props: Omit<Props, 'headerIcon'>) =>
+export const ErrorDialog = (props: Omit<InfoProps, 'headerIcon'>) =>
     InfoDialog({
         ...props,
         title: props.title ?? 'Error',
         headerIcon: 'alert',
     });
 
-interface ConfirmationDialogProps {
-    isVisible: boolean;
+interface ConfirmationDialogProps extends Omit<CoreProps, 'onHide'> {
     title?: string;
     headerIcon?: string;
-    children: ReactNode | string;
     confirmLabel?: string;
     onConfirm: () => void;
     cancelLabel?: string;
@@ -145,26 +200,37 @@ export const ConfirmationDialog = ({
     title = 'Confirm',
     headerIcon,
     children,
+    className,
     confirmLabel = 'Confirm',
     onConfirm,
     cancelLabel = 'Cancel',
     onCancel,
     optionalLabel,
-    onOptional,
+    onOptional = () => {},
+    size,
 }: ConfirmationDialogProps) => (
-    <Dialog isVisible={isVisible}>
-        <Dialog.Header title={title} headerIcon={headerIcon} />
-        <Dialog.Body>{children}</Dialog.Body>
-        <Dialog.Footer>
-            {onOptional && optionalLabel && (
-                <DialogButton onClick={onOptional}>
-                    {optionalLabel}
+    <GenericDialog
+        onHide={onCancel}
+        closeOnEsc
+        isVisible={isVisible}
+        headerIcon={headerIcon}
+        title={title}
+        className={className}
+        size={size}
+        footer={
+            <>
+                <DialogButton variant="primary" onClick={onConfirm}>
+                    {confirmLabel}
                 </DialogButton>
-            )}
-            <DialogButton onClick={onConfirm} variant="primary">
-                {confirmLabel}
-            </DialogButton>
-            <DialogButton onClick={onCancel}>{cancelLabel}</DialogButton>
-        </Dialog.Footer>
-    </Dialog>
+                {optionalLabel && (
+                    <DialogButton onClick={onOptional}>
+                        {optionalLabel}
+                    </DialogButton>
+                )}
+                <DialogButton onClick={onCancel}>{cancelLabel}</DialogButton>
+            </>
+        }
+    >
+        {children}
+    </GenericDialog>
 );

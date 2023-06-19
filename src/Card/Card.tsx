@@ -6,15 +6,15 @@
 
 import React from 'react';
 import Card from 'react-bootstrap/Card';
-import { element, oneOfType, string } from 'prop-types';
 
 import styles from './card.module.scss';
 
 type NrfCardProps = {
-    title: React.ReactElement | string;
+    children: React.ReactNode;
+    title: React.ReactNode;
 };
 
-const NrfCard: React.FC<NrfCardProps> = ({ children, title }) => (
+export default ({ children, title }: NrfCardProps) => (
     <Card className={styles.card}>
         <Card.Header className={styles.header}>
             <Card.Title>
@@ -24,9 +24,3 @@ const NrfCard: React.FC<NrfCardProps> = ({ children, title }) => (
         <Card.Body className={styles.body}>{children}</Card.Body>
     </Card>
 );
-
-NrfCard.propTypes = {
-    title: oneOfType([element, string]).isRequired,
-};
-
-export default NrfCard;

@@ -4,3 +4,4 @@
 /scripts/nordic-publish.js
 /dist
 /typings/generated/tsconfig.tsbuildinfo
+.vscode/settings.json

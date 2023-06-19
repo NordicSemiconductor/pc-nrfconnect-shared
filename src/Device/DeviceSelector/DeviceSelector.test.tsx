@@ -13,11 +13,9 @@ import {
 } from '@testing-library/react';
 
 import render from '../../../test/testrenderer';
-import { Device } from '../../state';
-import { setDevices } from '../deviceSlice';
+import { Device, setDevices } from '../deviceSlice';
+import { jprogDeviceSetup } from '../jprogOperations';
 import DeviceSelector from './DeviceSelector';
-
-jest.mock('../sdfuOperations', () => ({}));
 
 const testDevice: Device = {
     id: 1,
@@ -95,13 +93,17 @@ const testDevice: Device = {
 };
 
 const validFirmware = {
-    jprog: {
-        PCATest: {
-            fw: 'firmware/PCATest.hex',
-            fwVersion: 'test-fw-1.0.0',
-            fwIdAddress: 0x6000,
-        },
-    },
+    deviceSetups: [
+        jprogDeviceSetup([
+            {
+                key: 'PCATest',
+                fw: 'firmware/invalidDevice.hex',
+                fwVersion: 'fw-1.0.0',
+                fwIdAddress: 0x6000,
+            },
+        ]),
+    ],
+    allowCustomDevice: false,
 };
 
 describe('DeviceSelector', () => {
@@ -228,14 +230,17 @@ describe('DeviceSelector', () => {
                     jlink: true,
                     mcuBoot: true,
                 }}
-                deviceSetup={{
-                    jprog: {
-                        invalidDevice: {
-                            fw: 'firmware/invalidDevice.hex',
-                            fwVersion: 'fw-1.0.0',
-                            fwIdAddress: 0x6000,
-                        },
-                    },
+                deviceSetupConfig={{
+                    deviceSetups: [
+                        jprogDeviceSetup([
+                            {
+                                key: 'firmware_1',
+                                fw: 'firmware/invalidDevice.hex',
+                                fwVersion: 'fw-1.0.0',
+                                fwIdAddress: 0x6000,
+                            },
+                        ]),
+                    ],
                     allowCustomDevice: true,
                 }}
             />,
@@ -257,14 +262,17 @@ describe('DeviceSelector', () => {
                     jlink: true,
                     mcuBoot: true,
                 }}
-                deviceSetup={{
-                    jprog: {
-                        invalidDevice: {
-                            fw: 'firmware/invalidDevice.hex',
-                            fwVersion: 'fw-1.0.0',
-                            fwIdAddress: 0x6000,
-                        },
-                    },
+                deviceSetupConfig={{
+                    deviceSetups: [
+                        jprogDeviceSetup([
+                            {
+                                key: 'invalidDevice',
+                                fw: 'firmware/invalidDevice.hex',
+                                fwVersion: 'fw-1.0.0',
+                                fwIdAddress: 0x6000,
+                            },
+                        ]),
+                    ],
                     allowCustomDevice: false,
                 }}
             />,
@@ -292,7 +300,7 @@ describe('DeviceSelector', () => {
                     jlink: true,
                     mcuBoot: true,
                 }}
-                deviceSetup={validFirmware}
+                deviceSetupConfig={validFirmware}
             />,
             [setDevices([testDevice])]
         );
@@ -314,7 +322,7 @@ describe('DeviceSelector', () => {
                     jlink: true,
                     mcuBoot: true,
                 }}
-                deviceSetup={validFirmware}
+                deviceSetupConfig={validFirmware}
             />,
             [setDevices([testDevice])]
         );

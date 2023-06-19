@@ -5,7 +5,6 @@
  */
 
 import React from 'react';
-import { func, string } from 'prop-types';
 
 import './pseudo-button.scss';
 
@@ -30,12 +29,19 @@ const blurAndInvoke =
 
 // Motivation for this class: A normal button in HTML must not contain divs or other buttons,
 // but we do have things that behave like buttons and at the same time should contain such things
-const PseudoButton: React.FC<{
-    className?: string;
-    title?: string;
+export default ({
+    onClick = () => {},
+    className = '',
+    children,
+    title,
+    testId,
+}: {
     onClick?: React.EventHandler<React.SyntheticEvent>;
+    className?: string;
+    children?: React.ReactNode;
+    title?: string;
     testId?: string;
-}> = ({ onClick = () => {}, className = '', children, title, testId }) => (
+}) => (
     <div
         role="button"
         className={`core19-pseudo-button ${className}`}
@@ -48,11 +54,3 @@ const PseudoButton: React.FC<{
         {children}
     </div>
 );
-PseudoButton.propTypes = {
-    onClick: func,
-    className: string,
-    title: string,
-    testId: string,
-};
-
-export default PseudoButton;

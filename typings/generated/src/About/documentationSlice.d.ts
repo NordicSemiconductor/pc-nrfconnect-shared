@@ -7,6 +7,6 @@ interface DocumentationSectionProps {
 export interface DocumentationState {
     sections: React.Component<DocumentationSectionProps>[];
 }
-export declare const reducer: import("redux").Reducer<DocumentationState, import("redux").AnyAction>, setDocumentationSections: import("@reduxjs/toolkit").ActionCreatorWithPayload<any, string>;
+export declare const reducer: import("redux").Reducer<DocumentationState, import("redux").AnyAction>, setDocumentationSections: import("@reduxjs/toolkit").ActionCreatorWithPayload<any, "documentation/setDocumentationSections">;
 export declare const documentationSections: ({ documentation }: any) => any;
 export {};

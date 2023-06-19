@@ -89,6 +89,10 @@ export const createSerialPort = async (
         ipcRenderer.invoke(SERIALPORT_CHANNEL.SET, path, newOptions);
     };
 
+    const getOptions = ():
+        | Promise<SerialPortOpenOptions<AutoDetectTypes>>
+        | undefined => ipcRenderer.invoke(SERIALPORT_CHANNEL.GET_OPTIONS, path);
+
     const openWithRetries = async (retryCount: number) => {
         try {
             return (await ipcRenderer.invoke(
@@ -118,9 +122,15 @@ export const createSerialPort = async (
     const error = await openWithRetries(3);
 
     if (error) {
-        logger.error(
-            `Failed to connect to port: ${path}. Make sure the port is not already taken, if you are not sure, try to power cycle the device and try to connect again.`
-        );
+        if (error.includes('FAILED_DIFFERENT_SETTINGS')) {
+            logger.warn(
+                `Failed to connect to port: ${path}. Port is open with different settings.`
+            );
+        } else {
+            logger.error(
+                `Failed to connect to port: ${path}. Make sure the port is not already taken, if you are not sure, try to power cycle the device and try to connect again.`
+            );
+        }
         throw new Error(error);
     } else {
         logger.info(`Opened port with options: ${JSON.stringify(options)}`);
@@ -133,6 +143,7 @@ export const createSerialPort = async (
         isOpen,
         update,
         set,
+        getOptions,
         onData: (handler: (data: Uint8Array) => void) => {
             eventEmitter.on('onData', handler);
             return () => {
@@ -174,4 +185,18 @@ export const createSerialPort = async (
             };
         },
     };
+};
+
+export const getSerialPortOptions = async (
+    path: string
+): Promise<SerialPortOpenOptions<AutoDetectTypes> | undefined> => {
+    try {
+        console.log('will fetch options from path=', path);
+        return (await ipcRenderer.invoke(
+            SERIALPORT_CHANNEL.GET_OPTIONS,
+            path
+        )) as SerialPortOpenOptions<AutoDetectTypes> | undefined;
+    } catch (error) {
+        logger.error(`Failed to get options for port: ${path}`);
+    }
 };
