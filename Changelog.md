@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## Unreleased
+
+### Changed
+
+-   FeedbackPane: Change **Platform** to **Operating system**, and remove the
+    link, which opened nodejs documentation.
+
 ## 59 - 2023-06-16
 
 ### Added

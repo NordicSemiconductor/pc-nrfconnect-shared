@@ -87,17 +87,9 @@ export default () => {
                         We only collect this information when you send feedback:
                     </p>
                     <ul>
-                        <li>Application Name</li>
+                        <li>Application name</li>
                         <li>Your feedback</li>
-                        <li>
-                            <a
-                                href="https://nodejs.org/api/process.html#processplatform"
-                                target="_blank"
-                                rel="noreferrer noopener"
-                            >
-                                Platform
-                            </a>
-                        </li>
+                        <li>Operating system</li>
                     </ul>
                 </section>
                 <Button
