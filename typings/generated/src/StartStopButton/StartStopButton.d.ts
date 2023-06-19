@@ -8,6 +8,7 @@ interface Props {
     started: boolean;
     disabled?: boolean;
     large?: boolean;
+    showIcon?: boolean;
     variant?: ButtonVariants;
     className?: string;
 }
