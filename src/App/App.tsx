@@ -23,6 +23,7 @@ import {
 } from '../Device/deviceSlice';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
+import FlashMessages from '../FlashMessage/FlashMessage';
 import LogViewer from '../Log/LogViewer';
 import NavBar from '../NavBar/NavBar';
 import classNames from '../utils/classNames';
@@ -187,6 +188,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
                         <LogViewer />
                     </div>
                 </div>
+                <FlashMessages />
             </div>
             <VisibilityBar isSidePanelEnabled={sidePanel !== null} />
 

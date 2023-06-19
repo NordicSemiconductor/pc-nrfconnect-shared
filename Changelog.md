@@ -9,6 +9,14 @@ every new version is a new major version.
 
 ## Unreleased
 
+### Added
+
+-   Flash Messages feature:
+
+    -   Add `messages: flashMessageReducer` in the appReducer.
+    -   Create flash messages by using one of the relevant thunk functions
+        exported from `flashMessageSlice.ts`.
+
 ### Changed
 
 -   FeedbackPane: Change **Platform** to **Operating system**, and remove the
