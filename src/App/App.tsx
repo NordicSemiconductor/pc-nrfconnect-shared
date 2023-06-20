@@ -44,27 +44,6 @@ import VisibilityBar from './VisibilityBar';
 import './app.scss';
 import './shared.scss';
 
-type LegacyPane = [string, FC];
-let warnedAboutLegacyPanes = false;
-const convertLegacy = (pane: Pane | LegacyPane): Pane => {
-    const isLegacyPane = Array.isArray(pane);
-    if (!isLegacyPane) {
-        return pane;
-    }
-
-    if (!warnedAboutLegacyPanes) {
-        console.warn(
-            `Passed legacy definition for pane '${pane[0]}' which will be deprecated and removed in the future.`
-        );
-        warnedAboutLegacyPanes = true;
-    }
-
-    return {
-        name: pane[0],
-        Main: pane[1],
-    };
-};
-
 let usageDataAlreadyInitialised = false;
 const initialiseUsageData = () => {
     if (!usageDataAlreadyInitialised) {
@@ -232,11 +211,11 @@ const usePersistedPane = () => {
     }, [dispatch]);
 };
 
-const useAllPanes = (panes: (Pane | LegacyPane)[]) => {
+const useAllPanes = (panes: Pane[]) => {
     const dispatch = useDispatch();
 
     const allPanes = useMemo(
-        () => [...panes, { name: 'About', Main: About }].map(convertLegacy),
+        () => [...panes, { name: 'About', Main: About }] as Pane[],
         [panes]
     );
 
