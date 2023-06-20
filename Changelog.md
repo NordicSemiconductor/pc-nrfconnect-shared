@@ -23,6 +23,10 @@ every new version is a new major version.
 
 -   Support for `LegacyPane`
 
+### Fixed
+
+-   `DeviceSetup` on reject `isExpectedFirmware` used to fail silently
+
 ### Steps to upgrade when using this package
 
 -   Replace all instances of `LegacyPane` with `Pane` in the `panes` property of
