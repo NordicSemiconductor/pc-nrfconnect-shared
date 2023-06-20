@@ -13,8 +13,8 @@ import nrfDeviceLib, {
 import logger from '../logging';
 import type { AppDispatch, RootState } from '../store';
 import {
-    clearWaitForDevice,
     clearWaitForDeviceTimeout,
+    completeWaitForDevice,
     setArrivedButWrongWhen,
     setDisconnectedTime,
     setLastArrivedDeviceId,
@@ -76,23 +76,26 @@ const initAutoReconnectTimeout =
     (dispatch: AppDispatch) => {
         const timeout = waitForDevice.timeout;
 
+        const onFail = waitForDevice.onFail;
+        waitForDevice.onFail = (reason?: string | undefined) => {
+            dispatch(closeDeviceSetupDialog());
+            if (onFail) {
+                onFail(reason);
+            }
+            dispatch(clearWaitForDeviceTimeout());
+            onTimeout();
+            logger.warn(reason);
+        };
+
         dispatch(
             setWaitForDeviceTimeout(
                 setTimeout(() => {
-                    dispatch(closeDeviceSetupDialog());
-                    if (waitForDevice?.onFail)
-                        waitForDevice?.onFail(
+                    if (waitForDevice.onFail)
+                        waitForDevice.onFail(
                             `Failed to detect device after reboot. Timed out after ${
                                 timeout / 1000
                             } seconds.`
                         );
-                    dispatch(clearWaitForDeviceTimeout());
-                    onTimeout();
-                    logger.warn(
-                        `Failed to detect device after reboot. Timed out after ${
-                            timeout / 1000
-                        } seconds.`
-                    );
                 }, timeout)
             )
         );
@@ -277,7 +280,7 @@ export const startWatchingDevices =
                                     );
 
                                     if (waitForDevice.once) {
-                                        dispatch(clearWaitForDevice());
+                                        dispatch(completeWaitForDevice());
                                     } else {
                                         dispatch(clearWaitForDeviceTimeout());
                                     }

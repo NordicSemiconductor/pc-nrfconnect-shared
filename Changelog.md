@@ -18,6 +18,12 @@ every new version is a new major version.
 
 -   FeedbackPane: Change **Platform** to **Operating system**, and remove the
     link, which opened nodejs documentation.
+-   `clearWaitForDevice` will now call the on fail if timeout has already
+    started
+
+### Fixed
+
+-   Device remains in the device list if wait for device is active and canceled
 
 ## 59 - 2023-06-16
 

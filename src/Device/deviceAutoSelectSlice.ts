@@ -84,6 +84,15 @@ const slice = createSlice({
         },
 
         clearWaitForDevice: state => {
+            if (state.autoReconnectTimeout && state.waitForDevice?.onFail) {
+                state.waitForDevice?.onFail('canceled');
+            }
+            state.waitForDevice = undefined;
+            clearTimeout(state.autoReconnectTimeout);
+            state.autoReconnectTimeout = undefined;
+        },
+
+        completeWaitForDevice: state => {
             state.waitForDevice = undefined;
             clearTimeout(state.autoReconnectTimeout);
             state.autoReconnectTimeout = undefined;
@@ -114,6 +123,7 @@ export const {
         setAutoReselect,
         setWaitForDevice,
         clearWaitForDevice,
+        completeWaitForDevice,
         setLastArrivedDeviceId,
         setArrivedButWrongWhen,
     },
