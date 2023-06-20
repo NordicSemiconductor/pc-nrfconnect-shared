@@ -76,11 +76,10 @@ const initAutoReconnectTimeout =
     (dispatch: AppDispatch) => {
         const timeout = waitForDevice.timeout;
 
-        const onFail = waitForDevice.onFail;
-        waitForDevice.onFail = (reason?: string | undefined) => {
+        const onFail = (reason?: string) => {
             dispatch(closeDeviceSetupDialog());
-            if (onFail) {
-                onFail(reason);
+            if (waitForDevice.onFail) {
+                waitForDevice.onFail(reason);
             }
             dispatch(clearWaitForDeviceTimeout());
             onTimeout();
@@ -90,12 +89,11 @@ const initAutoReconnectTimeout =
         dispatch(
             setWaitForDeviceTimeout(
                 setTimeout(() => {
-                    if (waitForDevice.onFail)
-                        waitForDevice.onFail(
-                            `Failed to detect device after reboot. Timed out after ${
-                                timeout / 1000
-                            } seconds.`
-                        );
+                    onFail(
+                        `Failed to detect device after reboot. Timed out after ${
+                            timeout / 1000
+                        } seconds.`
+                    );
                 }, timeout)
             )
         );
