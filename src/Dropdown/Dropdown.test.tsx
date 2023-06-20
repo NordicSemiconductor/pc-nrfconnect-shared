@@ -27,7 +27,7 @@ describe('Dropdown', () => {
             <Dropdown
                 items={items}
                 onSelect={jest.fn()}
-                selectedItem={items[0]}
+                selectedItem={items[0]!}
             />
         );
         expect(screen.getAllByText('Foo').length).toBe(2); // default selected + item
@@ -36,12 +36,12 @@ describe('Dropdown', () => {
 
     it('calls onSelect when item is clicked', () => {
         const onSelect = jest.fn();
-        const item = items[1];
+        const item = items[1]!;
         render(
             <Dropdown
                 items={items}
                 onSelect={onSelect}
-                selectedItem={items[0]}
+                selectedItem={items[0]!}
             />
         );
         const dropdownItem = screen.getByText(item.label);
@@ -54,7 +54,7 @@ describe('Dropdown', () => {
             <Dropdown
                 items={items}
                 onSelect={jest.fn()}
-                selectedItem={items[1]}
+                selectedItem={items[1]!}
             />
         );
         expect(screen.getAllByText('Bar').length).toBe(2);

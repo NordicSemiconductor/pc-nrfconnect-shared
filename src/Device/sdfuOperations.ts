@@ -68,13 +68,13 @@ const getBootloaderInformation = async (device: Device) => {
         device.id
     );
 
-    const index = info.imageInfoList.findIndex(
+    const image = info.imageInfoList.find(
         imageInfo => imageInfo.imageType === 'NRFDL_IMAGE_TYPE_BOOTLOADER'
     );
-    if (index !== -1) {
+    if (image != null) {
         return {
             bootloaderType: info.bootloaderType,
-            version: info.imageInfoList[index].version,
+            version: image.version,
         };
     }
 

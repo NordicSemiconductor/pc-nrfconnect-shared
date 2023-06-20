@@ -8,6 +8,8 @@
         "jsx": "react",
 
         "strict": true,
+        "noUncheckedIndexedAccess": true,
+
         "isolatedModules": true,
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true

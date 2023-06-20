@@ -136,7 +136,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
         if (documentation) dispatch(setDocumentationSections(documentation));
     }, [dispatch, documentation]);
 
-    const SidePanelComponent = allPanes[currentPane].SidePanel;
+    const SidePanelComponent = allPanes[currentPane]?.SidePanel;
     const currentSidePanel =
         SidePanelComponent != null ? <SidePanelComponent /> : sidePanel;
 

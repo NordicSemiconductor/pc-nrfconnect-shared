@@ -69,7 +69,8 @@ const ErrorDialog = () => {
             <Dialog.Header title="Error" headerIcon="alert" />
             <Dialog.Body>
                 {messages.length === 1 ? (
-                    <ErrorMessage error={messages[0]} />
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The logic above ensures that there is one message
+                    <ErrorMessage error={messages[0]!} />
                 ) : (
                     <MultipleErrorMessages messages={messages} />
                 )}

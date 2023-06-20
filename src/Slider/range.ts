@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 
 import { isFactor } from './factor';
 
-export type Values = readonly number[];
+export type Values = readonly [number, ...number[]];
 export type Range = {
     min: number;
     max: number;
@@ -25,10 +25,12 @@ export const isValues = (
 export const getMin = (rangeOrValues: RangeOrValues) =>
     isValues(rangeOrValues) ? rangeOrValues[0] : rangeOrValues.min;
 
+const lastValue = (rangeOrValues: Values) =>
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Because the array is defined to have at least one element
+    rangeOrValues[rangeOrValues.length - 1]!;
+
 export const getMax = (rangeOrValues: RangeOrValues) =>
-    isValues(rangeOrValues)
-        ? rangeOrValues[rangeOrValues.length - 1]
-        : rangeOrValues.max;
+    isValues(rangeOrValues) ? lastValue(rangeOrValues) : rangeOrValues.max;
 
 export const getStep = (range: Range) =>
     range.step != null ? range.step : 0.1 ** (range.decimals ?? 0);
@@ -40,14 +42,16 @@ const assert = (expectedToBeTrue: boolean, warning: string) => {
 };
 
 const validateValues = (values: Values) => {
-    for (let i = 0; i < values.length - 1; i += 1) {
-        assert(
-            values[i] < values[i + 1],
-            `The values of the range must be sorted correctly, but ${
-                values[i]
-            } is larger then ${values[i + 1]} in ${values}`
-        );
-    }
+    let previousValue: Values[0] | undefined;
+    values.forEach(value => {
+        if (previousValue != null) {
+            assert(
+                previousValue < value,
+                `The values of the range must be sorted correctly, but ${previousValue} is larger then ${value} in ${values}`
+            );
+        }
+        previousValue = value;
+    });
 };
 
 const validateRange = (range: Range) => {

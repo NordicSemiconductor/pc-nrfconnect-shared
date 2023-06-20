@@ -30,6 +30,10 @@ const useValidatedArraySizes = (
     }, [onChange, values]);
 };
 
+const warnAboutUndefinedCallback = (index: number) => () => {
+    throw new Error(`onChange is not defined for index ${index}`);
+};
+
 export interface Props {
     id?: string;
     title?: string;
@@ -79,7 +83,9 @@ const Slider: FC<Props> = ({
                     value={value}
                     range={rangeOrValues}
                     disabled={disabled}
-                    onChange={onChange[index]}
+                    onChange={
+                        onChange[index] ?? warnAboutUndefinedCallback(index)
+                    }
                     onChangeComplete={onChangeComplete}
                     sliderWidth={width}
                 />

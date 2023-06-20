@@ -80,7 +80,7 @@ export default async () => {
         log('JLink', getModuleVersion('JlinkARM', versions));
         if (
             process.platform === 'darwin' &&
-            os.cpus()[0].model.includes('Apple')
+            os.cpus()[0]?.model.includes('Apple')
         ) {
             const JLinkArchOnDarwin = await checkJLinkArchitectureOnDarwin();
 

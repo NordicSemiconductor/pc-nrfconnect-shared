@@ -27,8 +27,8 @@ describe('logBuffer', () => {
             { id: 0, level: '', message: '' },
             { id: 1, level: '', message: '' },
         ];
-        logBuffer.addEntry(inputEntries[0]);
-        logBuffer.addEntry(inputEntries[1]);
+        logBuffer.addEntry(inputEntries[0]!);
+        logBuffer.addEntry(inputEntries[1]!);
         const outputEntries = logBuffer.clear();
         expect(outputEntries).toEqual(inputEntries);
     });

@@ -42,7 +42,7 @@ const generalInfoReport = async () => {
             processors,
         },
         { total, free },
-        fsSize,
+        fsSizes,
     ] = await Promise.all([
         si.system(),
         si.bios(),
@@ -57,15 +57,21 @@ const generalInfoReport = async () => {
         getDeviceLibContext()
     );
 
+    const fsSizesEntries = fsSizes.map(
+        fsSize =>
+            `  - ${fsSize.fs} (${fsSize.type})` +
+            ` ${pretty(Number(fsSize.size) || 0)}` +
+            ` ${fsSize.use.toFixed(1)}% used`
+    );
+
     return [
         `- System:     ${manufacturer} ${model}`,
         `- BIOS:       ${vendor} ${version}`,
         `- CPU:        ${processors} x ${cpuManufacturer} ${brand} ${speed} GHz` +
             ` ${cores} cores (${physicalCores} physical)`,
         `- Memory:     ${pretty(free)} free of ${pretty(total)} total`,
-        `- Filesystem: ${fsSize[0].fs} (${fsSize[0].type})` +
-            ` ${pretty(Number(fsSize[0].size) || 0)}` +
-            ` ${fsSize[0].use.toFixed(1)}% used`,
+        `- Filesystem:`,
+        fsSizesEntries,
         '',
         `- OS:         ${distro} (${release}) ${platform} ${arch}`,
         '',

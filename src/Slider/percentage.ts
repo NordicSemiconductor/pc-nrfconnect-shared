@@ -38,21 +38,24 @@ export const fromPercentage = (
         const closestNextIndex =
             lastValueIndex === noOfIndexes ? noOfIndexes : lastValueIndex + 1;
 
-        let closestIndex = -1;
+        let closestIndex;
 
         if (directionForward) {
             closestIndex =
-                values[closestNextIndex] > computedValue
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The computation above should make sure, that we always read at a valid index
+                values[closestNextIndex]! > computedValue
                     ? lastValueIndex
                     : closestNextIndex;
         } else {
             closestIndex =
-                values[closestPrevIndex] < computedValue
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The computation above should make sure, that we always read at a valid index
+                values[closestPrevIndex]! < computedValue
                     ? lastValueIndex
                     : closestPrevIndex;
         }
 
-        return values[closestIndex];
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The computation above should make sure, that we always read at a valid index
+        return values[closestIndex]!;
     }
 
     const range = rangeOrValues;
