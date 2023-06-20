@@ -88,6 +88,7 @@ const slice = createSlice({
             if (state.autoReconnectTimeout && state.onTimeout) {
                 state.onTimeout('canceled');
             }
+            state.onTimeout = undefined;
             state.waitForDevice = undefined;
             clearTimeout(state.autoReconnectTimeout);
             state.autoReconnectTimeout = undefined;
@@ -95,6 +96,7 @@ const slice = createSlice({
 
         completeWaitForDevice: state => {
             state.waitForDevice = undefined;
+            state.onTimeout = undefined;
             clearTimeout(state.autoReconnectTimeout);
             state.autoReconnectTimeout = undefined;
         },
