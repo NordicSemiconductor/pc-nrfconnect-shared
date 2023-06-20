@@ -113,13 +113,18 @@ export const prepareDevice =
         if (checkCurrentFirmwareVersion) {
             // eslint-disable-next-line no-restricted-syntax
             for (const deviceSetup of validDeviceSetups) {
-                // eslint-disable-next-line no-await-in-loop
-                const result = await dispatch(
-                    deviceSetup.isExpectedFirmware(device)
-                );
-                device = result.device;
-                if (result.validFirmware) {
-                    onSuccessWrapper(device);
+                try {
+                    // eslint-disable-next-line no-await-in-loop
+                    const result = await dispatch(
+                        deviceSetup.isExpectedFirmware(device)
+                    );
+                    device = result.device;
+                    if (result.validFirmware) {
+                        onSuccessWrapper(device);
+                        return;
+                    }
+                } catch (error) {
+                    onFail(error);
                     return;
                 }
             }
