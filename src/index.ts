@@ -100,6 +100,7 @@ export {
     getAutoReselect,
     getWaitingForDeviceTimeout,
     getWaitingToAutoReselect,
+    getWaitForDevice,
 } from './Device/deviceAutoSelectSlice';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
 export { getDeviceLibContext } from './Device/deviceLibWrapper';

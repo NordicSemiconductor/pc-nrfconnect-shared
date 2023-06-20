@@ -72,10 +72,9 @@ const shouldAutoReselect = (
 };
 
 const initAutoReconnectTimeout =
-    (onTimeout: () => void, waitForDevice?: WaitForDevice) =>
+    (onTimeout: () => void, waitForDevice: WaitForDevice) =>
     (dispatch: AppDispatch) => {
-        const timeout = waitForDevice?.timeout;
-        if (timeout == null) return;
+        const timeout = waitForDevice.timeout;
 
         dispatch(
             setWaitForDeviceTimeout(
@@ -318,8 +317,7 @@ export const startWatchingDevices =
                                                     removeDeviceFromList(
                                                         device
                                                     ),
-                                                getState().deviceAutoSelect
-                                                    .waitForDevice
+                                                waitForDevice
                                             )
                                         );
                                     } else {
