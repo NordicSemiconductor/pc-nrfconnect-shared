@@ -30,6 +30,7 @@ export interface DeviceAutoSelectState {
     autoReconnectTimeout?: NodeJS.Timeout;
     lastArrivedDeviceId?: number;
     arrivedButWrongWhen?: boolean;
+    onTimeout?: (reason?: string) => void;
 }
 
 const initialState: DeviceAutoSelectState = {
@@ -84,8 +85,8 @@ const slice = createSlice({
         },
 
         clearWaitForDevice: state => {
-            if (state.autoReconnectTimeout && state.waitForDevice?.onFail) {
-                state.waitForDevice?.onFail('canceled');
+            if (state.autoReconnectTimeout && state.onTimeout) {
+                state.onTimeout('canceled');
             }
             state.waitForDevice = undefined;
             clearTimeout(state.autoReconnectTimeout);
@@ -110,6 +111,12 @@ const slice = createSlice({
         ) => {
             state.arrivedButWrongWhen = action.payload;
         },
+        setOnTimeout: (
+            state,
+            action: PayloadAction<(reason?: string) => void>
+        ) => {
+            state.onTimeout = action.payload;
+        },
     },
 });
 
@@ -126,6 +133,7 @@ export const {
         completeWaitForDevice,
         setLastArrivedDeviceId,
         setArrivedButWrongWhen,
+        setOnTimeout,
     },
 } = slice;
 
@@ -152,3 +160,5 @@ export const getLastArrivedDeviceId = (state: RootState) =>
     state.deviceAutoSelect.lastArrivedDeviceId;
 export const getArrivedButWrongWhen = (state: RootState) =>
     state.deviceAutoSelect.arrivedButWrongWhen;
+export const getOnTimeout = (state: RootState) =>
+    state.deviceAutoSelect.onTimeout;

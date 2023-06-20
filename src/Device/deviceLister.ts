@@ -18,6 +18,7 @@ import {
     setArrivedButWrongWhen,
     setDisconnectedTime,
     setLastArrivedDeviceId,
+    setOnTimeout,
     setWaitForDeviceTimeout,
     WaitForDevice,
 } from './deviceAutoSelectSlice';
@@ -73,27 +74,32 @@ const shouldAutoReselect = (
 
 const initAutoReconnectTimeout =
     (onTimeout: () => void, waitForDevice: WaitForDevice) =>
-    (dispatch: AppDispatch) => {
+    (dispatch: AppDispatch, getState: () => RootState) => {
         const timeout = waitForDevice.timeout;
 
-        const onFail = (reason?: string) => {
-            dispatch(closeDeviceSetupDialog());
-            if (waitForDevice.onFail) {
-                waitForDevice.onFail(reason);
-            }
-            dispatch(clearWaitForDeviceTimeout());
-            onTimeout();
-            logger.warn(reason);
-        };
+        dispatch(
+            setOnTimeout((reason?: string) => {
+                dispatch(closeDeviceSetupDialog());
+                if (waitForDevice.onFail) {
+                    waitForDevice.onFail(reason);
+                }
+                dispatch(clearWaitForDeviceTimeout());
+                onTimeout();
+                logger.warn(reason);
+            })
+        );
 
         dispatch(
             setWaitForDeviceTimeout(
                 setTimeout(() => {
-                    onFail(
-                        `Failed to detect device after reboot. Timed out after ${
-                            timeout / 1000
-                        } seconds.`
-                    );
+                    const action = getState().deviceAutoSelect.onTimeout;
+                    if (action) {
+                        action(
+                            `Failed to detect device after reboot. Timed out after ${
+                                timeout / 1000
+                            } seconds.`
+                        );
+                    }
                 }, timeout)
             )
         );
