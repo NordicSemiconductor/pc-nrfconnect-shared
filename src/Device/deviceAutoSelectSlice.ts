@@ -6,7 +6,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import type { RootState } from '../store';
+import type { AppDispatch, RootState } from '../store';
 import type { Device } from './deviceSlice';
 
 export interface WaitForDevice {
@@ -30,6 +30,7 @@ export interface DeviceAutoSelectState {
     autoReconnectTimeout?: NodeJS.Timeout;
     lastArrivedDeviceId?: number;
     arrivedButWrongWhen?: boolean;
+    onCancelTimeout?: () => void;
 }
 
 const initialState: DeviceAutoSelectState = {
@@ -84,6 +85,7 @@ const slice = createSlice({
         },
 
         clearWaitForDevice: state => {
+            state.onCancelTimeout = undefined;
             state.waitForDevice = undefined;
             clearTimeout(state.autoReconnectTimeout);
             state.autoReconnectTimeout = undefined;
@@ -101,8 +103,23 @@ const slice = createSlice({
         ) => {
             state.arrivedButWrongWhen = action.payload;
         },
+        setOnCancelTimeout: (state, action: PayloadAction<() => void>) => {
+            state.onCancelTimeout = action.payload;
+        },
     },
 });
+
+export const clearWaitForDevice =
+    (cancel = true) =>
+    (dispatch: AppDispatch, getState: () => RootState) => {
+        if (cancel && getState().deviceAutoSelect.autoReconnectTimeout) {
+            const onCancel = getState().deviceAutoSelect.onCancelTimeout;
+            if (onCancel) {
+                onCancel();
+            }
+        }
+        dispatch(slice.actions.clearWaitForDevice());
+    };
 
 export const {
     reducer,
@@ -113,9 +130,9 @@ export const {
         setDisconnectedTime,
         setAutoReselect,
         setWaitForDevice,
-        clearWaitForDevice,
         setLastArrivedDeviceId,
         setArrivedButWrongWhen,
+        setOnCancelTimeout,
     },
 } = slice;
 

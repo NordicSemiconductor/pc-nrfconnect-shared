@@ -18,6 +18,7 @@ import {
     setArrivedButWrongWhen,
     setDisconnectedTime,
     setLastArrivedDeviceId,
+    setOnCancelTimeout,
     setWaitForDeviceTimeout,
     WaitForDevice,
 } from './deviceAutoSelectSlice';
@@ -75,6 +76,8 @@ const initAutoReconnectTimeout =
     (onTimeout: () => void, waitForDevice: WaitForDevice) =>
     (dispatch: AppDispatch) => {
         const timeout = waitForDevice.timeout;
+
+        dispatch(setOnCancelTimeout(onTimeout));
 
         dispatch(
             setWaitForDeviceTimeout(
@@ -135,6 +138,29 @@ export const hasValidDeviceTraits = (
         rule => requiredTraits[rule as keyof DeviceTraits] === false
     );
 
+const removeDeviceFromList =
+    (
+        remove: Device,
+        onDeviceDeselected: () => void,
+        onDeviceDisconnected: (device: Device) => void
+    ) =>
+    (dispatch: AppDispatch, getState: () => RootState) => {
+        if (remove.serialNumber === getState().device.selectedSerialNumber) {
+            onDeviceDeselected();
+        }
+
+        if (
+            remove.serialNumber === getState().device.selectedSerialNumber &&
+            !getState().deviceAutoSelect.waitForDevice
+        ) {
+            dispatch(closeDeviceSetupDialog());
+        }
+
+        if (!getState().deviceAutoSelect.arrivedButWrongWhen) {
+            dispatch(removeDevice(remove));
+            onDeviceDisconnected(remove);
+        }
+    };
 /*
  * Starts watching for devices with the given traits. See the nrf-device-lib
  * library for available traits. Whenever devices are attached/detached, this
@@ -150,28 +176,6 @@ export const startWatchingDevices =
     ) =>
     async (dispatch: AppDispatch, getState: () => RootState) => {
         const updateDeviceList = (event: HotplugEvent) => {
-            const removeDeviceFromList = (remove: Device) => {
-                if (
-                    remove.serialNumber ===
-                    getState().device.selectedSerialNumber
-                ) {
-                    onDeviceDeselected();
-                }
-
-                if (
-                    remove.serialNumber ===
-                        getState().device.selectedSerialNumber &&
-                    !getState().deviceAutoSelect.waitForDevice
-                ) {
-                    dispatch(closeDeviceSetupDialog());
-                }
-
-                if (!getState().deviceAutoSelect.arrivedButWrongWhen) {
-                    dispatch(removeDevice(remove));
-                    onDeviceDisconnected(remove);
-                }
-            };
-
             switch (event.event_type) {
                 case 'NRFDL_DEVICE_EVENT_ARRIVED':
                     if (!event.device) {
@@ -277,7 +281,7 @@ export const startWatchingDevices =
                                     );
 
                                     if (waitForDevice.once) {
-                                        dispatch(clearWaitForDevice());
+                                        dispatch(clearWaitForDevice(false));
                                     } else {
                                         dispatch(clearWaitForDeviceTimeout());
                                     }
@@ -314,19 +318,35 @@ export const startWatchingDevices =
                                         dispatch(
                                             initAutoReconnectTimeout(
                                                 () =>
-                                                    removeDeviceFromList(
-                                                        device
+                                                    dispatch(
+                                                        removeDeviceFromList(
+                                                            device,
+                                                            onDeviceDeselected,
+                                                            onDeviceDisconnected
+                                                        )
                                                     ),
                                                 waitForDevice
                                             )
                                         );
                                     } else {
-                                        removeDeviceFromList(device);
+                                        dispatch(
+                                            removeDeviceFromList(
+                                                device,
+                                                onDeviceDeselected,
+                                                onDeviceDisconnected
+                                            )
+                                        );
                                     }
 
                                     dispatch(setDisconnectedTime(Date.now()));
                                 } else {
-                                    removeDeviceFromList(device);
+                                    dispatch(
+                                        removeDeviceFromList(
+                                            device,
+                                            onDeviceDeselected,
+                                            onDeviceDisconnected
+                                        )
+                                    );
                                 }
                             }
                         });

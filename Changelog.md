@@ -19,6 +19,11 @@ every new version is a new major version.
 -   FeedbackPane: Change **Platform** to **Operating system**, and remove the
     link, which opened nodejs documentation.
 
+### Fixed
+
+-   Device remains selected if waiting for device is ongoing and
+    `clearWaitForDevice` is called
+
 ### Removed
 
 -   Support for `LegacyPane`
