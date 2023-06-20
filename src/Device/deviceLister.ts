@@ -74,32 +74,29 @@ const shouldAutoReselect = (
 
 const initAutoReconnectTimeout =
     (onTimeout: () => void, waitForDevice: WaitForDevice) =>
-    (dispatch: AppDispatch, getState: () => RootState) => {
+    (dispatch: AppDispatch) => {
         const timeout = waitForDevice.timeout;
 
-        dispatch(
-            setOnTimeout((reason?: string) => {
-                dispatch(closeDeviceSetupDialog());
-                if (waitForDevice.onFail) {
-                    waitForDevice.onFail(reason);
-                }
-                dispatch(clearWaitForDeviceTimeout());
-                onTimeout();
-                logger.warn(reason);
-            })
-        );
+        const action = (reason?: string) => {
+            dispatch(closeDeviceSetupDialog());
+            if (waitForDevice.onFail) {
+                waitForDevice.onFail(reason);
+            }
+            dispatch(clearWaitForDeviceTimeout());
+            onTimeout();
+            logger.warn(reason);
+        };
+
+        dispatch(setOnTimeout(action));
 
         dispatch(
             setWaitForDeviceTimeout(
                 setTimeout(() => {
-                    const action = getState().deviceAutoSelect.onTimeout;
-                    if (action) {
-                        action(
-                            `Failed to detect device after reboot. Timed out after ${
-                                timeout / 1000
-                            } seconds.`
-                        );
-                    }
+                    action(
+                        `Failed to detect device after reboot. Timed out after ${
+                            timeout / 1000
+                        } seconds.`
+                    );
                 }, timeout)
             )
         );
