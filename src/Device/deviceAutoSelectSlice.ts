@@ -111,9 +111,8 @@ const slice = createSlice({
 });
 
 export const clearWaitForDevice =
-    (cancel = true) =>
-    (dispatch: AppDispatch, getState: () => RootState) => {
-        if (cancel && getState().deviceAutoSelect.autoReconnectTimeout) {
+    () => (dispatch: AppDispatch, getState: () => RootState) => {
+        if (getState().deviceAutoSelect.autoReconnectTimeout) {
             const onCancel = getState().deviceAutoSelect.onCancelTimeout;
             if (onCancel) {
                 onCancel();
