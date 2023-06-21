@@ -13,11 +13,11 @@ import nrfDeviceLib, {
 import logger from '../logging';
 import type { AppDispatch, RootState } from '../store';
 import {
-    clearWaitForDevice,
     clearWaitForDeviceTimeout,
     setArrivedButWrongWhen,
     setDisconnectedTime,
     setLastArrivedDeviceId,
+    setOnCancelTimeout,
     setWaitForDeviceTimeout,
     WaitForDevice,
 } from './deviceAutoSelectSlice';
@@ -76,6 +76,8 @@ const initAutoReconnectTimeout =
     (dispatch: AppDispatch) => {
         const timeout = waitForDevice.timeout;
 
+        dispatch(setOnCancelTimeout(onTimeout));
+
         dispatch(
             setWaitForDeviceTimeout(
                 setTimeout(() => {
@@ -86,8 +88,7 @@ const initAutoReconnectTimeout =
                                 timeout / 1000
                             } seconds.`
                         );
-                    dispatch(clearWaitForDeviceTimeout());
-                    onTimeout();
+                    dispatch(clearWaitForDevice());
                     logger.warn(
                         `Failed to detect device after reboot. Timed out after ${
                             timeout / 1000
@@ -135,6 +136,33 @@ export const hasValidDeviceTraits = (
         rule => requiredTraits[rule as keyof DeviceTraits] === false
     );
 
+const removeDeviceFromList =
+    (
+        removedDevice: Device,
+        onDeviceDeselected: () => void,
+        onDeviceDisconnected: (device: Device) => void
+    ) =>
+    (dispatch: AppDispatch, getState: () => RootState) => {
+        if (
+            removedDevice.serialNumber ===
+            getState().device.selectedSerialNumber
+        ) {
+            onDeviceDeselected();
+        }
+
+        if (
+            removedDevice.serialNumber ===
+                getState().device.selectedSerialNumber &&
+            !getState().deviceAutoSelect.waitForDevice
+        ) {
+            dispatch(closeDeviceSetupDialog());
+        }
+
+        if (!getState().deviceAutoSelect.arrivedButWrongWhen) {
+            dispatch(removeDevice(removedDevice));
+            onDeviceDisconnected(removedDevice);
+        }
+    };
 /*
  * Starts watching for devices with the given traits. See the nrf-device-lib
  * library for available traits. Whenever devices are attached/detached, this
@@ -150,28 +178,6 @@ export const startWatchingDevices =
     ) =>
     async (dispatch: AppDispatch, getState: () => RootState) => {
         const updateDeviceList = (event: HotplugEvent) => {
-            const removeDeviceFromList = (remove: Device) => {
-                if (
-                    remove.serialNumber ===
-                    getState().device.selectedSerialNumber
-                ) {
-                    onDeviceDeselected();
-                }
-
-                if (
-                    remove.serialNumber ===
-                        getState().device.selectedSerialNumber &&
-                    !getState().deviceAutoSelect.waitForDevice
-                ) {
-                    dispatch(closeDeviceSetupDialog());
-                }
-
-                if (!getState().deviceAutoSelect.arrivedButWrongWhen) {
-                    dispatch(removeDevice(remove));
-                    onDeviceDisconnected(remove);
-                }
-            };
-
             switch (event.event_type) {
                 case 'NRFDL_DEVICE_EVENT_ARRIVED':
                     if (!event.device) {
@@ -276,11 +282,11 @@ export const startWatchingDevices =
                                         'Wait For Device was successfully'
                                     );
 
-                                    if (waitForDevice.once) {
-                                        dispatch(clearWaitForDevice());
-                                    } else {
-                                        dispatch(clearWaitForDeviceTimeout());
-                                    }
+                                    dispatch(
+                                        clearWaitForDeviceTimeout(
+                                            waitForDevice.once
+                                        )
+                                    );
 
                                     if (waitForDevice.onSuccess)
                                         waitForDevice.onSuccess(
@@ -314,19 +320,35 @@ export const startWatchingDevices =
                                         dispatch(
                                             initAutoReconnectTimeout(
                                                 () =>
-                                                    removeDeviceFromList(
-                                                        device
+                                                    dispatch(
+                                                        removeDeviceFromList(
+                                                            device,
+                                                            onDeviceDeselected,
+                                                            onDeviceDisconnected
+                                                        )
                                                     ),
                                                 waitForDevice
                                             )
                                         );
                                     } else {
-                                        removeDeviceFromList(device);
+                                        dispatch(
+                                            removeDeviceFromList(
+                                                device,
+                                                onDeviceDeselected,
+                                                onDeviceDisconnected
+                                            )
+                                        );
                                     }
 
                                     dispatch(setDisconnectedTime(Date.now()));
                                 } else {
-                                    removeDeviceFromList(device);
+                                    dispatch(
+                                        removeDeviceFromList(
+                                            device,
+                                            onDeviceDeselected,
+                                            onDeviceDisconnected
+                                        )
+                                    );
                                 }
                             }
                         });
@@ -376,6 +398,14 @@ const getAutoSelectDeviceCLISerial = () => {
     const serialIndex = argv.findIndex(arg => arg === '--deviceSerial');
     return serialIndex > -1 ? argv[serialIndex + 1] : undefined;
 };
+
+export const clearWaitForDevice =
+    () => (dispatch: AppDispatch, getState: () => RootState) => {
+        if (getState().deviceAutoSelect.autoReconnectTimeout) {
+            getState().deviceAutoSelect.onCancelTimeout?.();
+        }
+        dispatch(clearWaitForDeviceTimeout(true));
+    };
 
 /**
  * Stops watching for devices.

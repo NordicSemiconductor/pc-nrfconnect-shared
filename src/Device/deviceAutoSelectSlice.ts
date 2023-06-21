@@ -30,6 +30,7 @@ export interface DeviceAutoSelectState {
     autoReconnectTimeout?: NodeJS.Timeout;
     lastArrivedDeviceId?: number;
     arrivedButWrongWhen?: boolean;
+    onCancelTimeout?: () => void;
 }
 
 const initialState: DeviceAutoSelectState = {
@@ -48,9 +49,17 @@ const slice = createSlice({
             state.autoReconnectTimeout = action.payload;
         },
 
-        clearWaitForDeviceTimeout: state => {
+        clearWaitForDeviceTimeout: (
+            state,
+            { payload: clearDevice }: PayloadAction<boolean>
+        ) => {
             clearTimeout(state.autoReconnectTimeout);
             state.autoReconnectTimeout = undefined;
+
+            if (clearDevice) {
+                state.onCancelTimeout = undefined;
+                state.waitForDevice = undefined;
+            }
         },
 
         setAutoSelectDevice: (
@@ -83,12 +92,6 @@ const slice = createSlice({
             if (state.device) state.waitForDevice = action.payload;
         },
 
-        clearWaitForDevice: state => {
-            state.waitForDevice = undefined;
-            clearTimeout(state.autoReconnectTimeout);
-            state.autoReconnectTimeout = undefined;
-        },
-
         setLastArrivedDeviceId: (
             state,
             action: PayloadAction<number | undefined>
@@ -100,6 +103,9 @@ const slice = createSlice({
             action: PayloadAction<boolean | undefined>
         ) => {
             state.arrivedButWrongWhen = action.payload;
+        },
+        setOnCancelTimeout: (state, action: PayloadAction<() => void>) => {
+            state.onCancelTimeout = action.payload;
         },
     },
 });
@@ -113,9 +119,9 @@ export const {
         setDisconnectedTime,
         setAutoReselect,
         setWaitForDevice,
-        clearWaitForDevice,
         setLastArrivedDeviceId,
         setArrivedButWrongWhen,
+        setOnCancelTimeout,
     },
 } = slice;
 
