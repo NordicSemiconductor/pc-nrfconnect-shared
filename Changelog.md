@@ -23,14 +23,11 @@ every new version is a new major version.
 
 -   Device remains selected if waiting for device is ongoing and
     `clearWaitForDevice` is called
+-   `DeviceSetup` on reject `isExpectedFirmware` used to fail silently
 
 ### Removed
 
 -   Support for `LegacyPane`
-
-### Fixed
-
--   `DeviceSetup` on reject `isExpectedFirmware` used to fail silently
 
 ### Steps to upgrade when using this package
 
