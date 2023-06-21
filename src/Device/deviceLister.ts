@@ -13,7 +13,6 @@ import nrfDeviceLib, {
 import logger from '../logging';
 import type { AppDispatch, RootState } from '../store';
 import {
-    clearWaitForDevice,
     clearWaitForDeviceTimeout,
     setArrivedButWrongWhen,
     setDisconnectedTime,
@@ -395,6 +394,17 @@ const getAutoSelectDeviceCLISerial = () => {
     const serialIndex = argv.findIndex(arg => arg === '--deviceSerial');
     return serialIndex > -1 ? argv[serialIndex + 1] : undefined;
 };
+
+export const clearWaitForDevice =
+    () => (dispatch: AppDispatch, getState: () => RootState) => {
+        if (getState().deviceAutoSelect.autoReconnectTimeout) {
+            const onCancel = getState().deviceAutoSelect.onCancelTimeout;
+            if (onCancel) {
+                onCancel();
+            }
+        }
+        dispatch(clearWaitForDeviceTimeout(true));
+    };
 
 /**
  * Stops watching for devices.

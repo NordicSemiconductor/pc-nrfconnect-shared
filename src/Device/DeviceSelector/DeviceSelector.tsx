@@ -10,11 +10,14 @@ import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import useHotKey from '../../utils/useHotKey';
 import {
-    clearWaitForDevice,
     getWaitingToAutoReselect,
     setAutoSelectDevice,
 } from '../deviceAutoSelectSlice';
-import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
+import {
+    clearWaitForDevice,
+    startWatchingDevices,
+    stopWatchingDevices,
+} from '../deviceLister';
 import { DeviceSetupConfig, setupDevice } from '../deviceSetup';
 import DeviceSetupView from '../DeviceSetup/DeviceSetupView';
 import {

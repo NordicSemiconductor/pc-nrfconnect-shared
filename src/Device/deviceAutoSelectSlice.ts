@@ -6,7 +6,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import type { AppDispatch, RootState } from '../store';
+import type { RootState } from '../store';
 import type { Device } from './deviceSlice';
 
 export interface WaitForDevice {
@@ -109,17 +109,6 @@ const slice = createSlice({
         },
     },
 });
-
-export const clearWaitForDevice =
-    () => (dispatch: AppDispatch, getState: () => RootState) => {
-        if (getState().deviceAutoSelect.autoReconnectTimeout) {
-            const onCancel = getState().deviceAutoSelect.onCancelTimeout;
-            if (onCancel) {
-                onCancel();
-            }
-        }
-        dispatch(slice.actions.clearWaitForDeviceTimeout(true));
-    };
 
 export const {
     reducer,

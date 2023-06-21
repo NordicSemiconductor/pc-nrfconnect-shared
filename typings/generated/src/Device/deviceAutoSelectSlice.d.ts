@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import type { AppDispatch, RootState } from '../store';
+import type { RootState } from '../store';
 import type { Device } from './deviceSlice';
 export interface WaitForDevice {
     timeout: number;
@@ -18,7 +18,6 @@ export interface DeviceAutoSelectState {
     arrivedButWrongWhen?: boolean;
     onCancelTimeout?: () => void;
 }
-export declare const clearWaitForDevice: () => (dispatch: AppDispatch, getState: () => RootState) => void;
 export declare const reducer: import("redux").Reducer<DeviceAutoSelectState, import("redux").AnyAction>, setWaitForDeviceTimeout: import("@reduxjs/toolkit").ActionCreatorWithPayload<NodeJS.Timeout, "deviceAutoSelect/setWaitForDeviceTimeout">, clearWaitForDeviceTimeout: import("@reduxjs/toolkit").ActionCreatorWithPayload<boolean, "deviceAutoSelect/clearWaitForDeviceTimeout">, setAutoSelectDevice: import("@reduxjs/toolkit").ActionCreatorWithOptionalPayload<Device | undefined, "deviceAutoSelect/setAutoSelectDevice">, setDisconnectedTime: import("@reduxjs/toolkit").ActionCreatorWithOptionalPayload<number | undefined, "deviceAutoSelect/setDisconnectedTime">, setAutoReselect: import("@reduxjs/toolkit").ActionCreatorWithPayload<boolean, "deviceAutoSelect/setAutoReselect">, setWaitForDevice: import("@reduxjs/toolkit").ActionCreatorWithPayload<WaitForDevice, "deviceAutoSelect/setWaitForDevice">, setLastArrivedDeviceId: import("@reduxjs/toolkit").ActionCreatorWithOptionalPayload<number | undefined, "deviceAutoSelect/setLastArrivedDeviceId">, setArrivedButWrongWhen: import("@reduxjs/toolkit").ActionCreatorWithOptionalPayload<boolean | undefined, "deviceAutoSelect/setArrivedButWrongWhen">, setOnCancelTimeout: import("@reduxjs/toolkit").ActionCreatorWithPayload<() => void, "deviceAutoSelect/setOnCancelTimeout">;
 export declare const getAutoReselectDevice: (state: RootState) => Device | undefined;
 export declare const getAutoReselect: (state: RootState) => boolean;
