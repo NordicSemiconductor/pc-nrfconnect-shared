@@ -33,7 +33,7 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
     const [fadeoutTimer, setFadeoutTimer] = useState<string>(
         dismissTime == null ? 'unset' : `${dismissTime}ms`
     );
-    const timeoutHandler = useRef<NodeJS.Timeout | null>(null);
+    const timeoutHandler = useRef<NodeJS.Timeout | undefined>(undefined);
 
     if (timeoutHandler.current == null && dismissTime != null) {
         timeoutHandler.current = setTimeout(() => {
@@ -42,29 +42,24 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
     }
 
     const close = () => {
-        if (timeoutHandler.current) {
-            clearTimeout(timeoutHandler.current);
-        }
+        clearTimeout(timeoutHandler.current);
         dispatch(removeMessage(id));
     };
 
     const addFadeout = () => {
-        if (dismissTime != null) {
-            timeoutHandler.current = setTimeout(() => {
-                dispatch(removeMessage(id));
-            }, dismissTime);
+        if (dismissTime) {
+            timeoutHandler.current = setTimeout(
+                () => dispatch(removeMessage(id)),
+                dismissTime
+            );
+            setFadeoutTimer(`${dismissTime}ms`);
         }
-        setFadeoutTimer(`${dismissTime}ms`);
     };
 
     const removeFadeout = () => {
         setFadeoutTimer('unset');
-        if (timeoutHandler.current) {
-            clearTimeout(timeoutHandler.current);
-        }
+        clearTimeout(timeoutHandler.current);
     };
-
-    const initialRender = () => divRef.current == null;
 
     return (
         <div
@@ -73,24 +68,17 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
                 backgroundColor: getBackgroundColorFromVariant(variant),
                 color: colors.white,
                 zIndex: 1000,
-                animation: initialRender() ? 'slide-in 1s' : 'unset',
+                animation: !divRef.current ? 'slide-in 1s' : 'unset',
                 width: '100%',
                 padding: '16px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
             }}
-            className={`flash-variant-${variant}`}
             onMouseEnter={removeFadeout}
             onMouseLeave={addFadeout}
         >
-            <div
-                style={{
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                }}
-            >
+            <div className="d-flex w-100 justify-space-between">
                 {message}
                 <div onClick={close}>
                     <Icon path={mdiClose} size={0.8} />
@@ -117,9 +105,7 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
 
 const FlashMessages = () => {
     const messages = useSelector(getMessages);
-    const showMessages = messages?.length > 0;
-
-    if (!showMessages) return null;
+    if (!(messages?.length > 0)) return null;
 
     return (
         <div
@@ -130,7 +116,6 @@ const FlashMessages = () => {
                 display: 'flex',
                 flexDirection: 'column-reverse',
             }}
-            className="message-container"
         >
             {messages.map(flashMessage => (
                 <FlashMessage
@@ -154,7 +139,7 @@ const getBackgroundColorFromVariant = (variant: FlashMessageVariant) => {
             return colors.orange;
 
         default:
-            return '' as never;
+            return 'unset';
     }
 };
 export default FlashMessages;
