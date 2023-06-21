@@ -398,10 +398,7 @@ const getAutoSelectDeviceCLISerial = () => {
 export const clearWaitForDevice =
     () => (dispatch: AppDispatch, getState: () => RootState) => {
         if (getState().deviceAutoSelect.autoReconnectTimeout) {
-            const onCancel = getState().deviceAutoSelect.onCancelTimeout;
-            if (onCancel) {
-                onCancel();
-            }
+            getState().deviceAutoSelect.onCancelTimeout?.();
         }
         dispatch(clearWaitForDeviceTimeout(true));
     };
