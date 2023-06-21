@@ -49,9 +49,17 @@ const slice = createSlice({
             state.autoReconnectTimeout = action.payload;
         },
 
-        clearWaitForDeviceTimeout: state => {
+        clearWaitForDeviceTimeout: (
+            state,
+            { payload: clearDevice }: PayloadAction<boolean>
+        ) => {
             clearTimeout(state.autoReconnectTimeout);
             state.autoReconnectTimeout = undefined;
+
+            if (clearDevice) {
+                state.onCancelTimeout = undefined;
+                state.waitForDevice = undefined;
+            }
         },
 
         setAutoSelectDevice: (
@@ -84,13 +92,6 @@ const slice = createSlice({
             if (state.device) state.waitForDevice = action.payload;
         },
 
-        clearWaitForDevice: state => {
-            state.onCancelTimeout = undefined;
-            state.waitForDevice = undefined;
-            clearTimeout(state.autoReconnectTimeout);
-            state.autoReconnectTimeout = undefined;
-        },
-
         setLastArrivedDeviceId: (
             state,
             action: PayloadAction<number | undefined>
@@ -118,7 +119,7 @@ export const clearWaitForDevice =
                 onCancel();
             }
         }
-        dispatch(slice.actions.clearWaitForDevice());
+        dispatch(slice.actions.clearWaitForDeviceTimeout(true));
     };
 
 export const {

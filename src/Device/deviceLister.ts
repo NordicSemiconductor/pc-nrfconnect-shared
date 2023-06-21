@@ -279,11 +279,11 @@ export const startWatchingDevices =
                                         'Wait For Device was successfully'
                                     );
 
-                                    if (waitForDevice.once) {
-                                        dispatch(clearWaitForDevice(false));
-                                    } else {
-                                        dispatch(clearWaitForDeviceTimeout());
-                                    }
+                                    dispatch(
+                                        clearWaitForDeviceTimeout(
+                                            waitForDevice.once
+                                        )
+                                    );
 
                                     if (waitForDevice.onSuccess)
                                         waitForDevice.onSuccess(
