@@ -138,25 +138,29 @@ export const hasValidDeviceTraits = (
 
 const removeDeviceFromList =
     (
-        remove: Device,
+        removedDevice: Device,
         onDeviceDeselected: () => void,
         onDeviceDisconnected: (device: Device) => void
     ) =>
     (dispatch: AppDispatch, getState: () => RootState) => {
-        if (remove.serialNumber === getState().device.selectedSerialNumber) {
+        if (
+            removedDevice.serialNumber ===
+            getState().device.selectedSerialNumber
+        ) {
             onDeviceDeselected();
         }
 
         if (
-            remove.serialNumber === getState().device.selectedSerialNumber &&
+            removedDevice.serialNumber ===
+                getState().device.selectedSerialNumber &&
             !getState().deviceAutoSelect.waitForDevice
         ) {
             dispatch(closeDeviceSetupDialog());
         }
 
         if (!getState().deviceAutoSelect.arrivedButWrongWhen) {
-            dispatch(removeDevice(remove));
-            onDeviceDisconnected(remove);
+            dispatch(removeDevice(removedDevice));
+            onDeviceDisconnected(removedDevice);
         }
     };
 /*
