@@ -53,7 +53,8 @@ export { getAppSpecificStore as getPersistentStore, persistTerminalSettings, get
 export { jprogDeviceSetup } from './Device/jprogOperations';
 export { sdfuDeviceSetup } from './Device/sdfuOperations';
 export { selectedDevice, getReadbackProtection, persistSerialPortOptions, type Device, } from './Device/deviceSlice';
-export { setWaitForDevice, clearWaitForDevice, getAutoReselect, getWaitingForDeviceTimeout, getWaitingToAutoReselect, getWaitForDevice, } from './Device/deviceAutoSelectSlice';
+export { setWaitForDevice, getAutoReselect, getWaitingForDeviceTimeout, getWaitingToAutoReselect, getWaitForDevice, } from './Device/deviceAutoSelectSlice';
+export { clearWaitForDevice } from './Device/deviceLister';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
 export { getDeviceLibContext } from './Device/deviceLibWrapper';
 export { isDeviceInDFUBootloader } from './Device/sdfuOperations';

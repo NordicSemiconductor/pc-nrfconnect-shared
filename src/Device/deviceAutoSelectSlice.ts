@@ -6,7 +6,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import type { AppDispatch, RootState } from '../store';
+import type { RootState } from '../store';
 import type { Device } from './deviceSlice';
 
 export interface WaitForDevice {
@@ -49,9 +49,17 @@ const slice = createSlice({
             state.autoReconnectTimeout = action.payload;
         },
 
-        clearWaitForDeviceTimeout: state => {
+        clearWaitForDeviceTimeout: (
+            state,
+            { payload: clearDevice }: PayloadAction<boolean>
+        ) => {
             clearTimeout(state.autoReconnectTimeout);
             state.autoReconnectTimeout = undefined;
+
+            if (clearDevice) {
+                state.onCancelTimeout = undefined;
+                state.waitForDevice = undefined;
+            }
         },
 
         setAutoSelectDevice: (
@@ -84,13 +92,6 @@ const slice = createSlice({
             if (state.device) state.waitForDevice = action.payload;
         },
 
-        clearWaitForDevice: state => {
-            state.onCancelTimeout = undefined;
-            state.waitForDevice = undefined;
-            clearTimeout(state.autoReconnectTimeout);
-            state.autoReconnectTimeout = undefined;
-        },
-
         setLastArrivedDeviceId: (
             state,
             action: PayloadAction<number | undefined>
@@ -108,18 +109,6 @@ const slice = createSlice({
         },
     },
 });
-
-export const clearWaitForDevice =
-    (cancel = true) =>
-    (dispatch: AppDispatch, getState: () => RootState) => {
-        if (cancel && getState().deviceAutoSelect.autoReconnectTimeout) {
-            const onCancel = getState().deviceAutoSelect.onCancelTimeout;
-            if (onCancel) {
-                onCancel();
-            }
-        }
-        dispatch(slice.actions.clearWaitForDevice());
-    };
 
 export const {
     reducer,
