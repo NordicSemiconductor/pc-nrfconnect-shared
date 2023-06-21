@@ -89,8 +89,7 @@ const initAutoReconnectTimeout =
                                 timeout / 1000
                             } seconds.`
                         );
-                    dispatch(clearWaitForDeviceTimeout());
-                    onTimeout();
+                    dispatch(clearWaitForDevice());
                     logger.warn(
                         `Failed to detect device after reboot. Timed out after ${
                             timeout / 1000
