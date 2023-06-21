@@ -6,7 +6,6 @@
 
 import { DependencyList, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import Mousetrap from 'mousetrap';
 
 import { addShortcut, removeShortcut, Shortcut } from '../About/shortcutSlice';
 import { sendUsageData } from './usageData';
@@ -16,15 +15,16 @@ const useNewHotKey = (shortcut: Shortcut, deps: DependencyList = []) => {
     useEffect(() => {
         dispatch(addShortcut(shortcut));
 
-        Mousetrap.bind(shortcut.hotKey, (_e, combo) => {
-            shortcut.action();
-            sendUsageData('Pressed hotkey', combo);
-        });
+        const combos = Array.isArray(shortcut.hotKey)
+            ? shortcut.hotKey
+            : [shortcut.hotKey];
+
+        const event = createHotKeyHandler(combos, shortcut);
+        document.addEventListener('keydown', event);
 
         return () => {
             dispatch(removeShortcut(shortcut));
-
-            Mousetrap.unbind(shortcut.hotKey);
+            document.removeEventListener('keydown', event);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, deps);
@@ -60,3 +60,38 @@ export default (
         useNewHotKey(...args);
     }
 };
+
+const modifiers = ['ctrl', 'alt', 'meta', 'shift', 'mod'];
+const createHotKeyHandler =
+    (combos: string[], shortcut: Shortcut) =>
+    (keyboardEvent: KeyboardEvent) => {
+        const { altKey, ctrlKey, metaKey, shiftKey, key } = keyboardEvent;
+
+        combos.forEach(combo => {
+            const parts = combo.split('+');
+            const nonModifierKey = parts.find(
+                part => !modifiers.includes(part)
+            );
+
+            parts.includes('mod'); // ctrl | meta
+
+            const ctrl =
+                parts.includes('ctrl') ||
+                (process.platform !== 'darwin' && parts.includes('mod'));
+
+            const meta =
+                parts.includes('meta') ||
+                (process.platform === 'darwin' && parts.includes('mod'));
+
+            if (
+                ctrlKey === ctrl &&
+                metaKey === meta &&
+                altKey === parts.includes('alt') &&
+                shiftKey === parts.includes('shift') &&
+                key === nonModifierKey
+            ) {
+                shortcut.action();
+                sendUsageData('Pressed hotkey', combo);
+            }
+        });
+    };
