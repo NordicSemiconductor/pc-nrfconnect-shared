@@ -18,6 +18,8 @@ module.exports = (disabledMocks = []) => ({
         '^electron-store$': `${mockDir}/electronStoreMock.ts`,
         '@nordicsemiconductor/nrf-device-lib-js': `${mockDir}/deviceLibMock.ts`,
         '@electron/remote': `${mockDir}/remoteMock.ts`,
+        'react-markdown':
+            '<rootDir>/node_modules/react-markdown/react-markdown.min.js',
         ...(disabledMocks.includes('packageJson')
             ? {}
             : {
@@ -35,7 +37,6 @@ module.exports = (disabledMocks = []) => ({
     },
     transformIgnorePatterns: ['node_modules/(?!(pc-nrfconnect-shared)/)'],
     setupFilesAfterEnv: [`${__dirname}/../test/setupTests.ts`],
-    snapshotSerializers: ['enzyme-to-json/serializer'],
     resolver: `${__dirname}/../test/jestResolver.js`,
     modulePathIgnorePatterns: ['dist'],
 });
