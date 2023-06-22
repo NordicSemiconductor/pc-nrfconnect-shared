@@ -1,12 +1,11 @@
 import { AnyAction, ThunkAction } from '@reduxjs/toolkit';
 import type { RootState } from '../store';
 export interface FlashMessages {
-    idCounter: number;
     messages: FlashMessage[];
 }
 export type FlashMessageVariant = 'success' | 'warning' | 'error' | 'info';
 export interface FlashMessage {
-    id: number;
+    id: string;
     message: string;
     variant: FlashMessageVariant;
     dismissTime?: number;
@@ -19,5 +18,12 @@ export declare const newWarningFlashMessage: (message: string, dismissTime?: num
 export declare const newErrorFlashMessage: (message: string, dismissTime?: number) => TAction;
 export declare const newInfoFlashMessage: (message: string, dismissTime?: number) => TAction;
 export declare const getMessages: (state: RootState) => FlashMessage[];
-export declare const reducer: import("redux").Reducer<FlashMessages, AnyAction>, addNewMessage: import("@reduxjs/toolkit").ActionCreatorWithPayload<FlashMessagePayload, "flashMessages/addNewMessage">, removeMessage: import("@reduxjs/toolkit").ActionCreatorWithPayload<number, "flashMessages/removeMessage">;
+export declare const reducer: import("redux").Reducer<FlashMessages, AnyAction>, addNewMessage: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[message: FlashMessagePayload], {
+    message: string;
+    variant: FlashMessageVariant;
+    dismissTime?: number | undefined;
+    id: string;
+}, "flashMessages/addNewMessage", never, never>, removeMessage: import("@reduxjs/toolkit").ActionCreatorWithPayload<{
+    id: string;
+}, "flashMessages/removeMessage">;
 export {};

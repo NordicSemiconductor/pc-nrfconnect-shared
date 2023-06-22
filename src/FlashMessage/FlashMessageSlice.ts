@@ -7,6 +7,7 @@
 import {
     AnyAction,
     createSlice,
+    nanoid,
     PayloadAction,
     ThunkAction,
 } from '@reduxjs/toolkit';
@@ -14,14 +15,13 @@ import {
 import type { RootState } from '../store';
 
 export interface FlashMessages {
-    idCounter: number;
     messages: FlashMessage[];
 }
 
 export type FlashMessageVariant = 'success' | 'warning' | 'error' | 'info';
 
 export interface FlashMessage {
-    id: number;
+    id: string;
     message: string;
     variant: FlashMessageVariant;
     dismissTime?: number;
@@ -30,7 +30,6 @@ export interface FlashMessage {
 export type FlashMessagePayload = Omit<FlashMessage, 'id'>;
 
 const initialState: FlashMessages = {
-    idCounter: 0,
     messages: [],
 };
 
@@ -38,13 +37,20 @@ const slice = createSlice({
     name: 'flashMessages',
     initialState,
     reducers: {
-        addNewMessage: (state, action: PayloadAction<FlashMessagePayload>) => {
-            state.messages.push({ ...action.payload, id: state.idCounter });
-            state.idCounter += 1;
+        addNewMessage: {
+            reducer: (state, action: PayloadAction<FlashMessage>) => {
+                state.messages.push(action.payload);
+            },
+            prepare: (message: FlashMessagePayload) => ({
+                payload: {
+                    id: nanoid(),
+                    ...message,
+                },
+            }),
         },
-        removeMessage: (state, action: PayloadAction<number>) => {
+        removeMessage: (state, action: PayloadAction<{ id: string }>) => {
             state.messages = state.messages.filter(
-                message => message.id !== action.payload
+                message => message.id !== action.payload.id
             );
         },
     },

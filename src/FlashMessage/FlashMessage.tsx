@@ -37,19 +37,19 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
 
     if (timeoutHandler.current == null && dismissTime != null) {
         timeoutHandler.current = setTimeout(() => {
-            dispatch(removeMessage(id));
+            dispatch(removeMessage({ id }));
         }, dismissTime);
     }
 
     const close = () => {
         clearTimeout(timeoutHandler.current);
-        dispatch(removeMessage(id));
+        dispatch(removeMessage({ id }));
     };
 
     const addFadeout = () => {
         if (dismissTime) {
             timeoutHandler.current = setTimeout(() => {
-                dispatch(removeMessage(id));
+                dispatch(removeMessage({ id }));
             }, dismissTime);
             setFadeoutTimer(`${dismissTime}ms`);
         }
