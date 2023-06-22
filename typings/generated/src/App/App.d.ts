@@ -1,6 +1,7 @@
 import 'focus-visible';
 import { FC, ReactNode } from 'react';
 import { Reducer } from 'redux';
+import { FeedbackPaneProps } from '../Panes/FeedbackPane';
 import './app.scss';
 import './shared.scss';
 export interface PaneProps {
@@ -18,6 +19,7 @@ interface ConnectedAppProps {
     showLogByDefault?: boolean;
     reportUsageData?: boolean;
     documentation?: ReactNode[];
+    feedback?: boolean | FeedbackPaneProps;
     children?: ReactNode;
     autoReselectByDefault?: boolean;
 }
