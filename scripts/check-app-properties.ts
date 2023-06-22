@@ -68,6 +68,7 @@ const checkMandatoryProperties = (packageJson: PackageJson) => {
         `description`,
         `displayName`,
         `engines.nrfconnect`,
+        `html`,
     ];
 
     const missingProperties = mandatoryProperties.filter(

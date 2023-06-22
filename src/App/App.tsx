@@ -8,6 +8,7 @@ import 'focus-visible';
 
 import React, { FC, ReactNode, useEffect, useMemo } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
+import { createRoot } from 'react-dom/client';
 import { useDispatch, useSelector } from 'react-redux';
 import { ipcRenderer } from 'electron';
 import { Reducer } from 'redux';
@@ -226,4 +227,14 @@ const useAllPanes = (panes: Pane[]) => {
     }, [dispatch, allPanes]);
 
     return allPanes;
+};
+
+export const render = (App: React.ReactNode) => {
+    const element = document.getElementById('webapp');
+    if (element == null) {
+        throw new Error('Unable to find root element <div id="webapp"></div>');
+    }
+
+    const root = createRoot(element);
+    root.render(App);
 };

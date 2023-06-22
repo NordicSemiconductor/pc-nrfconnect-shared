@@ -10,7 +10,7 @@ const { sassPlugin, postcssModules } = require('esbuild-sass-plugin');
 const esbuild = require('esbuild');
 const svgr = require('@svgr/core').transform;
 
-function options(additionalOptions) {
+function options(additionalOptions = {}) {
     const { dependencies } = JSON.parse(
         fs.readFileSync('package.json', 'utf8')
     );
@@ -22,7 +22,7 @@ function options(additionalOptions) {
     const outdir = outfile ? undefined : './dist';
 
     return {
-        format: 'cjs',
+        format: 'iife',
         outfile,
         outdir,
         target: 'chrome89',
@@ -52,7 +52,6 @@ function options(additionalOptions) {
             'electron',
             'serialport',
             '@electron/remote',
-            'react',
             '@nordicsemiconductor/nrf-device-lib-js',
 
             // App dependencies
@@ -69,6 +68,7 @@ function options(additionalOptions) {
             '.ttf': 'file',
         },
         plugins: [
+            ...(additionalOptions.plugins ?? []),
             sassPlugin({
                 filter: /\.(module|icss)\.scss/,
                 cssImports: true,

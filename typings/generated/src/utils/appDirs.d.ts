@@ -1,12 +1,4 @@
 declare const getUserDataDir: () => any;
-declare global {
-    interface Window {
-        appDir: string;
-        appDataDir: string;
-        appLogDir: string;
-    }
-}
-declare function setAppDirs(newAppDir: string, newAppDataDir: string, newAppLogDir: string): void;
 /**
  * Get the filesystem path of the currently loaded app.
  *
@@ -32,4 +24,4 @@ declare function getAppDataDir(): string;
  * @returns {string|undefined} Absolute path of data directory of the current app.
  */
 declare function getAppLogDir(): string;
-export { setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir, };
+export { getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir };
