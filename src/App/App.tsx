@@ -58,13 +58,13 @@ const initialiseUsageData = () => {
     }
 };
 
-export interface PaneProps {
+export interface ExternalPaneProps {
     active: boolean;
 }
 
 export interface Pane {
     name: string;
-    Main: FC<PaneProps>;
+    Main: FC<ExternalPaneProps>;
     SidePanel?: FC;
 }
 
@@ -213,11 +213,15 @@ const usePersistedPane = () => {
     }, [dispatch]);
 };
 
+type PaneWithProps = Omit<Pane, 'Main'> & {
+    Main: FC<ExternalPaneProps & Record<string, unknown>>;
+};
+
 const useAllPanes = (panes: Pane[]) => {
     const dispatch = useDispatch();
 
     const allPanes = useMemo(
-        () => [...panes, { name: 'About', Main: About }] as Pane[],
+        () => [...panes, { name: 'About', Main: About }] as PaneWithProps[],
         [panes]
     );
 

@@ -9,7 +9,7 @@ const ErrorDialogActions = { hideDialog, showDialog };
 
 export { ErrorDialogActions };
 
-export { default as App, type PaneProps } from './App/App';
+export { default as App, type ExternalPaneProps as PaneProps } from './App/App';
 export { default as Logo } from './Logo/Logo';
 export {
     default as DeviceSelector,
