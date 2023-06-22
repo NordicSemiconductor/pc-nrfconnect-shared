@@ -8,7 +8,6 @@ export declare const rootReducerSpec: (appReducer?: Reducer) => {
     brokenDeviceDialog: Reducer<import("./Device/BrokenDeviceDialog/brokenDeviceDialogSlice").BrokenDeviceDialog, import("redux").AnyAction>;
     errorDialog: Reducer<import("./ErrorDialog/errorDialogSlice").ErrorDialog, import("redux").AnyAction>;
     log: Reducer<import("./Log/logSlice").Log, import("redux").AnyAction>;
-    documentation: Reducer<import("./About/documentationSlice").DocumentationState, import("redux").AnyAction>;
     shortcuts: Reducer<import("./About/shortcutSlice").ShortcutState, import("redux").AnyAction>;
     flashMessages: Reducer<import("./FlashMessage/FlashMessageSlice").FlashMessages, import("redux").AnyAction>;
 };
@@ -21,7 +20,6 @@ declare const store: (appReducer?: Reducer) => import("@reduxjs/toolkit/dist/con
     brokenDeviceDialog: import("./Device/BrokenDeviceDialog/brokenDeviceDialogSlice").BrokenDeviceDialog;
     errorDialog: import("./ErrorDialog/errorDialogSlice").ErrorDialog;
     log: import("./Log/logSlice").Log;
-    documentation: import("./About/documentationSlice").DocumentationState;
     shortcuts: import("./About/shortcutSlice").ShortcutState;
     flashMessages: import("./FlashMessage/FlashMessageSlice").FlashMessages;
 }, import("redux").AnyAction, import("@reduxjs/toolkit").MiddlewareArray<[import("@reduxjs/toolkit").ThunkMiddleware<{
@@ -33,7 +31,6 @@ declare const store: (appReducer?: Reducer) => import("@reduxjs/toolkit/dist/con
     brokenDeviceDialog: import("./Device/BrokenDeviceDialog/brokenDeviceDialogSlice").BrokenDeviceDialog;
     errorDialog: import("./ErrorDialog/errorDialogSlice").ErrorDialog;
     log: import("./Log/logSlice").Log;
-    documentation: import("./About/documentationSlice").DocumentationState;
     shortcuts: import("./About/shortcutSlice").ShortcutState;
     flashMessages: import("./FlashMessage/FlashMessageSlice").FlashMessages;
 }, import("redux").AnyAction, undefined>]>>;
@@ -46,7 +43,6 @@ declare const concreteStore: import("@reduxjs/toolkit/dist/configureStore").Tool
     brokenDeviceDialog: import("./Device/BrokenDeviceDialog/brokenDeviceDialogSlice").BrokenDeviceDialog;
     errorDialog: import("./ErrorDialog/errorDialogSlice").ErrorDialog;
     log: import("./Log/logSlice").Log;
-    documentation: import("./About/documentationSlice").DocumentationState;
     shortcuts: import("./About/shortcutSlice").ShortcutState;
     flashMessages: import("./FlashMessage/FlashMessageSlice").FlashMessages;
 }, import("redux").AnyAction, import("@reduxjs/toolkit").MiddlewareArray<[import("@reduxjs/toolkit").ThunkMiddleware<{
@@ -58,7 +54,6 @@ declare const concreteStore: import("@reduxjs/toolkit/dist/configureStore").Tool
     brokenDeviceDialog: import("./Device/BrokenDeviceDialog/brokenDeviceDialogSlice").BrokenDeviceDialog;
     errorDialog: import("./ErrorDialog/errorDialogSlice").ErrorDialog;
     log: import("./Log/logSlice").Log;
-    documentation: import("./About/documentationSlice").DocumentationState;
     shortcuts: import("./About/shortcutSlice").ShortcutState;
     flashMessages: import("./FlashMessage/FlashMessageSlice").FlashMessages;
 }, import("redux").AnyAction, undefined>]>>;
