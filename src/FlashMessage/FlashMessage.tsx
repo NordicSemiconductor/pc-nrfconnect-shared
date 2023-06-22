@@ -118,13 +118,14 @@ const FlashMessages = () => {
     return (
         <div
             style={{
+                position: 'absolute',
+                bottom: '32px',
+                right: '16px',
                 width: '256px',
                 gap: '16px',
-                marginBottom: '32px',
                 display: 'flex',
                 flexDirection: 'column-reverse',
             }}
-            className="message-container"
         >
             {messages.map(flashMessage => (
                 <FlashMessage
