@@ -4,16 +4,35 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import Button from '../Button/Button';
+import Dropdown, { DropdownItem } from '../Dropdown/Dropdown';
 import logger from '../logging';
 import { isDevelopment } from '../utils/environment';
 import packageJson from '../utils/packageJson';
 
-export default () => {
+export interface FeedbackPaneProps {
+    categories?: string[];
+}
+
+export default ({ categories }: FeedbackPaneProps) => {
     const [feedback, setFeedback] = useState('');
     const [sayThankYou, setSayThankYou] = useState(false);
+
+    const categoryItems = useMemo(() => {
+        if (!categories?.length) return undefined;
+
+        const items = ['Select a category', ...categories].map(category => ({
+            label: category,
+            value: category,
+        }));
+        return items;
+    }, [categories]);
+
+    const [selectedCategory, setSelectedCategory] = useState<
+        DropdownItem | undefined
+    >(categoryItems ? categoryItems[0] : undefined);
 
     if (sayThankYou === true) {
         return (
@@ -70,6 +89,13 @@ export default () => {
                     </p>
                 </section>
                 <form className="d-flex flex-column w-100">
+                    {categoryItems?.length && (
+                        <Dropdown
+                            items={categoryItems}
+                            onSelect={setSelectedCategory}
+                            selectedItem={selectedCategory || categoryItems[0]}
+                        />
+                    )}
                     <label htmlFor="feedback-text">
                         <b>What is your feedback?</b>
                         <textarea
@@ -96,7 +122,13 @@ export default () => {
                     large
                     className="align-self-end"
                     variant="primary"
-                    onClick={() => handleFormData(feedback, setSayThankYou)}
+                    onClick={() =>
+                        handleFormData(
+                            feedback,
+                            setSayThankYou,
+                            selectedCategory?.value
+                        )
+                    }
                     disabled={feedback === ''}
                 >
                     Send Feedback
@@ -113,13 +145,18 @@ const formURL =
 
 const handleFormData = async (
     feedback: string,
-    setResponse: (response: boolean) => void
+    setResponse: (response: boolean) => void,
+    category?: string
 ) => {
-    const data = {
+    const data: Record<string, unknown> = {
         name: getAppName(),
         feedback,
         platform: process.platform,
     };
+
+    if (category && category !== 'Select a category') {
+        data.category = category;
+    }
 
     try {
         const response = await fetch(formURL, {
