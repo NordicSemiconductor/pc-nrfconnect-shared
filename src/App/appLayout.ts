@@ -34,7 +34,6 @@ const setCurrentPaneInState = (newPane: number, state: AppLayout) => {
 
 interface PaneSpec {
     name: string;
-    Main: unknown;
 }
 
 const slice = createSlice({
