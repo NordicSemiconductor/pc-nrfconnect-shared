@@ -144,3 +144,12 @@ export type {
 } from './utils/AppTypes';
 
 export { default as FeedbackPane } from './Panes/FeedbackPane';
+
+export {
+    addNewMessage,
+    newCopiedFlashMessage,
+    newInfoFlashMessage,
+    newWarningFlashMessage,
+    newErrorFlashMessage,
+    newSuccessFlashMessage,
+} from './FlashMessage/FlashMessageSlice';

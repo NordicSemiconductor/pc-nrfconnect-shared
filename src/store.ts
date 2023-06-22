@@ -15,6 +15,7 @@ import { reducer as deviceAutoSelect } from './Device/deviceAutoSelectSlice';
 import { reducer as deviceSetup } from './Device/deviceSetupSlice';
 import { reducer as device } from './Device/deviceSlice';
 import { reducer as errorDialog } from './ErrorDialog/errorDialogSlice';
+import { reducer as flashMessages } from './FlashMessage/FlashMessageSlice';
 import { reducer as log } from './Log/logSlice';
 
 const ifBuiltForDevelopment = <X>(value: X) =>
@@ -33,6 +34,7 @@ export const rootReducerSpec = (appReducer: Reducer = noopReducer) => ({
     log,
     documentation,
     shortcuts,
+    flashMessages,
 });
 
 const store = (appReducer?: Reducer) =>

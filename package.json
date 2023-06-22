@@ -36,6 +36,8 @@
     "dependencies": {
         "@electron/remote": "^2.0.4",
         "@mdi/font": "7.2.96",
+        "@mdi/js": "^7.2.96",
+        "@mdi/react": "^1.6.1",
         "@reduxjs/toolkit": "1.9.3",
         "@svgr/core": "^7.0.0",
         "@svgr/plugin-jsx": "7.0.0",

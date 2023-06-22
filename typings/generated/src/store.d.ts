@@ -10,6 +10,7 @@ export declare const rootReducerSpec: (appReducer?: Reducer) => {
     log: Reducer<import("./Log/logSlice").Log, import("redux").AnyAction>;
     documentation: Reducer<import("./About/documentationSlice").DocumentationState, import("redux").AnyAction>;
     shortcuts: Reducer<import("./About/shortcutSlice").ShortcutState, import("redux").AnyAction>;
+    flashMessages: Reducer<import("./FlashMessage/FlashMessageSlice").FlashMessages, import("redux").AnyAction>;
 };
 declare const store: (appReducer?: Reducer) => import("@reduxjs/toolkit/dist/configureStore").ToolkitStore<{
     app: any;
@@ -22,6 +23,7 @@ declare const store: (appReducer?: Reducer) => import("@reduxjs/toolkit/dist/con
     log: import("./Log/logSlice").Log;
     documentation: import("./About/documentationSlice").DocumentationState;
     shortcuts: import("./About/shortcutSlice").ShortcutState;
+    flashMessages: import("./FlashMessage/FlashMessageSlice").FlashMessages;
 }, import("redux").AnyAction, import("@reduxjs/toolkit").MiddlewareArray<[import("@reduxjs/toolkit").ThunkMiddleware<{
     app: any;
     appLayout: import("./App/appLayout").AppLayout;
@@ -33,6 +35,7 @@ declare const store: (appReducer?: Reducer) => import("@reduxjs/toolkit/dist/con
     log: import("./Log/logSlice").Log;
     documentation: import("./About/documentationSlice").DocumentationState;
     shortcuts: import("./About/shortcutSlice").ShortcutState;
+    flashMessages: import("./FlashMessage/FlashMessageSlice").FlashMessages;
 }, import("redux").AnyAction, undefined>]>>;
 declare const concreteStore: import("@reduxjs/toolkit/dist/configureStore").ToolkitStore<{
     app: any;
@@ -45,6 +48,7 @@ declare const concreteStore: import("@reduxjs/toolkit/dist/configureStore").Tool
     log: import("./Log/logSlice").Log;
     documentation: import("./About/documentationSlice").DocumentationState;
     shortcuts: import("./About/shortcutSlice").ShortcutState;
+    flashMessages: import("./FlashMessage/FlashMessageSlice").FlashMessages;
 }, import("redux").AnyAction, import("@reduxjs/toolkit").MiddlewareArray<[import("@reduxjs/toolkit").ThunkMiddleware<{
     app: any;
     appLayout: import("./App/appLayout").AppLayout;
@@ -56,6 +60,7 @@ declare const concreteStore: import("@reduxjs/toolkit/dist/configureStore").Tool
     log: import("./Log/logSlice").Log;
     documentation: import("./About/documentationSlice").DocumentationState;
     shortcuts: import("./About/shortcutSlice").ShortcutState;
+    flashMessages: import("./FlashMessage/FlashMessageSlice").FlashMessages;
 }, import("redux").AnyAction, undefined>]>>;
 export type RootState = ReturnType<typeof concreteStore.getState>;
 export type AppDispatch = typeof concreteStore.dispatch;
