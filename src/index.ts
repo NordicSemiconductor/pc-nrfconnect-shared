@@ -145,7 +145,6 @@ export type {
 export { default as FeedbackPane } from './Panes/FeedbackPane';
 
 export {
-    flashMessageReducer,
     addNewMessage,
     newCopiedFlashMessage,
     newInfoFlashMessage,

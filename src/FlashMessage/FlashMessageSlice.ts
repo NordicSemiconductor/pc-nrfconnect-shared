@@ -12,11 +12,11 @@ import {
 } from '@reduxjs/toolkit';
 
 import logger from '../logging';
-import { RootState } from '../store';
+import type { RootState } from '../store';
 
 const MAX_NUMBER_OF_MESSAGES = 8;
 
-interface State {
+export interface FlashMessages {
     idCounter: number;
     messages: FlashMessage[];
 }
@@ -32,13 +32,13 @@ export interface FlashMessage {
 
 export type FlashMessagePayload = Omit<FlashMessage, 'id'>;
 
-const initialState: State = {
+const initialState: FlashMessages = {
     idCounter: 0,
     messages: [],
 };
 
 const slice = createSlice({
-    name: 'app-messages',
+    name: 'flashMessages',
     initialState,
     reducers: {
         addNewMessage: (state, action: PayloadAction<FlashMessagePayload>) => {
@@ -104,8 +104,9 @@ const newFlashMessage =
         );
     };
 
-export const getMessages = (state: RootState) =>
-    state.app?.messages.messages as FlashMessage[];
-export const { addNewMessage, removeMessage } = slice.actions;
+export const getMessages = (state: RootState) => state.flashMessages.messages;
 
-export const flashMessageReducer = slice.reducer;
+export const {
+    reducer,
+    actions: { addNewMessage, removeMessage },
+} = slice;

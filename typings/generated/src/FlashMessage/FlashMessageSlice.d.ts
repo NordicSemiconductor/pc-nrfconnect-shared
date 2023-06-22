@@ -1,6 +1,6 @@
 import { AnyAction, ThunkAction } from '@reduxjs/toolkit';
-import { RootState } from '../store';
-interface State {
+import type { RootState } from '../store';
+export interface FlashMessages {
     idCounter: number;
     messages: FlashMessage[];
 }
@@ -19,6 +19,5 @@ export declare const newWarningFlashMessage: (message: string, dismissTime?: num
 export declare const newErrorFlashMessage: (message: string, dismissTime?: number) => TAction;
 export declare const newInfoFlashMessage: (message: string, dismissTime?: number) => TAction;
 export declare const getMessages: (state: RootState) => FlashMessage[];
-export declare const addNewMessage: import("@reduxjs/toolkit").ActionCreatorWithPayload<FlashMessagePayload, "app-messages/addNewMessage">, removeMessage: import("@reduxjs/toolkit").ActionCreatorWithPayload<number, "app-messages/removeMessage">;
-export declare const flashMessageReducer: import("redux").Reducer<State, AnyAction>;
+export declare const reducer: import("redux").Reducer<FlashMessages, AnyAction>, addNewMessage: import("@reduxjs/toolkit").ActionCreatorWithPayload<FlashMessagePayload, "flashMessages/addNewMessage">, removeMessage: import("@reduxjs/toolkit").ActionCreatorWithPayload<number, "flashMessages/removeMessage">;
 export {};
