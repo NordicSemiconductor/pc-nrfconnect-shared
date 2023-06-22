@@ -37,20 +37,15 @@ const slice = createSlice({
     name: 'flashMessages',
     initialState,
     reducers: {
-        addNewMessage: {
-            reducer: (state, action: PayloadAction<FlashMessage>) => {
-                state.messages.push(action.payload);
-            },
-            prepare: (message: FlashMessagePayload) => ({
-                payload: {
-                    id: nanoid(),
-                    ...message,
-                },
-            }),
+        addNewMessage: (
+            state,
+            { payload: message }: PayloadAction<FlashMessagePayload>
+        ) => {
+            state.messages.push({ ...message, id: nanoid() });
         },
-        removeMessage: (state, action: PayloadAction<{ id: string }>) => {
+        removeMessage: (state, { payload: id }: PayloadAction<string>) => {
             state.messages = state.messages.filter(
-                message => message.id !== action.payload.id
+                message => message.id !== id
             );
         },
     },
