@@ -3,12 +3,12 @@ import { FC, ReactNode } from 'react';
 import { Reducer } from 'redux';
 import './app.scss';
 import './shared.scss';
-export interface PaneProps {
+export interface ExternalPaneProps {
     active: boolean;
 }
 export interface Pane {
     name: string;
-    Main: FC<PaneProps>;
+    Main: FC<ExternalPaneProps>;
     SidePanel?: FC;
 }
 interface ConnectedAppProps {

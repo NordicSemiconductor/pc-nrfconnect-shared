@@ -9,7 +9,7 @@ declare const ErrorDialogActions: {
     }, "errorDialog/showDialog", never, never>;
 };
 export { ErrorDialogActions };
-export { default as App, type PaneProps } from './App/App';
+export { default as App, type ExternalPaneProps as PaneProps } from './App/App';
 export { default as Logo } from './Logo/Logo';
 export { default as DeviceSelector, type Props as DeviceSelectorProps, } from './Device/DeviceSelector/DeviceSelector';
 export { Dialog, GenericDialog, ConfirmationDialog, InfoDialog, ErrorDialog, DialogButton, } from './Dialog/Dialog';
