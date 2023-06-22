@@ -140,7 +140,7 @@ export default ({ categories }: FeedbackPaneProps) => {
 
 const formURL =
     isDevelopment === true
-        ? 'https://formkeep.com/f/8deb409a565'
+        ? 'https://formkeep.com/f/87deb409a565'
         : 'https://formkeep.com/f/36b394b92851';
 
 const handleFormData = async (
