@@ -11,10 +11,7 @@ import {
     ThunkAction,
 } from '@reduxjs/toolkit';
 
-import logger from '../logging';
 import type { RootState } from '../store';
-
-const MAX_NUMBER_OF_MESSAGES = 8;
 
 export interface FlashMessages {
     idCounter: number;
@@ -42,20 +39,6 @@ const slice = createSlice({
     initialState,
     reducers: {
         addNewMessage: (state, action: PayloadAction<FlashMessagePayload>) => {
-            if (state.messages.length >= MAX_NUMBER_OF_MESSAGES) {
-                // Only remove the first message with a set time.
-                const messageToRemove = state.messages.find(
-                    msg => msg.dismissTime != null
-                )?.id;
-                if (messageToRemove) {
-                    state.messages = state.messages.filter(
-                        msg => msg.id !== messageToRemove
-                    );
-                } else {
-                    logger.debug('Max number of flash messages reached');
-                }
-            }
-
             state.messages.push({ ...action.payload, id: state.idCounter });
             state.idCounter += 1;
         },
