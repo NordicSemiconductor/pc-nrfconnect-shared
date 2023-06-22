@@ -33,7 +33,7 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
     const [fadeoutTimer, setFadeoutTimer] = useState<string>(
         dismissTime == null ? 'unset' : `${dismissTime}ms`
     );
-    const timeoutHandler = useRef<NodeJS.Timeout | null>(null);
+    const timeoutHandler = useRef<NodeJS.Timeout | undefined>(undefined);
 
     if (timeoutHandler.current == null && dismissTime != null) {
         timeoutHandler.current = setTimeout(() => {
@@ -42,26 +42,22 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
     }
 
     const close = () => {
-        if (timeoutHandler.current) {
-            clearTimeout(timeoutHandler.current);
-        }
+        clearTimeout(timeoutHandler.current);
         dispatch(removeMessage(id));
     };
 
     const addFadeout = () => {
-        if (dismissTime != null) {
+        if (dismissTime) {
             timeoutHandler.current = setTimeout(() => {
                 dispatch(removeMessage(id));
             }, dismissTime);
+            setFadeoutTimer(`${dismissTime}ms`);
         }
-        setFadeoutTimer(`${dismissTime}ms`);
     };
 
     const removeFadeout = () => {
+        clearTimeout(timeoutHandler.current);
         setFadeoutTimer('unset');
-        if (timeoutHandler.current) {
-            clearTimeout(timeoutHandler.current);
-        }
     };
 
     const initialRender = () => divRef.current == null;
@@ -80,7 +76,6 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
                 flexDirection: 'column',
                 justifyContent: 'space-between',
             }}
-            className={`flash-variant-${variant}`}
             onMouseEnter={removeFadeout}
             onMouseLeave={addFadeout}
         >
@@ -117,9 +112,8 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
 
 const FlashMessages = () => {
     const messages = useSelector(getMessages);
-    const showMessages = messages?.length > 0;
 
-    if (!showMessages) return null;
+    if (messages.length === 0) return null;
 
     return (
         <div
