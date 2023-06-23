@@ -1,4 +1,7 @@
-/// <reference types="react" />
+import { ReactNode } from 'react';
 import './about.scss';
-declare const _default: () => JSX.Element;
+interface AboutPaneProps {
+    documentation?: ReactNode[];
+}
+declare const _default: ({ documentation }: AboutPaneProps) => JSX.Element;
 export default _default;

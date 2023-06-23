@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import ApplicationCard from './ApplicationCard';
 import DeviceCard from './DeviceCard';
@@ -13,12 +13,18 @@ import SupportCard from './SupportCard';
 
 import './about.scss';
 
-export default () => (
+interface AboutPaneProps {
+    documentation?: ReactNode[];
+}
+
+export default ({ documentation }: AboutPaneProps) => (
     <div className="about">
         <div className="about-inner">
             <ApplicationCard />
             <DeviceCard />
-            <DocumentationCard />
+            {documentation && documentation.length && (
+                <DocumentationCard documentationSections={documentation} />
+            )}
             <SupportCard />
         </div>
     </div>

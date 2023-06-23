@@ -13,6 +13,10 @@ every new version is a new major version.
 
 -   `Dropdown` component now accepts className.
 
+### Changed
+
+-   `documentation` is now supplied to the `About` pane through props.
+
 ## 60 - 2023-06-21
 
 ### Added

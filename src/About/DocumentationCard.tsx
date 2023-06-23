@@ -4,15 +4,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { ReactNode } from 'react';
 
 import Card from '../Card/Card';
-import { documentationSections } from './documentationSlice';
 
-export default () => {
-    const sections = useSelector(documentationSections);
-    if (sections.length === 0) return null;
-
-    return <Card title="Documentation">{sections}</Card>;
-};
+export default ({
+    documentationSections,
+}: {
+    documentationSections: ReactNode[];
+}) => <Card title="Documentation">{documentationSections}</Card>;

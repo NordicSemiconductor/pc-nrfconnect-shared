@@ -7,7 +7,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { Reducer } from 'redux';
 
-import { reducer as documentation } from './About/documentationSlice';
 import { reducer as shortcuts } from './About/shortcutSlice';
 import { reducer as appLayout } from './App/appLayout';
 import { reducer as brokenDeviceDialog } from './Device/BrokenDeviceDialog/brokenDeviceDialogSlice';
@@ -32,7 +31,6 @@ export const rootReducerSpec = (appReducer: Reducer = noopReducer) => ({
     brokenDeviceDialog,
     errorDialog,
     log,
-    documentation,
     shortcuts,
     flashMessages,
 });

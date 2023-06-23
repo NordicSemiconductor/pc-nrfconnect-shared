@@ -13,7 +13,6 @@ import { ipcRenderer } from 'electron';
 import { Reducer } from 'redux';
 
 import About from '../About/About';
-import { setDocumentationSections } from '../About/documentationSlice';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
 import { setAutoReselect } from '../Device/deviceAutoSelectSlice';
 import {
@@ -92,7 +91,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
-    const allPanes = useAllPanes(panes);
+    const allPanes = useAllPanes(panes, documentation);
     const dispatch = useDispatch();
 
     useHotKey({
@@ -111,10 +110,6 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
             dispatch(toggleLogVisible());
         }
     }, [dispatch, showLogByDefault]);
-
-    useEffect(() => {
-        if (documentation) dispatch(setDocumentationSections(documentation));
-    }, [dispatch, documentation]);
 
     const SidePanelComponent = allPanes[currentPane].SidePanel;
     const currentSidePanel =
@@ -213,14 +208,19 @@ const usePersistedPane = () => {
     }, [dispatch]);
 };
 
-const useAllPanes = (panes: Pane[]) => {
+const useAllPanes = (panes: Pane[], documentation: ReactNode[] | undefined) => {
     const dispatch = useDispatch();
 
-    const allPanes = useMemo(
-        () => [...panes, { name: 'About', Main: About }] as Pane[],
-        [panes]
-    );
+    const allPanes = useMemo(() => {
+        const newPanes = [...panes];
 
+        newPanes.push({
+            name: 'About',
+            Main: props => <About documentation={documentation} {...props} />,
+        });
+
+        return newPanes;
+    }, [panes, documentation]);
     useEffect(() => {
         dispatch(setPanes(allPanes));
     }, [dispatch, allPanes]);
