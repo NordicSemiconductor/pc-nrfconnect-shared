@@ -8,7 +8,10 @@ const colors = require('./colors');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    content: ['./src/**/*.{html,jsx,tsx}'],
+    content: [
+        './src/**/*.{html,jsx,tsx}',
+        './node_modules/pc-nrfconnect-shared/src/**/*.tsx',
+    ],
     theme: {
         colors,
         extend: {},
