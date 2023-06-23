@@ -12,6 +12,8 @@ import logger from '../logging';
 import { isDevelopment } from '../utils/environment';
 import packageJson from '../utils/packageJson';
 
+import './feedback.css';
+
 export interface FeedbackPaneProps {
     categories?: string[];
 }
@@ -94,6 +96,7 @@ export default ({ categories }: FeedbackPaneProps) => {
                             items={categoryItems}
                             onSelect={setSelectedCategory}
                             selectedItem={selectedCategory || categoryItems[0]}
+                            className="feedback-categories"
                         />
                     )}
                     <label htmlFor="feedback-text">
