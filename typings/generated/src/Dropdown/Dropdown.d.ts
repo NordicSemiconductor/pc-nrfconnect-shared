@@ -11,6 +11,7 @@ export interface DropdownProps {
     disabled?: boolean;
     selectedItem: DropdownItem;
     numItemsBeforeScroll?: number;
+    className?: string;
 }
-declare const _default: ({ id, label, items, onSelect, disabled, selectedItem, numItemsBeforeScroll, }: DropdownProps) => JSX.Element;
+declare const _default: ({ id, label, items, onSelect, disabled, selectedItem, numItemsBeforeScroll, className, }: DropdownProps) => JSX.Element;
 export default _default;
