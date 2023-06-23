@@ -143,8 +143,6 @@ export type {
     SourceJson,
 } from './utils/AppTypes';
 
-export { default as FeedbackPane } from './Panes/FeedbackPane';
-
 export {
     addNewMessage,
     newCopiedFlashMessage,

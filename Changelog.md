@@ -7,15 +7,26 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 61 - Unreleased
+## 61 - 2023-06-23
 
 ### Added
 
 -   `Dropdown` component now accepts className.
+-   `feedback` property in `App` component to add the feedback pane and
+    alternatively add custom categories.
 
 ### Changed
 
 -   `documentation` is now supplied to the `About` pane through props.
+
+### Removed
+
+-   `FeedbackPane` is no longer exported.
+
+### Steps to upgrade when using this package
+
+-   If you want to include the `FeedbackPane` in your app, provide the
+    `feedback` property to the `App` component.
 
 ## 60 - 2023-06-21
 

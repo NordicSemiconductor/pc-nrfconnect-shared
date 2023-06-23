@@ -25,6 +25,7 @@ import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import FlashMessages from '../FlashMessage/FlashMessage';
 import LogViewer from '../Log/LogViewer';
 import NavBar from '../NavBar/NavBar';
+import FeedbackPane, { FeedbackPaneProps } from '../Panes/FeedbackPane';
 import classNames from '../utils/classNames';
 import packageJson from '../utils/packageJson';
 import { getPersistedCurrentPane } from '../utils/persistentStore';
@@ -74,6 +75,7 @@ interface ConnectedAppProps {
     showLogByDefault?: boolean;
     reportUsageData?: boolean;
     documentation?: ReactNode[];
+    feedback?: boolean | FeedbackPaneProps;
     children?: ReactNode;
     autoReselectByDefault?: boolean;
 }
@@ -85,13 +87,14 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     showLogByDefault = true,
     reportUsageData = false,
     documentation,
+    feedback,
     children,
     autoReselectByDefault = false,
 }) => {
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
-    const allPanes = useAllPanes(panes, documentation);
+    const allPanes = useAllPanes(panes, documentation, feedback);
     const dispatch = useDispatch();
 
     useHotKey({
@@ -208,11 +211,29 @@ const usePersistedPane = () => {
     }, [dispatch]);
 };
 
-const useAllPanes = (panes: Pane[], documentation: ReactNode[] | undefined) => {
+const useAllPanes = (
+    panes: Pane[],
+    documentation: ReactNode[] | undefined,
+    feedback: boolean | FeedbackPaneProps | undefined
+) => {
     const dispatch = useDispatch();
 
     const allPanes = useMemo(() => {
         const newPanes = [...panes];
+
+        if (feedback) {
+            newPanes.push({
+                name: 'Feedback',
+                Main: props => (
+                    <FeedbackPane
+                        {...(typeof feedback === 'object'
+                            ? feedback
+                            : undefined)}
+                        {...props}
+                    />
+                ),
+            });
+        }
 
         newPanes.push({
             name: 'About',
@@ -220,7 +241,8 @@ const useAllPanes = (panes: Pane[], documentation: ReactNode[] | undefined) => {
         });
 
         return newPanes;
-    }, [panes, documentation]);
+    }, [panes, documentation, feedback]);
+
     useEffect(() => {
         dispatch(setPanes(allPanes));
     }, [dispatch, allPanes]);
