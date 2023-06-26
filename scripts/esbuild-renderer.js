@@ -10,7 +10,7 @@ const { sassPlugin, postcssModules } = require('esbuild-sass-plugin');
 const esbuild = require('esbuild');
 const svgr = require('@svgr/core').transform;
 
-function options(additionalOptions = {}) {
+function options(additionalOptions) {
     const { dependencies } = JSON.parse(
         fs.readFileSync('package.json', 'utf8')
     );
