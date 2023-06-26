@@ -68,7 +68,6 @@ function options(additionalOptions = {}) {
             '.ttf': 'file',
         },
         plugins: [
-            ...(additionalOptions.plugins ?? []),
             sassPlugin({
                 filter: /\.(module|icss)\.scss/,
                 cssImports: true,
