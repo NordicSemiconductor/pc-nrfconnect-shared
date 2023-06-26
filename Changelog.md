@@ -9,6 +9,10 @@ every new version is a new major version.
 
 ## 62 - Unreleased
 
+### Added
+
+-   Slide-out effect for Flash messages.
+
 ### Changed
 
 -   Reduced time for CopiedFlashMessage, from 12s to 3s.
