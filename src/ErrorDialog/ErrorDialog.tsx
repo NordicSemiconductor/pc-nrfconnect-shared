@@ -25,7 +25,7 @@ const ErrorMessage = ({
     error: ErrorMessage;
 }) => (
     <>
-        <ReactMarkdown source={message} linkTarget="_blank" />
+        <ReactMarkdown linkTarget="_blank">{message}</ReactMarkdown>
         {detail != null && (
             <details className="details">
                 <summary>Show technical details</summary>
