@@ -69,7 +69,10 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
                 backgroundColor: getBackgroundColorFromVariant(variant),
                 color: colors.white,
                 zIndex: 1000,
-                animation: initialRender() ? 'slide-in 1s' : 'unset',
+                animation:
+                    fadeoutTimer !== 'unset'
+                        ? flashMessageAnimations(initialRender(), dismissTime)
+                        : 'unset',
                 width: '100%',
                 padding: '16px',
                 display: 'flex',
@@ -135,6 +138,20 @@ const FlashMessages = () => {
             ))}
         </div>
     );
+};
+
+const SLIDE_IN = '1s slide-in';
+const SLIDE_OUT = (dismissTime: number) =>
+    `1s slide-out ${dismissTime - 1000}ms`;
+const flashMessageAnimations = (
+    initialRender2: boolean,
+    dismissTime2?: number
+): string => {
+    if (!dismissTime2) {
+        return initialRender2 ? SLIDE_IN : 'unset';
+    }
+
+    return `${SLIDE_OUT(dismissTime2)},${initialRender2 ? SLIDE_IN : ''}`;
 };
 
 const getBackgroundColorFromVariant = (variant: FlashMessageVariant) => {

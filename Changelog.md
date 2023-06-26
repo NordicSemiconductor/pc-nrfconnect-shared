@@ -7,6 +7,17 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 62 - Unreleased
+
+### Added
+
+-   Slide-out effect for Flash messages.
+
+### Changed
+
+-   Reduced time for CopiedFlashMessage, from 12s to 3s.
+-   Faster slide-in effect for Flash messages.
+
 ## 61 - 2023-06-23
 
 ### Added
