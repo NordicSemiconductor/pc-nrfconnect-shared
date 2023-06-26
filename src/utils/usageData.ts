@@ -17,7 +17,7 @@ import {
     persistIsSendingUsageData,
 } from './persistentStore';
 
-const instrumentationKey = '6a75f7f5-dfe5-412f-a996-28a4b7f479c0';
+const instrumentationKey = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
 const categoryName = () =>
     isDevelopment ? `${appJson.name}-dev` : appJson.name;
 
@@ -56,7 +56,7 @@ export const init = (packageJson: PackageJson) => {
         });
 
         insights.loadAppInsights();
-        insights.trackPageView({ name: appJson.name });
+        insights.trackPageView({ name: categoryName() });
 
         // eslint-disable-next-line global-require
         const si = require('systeminformation') as typeof Systeminformation;
