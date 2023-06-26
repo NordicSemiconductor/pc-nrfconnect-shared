@@ -7,7 +7,7 @@
 import React, { FC } from 'react';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
-import { Device } from '../../../state';
+import { Device } from '../../deviceSlice';
 import { MakeDeviceFavorite } from '../Favorite';
 import RenameDevice from './RenameDevice';
 

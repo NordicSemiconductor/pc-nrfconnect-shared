@@ -1,6 +1,6 @@
 {
     "name": "pc-nrfconnect-shared",
-    "version": "51.0.0",
+    "version": "61.0.0",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -37,6 +37,8 @@
         "@electron/remote": "^2.0.4",
         "@mdi/font": "7.2.96",
         "@microsoft/applicationinsights-web": "^3.0.2",
+        "@mdi/js": "^7.2.96",
+        "@mdi/react": "^1.6.1",
         "@reduxjs/toolkit": "1.9.3",
         "@svgr/core": "^7.0.0",
         "@svgr/plugin-jsx": "7.0.0",

@@ -1,5 +1,10 @@
 import { LogEntry } from 'winston';
-import { Log, RootState } from '../state';
+import type { RootState } from '../store';
+export interface Log {
+    autoScroll: boolean;
+    logEntries: LogEntry[];
+    isLoggingVerbose: boolean;
+}
 export declare const autoScroll: (state: RootState) => boolean;
 export declare const logEntries: (state: RootState) => LogEntry[];
 export declare const isLoggingVerbose: () => boolean;

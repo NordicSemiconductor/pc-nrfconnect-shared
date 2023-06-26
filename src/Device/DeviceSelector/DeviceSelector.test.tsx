@@ -13,8 +13,7 @@ import {
 } from '@testing-library/react';
 
 import render from '../../../test/testrenderer';
-import { Device } from '../../state';
-import { setDevices } from '../deviceSlice';
+import { Device, setDevices } from '../deviceSlice';
 import { jprogDeviceSetup } from '../jprogOperations';
 import DeviceSelector from './DeviceSelector';
 

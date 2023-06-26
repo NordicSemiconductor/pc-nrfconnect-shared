@@ -1,3 +1,5 @@
-/// <reference types="react" />
-declare const _default: () => JSX.Element | null;
+import { ReactNode } from 'react';
+declare const _default: ({ documentationSections, }: {
+    documentationSections: ReactNode[];
+}) => JSX.Element;
 export default _default;

@@ -5,10 +5,10 @@
  */
 
 import logger from '../logging';
-import { TDispatch } from '../state';
+import { AppDispatch } from '../store';
 import { addEntries } from './logSlice';
 
-const addLogEntriesToStore = (dispatch: TDispatch) => () => {
+const addLogEntriesToStore = (dispatch: AppDispatch) => () => {
     const entries = logger.getAndClearEntries();
     if (entries.length > 0) {
         dispatch(addEntries(entries));
@@ -23,7 +23,7 @@ const addLogEntriesToStore = (dispatch: TDispatch) => () => {
  * @param {function} dispatch The redux dispatch function.
  * @returns {function(*)} Function that stops the listener.
  */
-export default (dispatch: TDispatch) => {
+export default (dispatch: AppDispatch) => {
     const LOG_UPDATE_INTERVAL = 400;
     const logListener = setInterval(
         addLogEntriesToStore(dispatch),

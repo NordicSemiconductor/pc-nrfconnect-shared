@@ -11,12 +11,13 @@ import fs from 'fs';
 import MemoryMap from 'nrf-intel-hex';
 
 import logger from '../logging';
-import { Device, TDispatch } from '../state';
+import { AppDispatch } from '../store';
 import { getAppFile } from '../utils/appDirs';
 import { setWaitForDevice } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import { DeviceSetup, DfuEntry } from './deviceSetup';
 import { openDeviceSetupDialog } from './deviceSetupSlice';
+import { Device } from './deviceSlice';
 import {
     createInitPacketBuffer,
     defaultInitPacket,
@@ -87,7 +88,7 @@ const updateBootloader =
         onFail: (reason?: unknown) => void,
         onProgress: (progress: number, message?: string) => void
     ) =>
-    async (dispatch: TDispatch) => {
+    async (dispatch: AppDispatch) => {
         logger.info(`Update Bootloader ${device}`);
         const zip = new AdmZip(getAppFile(LATEST_BOOTLOADER));
         const zipBuffer = zip.toBuffer();
@@ -153,7 +154,7 @@ const switchToDeviceMode =
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void
     ) =>
-    (dispatch: TDispatch) => {
+    (dispatch: AppDispatch) => {
         nrfDeviceLib
             .deviceControlSetMcuState(
                 getDeviceLibContext(),
@@ -167,7 +168,7 @@ const switchToDeviceMode =
                         when:
                             mcuState === 'NRFDL_MCU_STATE_APPLICATION'
                                 ? 'applicationMode'
-                                : 'BootLoaderMode',
+                                : 'dfuBootLoaderMode',
                         once: true,
                         onSuccess,
                         onFail,
@@ -183,7 +184,7 @@ export const switchToBootloaderMode =
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void
     ) =>
-    (dispatch: TDispatch) => {
+    (dispatch: AppDispatch) => {
         if (!isDeviceInDFUBootloader(device)) {
             dispatch(
                 switchToDeviceMode(
@@ -210,7 +211,7 @@ export const switchToApplicationMode =
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void
     ) =>
-    (dispatch: TDispatch) => {
+    (dispatch: AppDispatch) => {
         dispatch(
             switchToDeviceMode(
                 device,
@@ -253,7 +254,7 @@ const askAndUpdateBootloader =
         onFail: (reason?: unknown) => void,
         onProgress: (progress: number, message?: string) => void
     ) =>
-    (dispatch: TDispatch) => {
+    (dispatch: AppDispatch) => {
         dispatch(
             switchToBootloaderMode(
                 device,
@@ -413,7 +414,7 @@ const programInDFUBootloader =
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void
     ) =>
-    async (dispatch: TDispatch) => {
+    async (dispatch: AppDispatch) => {
         logger.debug(
             `${device.serialNumber} on ${device.serialport?.comName} is now in DFU-Bootloader...`
         );
@@ -526,7 +527,7 @@ const programDeviceWithFw =
         selectedFw: DfuEntry,
         onProgress: (progress: number, message?: string) => void
     ) =>
-    (dispatch: TDispatch) =>
+    (dispatch: AppDispatch) =>
         new Promise<Device>((resolve, reject) => {
             const action = (d: Device) => {
                 dispatch(
@@ -559,7 +560,7 @@ export const sdfuDeviceSetup = (
         dfuFirmware.map(firmwareOption => ({
             key: firmwareOption.key,
             description: firmwareOption.description,
-            programDevice: onProgress => (dispatch: TDispatch) =>
+            programDevice: onProgress => (dispatch: AppDispatch) =>
                 dispatch(
                     programDeviceWithFw(device, firmwareOption, onProgress)
                 ),
@@ -589,7 +590,7 @@ export const sdfuDeviceSetup = (
                 });
             }
         }),
-    tryToSwitchToApplicationMode: device => (dispatch: TDispatch) =>
+    tryToSwitchToApplicationMode: device => (dispatch: AppDispatch) =>
         new Promise<Device>((resolve, reject) => {
             dispatch(switchToApplicationMode(device, resolve, reject));
         }),

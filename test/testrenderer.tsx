@@ -7,13 +7,12 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
-import { Action, applyMiddleware, createStore, Reducer } from 'redux';
-import thunk from 'redux-thunk';
+import { Action, Reducer } from 'redux';
 
-import rootReducer from '../src/rootReducer';
+import createStore from '../src/store';
 
 const createPreparedStore = (actions: Action[], appReducer?: Reducer) => {
-    const store = createStore(rootReducer(appReducer), applyMiddleware(thunk));
+    const store = createStore(appReducer);
     actions.forEach(store.dispatch);
 
     return store;

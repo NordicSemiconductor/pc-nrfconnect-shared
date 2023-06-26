@@ -4,11 +4,15 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import type {
+    Device as NrfdlDevice,
+    SerialPort,
+} from '@nordicsemiconductor/nrf-device-lib-js';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 import { SerialPortOpenOptions } from 'serialport';
 
-import { Device, DeviceState, RootState } from '../state';
+import type { RootState } from '../store';
 import {
     getPersistedIsFavorite,
     getPersistedNickname,
@@ -17,6 +21,16 @@ import {
     persistNickname,
     persistSerialPortSettings as persistSerialPortSettingsToStore,
 } from '../utils/persistentStore';
+
+export interface Device extends NrfdlDevice {
+    serialNumber: string;
+    boardVersion?: string;
+    nickname?: string;
+    serialport?: SerialPort;
+    favorite?: boolean;
+    id: number;
+    persistedSerialPortOptions?: SerialPortOpenOptions<AutoDetectTypes>;
+}
 
 const updateDevice = (
     state: DeviceState,
@@ -28,6 +42,13 @@ const updateDevice = (
         Object.assign(device, updateToMergeIn);
     }
 };
+
+export interface DeviceState {
+    devices: Map<string, Device>;
+    deviceInfo: Device | null;
+    selectedSerialNumber: string | null;
+    readbackProtection: 'unknown' | 'protected' | 'unprotected';
+}
 
 const initialState: DeviceState = {
     devices: new Map(),

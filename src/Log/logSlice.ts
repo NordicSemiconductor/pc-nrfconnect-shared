@@ -7,10 +7,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { LogEntry } from 'winston';
 
-import { Log, RootState } from '../state';
+import type { RootState } from '../store';
 import { getIsLoggingVerbose } from '../utils/persistentStore';
 
 const MAX_ENTRIES = 1000;
+
+export interface Log {
+    autoScroll: boolean;
+    logEntries: LogEntry[];
+    isLoggingVerbose: boolean;
+}
 
 const initialState: Log = {
     autoScroll: true,

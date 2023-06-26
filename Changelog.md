@@ -7,6 +7,133 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 61 - 2023-06-23
+
+### Added
+
+-   `Dropdown` component now accepts className.
+-   `feedback` property in `App` component to add the feedback pane and
+    alternatively add custom categories.
+
+### Changed
+
+-   `documentation` is now supplied to the `About` pane through props.
+
+### Removed
+
+-   `FeedbackPane` is no longer exported.
+
+### Steps to upgrade when using this package
+
+-   If you want to include the `FeedbackPane` in your app, provide the
+    `feedback` property to the `App` component.
+
+## 60 - 2023-06-21
+
+### Added
+
+-   Exported `getWaitForDevice` hance allowing apps to resort previous state if
+    needed
+
+### Added
+
+-   Flash Messages feature. Comes with convenience thunk functions in order to
+    create info, success, warning, and error messages.
+
+### Changed
+
+-   FeedbackPane: Change **Platform** to **Operating system**, and remove the
+    link, which opened nodejs documentation.
+
+### Fixed
+
+-   Device remains selected if waiting for device is ongoing and
+    `clearWaitForDevice` is called
+-   `DeviceSetup` on reject `isExpectedFirmware` used to fail silently
+
+### Removed
+
+-   Support for `LegacyPane`
+
+### Steps to upgrade when using this package
+
+-   Replace all instances of `LegacyPane` with `Pane` in the `panes` property of
+    `App`.
+
+## 59 - 2023-06-16
+
+### Added
+
+-   `StartStopButton` added new optional property `showIcon`
+
+### Fixed
+
+-   `StartSop` button `large` false not working
+
+## 58 - 2023-06-14
+
+### Changed
+
+-   Opening port with error `FAILED_DIFFERENT_SETTINGS` will now log a warning
+    not error
+
+## 57 - 2023-06-09
+
+### Added
+
+-   AutoReconnect Mode `WaitForDevice.when` now support an new mode a custom
+    function for more flexibility
+
+## 56 - 2023-06-09
+
+### Changed
+
+-   Device setup progress bar style
+-   The internal handling of the Redux store shaped was changed. Because apps
+    should not make any assumptions about that, this should not break any apps
+    that only go through the API. If it still breaks something, feel free to
+    reach out to Marko. :-)
+
+## 55 - 2023-06-08
+
+### Added
+
+-   AutoReconnect Mode `WaitForDevice.when` now support an new mode `sameTraits`
+
+### Changed
+
+-   AutoReconnect Mode `WaitForDevice.when` mode `BootLoaderMode` has been
+    renamed to `dfuBootLoaderMode`
+
+### Steps to upgrade when using this package
+
+-   Replace all instances of `BootLoaderMode` to `dfuBootLoaderMode` in all
+    `WaitForDevice.when`
+
+## 54 - 2023-06-05
+
+### Removed
+
+-   `react-dom` is no longer listed as an external package due to launcher
+    requiring it for bundling.
+
+## 53 - 2023-06-05
+
+### Added
+
+-   `Toggle` parameter `label` now allows React.ReactNode.
+-   `StartStop` parameter `startText` now allows React.ReactNode.
+-   `StartStop` parameter `stopText` now allows React.ReactNode.
+
+## 52 - 2023-06-02
+
+### Changed
+
+-   Error dialog: If there are multiple errors, state so more clearly.
+-   Error dialog: Add the option to provide details to each error. To use this,
+    pass a third parameter to the action creator
+    `ErrorDialogActions.showDialog`.
+
 ## 51 - 2023-05-31
 
 ### Added
@@ -17,7 +144,7 @@ every new version is a new major version.
 
 ### Fixed
 
--   `dialog` text wrapping opts to keep words as whole of possible
+-   `dialog` text wrapping opts to keep words as whole of possible.
 
 ## 49 - 2023-05-30
 
