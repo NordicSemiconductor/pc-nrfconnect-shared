@@ -6,7 +6,7 @@
  */
 
 const fs = require('fs');
-const join = require('path').join;
+const { join, basename } = require('path');
 const { build } = require('./esbuild-renderer');
 
 const entry = [
@@ -23,21 +23,15 @@ if (!fs.existsSync(distFolder)) {
     fs.mkdirSync(distFolder);
 }
 
-fs.copyFileSync(
-    join(
-        process.cwd(),
-        './node_modules/pc-nrfconnect-shared/scripts/nordic-publish.js'
-    ),
-    join(distFolder, 'nordic-publish.js')
-);
+const copyFileToDist = file =>
+    fs.copyFileSync(
+        join(process.cwd(), 'node_modules/pc-nrfconnect-shared', file),
+        join(distFolder, basename(file))
+    );
 
-fs.copyFileSync(
-    join(
-        process.cwd(),
-        './node_modules/pc-nrfconnect-shared/dist/bootstrap.css'
-    ),
-    join(distFolder, 'bootstrap.css')
-);
+copyFileToDist('scripts/nordic-publish.js');
+copyFileToDist('dist/bootstrap.css');
+copyFileToDist('src/index.html');
 
 if (process.argv.includes('--include-bootloader')) {
     if (!fs.existsSync(`${process.cwd()}/fw`)) {

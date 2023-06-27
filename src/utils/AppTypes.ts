@@ -57,4 +57,5 @@ export interface PackageJson {
         url: string;
     };
     scripts?: ObjectContainingOptionalStrings;
+    html?: string;
 }
