@@ -22,7 +22,7 @@ function options(additionalOptions) {
     const outdir = outfile ? undefined : './dist';
 
     return {
-        format: 'cjs',
+        format: 'iife',
         outfile,
         outdir,
         target: 'chrome89',
@@ -52,7 +52,6 @@ function options(additionalOptions) {
             'electron',
             'serialport',
             '@electron/remote',
-            'react',
             '@nordicsemiconductor/nrf-device-lib-js',
 
             // App dependencies
