@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { readFileSync } from 'fs';
-
 /* Explanation for that cascade of eslint-disable-next-line and @ts-ignore:
    '../../../../package.json' will resolve correctly when `shared` is used in
    a real app, so it is fine.
@@ -32,22 +30,8 @@ import { readFileSync } from 'fs';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore This will be available when the app uses it.
 // eslint-disable-next-line import/no-unresolved
-import packageJsons from '../../../../package.json';
+import packageJson from '../../../../package.json';
 import type { PackageJson } from './AppTypes';
-
-let packageJson: PackageJson = packageJsons;
-
-export const loadPackageJson = (packageJsonPath: string) => {
-    try {
-        packageJson = JSON.parse(
-            readFileSync(packageJsonPath, 'utf8')
-        ) as PackageJson;
-    } catch (e) {
-        console.error(
-            'Failed to read "package.json" of the app. Please tell the app developer to package it correctly.'
-        );
-    }
-};
 
 export default () => {
     if (packageJson == null) {
@@ -56,5 +40,5 @@ export default () => {
 - Or if the app was packaged without a package.json, but in that case the launcher should not even launch this app.`);
     }
 
-    return packageJson;
+    return packageJson as PackageJson;
 };
