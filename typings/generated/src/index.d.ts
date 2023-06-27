@@ -9,7 +9,7 @@ declare const ErrorDialogActions: {
     }, "errorDialog/showDialog", never, never>;
 };
 export { ErrorDialogActions };
-export { default as App, type PaneProps } from './App/App';
+export { default as App, render, type PaneProps } from './App/App';
 export { default as Logo } from './Logo/Logo';
 export { default as DeviceSelector, type Props as DeviceSelectorProps, } from './Device/DeviceSelector/DeviceSelector';
 export { Dialog, GenericDialog, ConfirmationDialog, InfoDialog, ErrorDialog, DialogButton, } from './Dialog/Dialog';
@@ -39,7 +39,7 @@ export { reducer as errorDialogReducer } from './ErrorDialog/errorDialogSlice';
 export { default as logger } from './logging';
 export { default as bleChannels } from './utils/bleChannels';
 export { colors } from './utils/colors';
-export { setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir, } from './utils/appDirs';
+export { getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir, } from './utils/appDirs';
 export { openUrl } from './utils/open';
 export { default as systemReport } from './utils/systemReport';
 export { default as usageData } from './utils/usageData';

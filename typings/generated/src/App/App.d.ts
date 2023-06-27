@@ -1,5 +1,5 @@
 import 'focus-visible';
-import { FC, ReactNode } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { Reducer } from 'redux';
 import './app.scss';
 import './shared.scss';
@@ -25,3 +25,4 @@ declare const _default: ({ appReducer, ...props }: {
     appReducer?: Reducer<any, import("redux").AnyAction> | undefined;
 } & ConnectedAppProps) => JSX.Element;
 export default _default;
+export declare const render: (App: React.ReactElement) => void;
