@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 63 - Unreleased
+
+### Changed
+
+-   Flash Messages: slide-in effect duration reduced to 300ms.
+-   Flash Messages: loader effect ends before slide-out effect begins.
+
 ## 62 - 2023-06-26
 
 ### Added

@@ -21,6 +21,20 @@ import {
 
 import './flashMessage.css';
 
+const SLIDE_IN_DURATION_MS = 300;
+const SLIDE_IN_ANIMATION = `${SLIDE_IN_DURATION_MS}ms slide-in`;
+
+const SLIDE_OUT_DURATION_MS = 1000;
+const SLIDE_OUT_ANIMATION = (dismissTime: number) =>
+    `${SLIDE_OUT_DURATION_MS}ms slide-out ${
+        dismissTime - SLIDE_OUT_DURATION_MS
+    }ms`;
+
+const LOADER_ANIMATION = (dismissTime: number) =>
+    `${
+        dismissTime - SLIDE_OUT_DURATION_MS
+    }ms flash-message-loader linear forwards`;
+
 interface FlashMessageProps {
     flashMessage: FlashMessage;
 }
@@ -104,7 +118,7 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
                         marginTop: '8px',
                         animation:
                             fadeoutTimer !== 'unset'
-                                ? `flash-message ${dismissTime}ms linear`
+                                ? LOADER_ANIMATION(dismissTime)
                                 : 'unset',
                     }}
                 />
@@ -140,18 +154,17 @@ const FlashMessages = () => {
     );
 };
 
-const SLIDE_IN = '1s slide-in';
-const SLIDE_OUT = (dismissTime: number) =>
-    `1s slide-out ${dismissTime - 1000}ms`;
 const flashMessageAnimations = (
     initialRender2: boolean,
     dismissTime2?: number
 ): string => {
     if (!dismissTime2) {
-        return initialRender2 ? SLIDE_IN : 'unset';
+        return initialRender2 ? SLIDE_IN_ANIMATION : 'unset';
     }
 
-    return `${SLIDE_OUT(dismissTime2)},${initialRender2 ? SLIDE_IN : ''}`;
+    return `${SLIDE_OUT_ANIMATION(dismissTime2)},${
+        initialRender2 ? SLIDE_IN_ANIMATION : ''
+    }`;
 };
 
 const getBackgroundColorFromVariant = (variant: FlashMessageVariant) => {
