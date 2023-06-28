@@ -8,7 +8,7 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import type Systeminformation from 'systeminformation';
 
 import logger from '../logging';
-import { PackageJson } from './AppTypes';
+import type { PackageJson } from './AppTypes';
 import { isDevelopment } from './environment';
 import {
     deleteIsSendingUsageData,
@@ -43,30 +43,30 @@ export const init = (packageJson: PackageJson) => {
 
     if (!getIsSendingUsageData()) return;
 
+    const accountId = getUsageDataClientId();
+
+    insights = new ApplicationInsights({
+        config: {
+            instrumentationKey,
+            disableExceptionTracking: false,
+            accountId,
+        },
+    });
+
+    insights.loadAppInsights();
+    initialized = true;
+    insights.trackPageView({ name: categoryName() });
+
+    logger.debug(
+        `Application Insights for category ${categoryName()} has initialized`
+    );
+
+    // Add 5 second delay to prevent inital rendering from beeing frozen.
     setTimeout(async () => {
-        const clientId = getUsageDataClientId();
-
-        logger.debug(`Client Id: ${clientId}`);
-
-        insights = new ApplicationInsights({
-            config: {
-                instrumentationKey,
-                disableExceptionTracking: false,
-            },
-        });
-
-        insights.loadAppInsights();
-        insights.trackPageView({ name: categoryName() });
-
         // eslint-disable-next-line global-require
         const si = require('systeminformation') as typeof Systeminformation;
         sendUsageData('architecture', (await si.osInfo()).arch);
-
-        initialized = true;
-        logger.debug(
-            `Application Insights for category ${categoryName()} has initialized`
-        );
-    }, 5000); // Add 5 second delay to prevent inital rendering from beeing frozen.
+    }, 5_000);
 };
 
 /**
