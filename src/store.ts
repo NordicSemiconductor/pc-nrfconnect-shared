@@ -51,7 +51,7 @@ const store = (appReducer?: Reducer) =>
 // Needed only to infer the types below
 const concreteStore = store();
 
-export type TAction<T> = ThunkAction<T, RootState, null, AnyAction>;
+export type TAction<T> = ThunkAction<T, RootState, undefined, AnyAction>;
 export type RootState = ReturnType<typeof concreteStore.getState>;
 export type AppDispatch = typeof concreteStore.dispatch;
 
