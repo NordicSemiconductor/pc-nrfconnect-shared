@@ -5,7 +5,7 @@
  */
 import logger from '../logging';
 import describeError from '../logging/describeError';
-import { AppDispatch, RootState } from '../store';
+import { TAction } from '../store';
 import {
     closeDeviceSetupDialog,
     openDeviceSetupDialog,
@@ -39,24 +39,17 @@ export interface DeviceSetup {
         description?: string;
         programDevice: (
             onProgress: (progress: number, message?: string) => void
-        ) => (
-            dispatch: AppDispatch,
-            getState: () => RootState
-        ) => Promise<Device>;
+        ) => TAction<Promise<Device>>;
     }[]; // The list of all firmware that can be applied for this device with the program function for that fw item
-    isExpectedFirmware: (device: Device) => (
-        dispatch: AppDispatch,
-        getState: () => RootState
-    ) => Promise<{
-        device: Device;
-        validFirmware: boolean;
-    }>; // returns true if device has one of the expected firmware returned by getFirmwareOptions
+    isExpectedFirmware: (device: Device) => TAction<
+        Promise<{
+            device: Device;
+            validFirmware: boolean;
+        }>
+    >; // returns true if device has one of the expected firmware returned by getFirmwareOptions
     tryToSwitchToApplicationMode: (
         device: Device
-    ) => (
-        dispatch: AppDispatch,
-        getState: () => RootState
-    ) => Promise<Device | null>; // returns the device after switched to app mode. If this is not possible or not relevant return null
+    ) => TAction<Promise<Device | null>>; // returns the device after switched to app mode. If this is not possible or not relevant return null
 }
 
 export interface DeviceSetupConfig {
@@ -74,8 +67,8 @@ export const prepareDevice =
         onFail: (reason?: unknown) => void,
         checkCurrentFirmwareVersion = true,
         requireUserConfirmation = true
-    ) =>
-    async (dispatch: AppDispatch) => {
+    ): TAction<Promise<void>> =>
+    async dispatch => {
         const onSuccessWrapper = (d: Device) => {
             onSuccess(d);
             dispatch(closeDeviceSetupDialog());
@@ -232,8 +225,8 @@ export const setupDevice =
         deviceSetupConfig: DeviceSetupConfig,
         onDeviceIsReady: (device: Device) => void,
         doDeselectDevice: () => void
-    ) =>
-    (dispatch: AppDispatch, getState: () => RootState) =>
+    ): TAction<void> =>
+    (dispatch, getState) =>
         dispatch(
             prepareDevice(
                 device,
