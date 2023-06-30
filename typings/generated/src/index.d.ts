@@ -65,7 +65,7 @@ export { default as describeError } from './logging/describeError';
 export { createSerialPort, getSerialPortOptions, type SerialPort, } from './SerialPort/SerialPort';
 export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSettingsDialog';
 export { openAppWindow } from './OpenApp/openApp';
-export type { AppDispatch, TAction, NrfConnectState } from './store';
+export type { TAction, NrfConnectState } from './store';
 export { type DeviceSetupConfig, type DeviceSetup, prepareDevice, } from './Device/deviceSetup';
 export type { AppInfo, AppVersions, PackageJson, SourceJson, } from './utils/AppTypes';
 export { addNewMessage, newCopiedFlashMessage, newInfoFlashMessage, newWarningFlashMessage, newErrorFlashMessage, newSuccessFlashMessage, } from './FlashMessage/FlashMessageSlice';
