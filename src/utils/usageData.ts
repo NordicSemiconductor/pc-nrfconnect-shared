@@ -18,8 +18,6 @@ import {
 } from './persistentStore';
 
 const instrumentationKey = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
-const categoryName = () =>
-    isDevelopment ? `${appJson.name}-dev` : appJson.name;
 
 interface EventAction {
     action: string;
@@ -27,9 +25,7 @@ interface EventAction {
 }
 
 let initialized = false;
-let appJson: PackageJson;
 let eventQueue: EventAction[] = [];
-
 let insights: ApplicationInsights;
 
 /**
@@ -39,7 +35,10 @@ let insights: ApplicationInsights;
  * @returns {Promise<void>} void
  */
 export const init = (packageJson: PackageJson) => {
-    appJson = packageJson;
+    const applicationName = isDevelopment
+        ? `${packageJson.name}-dev`
+        : packageJson.name;
+    const applicationVersion = packageJson.version;
 
     if (!getIsSendingUsageData()) return;
 
@@ -48,17 +47,30 @@ export const init = (packageJson: PackageJson) => {
     insights = new ApplicationInsights({
         config: {
             instrumentationKey,
-            disableExceptionTracking: false,
             accountId,
         },
     });
 
     insights.loadAppInsights();
     initialized = true;
-    insights.trackPageView({ name: categoryName() });
+    insights.trackPageView({ name: applicationName });
+
+    // Add app name and version to every event
+    insights.addTelemetryInitializer(envelope => {
+        const trace = {
+            ...(envelope.ext?.trace ?? {}),
+            name: applicationName,
+        };
+        envelope.ext = { ...envelope.ext, trace };
+        envelope.data = {
+            ...envelope.data,
+            applicationName,
+            applicationVersion,
+        };
+    });
 
     logger.debug(
-        `Application Insights for category ${categoryName()} has initialized`
+        `Application Insights for category ${applicationName} has initialized`
     );
 
     // Add 5 second delay to prevent inital rendering from beeing frozen.
@@ -131,12 +143,13 @@ export const reset = () => {
  */
 const sendEvent = ({ action, label }: EventAction) => {
     const isSendingUsageData = getIsSendingUsageData();
-    const category = categoryName();
 
     if (isSendingUsageData) {
-        const data = JSON.stringify({ category, action, label });
-        logger.debug(`Sending usage data ${data}`);
-        insights.trackEvent({ name: category, properties: { action, label } });
+        logger.debug(`Sending usage data ${action} ${label}`);
+        insights.trackEvent({
+            name: action,
+            properties: label ? { label } : undefined,
+        });
     }
 };
 
@@ -167,7 +180,7 @@ export const sendErrorReport = (error: string) => {
     });
     sendUsageData(
         'Report error',
-        `${process.platform}; ${process.arch}; v${appJson?.version}; ${error}`
+        `${process.platform}; ${process.arch}; ${error}`
     );
 };
 
