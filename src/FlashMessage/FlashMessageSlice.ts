@@ -45,31 +45,31 @@ const slice = createSlice({
     },
 });
 
-export const newCopiedFlashMessage = (): TAction => dispatch =>
+export const newCopiedFlashMessage = (): TAction<void> => dispatch =>
     dispatch(newInfoFlashMessage('Copied to clipboard!', 3000));
 
 export const newSuccessFlashMessage =
-    (message: string, dismissTime?: number): TAction =>
+    (message: string, dismissTime?: number): TAction<void> =>
     dispatch =>
         dispatch(newFlashMessage({ message, variant: 'success', dismissTime }));
 
 export const newWarningFlashMessage =
-    (message: string, dismissTime?: number): TAction =>
+    (message: string, dismissTime?: number): TAction<void> =>
     dispatch =>
         dispatch(newFlashMessage({ message, variant: 'warning', dismissTime }));
 
 export const newErrorFlashMessage =
-    (message: string, dismissTime?: number): TAction =>
+    (message: string, dismissTime?: number): TAction<void> =>
     dispatch =>
         dispatch(newFlashMessage({ message, variant: 'error', dismissTime }));
 
 export const newInfoFlashMessage =
-    (message: string, dismissTime?: number): TAction =>
+    (message: string, dismissTime?: number): TAction<void> =>
     dispatch =>
         dispatch(newFlashMessage({ message, variant: 'info', dismissTime }));
 
 const newFlashMessage =
-    ({ message, variant, dismissTime }: FlashMessagePayload): TAction =>
+    ({ message, variant, dismissTime }: FlashMessagePayload): TAction<void> =>
     dispatch => {
         dispatch(
             addNewMessage({
