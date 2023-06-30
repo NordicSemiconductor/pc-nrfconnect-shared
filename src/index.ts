@@ -49,6 +49,7 @@ export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
 export { default as MasonryLayout } from './MasonryLayout/MasonryLayout';
 
 export { default as useStopwatch } from './utils/useStopwatch';
+export { default as useFocusedOnVisible } from './utils/useFocusedOnVisible';
 
 export { reducer as errorDialogReducer } from './ErrorDialog/errorDialogSlice';
 export { default as logger } from './logging';
@@ -96,11 +97,12 @@ export {
 } from './Device/deviceSlice';
 export {
     setWaitForDevice,
-    clearWaitForDevice,
     getAutoReselect,
     getWaitingForDeviceTimeout,
     getWaitingToAutoReselect,
+    getWaitForDevice,
 } from './Device/deviceAutoSelectSlice';
+export { clearWaitForDevice } from './Device/deviceLister';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
 export { getDeviceLibContext } from './Device/deviceLibWrapper';
 export { isDeviceInDFUBootloader } from './Device/sdfuOperations';
@@ -127,7 +129,7 @@ export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSe
 
 export { openAppWindow } from './OpenApp/openApp';
 
-export type { NrfConnectState } from './store';
+export type { AppDispatch, AppThunk, NrfConnectState } from './store';
 
 export {
     type DeviceSetupConfig,
@@ -142,4 +144,11 @@ export type {
     SourceJson,
 } from './utils/AppTypes';
 
-export { default as FeedbackPane } from './Panes/FeedbackPane';
+export {
+    addNewMessage,
+    newCopiedFlashMessage,
+    newInfoFlashMessage,
+    newWarningFlashMessage,
+    newErrorFlashMessage,
+    newSuccessFlashMessage,
+} from './FlashMessage/FlashMessageSlice';

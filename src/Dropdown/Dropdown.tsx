@@ -7,6 +7,8 @@
 import React, { useState } from 'react';
 import FormLabel from 'react-bootstrap/FormLabel';
 
+import classNames from '../utils/classNames';
+
 import styles from './Dropdown.module.scss';
 
 export interface DropdownItem {
@@ -22,6 +24,7 @@ export interface DropdownProps {
     disabled?: boolean;
     selectedItem: DropdownItem;
     numItemsBeforeScroll?: number;
+    className?: string;
 }
 
 export default ({
@@ -32,6 +35,7 @@ export default ({
     disabled = false,
     selectedItem,
     numItemsBeforeScroll = 0,
+    className = '',
 }: DropdownProps) => {
     const [isActive, setIsActive] = useState(false);
 
@@ -42,7 +46,7 @@ export default ({
 
     return (
         <div
-            className={styles.container}
+            className={classNames(styles.container, className)}
             onBlur={event => {
                 if (!event.currentTarget.contains(event.relatedTarget)) {
                     setIsActive(false);

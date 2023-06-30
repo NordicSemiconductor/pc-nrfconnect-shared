@@ -5,7 +5,7 @@
  */
 import logger from '../logging';
 import describeError from '../logging/describeError';
-import { AppDispatch, RootState } from '../store';
+import { AppThunk, RootState } from '../store';
 import {
     closeDeviceSetupDialog,
     openDeviceSetupDialog,
@@ -39,24 +39,18 @@ export interface DeviceSetup {
         description?: string;
         programDevice: (
             onProgress: (progress: number, message?: string) => void
-        ) => (
-            dispatch: AppDispatch,
-            getState: () => RootState
-        ) => Promise<Device>;
+        ) => AppThunk<RootState, Promise<Device>>;
     }[]; // The list of all firmware that can be applied for this device with the program function for that fw item
-    isExpectedFirmware: (device: Device) => (
-        dispatch: AppDispatch,
-        getState: () => RootState
-    ) => Promise<{
-        device: Device;
-        validFirmware: boolean;
-    }>; // returns true if device has one of the expected firmware returned by getFirmwareOptions
+    isExpectedFirmware: (device: Device) => AppThunk<
+        RootState,
+        Promise<{
+            device: Device;
+            validFirmware: boolean;
+        }>
+    >; // returns true if device has one of the expected firmware returned by getFirmwareOptions
     tryToSwitchToApplicationMode: (
         device: Device
-    ) => (
-        dispatch: AppDispatch,
-        getState: () => RootState
-    ) => Promise<Device | null>; // returns the device after switched to app mode. If this is not possible or not relevant return null
+    ) => AppThunk<RootState, Promise<Device | null>>; // returns the device after switched to app mode. If this is not possible or not relevant return null
 }
 
 export interface DeviceSetupConfig {
@@ -74,8 +68,8 @@ export const prepareDevice =
         onFail: (reason?: unknown) => void,
         checkCurrentFirmwareVersion = true,
         requireUserConfirmation = true
-    ) =>
-    async (dispatch: AppDispatch) => {
+    ): AppThunk<RootState, Promise<void>> =>
+    async dispatch => {
         const onSuccessWrapper = (d: Device) => {
             onSuccess(d);
             dispatch(closeDeviceSetupDialog());
@@ -113,13 +107,18 @@ export const prepareDevice =
         if (checkCurrentFirmwareVersion) {
             // eslint-disable-next-line no-restricted-syntax
             for (const deviceSetup of validDeviceSetups) {
-                // eslint-disable-next-line no-await-in-loop
-                const result = await dispatch(
-                    deviceSetup.isExpectedFirmware(device)
-                );
-                device = result.device;
-                if (result.validFirmware) {
-                    onSuccessWrapper(device);
+                try {
+                    // eslint-disable-next-line no-await-in-loop
+                    const result = await dispatch(
+                        deviceSetup.isExpectedFirmware(device)
+                    );
+                    device = result.device;
+                    if (result.validFirmware) {
+                        onSuccessWrapper(device);
+                        return;
+                    }
+                } catch (error) {
+                    onFail(error);
                     return;
                 }
             }
@@ -227,8 +226,8 @@ export const setupDevice =
         deviceSetupConfig: DeviceSetupConfig,
         onDeviceIsReady: (device: Device) => void,
         doDeselectDevice: () => void
-    ) =>
-    (dispatch: AppDispatch, getState: () => RootState) =>
+    ): AppThunk<RootState> =>
+    (dispatch, getState) =>
         dispatch(
             prepareDevice(
                 device,

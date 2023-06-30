@@ -20,6 +20,7 @@ interface Props {
     started: boolean;
     disabled?: boolean;
     large?: boolean;
+    showIcon?: boolean;
     variant?: ButtonVariants;
     className?: string;
 }
@@ -33,6 +34,7 @@ const StartStopButton: FC<Props> = ({
     variant = 'secondary',
     className,
     large = true,
+    showIcon = true,
 }) => {
     const label = started ? stopText : startText;
     const src = started ? stopSvg : playSvg;
@@ -49,7 +51,7 @@ const StartStopButton: FC<Props> = ({
             onClick={() => onClick()}
             variant={variant}
         >
-            <img alt="" src={src} />
+            {showIcon && <img alt="" src={src} />}
             {label}
         </Button>
     );

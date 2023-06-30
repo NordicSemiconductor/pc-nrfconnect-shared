@@ -7,6 +7,129 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 67 - 2023-07-04
+
+### Fixed
+
+-   Usage data (`insights` object) was possibly undefined.
+
+## 66 - 2023-07-03
+
+### Fixed
+
+-   `Restart application with verbose logging` button did not restart
+    application
+-   Margin on feedback pane
+-   Improve `NavBar` layout when there are a lot of tabs
+
+## 65 - 2023-07-03
+
+### Changed
+
+-   'AppThunk<ReturnType>' to 'AppThunk<AppLayout, ReturnType>'
+
+### Steps to upgrade when using this package
+
+-   If 'AppThunk' is used with return type generic, add AppLayout (RootState)
+    'AppThunk<AppLayout, ReturnType>'
+
+## 64 - 2023-07-03
+
+### Added
+
+-   Export 'AppThunk<ReturnType>' for apps to use
+-   Export 'AppDispatch' for apps to use
+
+### Changed
+
+-   Replace Google Analytics with Application Insights.
+
+## 63 - 2023-06-27
+
+### Added
+
+-   Hook `useFocusedOnVisible` to focus an element when a dialog becomes
+    visible.
+
+### Changed
+
+-   Flash Messages: slide-in effect duration reduced to 300ms.
+-   Flash Messages: loader effect ends before slide-out effect begins.
+
+## 62 - 2023-06-26
+
+### Added
+
+-   Slide-out effect for Flash messages.
+
+### Changed
+
+-   Reduced time for CopiedFlashMessage, from 12s to 3s.
+-   Faster slide-in effect for Flash messages.
+
+## 61 - 2023-06-23
+
+### Added
+
+-   `Dropdown` component now accepts className.
+-   `feedback` property in `App` component to add the feedback pane and
+    alternatively add custom categories.
+
+### Changed
+
+-   `documentation` is now supplied to the `About` pane through props.
+
+### Removed
+
+-   `FeedbackPane` is no longer exported.
+
+### Steps to upgrade when using this package
+
+-   If you want to include the `FeedbackPane` in your app, provide the
+    `feedback` property to the `App` component.
+
+## 60 - 2023-06-21
+
+### Added
+
+-   Exported `getWaitForDevice` hance allowing apps to resort previous state if
+    needed
+
+### Added
+
+-   Flash Messages feature. Comes with convenience thunk functions in order to
+    create info, success, warning, and error messages.
+
+### Changed
+
+-   FeedbackPane: Change **Platform** to **Operating system**, and remove the
+    link, which opened nodejs documentation.
+
+### Fixed
+
+-   Device remains selected if waiting for device is ongoing and
+    `clearWaitForDevice` is called
+-   `DeviceSetup` on reject `isExpectedFirmware` used to fail silently
+
+### Removed
+
+-   Support for `LegacyPane`
+
+### Steps to upgrade when using this package
+
+-   Replace all instances of `LegacyPane` with `Pane` in the `panes` property of
+    `App`.
+
+## 59 - 2023-06-16
+
+### Added
+
+-   `StartStopButton` added new optional property `showIcon`
+
+### Fixed
+
+-   `StartSop` button `large` false not working
+
 ## 58 - 2023-06-14
 
 ### Changed

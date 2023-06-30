@@ -13,7 +13,6 @@ import { ipcRenderer } from 'electron';
 import { Reducer } from 'redux';
 
 import About from '../About/About';
-import { setDocumentationSections } from '../About/documentationSlice';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
 import { setAutoReselect } from '../Device/deviceAutoSelectSlice';
 import {
@@ -23,8 +22,10 @@ import {
 } from '../Device/deviceSlice';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
+import FlashMessages from '../FlashMessage/FlashMessage';
 import LogViewer from '../Log/LogViewer';
 import NavBar from '../NavBar/NavBar';
+import FeedbackPane, { FeedbackPaneProps } from '../Panes/FeedbackPane';
 import classNames from '../utils/classNames';
 import packageJson from '../utils/packageJson';
 import { getPersistedCurrentPane } from '../utils/persistentStore';
@@ -44,27 +45,6 @@ import VisibilityBar from './VisibilityBar';
 import './app.scss';
 import './shared.scss';
 import './tailwind.css';
-
-type LegacyPane = [string, FC];
-let warnedAboutLegacyPanes = false;
-const convertLegacy = (pane: Pane | LegacyPane): Pane => {
-    const isLegacyPane = Array.isArray(pane);
-    if (!isLegacyPane) {
-        return pane;
-    }
-
-    if (!warnedAboutLegacyPanes) {
-        console.warn(
-            `Passed legacy definition for pane '${pane[0]}' which will be deprecated and removed in the future.`
-        );
-        warnedAboutLegacyPanes = true;
-    }
-
-    return {
-        name: pane[0],
-        Main: pane[1],
-    };
-};
 
 let usageDataAlreadyInitialised = false;
 const initialiseUsageData = () => {
@@ -96,6 +76,7 @@ interface ConnectedAppProps {
     showLogByDefault?: boolean;
     reportUsageData?: boolean;
     documentation?: ReactNode[];
+    feedback?: boolean | FeedbackPaneProps;
     children?: ReactNode;
     autoReselectByDefault?: boolean;
 }
@@ -107,13 +88,14 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     showLogByDefault = true,
     reportUsageData = false,
     documentation,
+    feedback,
     children,
     autoReselectByDefault = false,
 }) => {
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
-    const allPanes = useAllPanes(panes);
+    const allPanes = useAllPanes(panes, documentation, feedback);
     const dispatch = useDispatch();
 
     useHotKey({
@@ -132,10 +114,6 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
             dispatch(toggleLogVisible());
         }
     }, [dispatch, showLogByDefault]);
-
-    useEffect(() => {
-        if (documentation) dispatch(setDocumentationSections(documentation));
-    }, [dispatch, documentation]);
 
     const SidePanelComponent = allPanes[currentPane].SidePanel;
     const currentSidePanel =
@@ -188,6 +166,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
                         <LogViewer />
                     </div>
                 </div>
+                <FlashMessages />
             </div>
             <VisibilityBar isSidePanelEnabled={sidePanel !== null} />
 
@@ -233,13 +212,37 @@ const usePersistedPane = () => {
     }, [dispatch]);
 };
 
-const useAllPanes = (panes: (Pane | LegacyPane)[]) => {
+const useAllPanes = (
+    panes: Pane[],
+    documentation: ReactNode[] | undefined,
+    feedback: boolean | FeedbackPaneProps | undefined
+) => {
     const dispatch = useDispatch();
 
-    const allPanes = useMemo(
-        () => [...panes, { name: 'About', Main: About }].map(convertLegacy),
-        [panes]
-    );
+    const allPanes = useMemo(() => {
+        const newPanes = [...panes];
+
+        if (feedback) {
+            newPanes.push({
+                name: 'Feedback',
+                Main: props => (
+                    <FeedbackPane
+                        {...(typeof feedback === 'object'
+                            ? feedback
+                            : undefined)}
+                        {...props}
+                    />
+                ),
+            });
+        }
+
+        newPanes.push({
+            name: 'About',
+            Main: props => <About documentation={documentation} {...props} />,
+        });
+
+        return newPanes;
+    }, [panes, documentation, feedback]);
 
     useEffect(() => {
         dispatch(setPanes(allPanes));

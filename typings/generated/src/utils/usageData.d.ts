@@ -1,4 +1,4 @@
-import { PackageJson } from './AppTypes';
+import type { PackageJson } from './AppTypes';
 /**
  * Initialize instance to send user data
  * @param {*} packageJson the app's package json
@@ -38,14 +38,14 @@ export declare const disable: () => void;
  */
 export declare const reset: () => void;
 /**
- * Send usage data event to Google Analytics
+ * Send usage data event to Application Insights
  * @param {string} action The event action
  * @param {string} label The event label
  * @returns {void}
  */
 export declare const sendUsageData: <T extends string>(action: T, label?: string) => void;
 /**
- * Send error usage data event to Google Analytics and also show it in the logger view
+ * Send error usage data event to Application Insights and also show it in the logger view
  * @param {string} error The event action
  * @returns {void}
  */

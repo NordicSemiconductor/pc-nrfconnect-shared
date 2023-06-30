@@ -15,12 +15,11 @@ import './nav-menu-item.scss';
 
 interface Props {
     index: number;
-    isFirst: boolean;
     isSelected: boolean;
     label: string;
 }
 
-const NavMenuItem: FC<Props> = ({ index, isFirst, isSelected, label }) => {
+const NavMenuItem: FC<Props> = ({ index, isSelected, label }) => {
     const dispatch = useDispatch();
 
     return (
@@ -29,7 +28,7 @@ const NavMenuItem: FC<Props> = ({ index, isFirst, isSelected, label }) => {
             className={classNames(
                 'core19-nav-menu-item',
                 isSelected && 'selected',
-                isFirst && 'first'
+                'mr-4'
             )}
             onClick={() => dispatch(setCurrentPane(index))}
         >

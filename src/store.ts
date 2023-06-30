@@ -4,10 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { configureStore } from '@reduxjs/toolkit';
+import { AnyAction, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { Reducer } from 'redux';
 
-import { reducer as documentation } from './About/documentationSlice';
 import { reducer as shortcuts } from './About/shortcutSlice';
 import { reducer as appLayout } from './App/appLayout';
 import { reducer as brokenDeviceDialog } from './Device/BrokenDeviceDialog/brokenDeviceDialogSlice';
@@ -15,6 +14,7 @@ import { reducer as deviceAutoSelect } from './Device/deviceAutoSelectSlice';
 import { reducer as deviceSetup } from './Device/deviceSetupSlice';
 import { reducer as device } from './Device/deviceSlice';
 import { reducer as errorDialog } from './ErrorDialog/errorDialogSlice';
+import { reducer as flashMessages } from './FlashMessage/FlashMessageSlice';
 import { reducer as log } from './Log/logSlice';
 
 const ifBuiltForDevelopment = <X>(value: X) =>
@@ -31,8 +31,8 @@ export const rootReducerSpec = (appReducer: Reducer = noopReducer) => ({
     brokenDeviceDialog,
     errorDialog,
     log,
-    documentation,
     shortcuts,
+    flashMessages,
 });
 
 const store = (appReducer?: Reducer) =>
@@ -50,6 +50,13 @@ const store = (appReducer?: Reducer) =>
 
 // Needed only to infer the types below
 const concreteStore = store();
+
+export type AppThunk<AppLayout = RootState, ReturnType = void> = ThunkAction<
+    ReturnType,
+    AppLayout,
+    unknown,
+    AnyAction
+>;
 export type RootState = ReturnType<typeof concreteStore.getState>;
 export type AppDispatch = typeof concreteStore.dispatch;
 
