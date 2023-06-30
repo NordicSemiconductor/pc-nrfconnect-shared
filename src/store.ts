@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { configureStore } from '@reduxjs/toolkit';
+import { AnyAction, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { Reducer } from 'redux';
 
 import { reducer as shortcuts } from './About/shortcutSlice';
@@ -50,6 +50,8 @@ const store = (appReducer?: Reducer) =>
 
 // Needed only to infer the types below
 const concreteStore = store();
+
+export type TAction = ThunkAction<void, RootState, null, AnyAction>;
 export type RootState = ReturnType<typeof concreteStore.getState>;
 export type AppDispatch = typeof concreteStore.dispatch;
 

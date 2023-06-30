@@ -4,15 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import {
-    AnyAction,
-    createSlice,
-    nanoid,
-    PayloadAction,
-    ThunkAction,
-} from '@reduxjs/toolkit';
+import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
 
-import type { RootState } from '../store';
+import type { RootState, TAction } from '../store';
 
 export interface FlashMessages {
     messages: FlashMessage[];
@@ -50,8 +44,6 @@ const slice = createSlice({
         },
     },
 });
-
-type TAction = ThunkAction<void, RootState, null, AnyAction>;
 
 export const newCopiedFlashMessage = (): TAction => dispatch =>
     dispatch(newInfoFlashMessage('Copied to clipboard!', 3000));
