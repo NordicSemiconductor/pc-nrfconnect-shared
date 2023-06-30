@@ -11,6 +11,29 @@ every new version is a new major version.
 
 -   Replace Google Analytics with Application Insights.
 
+## 63 - 2023-06-27
+
+### Added
+
+-   Hook `useFocusedOnVisible` to focus an element when a dialog becomes
+    visible.
+
+### Changed
+
+-   Flash Messages: slide-in effect duration reduced to 300ms.
+-   Flash Messages: loader effect ends before slide-out effect begins.
+
+## 62 - 2023-06-26
+
+### Added
+
+-   Slide-out effect for Flash messages.
+
+### Changed
+
+-   Reduced time for CopiedFlashMessage, from 12s to 3s.
+-   Faster slide-in effect for Flash messages.
+
 ## 61 - 2023-06-23
 
 ### Added

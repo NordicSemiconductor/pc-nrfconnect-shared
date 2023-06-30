@@ -54,7 +54,7 @@ const slice = createSlice({
 type TAction = ThunkAction<void, RootState, null, AnyAction>;
 
 export const newCopiedFlashMessage = (): TAction => dispatch =>
-    dispatch(newInfoFlashMessage('Copied to clipboard!', 12000));
+    dispatch(newInfoFlashMessage('Copied to clipboard!', 3000));
 
 export const newSuccessFlashMessage =
     (message: string, dismissTime?: number): TAction =>

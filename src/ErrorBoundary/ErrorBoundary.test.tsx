@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 
 import render from '../../test/testrenderer';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
