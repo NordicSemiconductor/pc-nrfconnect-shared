@@ -129,7 +129,7 @@ export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSe
 
 export { openAppWindow } from './OpenApp/openApp';
 
-export type { TAction, NrfConnectState } from './store';
+export type { AppDispatch, TAction, NrfConnectState } from './store';
 
 export {
     type DeviceSetupConfig,
