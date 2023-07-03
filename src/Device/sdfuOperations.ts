@@ -11,7 +11,7 @@ import fs from 'fs';
 import MemoryMap from 'nrf-intel-hex';
 
 import logger from '../logging';
-import { AppThunk } from '../store';
+import { AppThunk, RootState } from '../store';
 import { getAppFile } from '../utils/appDirs';
 import { setWaitForDevice } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
@@ -413,7 +413,7 @@ const programInDFUBootloader =
         onProgress: (progress: number, message?: string) => void,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void
-    ): AppThunk<Promise<void>> =>
+    ): AppThunk<RootState, Promise<void>> =>
     async dispatch => {
         logger.debug(
             `${device.serialNumber} on ${device.serialport?.comName} is now in DFU-Bootloader...`
@@ -526,7 +526,7 @@ const programDeviceWithFw =
         device: Device,
         selectedFw: DfuEntry,
         onProgress: (progress: number, message?: string) => void
-    ): AppThunk<Promise<Device>> =>
+    ): AppThunk<RootState, Promise<Device>> =>
     dispatch =>
         new Promise<Device>((resolve, reject) => {
             const action = (d: Device) => {

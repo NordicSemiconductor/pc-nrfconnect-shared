@@ -51,9 +51,9 @@ const store = (appReducer?: Reducer) =>
 // Needed only to infer the types below
 const concreteStore = store();
 
-export type AppThunk<ReturnType = void> = ThunkAction<
+export type AppThunk<AppLayout = RootState, ReturnType = void> = ThunkAction<
     ReturnType,
-    RootState,
+    AppLayout,
     unknown,
     AnyAction
 >;

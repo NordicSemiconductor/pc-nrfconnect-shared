@@ -5,7 +5,7 @@
  */
 import logger from '../logging';
 import describeError from '../logging/describeError';
-import { AppThunk } from '../store';
+import { AppThunk, RootState } from '../store';
 import {
     closeDeviceSetupDialog,
     openDeviceSetupDialog,
@@ -39,9 +39,10 @@ export interface DeviceSetup {
         description?: string;
         programDevice: (
             onProgress: (progress: number, message?: string) => void
-        ) => AppThunk<Promise<Device>>;
+        ) => AppThunk<RootState, Promise<Device>>;
     }[]; // The list of all firmware that can be applied for this device with the program function for that fw item
     isExpectedFirmware: (device: Device) => AppThunk<
+        RootState,
         Promise<{
             device: Device;
             validFirmware: boolean;
@@ -49,7 +50,7 @@ export interface DeviceSetup {
     >; // returns true if device has one of the expected firmware returned by getFirmwareOptions
     tryToSwitchToApplicationMode: (
         device: Device
-    ) => AppThunk<Promise<Device | null>>; // returns the device after switched to app mode. If this is not possible or not relevant return null
+    ) => AppThunk<RootState, Promise<Device | null>>; // returns the device after switched to app mode. If this is not possible or not relevant return null
 }
 
 export interface DeviceSetupConfig {
@@ -67,7 +68,7 @@ export const prepareDevice =
         onFail: (reason?: unknown) => void,
         checkCurrentFirmwareVersion = true,
         requireUserConfirmation = true
-    ): AppThunk<Promise<void>> =>
+    ): AppThunk<RootState, Promise<void>> =>
     async dispatch => {
         const onSuccessWrapper = (d: Device) => {
             onSuccess(d);
@@ -225,7 +226,7 @@ export const setupDevice =
         deviceSetupConfig: DeviceSetupConfig,
         onDeviceIsReady: (device: Device) => void,
         doDeselectDevice: () => void
-    ): AppThunk<void> =>
+    ): AppThunk<RootState> =>
     (dispatch, getState) =>
         dispatch(
             prepareDevice(

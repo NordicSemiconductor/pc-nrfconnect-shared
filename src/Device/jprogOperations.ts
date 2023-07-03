@@ -14,7 +14,7 @@ import nrfDeviceLib, {
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../logging';
-import type { AppThunk } from '../store';
+import type { AppThunk, RootState } from '../store';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import { DeviceSetup, JprogEntry } from './deviceSetup';
 import { Device, setReadbackProtected } from './deviceSlice';
@@ -100,7 +100,7 @@ const programDeviceWithFw =
         device: Device,
         selectedFw: JprogEntry,
         onProgress: (progress: number, message?: string) => void
-    ): AppThunk<Promise<Device>> =>
+    ): AppThunk<RootState, Promise<Device>> =>
     async (dispatch, getState) => {
         try {
             if (getState().device.readbackProtection === 'protected') {

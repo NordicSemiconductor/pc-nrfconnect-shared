@@ -58,7 +58,7 @@ declare const concreteStore: import("@reduxjs/toolkit/dist/configureStore").Tool
     shortcuts: import("./About/shortcutSlice").ShortcutState;
     flashMessages: import("./FlashMessage/FlashMessageSlice").FlashMessages;
 }, AnyAction, undefined>]>>;
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, AnyAction>;
+export type AppThunk<AppLayout = RootState, ReturnType = void> = ThunkAction<ReturnType, AppLayout, unknown, AnyAction>;
 export type RootState = ReturnType<typeof concreteStore.getState>;
 export type AppDispatch = typeof concreteStore.dispatch;
 export interface NrfConnectState<AppState> extends RootState {
