@@ -13,6 +13,10 @@ every new version is a new major version.
 
 -   Export 'AppThunk<ReturnType>' for apps to use
 -   Export 'AppDispatch' for apps to use
+  
+### Changed
+
+-   Replace Google Analytics with Application Insights.
 
 ## 63 - 2023-06-27
 
