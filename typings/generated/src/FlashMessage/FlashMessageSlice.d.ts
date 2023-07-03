@@ -1,4 +1,4 @@
-import type { RootState, AppThunk } from '../store';
+import type { AppThunk, RootState } from '../store';
 export interface FlashMessages {
     messages: FlashMessage[];
 }
