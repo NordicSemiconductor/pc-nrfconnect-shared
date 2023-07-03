@@ -7,6 +7,17 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 65 - 2023-07-03
+
+### Changed
+
+-   'AppThunk<ReturnType>' to 'AppThunk<AppLayout, ReturnType>'
+
+### Steps to upgrade when using this package
+
+-   If 'AppThunk' is used with return type generic, add AppLayout (RootState)
+    'AppThunk<AppLayout, ReturnType>'
+
 ## 64 - 2023-07-03
 
 ### Added

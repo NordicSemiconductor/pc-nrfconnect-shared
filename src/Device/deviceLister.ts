@@ -11,7 +11,7 @@ import nrfDeviceLib, {
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../logging';
-import type { AppThunk } from '../store';
+import type { AppThunk, RootState } from '../store';
 import {
     clearWaitForDeviceTimeout,
     setArrivedButWrongWhen,
@@ -175,7 +175,7 @@ export const startWatchingDevices =
         onDeviceDisconnected: (device: Device) => void,
         onDeviceDeselected: () => void,
         doSelectDevice: (device: Device, autoReselected: boolean) => void
-    ): AppThunk<Promise<void>> =>
+    ): AppThunk<RootState, Promise<void>> =>
     async (dispatch, getState) => {
         const updateDeviceList = (event: HotplugEvent) => {
             switch (event.event_type) {
