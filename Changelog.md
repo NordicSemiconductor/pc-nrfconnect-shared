@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 64 - 2023-07-03
+
+### Added
+
+-   Export 'AppThunk<ReturnType>' for apps to use
+-   Export 'AppDispatch' for apps to use
+
 ## 63 - 2023-06-27
 
 ### Added
