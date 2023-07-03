@@ -1,15 +1,16 @@
+import { AnyAction, ThunkAction } from '@reduxjs/toolkit';
 import { Reducer } from 'redux';
 export declare const rootReducerSpec: (appReducer?: Reducer) => {
-    app: Reducer<any, import("redux").AnyAction>;
-    appLayout: Reducer<import("./App/appLayout").AppLayout, import("redux").AnyAction>;
-    device: Reducer<import("./Device/deviceSlice").DeviceState, import("redux").AnyAction>;
-    deviceSetup: Reducer<import("./Device/deviceSetupSlice").DeviceSetupState, import("redux").AnyAction>;
-    deviceAutoSelect: Reducer<import("./Device/deviceAutoSelectSlice").DeviceAutoSelectState, import("redux").AnyAction>;
-    brokenDeviceDialog: Reducer<import("./Device/BrokenDeviceDialog/brokenDeviceDialogSlice").BrokenDeviceDialog, import("redux").AnyAction>;
-    errorDialog: Reducer<import("./ErrorDialog/errorDialogSlice").ErrorDialog, import("redux").AnyAction>;
-    log: Reducer<import("./Log/logSlice").Log, import("redux").AnyAction>;
-    shortcuts: Reducer<import("./About/shortcutSlice").ShortcutState, import("redux").AnyAction>;
-    flashMessages: Reducer<import("./FlashMessage/FlashMessageSlice").FlashMessages, import("redux").AnyAction>;
+    app: Reducer<any, AnyAction>;
+    appLayout: Reducer<import("./App/appLayout").AppLayout, AnyAction>;
+    device: Reducer<import("./Device/deviceSlice").DeviceState, AnyAction>;
+    deviceSetup: Reducer<import("./Device/deviceSetupSlice").DeviceSetupState, AnyAction>;
+    deviceAutoSelect: Reducer<import("./Device/deviceAutoSelectSlice").DeviceAutoSelectState, AnyAction>;
+    brokenDeviceDialog: Reducer<import("./Device/BrokenDeviceDialog/brokenDeviceDialogSlice").BrokenDeviceDialog, AnyAction>;
+    errorDialog: Reducer<import("./ErrorDialog/errorDialogSlice").ErrorDialog, AnyAction>;
+    log: Reducer<import("./Log/logSlice").Log, AnyAction>;
+    shortcuts: Reducer<import("./About/shortcutSlice").ShortcutState, AnyAction>;
+    flashMessages: Reducer<import("./FlashMessage/FlashMessageSlice").FlashMessages, AnyAction>;
 };
 declare const store: (appReducer?: Reducer) => import("@reduxjs/toolkit/dist/configureStore").ToolkitStore<{
     app: any;
@@ -22,7 +23,7 @@ declare const store: (appReducer?: Reducer) => import("@reduxjs/toolkit/dist/con
     log: import("./Log/logSlice").Log;
     shortcuts: import("./About/shortcutSlice").ShortcutState;
     flashMessages: import("./FlashMessage/FlashMessageSlice").FlashMessages;
-}, import("redux").AnyAction, import("@reduxjs/toolkit").MiddlewareArray<[import("@reduxjs/toolkit").ThunkMiddleware<{
+}, AnyAction, import("@reduxjs/toolkit").MiddlewareArray<[import("@reduxjs/toolkit").ThunkMiddleware<{
     app: any;
     appLayout: import("./App/appLayout").AppLayout;
     device: import("./Device/deviceSlice").DeviceState;
@@ -33,7 +34,7 @@ declare const store: (appReducer?: Reducer) => import("@reduxjs/toolkit/dist/con
     log: import("./Log/logSlice").Log;
     shortcuts: import("./About/shortcutSlice").ShortcutState;
     flashMessages: import("./FlashMessage/FlashMessageSlice").FlashMessages;
-}, import("redux").AnyAction, undefined>]>>;
+}, AnyAction, undefined>]>>;
 declare const concreteStore: import("@reduxjs/toolkit/dist/configureStore").ToolkitStore<{
     app: any;
     appLayout: import("./App/appLayout").AppLayout;
@@ -45,7 +46,7 @@ declare const concreteStore: import("@reduxjs/toolkit/dist/configureStore").Tool
     log: import("./Log/logSlice").Log;
     shortcuts: import("./About/shortcutSlice").ShortcutState;
     flashMessages: import("./FlashMessage/FlashMessageSlice").FlashMessages;
-}, import("redux").AnyAction, import("@reduxjs/toolkit").MiddlewareArray<[import("@reduxjs/toolkit").ThunkMiddleware<{
+}, AnyAction, import("@reduxjs/toolkit").MiddlewareArray<[import("@reduxjs/toolkit").ThunkMiddleware<{
     app: any;
     appLayout: import("./App/appLayout").AppLayout;
     device: import("./Device/deviceSlice").DeviceState;
@@ -56,7 +57,8 @@ declare const concreteStore: import("@reduxjs/toolkit/dist/configureStore").Tool
     log: import("./Log/logSlice").Log;
     shortcuts: import("./About/shortcutSlice").ShortcutState;
     flashMessages: import("./FlashMessage/FlashMessageSlice").FlashMessages;
-}, import("redux").AnyAction, undefined>]>>;
+}, AnyAction, undefined>]>>;
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, AnyAction>;
 export type RootState = ReturnType<typeof concreteStore.getState>;
 export type AppDispatch = typeof concreteStore.dispatch;
 export interface NrfConnectState<AppState> extends RootState {

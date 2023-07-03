@@ -14,7 +14,7 @@ import nrfDeviceLib, {
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../logging';
-import type { AppDispatch, RootState } from '../store';
+import type { AppThunk } from '../store';
 import { getDeviceLibContext } from './deviceLibWrapper';
 import { DeviceSetup, JprogEntry } from './deviceSetup';
 import { Device, setReadbackProtected } from './deviceSlice';
@@ -100,8 +100,8 @@ const programDeviceWithFw =
         device: Device,
         selectedFw: JprogEntry,
         onProgress: (progress: number, message?: string) => void
-    ) =>
-    async (dispatch: AppDispatch, getState: () => RootState) => {
+    ): AppThunk<Promise<Device>> =>
+    async (dispatch, getState) => {
         try {
             if (getState().device.readbackProtection === 'protected') {
                 logger.info('Recovering device');
@@ -163,12 +163,12 @@ export const jprogDeviceSetup = (
         firmwareOptions(device, firmware).map(firmwareOption => ({
             key: firmwareOption.key,
             description: firmwareOption.description,
-            programDevice: onProgress => (dispatch: AppDispatch) =>
+            programDevice: onProgress => dispatch =>
                 dispatch(
                     programDeviceWithFw(device, firmwareOption, onProgress)
                 ),
         })),
-    isExpectedFirmware: (device: Device) => (dispatch: AppDispatch) => {
+    isExpectedFirmware: (device: Device) => dispatch => {
         const fwVersions = firmwareOptions(device, firmware);
         if (fwVersions.length === 0) {
             return Promise.resolve({

@@ -11,7 +11,7 @@ import nrfDeviceLib, {
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../logging';
-import type { AppDispatch, RootState } from '../store';
+import type { AppThunk } from '../store';
 import {
     clearWaitForDeviceTimeout,
     setArrivedButWrongWhen,
@@ -72,8 +72,8 @@ const shouldAutoReselect = (
 };
 
 const initAutoReconnectTimeout =
-    (onTimeout: () => void, waitForDevice: WaitForDevice) =>
-    (dispatch: AppDispatch) => {
+    (onTimeout: () => void, waitForDevice: WaitForDevice): AppThunk =>
+    dispatch => {
         const timeout = waitForDevice.timeout;
 
         dispatch(setOnCancelTimeout(onTimeout));
@@ -141,8 +141,8 @@ const removeDeviceFromList =
         removedDevice: Device,
         onDeviceDeselected: () => void,
         onDeviceDisconnected: (device: Device) => void
-    ) =>
-    (dispatch: AppDispatch, getState: () => RootState) => {
+    ): AppThunk =>
+    (dispatch, getState) => {
         if (
             removedDevice.serialNumber ===
             getState().device.selectedSerialNumber
@@ -175,8 +175,8 @@ export const startWatchingDevices =
         onDeviceDisconnected: (device: Device) => void,
         onDeviceDeselected: () => void,
         doSelectDevice: (device: Device, autoReselected: boolean) => void
-    ) =>
-    async (dispatch: AppDispatch, getState: () => RootState) => {
+    ): AppThunk<Promise<void>> =>
+    async (dispatch, getState) => {
         const updateDeviceList = (event: HotplugEvent) => {
             switch (event.event_type) {
                 case 'NRFDL_DEVICE_EVENT_ARRIVED':
@@ -399,13 +399,12 @@ const getAutoSelectDeviceCLISerial = () => {
     return serialIndex > -1 ? argv[serialIndex + 1] : undefined;
 };
 
-export const clearWaitForDevice =
-    () => (dispatch: AppDispatch, getState: () => RootState) => {
-        if (getState().deviceAutoSelect.autoReconnectTimeout) {
-            getState().deviceAutoSelect.onCancelTimeout?.();
-        }
-        dispatch(clearWaitForDeviceTimeout(true));
-    };
+export const clearWaitForDevice = (): AppThunk => (dispatch, getState) => {
+    if (getState().deviceAutoSelect.autoReconnectTimeout) {
+        getState().deviceAutoSelect.onCancelTimeout?.();
+    }
+    dispatch(clearWaitForDeviceTimeout(true));
+};
 
 /**
  * Stops watching for devices.
