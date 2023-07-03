@@ -5,7 +5,7 @@
  */
 import logger from '../logging';
 import describeError from '../logging/describeError';
-import { TAction } from '../store';
+import { AppThunk } from '../store';
 import {
     closeDeviceSetupDialog,
     openDeviceSetupDialog,
@@ -39,9 +39,9 @@ export interface DeviceSetup {
         description?: string;
         programDevice: (
             onProgress: (progress: number, message?: string) => void
-        ) => TAction<Promise<Device>>;
+        ) => AppThunk<Promise<Device>>;
     }[]; // The list of all firmware that can be applied for this device with the program function for that fw item
-    isExpectedFirmware: (device: Device) => TAction<
+    isExpectedFirmware: (device: Device) => AppThunk<
         Promise<{
             device: Device;
             validFirmware: boolean;
@@ -49,7 +49,7 @@ export interface DeviceSetup {
     >; // returns true if device has one of the expected firmware returned by getFirmwareOptions
     tryToSwitchToApplicationMode: (
         device: Device
-    ) => TAction<Promise<Device | null>>; // returns the device after switched to app mode. If this is not possible or not relevant return null
+    ) => AppThunk<Promise<Device | null>>; // returns the device after switched to app mode. If this is not possible or not relevant return null
 }
 
 export interface DeviceSetupConfig {
@@ -67,7 +67,7 @@ export const prepareDevice =
         onFail: (reason?: unknown) => void,
         checkCurrentFirmwareVersion = true,
         requireUserConfirmation = true
-    ): TAction<Promise<void>> =>
+    ): AppThunk<Promise<void>> =>
     async dispatch => {
         const onSuccessWrapper = (d: Device) => {
             onSuccess(d);
@@ -225,7 +225,7 @@ export const setupDevice =
         deviceSetupConfig: DeviceSetupConfig,
         onDeviceIsReady: (device: Device) => void,
         doDeselectDevice: () => void
-    ): TAction<void> =>
+    ): AppThunk<void> =>
     (dispatch, getState) =>
         dispatch(
             prepareDevice(

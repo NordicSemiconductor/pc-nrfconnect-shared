@@ -6,7 +6,7 @@
 
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
 
-import type { RootState, TAction } from '../store';
+import type { AppThunk, RootState } from '../store';
 
 export interface FlashMessages {
     messages: FlashMessage[];
@@ -45,31 +45,31 @@ const slice = createSlice({
     },
 });
 
-export const newCopiedFlashMessage = (): TAction<void> => dispatch =>
+export const newCopiedFlashMessage = (): AppThunk => dispatch =>
     dispatch(newInfoFlashMessage('Copied to clipboard!', 3000));
 
 export const newSuccessFlashMessage =
-    (message: string, dismissTime?: number): TAction<void> =>
+    (message: string, dismissTime?: number): AppThunk =>
     dispatch =>
         dispatch(newFlashMessage({ message, variant: 'success', dismissTime }));
 
 export const newWarningFlashMessage =
-    (message: string, dismissTime?: number): TAction<void> =>
+    (message: string, dismissTime?: number): AppThunk =>
     dispatch =>
         dispatch(newFlashMessage({ message, variant: 'warning', dismissTime }));
 
 export const newErrorFlashMessage =
-    (message: string, dismissTime?: number): TAction<void> =>
+    (message: string, dismissTime?: number): AppThunk =>
     dispatch =>
         dispatch(newFlashMessage({ message, variant: 'error', dismissTime }));
 
 export const newInfoFlashMessage =
-    (message: string, dismissTime?: number): TAction<void> =>
+    (message: string, dismissTime?: number): AppThunk =>
     dispatch =>
         dispatch(newFlashMessage({ message, variant: 'info', dismissTime }));
 
 const newFlashMessage =
-    ({ message, variant, dismissTime }: FlashMessagePayload): TAction<void> =>
+    ({ message, variant, dismissTime }: FlashMessagePayload): AppThunk =>
     dispatch => {
         dispatch(
             addNewMessage({

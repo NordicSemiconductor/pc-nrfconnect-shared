@@ -11,7 +11,7 @@ import fs from 'fs';
 import MemoryMap from 'nrf-intel-hex';
 
 import logger from '../logging';
-import { TAction } from '../store';
+import { AppThunk } from '../store';
 import { getAppFile } from '../utils/appDirs';
 import { setWaitForDevice } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
@@ -87,7 +87,7 @@ const updateBootloader =
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void,
         onProgress: (progress: number, message?: string) => void
-    ): TAction<void> =>
+    ): AppThunk =>
     async dispatch => {
         logger.info(`Update Bootloader ${device}`);
         const zip = new AdmZip(getAppFile(LATEST_BOOTLOADER));
@@ -153,7 +153,7 @@ const switchToDeviceMode =
         mcuState: nrfDeviceLib.MCUState,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void
-    ): TAction<void> =>
+    ): AppThunk =>
     dispatch => {
         nrfDeviceLib
             .deviceControlSetMcuState(
@@ -183,7 +183,7 @@ export const switchToBootloaderMode =
         device: Device,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void
-    ): TAction<void> =>
+    ): AppThunk =>
     dispatch => {
         if (!isDeviceInDFUBootloader(device)) {
             dispatch(
@@ -210,7 +210,7 @@ export const switchToApplicationMode =
         device: Device,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void
-    ): TAction<void> =>
+    ): AppThunk =>
     dispatch => {
         dispatch(
             switchToDeviceMode(
@@ -253,7 +253,7 @@ const askAndUpdateBootloader =
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void,
         onProgress: (progress: number, message?: string) => void
-    ): TAction<void> =>
+    ): AppThunk =>
     dispatch => {
         dispatch(
             switchToBootloaderMode(
@@ -413,7 +413,7 @@ const programInDFUBootloader =
         onProgress: (progress: number, message?: string) => void,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void
-    ): TAction<Promise<void>> =>
+    ): AppThunk<Promise<void>> =>
     async dispatch => {
         logger.debug(
             `${device.serialNumber} on ${device.serialport?.comName} is now in DFU-Bootloader...`
@@ -526,7 +526,7 @@ const programDeviceWithFw =
         device: Device,
         selectedFw: DfuEntry,
         onProgress: (progress: number, message?: string) => void
-    ): TAction<Promise<Device>> =>
+    ): AppThunk<Promise<Device>> =>
     dispatch =>
         new Promise<Device>((resolve, reject) => {
             const action = (d: Device) => {

@@ -1,5 +1,5 @@
 import { Device as NrfdlDevice, DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
-import type { TAction } from '../store';
+import type { AppThunk } from '../store';
 import { Device } from './deviceSlice';
 /**
  * Wrap the device form nrf-device-lib to make the Device type consistent
@@ -16,8 +16,8 @@ export declare const wrapDeviceFromNrfdl: (device: NrfdlDevice) => Device;
  */
 export declare const wrapDevicesFromNrfdl: (devices: NrfdlDevice[]) => Device[];
 export declare const hasValidDeviceTraits: (deviceTraits: DeviceTraits, requiredTraits: DeviceTraits) => boolean;
-export declare const startWatchingDevices: (deviceListing: DeviceTraits, onDeviceConnected: (device: Device) => void, onDeviceDisconnected: (device: Device) => void, onDeviceDeselected: () => void, doSelectDevice: (device: Device, autoReselected: boolean) => void) => TAction<Promise<void>>;
-export declare const clearWaitForDevice: () => TAction<void>;
+export declare const startWatchingDevices: (deviceListing: DeviceTraits, onDeviceConnected: (device: Device) => void, onDeviceDisconnected: (device: Device) => void, onDeviceDeselected: () => void, doSelectDevice: (device: Device, autoReselected: boolean) => void) => AppThunk<Promise<void>>;
+export declare const clearWaitForDevice: () => AppThunk;
 /**
  * Stops watching for devices.
  *

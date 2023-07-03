@@ -1,4 +1,4 @@
-import type { RootState, TAction } from '../store';
+import type { RootState, AppThunk } from '../store';
 export interface FlashMessages {
     messages: FlashMessage[];
 }
@@ -10,10 +10,10 @@ export interface FlashMessage {
     dismissTime?: number;
 }
 export type FlashMessagePayload = Omit<FlashMessage, 'id'>;
-export declare const newCopiedFlashMessage: () => TAction<void>;
-export declare const newSuccessFlashMessage: (message: string, dismissTime?: number) => TAction<void>;
-export declare const newWarningFlashMessage: (message: string, dismissTime?: number) => TAction<void>;
-export declare const newErrorFlashMessage: (message: string, dismissTime?: number) => TAction<void>;
-export declare const newInfoFlashMessage: (message: string, dismissTime?: number) => TAction<void>;
+export declare const newCopiedFlashMessage: () => AppThunk;
+export declare const newSuccessFlashMessage: (message: string, dismissTime?: number) => AppThunk;
+export declare const newWarningFlashMessage: (message: string, dismissTime?: number) => AppThunk;
+export declare const newErrorFlashMessage: (message: string, dismissTime?: number) => AppThunk;
+export declare const newInfoFlashMessage: (message: string, dismissTime?: number) => AppThunk;
 export declare const getMessages: (state: RootState) => FlashMessage[];
 export declare const reducer: import("redux").Reducer<FlashMessages, import("redux").AnyAction>, addNewMessage: import("@reduxjs/toolkit").ActionCreatorWithPayload<FlashMessagePayload, "flashMessages/addNewMessage">, removeMessage: import("@reduxjs/toolkit").ActionCreatorWithPayload<string, "flashMessages/removeMessage">;

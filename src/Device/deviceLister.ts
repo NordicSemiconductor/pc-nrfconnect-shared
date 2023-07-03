@@ -11,7 +11,7 @@ import nrfDeviceLib, {
 } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import logger from '../logging';
-import type { TAction } from '../store';
+import type { AppThunk } from '../store';
 import {
     clearWaitForDeviceTimeout,
     setArrivedButWrongWhen,
@@ -72,7 +72,7 @@ const shouldAutoReselect = (
 };
 
 const initAutoReconnectTimeout =
-    (onTimeout: () => void, waitForDevice: WaitForDevice): TAction<void> =>
+    (onTimeout: () => void, waitForDevice: WaitForDevice): AppThunk =>
     dispatch => {
         const timeout = waitForDevice.timeout;
 
@@ -141,7 +141,7 @@ const removeDeviceFromList =
         removedDevice: Device,
         onDeviceDeselected: () => void,
         onDeviceDisconnected: (device: Device) => void
-    ): TAction<void> =>
+    ): AppThunk =>
     (dispatch, getState) => {
         if (
             removedDevice.serialNumber ===
@@ -175,7 +175,7 @@ export const startWatchingDevices =
         onDeviceDisconnected: (device: Device) => void,
         onDeviceDeselected: () => void,
         doSelectDevice: (device: Device, autoReselected: boolean) => void
-    ): TAction<Promise<void>> =>
+    ): AppThunk<Promise<void>> =>
     async (dispatch, getState) => {
         const updateDeviceList = (event: HotplugEvent) => {
             switch (event.event_type) {
@@ -399,7 +399,7 @@ const getAutoSelectDeviceCLISerial = () => {
     return serialIndex > -1 ? argv[serialIndex + 1] : undefined;
 };
 
-export const clearWaitForDevice = (): TAction<void> => (dispatch, getState) => {
+export const clearWaitForDevice = (): AppThunk => (dispatch, getState) => {
     if (getState().deviceAutoSelect.autoReconnectTimeout) {
         getState().deviceAutoSelect.onCancelTimeout?.();
     }
