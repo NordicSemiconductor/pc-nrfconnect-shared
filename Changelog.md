@@ -11,7 +11,8 @@ every new version is a new major version.
 
 ### Fixed
 
--   Restart application with verbose logging button did not restart application
+-   `Restart application with verbose logging` button did not restart
+    application
 
 ## 65 - 2023-07-03
 
