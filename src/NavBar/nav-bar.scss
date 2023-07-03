@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-@import "../variables";
+@import '../variables';
 
 .core19-nav-bar {
     width: 100%;
@@ -21,6 +21,7 @@
 
     .core19-nav-bar-device-selector {
         width: $side-panel-width;
+        min-width: $side-panel-width;
         align-self: start;
     }
 }
