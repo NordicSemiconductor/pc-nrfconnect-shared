@@ -13,6 +13,7 @@ every new version is a new major version.
 
 -   `Restart application with verbose logging` button did not restart
     application
+-   Margin on feedback pane
 
 ## 65 - 2023-07-03
 
