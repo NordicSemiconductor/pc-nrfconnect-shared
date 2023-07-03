@@ -83,7 +83,7 @@ export default () => {
                         variant="secondary"
                         onClick={() => {
                             persistIsLoggingVerbose(true);
-                            getCurrentWindow().reload();
+                            getCurrentWindow().emit('restart-window');
                         }}
                         title="Restart application with verbose logging turned on to get log messages from initial enumeration"
                         disabled={!verboseLogging}

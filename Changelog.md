@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 66 - 2023-07-03
+
+### Fixed
+
+-   `Restart application with verbose logging` button did not restart
+    application
+
 ## 65 - 2023-07-03
 
 ### Changed
