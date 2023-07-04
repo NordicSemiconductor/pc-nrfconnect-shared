@@ -9,6 +9,11 @@ every new version is a new major version.
 
 ## 67 - 2023-07-04
 
+### Added
+
+-   Tailwind support. Use `tw-` prefix for tailwind classes and no prefix for
+    bootstrap classes.
+
 ### Fixed
 
 -   Usage data (`insights` object) was possibly undefined.
