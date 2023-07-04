@@ -44,6 +44,7 @@ import VisibilityBar from './VisibilityBar';
 
 import './app.scss';
 import './shared.scss';
+import './tailwind.css';
 
 let usageDataAlreadyInitialised = false;
 const initialiseUsageData = () => {

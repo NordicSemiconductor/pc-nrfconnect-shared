@@ -10,6 +10,10 @@ const { sassPlugin, postcssModules } = require('esbuild-sass-plugin');
 const esbuild = require('esbuild');
 const svgr = require('@svgr/core').transform;
 
+const postCssPlugin = require('esbuild-style-plugin');
+const tailwindcss = require('tailwindcss');
+const autoprefixer = require('autoprefixer');
+
 function options(additionalOptions) {
     const { dependencies } = JSON.parse(
         fs.readFileSync('package.json', 'utf8')
@@ -80,6 +84,16 @@ function options(additionalOptions) {
                 filter: /\.scss$/,
                 cssImports: true,
                 quietDeps: false,
+            }),
+            postCssPlugin({
+                postcss: {
+                    plugins: [
+                        tailwindcss(
+                            './node_modules/pc-nrfconnect-shared/config/tailwind.config.js'
+                        ),
+                        autoprefixer,
+                    ],
+                },
             }),
             {
                 name: 'svgr',

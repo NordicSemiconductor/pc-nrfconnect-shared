@@ -4,6 +4,7 @@ import { Reducer } from 'redux';
 import { FeedbackPaneProps } from '../Panes/FeedbackPane';
 import './app.scss';
 import './shared.scss';
+import './tailwind.css';
 export interface PaneProps {
     active: boolean;
 }
