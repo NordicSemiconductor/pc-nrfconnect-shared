@@ -24,9 +24,8 @@ interface EventAction {
     label?: string;
 }
 
-let initialized = false;
 let eventQueue: EventAction[] = [];
-let insights: ApplicationInsights;
+let insights: ApplicationInsights | undefined;
 
 /**
  * Initialize instance to send user data
@@ -52,7 +51,6 @@ export const init = (packageJson: PackageJson) => {
     });
 
     insights.loadAppInsights();
-    initialized = true;
     insights.trackPageView({ name: applicationName });
 
     // Add app name and version to every event
@@ -88,9 +86,11 @@ export const init = (packageJson: PackageJson) => {
  */
 export const isInitialized = () => {
     logger.debug(
-        `Usage report instance is${initialized ? '' : ' not'} initialized`
+        `Usage report instance is${
+            insights !== undefined ? '' : ' not'
+        } initialized`
     );
-    return initialized;
+    return insights !== undefined;
 };
 
 /**
@@ -111,7 +111,7 @@ export const isEnabled = () => {
  */
 export const enable = () => {
     persistIsSendingUsageData(true);
-    logger.debug('Usage data has enabled');
+    logger.debug('Usage data has been enabled');
 };
 
 /**
@@ -121,7 +121,7 @@ export const enable = () => {
  */
 export const disable = () => {
     persistIsSendingUsageData(false);
-    logger.debug('Usage data has disabled');
+    logger.debug('Usage data has been disabled');
 };
 
 /**
@@ -132,7 +132,7 @@ export const disable = () => {
  */
 export const reset = () => {
     deleteIsSendingUsageData();
-    logger.debug('Usage data has reset');
+    logger.debug('Usage data setting has been reset');
 };
 
 /**
@@ -144,7 +144,7 @@ export const reset = () => {
 const sendEvent = ({ action, label }: EventAction) => {
     const isSendingUsageData = getIsSendingUsageData();
 
-    if (isSendingUsageData) {
+    if (isSendingUsageData && insights !== undefined) {
         logger.debug(`Sending usage data ${action} ${label}`);
         insights.trackEvent({
             name: action,
@@ -161,7 +161,7 @@ const sendEvent = ({ action, label }: EventAction) => {
  */
 export const sendUsageData = <T extends string>(action: T, label?: string) => {
     eventQueue.push({ action, label });
-    if (!initialized) {
+    if (!isInitialized()) {
         return;
     }
     eventQueue.forEach(sendEvent);
@@ -175,7 +175,7 @@ export const sendUsageData = <T extends string>(action: T, label?: string) => {
  */
 export const sendErrorReport = (error: string) => {
     logger.error(error);
-    insights.trackException({
+    insights?.trackException({
         exception: new Error(error),
     });
     sendUsageData(

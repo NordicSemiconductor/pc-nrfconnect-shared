@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 67 - 2023-07-04
+
+### Fixed
+
+-   Usage data (`insights` object) was possibly undefined.
+
 ## 66 - 2023-07-03
 
 ### Fixed
