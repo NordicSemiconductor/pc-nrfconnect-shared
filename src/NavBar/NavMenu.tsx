@@ -36,7 +36,7 @@ const NavMenu = () => {
     });
 
     return (
-        <div data-testid="nav-menu" className="ml-3 d-flex flex-wrap">
+        <div data-testid="nav-menu" className="d-flex ml-3 flex-wrap">
             {paneNames.map((name, index: number) => (
                 <NavMenuItem
                     key={name}

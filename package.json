@@ -103,6 +103,7 @@
         "postcss": "8.4.24",
         "postcss-modules": "^6.0.0",
         "prettier": "2.8.8",
+        "prettier-plugin-tailwindcss": "^0.3.0",
         "prettysize": "2.0.0",
         "protobufjs": "^7.0.0",
         "react": "16.14.0",
