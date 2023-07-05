@@ -57,9 +57,7 @@ export default ({
             <button
                 id={id}
                 type="button"
-                className={`${styles.btn} ${
-                    isActive ? styles.btnActive : styles.btnInactive
-                }`}
+                className={classNames(styles.btn, isActive && styles.btnActive)}
                 onClick={() => setIsActive(!isActive)}
                 disabled={disabled}
             >
