@@ -9,7 +9,7 @@ const join = require('path').join;
 const { sassPlugin, postcssModules } = require('esbuild-sass-plugin');
 const esbuild = require('esbuild');
 const svgr = require('@svgr/core').transform;
-
+const builtinModules = require('module').builtinModules;
 const postCssPlugin = require('esbuild-style-plugin');
 const tailwindcss = require('tailwindcss');
 const autoprefixer = require('autoprefixer');
@@ -36,21 +36,7 @@ function options(additionalOptions) {
         bundle: true,
         logLevel: 'info',
         external: [
-            // node
-            'fs',
-            'zlib',
-            'os',
-            'http',
-            'child_process',
-            'crypto',
-            'path',
-            'https',
-            'net',
-            'stream',
-            'url',
-            'module',
-            'constants',
-            'buffer',
+            ...builtinModules,
 
             // launcher includes
             'electron',
