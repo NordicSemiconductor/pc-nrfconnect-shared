@@ -39,7 +39,7 @@ export default ({ categories }: FeedbackPaneProps) => {
     if (sayThankYou === true) {
         return (
             <div className="w-100 d-flex justify-content-center">
-                <div className="d-flex flex-column justify-content-center align-items-start bg-white px-3 py-4 mb-3">
+                <div className="d-flex flex-column justify-content-center align-items-start mb-3 bg-white px-3 py-4">
                     <b className="mb-3">Thank you!</b>
                     <section>
                         <p>
@@ -69,7 +69,7 @@ export default ({ categories }: FeedbackPaneProps) => {
 
     return (
         <div className="w-100 d-flex justify-content-center">
-            <div className="d-flex flex-column justify-content-center align-items-start bg-white px-3 py-4 mb-3">
+            <div className="d-flex flex-column justify-content-center align-items-start mb-3 bg-white px-3 py-4">
                 <b className="mb-3">Give Feedback</b>
                 <section>
                     <p>
