@@ -415,7 +415,6 @@ export const stopWatchingDevices = () => {
     // Not sure, if this guard clause is really needed
     if (getDeviceLibContext() && hotplugTaskId !== null) {
         try {
-            // @ts-expect-error Type will be updated in device-lib-js
             nrfDeviceLib.stopHotplugEvents(hotplugTaskId);
             hotplugTaskId = null;
         } catch (error) {
