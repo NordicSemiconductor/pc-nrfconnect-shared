@@ -13,7 +13,6 @@ const builtinModules = require('module').builtinModules;
 const postCssPlugin = require('esbuild-style-plugin');
 const tailwindcss = require('tailwindcss');
 const autoprefixer = require('autoprefixer');
-const { require } = require('yargs');
 
 function options(additionalOptions) {
     const { dependencies } = JSON.parse(
