@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 68 - 2023-07-04
+
+### Fixed
+
+-   A fresh npm i without `package-lock.json` and no `node_modules` folder
+    resulted in `util.promisify` is not a function
+
 ## 67 - 2023-07-04
 
 ### Added
