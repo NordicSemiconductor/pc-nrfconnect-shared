@@ -31,6 +31,12 @@ every new version is a new major version.
     following contents in your project root:
 
 ```js
+/*
+ * Copyright (c) 2023 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
 const baseConfig = require('./node_modules/pc-nrfconnect-shared/config/tailwind.config.js');
 
 module.exports = {
