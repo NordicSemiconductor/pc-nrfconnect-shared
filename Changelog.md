@@ -13,6 +13,7 @@ every new version is a new major version.
 
 -   A fresh npm i without `package-lock.json` and no `node_modules` folder
     resulted in `util.promisify` is not a function
+-   Button lost x-padding with the addition of tailwind
 
 ## 67 - 2023-07-04
 
