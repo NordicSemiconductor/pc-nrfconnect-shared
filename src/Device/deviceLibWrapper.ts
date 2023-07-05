@@ -98,7 +98,6 @@ export const forwardLogEventsFromDeviceLib = () => {
         (evt: LogEvent) => logNrfdlLogs(evt)
     );
     return () => {
-        // @ts-expect-error Type will be updated in device-lib-js
         stopLogEvents(taskId);
     };
 };
