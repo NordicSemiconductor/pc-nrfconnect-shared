@@ -24,6 +24,20 @@ every new version is a new major version.
 
 -   Usage data (`insights` object) was possibly undefined.
 
+### Steps to upgrade when using this package
+
+-   While technically not necessary in production, to use the tailwind language
+    server you will have to create a `tailwind.config.js` file with the
+    following contents in your project root:
+
+```js
+const baseConfig = require('./node_modules/pc-nrfconnect-shared/config/tailwind.config.js');
+
+module.exports = {
+    ...baseConfig,
+};
+```
+
 ## 66 - 2023-07-03
 
 ### Fixed
