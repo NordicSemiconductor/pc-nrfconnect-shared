@@ -7,7 +7,11 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 68 - 2023-07-04
+## 68 - 2023-07-05
+
+### Added
+
+-   `prettier-plugin-tailwindcss` for ordering Tailwind classes.
 
 ### Fixed
 
