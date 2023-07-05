@@ -1,83 +1,15 @@
 /*
- * Copyright (c) 2015 Nordic Semiconductor ASA
+ * Copyright (c) 2023 Nordic Semiconductor ASA
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
 @import '../../styles';
 
-$dropdown-item-height: 24px; //px unit dependency in dropdown.tsx
-
-:export {
-    dropdownItemHeight: $dropdown-item-height;
-}
-
-.container {
-    position: relative;
-    width: 100%;
-}
-
-.label {
-    font-size: 12px;
-    margin-bottom: 4px !important;
-}
-
-.btn {
-    width: 100%;
-    height: 32px;
-    padding: 0 8px;
-    background: $gray-700;
-    color: $white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: none;
-}
-
-.mdi {
-    font-size: 18px;
-}
-
-.btnActive .mdi {
-    transform: rotate(180deg);
-}
-
 .content {
-    background: $gray-700;
-    color: $white;
-    position: absolute;
-    width: 100%;
-    right: 0;
-    padding: 0;
-    border-top: solid 2px $gray-600;
-    z-index: 2;
-
     &[data-height='true'] {
-        overflow-y: scroll; // Make Scroll Fixed Height Scrolable
+        overflow-y: scroll; // Make Scroll Fixed Height Scrollable
 
         @include scrollbars($gray-700);
     }
-}
-
-.itemsInactive {
-    display: none;
-}
-
-.item {
-    color: $white;
-    padding: 4px 8px;
-    height: $dropdown-item-height;
-    background-color: transparent;
-    border: 0;
-    width: 100%;
-    text-align: inherit;
-    display: block;
-    clear: both;
-    font-weight: 400;
-    white-space: nowrap;
-}
-
-.item:hover,
-.item:focus {
-    background: $gray-600;
 }
