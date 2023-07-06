@@ -74,9 +74,7 @@ function options(additionalOptions) {
             postCssPlugin({
                 postcss: {
                     plugins: [
-                        tailwindcss(
-                            './node_modules/pc-nrfconnect-shared/config/tailwind.config.js'
-                        ),
+                        tailwindcss('./tailwind.config.js'),
                         autoprefixer,
                     ],
                 },
