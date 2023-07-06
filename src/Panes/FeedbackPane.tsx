@@ -86,9 +86,9 @@ export default ({ categories }: FeedbackPaneProps) => {
                     </a>
                     .
                 </p>
-                <form className="tw-flex tw-w-full tw-flex-col">
+                <form className="tw-flex tw-w-full tw-flex-col tw-gap-4">
                     {categoryItems?.length && (
-                        <div className="tw-mb-4 tw-w-52">
+                        <div className="tw-w-52">
                             <Dropdown
                                 items={categoryItems}
                                 onSelect={setSelectedCategory}
@@ -98,16 +98,16 @@ export default ({ categories }: FeedbackPaneProps) => {
                             />
                         </div>
                     )}
-                    <label htmlFor="feedback-text">
+                    <div>
                         <b>What is your feedback?</b>
                         <textarea
                             name="feedback-text"
-                            className="tw-mb-3 tw-h-32 tw-w-full tw-border tw-border-gray-700"
+                            className="tw-h-32 tw-w-full tw-border tw-border-gray-700"
                             required
                             value={feedback}
                             onChange={e => setFeedback(e.target.value)}
                         />
-                    </label>
+                    </div>
                 </form>
                 <p>We only collect this information when you send feedback:</p>
                 <ul>
