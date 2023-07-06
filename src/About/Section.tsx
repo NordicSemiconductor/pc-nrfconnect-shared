@@ -6,16 +6,14 @@
 
 import React, { ReactNode } from 'react';
 
-import './section.scss';
-
 interface Props {
     title?: string;
     children?: ReactNode;
 }
 
 export default ({ children, title }: Props) => (
-    <div className="about-section">
-        {title != null && <h3 className="about-section-title">{title}</h3>}
-        {children}
+    <div className="tw-mt-4 [&:first-child]:tw-mt-0">
+        {title != null && <h3 className="tw-mb-1 tw-font-medium">{title}</h3>}
+        <div className="[&>*]:tw-mb-4">{children}</div>
     </div>
 );

@@ -71,11 +71,7 @@ export default () => {
                     url={appInfo.repositoryUrl}
                     label="Get source code"
                 />
-            </Section>
-            <Section>
                 <FactoryResetButton label="Restore defaults..." />
-            </Section>
-            <Section>
                 <ShortcutButton label="Show shortcuts" />
             </Section>
         </Card>
