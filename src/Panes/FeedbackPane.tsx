@@ -12,8 +12,6 @@ import logger from '../logging';
 import { isDevelopment } from '../utils/environment';
 import packageJson from '../utils/packageJson';
 
-import './feedback.css';
-
 export interface FeedbackPaneProps {
     categories?: string[];
 }
@@ -38,9 +36,9 @@ export default ({ categories }: FeedbackPaneProps) => {
 
     if (sayThankYou === true) {
         return (
-            <div className="w-100 d-flex justify-content-center">
-                <div className="d-flex flex-column justify-content-center align-items-start mb-3 bg-white px-3 py-4">
-                    <b className="mb-3">Thank you!</b>
+            <div className="tw-flex tw-w-full tw-justify-center">
+                <div className="tw-mb-3 tw-flex tw-flex-col tw-items-start tw-justify-center tw-bg-white tw-px-3 tw-py-4">
+                    <b className="tw-mb-3">Thank you!</b>
                     <section>
                         <p>
                             We value your feedback and any ideas you may have
@@ -53,7 +51,7 @@ export default ({ categories }: FeedbackPaneProps) => {
                     </section>
                     <Button
                         large
-                        className="align-self-end"
+                        className="tw-align-self-end tw-self-end"
                         onClick={() => {
                             setSayThankYou(false);
                             setFeedback('');
@@ -68,62 +66,58 @@ export default ({ categories }: FeedbackPaneProps) => {
     }
 
     return (
-        <div className="w-100 d-flex justify-content-center">
-            <div className="d-flex flex-column justify-content-center align-items-start mb-3 bg-white px-3 py-4">
-                <b className="mb-3">Give Feedback</b>
-                <section>
-                    <p>
-                        We value your feedback and any ideas you may have for
-                        improving our applications. Please use the form below to
-                        give feedback.
-                    </p>
-                    <p>
-                        Note: this is not a support channel, and you will not
-                        receive a response. For help and support, visit the{' '}
-                        <a
-                            href="https://devzone.nordicsemi.com/"
-                            target="_blank"
-                            rel="noreferrer noopener"
-                        >
-                            Nordic DevZone
-                        </a>
-                        .
-                    </p>
-                </section>
-                <form className="d-flex flex-column w-100">
+        <div className="tw-flex tw-w-full tw-justify-center">
+            <div className="tw-mb-3 tw-flex tw-flex-col tw-items-start tw-justify-center tw-gap-4 tw-bg-white tw-px-3 tw-py-4">
+                <b>Give Feedback</b>
+                <p>
+                    We value your feedback and any ideas you may have for
+                    improving our applications. Please use the form below to
+                    give feedback.
+                </p>
+                <p>
+                    Note: this is not a support channel, and you will not
+                    receive a response. For help and support, visit the{' '}
+                    <a
+                        href="https://devzone.nordicsemi.com/"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                    >
+                        Nordic DevZone
+                    </a>
+                    .
+                </p>
+                <form className="tw-flex tw-w-full tw-flex-col">
                     {categoryItems?.length && (
-                        <Dropdown
-                            items={categoryItems}
-                            onSelect={setSelectedCategory}
-                            selectedItem={selectedCategory || categoryItems[0]}
-                            className="feedback-categories"
-                        />
+                        <div className="tw-mb-4 tw-w-52">
+                            <Dropdown
+                                items={categoryItems}
+                                onSelect={setSelectedCategory}
+                                selectedItem={
+                                    selectedCategory || categoryItems[0]
+                                }
+                            />
+                        </div>
                     )}
                     <label htmlFor="feedback-text">
                         <b>What is your feedback?</b>
                         <textarea
                             name="feedback-text"
-                            className="w-100 mb-3"
-                            style={{ height: '8rem' }}
+                            className="tw-mb-3 tw-h-32 tw-w-full tw-border tw-border-gray-700"
                             required
                             value={feedback}
                             onChange={e => setFeedback(e.target.value)}
                         />
                     </label>
                 </form>
-                <section>
-                    <p>
-                        We only collect this information when you send feedback:
-                    </p>
-                    <ul>
-                        <li>Application name</li>
-                        <li>Your feedback</li>
-                        <li>Operating system</li>
-                    </ul>
-                </section>
+                <p>We only collect this information when you send feedback:</p>
+                <ul>
+                    <li>Application name</li>
+                    <li>Your feedback</li>
+                    <li>Operating system</li>
+                </ul>
                 <Button
                     large
-                    className="align-self-end"
+                    className="tw-self-end"
                     variant="primary"
                     onClick={() =>
                         handleFormData(
