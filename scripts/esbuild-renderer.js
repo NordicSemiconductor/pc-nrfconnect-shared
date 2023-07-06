@@ -90,8 +90,11 @@ function options(additionalOptions) {
                     builder.onResolve({ filter }, args => {
                         // Rename file to .svgr to let this plugin handle it.
                         const [, shortpath] = filter.exec(args.path);
-                        const path = `${join(args.resolveDir, shortpath)}r`;
-                        return { path };
+                        const resolvedPath = `${join(
+                            args.resolveDir,
+                            shortpath
+                        )}r`;
+                        return { resolvedPath };
                     });
 
                     builder.onLoad({ filter: /\.svgr$/ }, async args => {
