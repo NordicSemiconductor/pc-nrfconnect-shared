@@ -13,6 +13,10 @@ every new version is a new major version.
 
 -   Turn off tree-shaking for tailwind classes during a development build.
 
+### Fixed
+
+-   `Feedback` pane lost styling with the addition of tailwind
+
 ## 68 - 2023-07-05
 
 ### Added
