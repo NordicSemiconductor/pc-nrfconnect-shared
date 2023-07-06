@@ -81,6 +81,7 @@ export default ({ categories }: FeedbackPaneProps) => {
                         href="https://devzone.nordicsemi.com/"
                         target="_blank"
                         rel="noreferrer noopener"
+                        className="tw-text-nordicBlue"
                     >
                         Nordic DevZone
                     </a>
