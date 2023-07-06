@@ -12,8 +12,8 @@ interface Props {
 }
 
 export default ({ children, title }: Props) => (
-    <div className="tw-mt-4 [&:first-child]:tw-mt-0">
-        {title != null && <h3 className="tw-mb-1 tw-font-medium">{title}</h3>}
-        <div className="[&>*]:tw-mb-4">{children}</div>
+    <div className="tw-w-full">
+        {title != null && <h3 className="tw-pb-1 tw-font-medium">{title}</h3>}
+        <div className="tw-flex tw-flex-column tw-flex-wrap tw-gap-4">{children}</div>
     </div>
 );
