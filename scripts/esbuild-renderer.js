@@ -13,6 +13,12 @@ const builtinModules = require('module').builtinModules;
 const postCssPlugin = require('esbuild-style-plugin');
 const tailwindcss = require('tailwindcss');
 const autoprefixer = require('autoprefixer');
+const path = require('path');
+
+const tailwindConfig = () =>
+    fs.existsSync(path.join(__dirname, '..', '..', '..', 'tailwind.config.js'))
+        ? './tailwind.config.js'
+        : './node_modules/pc-nrfconnect-shared/config/tailwind.config.js';
 
 function options(additionalOptions) {
     const { dependencies } = JSON.parse(
@@ -73,12 +79,7 @@ function options(additionalOptions) {
             }),
             postCssPlugin({
                 postcss: {
-                    plugins: [
-                        tailwindcss(
-                            './node_modules/pc-nrfconnect-shared/config/tailwind.config.js'
-                        ),
-                        autoprefixer,
-                    ],
+                    plugins: [tailwindcss(tailwindConfig()), autoprefixer],
                 },
             }),
             {
@@ -89,8 +90,11 @@ function options(additionalOptions) {
                     builder.onResolve({ filter }, args => {
                         // Rename file to .svgr to let this plugin handle it.
                         const [, shortpath] = filter.exec(args.path);
-                        const path = `${join(args.resolveDir, shortpath)}r`;
-                        return { path };
+                        const resolvedPath = `${join(
+                            args.resolveDir,
+                            shortpath
+                        )}r`;
+                        return { resolvedPath };
                     });
 
                     builder.onLoad({ filter: /\.svgr$/ }, async args => {
