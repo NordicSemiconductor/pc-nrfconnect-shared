@@ -46,7 +46,7 @@ export default ({
 
     return (
         <div
-            className={classNames('tw-relative', 'tw-w-full', className)}
+            className={`tw-relative tw-w-full ${className}`}
             onBlur={event => {
                 if (!event.currentTarget.contains(event.relatedTarget)) {
                     setIsActive(false);
@@ -69,12 +69,9 @@ export default ({
                         : selectedItem.label}
                 </span>
                 <span
-                    className={classNames(
-                        'mdi',
-                        'mdi-chevron-down',
-                        'tw-text-lg',
+                    className={`mdi mdi-chevron-down tw-text-lg ${classNames(
                         isActive && 'tw-rotate-180'
-                    )}
+                    )}`}
                 />
             </button>
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions -- We need an interactive handler as described below */}
@@ -94,21 +91,10 @@ export default ({
                     numItemsBeforeScroll > 0 &&
                     items.length > numItemsBeforeScroll
                 }
-                className={classNames(
+                className={`tw-text-while tw-absolute tw-right-0 tw-z-10 tw-w-full tw-border-t-2 tw-border-solid tw-border-gray-600 tw-bg-gray-700 tw-p-0 ${classNames(
                     styles.content,
-                    'tw-bg-gray-700',
-                    'tw-text-while',
-                    'tw-absolute',
-                    'tw-w-full',
-                    'tw-w-full',
-                    'tw-right-0',
-                    'tw-p-0',
-                    'tw-border-t-2',
-                    'tw-border-gray-600',
-                    'tw-border-solid',
-                    'tw-z-10',
                     !isActive && 'tw-hidden'
-                )}
+                )}`}
             >
                 {items.map(item => (
                     <button
