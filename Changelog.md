@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 69 - Unreleased
+
+### Added
+
+-   Turn off tree-shaking for tailwind classes during a development build.
+
 ## 68 - 2023-07-05
 
 ### Added

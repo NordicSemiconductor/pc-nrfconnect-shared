@@ -14,6 +14,13 @@ module.exports = {
         './src/**/*.{html,jsx,tsx}',
         './node_modules/pc-nrfconnect-shared/src/**/*.tsx',
     ],
+    ...(!process.argv.includes('--prod') && {
+        safelist: [
+            {
+                pattern: /.*/,
+            },
+        ],
+    }),
     theme: {
         colors,
         extend: {},
