@@ -13,6 +13,10 @@ every new version is a new major version.
 
 -   Turn off tree-shaking for tailwind classes during a development build.
 
+### Fixed
+
+-   Button x-padding adapts to large vs small button
+
 ## 68 - 2023-07-05
 
 ### Added
