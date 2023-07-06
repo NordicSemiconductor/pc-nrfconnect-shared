@@ -41,7 +41,7 @@ export default () => {
 
     return (
         <Card title="Device">
-            <div className="tw-flex tw-flex-column tw-flex-wrap tw-gap-4">
+            <div className="tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
                 <Section title="Name">{name || 'Unknown'}</Section>
                 <Section title="ID">{device.serialNumber}</Section>
                 <Section title="PCA">{pca || 'Unknown'}</Section>

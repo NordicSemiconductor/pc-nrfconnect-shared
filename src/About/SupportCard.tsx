@@ -35,7 +35,7 @@ export default () => {
 
     return (
         <Card title="Support">
-            <div className="tw-flex tw-flex-column tw-flex-wrap tw-gap-4">
+            <div className="tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
                 <Section title="DevZone">
                     <p>
                         All support requests must be sent through our developer
@@ -49,9 +49,9 @@ export default () => {
                 <Section title="System report">
                     <p>
                         In order to get the best support it is helpful for our
-                        employees to know details about your operating system and
-                        related software. Create a system report and add to your
-                        support request.
+                        employees to know details about your operating system
+                        and related software. Create a system report and add to
+                        your support request.
                     </p>
                     <AboutButton
                         onClick={() =>
@@ -66,8 +66,9 @@ export default () => {
                 </Section>
                 <Section title="Verbose Logging">
                     <p>
-                        Aid our support team with additional log information. Enable
-                        this only when necessary as the log will grow quickly.
+                        Aid our support team with additional log information.
+                        Enable this only when necessary as the log will grow
+                        quickly.
                     </p>
                     <div className="tw-w-full">
                         <Toggle

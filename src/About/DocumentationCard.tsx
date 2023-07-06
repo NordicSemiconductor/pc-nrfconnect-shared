@@ -12,8 +12,10 @@ export default ({
     documentationSections,
 }: {
     documentationSections: ReactNode[];
-}) => <Card title="Documentation">
-    <div className="tw-flex tw-flex-column tw-flex-wrap tw-gap-4">
-        {documentationSections}
-    </div>
-</Card>;
+}) => (
+    <Card title="Documentation">
+        <div className="tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
+            {documentationSections}
+        </div>
+    </Card>
+);

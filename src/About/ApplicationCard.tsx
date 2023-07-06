@@ -56,7 +56,7 @@ export default () => {
 
     return (
         <Card title="Application">
-            <div className="tw-flex tw-flex-column tw-flex-wrap tw-gap-4">
+            <div className="tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
                 <Section title="Title">{appInfo.displayName}</Section>
                 <Section title="Purpose">{appInfo.description}</Section>
                 <Section title="Version">{appInfo.currentVersion}</Section>
