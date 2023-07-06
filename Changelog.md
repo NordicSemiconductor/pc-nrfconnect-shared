@@ -13,6 +13,11 @@ every new version is a new major version.
 
 -   Turn off tree-shaking for tailwind classes during a development build.
 
+### Changed
+
+-   Borders for all button variants except `secondary` are now the same as their
+    background colour.
+
 ### Fixed
 
 -   Button x-padding adapts to large vs small button
