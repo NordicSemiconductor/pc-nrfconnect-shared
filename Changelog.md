@@ -17,7 +17,8 @@ every new version is a new major version.
 
 -   Borders for all button variants except `secondary` are now the same as their
     background colour.
--   The project specific tailwind config will now be used for post-processing.
+-   The project specific tailwind config will now be used for post-processing if
+    it exists.
 
 ### Fixed
 

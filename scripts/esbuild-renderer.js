@@ -13,6 +13,12 @@ const builtinModules = require('module').builtinModules;
 const postCssPlugin = require('esbuild-style-plugin');
 const tailwindcss = require('tailwindcss');
 const autoprefixer = require('autoprefixer');
+const path = require('path');
+
+const tailwindConfig = () =>
+    fs.existsSync(path.join(__dirname, '..', '..', '..', 'tailwind.config.js'))
+        ? './tailwind.config.js'
+        : './node_modules/pc-nrfconnect-shared/config/tailwind.config.js';
 
 function options(additionalOptions) {
     const { dependencies } = JSON.parse(
@@ -73,10 +79,7 @@ function options(additionalOptions) {
             }),
             postCssPlugin({
                 postcss: {
-                    plugins: [
-                        tailwindcss('./tailwind.config.js'),
-                        autoprefixer,
-                    ],
+                    plugins: [tailwindcss(tailwindConfig()), autoprefixer],
                 },
             }),
             {
