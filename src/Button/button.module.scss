@@ -13,10 +13,12 @@
     height: 24px;
     border: 1px;
     border-style: solid;
+    padding: 0 8px;
 
     &.large {
         height: 32px;
         font-size: 14px;
+        padding: 0 16px;
     }
 
     &.primary {

@@ -47,8 +47,7 @@ const Button: React.FC<ButtonProps> = ({
             variant !== 'custom' && styles.button,
             large && styles.large,
             styles[variant],
-            className,
-            large ? 'tw-px-4' : 'tw-px-2'
+            className
         )}
         disabled={disabled}
         onClick={onClick}
