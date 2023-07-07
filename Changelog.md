@@ -22,6 +22,7 @@ every new version is a new major version.
     background colour.
 -   The project specific tailwind config will now be used for post-processing if
     it exists.
+-   Device setup dialog hides prompt message while in progress.
 
 ### Fixed
 
