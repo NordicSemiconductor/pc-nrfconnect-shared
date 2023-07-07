@@ -1,3 +1,4 @@
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -12,6 +13,7 @@ every new version is a new major version.
 ### Added
 
 -   Turn off tree-shaking for tailwind classes during a development build.
+-   Added .tw-preflight css class to be used when transitioning to tailwind. For more details: https://github.com/NordicSemiconductor/pc-nrfconnect-shared/blob/main/src/App/preflight.scss
 
 ### Changed
 
