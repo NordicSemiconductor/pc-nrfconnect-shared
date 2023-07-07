@@ -94,7 +94,7 @@ function options(additionalOptions) {
                             args.resolveDir,
                             shortpath
                         )}r`;
-                        return { resolvedPath };
+                        return { path: resolvedPath };
                     });
 
                     builder.onLoad({ filter: /\.svgr$/ }, async args => {
