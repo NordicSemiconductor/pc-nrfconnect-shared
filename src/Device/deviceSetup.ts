@@ -215,6 +215,7 @@ export const prepareDevice =
                     message:
                         deviceSetupConfig.choiceMessage ??
                         'Which firmware do you want to program?',
+                    choices,
                 })
             );
         }
