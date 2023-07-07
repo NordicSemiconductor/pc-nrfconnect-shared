@@ -46,7 +46,7 @@ export default ({
 
     return (
         <div
-            className={`tw-relative tw-w-full ${className}`}
+            className={`tw-preflight tw-relative tw-w-full ${className}`}
             onBlur={event => {
                 if (!event.currentTarget.contains(event.relatedTarget)) {
                     setIsActive(false);
