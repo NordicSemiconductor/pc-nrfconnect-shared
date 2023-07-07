@@ -577,12 +577,12 @@ export const sdfuDeviceSetup = (
 
                 const { semVer } = device.dfuTriggerVersion;
 
-                if (dfuFirmware.filter(fw => fw.semver === semVer).length > 0) {
-                    resolve({
-                        device,
-                        validFirmware: true,
-                    });
-                }
+                resolve({
+                    device,
+                    validFirmware:
+                        dfuFirmware.filter(fw => fw.semver === semVer).length >
+                        0,
+                });
             } else {
                 resolve({
                     device,
