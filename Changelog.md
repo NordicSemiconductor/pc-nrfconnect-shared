@@ -23,6 +23,8 @@ every new version is a new major version.
 ### Fixed
 
 -   Button x-padding adapts to large vs small button
+-   Device setup fails report sdfu different FW version
+-   Device setup does not show the choices radio boxes
 
 ## 68 - 2023-07-05
 
