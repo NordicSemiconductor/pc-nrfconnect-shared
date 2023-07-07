@@ -53,6 +53,7 @@ export default () => {
                                 disabled={isInProgress}
                                 onClick={() => setSelectedChoices(index)}
                                 label={choice}
+                                checked={index === selectedChoices}
                             />
                         ))}
                     </Form.Group>
