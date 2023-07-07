@@ -40,9 +40,11 @@ export default () => {
                 headerIcon=""
             />
             <Dialog.Body>
-                <Form.Group>
-                    <div>{message}</div>
-                </Form.Group>
+                {!progress && !progressMessage && (
+                    <Form.Group>
+                        <div>{message}</div>
+                    </Form.Group>
+                )}
                 {choices && (
                     <Form.Group>
                         {choices.map((choice, index) => (
