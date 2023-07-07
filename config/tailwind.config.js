@@ -25,5 +25,8 @@ module.exports = {
         colors,
         extend: {},
     },
+    corePlugins: {
+        preflight: false,
+    },
     plugins: [],
 };
