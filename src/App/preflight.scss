@@ -4,10 +4,21 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-/*
- * Use to "reset" bootstrap and user agent styles
+/**
+ * Use to "reset" bootstrap and user agent styles. Used to gradually move to tailwind from css and bootstrap.
+ * Replaces preflight from the config (so it is not applied globally)
+ *
+ * Usage:
+ *   1. Find an area that want to rewrite with tailwind
+ *   2. Apply .tw-preflight class at the top of DOM tree of that area
+ *   3. Rewrite all elements down this point using Tailwind
+ *   ...
+ *   N. when all styles are rewritten with Tailwind, remove this class and all it's occurrences from the project,
+ *      then enable preflight globally in tailwind.config.js
+ *   N+1. You're awesome!
+ *
  * Copy of https://github.com/tailwindlabs/tailwindcss/blob/master/src/css/preflight.css
- */
+ **/
 .tw-preflight {
     /*
         1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
