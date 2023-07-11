@@ -212,20 +212,26 @@ export const switchToApplicationMode =
         onFail: (reason?: unknown) => void
     ): AppThunk =>
     dispatch => {
-        dispatch(
-            switchToDeviceMode(
-                device,
-                'NRFDL_MCU_STATE_APPLICATION',
-                d => {
-                    if (isDeviceInDFUBootloader(d))
-                        onFail(
-                            new Error('Failed to switch to Application Mode')
-                        );
-                    else onSuccess(d);
-                },
-                onFail
-            )
-        );
+        if (isDeviceInDFUBootloader(device)) {
+            dispatch(
+                switchToDeviceMode(
+                    device,
+                    'NRFDL_MCU_STATE_APPLICATION',
+                    d => {
+                        if (isDeviceInDFUBootloader(d))
+                            onFail(
+                                new Error(
+                                    'Failed to switch to Application Mode'
+                                )
+                            );
+                        else onSuccess(d);
+                    },
+                    onFail
+                )
+            );
+        } else {
+            onSuccess(device);
+        }
     };
 
 const isLatestBootloader = async (device: Device) => {
