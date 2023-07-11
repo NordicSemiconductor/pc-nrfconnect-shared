@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 71 - 2023-07-11
+
+### Fixed
+
+-   `SwitchToApplicationMode` does not call on success when device is already in
+    application mode
+
 ## 70 - 2023-07-07
 
 ### Fixed
