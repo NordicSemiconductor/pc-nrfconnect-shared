@@ -16,11 +16,6 @@ export declare const wrapDeviceFromNrfdl: (device: NrfdlDevice) => Device;
  */
 export declare const wrapDevicesFromNrfdl: (devices: NrfdlDevice[]) => Device[];
 export declare const hasValidDeviceTraits: (deviceTraits: DeviceTraits, requiredTraits: DeviceTraits) => boolean;
-export declare const startWatchingDevices: (deviceListing: DeviceTraits, onDeviceConnected: (device: Device) => void, onDeviceDisconnected: (device: Device) => void, onDeviceDeselected: () => void, doSelectDevice: (device: Device, autoReselected: boolean) => void) => AppThunk<RootState, Promise<void>>;
+export declare const startWatchingDevices: (deviceListing: DeviceTraits, onDeviceConnected: (device: Device) => void, onDeviceDisconnected: (device: Device) => void, onDeviceDeselected: () => void, doSelectDevice: (device: Device, autoReselected: boolean) => void) => AppThunk<RootState, void>;
 export declare const clearWaitForDevice: () => AppThunk;
-/**
- * Stops watching for devices.
- *
- * @returns {undefined}
- */
-export declare const stopWatchingDevices: () => void;
+export declare const stopWatchingDevices: (callback?: () => void) => void;
