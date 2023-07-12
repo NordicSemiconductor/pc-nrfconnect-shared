@@ -66,6 +66,7 @@
         "adm-zip": "^0.5.5",
         "autoprefixer": "10.4.14",
         "bootstrap": "4.6.2",
+        "cancelable-promise": "^4.3.1",
         "commander": "10.0.0",
         "date-fns": "2.29.3",
         "electron": "22.3.5",

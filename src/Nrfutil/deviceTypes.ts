@@ -58,10 +58,34 @@ export interface Device {
     };
 }
 
+export interface DeviceBuffer {
+    serialNumber: string;
+    buffer: string;
+}
+
 export type ProgrammingOptions =
     | JLinkProgrammingOptions
     | McuBootProgrammingOptions
     | NordicDfuProgrammingOptions;
+
+export type DeviceFamily =
+    | 'NRF51_FAMILY'
+    | 'NRF52_FAMILY'
+    | 'NRF53_FAMILY'
+    | 'NRF91_FAMILY';
+
+export type ProtectionStatus =
+    | 'NRFDL_PROTECTION_STATUS_NONE'
+    | 'NRFDL_PROTECTION_STATUS_REGION0'
+    | 'NRFDL_PROTECTION_STATUS_REGION0_REGION1'
+    | 'NRFDL_PROTECTION_STATUS_SECURE_REGIONS'
+    | 'NRFDL_PROTECTION_STATUS_ALL';
+export interface GetProtectionStatusResult {
+    core: DeviceCore;
+    deviceFamily?: DeviceFamily;
+    protectionStatus: ProtectionStatus;
+    serialNumber: string;
+}
 
 export interface JLinkProgrammingOptions {
     chipEraseMode: 'ERASE_ALL' | 'ERASE_NONE';

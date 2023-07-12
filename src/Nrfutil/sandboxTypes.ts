@@ -4,11 +4,13 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-export interface CancellablePromise<T> extends Promise<T> {
-    cancel: () => void;
-}
+export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
 
-export type CancellableOperation = () => Promise<void>;
+export type CancellableOperation = {
+    stop: (callback?: (code: number | null) => void) => void;
+    isRunning: () => boolean;
+    onClosed: (handler: (code: number | null) => void) => () => void;
+};
 
 export interface BackgroundTask<T> {
     onError: (error: Error) => void;
@@ -29,9 +31,26 @@ export type Task = {
     name: string;
 };
 
+export type TaskEnd<T = void> = {
+    task: Task;
+    message?: string;
+    result?: 'success' | 'fail';
+    error?: {
+        code: number;
+        description: string;
+    };
+    name: string;
+    data?: T;
+};
+
+export type TaskProgress = {
+    task: Task;
+    progress: Progress;
+};
+
 export type NrfutilJson<T> = {
-    type: 'task_begin' | 'task_progress' | 'task_end' | 'task_info' | 'log';
-    data: Task & T;
+    type: 'task_begin' | 'task_progress' | 'task_end' | 'info' | 'log';
+    data: T;
 };
 
 export type Progress = {
@@ -104,7 +123,6 @@ export type Version = {
 
 export type NrfUtilSettings = {
     logLevel: LogLevel;
-    execPath: string;
     bootstrapConfigUrl?: string;
     bootstrapTarballPath?: string;
     devicePluginsDirForceNrfdlLocation?: string;
