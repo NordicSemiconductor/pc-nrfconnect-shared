@@ -7,9 +7,9 @@
 export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
 
 export type CancellableOperation = {
-    stop: (callback?: (code: number | null) => void) => void;
+    stop: (callback?: (error?: Error) => void) => void;
     isRunning: () => boolean;
-    onClosed: (handler: (code: number | null) => void) => () => void;
+    onClosed: (handler: (error?: Error) => void) => () => void;
 };
 
 export interface BackgroundTask<T> {

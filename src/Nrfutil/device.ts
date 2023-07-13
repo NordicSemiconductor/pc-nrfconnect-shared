@@ -111,28 +111,34 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
         onProgress?: (progress: Progress) => void,
         core?: DeviceCore,
         programmingOptions?: ProgrammingOptions[]
-    ): CancelablePromise<void> => {
-        // Validate trait with ProgrammingOptions type !!
+    ): CancelablePromise<void> =>
+        new CancelablePromise<void>((resolve, reject, onCancel) => {
+            // Validate trait with ProgrammingOptions type !!
 
-        const args: string[] = [];
-        args.concat(deviceTraitsToArgs(device.traits));
+            const args: string[] = [];
+            args.concat(deviceTraitsToArgs(device.traits));
 
-        return sandbox.execSubcommand(
-            'program',
-            [
-                '--firmware',
-                firmwarePath,
-                '--serial-number',
-                device.serialNumber,
-                ...args,
-                ...(core ? ['--core', core] : []),
-                ...(programmingOptions && programmingOptions?.length > 0
-                    ? ['--options', programmingOptions.join(',')]
-                    : []),
-            ],
-            onProgress
-        );
-    };
+            const operation = sandbox
+                .execSubcommand(
+                    'program',
+                    [
+                        '--firmware',
+                        firmwarePath,
+                        '--serial-number',
+                        device.serialNumber,
+                        ...args,
+                        ...(core ? ['--core', core] : []),
+                        ...(programmingOptions && programmingOptions?.length > 0
+                            ? ['--options', programmingOptions.join(',')]
+                            : []),
+                    ],
+                    onProgress
+                )
+                .then(() => resolve())
+                .catch(reject);
+
+            onCancel(operation.cancel);
+        });
 
     const programBuffer = (
         device: WithRequired<NrfutilDevice, 'serialNumber'>,
@@ -179,85 +185,158 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
         core?: DeviceCore,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<void> =>
-        sandbox.execSubcommand(
-            'recover',
-            [
-                '--serial-number',
-                device.serialNumber,
-                ...(core ? ['--core', core] : []),
-            ],
-            onProgress
-        );
+        new CancelablePromise<void>((resolve, reject, onCancel) => {
+            const operation = sandbox
+                .execSubcommand(
+                    'recover',
+                    [
+                        '--serial-number',
+                        device.serialNumber,
+                        ...(core ? ['--core', core] : []),
+                    ],
+                    onProgress
+                )
+                .then(() => resolve())
+                .catch(reject);
+
+            onCancel(operation.cancel);
+        });
 
     const reset = (
         device: WithRequired<NrfutilDevice, 'serialNumber'>,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<void> =>
-        sandbox.execSubcommand(
-            'reset',
-            ['--serial-number', device.serialNumber],
-            onProgress
-        );
+        new CancelablePromise<void>((resolve, reject, onCancel) => {
+            const operation = sandbox
+                .execSubcommand(
+                    'reset',
+                    ['--serial-number', device.serialNumber],
+                    onProgress
+                )
+                .then(() => resolve())
+                .catch(reject);
+
+            onCancel(operation.cancel);
+        });
 
     const fwInfo = (
         device: WithRequired<NrfutilDevice, 'serialNumber'>,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<FWInfo> =>
-        sandbox.execSubcommand(
-            'fw-info',
-            ['--serial-number', device.serialNumber],
-            onProgress
-        );
+        new CancelablePromise<FWInfo>((resolve, reject, onCancel) => {
+            const operation = sandbox
+                .execSubcommand<FWInfo>(
+                    'fw-info',
+                    ['--serial-number', device.serialNumber],
+                    onProgress
+                )
+                .then(results => {
+                    if (
+                        results.taskEnd.length === 1 &&
+                        results.taskEnd[0].data
+                    ) {
+                        resolve(results.taskEnd[0].data);
+                    } else {
+                        reject(new Error('Unexpected result'));
+                    }
+                })
+                .catch(reject);
+
+            onCancel(operation.cancel);
+        });
 
     const setMcuState = (
         device: WithRequired<NrfutilDevice, 'serialNumber'>,
         state: McuState,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<void> =>
-        sandbox.execSubcommand(
-            'mcu-state-set',
-            [state, '--serial-number', device.serialNumber],
-            onProgress
-        );
+        new CancelablePromise<void>((resolve, reject, onCancel) => {
+            const operation = sandbox
+                .execSubcommand(
+                    'mcu-state-set',
+                    [state, '--serial-number', device.serialNumber],
+                    onProgress
+                )
+                .then(() => resolve())
+                .catch(reject);
+
+            onCancel(operation.cancel);
+        });
 
     const firmwareRead = (
         device: WithRequired<NrfutilDevice, 'serialNumber'>,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<Buffer> =>
         new CancelablePromise<Buffer>((resolve, reject, onCancel) => {
-            const operation = sandbox.execSubcommand<DeviceBuffer>(
-                'fw-read',
-                ['--serial-number', device.serialNumber],
-                onProgress
-            );
+            const operation = sandbox
+                .execSubcommand<DeviceBuffer>(
+                    'fw-read',
+                    ['--serial-number', device.serialNumber],
+                    onProgress
+                )
+                .then(results => {
+                    if (
+                        results.taskEnd.length === 1 &&
+                        results.taskEnd[0].data
+                    ) {
+                        resolve(
+                            Buffer.from(
+                                results.taskEnd[0].data.buffer,
+                                'base64'
+                            )
+                        );
+                    } else {
+                        reject(new Error('Unexpected result'));
+                    }
+                })
+                .catch(reject);
 
             onCancel(() => operation.cancel());
-
-            operation
-                .then(deviceBuffer =>
-                    resolve(Buffer.from(deviceBuffer.buffer, 'base64'))
-                )
-                .catch(reject);
         });
 
     const erase = (
         device: WithRequired<NrfutilDevice, 'serialNumber'>,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<void> =>
-        sandbox.execSubcommand(
-            'erase',
-            ['--serial-number', device.serialNumber],
-            onProgress
-        );
+        new CancelablePromise<void>((resolve, reject, onCancel) => {
+            const operation = sandbox
+                .execSubcommand(
+                    'erase',
+                    ['--serial-number', device.serialNumber],
+                    onProgress
+                )
+                .then(() => resolve())
+                .catch(reject);
+
+            onCancel(operation.cancel);
+        });
 
     const getProtectionStatus = (
         device: WithRequired<NrfutilDevice, 'serialNumber'>,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<GetProtectionStatusResult> =>
-        sandbox.execSubcommand(
-            'protection-get',
-            ['--serial-number', device.serialNumber],
-            onProgress
+        new CancelablePromise<GetProtectionStatusResult>(
+            (resolve, reject, onCancel) => {
+                const operation = sandbox
+                    .execSubcommand<GetProtectionStatusResult>(
+                        'protection-get',
+                        ['--serial-number', device.serialNumber],
+                        onProgress
+                    )
+                    .then(results => {
+                        if (
+                            results.taskEnd.length === 1 &&
+                            results.taskEnd[0].data
+                        ) {
+                            resolve(results.taskEnd[0].data);
+                        } else {
+                            reject(new Error('Unexpected result'));
+                        }
+                    })
+                    .catch(reject);
+
+                onCancel(operation.cancel);
+            }
         );
 
     const setProtectionStatus = (
@@ -265,10 +344,28 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
         region: 'All' | 'SecureRegions' | 'Region0' | 'Region0Region1',
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<GetProtectionStatusResult> =>
-        sandbox.execSubcommand(
-            'protection-set',
-            [region, '--serial-number', device.serialNumber],
-            onProgress
+        new CancelablePromise<GetProtectionStatusResult>(
+            (resolve, reject, onCancel) => {
+                const operation = sandbox
+                    .execSubcommand<GetProtectionStatusResult>(
+                        'protection-set',
+                        [region, '--serial-number', device.serialNumber],
+                        onProgress
+                    )
+                    .then(results => {
+                        if (
+                            results.taskEnd.length === 1 &&
+                            results.taskEnd[0].data
+                        ) {
+                            resolve(results.taskEnd[0].data);
+                        } else {
+                            reject(new Error('Unexpected result'));
+                        }
+                    })
+                    .catch(reject);
+
+                onCancel(operation.cancel);
+            }
         );
 
     return {
