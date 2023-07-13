@@ -16,7 +16,6 @@ module.exports = (disabledMocks = []) => ({
         'pc-nrfjprog-js|nrf-device-setup|usb': `${mockDir}/emptyMock.ts`,
         '^electron$': `${mockDir}/electronMock.ts`,
         '^electron-store$': `${mockDir}/electronStoreMock.ts`,
-        '@nordicsemiconductor/nrf-device-lib-js': `${mockDir}/deviceLibMock.ts`,
         '@electron/remote': `${mockDir}/remoteMock.ts`,
         ...(disabledMocks.includes('packageJson')
             ? {}

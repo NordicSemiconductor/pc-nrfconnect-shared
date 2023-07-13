@@ -30,9 +30,6 @@
         "prepare-shared-release": "ts-node scripts/prepare-shared-release.ts",
         "postinstall": "run-p compile:*"
     },
-    "peerDependencies": {
-        "@nordicsemiconductor/nrf-device-lib-js": "*"
-    },
     "dependencies": {
         "@electron/remote": "^2.0.4",
         "@mdi/font": "7.2.96",
