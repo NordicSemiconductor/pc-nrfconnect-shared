@@ -67,7 +67,7 @@ export type Progress = {
 };
 
 export type LogMessage = {
-    level: 'OFF' | 'ERROR' | 'WARN' | 'INFO' | 'DEBUG' | 'TRACE';
+    level: 'OFF' | 'ERROR' | 'WARN' | 'INFO' | 'DEBUG' | 'TRACE' | 'CRITICAL';
     message: string;
 };
 
@@ -83,46 +83,44 @@ export interface SemanticVersion {
 
 type VersionFormat = 'incremental' | 'semantic' | 'string';
 
-type Plugin = {
-    dependencies: Dependencies[];
+export type Plugin = {
+    dependencies: Dependency[];
+    name: string;
     versionFormat: VersionFormat;
-    version: {
-        name: string;
-        description?: string;
-        dependencies?: Dependencies[];
-        versionFormat: VersionFormat;
-        version: SemanticVersion | string | number;
-    };
+    version: VersionTypes;
 };
 
-type Dependencies = {
-    classification: FeatureClassification;
+export type Dependency = {
+    classification?: FeatureClassification;
     name: string;
     plugins?: Plugin[];
-    dependencies?: Dependencies[];
+    dependencies?: SubDependency[];
     versionFormat: VersionFormat;
-    version: {
-        name: string;
-        description?: string;
-        dependencies?: Dependencies[];
-        versionFormat: VersionFormat;
-        version: SemanticVersion | string | number;
-    };
+    version: VersionTypes;
 };
 
-export type Version = {
+export type VersionTypes = SemanticVersion | string | number;
+
+export interface SubDependency {
+    name: string;
+    description?: string;
+    dependencies?: Dependency[];
+    versionFormat: VersionFormat;
+    version: VersionTypes;
+}
+
+export type ModuleVersion = {
     build_timestamp: string;
     classification: FeatureClassification;
     commit_date: string;
     commit_hash: string;
-    dependencies: Dependencies[];
+    dependencies: Dependency[];
     host: string;
     name: string;
     version: string;
 };
 
 export type NrfUtilSettings = {
-    logLevel: LogLevel;
     bootstrapConfigUrl?: string;
     bootstrapTarballPath?: string;
     devicePluginsDirForceNrfdlLocation?: string;
@@ -131,3 +129,18 @@ export type NrfUtilSettings = {
     log?: string;
     packageIndexUrl?: string;
 };
+
+export const isSemanticVersion = (
+    version?: SubDependency
+): version is SubDependency & { version: SemanticVersion } =>
+    version?.versionFormat === 'semantic';
+
+export const isIncrementalVersion = (
+    version?: SubDependency
+): version is SubDependency & { version: number } =>
+    version?.versionFormat === 'incremental';
+
+export const isStringVersion = (
+    version?: SubDependency
+): version is SubDependency & { version: string } =>
+    version?.versionFormat === 'string';

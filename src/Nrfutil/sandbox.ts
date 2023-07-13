@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /*
  * Copyright (c) 2023 Nordic Semiconductor ASA
  *
@@ -6,23 +5,29 @@
  */
 
 import { CancelablePromise } from 'cancelable-promise';
-import { exec, spawn } from 'child_process';
+import { spawn } from 'child_process';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 
+import logger from '../logging';
 import {
     BackgroundTask,
     CancellableOperation,
+    LogLevel,
     LogMessage,
+    ModuleVersion,
     NrfutilJson,
     NrfUtilSettings,
     Progress,
     TaskEnd,
     TaskProgress,
-    Version,
 } from './sandboxTypes';
 
 export type NrfutilSandboxType = ReturnType<typeof NrfutilSandbox>;
+
+const parseJsonBuffers = <T>(data: Buffer): T[] =>
+    JSON.parse(`[${data.toString().replaceAll('}\n{', '}\n,{')}]`) ?? [];
 
 const NrfutilSandbox = (
     baseDir: string,
@@ -31,6 +36,7 @@ const NrfutilSandbox = (
     setting?: NrfUtilSettings
 ) => {
     const onLoggingHandlers: ((logging: LogMessage) => void)[] = [];
+    let logLevel: LogLevel = 'info';
 
     const prepareEnv = () => {
         const env = { ...process.env };
@@ -72,118 +78,134 @@ const NrfutilSandbox = (
 
     const env = prepareEnv();
 
-    const getModuleVersion = (): Promise<Version> =>
+    const getModuleVersion = (): Promise<ModuleVersion> =>
         new Promise((resolve, reject) => {
-            fs.existsSync(
-                path.join(
-                    baseDir,
-                    'sandbox',
-                    module,
-                    version,
-                    `nrfutil-${module}`
-                )
-            );
-
-            let result: Version;
+            let result: ModuleVersion;
             const nrfutil = spawn(
-                'nrfutil',
-                [module, ' --version', ' --json', '--log-output=stdout'],
+                path.join(baseDir, 'nrfutil'),
+                [module, '--version', '--json', '--log-output=stdout'],
                 {
                     env,
                 }
             );
 
             nrfutil.stdout.on('data', data => {
-                const parsedData: NrfutilJson<unknown> = JSON.parse(data);
-                if (!processLoggingData(parsedData)) {
-                    if (parsedData.type === 'info') {
-                        result = parsedData.data as unknown as Version;
+                const parsedData: NrfutilJson<unknown>[] =
+                    parseJsonBuffers(data);
+
+                parsedData.forEach(item => {
+                    if (item.type === 'info') {
+                        result = item.data as unknown as ModuleVersion;
                     }
-                }
+                });
+            });
+
+            let stdErr: string | undefined;
+            nrfutil.stderr.on('data', (data: Buffer) => {
+                stdErr += data.toString();
             });
 
             nrfutil.on('close', code => {
                 if (code === 0) {
                     resolve(result);
                 } else {
-                    reject(new Error(`Failed with error code ${code}`));
+                    let msg = `Failed with exit code ${code}`;
+
+                    if (stdErr) {
+                        msg += `\nError: ${stdErr}`;
+                    }
+
+                    reject(new Error(msg));
                 }
             });
         });
 
     const isSandboxInstalled = (): Promise<boolean> =>
         new Promise((resolve, reject) => {
-            fs.existsSync(
-                path.join(
-                    baseDir,
-                    'sandbox',
-                    module,
-                    version,
-                    `nrfutil-${module}`
+            if (
+                fs.existsSync(
+                    path.join(
+                        baseDir,
+                        'sandbox',
+                        module,
+                        version,
+                        'bin',
+                        `nrfutil-${module}${
+                            os.platform() === 'win32' ? '.exe' : ''
+                        }`
+                    )
                 )
-            );
-            getModuleVersion()
-                .then(moduleVersion =>
-                    resolve(moduleVersion.version === version)
-                )
-                .then(reject);
+            ) {
+                getModuleVersion()
+                    .then(moduleVersion =>
+                        resolve(moduleVersion.version === version)
+                    )
+                    .then(reject);
+            } else {
+                resolve(false);
+            }
         });
 
     const prepareSandbox = (
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<void> =>
         new CancelablePromise<void>((resolve, reject, onCancel) => {
-            let result: Version;
+            logger.info(`Preparing nrfutil-${module} version: ${version}`);
             const nrfutil = spawn(
-                'nrfutil',
+                path.join(baseDir, 'nrfutil'),
                 [
                     'install',
                     `${module}=${version}`,
                     '--force',
-                    ' --json',
+                    '--json',
                     '--log-output=stdout',
+                    '--log-level',
+                    logLevel,
                 ],
                 {
                     env: {
                         ...env,
-                        NRFUTIL_EXEC_PATH: path.join(baseDir),
+                        NRFUTIL_EXEC_PATH: baseDir,
                     },
                 }
             );
 
-            let taskEnd: TaskEnd;
-            let stdErr: string;
+            let taskEnd: TaskEnd | undefined;
+            let stdErr: string | undefined;
 
-            nrfutil.stdout.on('data', data => {
-                const parsedData: NrfutilJson<unknown> = JSON.parse(data);
-                if (!processLoggingData(parsedData)) {
-                    switch (parsedData.type) {
-                        case 'task_progress':
-                            onProgress?.(
-                                (parsedData.data as unknown as TaskProgress)
-                                    .progress
-                            );
-                            break;
-                        case 'task_end':
-                            taskEnd = parsedData.data as unknown as TaskEnd;
-                            break;
+            nrfutil.stdout.on('data', (data: Buffer) => {
+                const parsedData: NrfutilJson<unknown>[] =
+                    parseJsonBuffers(data);
+                parsedData.forEach(item => {
+                    if (!processLoggingData(item)) {
+                        switch (item.type) {
+                            case 'task_progress':
+                                onProgress?.(
+                                    (item.data as unknown as TaskProgress)
+                                        .progress
+                                );
+                                break;
+                            case 'task_end':
+                                taskEnd = item.data as unknown as TaskEnd;
+                                break;
+                        }
                     }
-                    if (parsedData.type === 'info') {
-                        result = parsedData.data as unknown as Version;
-                    }
-                }
+                });
             });
 
-            nrfutil.stderr.on('data', data => {
-                stdErr += data;
+            nrfutil.stderr.on('data', (data: Buffer) => {
+                stdErr += data.toString();
             });
 
             nrfutil.on('close', code => {
-                if (code === 0 && taskEnd.result === 'success') {
+                if (code === 0 && taskEnd?.result === 'success') {
+                    logger.info(
+                        `Successfully Installed nrfutil-${module} version: ${version}`
+                    );
                     resolve();
                 } else {
                     let msg = `Failed with exit code ${code}`;
-                    if (taskEnd.message) {
+                    if (taskEnd?.message) {
                         msg += `\nMessage: ${taskEnd.message}`;
                     }
 
@@ -205,51 +227,56 @@ const NrfutilSandbox = (
     ): CancelablePromise<Result> =>
         new CancelablePromise<Result>((resolve, reject, onCancel) => {
             const nrfutil = spawn(
-                'nrfutil',
+                path.join(baseDir, 'nrfutil'),
                 [
+                    module,
                     command,
-                    `${module}${version}`,
                     ...args,
-                    ' --json',
+                    '--json',
                     '--log-output=stdout',
+                    '--log-level',
+                    logLevel,
                 ],
                 {
                     env,
                 }
             );
 
-            let taskEnd: TaskEnd<Result>;
-            let stdErr: string;
+            let taskEnd: TaskEnd<Result> | undefined;
+            let stdErr: string | undefined;
 
-            nrfutil.stdout.on('data', data => {
-                const parsedData: NrfutilJson<unknown> = JSON.parse(data);
-                if (!processLoggingData(parsedData)) {
-                    switch (parsedData.type) {
-                        case 'task_progress':
-                            onProgress?.(
-                                (parsedData.data as unknown as TaskProgress)
-                                    .progress
-                            );
-                            break;
-                        case 'task_end':
-                            taskEnd =
-                                parsedData.data as unknown as TaskEnd<Result>;
-                            break;
+            nrfutil.stdout.on('data', (data: Buffer) => {
+                const parsedData: NrfutilJson<unknown>[] =
+                    parseJsonBuffers(data);
+                parsedData.forEach(item => {
+                    if (!processLoggingData(item)) {
+                        switch (item.type) {
+                            case 'task_progress':
+                                onProgress?.(
+                                    (item.data as unknown as TaskProgress)
+                                        .progress
+                                );
+                                break;
+                            case 'task_end':
+                                taskEnd =
+                                    item.data as unknown as TaskEnd<Result>;
+                                break;
+                        }
                     }
-                }
+                });
             });
 
-            nrfutil.stderr.on('data', data => {
-                stdErr += data;
+            nrfutil.stderr.on('data', (data: Buffer) => {
+                stdErr += data.toString();
             });
 
             nrfutil.on('close', code => {
-                if (code === 0 && taskEnd.result === 'success') {
-                    resolve(taskEnd.data as unknown as Result);
+                if (code === 0 && taskEnd?.result === 'success') {
+                    resolve(taskEnd?.data as unknown as Result);
                 } else {
                     let msg = `Failed with exit code ${code}`;
-                    if (taskEnd.message) {
-                        msg += `\nMessage: ${taskEnd.message}`;
+                    if (taskEnd?.message) {
+                        msg += `\nMessage: ${taskEnd?.message}`;
                     }
 
                     if (stdErr) {
@@ -272,37 +299,35 @@ const NrfutilSandbox = (
         const closedHandlers: ((code: number | null) => void)[] = [];
 
         const nrfutil = spawn(
-            'nrfutil',
+            path.join(baseDir, 'nrfutil'),
             [
+                module,
                 command,
-                `${module}${version}`,
                 ...args,
-                ' --json',
+                '--json',
                 '--log-output=stdout',
+                '--log-level',
+                logLevel,
             ],
             {
                 env,
             }
         );
 
-        nrfutil.stdout.on('data', data => {
-            const parsedData: NrfutilJson<unknown> = JSON.parse(data);
-            if (!processLoggingData(parsedData)) {
-                switch (parsedData.type) {
-                    case 'task_end':
-                        (
-                            parsedData.data as unknown as TaskEnd<Result[]>
-                        ).data?.forEach(processors.onData);
-                        break;
-                    case 'info':
-                        processors.onData(parsedData.data as unknown as Result);
-                        break;
+        nrfutil.stdout.on('data', (data: Buffer) => {
+            const parsedData: NrfutilJson<unknown>[] = parseJsonBuffers(data);
+
+            parsedData.forEach(item => {
+                if (!processLoggingData(item)) {
+                    if (item.type === 'info') {
+                        processors.onData(item.data as unknown as Result);
+                    }
                 }
-            }
+            });
         });
 
-        nrfutil.stderr.on('data', data => {
-            processors.onError(new Error(data));
+        nrfutil.stderr.on('data', (data: Buffer) => {
+            processors.onError(new Error(data.toString()));
         });
 
         nrfutil.on('close', code => {
@@ -324,6 +349,7 @@ const NrfutilSandbox = (
             },
         };
     };
+
     return {
         isSandboxInstalled,
         getModuleVersion,
@@ -336,7 +362,48 @@ const NrfutilSandbox = (
             return () =>
                 onLoggingHandlers.splice(onLoggingHandlers.indexOf(handler), 1);
         },
+        setLogLevel: (level: LogLevel) => {
+            logLevel = level;
+        },
     };
 };
+
+export const prepareSandbox = (
+    baseDir: string,
+    module: string,
+    version: string,
+    setting?: NrfUtilSettings
+) =>
+    new Promise<NrfutilSandboxType>((resolve, reject) => {
+        const sandbox = NrfutilSandbox(baseDir, module, version, setting);
+
+        sandbox
+            .isSandboxInstalled()
+            .then(result => {
+                if (!result) {
+                    sandbox
+                        .prepareSandbox()
+                        .then(() => resolve(sandbox))
+                        .catch(reject);
+                    return;
+                }
+
+                resolve(sandbox);
+            })
+            .catch(reject);
+    });
+
+export const prepareAndCreate = <Module>(
+    baseDir: string,
+    module: string,
+    version: string,
+    createModule: (sandbox: NrfutilSandboxType) => Module,
+    setting?: NrfUtilSettings
+) =>
+    new Promise<Module>((resolve, reject) => {
+        prepareSandbox(baseDir, module, version, setting)
+            .then(sandbox => resolve(createModule(sandbox)))
+            .catch(reject);
+    });
 
 export default NrfutilSandbox;

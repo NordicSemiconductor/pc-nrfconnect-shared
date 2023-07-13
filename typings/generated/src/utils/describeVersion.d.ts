@@ -1,3 +1,3 @@
-import { ModuleVersion } from '@nordicsemiconductor/nrf-device-lib-js';
-declare const _default: (version?: ModuleVersion) => string;
+import { SubDependency } from '../Nrfutil/sandboxTypes';
+declare const _default: (version?: SubDependency | string) => string;
 export default _default;

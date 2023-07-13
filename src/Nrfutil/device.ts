@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /*
  * Copyright (c) 2023 Nordic Semiconductor ASA
  *
@@ -11,27 +10,35 @@ import os from 'os';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
 
+import logger from '../logging';
+import { getAppDataDir } from '../utils/appDirs';
 import {
-    Device,
+    getIsLoggingVerbose,
+    persistIsLoggingVerbose,
+} from '../utils/persistentStore';
+import {
     DeviceBuffer,
     DeviceCore,
     DeviceTraits,
     FWInfo,
     GetProtectionStatusResult,
     HotplugEvent,
+    ListEvent,
+    McuState,
+    NrfutilDevice,
     ProgrammingOptions,
 } from './deviceTypes';
-import type { NrfutilSandboxType } from './sandbox';
-import NrfutilSandbox from './sandbox';
-import {
-    CancellableOperation,
-    LogMessage,
-    NrfUtilSettings,
-    Progress,
-    WithRequired,
-} from './sandboxTypes';
+import { type NrfutilSandboxType, prepareAndCreate } from './sandbox';
+import { CancellableOperation, Progress, WithRequired } from './sandboxTypes';
 
 export type NrfUtilDeviceType = ReturnType<typeof NrfUtilDevice>;
+
+const isHotplugEvent = (
+    event: HotplugEvent | ListEvent
+): event is HotplugEvent => (event as HotplugEvent).event !== undefined;
+
+const isListEvent = (event: HotplugEvent | ListEvent): event is ListEvent =>
+    (event as ListEvent).devices !== undefined;
 
 const deviceTraitsToArgs = (traits: DeviceTraits) => {
     const args: string[] = [];
@@ -48,41 +55,12 @@ const deviceTraitsToArgs = (traits: DeviceTraits) => {
     return args;
 };
 
-export const prepareAndCreate = (
-    baseDir: string,
-    module: string,
-    version: string,
-    onLogging: (logging: LogMessage) => void,
-    setting?: NrfUtilSettings
-) =>
-    new Promise<NrfUtilDeviceType>((resolve, reject) => {
-        const sandbox = NrfutilSandbox(baseDir, module, version, setting);
-
-        sandbox
-            .isSandboxInstalled()
-            .then(result => {
-                if (!result) {
-                    sandbox
-                        .prepareSandbox()
-                        .then(() => resolve(NrfUtilDevice(sandbox, onLogging)))
-                        .catch(reject);
-                    return;
-                }
-
-                resolve(NrfUtilDevice(sandbox, onLogging));
-            })
-            .catch(reject);
-    });
-
-const NrfUtilDevice = (
-    sandbox: NrfutilSandboxType,
-    onLogging: (logging: LogMessage) => void
-) => {
-    const releaseLogging = sandbox.onLogging(onLogging);
-
+const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
     const list = (
         traits: DeviceTraits,
-        onDeviceArrived: (device: WithRequired<Device, 'serialNumber'>) => void,
+        onDeviceArrived: (
+            device: WithRequired<NrfutilDevice, 'serialNumber'>
+        ) => void,
         onError: (error: Error) => void,
         onHotplugEvent?: {
             onDeviceLeft: (id: number) => void;
@@ -95,20 +73,29 @@ const NrfUtilDevice = (
             args.push('--hotplug');
         }
 
-        const onData = (data: HotplugEvent) => {
-            if (
-                data.event === 'NRFDL_DEVICE_EVENT_ARRIVED' &&
-                data.device &&
-                data.device.serialNumber
-            ) {
-                onDeviceArrived(
-                    data.device as WithRequired<Device, 'serialNumber'>
-                );
-            } else if (
-                data.event === 'NRFDL_DEVICE_EVENT_LEFT' &&
-                onHotplugEvent
-            ) {
-                onHotplugEvent.onDeviceLeft(data.id);
+        const onData = (data: HotplugEvent | ListEvent) => {
+            if (isListEvent(data)) {
+                data.devices.forEach(d => {
+                    if (d.serialNumber)
+                        onDeviceArrived(
+                            d as WithRequired<NrfutilDevice, 'serialNumber'>
+                        );
+                });
+            } else if (isHotplugEvent(data)) {
+                if (
+                    data.event === 'Arrived' &&
+                    data.device &&
+                    data.device.serialNumber
+                ) {
+                    onDeviceArrived(
+                        data.device as WithRequired<
+                            NrfutilDevice,
+                            'serialNumber'
+                        >
+                    );
+                } else if (data.event === 'Left' && onHotplugEvent) {
+                    onHotplugEvent.onDeviceLeft(data.id);
+                }
             }
         };
 
@@ -119,29 +106,41 @@ const NrfUtilDevice = (
     };
 
     const program = (
-        device: WithRequired<Device, 'serialNumber'>,
+        device: WithRequired<NrfutilDevice, 'serialNumber'>,
         firmwarePath: string,
-        core: DeviceCore,
-        programmingOptions: ProgrammingOptions,
-        onProgress?: (progress: Progress) => void
+        onProgress?: (progress: Progress) => void,
+        core?: DeviceCore,
+        programmingOptions?: ProgrammingOptions[]
     ): CancelablePromise<void> => {
         // Validate trait with ProgrammingOptions type !!
 
-        // const args: string[] = [];
-        // args.concat(deviceTraitsToArgs(traits));
+        const args: string[] = [];
+        args.concat(deviceTraitsToArgs(device.traits));
 
-        // return sandbox.execSubcommand('program', args, onProgress);
-
-        throw new Error('Not implemented');
+        return sandbox.execSubcommand(
+            'program',
+            [
+                '--firmware',
+                firmwarePath,
+                '--serial-number',
+                device.serialNumber,
+                ...args,
+                ...(core ? ['--core', core] : []),
+                ...(programmingOptions && programmingOptions?.length > 0
+                    ? ['--options', programmingOptions.join(',')]
+                    : []),
+            ],
+            onProgress
+        );
     };
 
     const programBuffer = (
-        device: WithRequired<Device, 'serialNumber'>,
+        device: WithRequired<NrfutilDevice, 'serialNumber'>,
         firmware: Buffer,
         type: 'hex' | 'zip',
-        core: DeviceCore,
-        programmingOptions: ProgrammingOptions,
-        onProgress?: (progress: Progress) => void
+        onProgress?: (progress: Progress) => void,
+        core?: DeviceCore,
+        programmingOptions?: ProgrammingOptions[]
     ): CancelablePromise<void> =>
         new CancelablePromise<void>((resolve, reject, onCancel) => {
             const saveTemp = (): string => {
@@ -159,9 +158,9 @@ const NrfUtilDevice = (
             const operation = program(
                 device,
                 tempFilePath,
+                onProgress,
                 core,
-                programmingOptions,
-                onProgress
+                programmingOptions
             );
 
             onCancel(() => {
@@ -176,17 +175,22 @@ const NrfUtilDevice = (
         });
 
     const recover = (
-        device: WithRequired<Device, 'serialNumber'>,
+        device: WithRequired<NrfutilDevice, 'serialNumber'>,
+        core?: DeviceCore,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<void> =>
         sandbox.execSubcommand(
             'recover',
-            ['--serial-number', device.serialNumber],
+            [
+                '--serial-number',
+                device.serialNumber,
+                ...(core ? ['--core', core] : []),
+            ],
             onProgress
         );
 
     const reset = (
-        device: WithRequired<Device, 'serialNumber'>,
+        device: WithRequired<NrfutilDevice, 'serialNumber'>,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<void> =>
         sandbox.execSubcommand(
@@ -196,7 +200,7 @@ const NrfUtilDevice = (
         );
 
     const fwInfo = (
-        device: WithRequired<Device, 'serialNumber'>,
+        device: WithRequired<NrfutilDevice, 'serialNumber'>,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<FWInfo> =>
         sandbox.execSubcommand(
@@ -206,8 +210,8 @@ const NrfUtilDevice = (
         );
 
     const setMcuState = (
-        device: WithRequired<Device, 'serialNumber'>,
-        state: 'Application' | 'Programming',
+        device: WithRequired<NrfutilDevice, 'serialNumber'>,
+        state: McuState,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<void> =>
         sandbox.execSubcommand(
@@ -217,7 +221,7 @@ const NrfUtilDevice = (
         );
 
     const firmwareRead = (
-        device: WithRequired<Device, 'serialNumber'>,
+        device: WithRequired<NrfutilDevice, 'serialNumber'>,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<Buffer> =>
         new CancelablePromise<Buffer>((resolve, reject, onCancel) => {
@@ -237,7 +241,7 @@ const NrfUtilDevice = (
         });
 
     const erase = (
-        device: WithRequired<Device, 'serialNumber'>,
+        device: WithRequired<NrfutilDevice, 'serialNumber'>,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<void> =>
         sandbox.execSubcommand(
@@ -247,7 +251,7 @@ const NrfUtilDevice = (
         );
 
     const getProtectionStatus = (
-        device: WithRequired<Device, 'serialNumber'>,
+        device: WithRequired<NrfutilDevice, 'serialNumber'>,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<GetProtectionStatusResult> =>
         sandbox.execSubcommand(
@@ -257,7 +261,7 @@ const NrfUtilDevice = (
         );
 
     const setProtectionStatus = (
-        device: WithRequired<Device, 'serialNumber'>,
+        device: WithRequired<NrfutilDevice, 'serialNumber'>,
         region: 'All' | 'SecureRegions' | 'Region0' | 'Region0Region1',
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<GetProtectionStatusResult> =>
@@ -279,10 +283,64 @@ const NrfUtilDevice = (
         setMcuState,
         list,
         firmwareRead,
-        release: () => {
-            releaseLogging();
-        },
+        onLogging: sandbox.onLogging,
+        setLogLevel: sandbox.setLogLevel,
+        setVerboseLogging: (verbose: boolean) =>
+            sandbox.setLogLevel(verbose ? 'trace' : 'error'),
+        getModuleVersion: sandbox.getModuleVersion,
     };
 };
 
-export default NrfUtilDevice;
+let deviceLib: NrfUtilDeviceType | undefined;
+let promiseDeviceLib: Promise<NrfUtilDeviceType> | undefined;
+
+const getDeviceLib = () =>
+    new Promise<NrfUtilDeviceType>((resolve, reject) => {
+        if (deviceLib) {
+            resolve(deviceLib);
+            return;
+        }
+
+        if (!promiseDeviceLib) {
+            promiseDeviceLib = prepareAndCreate<NrfUtilDeviceType>(
+                path.join(getAppDataDir(), '../'),
+                'device',
+                '1.2.0',
+                NrfUtilDevice
+            );
+        }
+
+        promiseDeviceLib
+            .then(lib => {
+                lib.onLogging(evt => {
+                    switch (evt.level) {
+                        case 'TRACE':
+                            logger.verbose(evt.message);
+                            break;
+                        case 'DEBUG':
+                            logger.debug(evt.message);
+                            break;
+                        case 'INFO':
+                            logger.info(evt.message);
+                            break;
+                        case 'WARN':
+                            logger.warn(evt.message);
+                            break;
+                        case 'ERROR':
+                            logger.error(evt.message);
+                            break;
+                        case 'CRITICAL':
+                            logger.error(evt.message);
+                            break;
+                    }
+                });
+                lib.setVerboseLogging(getIsLoggingVerbose());
+                // Only the first reset after selecting "reset with verbose logging" is relevant
+                persistIsLoggingVerbose(false);
+                deviceLib = lib;
+                resolve(lib);
+            })
+            .catch(reject);
+    });
+
+export default getDeviceLib;
