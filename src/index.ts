@@ -88,8 +88,8 @@ export {
 } from './utils/persistentStore';
 
 export { jprogDeviceSetup } from './Device/jprogOperations';
-
 export { sdfuDeviceSetup } from './Device/sdfuOperations';
+export type { DeviceTraits } from './Nrfutil/deviceTypes';
 
 export {
     selectedDevice,
@@ -106,7 +106,6 @@ export {
 } from './Device/deviceAutoSelectSlice';
 export { clearWaitForDevice } from './Device/deviceLister';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
-export { getDeviceLibContext } from './Device/deviceLibWrapper';
 export { isDeviceInDFUBootloader } from './Device/sdfuOperations';
 export {
     default as sdfuOperations,

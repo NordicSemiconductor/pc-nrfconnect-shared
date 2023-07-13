@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js';
 import fs from 'fs';
 import { EOL } from 'os';
 import path from 'path';
@@ -15,12 +14,10 @@ import {
     deviceInfo as getDeviceInfo,
     productPageUrl,
 } from '../Device/deviceInfo/deviceInfo';
-import {
-    getDeviceLibContext,
-    getModuleVersion,
-} from '../Device/deviceLibWrapper';
+import { getModuleVersion } from '../Device/deviceLibWrapper';
 import { Device } from '../Device/deviceSlice';
 import logger from '../logging';
+import getDeviceLib from '../Nrfutil/device';
 import { getAppDataDir } from './appDirs';
 import describeVersion from './describeVersion';
 import { openFile } from './open';
@@ -53,9 +50,9 @@ const generalInfoReport = async () => {
         si.fsSize(),
     ]);
 
-    const versions = await nrfDeviceLib.getModuleVersions(
-        getDeviceLibContext()
-    );
+    const deviceLib = await getDeviceLib();
+    const moduleVersion = await deviceLib.getModuleVersion();
+    const dependencies = moduleVersion.dependencies;
 
     return [
         `- System:     ${manufacturer} ${model}`,
@@ -75,17 +72,12 @@ const generalInfoReport = async () => {
         `    - node: ${node}`,
         `    - python: ${python}`,
         `    - python3: ${python3}`,
-        `    - nrf-device-lib-js: ${describeVersion(
-            getModuleVersion('nrfdl-js', versions)
-        )}`,
-        `    - nrf-device-lib: ${describeVersion(
-            getModuleVersion('nrfdl', versions)
-        )}`,
+        `    - nrfutil-device: ${moduleVersion.version}`,
         `    - nrfjprog DLL: ${describeVersion(
-            getModuleVersion('jprog', versions)
+            getModuleVersion('jprog', dependencies)
         )}`,
         `    - JLink: ${describeVersion(
-            getModuleVersion('JlinkARM', versions)
+            getModuleVersion('JlinkARM', dependencies)
         )}`,
         '',
     ];

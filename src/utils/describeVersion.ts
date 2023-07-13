@@ -4,18 +4,25 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { ModuleVersion } from '@nordicsemiconductor/nrf-device-lib-js';
+import {
+    isIncrementalVersion,
+    isSemanticVersion,
+    isStringVersion,
+    SubDependency,
+} from '../Nrfutil/sandboxTypes';
 
-export default (version?: ModuleVersion) => {
-    if (version == null) {
-        return 'Unknown';
+export default (version?: SubDependency | string) => {
+    if (typeof version === 'string') {
+        return version;
     }
 
-    switch (version.versionFormat) {
-        case 'incremental':
-        case 'string':
-            return String(version.version);
-        case 'semantic':
-            return `${version.version.major}.${version.version.minor}.${version.version.patch}`;
+    if (isSemanticVersion(version)) {
+        return `${version.version.major}.${version.version.minor}.${version.version.patch}`;
     }
+
+    if (isIncrementalVersion(version) || isStringVersion(version)) {
+        return String(version.version);
+    }
+
+    return 'Unknown';
 };

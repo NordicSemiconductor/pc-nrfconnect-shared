@@ -112,7 +112,7 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
@@ -126,7 +126,7 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
@@ -141,7 +141,7 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
@@ -156,7 +156,7 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
@@ -171,7 +171,7 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
@@ -188,7 +188,7 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
@@ -206,7 +206,7 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
@@ -226,7 +226,7 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
@@ -258,7 +258,7 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
@@ -296,7 +296,7 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
@@ -318,7 +318,7 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}

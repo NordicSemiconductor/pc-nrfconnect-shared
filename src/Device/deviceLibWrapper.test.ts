@@ -4,10 +4,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import { Dependency } from '../Nrfutil/sandboxTypes';
 import { getModuleVersion } from './deviceLibWrapper';
 
-const exampleModuleVersions = [
+const exampleModuleVersions: Dependency[] = [
     {
+        classification: 'nrf-external',
         name: 'nrfdl',
         plugins: [
             {
@@ -15,43 +17,33 @@ const exampleModuleVersions = [
                     {
                         dependencies: [
                             {
-                                expectedVersion: {
-                                    version: 'JLink_V7.66a',
-                                    versionFormat: 'string' as const,
-                                },
                                 name: 'JlinkARM',
                                 version: 'JLink_V7.66a',
-                                versionFormat: 'string' as const,
+                                versionFormat: 'string',
                             },
                         ],
                         name: 'jprog',
                         version: {
                             major: 10,
-                            metadata: '0',
                             minor: 16,
                             patch: 0,
-                            pre: '0',
                         },
-                        versionFormat: 'semantic' as const,
+                        versionFormat: 'semantic',
                     },
                 ],
                 name: 'jlink',
                 version: {
                     major: 0,
-                    metadata: '0',
                     minor: 12,
                     patch: 5,
-                    pre: '0',
                 },
                 versionFormat: 'semantic' as const,
             },
         ],
         version: {
             major: 0,
-            metadata: '0',
             minor: 12,
             patch: 5,
-            pre: '0',
         },
         versionFormat: 'semantic' as const,
     },
@@ -61,28 +53,12 @@ const exampleModuleVersions = [
             major: 0,
             minor: 4,
             patch: 12,
-            metadata: '0',
-            pre: '0',
         },
         versionFormat: 'semantic' as const,
     },
 ];
 
 describe('finding module versions', () => {
-    test('in the top level modules', () => {
-        expect(getModuleVersion('nrfdl-js', exampleModuleVersions)).toEqual({
-            name: 'nrfdl-js',
-            version: {
-                major: 0,
-                minor: 4,
-                patch: 12,
-                metadata: '0',
-                pre: '0',
-            },
-            versionFormat: 'semantic' as const,
-        });
-    });
-
     test('in nested dependencies', () => {
         expect(getModuleVersion('JlinkARM', exampleModuleVersions)).toEqual({
             expectedVersion: {

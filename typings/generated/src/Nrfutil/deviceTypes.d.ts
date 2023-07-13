@@ -1,11 +1,13 @@
-import { SemanticVersion } from '@nordicsemiconductor/nrf-device-lib-js';
 export interface HotplugEvent {
     id: number;
-    event: 'NRFDL_DEVICE_EVENT_ARRIVED' | 'NRFDL_DEVICE_EVENT_LEFT';
-    device?: Device;
+    event: 'Arrived' | 'Left';
+    device?: NrfutilDevice;
+}
+export interface ListEvent {
+    devices: NrfutilDevice[];
 }
 export interface DeviceArrivedEvent {
-    device: Device;
+    device: NrfutilDevice;
 }
 export interface DeviceLeftEvent {
     id: number;
@@ -28,7 +30,8 @@ export interface DfuTriggerInfo {
 export interface DfuTriggerVersion {
     semVer: string;
 }
-export interface Device {
+export type McuState = 'Application' | 'Programming';
+export interface NrfutilDevice {
     id: number;
     serialNumber?: string;
     traits: DeviceTraits;
@@ -75,6 +78,13 @@ interface ImageLocation {
     address: number;
     size: number;
 }
+interface SemanticVersion {
+    major: number;
+    minor: number;
+    patch: number;
+    pre: string;
+    metadata?: string;
+}
 interface Image {
     imageLocation?: ImageLocation;
     imageType: ImageType;
@@ -88,7 +98,7 @@ export interface FWInfo {
     serialNumber: string;
     operationId?: string;
 }
-export type DeviceCore = 'NRFDL_DEVICE_CORE_APPLICATION' | 'NRFDL_DEVICE_CORE_MODEM' | 'NRFDL_DEVICE_CORE_NETWORK';
+export type DeviceCore = 'Application' | 'Modem' | 'Network';
 export interface DeviceTraits {
     usb?: boolean;
     nordicUsb?: boolean;

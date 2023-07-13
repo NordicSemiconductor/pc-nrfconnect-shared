@@ -1,20 +1,20 @@
-import { Device as NrfdlDevice, DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
+import { DeviceTraits, NrfutilDevice } from '../Nrfutil/deviceTypes';
 import type { AppThunk, RootState } from '../store';
 import { Device } from './deviceSlice';
 /**
- * Wrap the device form nrf-device-lib to make the Device type consistent
+ * Wrap the device form nrfutil-device to make the Device type consistent
  *
- * @param {Device} device The input device from nrf-device-lib
- * @returns {Device} The updated device
+ * @param {NrfutilDevice} device The input device from nrfutil-device
+ * @returns {NrfutilDevice} The updated device
  */
-export declare const wrapDeviceFromNrfdl: (device: NrfdlDevice) => Device;
+export declare const wrapDeviceFromNrfdl: (device: NrfutilDevice) => Device;
 /**
- * Wrap the device form nrf-device-lib to make the Device type consistent
+ * Wrap the device form nrfutil-device to make the Device type consistent
  *
- * @param {Device[]} devices The input devices from nrf-device-lib
- * @returns {Device[]} The updated devices
+ * @param {NrfutilDevice[]} devices The input devices from nrfutil-device
+ * @returns {NrfutilDevice[]} The updated devices
  */
-export declare const wrapDevicesFromNrfdl: (devices: NrfdlDevice[]) => Device[];
+export declare const wrapDevicesFromNrfdl: (devices: NrfutilDevice[]) => Device[];
 export declare const hasValidDeviceTraits: (deviceTraits: DeviceTraits, requiredTraits: DeviceTraits) => boolean;
 export declare const startWatchingDevices: (deviceListing: DeviceTraits, onDeviceConnected: (device: Device) => void, onDeviceDisconnected: (device: Device) => void, onDeviceDeselected: () => void, doSelectDevice: (device: Device, autoReselected: boolean) => void) => AppThunk<RootState, void>;
 export declare const clearWaitForDevice: () => AppThunk;

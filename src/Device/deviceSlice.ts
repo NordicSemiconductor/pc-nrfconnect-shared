@@ -4,14 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import type {
-    Device as NrfdlDevice,
-    SerialPort,
-} from '@nordicsemiconductor/nrf-device-lib-js';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 import { SerialPortOpenOptions } from 'serialport';
 
+import { NrfutilDevice, SerialPort } from '../Nrfutil/deviceTypes';
 import type { RootState } from '../store';
 import {
     getPersistedIsFavorite,
@@ -22,7 +19,7 @@ import {
     persistSerialPortSettings as persistSerialPortSettingsToStore,
 } from '../utils/persistentStore';
 
-export interface Device extends NrfdlDevice {
+export interface Device extends NrfutilDevice {
     serialNumber: string;
     boardVersion?: string;
     nickname?: string;

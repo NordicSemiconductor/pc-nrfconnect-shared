@@ -1,39 +1,45 @@
 /// <reference types="node" />
 import { CancelablePromise } from 'cancelable-promise';
-import { Device, DeviceCore, DeviceTraits, FWInfo, GetProtectionStatusResult, ProgrammingOptions } from './deviceTypes';
-import type { NrfutilSandboxType } from './sandbox';
-import { CancellableOperation, LogMessage, NrfUtilSettings, Progress, WithRequired } from './sandboxTypes';
+import { DeviceCore, DeviceTraits, FWInfo, GetProtectionStatusResult, McuState, NrfutilDevice, ProgrammingOptions } from './deviceTypes';
+import { type NrfutilSandboxType } from './sandbox';
+import { CancellableOperation, Progress, WithRequired } from './sandboxTypes';
 export type NrfUtilDeviceType = ReturnType<typeof NrfUtilDevice>;
-export declare const prepareAndCreate: (baseDir: string, module: string, version: string, onLogging: (logging: LogMessage) => void, setting?: NrfUtilSettings) => Promise<{
-    program: (device: WithRequired<Device, 'serialNumber'>, firmwarePath: string, core: DeviceCore, programmingOptions: ProgrammingOptions, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
-    programBuffer: (device: WithRequired<Device, 'serialNumber'>, firmware: Buffer, type: 'hex' | 'zip', core: DeviceCore, programmingOptions: ProgrammingOptions, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
-    erase: (device: WithRequired<Device, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
-    recover: (device: WithRequired<Device, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
-    reset: (device: WithRequired<Device, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
-    getProtectionStatus: (device: WithRequired<Device, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<GetProtectionStatusResult>;
-    setProtectionStatus: (device: WithRequired<Device, 'serialNumber'>, region: 'All' | 'SecureRegions' | 'Region0' | 'Region0Region1', onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<GetProtectionStatusResult>;
-    fwInfo: (device: WithRequired<Device, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<FWInfo>;
-    setMcuState: (device: WithRequired<Device, 'serialNumber'>, state: 'Application' | 'Programming', onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
-    list: (traits: DeviceTraits, onDeviceArrived: (device: WithRequired<Device, 'serialNumber'>) => void, onError: (error: Error) => void, onHotplugEvent?: {
+declare const NrfUtilDevice: (sandbox: NrfutilSandboxType) => {
+    program: (device: WithRequired<NrfutilDevice, 'serialNumber'>, firmwarePath: string, onProgress?: ((progress: Progress) => void) | undefined, core?: DeviceCore, programmingOptions?: ProgrammingOptions[]) => CancelablePromise<void>;
+    programBuffer: (device: WithRequired<NrfutilDevice, 'serialNumber'>, firmware: Buffer, type: 'hex' | 'zip', onProgress?: ((progress: Progress) => void) | undefined, core?: DeviceCore, programmingOptions?: ProgrammingOptions[]) => CancelablePromise<void>;
+    erase: (device: WithRequired<NrfutilDevice, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
+    recover: (device: WithRequired<NrfutilDevice, 'serialNumber'>, core?: DeviceCore, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
+    reset: (device: WithRequired<NrfutilDevice, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
+    getProtectionStatus: (device: WithRequired<NrfutilDevice, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<GetProtectionStatusResult>;
+    setProtectionStatus: (device: WithRequired<NrfutilDevice, 'serialNumber'>, region: 'All' | 'SecureRegions' | 'Region0' | 'Region0Region1', onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<GetProtectionStatusResult>;
+    fwInfo: (device: WithRequired<NrfutilDevice, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<FWInfo>;
+    setMcuState: (device: WithRequired<NrfutilDevice, 'serialNumber'>, state: McuState, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
+    list: (traits: DeviceTraits, onDeviceArrived: (device: WithRequired<NrfutilDevice, 'serialNumber'>) => void, onError: (error: Error) => void, onHotplugEvent?: {
         onDeviceLeft: (id: number) => void;
     } | undefined) => CancellableOperation;
-    firmwareRead: (device: WithRequired<Device, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<Buffer>;
-    release: () => void;
-}>;
-declare const NrfUtilDevice: (sandbox: NrfutilSandboxType, onLogging: (logging: LogMessage) => void) => {
-    program: (device: WithRequired<Device, 'serialNumber'>, firmwarePath: string, core: DeviceCore, programmingOptions: ProgrammingOptions, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
-    programBuffer: (device: WithRequired<Device, 'serialNumber'>, firmware: Buffer, type: 'hex' | 'zip', core: DeviceCore, programmingOptions: ProgrammingOptions, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
-    erase: (device: WithRequired<Device, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
-    recover: (device: WithRequired<Device, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
-    reset: (device: WithRequired<Device, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
-    getProtectionStatus: (device: WithRequired<Device, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<GetProtectionStatusResult>;
-    setProtectionStatus: (device: WithRequired<Device, 'serialNumber'>, region: 'All' | 'SecureRegions' | 'Region0' | 'Region0Region1', onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<GetProtectionStatusResult>;
-    fwInfo: (device: WithRequired<Device, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<FWInfo>;
-    setMcuState: (device: WithRequired<Device, 'serialNumber'>, state: 'Application' | 'Programming', onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
-    list: (traits: DeviceTraits, onDeviceArrived: (device: WithRequired<Device, 'serialNumber'>) => void, onError: (error: Error) => void, onHotplugEvent?: {
-        onDeviceLeft: (id: number) => void;
-    } | undefined) => CancellableOperation;
-    firmwareRead: (device: WithRequired<Device, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<Buffer>;
-    release: () => void;
+    firmwareRead: (device: WithRequired<NrfutilDevice, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<Buffer>;
+    onLogging: (handler: (logging: import("./sandboxTypes").LogMessage) => void) => () => ((logging: import("./sandboxTypes").LogMessage) => void)[];
+    setLogLevel: (level: import("./sandboxTypes").LogLevel) => void;
+    setVerboseLogging: (verbose: boolean) => void;
+    getModuleVersion: () => Promise<import("./sandboxTypes").ModuleVersion>;
 };
-export default NrfUtilDevice;
+declare const getDeviceLib: () => Promise<{
+    program: (device: WithRequired<NrfutilDevice, 'serialNumber'>, firmwarePath: string, onProgress?: ((progress: Progress) => void) | undefined, core?: DeviceCore, programmingOptions?: ProgrammingOptions[]) => CancelablePromise<void>;
+    programBuffer: (device: WithRequired<NrfutilDevice, 'serialNumber'>, firmware: Buffer, type: 'hex' | 'zip', onProgress?: ((progress: Progress) => void) | undefined, core?: DeviceCore, programmingOptions?: ProgrammingOptions[]) => CancelablePromise<void>;
+    erase: (device: WithRequired<NrfutilDevice, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
+    recover: (device: WithRequired<NrfutilDevice, 'serialNumber'>, core?: DeviceCore, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
+    reset: (device: WithRequired<NrfutilDevice, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
+    getProtectionStatus: (device: WithRequired<NrfutilDevice, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<GetProtectionStatusResult>;
+    setProtectionStatus: (device: WithRequired<NrfutilDevice, 'serialNumber'>, region: 'All' | 'SecureRegions' | 'Region0' | 'Region0Region1', onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<GetProtectionStatusResult>;
+    fwInfo: (device: WithRequired<NrfutilDevice, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<FWInfo>;
+    setMcuState: (device: WithRequired<NrfutilDevice, 'serialNumber'>, state: McuState, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<void>;
+    list: (traits: DeviceTraits, onDeviceArrived: (device: WithRequired<NrfutilDevice, 'serialNumber'>) => void, onError: (error: Error) => void, onHotplugEvent?: {
+        onDeviceLeft: (id: number) => void;
+    } | undefined) => CancellableOperation;
+    firmwareRead: (device: WithRequired<NrfutilDevice, 'serialNumber'>, onProgress?: ((progress: Progress) => void) | undefined) => CancelablePromise<Buffer>;
+    onLogging: (handler: (logging: import("./sandboxTypes").LogMessage) => void) => () => ((logging: import("./sandboxTypes").LogMessage) => void)[];
+    setLogLevel: (level: import("./sandboxTypes").LogLevel) => void;
+    setVerboseLogging: (verbose: boolean) => void;
+    getModuleVersion: () => Promise<import("./sandboxTypes").ModuleVersion>;
+}>;
+export default getDeviceLib;

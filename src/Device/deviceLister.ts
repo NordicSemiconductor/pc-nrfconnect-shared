@@ -4,14 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import {
-    Device as NrfdlDevice,
-    DeviceTraits,
-} from '@nordicsemiconductor/nrf-device-lib-js';
-
 import logger from '../logging';
-import { prepareAndCreate } from '../Nrfutil/device';
-import { Device as SandboxDevice } from '../Nrfutil/deviceTypes';
+import getDeviceLib from '../Nrfutil/device';
+import { DeviceTraits, NrfutilDevice } from '../Nrfutil/deviceTypes';
 import { WithRequired } from '../Nrfutil/sandboxTypes';
 import type { AppThunk, RootState } from '../store';
 import {
@@ -102,12 +97,12 @@ const initAutoReconnectTimeout =
     };
 
 /**
- * Wrap the device form nrf-device-lib to make the Device type consistent
+ * Wrap the device form nrfutil-device to make the Device type consistent
  *
- * @param {Device} device The input device from nrf-device-lib
- * @returns {Device} The updated device
+ * @param {NrfutilDevice} device The input device from nrfutil-device
+ * @returns {NrfutilDevice} The updated device
  */
-export const wrapDeviceFromNrfdl = (device: NrfdlDevice): Device => ({
+export const wrapDeviceFromNrfdl = (device: NrfutilDevice): Device => ({
     ...device,
     boardVersion: device.jlink?.boardVersion ?? undefined,
     serialport: device.serialPorts?.[0] ?? undefined,
@@ -115,12 +110,12 @@ export const wrapDeviceFromNrfdl = (device: NrfdlDevice): Device => ({
 });
 
 /**
- * Wrap the device form nrf-device-lib to make the Device type consistent
+ * Wrap the device form nrfutil-device to make the Device type consistent
  *
- * @param {Device[]} devices The input devices from nrf-device-lib
- * @returns {Device[]} The updated devices
+ * @param {NrfutilDevice[]} devices The input devices from nrfutil-device
+ * @returns {NrfutilDevice[]} The updated devices
  */
-export const wrapDevicesFromNrfdl = (devices: NrfdlDevice[]): Device[] =>
+export const wrapDevicesFromNrfdl = (devices: NrfutilDevice[]): Device[] =>
     devices.map(wrapDeviceFromNrfdl);
 
 export const hasValidDeviceTraits = (
@@ -164,7 +159,7 @@ const removeDeviceFromList =
         }
     };
 /*
- * Starts watching for devices with the given traits. See the nrf-device-lib
+ * Starts watching for devices with the given traits. See the nrfutil-device
  * library for available traits. Whenever devices are attached/detached, this
  * will dispatch AddDevice or removeDevice and trigger events.
  */
@@ -178,7 +173,7 @@ export const startWatchingDevices =
     ): AppThunk<RootState, void> =>
     (dispatch, getState) => {
         const onDeviceArrived = (
-            device: WithRequired<SandboxDevice, 'serialNumber'>
+            device: WithRequired<NrfutilDevice, 'serialNumber'>
         ) => {
             if (hasValidDeviceTraits(device.traits, deviceListing)) {
                 device = wrapDeviceFromNrfdl(device);
@@ -335,13 +330,8 @@ export const startWatchingDevices =
         };
 
         stopWatchingDevices(() => {
-            prepareAndCreate(
-                'C:\\Workspace',
-                'device',
-                '1.2.0',
-                console.log
-            ).then(nrfutilDevice => {
-                const operation = nrfutilDevice.list(
+            getDeviceLib().then(deviceLib => {
+                const operation = deviceLib?.list(
                     deviceListing,
                     onDeviceArrived,
                     console.log,
@@ -351,7 +341,6 @@ export const startWatchingDevices =
                 stopNrfutilDevice = (callback?: () => void) => {
                     operation.stop(() => {
                         callback?.();
-                        nrfutilDevice.release();
                     });
                 };
             });
@@ -385,5 +374,6 @@ export const clearWaitForDevice = (): AppThunk => (dispatch, getState) => {
 };
 
 export const stopWatchingDevices = (callback?: () => void) => {
-    stopNrfutilDevice?.(callback);
+    if (stopNrfutilDevice) stopNrfutilDevice(callback);
+    else callback?.();
 };

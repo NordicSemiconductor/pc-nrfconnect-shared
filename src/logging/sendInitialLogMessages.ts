@@ -4,13 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { getModuleVersions } from '@nordicsemiconductor/nrf-device-lib-js';
 import { ipcRenderer } from 'electron';
 
-import {
-    getDeviceLibContext,
-    getModuleVersion,
-} from '../Device/deviceLibWrapper';
+import { getModuleVersion } from '../Device/deviceLibWrapper';
+import getDeviceLib from '../Nrfutil/device';
 import { getAppDataDir } from '../utils/appDirs';
 import describeVersion from '../utils/describeVersion';
 import logLibVersions from '../utils/logLibVersions';
@@ -50,8 +47,10 @@ export default () => {
         logger.debug(`TmpDir: ${tmpDir}`);
 
         if (bundledJlink) {
-            const versions = await getModuleVersions(getDeviceLibContext());
-            const jlinkVersion = getModuleVersion('JlinkARM', versions);
+            const deviceLib = await getDeviceLib();
+            const dependencies = (await deviceLib.getModuleVersion())
+                .dependencies;
+            const jlinkVersion = getModuleVersion('JlinkARM', dependencies);
 
             if (!describeVersion(jlinkVersion).includes(bundledJlink)) {
                 logger.info(

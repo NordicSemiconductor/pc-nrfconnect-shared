@@ -4,75 +4,55 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import nrfDeviceLib, {
-    deviceControlRecover,
-    deviceControlReset,
-    Error as nrfError,
-    firmwareProgram,
-    FirmwareStreamType,
-    readFwInfo,
-} from '@nordicsemiconductor/nrf-device-lib-js';
-
 import logger from '../logging';
+import getDeviceLib from '../Nrfutil/device';
+import { FWInfo } from '../Nrfutil/deviceTypes';
 import type { AppThunk, RootState } from '../store';
-import { getDeviceLibContext } from './deviceLibWrapper';
 import { DeviceSetup, JprogEntry } from './deviceSetup';
 import { Device, setReadbackProtected } from './deviceSlice';
 
 const program = (
-    deviceId: number,
-    firmware: string | Buffer,
+    device: Device,
+    firmware: string,
     onProgress: (progress: number, message?: string) => void
-) => {
-    let fwFormat: FirmwareStreamType;
-    if (firmware instanceof Buffer) {
-        fwFormat = 'NRFDL_FW_BUFFER';
-    } else {
-        fwFormat = 'NRFDL_FW_FILE';
-    }
-    return new Promise<void>((resolve, reject) => {
+) =>
+    new Promise<void>((resolve, reject) => {
         onProgress(0, 'Preparing to program');
-        firmwareProgram(
-            getDeviceLibContext(),
-            deviceId,
-            fwFormat,
-            'NRFDL_FW_INTEL_HEX',
-            firmware,
-            (error?: nrfError) => {
+        getDeviceLib()
+            .then(deviceLib => {
+                deviceLib.program(
+                    device,
+                    firmware,
+                    progress => {
+                        onProgress(
+                            progress.progressPercentage,
+                            progress.message ?? 'programming'
+                        );
+                    },
+                    'Application'
+                );
+            })
+            .catch(error => {
                 if (error) reject(error);
                 logger.info('Device programming completed.');
                 resolve();
-            },
-            progress => {
-                onProgress(
-                    progress.progressJson.progressPercentage,
-                    progress.progressJson.message ?? 'programming'
-                );
-            },
-            null,
-            'NRFDL_DEVICE_CORE_APPLICATION'
-        );
+            });
     });
-};
 
-/**
- * Reset the device after programming
- *
- * @param {Number} deviceId The Id of the device.
- * @returns {Promise} Promise that resolves if successful or rejects with error.
- */
-const reset = async (deviceId: number) => {
-    await deviceControlReset(getDeviceLibContext(), deviceId);
+const reset = async (device: Device) => {
+    const deviceLib = await getDeviceLib();
+    await deviceLib.reset(device);
 };
 
 const getDeviceReadProtection = async (
     device: Device
 ): Promise<{
-    fwInfo: nrfDeviceLib.FWInfo.ReadResult | null;
+    fwInfo: FWInfo | null;
     readbackProtection: 'unknown' | 'protected' | 'unprotected';
 }> => {
     try {
-        const fwInfo = await readFwInfo(getDeviceLibContext(), device.id);
+        const deviceLib = await getDeviceLib();
+        const fwInfo = await deviceLib.fwInfo(device);
         return {
             fwInfo,
             readbackProtection: 'unprotected',
@@ -106,20 +86,18 @@ const programDeviceWithFw =
             if (getState().device.readbackProtection === 'protected') {
                 logger.info('Recovering device');
                 onProgress(0, 'Recovering device');
-                await deviceControlRecover(
-                    getDeviceLibContext(),
-                    device.id,
-                    'NRFDL_DEVICE_CORE_APPLICATION'
-                );
+                getDeviceLib().then(deviceLib => {
+                    deviceLib.recover(device, 'Application');
+                });
             }
 
             logger.debug(
                 `Programming ${device.serialNumber} with ${selectedFw.fw}`
             );
-            await program(device.id, selectedFw.fw, onProgress);
+            await program(device, selectedFw.fw, onProgress);
             logger.debug(`Resetting ${device.serialNumber}`);
             onProgress(100, 'Resetting device');
-            await reset(device.id);
+            await reset(device);
             const { readbackProtection } = await getDeviceReadProtection(
                 device
             );
