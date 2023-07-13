@@ -83,6 +83,8 @@ export {
     getAppSpecificStore as getPersistentStore,
     persistTerminalSettings,
     getPersistedTerminalSettings,
+    persistNickname,
+    getPersistedNickname,
 } from './utils/persistentStore';
 
 export { jprogDeviceSetup } from './Device/jprogOperations';
