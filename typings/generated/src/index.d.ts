@@ -50,7 +50,7 @@ export { default as useHotKey } from './utils/useHotKey';
 export { isDevelopment } from './utils/environment';
 export { currentPane, setCurrentPane } from './App/appLayout';
 export { isLoggingVerbose } from './Log/logSlice';
-export { getAppSpecificStore as getPersistentStore, persistTerminalSettings, getPersistedTerminalSettings, } from './utils/persistentStore';
+export { getAppSpecificStore as getPersistentStore, persistTerminalSettings, getPersistedTerminalSettings, persistNickname, getPersistedNickname, } from './utils/persistentStore';
 export { jprogDeviceSetup } from './Device/jprogOperations';
 export { sdfuDeviceSetup } from './Device/sdfuOperations';
 export { selectedDevice, getReadbackProtection, persistSerialPortOptions, type Device, } from './Device/deviceSlice';
