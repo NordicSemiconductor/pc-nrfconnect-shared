@@ -42,8 +42,7 @@ const NrfutilSandbox = (
         const env = { ...process.env };
         env.NRFUTIL_HOME = path.join(
             baseDir,
-            'nrfutil',
-            'sandbox',
+            'nrfutil-sandboxes',
             module,
             version
         );
@@ -135,8 +134,7 @@ const NrfutilSandbox = (
                 fs.existsSync(
                     path.join(
                         baseDir,
-                        'nrfutil',
-                        'sandbox',
+                        'nrfutil-sandboxes',
                         module,
                         version,
                         'bin',
