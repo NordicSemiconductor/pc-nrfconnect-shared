@@ -53,7 +53,9 @@ export { isLoggingVerbose } from './Log/logSlice';
 export { getAppSpecificStore as getPersistentStore, persistTerminalSettings, getPersistedTerminalSettings, persistNickname, getPersistedNickname, } from './utils/persistentStore';
 export { jprogDeviceSetup } from './Device/jprogOperations';
 export { sdfuDeviceSetup } from './Device/sdfuOperations';
-export type { DeviceTraits } from './Nrfutil/deviceTypes';
+export type { Progress } from './Nrfutil/sandboxTypes';
+export type { DeviceCore, DeviceTraits, ProtectionStatus, DeviceCoreInfo, SerialPort as DeviceSerialPort, ImageType as FWInfoImageType, } from './Nrfutil/deviceTypes';
+export { default as getDeviceLib } from './Nrfutil/device';
 export { selectedDevice, getReadbackProtection, persistSerialPortOptions, type Device, } from './Device/deviceSlice';
 export { setWaitForDevice, getAutoReselect, getWaitingForDeviceTimeout, getWaitingToAutoReselect, getWaitForDevice, } from './Device/deviceAutoSelectSlice';
 export { clearWaitForDevice } from './Device/deviceLister';
@@ -67,5 +69,5 @@ export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSe
 export { openAppWindow } from './OpenApp/openApp';
 export type { AppDispatch, AppThunk, NrfConnectState } from './store';
 export { type DeviceSetupConfig, type DeviceSetup, prepareDevice, } from './Device/deviceSetup';
-export type { AppInfo, AppVersions, PackageJson, SourceJson, } from './utils/AppTypes';
+export type { AppInfo, AppVersions, PackageJson, SourceJson, WithRequired, } from './utils/AppTypes';
 export { addNewMessage, newCopiedFlashMessage, newInfoFlashMessage, newWarningFlashMessage, newErrorFlashMessage, newSuccessFlashMessage, } from './FlashMessage/FlashMessageSlice';

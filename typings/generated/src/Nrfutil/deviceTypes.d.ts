@@ -59,17 +59,34 @@ export interface GetProtectionStatusResult {
     protectionStatus: ProtectionStatus;
     serialNumber: string;
 }
+export type DeviceCoreInfo = {
+    name: 'core-info';
+    codeAddress: number;
+    codePageSize: number;
+    codeSize: number;
+    uicrAddress: number;
+    infoPageSize: number;
+    codeRamPresent: boolean;
+    codeRamAddress: number;
+    dataRamAddress: number;
+    ramSize: number;
+    qspiPresent: boolean;
+    xipAddress: number;
+    xipSize: number;
+    pinResetPin: number;
+    serialNumber: string;
+};
 export interface JLinkProgrammingOptions {
-    chipEraseMode: 'ERASE_ALL' | 'ERASE_NONE';
-    reset: 'RESET_DEBUG' | 'RESET_HARD' | 'RESET_NONE' | 'RESET_PIN' | 'RESET_SYSTEM';
-    verify: 'VERIFY_HASH' | 'VERIFY_NONE' | 'VERIFY_READ';
+    chipEraseMode?: 'ERASE_ALL' | 'ERASE_NONE';
+    reset?: 'RESET_DEBUG' | 'RESET_HARD' | 'RESET_NONE' | 'RESET_PIN' | 'RESET_SYSTEM';
+    verify?: 'VERIFY_HASH' | 'VERIFY_NONE' | 'VERIFY_READ';
 }
 export interface McuBootProgrammingOptions {
-    mcuEndState: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
-    net_core_upload_delay: number;
+    mcuEndState?: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
+    netCoreUploadDelay?: number;
 }
 export interface NordicDfuProgrammingOptions {
-    mcuEndState: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
+    mcuEndState?: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
 }
 export type BootloaderType = 'NRFDL_BOOTLOADER_TYPE_NONE' | 'NRFDL_BOOTLOADER_TYPE_MCUBOOT' | 'NRFDL_BOOTLOADER_TYPE_SDFU' | 'NRFDL_BOOTLOADER_TYPE_B0' | 'NRFDL_BOOTLOADER_TYPE_UNKNOWN';
 export type ImageType = 'NRFDL_IMAGE_TYPE_APPLICATION' | 'NRFDL_IMAGE_TYPE_BOOTLOADER' | 'NRFDL_IMAGE_TYPE_SOFTDEVICE' | 'NRFDL_IMAGE_TYPE_OPERATIVE_SYSTEM' | 'NRFDL_IMAGE_TYPE_GENERIC' | 'NRFDL_IMAGE_TYPE_UNKNOWN';

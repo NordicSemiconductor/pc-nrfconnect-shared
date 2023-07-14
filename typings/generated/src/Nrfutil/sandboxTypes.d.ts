@@ -1,10 +1,7 @@
-export type WithRequired<T, K extends keyof T> = T & {
-    [P in K]-?: T[P];
-};
 export type CancellableOperation = {
-    stop: (callback?: (code: number | null) => void) => void;
+    stop: (callback?: (error?: Error) => void) => void;
     isRunning: () => boolean;
-    onClosed: (handler: (code: number | null) => void) => () => void;
+    onClosed: (handler: (error?: Error) => void) => () => void;
 };
 export interface BackgroundTask<T> {
     onError: (error: Error) => void;
@@ -32,10 +29,22 @@ export type TaskProgress = {
     task: Task;
     progress: Progress;
 };
-export type NrfutilJson<T> = {
-    type: 'task_begin' | 'task_progress' | 'task_end' | 'info' | 'log';
-    data: T;
+type NrfutilJsonProgress = {
+    type: 'task_progress';
+    data: TaskProgress;
 };
+type NrfutilJsonLog = {
+    type: 'log';
+    data: LogMessage;
+};
+type NrfutilJsonEnd<T> = {
+    type: 'task_end';
+    data: TaskEnd<T>;
+};
+export type NrfutilJson<T = unknown> = {
+    type: 'task_begin' | 'info';
+    data: T;
+} | NrfutilJsonEnd<T> | NrfutilJsonProgress | NrfutilJsonLog;
 export type Progress = {
     progressPercentage: number;
     message?: string;
@@ -66,7 +75,7 @@ export type Plugin = {
     dependencies: Dependency[];
     name: string;
     versionFormat: VersionFormat;
-    version: VersionTypes;
+    version: VersionType;
 };
 export type Dependency = {
     classification?: FeatureClassification;
@@ -74,15 +83,15 @@ export type Dependency = {
     plugins?: Plugin[];
     dependencies?: SubDependency[];
     versionFormat: VersionFormat;
-    version: VersionTypes;
+    version: VersionType;
 };
-export type VersionTypes = SemanticVersion | string | number;
+export type VersionType = SemanticVersion | string | number;
 export interface SubDependency {
     name: string;
     description?: string;
-    dependencies?: Dependency[];
+    dependencies?: SubDependency[];
     versionFormat: VersionFormat;
-    version: VersionTypes;
+    version: VersionType;
 }
 export type ModuleVersion = {
     build_timestamp: string;

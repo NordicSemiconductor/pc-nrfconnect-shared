@@ -1,3 +1,4 @@
+export type WithRequired<T, K extends keyof T> = T & Required<Pick<T, K>>;
 export interface SourceJson {
     name: string;
     apps: string[];
@@ -36,6 +37,9 @@ export interface PackageJson {
     devDependencies?: ObjectContainingOptionalStrings;
     displayName?: string;
     engines?: ObjectContainingOptionalStrings;
+    nrfutil?: {
+        [index: string]: string[] | undefined;
+    };
     files?: readonly string[];
     license?: string;
     main?: string;
