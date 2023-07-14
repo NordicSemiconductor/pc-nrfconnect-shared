@@ -1,5 +1,5 @@
 import React from 'react';
-export type ButtonVariants = 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'danger' | 'link' | 'custom';
+export type ButtonVariants = 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'danger' | 'link';
 type ButtonProps = {
     id?: string;
     variant: ButtonVariants;

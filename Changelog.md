@@ -7,6 +7,16 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 73 - 2023-07-14
+
+### Removed
+
+-   `custom` variant for the `Button` component.
+
+### Steps to upgrade when using this package
+
+-   `custom` variant `Button`s have to be replaced with `button` elements.
+
 ## 72 - 2023-07-13
 
 ### Added
