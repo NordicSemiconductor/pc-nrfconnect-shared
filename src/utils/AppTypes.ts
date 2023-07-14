@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
+export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
 
 export interface SourceJson {
     name: string;

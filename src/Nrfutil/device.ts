@@ -29,7 +29,8 @@ import {
     ProgrammingOptions,
 } from './deviceTypes';
 import { type NrfutilSandboxType, prepareAndCreate } from './sandbox';
-import { CancellableOperation, Progress, WithRequired } from './sandboxTypes';
+import { CancellableOperation, Progress } from './sandboxTypes';
+import { WithRequired } from '../utils/AppTypes';
 
 export type NrfUtilDeviceType = ReturnType<typeof NrfUtilDevice>;
 
@@ -265,13 +266,18 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
 
     const firmwareRead = (
         device: WithRequired<NrfutilDevice, 'serialNumber'>,
+        core?: DeviceCore,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<Buffer> =>
         new CancelablePromise<Buffer>((resolve, reject, onCancel) => {
             const operation = sandbox
                 .execSubcommand<DeviceBuffer>(
                     'fw-read',
-                    ['--serial-number', device.serialNumber],
+                    [
+                        '--serial-number',
+                        device.serialNumber,
+                        ...(core ? ['--core', core] : []),
+                    ],
                     onProgress
                 )
                 .then(results => {
@@ -313,6 +319,7 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
 
     const getProtectionStatus = (
         device: WithRequired<NrfutilDevice, 'serialNumber'>,
+        core?: DeviceCore,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<GetProtectionStatusResult> =>
         new CancelablePromise<GetProtectionStatusResult>(
@@ -320,7 +327,11 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
                 const operation = sandbox
                     .execSubcommand<GetProtectionStatusResult>(
                         'protection-get',
-                        ['--serial-number', device.serialNumber],
+                        [
+                            '--serial-number',
+                            device.serialNumber,
+                            ...(core ? ['--core', core] : []),
+                        ],
                         onProgress
                     )
                     .then(results => {

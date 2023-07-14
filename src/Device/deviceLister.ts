@@ -7,8 +7,8 @@
 import logger from '../logging';
 import getDeviceLib from '../Nrfutil/device';
 import { DeviceTraits, NrfutilDevice } from '../Nrfutil/deviceTypes';
-import { WithRequired } from '../Nrfutil/sandboxTypes';
 import type { AppThunk, RootState } from '../store';
+import { WithRequired } from '../utils/AppTypes';
 import {
     clearWaitForDeviceTimeout,
     setArrivedButWrongWhen,
