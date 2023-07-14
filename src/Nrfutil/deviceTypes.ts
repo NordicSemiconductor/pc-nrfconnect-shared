@@ -110,23 +110,23 @@ export type DeviceCoreInfo = {
 };
 
 export interface JLinkProgrammingOptions {
-    chipEraseMode: 'ERASE_ALL' | 'ERASE_NONE';
-    reset:
+    chipEraseMode?: 'ERASE_ALL' | 'ERASE_NONE';
+    reset?:
         | 'RESET_DEBUG'
         | 'RESET_HARD'
         | 'RESET_NONE'
         | 'RESET_PIN'
         | 'RESET_SYSTEM';
-    verify: 'VERIFY_HASH' | 'VERIFY_NONE' | 'VERIFY_READ';
+    verify?: 'VERIFY_HASH' | 'VERIFY_NONE' | 'VERIFY_READ';
 }
 
 export interface McuBootProgrammingOptions {
-    mcuEndState: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
-    netCoreUploadDelay: number;
+    mcuEndState?: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
+    netCoreUploadDelay?: number;
 }
 
 export interface NordicDfuProgrammingOptions {
-    mcuEndState: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
+    mcuEndState?: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
 }
 
 export type BootloaderType =
