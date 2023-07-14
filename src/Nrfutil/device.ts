@@ -12,6 +12,7 @@ import { v4 as uuid } from 'uuid';
 
 import logger from '../logging';
 import { getAppDataDir } from '../utils/appDirs';
+import { WithRequired } from '../utils/AppTypes';
 import {
     getIsLoggingVerbose,
     persistIsLoggingVerbose,
@@ -19,6 +20,7 @@ import {
 import {
     DeviceBuffer,
     DeviceCore,
+    DeviceCoreInfo,
     DeviceTraits,
     FWInfo,
     GetProtectionStatusResult,
@@ -30,7 +32,6 @@ import {
 } from './deviceTypes';
 import { type NrfutilSandboxType, prepareAndCreate } from './sandbox';
 import { CancellableOperation, Progress } from './sandboxTypes';
-import { WithRequired } from '../utils/AppTypes';
 
 export type NrfUtilDeviceType = ReturnType<typeof NrfUtilDevice>;
 
@@ -264,6 +265,36 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
             onCancel(operation.cancel);
         });
 
+    const coreInfo = (
+        device: WithRequired<NrfutilDevice, 'serialNumber'>,
+        core?: DeviceCore,
+        onProgress?: (progress: Progress) => void
+    ): CancelablePromise<DeviceCoreInfo> =>
+        new CancelablePromise<DeviceCoreInfo>((resolve, reject, onCancel) => {
+            const operation = sandbox
+                .execSubcommand<DeviceCoreInfo>(
+                    'core-info',
+                    [
+                        '--serial-number',
+                        device.serialNumber,
+                        ...(core ? ['--core', core] : []),
+                    ],
+                    onProgress
+                )
+                .then(results => {
+                    if (
+                        results.taskEnd.length === 1 &&
+                        results.taskEnd[0].data
+                    ) {
+                        resolve(results.taskEnd[0].data);
+                    } else {
+                        reject(new Error('Unexpected result'));
+                    }
+                })
+                .catch(reject);
+
+            onCancel(operation.cancel);
+        });
     const firmwareRead = (
         device: WithRequired<NrfutilDevice, 'serialNumber'>,
         core?: DeviceCore,
@@ -389,6 +420,7 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
         setProtectionStatus,
         fwInfo,
         setMcuState,
+        coreInfo,
         list,
         firmwareRead,
         onLogging: sandbox.onLogging,

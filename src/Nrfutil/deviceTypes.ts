@@ -91,6 +91,24 @@ export interface GetProtectionStatusResult {
     serialNumber: string;
 }
 
+export type DeviceCoreInfo = {
+    name: 'core-info';
+    codeAddress: number;
+    codePageSize: number;
+    codeSize: number;
+    uicrAddress: number;
+    infoPageSize: number;
+    codeRamPresent: boolean;
+    codeRamAddress: number;
+    dataRamAddress: number;
+    ramSize: number;
+    qspiPresent: boolean;
+    xipAddress: number;
+    xipSize: number;
+    pinResetPin: number;
+    serialNumber: string;
+};
+
 export interface JLinkProgrammingOptions {
     chipEraseMode: 'ERASE_ALL' | 'ERASE_NONE';
     reset:
