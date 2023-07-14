@@ -8,7 +8,6 @@ import React, { FC } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { setCurrentPane } from '../App/appLayout';
-import Button from '../Button/Button';
 import classNames from '../utils/classNames';
 
 import './nav-menu-item.scss';
@@ -23,8 +22,8 @@ const NavMenuItem: FC<Props> = ({ index, isSelected, label }) => {
     const dispatch = useDispatch();
 
     return (
-        <Button
-            variant="custom"
+        <button
+            type="button"
             className={classNames(
                 'core19-nav-menu-item',
                 isSelected && 'selected',
@@ -33,7 +32,7 @@ const NavMenuItem: FC<Props> = ({ index, isSelected, label }) => {
             onClick={() => dispatch(setCurrentPane(index))}
         >
             {label}
-        </Button>
+        </button>
     );
 };
 

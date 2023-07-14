@@ -17,8 +17,7 @@ export type ButtonVariants =
     | 'info'
     | 'warning'
     | 'danger'
-    | 'link'
-    | 'custom';
+    | 'link';
 
 type ButtonProps = {
     id?: string;
@@ -44,7 +43,7 @@ const Button: React.FC<ButtonProps> = ({
         type="button"
         id={id}
         className={classNames(
-            variant !== 'custom' && styles.button,
+            styles.button,
             large && styles.large,
             styles[variant],
             className
