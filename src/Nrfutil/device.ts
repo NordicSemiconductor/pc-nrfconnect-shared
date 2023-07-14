@@ -25,8 +25,11 @@ import {
     FWInfo,
     GetProtectionStatusResult,
     HotplugEvent,
+    JLinkProgrammingOptions,
     ListEvent,
+    McuBootProgrammingOptions,
     McuState,
+    NordicDfuProgrammingOptions,
     NrfutilDevice,
     ProgrammingOptions,
 } from './deviceTypes';
@@ -42,6 +45,22 @@ const isHotplugEvent = (
 const isListEvent = (event: HotplugEvent | ListEvent): event is ListEvent =>
     (event as ListEvent).devices !== undefined;
 
+const isJLinkProgrammingOptions = (
+    options: ProgrammingOptions
+): options is JLinkProgrammingOptions =>
+    (options as JLinkProgrammingOptions).chipEraseMode !== undefined;
+
+const isMcuBootProgrammingOptions = (
+    options: ProgrammingOptions
+): options is McuBootProgrammingOptions =>
+    (options as McuBootProgrammingOptions).netCoreUploadDelay !== undefined;
+
+const isNordicDfuProgrammingOptions = (
+    options: ProgrammingOptions
+): options is NordicDfuProgrammingOptions =>
+    !isMcuBootProgrammingOptions(options) &&
+    (options as NordicDfuProgrammingOptions).mcuEndState !== undefined;
+
 const deviceTraitsToArgs = (traits: DeviceTraits) => {
     const args: string[] = [];
     const traitsString = Object.keys(traits)
@@ -55,6 +74,33 @@ const deviceTraitsToArgs = (traits: DeviceTraits) => {
     }
 
     return args;
+};
+
+const programmingOptionsToArgs = (options?: ProgrammingOptions) => {
+    if (!options) return [];
+
+    const args: string[] = [];
+
+    if (isJLinkProgrammingOptions(options)) {
+        if (options.chipEraseMode)
+            args.push(`chip_erase_mode=${options.chipEraseMode}`);
+        if (options.reset) args.push(`reset=${options.reset}`);
+        if (options.verify) args.push(`verify=${options.verify}`);
+    } else if (isMcuBootProgrammingOptions(options)) {
+        if (options.mcuEndState)
+            args.push(`mcu_end_state=${options.mcuEndState}`);
+        if (options.netCoreUploadDelay)
+            args.push(
+                `net_core_upload_delay=${Math.round(
+                    options.netCoreUploadDelay
+                )}`
+            );
+    } else if (isNordicDfuProgrammingOptions(options)) {
+        if (options.mcuEndState)
+            args.push(`mcu_end_state=${options.mcuEndState}`);
+    }
+
+    return args.length > 0 ? ['--options ', `${args.join(',')}`] : [];
 };
 
 const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
@@ -112,7 +158,7 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
         firmwarePath: string,
         onProgress?: (progress: Progress) => void,
         core?: DeviceCore,
-        programmingOptions?: ProgrammingOptions[]
+        programmingOptions?: ProgrammingOptions
     ): CancelablePromise<void> =>
         new CancelablePromise<void>((resolve, reject, onCancel) => {
             // Validate trait with ProgrammingOptions type !!
@@ -130,9 +176,7 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
                         device.serialNumber,
                         ...args,
                         ...(core ? ['--core', core] : []),
-                        ...(programmingOptions && programmingOptions?.length > 0
-                            ? ['--options', programmingOptions.join(',')]
-                            : []),
+                        ...programmingOptionsToArgs(programmingOptions),
                     ],
                     onProgress
                 )
@@ -148,7 +192,7 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
         type: 'hex' | 'zip',
         onProgress?: (progress: Progress) => void,
         core?: DeviceCore,
-        programmingOptions?: ProgrammingOptions[]
+        programmingOptions?: ProgrammingOptions
     ): CancelablePromise<void> =>
         new CancelablePromise<void>((resolve, reject, onCancel) => {
             const saveTemp = (): string => {

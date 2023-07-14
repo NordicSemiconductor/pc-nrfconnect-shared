@@ -122,7 +122,7 @@ export interface JLinkProgrammingOptions {
 
 export interface McuBootProgrammingOptions {
     mcuEndState: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
-    net_core_upload_delay: number;
+    netCoreUploadDelay: number;
 }
 
 export interface NordicDfuProgrammingOptions {
