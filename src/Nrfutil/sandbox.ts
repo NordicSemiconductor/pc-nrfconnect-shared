@@ -27,10 +27,12 @@ import {
 export type NrfutilSandboxType = ReturnType<typeof NrfutilSandbox>;
 
 const parseJsonBuffers = <T>(data: Buffer): T[] | undefined => {
+    const dataString = data.toString().trim();
+    if (!dataString.endsWith('}')) {
+        return undefined;
+    }
     try {
-        return (
-            JSON.parse(`[${data.toString().replaceAll('}\n{', '}\n,{')}]`) ?? []
-        );
+        return JSON.parse(`[${dataString.replaceAll('}\n{', '}\n,{')}]`) ?? [];
     } catch {
         return undefined;
     }
