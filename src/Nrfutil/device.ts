@@ -488,7 +488,7 @@ const getDeviceLib = () =>
             promiseDeviceLib = prepareAndCreate<NrfUtilDeviceType>(
                 path.join(getAppDataDir(), '../'),
                 'device',
-                '1.2.0',
+                process.env.NRF_DEVICE_VERSION ?? '1.2.0',
                 NrfUtilDevice
             );
         }
