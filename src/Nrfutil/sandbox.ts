@@ -26,8 +26,15 @@ import {
 
 export type NrfutilSandboxType = ReturnType<typeof NrfutilSandbox>;
 
-const parseJsonBuffers = <T>(data: Buffer): T[] =>
-    JSON.parse(`[${data.toString().replaceAll('}\n{', '}\n,{')}]`) ?? [];
+const parseJsonBuffers = <T>(data: Buffer): T[] | undefined => {
+    try {
+        return (
+            JSON.parse(`[${data.toString().replaceAll('}\n{', '}\n,{')}]`) ?? []
+        );
+    } catch {
+        return undefined;
+    }
+};
 
 const NrfutilSandbox = (
     baseDir: string,
@@ -89,8 +96,14 @@ const NrfutilSandbox = (
             onTaskEnd?: (taskEnd: TaskEnd<Result>) => void;
             onLogging?: (logging: LogMessage) => void;
         }
-    ) => {
-        const parsedData: NrfutilJson<Result>[] = parseJsonBuffers(data);
+    ): Buffer | undefined => {
+        const parsedData: NrfutilJson<Result>[] | undefined =
+            parseJsonBuffers(data);
+
+        if (!parsedData) {
+            return data;
+        }
+
         parsedData.forEach(item => {
             switch (item.type) {
                 case 'task_progress':
@@ -256,7 +269,7 @@ const NrfutilSandbox = (
     const execCommand = (
         command: string,
         args: string[],
-        parser: (data: Buffer) => void,
+        parser: (data: Buffer) => Buffer | undefined,
         onStdError: (data: Buffer) => void
     ): CancelablePromise<void> =>
         new CancelablePromise<void>((resolve, reject, onCancel) => {
@@ -275,8 +288,16 @@ const NrfutilSandbox = (
                 }
             );
 
+            let buffer = Buffer.from('');
+
             nrfutil.stdout.on('data', (data: Buffer) => {
-                parser(data);
+                buffer = Buffer.concat([buffer, data]);
+                const remainingBytes = parser(buffer);
+                if (remainingBytes) {
+                    buffer = remainingBytes;
+                } else {
+                    buffer = Buffer.from('');
+                }
             });
 
             nrfutil.stderr.on('data', (data: Buffer) => {
@@ -306,8 +327,12 @@ const NrfutilSandbox = (
             module,
             [command, ...args],
             data => {
-                const parsedData: NrfutilJson<unknown>[] =
+                const parsedData: NrfutilJson<unknown>[] | undefined =
                     parseJsonBuffers(data);
+
+                if (!parsedData) {
+                    return data;
+                }
 
                 parsedData.forEach(item => {
                     if (!processLoggingData(item)) {
