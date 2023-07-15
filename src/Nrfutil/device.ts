@@ -106,11 +106,14 @@ const programmingOptionsToArgs = (options?: ProgrammingOptions) => {
 const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
     const list = (
         traits: DeviceTraits,
-        onDeviceArrived: (
+        onEnumerated: (
             device: WithRequired<NrfutilDevice, 'serialNumber'>
         ) => void,
         onError: (error: Error) => void,
         onHotplugEvent?: {
+            onDeviceArrived: (
+                device: WithRequired<NrfutilDevice, 'serialNumber'>
+            ) => void;
             onDeviceLeft: (id: number) => void;
         }
     ): CancellableOperation => {
@@ -125,23 +128,23 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
             if (isListEvent(data)) {
                 data.devices.forEach(d => {
                     if (d.serialNumber)
-                        onDeviceArrived(
+                        onEnumerated(
                             d as WithRequired<NrfutilDevice, 'serialNumber'>
                         );
                 });
-            } else if (isHotplugEvent(data)) {
+            } else if (onHotplugEvent && isHotplugEvent(data)) {
                 if (
                     data.event === 'Arrived' &&
                     data.device &&
                     data.device.serialNumber
                 ) {
-                    onDeviceArrived(
+                    onHotplugEvent.onDeviceArrived(
                         data.device as WithRequired<
                             NrfutilDevice,
                             'serialNumber'
                         >
                     );
-                } else if (data.event === 'Left' && onHotplugEvent) {
+                } else if (data.event === 'Left') {
                     onHotplugEvent.onDeviceLeft(data.id);
                 }
             }

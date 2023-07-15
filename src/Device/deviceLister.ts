@@ -335,7 +335,7 @@ export const startWatchingDevices =
                     deviceListing,
                     onDeviceArrived,
                     console.log,
-                    { onDeviceLeft }
+                    { onDeviceArrived, onDeviceLeft }
                 );
 
                 stopNrfutilDevice = (callback?: () => void) => {
