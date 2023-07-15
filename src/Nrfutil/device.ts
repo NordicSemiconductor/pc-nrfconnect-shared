@@ -163,8 +163,7 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
         new CancelablePromise<void>((resolve, reject, onCancel) => {
             // Validate trait with ProgrammingOptions type !!
 
-            const args: string[] = [];
-            args.concat(deviceTraitsToArgs(device.traits));
+            const args: string[] = deviceTraitsToArgs(device.traits);
 
             const operation = sandbox
                 .execSubcommand(
