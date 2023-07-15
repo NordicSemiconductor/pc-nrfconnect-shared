@@ -236,10 +236,12 @@ const NrfutilSandbox = (
                         }
 
                         if (stdErr) {
-                            msg += `\nError: ${stdErr}`;
+                            msg += `\n${stdErr}`;
                         }
 
-                        reject(new Error(msg));
+                        error.message = msg;
+
+                        reject(error);
                     });
 
                 onCancel(operation.cancel);
