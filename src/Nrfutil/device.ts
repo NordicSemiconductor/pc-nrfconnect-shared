@@ -266,13 +266,18 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
 
     const fwInfo = (
         device: WithRequired<NrfutilDevice, 'serialNumber'>,
+        core?: DeviceCore,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<FWInfo> =>
         new CancelablePromise<FWInfo>((resolve, reject, onCancel) => {
             const operation = sandbox
                 .execSubcommand<FWInfo>(
                     'fw-info',
-                    ['--serial-number', device.serialNumber],
+                    [
+                        '--serial-number',
+                        device.serialNumber,
+                        ...(core ? ['--core', core] : []),
+                    ],
                     onProgress
                 )
                 .then(results => {
@@ -376,13 +381,18 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
 
     const erase = (
         device: WithRequired<NrfutilDevice, 'serialNumber'>,
+        core?: DeviceCore,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<void> =>
         new CancelablePromise<void>((resolve, reject, onCancel) => {
             const operation = sandbox
                 .execSubcommand(
                     'erase',
-                    ['--serial-number', device.serialNumber],
+                    [
+                        '--serial-number',
+                        device.serialNumber,
+                        ...(core ? ['--core', core] : []),
+                    ],
                     onProgress
                 )
                 .then(() => resolve())
@@ -427,6 +437,7 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
     const setProtectionStatus = (
         device: WithRequired<NrfutilDevice, 'serialNumber'>,
         region: 'All' | 'SecureRegions' | 'Region0' | 'Region0Region1',
+        core?: DeviceCore,
         onProgress?: (progress: Progress) => void
     ): CancelablePromise<GetProtectionStatusResult> =>
         new CancelablePromise<GetProtectionStatusResult>(
@@ -434,7 +445,12 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
                 const operation = sandbox
                     .execSubcommand<GetProtectionStatusResult>(
                         'protection-set',
-                        [region, '--serial-number', device.serialNumber],
+                        [
+                            region,
+                            '--serial-number',
+                            device.serialNumber,
+                            ...(core ? ['--core', core] : []),
+                        ],
                         onProgress
                     )
                     .then(results => {
