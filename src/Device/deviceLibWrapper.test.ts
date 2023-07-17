@@ -61,10 +61,6 @@ const exampleModuleVersions: Dependency[] = [
 describe('finding module versions', () => {
     test('in nested dependencies', () => {
         expect(getModuleVersion('JlinkARM', exampleModuleVersions)).toEqual({
-            expectedVersion: {
-                version: 'JLink_V7.66a',
-                versionFormat: 'string' as const,
-            },
             name: 'JlinkARM',
             version: 'JLink_V7.66a',
             versionFormat: 'string' as const,
