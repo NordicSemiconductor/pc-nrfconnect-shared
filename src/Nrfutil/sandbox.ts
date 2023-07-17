@@ -11,6 +11,7 @@ import os from 'os';
 import path from 'path';
 
 import logger from '../logging';
+import packageJson from '../utils/packageJson';
 import {
     BackgroundTask,
     CancellableOperation,
@@ -393,11 +394,21 @@ const NrfutilSandbox = (
 export const prepareSandbox = (
     baseDir: string,
     module: string,
-    version: string,
+    version?: string,
     setting?: NrfUtilSettings
 ) =>
     new Promise<NrfutilSandboxType>((resolve, reject) => {
-        const sandbox = NrfutilSandbox(baseDir, module, version, setting);
+        const moduleVersions = packageJson().nrfutil?.[module];
+        if (!version && (!moduleVersions || moduleVersions.length === 0)) {
+            throw new Error(`No version specified for nrfutil-${module}`);
+        }
+
+        const sandbox = NrfutilSandbox(
+            baseDir,
+            module,
+            version ?? (moduleVersions?.[0] as string),
+            setting
+        );
 
         sandbox
             .isSandboxInstalled()
@@ -418,12 +429,18 @@ export const prepareSandbox = (
 export const prepareAndCreate = <Module>(
     baseDir: string,
     module: string,
-    version: string,
     createModule: (sandbox: NrfutilSandboxType) => Module,
+    version?: string,
     setting?: NrfUtilSettings
-) =>
-    new Promise<Module>((resolve, reject) => {
+) => {
+    const moduleVersions = packageJson().nrfutil?.[module];
+    if (!version && (!moduleVersions || moduleVersions.length === 0)) {
+        throw new Error(`No version specified for nrfutil-${module}`);
+    }
+
+    return new Promise<Module>((resolve, reject) => {
         prepareSandbox(baseDir, module, version, setting)
             .then(sandbox => resolve(createModule(sandbox)))
             .catch(reject);
     });
+};
