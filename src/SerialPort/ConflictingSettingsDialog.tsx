@@ -49,10 +49,10 @@ const ConflictingSettingsDialog = ({
         useState<SerialPortOpenOptions<AutoDetectTypes>>();
 
     useEffect(() => {
-        if (!activeSettings) {
+        if (!isVisible) {
             getCurrentOptions(localSettings.path, setSettings);
         }
-    }, [isVisible, activeSettings, localSettings.path]);
+    }, [isVisible, localSettings.path]);
 
     const connectToSelectedSerialPort = async (
         overwrite: boolean,
