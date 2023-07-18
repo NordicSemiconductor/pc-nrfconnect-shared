@@ -76,7 +76,6 @@ export default () => {
                             deviceLib.setVerboseLogging(!verboseLogging);
                         });
                         dispatch(toggleIsLoggingVerbose());
-                        persistIsLoggingVerbose(!verboseLogging);
                     }}
                     isToggled={verboseLogging}
                     variant="primary"

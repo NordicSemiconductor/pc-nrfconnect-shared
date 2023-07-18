@@ -13,7 +13,10 @@ import { v4 as uuid } from 'uuid';
 import logger from '../logging';
 import { getAppDataDir } from '../utils/appDirs';
 import { WithRequired } from '../utils/AppTypes';
-import { getIsLoggingVerbose } from '../utils/persistentStore';
+import {
+    getIsLoggingVerbose,
+    persistIsLoggingVerbose,
+} from '../utils/persistentStore';
 import {
     DeviceBuffer,
     DeviceCore,
@@ -531,6 +534,8 @@ const getDeviceLib = () =>
                             }
                         });
                         lib.setVerboseLogging(getIsLoggingVerbose());
+                        // Only the first reset after selecting "reset with verbose logging" is relevant
+                        persistIsLoggingVerbose(false);
                         deviceLib = lib;
                         res(lib);
                     })
