@@ -501,42 +501,44 @@ const getDeviceLib = () =>
         }
 
         if (!promiseDeviceLib) {
-            promiseDeviceLib = prepareAndCreate<NrfUtilDeviceType>(
-                path.join(getAppDataDir(), '../'),
-                'device',
-                NrfUtilDevice
-            );
+            promiseDeviceLib = new Promise<NrfUtilDeviceType>((res, rej) => {
+                prepareAndCreate<NrfUtilDeviceType>(
+                    path.join(getAppDataDir(), '../'),
+                    'device',
+                    NrfUtilDevice
+                )
+                    .then(lib => {
+                        lib.onLogging(evt => {
+                            switch (evt.level) {
+                                case 'TRACE':
+                                    logger.verbose(evt.message);
+                                    break;
+                                case 'DEBUG':
+                                    logger.debug(evt.message);
+                                    break;
+                                case 'INFO':
+                                    logger.info(evt.message);
+                                    break;
+                                case 'WARN':
+                                    logger.warn(evt.message);
+                                    break;
+                                case 'ERROR':
+                                    logger.error(evt.message);
+                                    break;
+                                case 'CRITICAL':
+                                    logger.error(evt.message);
+                                    break;
+                            }
+                        });
+                        lib.setVerboseLogging(getIsLoggingVerbose());
+                        deviceLib = lib;
+                        res(lib);
+                    })
+                    .catch(rej);
+            });
         }
 
-        promiseDeviceLib
-            .then(lib => {
-                lib.onLogging(evt => {
-                    switch (evt.level) {
-                        case 'TRACE':
-                            logger.verbose(evt.message);
-                            break;
-                        case 'DEBUG':
-                            logger.debug(evt.message);
-                            break;
-                        case 'INFO':
-                            logger.info(evt.message);
-                            break;
-                        case 'WARN':
-                            logger.warn(evt.message);
-                            break;
-                        case 'ERROR':
-                            logger.error(evt.message);
-                            break;
-                        case 'CRITICAL':
-                            logger.error(evt.message);
-                            break;
-                    }
-                });
-                lib.setVerboseLogging(getIsLoggingVerbose());
-                deviceLib = lib;
-                resolve(lib);
-            })
-            .catch(reject);
+        promiseDeviceLib.then(resolve).catch(reject);
     });
 
 export default getDeviceLib;
