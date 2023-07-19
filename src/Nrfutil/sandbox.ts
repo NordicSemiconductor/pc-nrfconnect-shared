@@ -113,7 +113,7 @@ const NrfutilSandbox = (
                     callbacks.onTaskEnd?.(item.data);
                     break;
                 case 'info':
-                    callbacks.onInfo?.(item.data as unknown as Result);
+                    callbacks.onInfo?.(item.data);
                     break;
                 case 'log':
                     callbacks.onLogging?.(item.data);
@@ -323,7 +323,7 @@ const NrfutilSandbox = (
             module,
             [command, ...args],
             data => {
-                const parsedData: NrfutilJson[] | undefined =
+                const parsedData: NrfutilJson<Result>[] | undefined =
                     parseJsonBuffers(data);
 
                 if (!parsedData) {
@@ -333,7 +333,7 @@ const NrfutilSandbox = (
                 parsedData.forEach(item => {
                     if (!processLoggingData(item)) {
                         if (item.type === 'info') {
-                            processors.onData(item.data as unknown as Result);
+                            processors.onData(item.data);
                         }
                     }
                 });
