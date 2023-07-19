@@ -62,6 +62,10 @@ export interface NrfutilDevice {
     };
 }
 
+export interface NrfutilDeviceWithSerialnumber extends NrfutilDevice {
+    serialNumber: string;
+}
+
 export interface DeviceBuffer {
     serialNumber: string;
     buffer: string;

@@ -12,7 +12,6 @@ import { v4 as uuid } from 'uuid';
 
 import logger from '../logging';
 import { getAppDataDir } from '../utils/appDirs';
-import { WithRequired } from '../utils/AppTypes';
 import {
     getIsLoggingVerbose,
     persistIsLoggingVerbose,
@@ -30,7 +29,7 @@ import {
     McuBootProgrammingOptions,
     McuState,
     NordicDfuProgrammingOptions,
-    NrfutilDevice,
+    NrfutilDeviceWithSerialnumber,
     ProgrammingOptions,
 } from './deviceTypes';
 import { type NrfutilSandboxType, prepareSandbox } from './sandbox';
@@ -108,12 +107,10 @@ const programmingOptionsToArgs = (options?: ProgrammingOptions) => {
 
 const list = async (
     traits: DeviceTraits,
-    onEnumerated: (device: WithRequired<NrfutilDevice, 'serialNumber'>) => void,
+    onEnumerated: (device: NrfutilDeviceWithSerialnumber) => void,
     onError: (error: Error) => void,
     onHotplugEvent?: {
-        onDeviceArrived: (
-            device: WithRequired<NrfutilDevice, 'serialNumber'>
-        ) => void;
+        onDeviceArrived: (device: NrfutilDeviceWithSerialnumber) => void;
         onDeviceLeft: (id: number) => void;
     }
 ): Promise<CancellableOperation> => {
@@ -128,9 +125,7 @@ const list = async (
         if (isListEvent(data)) {
             data.devices.forEach(d => {
                 if (d.serialNumber)
-                    onEnumerated(
-                        d as WithRequired<NrfutilDevice, 'serialNumber'>
-                    );
+                    onEnumerated(d as NrfutilDeviceWithSerialnumber);
             });
         } else if (onHotplugEvent && isHotplugEvent(data)) {
             if (
@@ -139,7 +134,7 @@ const list = async (
                 data.device.serialNumber
             ) {
                 onHotplugEvent.onDeviceArrived(
-                    data.device as WithRequired<NrfutilDevice, 'serialNumber'>
+                    data.device as NrfutilDeviceWithSerialnumber
                 );
             } else if (data.event === 'Left') {
                 onHotplugEvent.onDeviceLeft(data.id);
@@ -155,7 +150,7 @@ const list = async (
 };
 
 const program = (
-    device: WithRequired<NrfutilDevice, 'serialNumber'>,
+    device: NrfutilDeviceWithSerialnumber,
     firmwarePath: string,
     onProgress?: (progress: Progress) => void,
     core?: DeviceCore,
@@ -191,7 +186,7 @@ const program = (
     });
 
 const programBuffer = (
-    device: WithRequired<NrfutilDevice, 'serialNumber'>,
+    device: NrfutilDeviceWithSerialnumber,
     firmware: Buffer,
     type: 'hex' | 'zip',
     onProgress?: (progress: Progress) => void,
@@ -231,7 +226,7 @@ const programBuffer = (
     });
 
 const recover = (
-    device: WithRequired<NrfutilDevice, 'serialNumber'>,
+    device: NrfutilDeviceWithSerialnumber,
     core?: DeviceCore,
     onProgress?: (progress: Progress) => void
 ): CancelablePromise<void> =>
@@ -257,7 +252,7 @@ const recover = (
     });
 
 const reset = (
-    device: WithRequired<NrfutilDevice, 'serialNumber'>,
+    device: NrfutilDeviceWithSerialnumber,
     onProgress?: (progress: Progress) => void
 ): CancelablePromise<void> =>
     new CancelablePromise<void>((resolve, reject, onCancel) => {
@@ -278,7 +273,7 @@ const reset = (
     });
 
 const getFwInfo = (
-    device: WithRequired<NrfutilDevice, 'serialNumber'>,
+    device: NrfutilDeviceWithSerialnumber,
     core?: DeviceCore,
     onProgress?: (progress: Progress) => void
 ): CancelablePromise<FWInfo> =>
@@ -313,7 +308,7 @@ const getFwInfo = (
     });
 
 const setMcuState = (
-    device: WithRequired<NrfutilDevice, 'serialNumber'>,
+    device: NrfutilDeviceWithSerialnumber,
     state: McuState,
     onProgress?: (progress: Progress) => void
 ): CancelablePromise<void> =>
@@ -335,7 +330,7 @@ const setMcuState = (
     });
 
 const getCoreInfo = (
-    device: WithRequired<NrfutilDevice, 'serialNumber'>,
+    device: NrfutilDeviceWithSerialnumber,
     core?: DeviceCore,
     onProgress?: (progress: Progress) => void
 ): CancelablePromise<DeviceCoreInfo> =>
@@ -369,7 +364,7 @@ const getCoreInfo = (
             .catch(reject);
     });
 const firmwareRead = (
-    device: WithRequired<NrfutilDevice, 'serialNumber'>,
+    device: NrfutilDeviceWithSerialnumber,
     core?: DeviceCore,
     onProgress?: (progress: Progress) => void
 ): CancelablePromise<Buffer> =>
@@ -409,7 +404,7 @@ const firmwareRead = (
     });
 
 const erase = (
-    device: WithRequired<NrfutilDevice, 'serialNumber'>,
+    device: NrfutilDeviceWithSerialnumber,
     core?: DeviceCore,
     onProgress?: (progress: Progress) => void
 ): CancelablePromise<void> =>
@@ -435,7 +430,7 @@ const erase = (
     });
 
 const getProtectionStatus = (
-    device: WithRequired<NrfutilDevice, 'serialNumber'>,
+    device: NrfutilDeviceWithSerialnumber,
     core?: DeviceCore,
     onProgress?: (progress: Progress) => void
 ): CancelablePromise<GetProtectionStatusResult> =>
@@ -472,7 +467,7 @@ const getProtectionStatus = (
     );
 
 const setProtectionStatus = (
-    device: WithRequired<NrfutilDevice, 'serialNumber'>,
+    device: NrfutilDeviceWithSerialnumber,
     region: 'All' | 'SecureRegions' | 'Region0' | 'Region0Region1',
     core?: DeviceCore,
     onProgress?: (progress: Progress) => void

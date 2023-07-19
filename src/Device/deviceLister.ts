@@ -6,9 +6,12 @@
 
 import logger from '../logging';
 import { list } from '../Nrfutil/device';
-import { DeviceTraits, NrfutilDevice } from '../Nrfutil/deviceTypes';
+import {
+    DeviceTraits,
+    NrfutilDevice,
+    NrfutilDeviceWithSerialnumber,
+} from '../Nrfutil/deviceTypes';
 import type { AppThunk, RootState } from '../store';
-import { WithRequired } from '../utils/AppTypes';
 import {
     clearWaitForDeviceTimeout,
     setArrivedButWrongWhen,
@@ -172,9 +175,7 @@ export const startWatchingDevices =
         doSelectDevice: (device: Device, autoReselected: boolean) => void
     ): AppThunk<RootState, void> =>
     (dispatch, getState) => {
-        const onDeviceArrived = (
-            device: WithRequired<NrfutilDevice, 'serialNumber'>
-        ) => {
+        const onDeviceArrived = (device: NrfutilDeviceWithSerialnumber) => {
             if (hasValidDeviceTraits(device.traits, deviceListing)) {
                 device = wrapDeviceFromNrfdl(device);
                 if (
