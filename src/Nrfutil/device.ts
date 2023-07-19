@@ -487,8 +487,13 @@ const NrfUtilDevice = (sandbox: NrfutilSandboxType) => {
         firmwareRead,
         onLogging: sandbox.onLogging,
         setLogLevel: sandbox.setLogLevel,
-        setVerboseLogging: (verbose: boolean) =>
-            sandbox.setLogLevel(verbose ? 'trace' : 'error'),
+        setVerboseLogging: (verbose: boolean) => {
+            if (process.env.NODE_ENV === 'production' && !verbose) {
+                sandbox.setLogLevel('off');
+            } else {
+                sandbox.setLogLevel(verbose ? 'trace' : 'error');
+            }
+        },
         getModuleVersion: sandbox.getModuleVersion,
     };
 };
@@ -530,6 +535,10 @@ const getDeviceLib = () =>
                                     break;
                                 case 'CRITICAL':
                                     logger.error(evt.message);
+                                    break;
+                                case 'OFF':
+                                default:
+                                    // Unreachable
                                     break;
                             }
                         });
