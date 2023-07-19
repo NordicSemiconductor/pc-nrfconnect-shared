@@ -46,6 +46,11 @@ export type TaskProgress = {
     progress: Progress;
 };
 
+type NrfutilJsonProgress = {
+    type: 'task_progress';
+    data: TaskProgress;
+};
+
 type NrfutilJsonLog = {
     type: 'log';
     data: LogMessage;
@@ -53,9 +58,10 @@ type NrfutilJsonLog = {
 
 export type NrfutilJson<T = unknown> =
     | {
-          type: 'task_begin' | 'task_progress' | 'task_end' | 'info';
+          type: 'task_begin' | 'task_end' | 'info';
           data: T;
       }
+    | NrfutilJsonProgress
     | NrfutilJsonLog;
 
 export type Progress = {

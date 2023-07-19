@@ -22,7 +22,6 @@ import {
     NrfUtilSettings,
     Progress,
     TaskEnd,
-    TaskProgress,
 } from './sandboxTypes';
 
 export type NrfutilSandboxType = ReturnType<typeof NrfutilSandbox>;
@@ -108,9 +107,7 @@ const NrfutilSandbox = (
         parsedData.forEach(item => {
             switch (item.type) {
                 case 'task_progress':
-                    callbacks.onProgress?.(
-                        (item.data as unknown as TaskProgress).progress
-                    );
+                    callbacks.onProgress?.(item.data.progress);
                     break;
                 case 'task_end':
                     callbacks.onTaskEnd?.(
