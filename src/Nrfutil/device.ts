@@ -103,7 +103,7 @@ const programmingOptionsToArgs = (options?: ProgrammingOptions) => {
             args.push(`mcu_end_state=${options.mcuEndState}`);
     }
 
-    return args.length > 0 ? ['--options ', `${args.join(',')}`] : [];
+    return args.length > 0 ? ['--options', `${args.join(',')}`] : [];
 };
 
 const list = async (
