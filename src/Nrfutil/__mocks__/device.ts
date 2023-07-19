@@ -4,26 +4,40 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-const getDeviceLib = () =>
-    Promise.resolve({
-        program: jest.fn(),
-        programBuffer: jest.fn(),
-        erase: jest.fn(),
-        recover: jest.fn(),
-        reset: jest.fn(),
-        getProtectionStatus: jest.fn(),
-        setProtectionStatus: jest.fn(),
-        fwInfo: jest.fn(),
-        setMcuState: jest.fn(),
-        coreInfo: jest.fn(),
-        list: jest.fn(() => ({
-            stop: jest.fn(),
-        })),
-        firmwareRead: jest.fn(),
-        onLogging: jest.fn(),
-        setLogLevel: jest.fn(),
-        setVerboseLogging: jest.fn(),
-        getModuleVersion: jest.fn(),
-    });
+const program = jest.fn();
+const programBuffer = jest.fn();
+const erase = jest.fn();
+const recover = jest.fn();
+const reset = jest.fn();
+const getProtectionStatus = jest.fn();
+const setProtectionStatus = jest.fn();
+const getFwInfo = jest.fn();
+const setMcuState = jest.fn();
+const getCoreInfo = jest.fn();
+const list = jest.fn(() => ({
+    stop: jest.fn(),
+}));
+const firmwareRead = jest.fn();
+const onLogging = jest.fn();
+const setLogLevel = jest.fn();
+const setVerboseLogging = jest.fn();
+const getModuleVersion = jest.fn();
 
-export default getDeviceLib;
+export {
+    program,
+    programBuffer,
+    erase,
+    recover,
+    reset,
+    getProtectionStatus,
+    setProtectionStatus,
+    getFwInfo,
+    setMcuState,
+    getCoreInfo,
+    list,
+    firmwareRead,
+    onLogging,
+    setLogLevel,
+    setVerboseLogging,
+    getModuleVersion,
+};
