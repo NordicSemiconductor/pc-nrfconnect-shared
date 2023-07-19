@@ -80,7 +80,7 @@ const NrfutilSandbox = (
         return env;
     };
 
-    const processLoggingData = (data: NrfutilJson<unknown>) => {
+    const processLoggingData = (data: NrfutilJson) => {
         if (data.type === 'log') {
             onLoggingHandlers.forEach(onLogging =>
                 onLogging(data.data as unknown as LogMessage)
@@ -330,7 +330,7 @@ const NrfutilSandbox = (
             module,
             [command, ...args],
             data => {
-                const parsedData: NrfutilJson<unknown>[] | undefined =
+                const parsedData: NrfutilJson[] | undefined =
                     parseJsonBuffers(data);
 
                 if (!parsedData) {
