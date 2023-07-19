@@ -334,7 +334,7 @@ export const startWatchingDevices =
                 const operation = deviceLib?.list(
                     deviceListing,
                     onDeviceArrived,
-                    console.log,
+                    logger.error,
                     { onDeviceArrived, onDeviceLeft }
                 );
 
