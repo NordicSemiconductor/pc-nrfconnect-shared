@@ -15,10 +15,7 @@ import {
     getDevices,
     selectedSerialNumber,
 } from '../Device/deviceSlice';
-import {
-    isLoggingVerboseSelector,
-    toggleIsLoggingVerbose,
-} from '../Log/logSlice';
+import { isLoggingVerbose, setIsLoggingVerbose } from '../Log/logSlice';
 import getDeviceLib from '../Nrfutil/device';
 import { Toggle } from '../Toggle/Toggle';
 import { persistIsLoggingVerbose } from '../utils/persistentStore';
@@ -30,7 +27,7 @@ export default () => {
     const dispatch = useDispatch();
     const devices = useSelector(getDevices);
     const currentSerialNumber = useSelector(selectedSerialNumber);
-    const verboseLogging = useSelector(isLoggingVerboseSelector);
+    const verboseLogging = useSelector(isLoggingVerbose);
     const currentDevice = useSelector(deviceInfo);
 
     return (
@@ -71,11 +68,11 @@ export default () => {
                 <Toggle
                     id="enableVerboseLoggin"
                     label="VERBOSE LOGGING"
-                    onToggle={() => {
+                    onToggle={isToggled => {
                         getDeviceLib().then(deviceLib => {
-                            deviceLib.setVerboseLogging(!verboseLogging);
+                            deviceLib.setVerboseLogging(isToggled);
                         });
-                        dispatch(toggleIsLoggingVerbose());
+                        dispatch(setIsLoggingVerbose(isToggled));
                     }}
                     isToggled={verboseLogging}
                     variant="primary"
