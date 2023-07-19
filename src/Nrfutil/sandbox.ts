@@ -432,15 +432,9 @@ export const prepareAndCreate = <Module>(
     createModule: (sandbox: NrfutilSandboxType) => Module,
     version?: string,
     setting?: NrfUtilSettings
-) => {
-    const moduleVersions = packageJson().nrfutil?.[module];
-    if (!version && (!moduleVersions || moduleVersions.length === 0)) {
-        throw new Error(`No version specified for nrfutil-${module}`);
-    }
-
-    return new Promise<Module>((resolve, reject) => {
+) =>
+    new Promise<Module>((resolve, reject) => {
         prepareSandbox(baseDir, module, version, setting)
             .then(sandbox => resolve(createModule(sandbox)))
             .catch(reject);
     });
-};
