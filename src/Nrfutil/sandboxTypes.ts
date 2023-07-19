@@ -102,7 +102,7 @@ export type VersionType = SemanticVersion | string | number;
 export interface SubDependency {
     name: string;
     description?: string;
-    dependencies?: Dependency[];
+    dependencies?: SubDependency[];
     versionFormat: VersionFormat;
     version: VersionType;
 }
