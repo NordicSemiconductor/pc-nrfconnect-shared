@@ -86,9 +86,8 @@ const programDeviceWithFw =
             if (getState().device.readbackProtection === 'protected') {
                 logger.info('Recovering device');
                 onProgress(0, 'Recovering device');
-                getDeviceLib().then(deviceLib => {
-                    deviceLib.recover(device, 'Application');
-                });
+                const deviceLib = await getDeviceLib();
+                await deviceLib.recover(device, 'Application');
             }
 
             logger.debug(
