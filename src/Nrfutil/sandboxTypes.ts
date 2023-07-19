@@ -56,11 +56,17 @@ type NrfutilJsonLog = {
     data: LogMessage;
 };
 
+type NrfutilJsonEnd<T> = {
+    type: 'task_end';
+    data: TaskEnd<T>;
+};
+
 export type NrfutilJson<T = unknown> =
     | {
-          type: 'task_begin' | 'task_end' | 'info';
+          type: 'task_begin' | 'info';
           data: T;
       }
+    | NrfutilJsonEnd<T>
     | NrfutilJsonProgress
     | NrfutilJsonLog;
 

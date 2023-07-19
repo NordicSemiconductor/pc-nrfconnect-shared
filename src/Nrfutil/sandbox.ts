@@ -110,9 +110,7 @@ const NrfutilSandbox = (
                     callbacks.onProgress?.(item.data.progress);
                     break;
                 case 'task_end':
-                    callbacks.onTaskEnd?.(
-                        item.data as unknown as TaskEnd<Result>
-                    );
+                    callbacks.onTaskEnd?.(item.data);
                     break;
                 case 'info':
                     callbacks.onInfo?.(item.data as unknown as Result);
