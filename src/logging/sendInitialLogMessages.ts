@@ -6,8 +6,8 @@
 
 import { ipcRenderer } from 'electron';
 
-import { getModuleVersion } from '../Device/deviceLibWrapper';
-import getDeviceLib from '../Nrfutil/device';
+import { getModuleVersion as resolveModuleVersion } from '../Device/deviceLibWrapper';
+import { getModuleVersion } from '../Nrfutil/device';
 import { getAppDataDir } from '../utils/appDirs';
 import describeVersion from '../utils/describeVersion';
 import logLibVersions from '../utils/logLibVersions';
@@ -47,10 +47,8 @@ export default () => {
         logger.debug(`TmpDir: ${tmpDir}`);
 
         if (bundledJlink) {
-            const deviceLib = await getDeviceLib();
-            const dependencies = (await deviceLib.getModuleVersion())
-                .dependencies;
-            const jlinkVersion = getModuleVersion('JlinkARM', dependencies);
+            const dependencies = (await getModuleVersion()).dependencies;
+            const jlinkVersion = resolveModuleVersion('JlinkARM', dependencies);
 
             if (!describeVersion(jlinkVersion).includes(bundledJlink)) {
                 logger.info(

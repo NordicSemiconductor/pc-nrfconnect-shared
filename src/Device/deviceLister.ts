@@ -5,7 +5,7 @@
  */
 
 import logger from '../logging';
-import getDeviceLib from '../Nrfutil/device';
+import { list } from '../Nrfutil/device';
 import { DeviceTraits, NrfutilDevice } from '../Nrfutil/deviceTypes';
 import type { AppThunk, RootState } from '../store';
 import { WithRequired } from '../utils/AppTypes';
@@ -329,21 +329,19 @@ export const startWatchingDevices =
             });
         };
 
-        stopWatchingDevices(() => {
-            getDeviceLib().then(deviceLib => {
-                const operation = deviceLib?.list(
-                    deviceListing,
-                    onDeviceArrived,
-                    logger.error,
-                    { onDeviceArrived, onDeviceLeft }
-                );
+        stopWatchingDevices(async () => {
+            const operation = await list(
+                deviceListing,
+                onDeviceArrived,
+                logger.error,
+                { onDeviceArrived, onDeviceLeft }
+            );
 
-                stopNrfutilDevice = (callback?: () => void) => {
-                    operation.stop(() => {
-                        callback?.();
-                    });
-                };
-            });
+            stopNrfutilDevice = (callback?: () => void) => {
+                operation.stop(() => {
+                    callback?.();
+                });
+            };
 
             if (!autoSelectDeviceCLISerialUsed) {
                 const autoSelectSN = getAutoSelectDeviceCLISerial();

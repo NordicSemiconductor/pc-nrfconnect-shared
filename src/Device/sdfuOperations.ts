@@ -10,7 +10,7 @@ import fs from 'fs';
 import MemoryMap from 'nrf-intel-hex';
 
 import logger from '../logging';
-import getDeviceLib from '../Nrfutil/device';
+import { getFwInfo, programBuffer, setMcuState } from '../Nrfutil/device';
 import { McuState } from '../Nrfutil/deviceTypes';
 import { AppThunk, RootState } from '../store';
 import { getAppFile } from '../utils/appDirs';
@@ -63,8 +63,7 @@ export const ensureBootloaderMode = (device: Device) => {
 };
 
 const getBootloaderInformation = async (device: Device) => {
-    const deviceLib = await getDeviceLib();
-    const info = await deviceLib.fwInfo(device);
+    const info = await getFwInfo(device);
 
     const index = info.imageInfoList.findIndex(
         imageInfo => imageInfo.imageType === 'NRFDL_IMAGE_TYPE_BOOTLOADER'
@@ -104,19 +103,14 @@ const updateBootloader =
                 onFail,
             })
         );
-        const deviceLib = await getDeviceLib();
+
         try {
-            await deviceLib.programBuffer(
-                device,
-                zipBuffer,
-                'zip',
-                progress => {
-                    onProgress(
-                        progress.progressPercentage,
-                        progress.message ?? 'Programming bootloader'
-                    );
-                }
-            );
+            await programBuffer(device, zipBuffer, 'zip', progress => {
+                onProgress(
+                    progress.progressPercentage,
+                    progress.message ?? 'Programming bootloader'
+                );
+            });
         } catch (error) {
             if (error) {
                 logger.error(
@@ -151,25 +145,22 @@ const switchToDeviceMode =
         onFail: (reason?: unknown) => void
     ): AppThunk =>
     dispatch => {
-        getDeviceLib().then(deviceLib => {
-            deviceLib
-                .setMcuState(device, mcuState)
-                .then(() => {
-                    dispatch(
-                        setWaitForDevice({
-                            timeout: 10000,
-                            when:
-                                mcuState === 'Application'
-                                    ? 'applicationMode'
-                                    : 'dfuBootLoaderMode',
-                            once: true,
-                            onSuccess,
-                            onFail,
-                        })
-                    );
-                })
-                .catch(err => onFail(err));
-        });
+        setMcuState(device, mcuState)
+            .then(() => {
+                dispatch(
+                    setWaitForDevice({
+                        timeout: 10000,
+                        when:
+                            mcuState === 'Application'
+                                ? 'applicationMode'
+                                : 'dfuBootLoaderMode',
+                        once: true,
+                        onSuccess,
+                        onFail,
+                    })
+                );
+            })
+            .catch(err => onFail(err));
     };
 
 export const switchToBootloaderMode =
@@ -482,11 +473,9 @@ const programInDFUBootloader =
             })
         );
 
-        const deviceLib = await getDeviceLib();
-        deviceLib
-            .programBuffer(device, zipBuffer, 'zip', progress => {
-                onProgress(progress.progressPercentage, progress.message ?? '');
-            })
+        programBuffer(device, zipBuffer, 'zip', progress => {
+            onProgress(progress.progressPercentage, progress.message ?? '');
+        })
             .then(() => {
                 logger.info(
                     'All dfu images have been written to the target device'

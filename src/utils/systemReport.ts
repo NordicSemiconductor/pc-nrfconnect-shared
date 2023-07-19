@@ -14,10 +14,10 @@ import {
     deviceInfo as getDeviceInfo,
     productPageUrl,
 } from '../Device/deviceInfo/deviceInfo';
-import { getModuleVersion } from '../Device/deviceLibWrapper';
+import { getModuleVersion as resolveModuleVersion } from '../Device/deviceLibWrapper';
 import { Device } from '../Device/deviceSlice';
 import logger from '../logging';
-import getDeviceLib from '../Nrfutil/device';
+import { getModuleVersion } from '../Nrfutil/device';
 import { getAppDataDir } from './appDirs';
 import describeVersion from './describeVersion';
 import { openFile } from './open';
@@ -50,8 +50,7 @@ const generalInfoReport = async () => {
         si.fsSize(),
     ]);
 
-    const deviceLib = await getDeviceLib();
-    const moduleVersion = await deviceLib.getModuleVersion();
+    const moduleVersion = await getModuleVersion();
     const dependencies = moduleVersion.dependencies;
 
     return [
@@ -74,10 +73,10 @@ const generalInfoReport = async () => {
         `    - python3: ${python3}`,
         `    - nrfutil-device: ${moduleVersion.version}`,
         `    - nrfjprog DLL: ${describeVersion(
-            getModuleVersion('jprog', dependencies)
+            resolveModuleVersion('jprog', dependencies)
         )}`,
         `    - JLink: ${describeVersion(
-            getModuleVersion('JlinkARM', dependencies)
+            resolveModuleVersion('JlinkARM', dependencies)
         )}`,
         '',
     ];
