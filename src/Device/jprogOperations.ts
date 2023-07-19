@@ -11,39 +11,6 @@ import type { AppThunk, RootState } from '../store';
 import { DeviceSetup, JprogEntry } from './deviceSetup';
 import { Device, setReadbackProtected } from './deviceSlice';
 
-const program = (
-    device: Device,
-    firmware: string,
-    onProgress: (progress: number, message?: string) => void
-) =>
-    new Promise<void>((resolve, reject) => {
-        onProgress(0, 'Preparing to program');
-        getDeviceLib()
-            .then(deviceLib => {
-                deviceLib.program(
-                    device,
-                    firmware,
-                    progress => {
-                        onProgress(
-                            progress.progressPercentage,
-                            progress.message ?? 'programming'
-                        );
-                    },
-                    'Application'
-                );
-            })
-            .catch(error => {
-                if (error) reject(error);
-                logger.info('Device programming completed.');
-                resolve();
-            });
-    });
-
-const reset = async (device: Device) => {
-    const deviceLib = await getDeviceLib();
-    await deviceLib.reset(device);
-};
-
 const getDeviceReadProtection = async (
     device: Device
 ): Promise<{
@@ -83,20 +50,30 @@ const programDeviceWithFw =
     ): AppThunk<RootState, Promise<Device>> =>
     async (dispatch, getState) => {
         try {
+            const deviceLib = await getDeviceLib();
             if (getState().device.readbackProtection === 'protected') {
                 logger.info('Recovering device');
                 onProgress(0, 'Recovering device');
-                const deviceLib = await getDeviceLib();
                 await deviceLib.recover(device, 'Application');
             }
 
             logger.debug(
                 `Programming ${device.serialNumber} with ${selectedFw.fw}`
             );
-            await program(device, selectedFw.fw, onProgress);
+            await deviceLib.program(
+                device,
+                selectedFw.fw,
+                progress => {
+                    onProgress(
+                        progress.progressPercentage,
+                        progress.message ?? 'programming'
+                    );
+                },
+                'Application'
+            );
             logger.debug(`Resetting ${device.serialNumber}`);
             onProgress(100, 'Resetting device');
-            await reset(device);
+            await deviceLib.reset(device);
             const { readbackProtection } = await getDeviceReadProtection(
                 device
             );
