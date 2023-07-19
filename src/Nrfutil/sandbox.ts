@@ -82,9 +82,7 @@ const NrfutilSandbox = (
 
     const processLoggingData = (data: NrfutilJson) => {
         if (data.type === 'log') {
-            onLoggingHandlers.forEach(onLogging =>
-                onLogging(data.data as unknown as LogMessage)
-            );
+            onLoggingHandlers.forEach(onLogging => onLogging(data.data));
             return true;
         }
 
@@ -123,7 +121,7 @@ const NrfutilSandbox = (
                     callbacks.onInfo?.(item.data as unknown as Result);
                     break;
                 case 'log':
-                    callbacks.onLogging?.(item.data as unknown as LogMessage);
+                    callbacks.onLogging?.(item.data);
                     break;
             }
         });
