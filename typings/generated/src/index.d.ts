@@ -55,7 +55,7 @@ export { jprogDeviceSetup } from './Device/jprogOperations';
 export { sdfuDeviceSetup } from './Device/sdfuOperations';
 export type { Progress } from './Nrfutil/sandboxTypes';
 export type { DeviceCore, DeviceTraits, ProtectionStatus, DeviceCoreInfo, SerialPort as DeviceSerialPort, ImageType as FWInfoImageType, } from './Nrfutil/deviceTypes';
-export { default as getDeviceLib } from './Nrfutil/device';
+export { program, programBuffer, erase, recover, reset, getProtectionStatus, setProtectionStatus, getFwInfo, setMcuState, getCoreInfo, list, firmwareRead, onLogging, setLogLevel, setVerboseLogging, getModuleVersion, } from './Nrfutil/device';
 export { selectedDevice, getReadbackProtection, persistSerialPortOptions, type Device, } from './Device/deviceSlice';
 export { setWaitForDevice, getAutoReselect, getWaitingForDeviceTimeout, getWaitingToAutoReselect, getWaitForDevice, } from './Device/deviceAutoSelectSlice';
 export { clearWaitForDevice } from './Device/deviceLister';
