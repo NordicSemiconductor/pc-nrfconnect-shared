@@ -85,7 +85,7 @@ export type Plugin = {
     dependencies: Dependency[];
     name: string;
     versionFormat: VersionFormat;
-    version: VersionTypes;
+    version: VersionType;
 };
 
 export type Dependency = {
@@ -94,17 +94,17 @@ export type Dependency = {
     plugins?: Plugin[];
     dependencies?: SubDependency[];
     versionFormat: VersionFormat;
-    version: VersionTypes;
+    version: VersionType;
 };
 
-export type VersionTypes = SemanticVersion | string | number;
+export type VersionType = SemanticVersion | string | number;
 
 export interface SubDependency {
     name: string;
     description?: string;
     dependencies?: Dependency[];
     versionFormat: VersionFormat;
-    version: VersionTypes;
+    version: VersionType;
 }
 
 export type ModuleVersion = {
