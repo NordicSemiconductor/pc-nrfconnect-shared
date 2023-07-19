@@ -5,7 +5,7 @@
  */
 
 import logger from '../logging';
-import getDeviceLib from '../Nrfutil/device';
+import { getFwInfo, program, recover, reset } from '../Nrfutil/device';
 import { FWInfo } from '../Nrfutil/deviceTypes';
 import type { AppThunk, RootState } from '../store';
 import { DeviceSetup, JprogEntry } from './deviceSetup';
@@ -18,10 +18,9 @@ const getDeviceReadProtection = async (
     readbackProtection: 'unknown' | 'protected' | 'unprotected';
 }> => {
     try {
-        const deviceLib = await getDeviceLib();
-        const fwInfo = await deviceLib.fwInfo(device);
+        const info = await getFwInfo(device);
         return {
-            fwInfo,
+            fwInfo: info,
             readbackProtection: 'unprotected',
         };
     } catch (error) {
@@ -50,17 +49,16 @@ const programDeviceWithFw =
     ): AppThunk<RootState, Promise<Device>> =>
     async (dispatch, getState) => {
         try {
-            const deviceLib = await getDeviceLib();
             if (getState().device.readbackProtection === 'protected') {
                 logger.info('Recovering device');
                 onProgress(0, 'Recovering device');
-                await deviceLib.recover(device, 'Application');
+                await recover(device, 'Application');
             }
 
             logger.debug(
                 `Programming ${device.serialNumber} with ${selectedFw.fw}`
             );
-            await deviceLib.program(
+            await program(
                 device,
                 selectedFw.fw,
                 progress => {
@@ -73,7 +71,7 @@ const programDeviceWithFw =
             );
             logger.debug(`Resetting ${device.serialNumber}`);
             onProgress(100, 'Resetting device');
-            await deviceLib.reset(device);
+            await reset(device);
             const { readbackProtection } = await getDeviceReadProtection(
                 device
             );
@@ -132,11 +130,11 @@ export const jprogDeviceSetup = (
         }
 
         return getDeviceReadProtection(device).then(
-            ({ fwInfo, readbackProtection }) => {
+            ({ fwInfo: info, readbackProtection }) => {
                 dispatch(setReadbackProtected(readbackProtection));
-                if (fwInfo && fwInfo.imageInfoList.length > 0) {
+                if (info && info.imageInfoList.length > 0) {
                     const fw = fwVersions.find(version =>
-                        fwInfo.imageInfoList.find(
+                        info.imageInfoList.find(
                             imageInfo =>
                                 typeof imageInfo.version === 'string' &&
                                 imageInfo.version.includes(version.fwVersion)

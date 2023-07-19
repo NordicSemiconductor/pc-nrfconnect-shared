@@ -7,9 +7,9 @@
 import { spawn } from 'child_process';
 import os from 'os';
 
-import { getModuleVersion } from '../Device/deviceLibWrapper';
+import { getModuleVersion as resolveModuleVersion } from '../Device/deviceLibWrapper';
 import logger from '../logging';
-import getDeviceLib from '../Nrfutil/device';
+import { getModuleVersion } from '../Nrfutil/device';
 import { SubDependency } from '../Nrfutil/sandboxTypes';
 import describeVersion from './describeVersion';
 
@@ -67,14 +67,13 @@ const checkJLinkArchitectureOnDarwin = async () => {
 
 export default async () => {
     try {
-        const deviceLib = await getDeviceLib();
-        const moduleVersion = await deviceLib.getModuleVersion();
+        const moduleVersion = await getModuleVersion();
         const dependencies = moduleVersion.dependencies;
 
         log('nrfutil-device', moduleVersion.version);
-        log('nrf-device-lib', getModuleVersion('nrfdl', dependencies));
-        log('nrfjprog DLL', getModuleVersion('jprog', dependencies));
-        log('JLink', getModuleVersion('JlinkARM', dependencies));
+        log('nrf-device-lib', resolveModuleVersion('nrfdl', dependencies));
+        log('nrfjprog DLL', resolveModuleVersion('jprog', dependencies));
+        log('JLink', resolveModuleVersion('JlinkARM', dependencies));
         if (
             process.platform === 'darwin' &&
             os.cpus()[0].model.includes('Apple')

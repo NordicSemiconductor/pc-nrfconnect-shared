@@ -16,7 +16,7 @@ import {
     selectedSerialNumber,
 } from '../Device/deviceSlice';
 import { isLoggingVerbose, setIsLoggingVerbose } from '../Log/logSlice';
-import getDeviceLib from '../Nrfutil/device';
+import { setVerboseLogging } from '../Nrfutil/device';
 import { Toggle } from '../Toggle/Toggle';
 import { persistIsLoggingVerbose } from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
@@ -69,9 +69,7 @@ export default () => {
                     id="enableVerboseLoggin"
                     label="VERBOSE LOGGING"
                     onToggle={isToggled => {
-                        getDeviceLib().then(deviceLib => {
-                            deviceLib.setVerboseLogging(isToggled);
-                        });
+                        setVerboseLogging(isToggled);
                         dispatch(setIsLoggingVerbose(isToggled));
                     }}
                     isToggled={verboseLogging}

@@ -99,7 +99,24 @@ export type {
     SerialPort as DeviceSerialPort,
     ImageType as FWInfoImageType,
 } from './Nrfutil/deviceTypes';
-export { default as getDeviceLib } from './Nrfutil/device';
+export {
+    program,
+    programBuffer,
+    erase,
+    recover,
+    reset,
+    getProtectionStatus,
+    setProtectionStatus,
+    getFwInfo,
+    setMcuState,
+    getCoreInfo,
+    list,
+    firmwareRead,
+    onLogging,
+    setLogLevel,
+    setVerboseLogging,
+    getModuleVersion,
+} from './Nrfutil/device';
 
 export {
     selectedDevice,
