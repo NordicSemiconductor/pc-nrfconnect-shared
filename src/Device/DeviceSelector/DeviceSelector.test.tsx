@@ -13,9 +13,11 @@ import {
 } from '@testing-library/react';
 
 import render from '../../../test/testrenderer';
-import { Device, setDevices } from '../deviceSlice';
+import { addDevice, Device, removeDevice } from '../deviceSlice';
 import { jprogDeviceSetup } from '../jprogOperations';
 import DeviceSelector from './DeviceSelector';
+
+jest.mock('../../Nrfutil/device/device');
 
 const testDevice: Device = {
     id: 1,
@@ -92,17 +94,23 @@ const testDevice: Device = {
     },
 };
 
+const deviceSetupMock: ReturnType<typeof jprogDeviceSetup> = {
+    supportsProgrammingMode: jest.fn(() => true),
+    getFirmwareOptions: jest.fn(() => [
+        { key: 'PCATest', programDevice: jest.fn() },
+    ]),
+    isExpectedFirmware: jest.fn(
+        (device: Device) => () =>
+            Promise.resolve({
+                device,
+                validFirmware: false,
+            })
+    ),
+    tryToSwitchToApplicationMode: jest.fn(() => () => Promise.resolve(null)),
+};
+
 const validFirmware = {
-    deviceSetups: [
-        jprogDeviceSetup([
-            {
-                key: 'PCATest',
-                fw: 'firmware/invalidDevice.hex',
-                fwVersion: 'fw-1.0.0',
-                fwIdAddress: 0x6000,
-            },
-        ]),
-    ],
+    deviceSetups: [deviceSetupMock],
     allowCustomDevice: false,
 };
 
@@ -112,7 +120,7 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
@@ -126,7 +134,7 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
@@ -141,12 +149,12 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
             />,
-            [setDevices([testDevice])]
+            [addDevice(testDevice)]
         );
         expect(screen.getByText(testDevice.serialNumber)).toBeInTheDocument();
     });
@@ -156,12 +164,12 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
             />,
-            [setDevices([testDevice]), setDevices([])]
+            [addDevice(testDevice), removeDevice(testDevice)]
         );
         expect(screen.queryByText(testDevice.serialNumber)).toBeNull();
     });
@@ -171,12 +179,12 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
             />,
-            [setDevices([testDevice])]
+            [addDevice(testDevice)]
         );
         fireEvent.click(screen.getByText('Select device'));
         fireEvent.click(screen.getByTestId('show-more-device-info'));
@@ -188,12 +196,12 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
             />,
-            [setDevices([testDevice])]
+            [addDevice(testDevice)]
         );
 
         fireEvent.click(screen.getByText('Select device'));
@@ -206,12 +214,12 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
             />,
-            [setDevices([testDevice])]
+            [addDevice(testDevice)]
         );
         fireEvent.click(screen.getByText('Select device'));
         fireEvent.click(screen.getByText(testDevice.serialNumber));
@@ -226,7 +234,7 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
@@ -244,7 +252,7 @@ describe('DeviceSelector', () => {
                     allowCustomDevice: true,
                 }}
             />,
-            [setDevices([testDevice])]
+            [addDevice(testDevice)]
         );
         fireEvent.click(screen.getByText('Select device'));
         fireEvent.click(screen.getByText(testDevice.serialNumber));
@@ -258,7 +266,7 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
@@ -276,7 +284,7 @@ describe('DeviceSelector', () => {
                     allowCustomDevice: false,
                 }}
             />,
-            [setDevices([testDevice])]
+            [addDevice(testDevice)]
         );
 
         fireEvent.click(screen.getByText('Select device'));
@@ -296,13 +304,13 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
                 deviceSetupConfig={validFirmware}
             />,
-            [setDevices([testDevice])]
+            [addDevice(testDevice)]
         );
 
         fireEvent.click(screen.getByText('Select device'));
@@ -318,13 +326,13 @@ describe('DeviceSelector', () => {
             <DeviceSelector
                 deviceListing={{
                     nordicUsb: true,
-                    serialPort: true,
+                    serialPorts: true,
                     jlink: true,
                     mcuBoot: true,
                 }}
                 deviceSetupConfig={validFirmware}
             />,
-            [setDevices([testDevice])]
+            [addDevice(testDevice)]
         );
 
         fireEvent.click(screen.getByText('Select device'));
