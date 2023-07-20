@@ -19,7 +19,6 @@ import {
     LogMessage,
     ModuleVersion,
     NrfutilJson,
-    NrfUtilSettings,
     Progress,
     TaskEnd,
 } from './sandboxTypes';
@@ -38,12 +37,7 @@ const parseJsonBuffers = <T>(data: Buffer): T[] | undefined => {
     }
 };
 
-const NrfutilSandbox = (
-    baseDir: string,
-    module: string,
-    version: string,
-    setting?: NrfUtilSettings
-) => {
+const NrfutilSandbox = (baseDir: string, module: string, version: string) => {
     const onLoggingHandlers: ((logging: LogMessage) => void)[] = [];
     let logLevel: LogLevel = 'info';
 
@@ -59,22 +53,18 @@ const NrfutilSandbox = (
 
         env.NRFUTIL_EXEC_PATH = path.join(env.NRFUTIL_HOME, 'bin');
 
-        if (setting?.bootstrapConfigUrl)
-            env.NRFUTIL_BOOTSTRAP_CONFIG_URL = setting.bootstrapConfigUrl;
-        if (setting?.bootstrapTarballPath)
-            env.NRFUTIL_BOOTSTRAP_TARBALL_PATH = setting.bootstrapTarballPath;
-        if (setting?.devicePluginsDirForceNrfdlLocation)
-            env.NRFUTIL_DEVICE_PLUGINS_DIR_FORCE_NRFDL_LOCATION =
-                setting.devicePluginsDirForceNrfdlLocation;
-        if (setting?.devicePluginsDirForceNrfutilLocation)
-            env.NRFUTIL_DEVICE_PLUGINS_DIR_FORCE_NRFUTIL_LIBDIR =
-                setting.devicePluginsDirForceNrfutilLocation;
-        if (setting?.ignoreMissingSubCommand)
-            env.NRFUTIL_IGNORE_MISSING_SUBCOMMAND =
-                setting.ignoreMissingSubCommand;
-        if (setting?.log) env.NRFUTIL_LOG = setting.log;
-        if (setting?.packageIndexUrl)
-            env.NRFUTIL_PACKAGE_INDEX_URL = setting.packageIndexUrl;
+        if (
+            env.NODE_ENV === 'production' &&
+            !env.NRF_OVERRIDE_NRFUTIL_SETTINGS
+        ) {
+            delete env.NRFUTIL_BOOTSTRAP_CONFIG_URL;
+            delete env.NRFUTIL_BOOTSTRAP_TARBALL_PATH;
+            delete env.NRFUTIL_DEVICE_PLUGINS_DIR_FORCE_NRFDL_LOCATION;
+            delete env.NRFUTIL_DEVICE_PLUGINS_DIR_FORCE_NRFUTIL_LIBDIR;
+            delete env.NRFUTIL_IGNORE_MISSING_SUBCOMMAND;
+            delete env.NRFUTIL_LOG;
+            delete env.NRFUTIL_PACKAGE_INDEX_URL;
+        }
 
         return env;
     };
@@ -387,8 +377,7 @@ const NrfutilSandbox = (
 export const prepareSandbox = (
     baseDir: string,
     module: string,
-    version?: string,
-    setting?: NrfUtilSettings
+    version?: string
 ) =>
     new Promise<NrfutilSandboxType>((resolve, reject) => {
         const moduleVersions = packageJson().nrfutil?.[module];
@@ -399,8 +388,7 @@ export const prepareSandbox = (
         const sandbox = NrfutilSandbox(
             baseDir,
             module,
-            version ?? (moduleVersions?.[0] as string),
-            setting
+            version ?? (moduleVersions?.[0] as string)
         );
 
         sandbox
@@ -423,11 +411,10 @@ export const prepareAndCreate = <Module>(
     baseDir: string,
     module: string,
     createModule: (sandbox: NrfutilSandboxType) => Module,
-    version?: string,
-    setting?: NrfUtilSettings
+    version?: string
 ) =>
     new Promise<Module>((resolve, reject) => {
-        prepareSandbox(baseDir, module, version, setting)
+        prepareSandbox(baseDir, module, version)
             .then(sandbox => resolve(createModule(sandbox)))
             .catch(reject);
     });
