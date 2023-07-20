@@ -52,6 +52,9 @@ export interface PackageJson {
     devDependencies?: ObjectContainingOptionalStrings;
     displayName?: string;
     engines?: ObjectContainingOptionalStrings;
+    nrfutil?: {
+        [index: string]: string[] | undefined;
+    };
     files?: readonly string[];
     license?: string;
     main?: string;
