@@ -4,77 +4,23 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import nrfDeviceLib, {
-    deviceControlRecover,
-    deviceControlReset,
-    Error as nrfError,
-    firmwareProgram,
-    FirmwareStreamType,
-    readFwInfo,
-} from '@nordicsemiconductor/nrf-device-lib-js';
-
 import logger from '../logging';
+import NrfutilDeviceLib from '../Nrfutil/device/device';
+import { FWInfo } from '../Nrfutil/device/getFwInfo';
 import type { AppThunk, RootState } from '../store';
-import { getDeviceLibContext } from './deviceLibWrapper';
 import { DeviceSetup, JprogEntry } from './deviceSetup';
 import { Device, setReadbackProtected } from './deviceSlice';
-
-const program = (
-    deviceId: number,
-    firmware: string | Buffer,
-    onProgress: (progress: number, message?: string) => void
-) => {
-    let fwFormat: FirmwareStreamType;
-    if (firmware instanceof Buffer) {
-        fwFormat = 'NRFDL_FW_BUFFER';
-    } else {
-        fwFormat = 'NRFDL_FW_FILE';
-    }
-    return new Promise<void>((resolve, reject) => {
-        onProgress(0, 'Preparing to program');
-        firmwareProgram(
-            getDeviceLibContext(),
-            deviceId,
-            fwFormat,
-            'NRFDL_FW_INTEL_HEX',
-            firmware,
-            (error?: nrfError) => {
-                if (error) reject(error);
-                logger.info('Device programming completed.');
-                resolve();
-            },
-            progress => {
-                onProgress(
-                    progress.progressJson.progressPercentage,
-                    progress.progressJson.message ?? 'programming'
-                );
-            },
-            null,
-            'NRFDL_DEVICE_CORE_APPLICATION'
-        );
-    });
-};
-
-/**
- * Reset the device after programming
- *
- * @param {Number} deviceId The Id of the device.
- * @returns {Promise} Promise that resolves if successful or rejects with error.
- */
-const reset = async (deviceId: number) => {
-    await deviceControlReset(getDeviceLibContext(), deviceId);
-};
 
 const getDeviceReadProtection = async (
     device: Device
 ): Promise<{
-    fwInfo: nrfDeviceLib.FWInfo.ReadResult | null;
+    fwInfo: FWInfo | null;
     readbackProtection: 'unknown' | 'protected' | 'unprotected';
 }> => {
     try {
-        const fwInfo = await readFwInfo(getDeviceLibContext(), device.id);
+        const info = await NrfutilDeviceLib.getFwInfo(device);
         return {
-            fwInfo,
+            fwInfo: info,
             readbackProtection: 'unprotected',
         };
     } catch (error) {
@@ -106,20 +52,26 @@ const programDeviceWithFw =
             if (getState().device.readbackProtection === 'protected') {
                 logger.info('Recovering device');
                 onProgress(0, 'Recovering device');
-                await deviceControlRecover(
-                    getDeviceLibContext(),
-                    device.id,
-                    'NRFDL_DEVICE_CORE_APPLICATION'
-                );
+                await NrfutilDeviceLib.recover(device, 'Application');
             }
 
             logger.debug(
                 `Programming ${device.serialNumber} with ${selectedFw.fw}`
             );
-            await program(device.id, selectedFw.fw, onProgress);
+            await NrfutilDeviceLib.program(
+                device,
+                selectedFw.fw,
+                progress => {
+                    onProgress(
+                        progress.progressPercentage,
+                        progress.message ?? 'programming'
+                    );
+                },
+                'Application'
+            );
             logger.debug(`Resetting ${device.serialNumber}`);
             onProgress(100, 'Resetting device');
-            await reset(device.id);
+            await NrfutilDeviceLib.reset(device);
             const { readbackProtection } = await getDeviceReadProtection(
                 device
             );
@@ -178,11 +130,11 @@ export const jprogDeviceSetup = (
         }
 
         return getDeviceReadProtection(device).then(
-            ({ fwInfo, readbackProtection }) => {
+            ({ fwInfo: info, readbackProtection }) => {
                 dispatch(setReadbackProtected(readbackProtection));
-                if (fwInfo && fwInfo.imageInfoList.length > 0) {
+                if (info && info.imageInfoList.length > 0) {
                     const fw = fwVersions.find(version =>
-                        fwInfo.imageInfoList.find(
+                        info.imageInfoList.find(
                             imageInfo =>
                                 typeof imageInfo.version === 'string' &&
                                 imageInfo.version.includes(version.fwVersion)
