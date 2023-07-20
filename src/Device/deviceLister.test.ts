@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
-
+import { DeviceTraits } from '../Nrfutil/device/common';
 import { hasValidDeviceTraits } from './deviceLister';
 
 const allFalseDeviceTraits: DeviceTraits = {
