@@ -101,16 +101,6 @@ const slice = createSlice({
             state.readbackProtection = 'unknown';
         },
 
-        setDevices: (state, action: PayloadAction<Device[]>) => {
-            state.devices.clear();
-            action.payload.forEach(device => {
-                state.devices.set(
-                    device.serialNumber,
-                    setPersistedData(device)
-                );
-            });
-        },
-
         addDevice: (state, action: PayloadAction<Device>) => {
             state.devices.set(
                 action.payload.serialNumber,
@@ -216,7 +206,6 @@ export const {
         selectDevice,
         addDevice,
         removeDevice,
-        setDevices,
         setDeviceNickname,
         toggleDeviceFavorited,
         setReadbackProtected,
