@@ -6,8 +6,8 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
+import { DeviceTraits } from '../../Nrfutil/deviceTypes';
 import useHotKey from '../../utils/useHotKey';
 import {
     getWaitingToAutoReselect,
