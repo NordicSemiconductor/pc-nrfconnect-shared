@@ -87,8 +87,35 @@ export {
 } from './utils/persistentStore';
 
 export { jprogDeviceSetup } from './Device/jprogOperations';
-
 export { sdfuDeviceSetup } from './Device/sdfuOperations';
+
+export type { Progress } from './Nrfutil/sandboxTypes';
+export type {
+    DeviceCore,
+    DeviceTraits,
+    ProtectionStatus,
+    DeviceCoreInfo,
+    SerialPort as DeviceSerialPort,
+    ImageType as FWInfoImageType,
+} from './Nrfutil/deviceTypes';
+export {
+    program,
+    programBuffer,
+    erase,
+    recover,
+    reset,
+    getProtectionStatus,
+    setProtectionStatus,
+    getFwInfo,
+    setMcuState,
+    getCoreInfo,
+    list,
+    firmwareRead,
+    onLogging,
+    setLogLevel,
+    setVerboseLogging,
+    getModuleVersion,
+} from './Nrfutil/device';
 
 export {
     selectedDevice,
