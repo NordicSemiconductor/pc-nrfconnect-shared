@@ -103,15 +103,6 @@ export type ModuleVersion = {
     name: string;
     version: string;
 };
-export type NrfUtilSettings = {
-    bootstrapConfigUrl?: string;
-    bootstrapTarballPath?: string;
-    devicePluginsDirForceNrfdlLocation?: string;
-    devicePluginsDirForceNrfutilLocation?: string;
-    ignoreMissingSubCommand?: string;
-    log?: string;
-    packageIndexUrl?: string;
-};
 export declare const isSemanticVersion: (version?: SubDependency) => version is SubDependency & {
     version: SemanticVersion;
 };
