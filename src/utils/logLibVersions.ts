@@ -4,21 +4,18 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import {
-    getModuleVersions,
-    ModuleVersion,
-} from '@nordicsemiconductor/nrf-device-lib-js';
 import { spawn } from 'child_process';
 import os from 'os';
 
-import {
-    getDeviceLibContext,
-    getModuleVersion,
-} from '../Device/deviceLibWrapper';
 import logger from '../logging';
-import describeVersion from './describeVersion';
+import NrfutilDeviceLib from '../Nrfutil/device/device';
+import {
+    describeVersion,
+    resolveModuleVersion,
+} from '../Nrfutil/moduleVersion';
+import { SubDependency } from '../Nrfutil/sandboxTypes';
 
-const log = (description: string, moduleVersion?: ModuleVersion) => {
+const log = (description: string, moduleVersion?: SubDependency | string) => {
     if (moduleVersion == null) {
         logger.warn(`Unable to detect version of ${description}.`);
     } else {
@@ -72,12 +69,13 @@ const checkJLinkArchitectureOnDarwin = async () => {
 
 export default async () => {
     try {
-        const versions = await getModuleVersions(getDeviceLibContext());
+        const moduleVersion = await NrfutilDeviceLib.getModuleVersion();
+        const dependencies = moduleVersion.dependencies;
 
-        log('nrf-device-lib-js', getModuleVersion('nrfdl-js', versions));
-        log('nrf-device-lib', getModuleVersion('nrfdl', versions));
-        log('nrfjprog DLL', getModuleVersion('jprog', versions));
-        log('JLink', getModuleVersion('JlinkARM', versions));
+        log('nrfutil-device', moduleVersion.version);
+        log('nrf-device-lib', resolveModuleVersion('nrfdl', dependencies));
+        log('nrfjprog DLL', resolveModuleVersion('jprog', dependencies));
+        log('JLink', resolveModuleVersion('JlinkARM', dependencies));
         if (
             process.platform === 'darwin' &&
             os.cpus()[0].model.includes('Apple')
