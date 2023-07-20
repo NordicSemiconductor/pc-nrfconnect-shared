@@ -1,17 +1,41 @@
 export declare const ErrorDialogActions: {
-    hideDialog: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"errorDialog/hideDialog">;
-    showDialog: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[message: string, errorResolutions?: import("./ErrorDialog/errorDialogSlice").ErrorResolutions | undefined, detail?: string | undefined], {
-        message: {
-            message: string;
-            detail: string | undefined;
-        };
-        errorResolutions: import("./ErrorDialog/errorDialogSlice").ErrorResolutions | undefined;
-    }, "errorDialog/showDialog", never, never>;
+    hideDialog: import('@reduxjs/toolkit').ActionCreatorWithoutPayload<'errorDialog/hideDialog'>;
+    showDialog: import('@reduxjs/toolkit').ActionCreatorWithPreparedPayload<
+        [
+            message: string,
+            errorResolutions?:
+                | import('./ErrorDialog/errorDialogSlice').ErrorResolutions
+                | undefined,
+            detail?: string | undefined
+        ],
+        {
+            message: {
+                message: string;
+                detail: string | undefined;
+            };
+            errorResolutions:
+                | import('./ErrorDialog/errorDialogSlice').ErrorResolutions
+                | undefined;
+        },
+        'errorDialog/showDialog',
+        never,
+        never
+    >;
 };
 export { default as App, type PaneProps } from './App/App';
 export { default as Logo } from './Logo/Logo';
-export { default as DeviceSelector, type Props as DeviceSelectorProps, } from './Device/DeviceSelector/DeviceSelector';
-export { Dialog, GenericDialog, ConfirmationDialog, InfoDialog, ErrorDialog, DialogButton, } from './Dialog/Dialog';
+export {
+    default as DeviceSelector,
+    type Props as DeviceSelectorProps,
+} from './Device/DeviceSelector/DeviceSelector';
+export {
+    Dialog,
+    GenericDialog,
+    ConfirmationDialog,
+    InfoDialog,
+    ErrorDialog,
+    DialogButton,
+} from './Dialog/Dialog';
 export type { DialogButtonProps } from './Dialog/Dialog';
 export { default as Slider } from './Slider/Slider';
 export { Toggle } from './Toggle/Toggle';
@@ -40,7 +64,14 @@ export { reducer as errorDialogReducer } from './ErrorDialog/errorDialogSlice';
 export { default as logger } from './logging';
 export { default as bleChannels } from './utils/bleChannels';
 export { colors } from './utils/colors';
-export { setAppDirs, getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir, } from './utils/appDirs';
+export {
+    setAppDirs,
+    getAppDir,
+    getAppFile,
+    getAppDataDir,
+    getAppLogDir,
+    getUserDataDir,
+} from './utils/appDirs';
 export { openUrl } from './utils/open';
 export { default as systemReport } from './utils/systemReport';
 export { default as usageData } from './utils/usageData';
@@ -50,23 +81,91 @@ export { default as useHotKey } from './utils/useHotKey';
 export { isDevelopment } from './utils/environment';
 export { currentPane, setCurrentPane } from './App/appLayout';
 export { isLoggingVerbose } from './Log/logSlice';
-export { getAppSpecificStore as getPersistentStore, persistTerminalSettings, getPersistedTerminalSettings, persistNickname, getPersistedNickname, } from './utils/persistentStore';
+export {
+    getAppSpecificStore as getPersistentStore,
+    persistTerminalSettings,
+    getPersistedTerminalSettings,
+    persistNickname,
+    getPersistedNickname,
+} from './utils/persistentStore';
 export { jprogDeviceSetup } from './Device/jprogOperations';
 export { sdfuDeviceSetup } from './Device/sdfuOperations';
-export { selectedDevice, getReadbackProtection, persistSerialPortOptions, type Device, } from './Device/deviceSlice';
-export { setWaitForDevice, getAutoReselect, getWaitingForDeviceTimeout, getWaitingToAutoReselect, getWaitForDevice, } from './Device/deviceAutoSelectSlice';
+export type { Progress } from './Nrfutil/sandboxTypes';
+export type {
+    DeviceCore,
+    DeviceTraits,
+    ProtectionStatus,
+    DeviceCoreInfo,
+    SerialPort as DeviceSerialPort,
+    ImageType as FWInfoImageType,
+} from './Nrfutil/deviceTypes';
+export {
+    program,
+    programBuffer,
+    erase,
+    recover,
+    reset,
+    getProtectionStatus,
+    setProtectionStatus,
+    getFwInfo,
+    setMcuState,
+    getCoreInfo,
+    list,
+    firmwareRead,
+    onLogging,
+    setLogLevel,
+    setVerboseLogging,
+    getModuleVersion,
+} from './Nrfutil/device';
+export {
+    selectedDevice,
+    getReadbackProtection,
+    persistSerialPortOptions,
+    type Device,
+} from './Device/deviceSlice';
+export {
+    setWaitForDevice,
+    getAutoReselect,
+    getWaitingForDeviceTimeout,
+    getWaitingToAutoReselect,
+    getWaitForDevice,
+} from './Device/deviceAutoSelectSlice';
 export { clearWaitForDevice } from './Device/deviceLister';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
 export { getDeviceLibContext } from './Device/deviceLibWrapper';
 export { isDeviceInDFUBootloader } from './Device/sdfuOperations';
-export { default as sdfuOperations, switchToBootloaderMode, switchToApplicationMode, } from './Device/sdfuOperations';
-export { defaultInitPacket, type DfuImage, FwType, HashType, } from './Device/initPacket';
+export {
+    default as sdfuOperations,
+    switchToBootloaderMode,
+    switchToApplicationMode,
+} from './Device/sdfuOperations';
+export {
+    defaultInitPacket,
+    type DfuImage,
+    FwType,
+    HashType,
+} from './Device/initPacket';
 export { default as describeError } from './logging/describeError';
-export { createSerialPort, getSerialPortOptions, type SerialPort, } from './SerialPort/SerialPort';
+export {
+    createSerialPort,
+    getSerialPortOptions,
+    type SerialPort,
+} from './SerialPort/SerialPort';
 export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSettingsDialog';
 export type { AppDispatch, AppThunk, NrfConnectState } from './store';
-export { type DeviceSetupConfig, type DeviceSetup, prepareDevice, } from './Device/deviceSetup';
-export { addNewMessage, newCopiedFlashMessage, newInfoFlashMessage, newWarningFlashMessage, newErrorFlashMessage, newSuccessFlashMessage, } from './FlashMessage/FlashMessageSlice';
+export {
+    type DeviceSetupConfig,
+    type DeviceSetup,
+    prepareDevice,
+} from './Device/deviceSetup';
+export {
+    addNewMessage,
+    newCopiedFlashMessage,
+    newInfoFlashMessage,
+    newWarningFlashMessage,
+    newErrorFlashMessage,
+    newSuccessFlashMessage,
+} from './FlashMessage/FlashMessageSlice';
 export { inMain as apps } from '../ipc/apps';
 export { inMain as openWindow } from '../ipc/openWindow';
 export { inMain as preventSleep } from '../ipc/preventSleep';
