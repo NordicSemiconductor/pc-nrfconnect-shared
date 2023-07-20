@@ -1,13 +1,9 @@
 /// <reference types="react" />
-import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
+import { DeviceTraits } from '../../Nrfutil/device/common';
 import { DeviceSetupConfig } from '../deviceSetup';
 import { Device } from '../deviceSlice';
-interface OutdatedDeviceTraits {
-    serialPort?: boolean;
-    serialport?: boolean;
-}
 export interface Props {
-    deviceListing: DeviceTraits & OutdatedDeviceTraits;
+    deviceListing: DeviceTraits;
     deviceSetupConfig?: DeviceSetupConfig;
     onDeviceSelected?: (device: Device, autoReselected: boolean) => void;
     onDeviceDeselected?: () => void;
