@@ -10,7 +10,6 @@ import { getCurrentWindow } from '@electron/remote';
 
 import Button from '../Button/Button';
 import Card from '../Card/Card';
-import { setVerboseDeviceLibLogging } from '../Device/deviceLibWrapper';
 import {
     deviceInfo,
     getDevices,
@@ -75,7 +74,6 @@ export default () => {
                             id="enableVerboseLoggin"
                             label="VERBOSE LOGGING"
                             onToggle={() => {
-                                setVerboseDeviceLibLogging(!verboseLogging);
                                 dispatch(toggleIsLoggingVerbose());
                             }}
                             isToggled={verboseLogging}
