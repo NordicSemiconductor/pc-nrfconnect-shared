@@ -31,13 +31,8 @@ import DeviceList from './DeviceList/DeviceList';
 import SelectDevice from './SelectDevice';
 import SelectedDevice from './SelectedDevice';
 
-interface OutdatedDeviceTraits {
-    serialPort?: boolean;
-    serialport?: boolean;
-}
-
 export interface Props {
-    deviceListing: DeviceTraits & OutdatedDeviceTraits;
+    deviceListing: DeviceTraits;
     deviceSetupConfig?: DeviceSetupConfig;
     onDeviceSelected?: (device: Device, autoReselected: boolean) => void;
     onDeviceDeselected?: () => void;
@@ -104,13 +99,9 @@ export default ({
     );
 
     const doStartWatchingDevices = useCallback(() => {
-        const patchedDeviceListing = {
-            serialPorts: deviceListing.serialPort || deviceListing.serialport,
-            ...deviceListing,
-        };
         dispatch(
             startWatchingDevices(
-                patchedDeviceListing,
+                deviceListing,
                 onDeviceConnected,
                 onDeviceDisconnected,
                 onDeviceDeselected,
