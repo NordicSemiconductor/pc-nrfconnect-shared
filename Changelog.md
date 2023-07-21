@@ -17,16 +17,7 @@ every new version is a new major version.
 -   Default Material UI color for 'red', 'indigo', 'amber', 'purple', 'green',
     'deepPurple', 'orange', 'lime', 'lightGreen', 'lightBlue', 'pink' which uses
     the 500 shade e.g `tw-bg-red`
-
-### Removed
-
--   'red', 'indigo', 'amber', 'purple', 'green', 'deepPurple', 'orange', 'lime',
-    'lightGreen', 'lightBlue', 'pink' from `utils/colors.ts`
-
-### Steps to upgrade when using this package
-
--   Replace any colors from `utils/colors.ts` with tailwind classes or `<color>`
-    -> `<color>500` e.g `red` -> `red500`
+-   NordicBlue shades 50-900 e.g. `tw-bg-nordicBlue-300`
 
 ## 74 - 2023-07-18
 

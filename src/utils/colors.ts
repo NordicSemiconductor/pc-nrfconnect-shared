@@ -6,7 +6,6 @@
 
 // Keep this file in sync with colors.scss
 export const colors = {
-    nordicBlue: '#00a9ce',
     blueSlate: '#0033a0',
     blueSlateLighter: '#7c98d3',
     white: 'white',
@@ -16,6 +15,19 @@ export const colors = {
     secondary: 'white',
     accent: '#0033a0',
 
+    nordicBlue: '#00A9CE',
+    nordicBlue50: '#E0F5F9',
+    nordicBlue100: '#B3E5F0',
+    nordicBlue200: '#80D4E7',
+    nordicBlue300: '#4DC3DD',
+    nordicBlue400: '#26B6D5',
+    nordicBlue500: '#00A9CE',
+    nordicBlue600: '#00A2C9',
+    nordicBlue700: '#0098C2',
+    nordicBlue800: '#008FBC',
+    nordicBlue900: '#007EB0',
+
+    gray: '#607d8b',
     gray50: '#eceff1',
     gray100: '#cfd8dc',
     gray200: '#b0bec5',
@@ -27,6 +39,7 @@ export const colors = {
     gray800: '#37474f',
     gray900: '#263238',
 
+    red: '#F44336',
     red50: '#FFEBEE',
     red100: '#FFCDD2',
     red200: '#FFCDD2',
@@ -38,6 +51,7 @@ export const colors = {
     red800: '#EF5350',
     red900: '#EF5350',
 
+    indigo: '#3F51B5',
     indigo50: '#E8EAF6',
     indigo100: '#C5CAE9',
     indigo200: '#9FA8DA',
@@ -49,6 +63,7 @@ export const colors = {
     indigo800: '#1A237E',
     indigo900: '#1A237E',
 
+    amber: '#FFC107',
     amber50: '#FFF8E1',
     amber100: '#FFECB3',
     amber200: '#FFE082',
@@ -60,6 +75,7 @@ export const colors = {
     amber800: '#FF8F00',
     amber900: '#FF6F00',
 
+    purple: '#9C27B0',
     purple50: '#F3E5F5',
     purple100: '#E1BEE7',
     purple200: '#CE93D8',
@@ -71,6 +87,7 @@ export const colors = {
     purple800: '#6A1B9A',
     purple900: '#4A148C',
 
+    green: '#4CAF50',
     green50: '#E8F5E9',
     green100: '#C8E6C9',
     green200: '#A5D6A7',
@@ -82,6 +99,7 @@ export const colors = {
     green800: '#2E7D32',
     green900: '#1B5E20',
 
+    deepPurple: '#673AB7',
     deepPurple50: '#EDE7F6',
     deepPurple100: '#D1C4E9',
     deepPurple200: '#B39DDB',
@@ -93,6 +111,7 @@ export const colors = {
     deepPurple800: '#4527A0',
     deepPurple900: '#311B92',
 
+    orange: '#FF9800',
     orange50: '#FFF3E0',
     orange100: '#FFE0B2',
     orange200: '#FFCC80',
@@ -104,6 +123,7 @@ export const colors = {
     orange800: '#EF6C00',
     orange900: '#FF6F00',
 
+    lime: '#CDDC39',
     lime50: '#F9FBE7',
     lime100: '#F0F4C3',
     lime200: '#E6EE9C',
@@ -115,6 +135,7 @@ export const colors = {
     lime800: '#9E9D24',
     lime900: '#827717',
 
+    pink: '#E91E63',
     pink50: '#FCE4EC',
     pink100: '#F8BBD0',
     pink200: '#F48FB1',
@@ -126,6 +147,7 @@ export const colors = {
     pink800: '#AD1457',
     pink900: '#880E4F',
 
+    lightGreen: '#8BC34A',
     lightGreen50: '#F1F8E9',
     lightGreen100: '#DCEDC8',
     lightGreen200: '#C5E1A5',
@@ -137,6 +159,7 @@ export const colors = {
     lightGreen800: '#558B2F',
     lightGreen900: '#33691E',
 
+    lightBlue: '#03A9F4',
     lightBlue50: '#E1F5FE',
     lightBlue100: '#B3E5FC',
     lightBlue200: '#81D4FA',

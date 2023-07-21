@@ -6,6 +6,7 @@
 const flattenedColors = require('../src/utils/colors').colors;
 
 const paletteColorsKeys = [
+    'nordicBlue',
     'gray',
     'red',
     'indigo',
@@ -23,12 +24,11 @@ const paletteColorsKeys = [
 const paletteColors = {};
 
 paletteColorsKeys.forEach(color => {
-    let defaultValue;
     const colorList = Object.entries(flattenedColors)
         .filter(([key]) => key.startsWith(color))
         .map(([key, value]) => {
-            if (key.endsWith('500')) {
-                defaultValue = value;
+            if (key === color) {
+                [DEFAULT, value];
             }
             return [key.replace(color, ''), value];
         });
