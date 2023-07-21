@@ -24,6 +24,11 @@ every new version is a new major version.
 ### Changed
 
 -   `Button` converted to tailwind
+-   `DisplayConflictingSettings` converted to tailwind
+
+### Fixed
+
+-   `DisplayConflictingSettings` spacing and minor UI inconsistencies
 
 ## 74 - 2023-07-18
 
