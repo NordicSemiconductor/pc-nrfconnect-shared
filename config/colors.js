@@ -28,15 +28,12 @@ paletteColorsKeys.forEach(color => {
         .filter(([key]) => key.startsWith(color))
         .map(([key, value]) => {
             if (key === color) {
-                [DEFAULT, value];
+                return ['DEFAULT', value];
             }
             return [key.replace(color, ''), value];
         });
 
-    paletteColors[color] = {
-        ...Object.fromEntries(colorList),
-        DEFAULT: defaultValue,
-    };
+    paletteColors[color] = Object.fromEntries(colorList);
 });
 
 const colors = Object.entries(flattenedColors).filter(
