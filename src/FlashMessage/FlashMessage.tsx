@@ -20,6 +20,7 @@ import {
 } from './FlashMessageSlice';
 
 import './flashMessage.css';
+import classNames from '../utils/classNames';
 
 const SLIDE_IN_DURATION_MS = 300;
 const SLIDE_IN_ANIMATION = `${SLIDE_IN_DURATION_MS}ms slide-in`;
@@ -79,30 +80,23 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
     return (
         <div
             ref={divRef}
+            className={`tw-flex tw-w-full tw-flex-col tw-justify-between tw-p-4  tw-text-white${classNames(
+                variant === 'error' && 'tw-bg-red',
+                variant === 'success' && 'tw-bg-green',
+                variant === 'info' && 'tw-bg-nordicBlue',
+                variant === 'warning' && 'tw-bg-orange'
+            )}`}
             style={{
-                backgroundColor: getBackgroundColorFromVariant(variant),
-                color: colors.white,
                 zIndex: 1000,
                 animation:
                     fadeoutTimer !== 'unset'
                         ? flashMessageAnimations(initialRender(), dismissTime)
                         : 'unset',
-                width: '100%',
-                padding: '16px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
             }}
             onMouseEnter={removeFadeout}
             onMouseLeave={addFadeout}
         >
-            <div
-                style={{
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                }}
-            >
+            <div className="tw-flex tw-w-full tw-justify-between">
                 {message}
                 <div onClick={close}>
                     <Icon path={mdiClose} size={0.8} />
@@ -167,19 +161,4 @@ const flashMessageAnimations = (
     }`;
 };
 
-const getBackgroundColorFromVariant = (variant: FlashMessageVariant) => {
-    switch (variant) {
-        case 'error':
-            return colors.red;
-        case 'success':
-            return colors.green;
-        case 'info':
-            return colors.nordicBlue;
-        case 'warning':
-            return colors.orange;
-
-        default:
-            return '' as never;
-    }
-};
 export default FlashMessages;
