@@ -6,11 +6,11 @@
 
 import React, { useEffect, useState } from 'react';
 import type { AutoDetectTypes } from '@serialport/bindings-cpp';
-import classNames from 'pc-nrfconnect-shared/src/utils/classNames';
 import { SerialPortOpenOptions } from 'serialport';
 
 import { ConfirmationDialog } from '../Dialog/Dialog';
 import logger from '../logging';
+import classNames from '../utils/classNames';
 import {
     createSerialPort,
     getSerialPortOptions,
