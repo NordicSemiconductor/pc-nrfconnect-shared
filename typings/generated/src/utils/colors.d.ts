@@ -1,5 +1,4 @@
 export declare const colors: {
-    nordicBlue: string;
     blueSlate: string;
     blueSlateLighter: string;
     white: string;
@@ -8,6 +7,18 @@ export declare const colors: {
     primaryDarkened: string;
     secondary: string;
     accent: string;
+    nordicBlue: string;
+    nordicBlue50: string;
+    nordicBlue100: string;
+    nordicBlue200: string;
+    nordicBlue300: string;
+    nordicBlue400: string;
+    nordicBlue500: string;
+    nordicBlue600: string;
+    nordicBlue700: string;
+    nordicBlue800: string;
+    nordicBlue900: string;
+    gray: string;
     gray50: string;
     gray100: string;
     gray200: string;
@@ -18,6 +29,7 @@ export declare const colors: {
     gray700: string;
     gray800: string;
     gray900: string;
+    red: string;
     red50: string;
     red100: string;
     red200: string;
@@ -28,6 +40,7 @@ export declare const colors: {
     red700: string;
     red800: string;
     red900: string;
+    indigo: string;
     indigo50: string;
     indigo100: string;
     indigo200: string;
@@ -38,6 +51,7 @@ export declare const colors: {
     indigo700: string;
     indigo800: string;
     indigo900: string;
+    amber: string;
     amber50: string;
     amber100: string;
     amber200: string;
@@ -48,6 +62,7 @@ export declare const colors: {
     amber700: string;
     amber800: string;
     amber900: string;
+    purple: string;
     purple50: string;
     purple100: string;
     purple200: string;
@@ -58,6 +73,7 @@ export declare const colors: {
     purple700: string;
     purple800: string;
     purple900: string;
+    green: string;
     green50: string;
     green100: string;
     green200: string;
@@ -68,6 +84,7 @@ export declare const colors: {
     green700: string;
     green800: string;
     green900: string;
+    deepPurple: string;
     deepPurple50: string;
     deepPurple100: string;
     deepPurple200: string;
@@ -78,6 +95,7 @@ export declare const colors: {
     deepPurple700: string;
     deepPurple800: string;
     deepPurple900: string;
+    orange: string;
     orange50: string;
     orange100: string;
     orange200: string;
@@ -88,6 +106,7 @@ export declare const colors: {
     orange700: string;
     orange800: string;
     orange900: string;
+    lime: string;
     lime50: string;
     lime100: string;
     lime200: string;
@@ -98,6 +117,7 @@ export declare const colors: {
     lime700: string;
     lime800: string;
     lime900: string;
+    pink: string;
     pink50: string;
     pink100: string;
     pink200: string;
@@ -108,6 +128,7 @@ export declare const colors: {
     pink700: string;
     pink800: string;
     pink900: string;
+    lightGreen: string;
     lightGreen50: string;
     lightGreen100: string;
     lightGreen200: string;
@@ -118,6 +139,7 @@ export declare const colors: {
     lightGreen700: string;
     lightGreen800: string;
     lightGreen900: string;
+    lightBlue: string;
     lightBlue50: string;
     lightBlue100: string;
     lightBlue200: string;
