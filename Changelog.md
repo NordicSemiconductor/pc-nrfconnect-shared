@@ -7,6 +7,18 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 75 - UNRELEASED
+
+### Added
+
+-   Material UI color shades 50-900 for 'red', 'indigo', 'amber', 'purple',
+    'green', 'deepPurple', 'orange', 'lime', 'lightGreen', 'lightBlue', 'pink',
+    such as e.g. `tw-bg-red-300`
+-   Default Material UI color for 'red', 'indigo', 'amber', 'purple', 'green',
+    'deepPurple', 'orange', 'lime', 'lightGreen', 'lightBlue', 'pink' which uses
+    the 500 shade e.g `tw-bg-red`
+-   NordicBlue shades 50-900 e.g. `tw-bg-nordicBlue-300`
+
 ## 74 - 2023-07-18
 
 ### Fixed
