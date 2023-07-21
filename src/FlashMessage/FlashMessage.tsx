@@ -11,11 +11,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { mdiClose } from '@mdi/js';
 import Icon from '@mdi/react';
 
+import classNames from '../utils/classNames';
 import { colors } from '../utils/colors';
 import { FlashMessage, getMessages, removeMessage } from './FlashMessageSlice';
 
 import './flashMessage.css';
-import classNames from '../utils/classNames';
 
 const SLIDE_IN_DURATION_MS = 300;
 const SLIDE_IN_ANIMATION = `${SLIDE_IN_DURATION_MS}ms slide-in`;
