@@ -7,6 +7,14 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+
+## 75 - UNRELEASED
+
+### Added
+
+-   Tailwind colors such as tw-bg-red-<50-900>
+-   Default Tailwind color tw-bg-red which uses the 500 shade
+
 ## 74 - 2023-07-18
 
 ### Fixed

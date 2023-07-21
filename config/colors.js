@@ -5,18 +5,45 @@
  */
 const flattenedColors = require('../src/utils/colors').colors;
 
-const grays = Object.entries(flattenedColors)
-    .filter(([key]) => key.startsWith('gray'))
-    .map(([key, value]) => [key.replace('gray', ''), value]);
+const paletteColorsKeys = [
+    'gray',
+    'red',
+    'indigo',
+    'amber',
+    'purple',
+    'green',
+    'deepPurple',
+    'orange',
+    'lime',
+    'lightGreen',
+    'lightBlue',
+    'pink',
+];
+
+let paletteColors = {};
+
+paletteColorsKeys.forEach(color => {
+    let defaultValue;
+    const colorList = Object.entries(flattenedColors)
+        .filter(([key]) => key.startsWith(color))
+        .map(([key, value]) => {
+            if (key.endsWith('500')) {
+                defaultValue = value;
+            }
+            return [key.replace(color, ''), value];
+        });
+
+    paletteColors[color] = {
+        ...Object.fromEntries(colorList),
+        DEFAULT: defaultValue,
+    };
+});
 
 const colors = Object.entries(flattenedColors).filter(
-    ([key]) => !key.startsWith('gray')
+    ([key]) => !paletteColorsKeys.find(c => key.startsWith(c))
 );
 
 module.exports = {
     ...Object.fromEntries(colors),
-
-    gray: {
-        ...Object.fromEntries(grays),
-    },
+    ...paletteColors,
 };
