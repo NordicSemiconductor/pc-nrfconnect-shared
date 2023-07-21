@@ -20,7 +20,7 @@ const paletteColorsKeys = [
     'pink',
 ];
 
-let paletteColors = {};
+const paletteColors = {};
 
 paletteColorsKeys.forEach(color => {
     let defaultValue;
