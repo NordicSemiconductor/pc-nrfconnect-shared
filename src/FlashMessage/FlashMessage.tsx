@@ -75,7 +75,7 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
     return (
         <div
             ref={divRef}
-            className={`tw-flex tw-w-full tw-flex-col tw-justify-between tw-p-4  tw-text-white${classNames(
+            className={`tw-flex tw-w-full tw-flex-col tw-justify-between tw-p-4  tw-text-white ${classNames(
                 variant === 'error' && 'tw-bg-red',
                 variant === 'success' && 'tw-bg-green',
                 variant === 'info' && 'tw-bg-nordicBlue',
