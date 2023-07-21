@@ -14,7 +14,7 @@ every new version is a new major version.
 -   Material UI color shades 50-900 for 'red', 'indigo', 'amber', 'purple',
     'green', 'deepPurple', 'orange', 'lime', 'lightGreen', 'lightBlue', 'pink',
     such as e.g. `tw-bg-red-300`
--   Default Tailwind color for 'red', 'indigo', 'amber', 'purple', 'green',
+-   Default Material UI color for 'red', 'indigo', 'amber', 'purple', 'green',
     'deepPurple', 'orange', 'lime', 'lightGreen', 'lightBlue', 'pink' which uses
     the 500 shade e.g `tw-bg-red`
 
