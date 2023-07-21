@@ -104,7 +104,7 @@ export const colors = {
     orange800: '#EF6C00',
     orange900: '#FF6F00',
 
-    lime50: '#311B92',
+    lime50: '#F9FBE7',
     lime100: '#F0F4C3',
     lime200: '#E6EE9C',
     lime300: '#DCE775',
