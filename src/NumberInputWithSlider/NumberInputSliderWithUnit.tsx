@@ -51,7 +51,10 @@ export default ({
                     values={[range.indexOf(internalValue)]}
                     onChange={[i => setInternalValue(range[i])]}
                     onChangeComplete={() => onChangeComplete(internalValue)}
-                    range={range}
+                    range={{
+                        min: 0,
+                        max: range.length - 1,
+                    }}
                     disabled={disabled}
                 />
             ) : (
