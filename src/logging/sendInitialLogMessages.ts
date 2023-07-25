@@ -5,8 +5,8 @@
  */
 
 import { getModuleVersions } from '@nordicsemiconductor/nrf-device-lib-js';
-import { ipcRenderer } from 'electron';
 
+import { getAppDetails } from '../../ipc/appDetails';
 import {
     getDeviceLibContext,
     getModuleVersion,
@@ -17,48 +17,47 @@ import logLibVersions from '../utils/logLibVersions';
 import logger from '.';
 
 let initialMessagesSent = false;
-export default () => {
+export default async () => {
     if (initialMessagesSent) return;
     initialMessagesSent = true;
 
     logLibVersions();
     logger.debug(`Application data folder: ${getAppDataDir()}`);
 
-    ipcRenderer.once('app-details', async (_event, details) => {
-        const {
-            name,
-            currentVersion,
-            engineVersion,
-            coreVersion,
-            corePath,
-            isOfficial,
-            installed,
-            homeDir,
-            tmpDir,
-            bundledJlink,
-        } = details;
+    const details = await getAppDetails();
 
-        const official = isOfficial ? 'official' : 'local';
+    const {
+        name,
+        currentVersion,
+        engineVersion,
+        coreVersion,
+        corePath,
+        isOfficial,
+        installed,
+        homeDir,
+        tmpDir,
+        bundledJlink,
+    } = details;
 
-        logger.debug(`App ${name} v${currentVersion} ${official}`);
-        logger.debug(`App path: ${installed.path}`);
-        logger.debug(
-            `nRFConnect ${coreVersion}, required by the app is (${engineVersion})`
-        );
-        logger.debug(`nRFConnect path: ${corePath}`);
-        logger.debug(`HomeDir: ${homeDir}`);
-        logger.debug(`TmpDir: ${tmpDir}`);
+    const official = isOfficial ? 'official' : 'local';
 
-        if (bundledJlink) {
-            const versions = await getModuleVersions(getDeviceLibContext());
-            const jlinkVersion = getModuleVersion('JlinkARM', versions);
+    logger.debug(`App ${name} v${currentVersion} ${official}`);
+    logger.debug(`App path: ${installed.path}`);
+    logger.debug(
+        `nRFConnect ${coreVersion}, required by the app is (${engineVersion})`
+    );
+    logger.debug(`nRFConnect path: ${corePath}`);
+    logger.debug(`HomeDir: ${homeDir}`);
+    logger.debug(`TmpDir: ${tmpDir}`);
 
-            if (!describeVersion(jlinkVersion).includes(bundledJlink)) {
-                logger.info(
-                    `Installed JLink version does not match the provided version (${bundledJlink})`
-                );
-            }
+    if (bundledJlink) {
+        const versions = await getModuleVersions(getDeviceLibContext());
+        const jlinkVersion = getModuleVersion('JlinkARM', versions);
+
+        if (!describeVersion(jlinkVersion).includes(bundledJlink)) {
+            logger.info(
+                `Installed JLink version does not match the provided version (${bundledJlink})`
+            );
         }
-    });
-    ipcRenderer.send('get-app-details');
+    }
 };

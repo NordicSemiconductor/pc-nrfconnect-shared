@@ -1,3 +1,6 @@
+export declare const ipc: {
+    registerGetAppDetails: (onGetAppDetails: (webContents: Electron.WebContents) => import("../ipc/appDetails").AppDetailsFromLauncher) => void;
+};
 export declare const SERIALPORT_CHANNEL: {
     OPEN: string;
     CLOSE: string;

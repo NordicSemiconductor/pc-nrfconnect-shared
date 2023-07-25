@@ -4,6 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import { registerGetAppDetails } from '../ipc/appDetails';
+
+export const ipc = { registerGetAppDetails };
+
 export const SERIALPORT_CHANNEL = {
     OPEN: 'serialport:open',
     CLOSE: 'serialport:close',
