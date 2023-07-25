@@ -11,19 +11,19 @@ import { RangeOrValues } from '../Slider/range';
 import Slider from '../Slider/Slider';
 
 export default ({
-    disabled,
     range,
     value,
     onChange,
     onChangeComplete,
+    disabled,
     label,
     unit,
 }: {
-    disabled: boolean;
     range: RangeOrValues;
     value: number;
     onChange: (value: number) => void;
     onChangeComplete?: (value: number) => void;
+    disabled?: boolean;
     label?: React.ReactNode;
     unit?: React.ReactNode;
 }) => (
