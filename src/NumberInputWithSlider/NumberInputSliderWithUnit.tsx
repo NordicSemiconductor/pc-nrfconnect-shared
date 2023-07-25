@@ -9,12 +9,14 @@ import React from 'react';
 import NumberInlineInput from '../InlineInput/NumberInlineInput';
 import { RangeOrValues } from '../Slider/range';
 import Slider from '../Slider/Slider';
+import classNames from '../utils/classNames';
 
 export default ({
     range,
     value,
     onChange,
     onChangeComplete,
+    className,
     disabled,
     label,
     unit,
@@ -23,11 +25,12 @@ export default ({
     value: number;
     onChange: (value: number) => void;
     onChangeComplete?: (value: number) => void;
+    className?: string;
     disabled?: boolean;
     label?: React.ReactNode;
     unit?: React.ReactNode;
 }) => (
-    <div className="tw-flex tw-flex-col tw-gap-1">
+    <div className={`tw-flex tw-flex-col tw-gap-1 ${classNames(className)}`}>
         {label && (
             <div className="tw-flex tw-justify-between">
                 {label}
