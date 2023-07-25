@@ -30,7 +30,11 @@ export default ({
     label?: React.ReactNode;
     unit?: React.ReactNode;
 }) => (
-    <div className={`tw-flex tw-flex-col tw-gap-1 ${classNames(className)}`}>
+    <div
+        className={`tw-flex tw-flex-col tw-gap-1 tw-text-xs ${classNames(
+            className
+        )}`}
+    >
         {label && (
             <div className="tw-flex tw-justify-between">
                 {label}
