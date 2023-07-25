@@ -33,6 +33,7 @@ export { default as SidePanel } from './SidePanel/SidePanel';
 export { Group, CollapsibleGroup } from './SidePanel/Group';
 export { default as InlineInput } from './InlineInput/InlineInput';
 export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
+export { default as NumberInputSliderWithUnit } from './NumberInputWithSlider/NumberInputSliderWithUnit';
 export { default as MasonryLayout } from './MasonryLayout/MasonryLayout';
 export { default as useStopwatch } from './utils/useStopwatch';
 export { default as useFocusedOnVisible } from './utils/useFocusedOnVisible';

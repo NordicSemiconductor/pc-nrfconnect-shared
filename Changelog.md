@@ -18,6 +18,8 @@ every new version is a new major version.
     'deepPurple', 'orange', 'lime', 'lightGreen', 'lightBlue', 'pink' which uses
     the 500 shade e.g `tw-bg-red`
 -   NordicBlue shades 50-900 e.g. `tw-bg-nordicBlue-300`
+-   `NumberInputSliderWithUnit` component that merges a number input with unit
+    and a slider with one element
 
 ## 74 - 2023-07-18
 
