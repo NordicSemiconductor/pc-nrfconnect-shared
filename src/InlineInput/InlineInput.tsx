@@ -34,9 +34,9 @@ useSynchronisationIfChangedFromOutside does take care of this by remembering the
 external value and comparing with it to determine whether it has changed.
 */
 
-export const useSynchronisationIfChangedFromOutside = <T,>(
-    externalValue: T,
-    setInternalValue: (value: T) => void
+const useSynchronisationIfChangedFromOutside = (
+    externalValue: string,
+    setInternalValue: (value: string) => void
 ) => {
     const previousExternalValue = useRef(externalValue);
     useEffect(() => {

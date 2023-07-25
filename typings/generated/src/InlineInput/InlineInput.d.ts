@@ -1,6 +1,5 @@
 import React from 'react';
 import './inline-input.scss';
-export declare const useSynchronisationIfChangedFromOutside: <T>(externalValue: T, setInternalValue: (value: T) => void) => T;
 interface Props {
     disabled?: boolean;
     value: string;
