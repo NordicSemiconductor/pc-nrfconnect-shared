@@ -6,6 +6,7 @@
 
 import React, { useState } from 'react';
 
+import { useSynchronisationIfChangedFromOutside } from '../InlineInput/InlineInput';
 import NumberInlineInput from '../InlineInput/NumberInlineInput';
 import { RangeOrValues } from '../Slider/range';
 import Slider from '../Slider/Slider';
@@ -13,19 +14,20 @@ import Slider from '../Slider/Slider';
 export default ({
     disabled,
     range,
-    initialValue,
+    value,
     onChangeComplete,
     label,
     unit,
 }: {
     disabled: boolean;
     range: RangeOrValues;
-    initialValue: number;
+    value: number;
     onChangeComplete: (value: number) => void;
     label?: React.ReactNode;
     unit?: React.ReactNode;
 }) => {
-    const [internalValue, setInternalValue] = useState(initialValue);
+    const [internalValue, setInternalValue] = useState(value);
+    useSynchronisationIfChangedFromOutside(value, setInternalValue);
 
     return (
         <div className="tw-flex tw-flex-col tw-gap-1">
@@ -36,10 +38,8 @@ export default ({
                         <NumberInlineInput
                             value={internalValue}
                             range={range}
-                            onChange={value => setInternalValue(value)}
-                            onChangeComplete={() =>
-                                onChangeComplete(internalValue)
-                            }
+                            onChange={setInternalValue}
+                            onChangeComplete={onChangeComplete}
                             disabled={disabled}
                         />
                         {unit}

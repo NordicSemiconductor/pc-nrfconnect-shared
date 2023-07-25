@@ -1,9 +1,9 @@
 import React from 'react';
 import { RangeOrValues } from '../Slider/range';
-declare const _default: ({ disabled, range, initialValue, onChangeComplete, label, unit, }: {
+declare const _default: ({ disabled, range, value, onChangeComplete, label, unit, }: {
     disabled: boolean;
     range: RangeOrValues;
-    initialValue: number;
+    value: number;
     onChangeComplete: (value: number) => void;
     label?: React.ReactNode;
     unit?: React.ReactNode;
