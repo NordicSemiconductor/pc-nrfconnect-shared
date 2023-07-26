@@ -36,7 +36,7 @@ export default ({ categories }: FeedbackPaneProps) => {
 
     if (sayThankYou === true) {
         return (
-            <div className="tw-flex tw-w-full tw-justify-center">
+            <div className="tw-preflight tw-flex tw-w-full tw-justify-center">
                 <div className="tw-mb-3 tw-flex tw-flex-col tw-items-start tw-justify-center tw-bg-white tw-px-3 tw-py-4">
                     <b className="tw-mb-3">Thank you!</b>
                     <section>
@@ -66,7 +66,7 @@ export default ({ categories }: FeedbackPaneProps) => {
     }
 
     return (
-        <div className="tw-flex tw-w-full tw-justify-center">
+        <div className="tw-preflight tw-flex tw-w-full tw-justify-center">
             <div className="tw-mb-3 tw-flex tw-flex-col tw-items-start tw-justify-center tw-gap-4 tw-bg-white tw-px-3 tw-py-4">
                 <b>Give Feedback</b>
                 <p>
@@ -111,7 +111,7 @@ export default ({ categories }: FeedbackPaneProps) => {
                     </div>
                 </form>
                 <p>We only collect this information when you send feedback:</p>
-                <ul>
+                <ul className="tw-list-disc tw-pl-8">
                     <li>Application name</li>
                     <li>Your feedback</li>
                     <li>Operating system</li>

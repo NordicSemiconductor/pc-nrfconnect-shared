@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default ({ children, title }: Props) => (
-    <div className="tw-w-full">
+    <div className="tw-preflight tw-w-full">
         {title != null && <h3 className="tw-pb-1 tw-font-medium">{title}</h3>}
         <div className="tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
             {children}

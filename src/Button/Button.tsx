@@ -38,7 +38,7 @@ const Button: React.FC<ButtonProps> = ({
     title,
     large = false,
 }) => (
-    <div className="tw-preflight">
+    <div className={`tw-preflight ${className}`}>
         <button
             type="button"
             id={id}
