@@ -111,7 +111,7 @@ export default ({ categories }: FeedbackPaneProps) => {
                     </div>
                 </form>
                 <p>We only collect this information when you send feedback:</p>
-                <ul>
+                <ul className="tw-list-disc tw-pl-8">
                     <li>Application name</li>
                     <li>Your feedback</li>
                     <li>Operating system</li>
