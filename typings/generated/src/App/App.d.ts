@@ -28,3 +28,4 @@ declare const _default: ({ appReducer, ...props }: {
     appReducer?: Reducer<any, import("redux").AnyAction> | undefined;
 } & ConnectedAppProps) => JSX.Element;
 export default _default;
+//# sourceMappingURL=App.d.ts.map

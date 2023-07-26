@@ -151,3 +151,4 @@ export declare const colors: {
     lightBlue800: string;
     lightBlue900: string;
 };
+//# sourceMappingURL=colors.d.ts.map

@@ -16,3 +16,4 @@ export declare const displayedDeviceName: (device: Device, { respectNickname }?:
 export declare const productPageUrl: (device: Device) => string | undefined;
 export declare const buyOnlineUrl: (device: Device) => string | undefined;
 export {};
+//# sourceMappingURL=deviceInfo.d.ts.map

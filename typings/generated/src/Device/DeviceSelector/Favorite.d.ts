@@ -7,3 +7,4 @@ export declare const MakeDeviceFavorite: FC<{
 export declare const FavoriteIndicator: FC<{
     device: Device;
 }>;
+//# sourceMappingURL=Favorite.d.ts.map

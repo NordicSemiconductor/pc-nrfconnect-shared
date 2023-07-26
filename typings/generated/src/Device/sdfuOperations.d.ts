@@ -12,3 +12,4 @@ declare const _default: {
     createDfuZipBuffer: (dfuImages: DfuImage[]) => Promise<Buffer>;
 };
 export default _default;
+//# sourceMappingURL=sdfuOperations.d.ts.map

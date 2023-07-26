@@ -24,3 +24,4 @@ export interface Steppers {
 }
 declare const _default: ({ title, steps }: Steppers) => JSX.Element;
 export default _default;
+//# sourceMappingURL=Stepper.d.ts.map

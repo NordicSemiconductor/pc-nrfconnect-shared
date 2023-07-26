@@ -12,3 +12,4 @@ interface MasonryLayoutProperties {
  */
 declare const _default: ({ children, minWidth, className, }: PropsWithChildren<MasonryLayoutProperties>) => JSX.Element;
 export default _default;
+//# sourceMappingURL=MasonryLayout.d.ts.map

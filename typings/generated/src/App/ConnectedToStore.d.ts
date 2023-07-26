@@ -5,3 +5,4 @@ declare const _default: ({ appReducer, children, }: {
     children: ReactNode;
 }) => JSX.Element;
 export default _default;
+//# sourceMappingURL=ConnectedToStore.d.ts.map

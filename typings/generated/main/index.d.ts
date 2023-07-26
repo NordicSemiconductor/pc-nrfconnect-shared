@@ -23,3 +23,4 @@ export type OpenAppOptions = {
         serialPortPath?: string;
     };
 };
+//# sourceMappingURL=index.d.ts.map

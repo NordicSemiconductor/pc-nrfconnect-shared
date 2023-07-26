@@ -18,3 +18,4 @@ export declare const getDeviceSetupMessage: (state: RootState) => string;
 export declare const getDeviceSetupProgressMessage: (state: RootState) => string | undefined;
 export declare const getDeviceSetupChoices: (state: RootState) => string[] | undefined;
 export declare const getDeviceSetupUserInputCallback: (state: RootState) => ((canceled: boolean, choice?: number) => void) | undefined;
+//# sourceMappingURL=deviceSetupSlice.d.ts.map

@@ -38,3 +38,4 @@ export interface DeviceSetupConfig {
 }
 export declare const prepareDevice: (device: Device, deviceSetupConfig: DeviceSetupConfig, onSuccess: (device: Device) => void, onFail: (reason?: unknown) => void, checkCurrentFirmwareVersion?: boolean, requireUserConfirmation?: boolean) => AppThunk<RootState, Promise<void>>;
 export declare const setupDevice: (device: Device, deviceSetupConfig: DeviceSetupConfig, onDeviceIsReady: (device: Device) => void, doDeselectDevice: () => void) => AppThunk<RootState>;
+//# sourceMappingURL=deviceSetup.d.ts.map

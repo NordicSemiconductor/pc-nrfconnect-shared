@@ -24,3 +24,4 @@ export declare const clearWaitForDevice: () => AppThunk;
  * @returns {undefined}
  */
 export declare const stopWatchingDevices: () => void;
+//# sourceMappingURL=deviceLister.d.ts.map

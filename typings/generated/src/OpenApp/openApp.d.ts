@@ -5,3 +5,4 @@ type AppSpec = {
 };
 export declare const openAppWindow: (app: AppSpec, openAppOptions?: OpenAppOptions) => void;
 export {};
+//# sourceMappingURL=openApp.d.ts.map

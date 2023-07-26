@@ -8,3 +8,4 @@ interface Props {
 }
 declare const _default: ({ device, doSelectDevice, allowMoreInfoVisible }: Props) => JSX.Element;
 export default _default;
+//# sourceMappingURL=Device.d.ts.map

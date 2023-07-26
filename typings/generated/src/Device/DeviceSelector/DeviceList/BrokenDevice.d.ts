@@ -5,3 +5,4 @@ declare const _default: ({ device }: {
     device: DeviceProps;
 }) => JSX.Element;
 export default _default;
+//# sourceMappingURL=BrokenDevice.d.ts.map

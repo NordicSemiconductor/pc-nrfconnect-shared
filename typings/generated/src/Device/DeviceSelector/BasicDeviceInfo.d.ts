@@ -9,3 +9,4 @@ interface BasicDeviceProps {
 }
 declare const _default: ({ device, deviceNameInputRef, toggles, showWaitingStatus, }: BasicDeviceProps) => JSX.Element;
 export default _default;
+//# sourceMappingURL=BasicDeviceInfo.d.ts.map

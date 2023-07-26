@@ -10,3 +10,4 @@ export default class AppTransport extends Transport {
     log({ level, message, timestamp }: LogEntry, next: () => void): void;
 }
 export {};
+//# sourceMappingURL=appTransport.d.ts.map

@@ -9,3 +9,4 @@ import { AppDispatch } from '../store';
  */
 declare const _default: (dispatch: AppDispatch) => () => void;
 export default _default;
+//# sourceMappingURL=syncLogToStore.d.ts.map

@@ -7,3 +7,4 @@ interface Props {
 }
 declare const _default: ({ title, link, linkLabel, children }: Props) => JSX.Element;
 export default _default;
+//# sourceMappingURL=DocumentationSection.d.ts.map
