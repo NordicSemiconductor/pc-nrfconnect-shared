@@ -35,7 +35,7 @@ export default () => {
 
     return (
         <Card title="Support">
-            <div className="tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
+            <div className="tw-preflight tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
                 <Section title="DevZone">
                     <p>
                         All support requests must be sent through our developer
