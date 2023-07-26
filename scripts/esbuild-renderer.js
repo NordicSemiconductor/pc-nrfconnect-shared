@@ -15,10 +15,14 @@ const tailwindcss = require('tailwindcss');
 const autoprefixer = require('autoprefixer');
 const path = require('path');
 
+const projectSpecificTailwindConfigPath = path.join(
+    process.cwd(),
+    'tailwind.config.js'
+);
 const tailwindConfig = () =>
-    fs.existsSync(path.join(__dirname, '..', '..', '..', 'tailwind.config.js'))
-        ? './tailwind.config.js'
-        : './node_modules/pc-nrfconnect-shared/config/tailwind.config.js';
+    fs.existsSync(projectSpecificTailwindConfigPath)
+        ? projectSpecificTailwindConfigPath
+        : require.resolve('pc-nrfconnect-shared/config/tailwind.config.js');
 
 function options(additionalOptions) {
     const { dependencies } = JSON.parse(
