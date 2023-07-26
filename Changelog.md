@@ -20,6 +20,17 @@ every new version is a new major version.
 -   NordicBlue shades 50-900 e.g. `tw-bg-nordicBlue-300`
 -   `NumberInputSliderWithUnit` component that merges a number input with unit
     and a slider with one element
+-   `Button` variant `link-button` with white background, and nordic blue text
+    and border
+
+### Changed
+
+-   `Button` converted to tailwind
+-   `DisplayConflictingSettings` converted to tailwind
+
+### Fixed
+
+-   `DisplayConflictingSettings` spacing and minor UI inconsistencies
 
 ## 74 - 2023-07-18
 
