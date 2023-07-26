@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import './section.scss';
 interface Props {
     title?: string;
     children?: ReactNode;

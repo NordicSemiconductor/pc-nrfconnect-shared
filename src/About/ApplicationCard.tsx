@@ -56,28 +56,26 @@ export default () => {
 
     return (
         <Card title="Application">
-            <Section title="Title">{appInfo.displayName}</Section>
-            <Section title="Purpose">{appInfo.description}</Section>
-            <Section title="Version">{appInfo.currentVersion}</Section>
-            <Section title="Source">{appInfo.source || 'local'}</Section>
-            <Section title="Supported engines">
-                nRF Connect {appInfo.engineVersion}
-            </Section>
-            <Section title="Current engine">
-                nRF Connect {appInfo.coreVersion}
-            </Section>
-            <Section>
-                <AboutButton
-                    url={appInfo.repositoryUrl}
-                    label="Get source code"
-                />
-            </Section>
-            <Section>
-                <FactoryResetButton label="Restore defaults..." />
-            </Section>
-            <Section>
-                <ShortcutButton label="Show shortcuts" />
-            </Section>
+            <div className="tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
+                <Section title="Title">{appInfo.displayName}</Section>
+                <Section title="Purpose">{appInfo.description}</Section>
+                <Section title="Version">{appInfo.currentVersion}</Section>
+                <Section title="Source">{appInfo.source || 'local'}</Section>
+                <Section title="Supported engines">
+                    nRF Connect {appInfo.engineVersion}
+                </Section>
+                <Section title="Current engine">
+                    nRF Connect {appInfo.coreVersion}
+                </Section>
+                <Section>
+                    <AboutButton
+                        url={appInfo.repositoryUrl}
+                        label="Get source code"
+                    />
+                    <FactoryResetButton label="Restore defaults..." />
+                    <ShortcutButton label="Show shortcuts" />
+                </Section>
+            </div>
         </Card>
     );
 };

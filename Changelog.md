@@ -91,6 +91,10 @@ every new version is a new major version.
 -   Device setup fails report sdfu different FW version
 -   Device setup does not show the choices radio boxes
 
+### Fixed
+
+-   Fixed `About` tab styling that was lost with the addition of tailwind
+
 ## 68 - 2023-07-05
 
 ### Added
