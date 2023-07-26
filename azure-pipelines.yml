@@ -9,7 +9,7 @@ steps:
     npm ci
     npm run check
     npm run generate-types
-    [[ $(git status --porcelain) ]] && echo "Generate types found changes" && exit 1
+    [[ $(git status --porcelain) ]] && printf "Generate types found changes:\n$(git status --porcelain)\n" && exit 1
     npm test -- --coverage --coverageReporters=cobertura
   displayName: "Lint & test"
 - task: PublishCodeCoverageResults@1

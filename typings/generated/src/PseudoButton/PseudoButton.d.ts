@@ -8,3 +8,4 @@ declare const _default: ({ onClick, className, children, title, testId, }: {
     testId?: string | undefined;
 }) => JSX.Element;
 export default _default;
+//# sourceMappingURL=PseudoButton.d.ts.map

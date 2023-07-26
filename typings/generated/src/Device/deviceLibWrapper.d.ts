@@ -6,3 +6,4 @@ export declare const setVerboseDeviceLibLogging: (verboseLogging: boolean) => vo
 type KnownModule = 'nrfdl' | 'nrfdl-js' | 'jprog' | 'JlinkARM';
 export declare const getModuleVersion: (module: KnownModule, versions?: ModuleVersion[]) => ModuleVersion | undefined;
 export {};
+//# sourceMappingURL=deviceLibWrapper.d.ts.map

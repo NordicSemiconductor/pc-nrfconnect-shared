@@ -5,3 +5,4 @@ declare const _default: ({ doDeselectDevice, toggleDeviceListVisible, }: {
     toggleDeviceListVisible: () => void;
 }) => JSX.Element;
 export default _default;
+//# sourceMappingURL=SelectedDevice.d.ts.map

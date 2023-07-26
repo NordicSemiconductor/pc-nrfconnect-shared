@@ -11,3 +11,4 @@ interface ConflictingSettingsDialog {
 }
 declare const ConflictingSettingsDialog: ({ isVisible, onOverwrite, onCancel, localSettings, setSerialPortCallback, }: ConflictingSettingsDialog) => JSX.Element;
 export default ConflictingSettingsDialog;
+//# sourceMappingURL=ConflictingSettingsDialog.d.ts.map

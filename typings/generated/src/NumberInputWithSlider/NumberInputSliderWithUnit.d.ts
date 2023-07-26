@@ -11,3 +11,4 @@ declare const _default: ({ range, value, onChange, onChangeComplete, className, 
     unit?: React.ReactNode;
 }) => JSX.Element;
 export default _default;
+//# sourceMappingURL=NumberInputSliderWithUnit.d.ts.map

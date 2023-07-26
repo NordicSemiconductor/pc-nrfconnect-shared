@@ -20,3 +20,4 @@ declare const _default: ({ autoStart, timer, resolution, }: Stopwatch) => {
     millisecond: number;
 };
 export default _default;
+//# sourceMappingURL=useStopwatch.d.ts.map

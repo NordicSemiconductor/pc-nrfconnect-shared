@@ -5,3 +5,4 @@ declare const SidePanel: ({ children, className, }: {
     className?: string | undefined;
 }) => JSX.Element;
 export default SidePanel;
+//# sourceMappingURL=SidePanel.d.ts.map

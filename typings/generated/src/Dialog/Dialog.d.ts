@@ -62,3 +62,4 @@ interface ConfirmationDialogProps extends Omit<CoreProps, 'onHide'> {
 }
 export declare const ConfirmationDialog: ({ isVisible, title, headerIcon, children, className, confirmLabel, onConfirm, cancelLabel, onCancel, optionalLabel, onOptional, size, }: ConfirmationDialogProps) => JSX.Element;
 export {};
+//# sourceMappingURL=Dialog.d.ts.map

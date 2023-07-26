@@ -19,3 +19,4 @@ export declare const createSerialPort: (options: SerialPortOpenOptions<AutoDetec
     onDataWritten: (handler: (data: Uint8Array) => void) => () => void;
 }>;
 export declare const getSerialPortOptions: (path: string) => Promise<SerialPortOpenOptions<AutoDetectTypes> | undefined>;
+//# sourceMappingURL=SerialPort.d.ts.map

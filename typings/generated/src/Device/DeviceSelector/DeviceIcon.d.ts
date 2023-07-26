@@ -5,3 +5,4 @@ declare const DeviceIcon: FC<{
     device: Device;
 }>;
 export default DeviceIcon;
+//# sourceMappingURL=DeviceIcon.d.ts.map

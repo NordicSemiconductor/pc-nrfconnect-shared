@@ -14,3 +14,4 @@ interface Props {
 }
 declare const StartStopButton: FC<Props>;
 export default StartStopButton;
+//# sourceMappingURL=StartStopButton.d.ts.map

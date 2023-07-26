@@ -13,3 +13,4 @@ declare function openFile(filePath: string): void;
  */
 declare function openUrl(url: string): void;
 export { openFile, openUrl };
+//# sourceMappingURL=open.d.ts.map

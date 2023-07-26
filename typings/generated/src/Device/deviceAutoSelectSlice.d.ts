@@ -27,3 +27,4 @@ export declare const getDisconnectionTime: (state: RootState) => number | undefi
 export declare const getWaitForDevice: (state: RootState) => WaitForDevice | undefined;
 export declare const getLastArrivedDeviceId: (state: RootState) => number | undefined;
 export declare const getArrivedButWrongWhen: (state: RootState) => boolean | undefined;
+//# sourceMappingURL=deviceAutoSelectSlice.d.ts.map

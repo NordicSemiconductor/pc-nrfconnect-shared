@@ -5,3 +5,4 @@ interface AboutPaneProps {
 }
 declare const _default: ({ documentation }: AboutPaneProps) => JSX.Element;
 export default _default;
+//# sourceMappingURL=About.d.ts.map

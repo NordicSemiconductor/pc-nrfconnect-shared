@@ -8,3 +8,4 @@
  */
 declare const _default: <T extends HTMLElement>(isVisible: boolean) => import("react").RefObject<T>;
 export default _default;
+//# sourceMappingURL=useFocusedOnVisible.d.ts.map

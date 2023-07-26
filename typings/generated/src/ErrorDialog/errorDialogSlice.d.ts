@@ -21,3 +21,4 @@ export declare const reducer: import("redux").Reducer<ErrorDialog, import("redux
 export declare const isVisible: (state: RootState) => boolean;
 export declare const messages: (state: RootState) => ErrorMessage[];
 export declare const errorResolutions: (state: RootState) => ErrorResolutions | undefined;
+//# sourceMappingURL=errorDialogSlice.d.ts.map

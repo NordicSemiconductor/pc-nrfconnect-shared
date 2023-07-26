@@ -15,3 +15,4 @@ export interface DropdownProps {
 }
 declare const _default: ({ id, label, items, onSelect, disabled, selectedItem, numItemsBeforeScroll, className, }: DropdownProps) => JSX.Element;
 export default _default;
+//# sourceMappingURL=Dropdown.d.ts.map

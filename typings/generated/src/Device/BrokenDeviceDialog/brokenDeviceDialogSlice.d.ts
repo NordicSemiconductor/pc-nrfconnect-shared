@@ -10,3 +10,4 @@ export declare const info: (state: RootState) => {
     description: string;
     url: string;
 };
+//# sourceMappingURL=brokenDeviceDialogSlice.d.ts.map

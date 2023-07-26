@@ -65,3 +65,4 @@ export interface NrfConnectState<AppState> extends RootState {
     app: AppState;
 }
 export default store;
+//# sourceMappingURL=store.d.ts.map

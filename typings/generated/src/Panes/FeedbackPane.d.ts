@@ -4,3 +4,4 @@ export interface FeedbackPaneProps {
 }
 declare const _default: ({ categories }: FeedbackPaneProps) => JSX.Element;
 export default _default;
+//# sourceMappingURL=FeedbackPane.d.ts.map

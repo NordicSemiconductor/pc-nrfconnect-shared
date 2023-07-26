@@ -13,3 +13,4 @@ export interface Props {
 }
 declare const _default: ({ items, onSelect, disabled, selectedItem }: Props) => JSX.Element;
 export default _default;
+//# sourceMappingURL=StateSelector.d.ts.map

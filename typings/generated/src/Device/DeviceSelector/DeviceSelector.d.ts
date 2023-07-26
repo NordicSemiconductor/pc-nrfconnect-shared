@@ -18,3 +18,4 @@ export interface Props {
 }
 declare const _default: ({ deviceListing, deviceSetupConfig, onDeviceSelected, onDeviceDeselected, onDeviceConnected, onDeviceDisconnected, onDeviceIsReady, deviceFilter, }: Props) => JSX.Element;
 export default _default;
+//# sourceMappingURL=DeviceSelector.d.ts.map

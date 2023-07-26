@@ -12,3 +12,4 @@ interface Props {
 }
 declare const InlineInput: React.ForwardRefExoticComponent<Props & React.RefAttributes<HTMLInputElement>>;
 export default InlineInput;
+//# sourceMappingURL=InlineInput.d.ts.map

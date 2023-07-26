@@ -14,3 +14,4 @@ export declare const Group: ({ className, heading, title, children, }: {
     title?: string | undefined;
     children?: React.ReactNode;
 }) => JSX.Element;
+//# sourceMappingURL=Group.d.ts.map

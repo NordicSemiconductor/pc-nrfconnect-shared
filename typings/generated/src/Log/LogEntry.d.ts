@@ -5,3 +5,4 @@ declare const _default: ({ entry }: {
     entry: LogEntry;
 }) => JSX.Element;
 export default _default;
+//# sourceMappingURL=LogEntry.d.ts.map

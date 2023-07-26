@@ -28,3 +28,4 @@ export declare const selectedDevice: (state: RootState) => Device | undefined;
 export declare const deviceInfo: (state: RootState) => Device | null;
 export declare const selectedSerialNumber: (state: RootState) => string | null;
 export declare const getReadbackProtection: (state: RootState) => "unknown" | "protected" | "unprotected";
+//# sourceMappingURL=deviceSlice.d.ts.map

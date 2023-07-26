@@ -6,3 +6,4 @@ export interface Props {
 }
 declare const ShortcutItem: FC<Props>;
 export default ShortcutItem;
+//# sourceMappingURL=ShortcutItem.d.ts.map
