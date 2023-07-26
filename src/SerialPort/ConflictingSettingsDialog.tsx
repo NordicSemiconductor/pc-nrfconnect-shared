@@ -166,7 +166,7 @@ const DisplayConflictingSettings = ({
                                 key={key}
                                 className={`tw-p-1 ${classNames(
                                     conflictingSettings.includes(key)
-                                        ? 'tw-bg-orange-100'
+                                        ? 'tw-bg-red-100'
                                         : 'tw-bg-green-100'
                                 )}`}
                             >
@@ -190,7 +190,7 @@ const DisplayConflictingSettings = ({
                         <li
                             className={`tw-p-1 ${classNames(
                                 conflictingSettings.includes(key)
-                                    ? 'tw-bg-orange-100'
+                                    ? 'tw-bg-red-100'
                                     : 'tw-bg-green-100'
                             )}`}
                             key={key}
