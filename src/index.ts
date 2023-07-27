@@ -145,6 +145,8 @@ export type {
     AppVersions,
     PackageJson,
     SourceJson,
+    UrlString,
+    WithdrawnJson,
 } from './utils/AppTypes';
 
 export {

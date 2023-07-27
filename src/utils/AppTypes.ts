@@ -4,15 +4,19 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+export type UrlString = string;
+
 export interface SourceJson {
     name: string;
-    apps: string[];
+    apps: UrlString[];
 }
+
+export type WithdrawnJson = UrlString[];
 
 export type AppVersions = {
     [version: string]: {
         shasum?: string;
-        tarballUrl: string;
+        tarballUrl: UrlString;
     };
 };
 
@@ -20,9 +24,9 @@ export interface AppInfo {
     name: string;
     displayName: string;
     description: string;
-    homepage?: string;
-    iconUrl: string;
-    releaseNotesUrl: string;
+    homepage?: UrlString;
+    iconUrl: UrlString;
+    releaseNotesUrl: UrlString;
     latestVersion: string;
     versions: AppVersions;
     installed?: {
@@ -44,7 +48,7 @@ export interface PackageJson {
     bin?: ObjectContainingOptionalStrings | string;
     dependencies?: ObjectContainingOptionalStrings;
     description?: string;
-    homepage?: string;
+    homepage?: UrlString;
     devDependencies?: ObjectContainingOptionalStrings;
     displayName?: string;
     engines?: ObjectContainingOptionalStrings;
@@ -54,7 +58,7 @@ export interface PackageJson {
     peerDependencies?: ObjectContainingOptionalStrings;
     repository?: {
         type: string;
-        url: string;
+        url: UrlString;
     };
     scripts?: ObjectContainingOptionalStrings;
 }
