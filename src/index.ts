@@ -130,7 +130,7 @@ export {
 } from './SerialPort/SerialPort';
 export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSettingsDialog';
 
-export { openAppWindow } from './OpenApp/openApp';
+export { openApp, openLauncher } from '../ipc/openWindow';
 
 export type { AppDispatch, AppThunk, NrfConnectState } from './store';
 

@@ -1,6 +1,9 @@
 export declare const ipc: {
     registerGetAppDetails: (onGetAppDetails: (webContents: Electron.WebContents) => import("../ipc/appDetails").AppDetailsFromLauncher) => void;
+    registerOpenApp: (handler: (app: import("../ipc/openWindow").AppSpec, openAppOptions?: import("../ipc/openWindow").OpenAppOptions | undefined) => void) => Electron.IpcMain;
+    registerOpenLauncher: (handler: () => void) => Electron.IpcMain;
 };
+export type { OpenAppOptions } from '../ipc/openWindow';
 export declare const SERIALPORT_CHANNEL: {
     OPEN: string;
     CLOSE: string;
@@ -19,11 +22,5 @@ export declare const SERIALPORT_CHANNEL: {
 export type OverwriteOptions = {
     overwrite?: boolean;
     settingsLocked?: boolean;
-};
-export type OpenAppOptions = {
-    device?: {
-        serialNumber: string;
-        serialPortPath?: string;
-    };
 };
 //# sourceMappingURL=index.d.ts.map

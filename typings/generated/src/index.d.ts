@@ -65,7 +65,7 @@ export { defaultInitPacket, type DfuImage, FwType, HashType, } from './Device/in
 export { default as describeError } from './logging/describeError';
 export { createSerialPort, getSerialPortOptions, type SerialPort, } from './SerialPort/SerialPort';
 export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSettingsDialog';
-export { openAppWindow } from './OpenApp/openApp';
+export { openApp, openLauncher } from '../ipc/openWindow';
 export type { AppDispatch, AppThunk, NrfConnectState } from './store';
 export { type DeviceSetupConfig, type DeviceSetup, prepareDevice, } from './Device/deviceSetup';
 export type { AppInfo, AppVersions, PackageJson, SourceJson, } from './utils/AppTypes';

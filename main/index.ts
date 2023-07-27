@@ -5,8 +5,15 @@
  */
 
 import { registerGetAppDetails } from '../ipc/appDetails';
+import { registerOpenApp, registerOpenLauncher } from '../ipc/openWindow';
 
-export const ipc = { registerGetAppDetails };
+export const ipc = {
+    registerGetAppDetails,
+    registerOpenApp,
+    registerOpenLauncher,
+};
+
+export type { OpenAppOptions } from '../ipc/openWindow';
 
 export const SERIALPORT_CHANNEL = {
     OPEN: 'serialport:open',
@@ -29,8 +36,4 @@ export const SERIALPORT_CHANNEL = {
 export type OverwriteOptions = {
     overwrite?: boolean;
     settingsLocked?: boolean;
-};
-
-export type OpenAppOptions = {
-    device?: { serialNumber: string; serialPortPath?: string };
 };
