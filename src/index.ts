@@ -147,7 +147,7 @@ export type {
     SourceJson,
     UrlString,
     WithdrawnJson,
-} from './utils/AppTypes';
+} from '../ipc/MetaFiles';
 
 export {
     addNewMessage,
@@ -157,3 +157,5 @@ export {
     newErrorFlashMessage,
     newSuccessFlashMessage,
 } from './FlashMessage/FlashMessageSlice';
+
+export { getDownloadableApps, installDownloadableApp } from '../ipc/apps';

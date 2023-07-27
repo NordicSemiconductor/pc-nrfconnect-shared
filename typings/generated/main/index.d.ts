@@ -1,9 +1,10 @@
 export declare const ipc: {
     registerGetAppDetails: (onGetAppDetails: (webContents: Electron.WebContents) => import("../ipc/appDetails").AppDetailsFromLauncher) => void;
-    registerOpenApp: (handler: (app: import("../ipc/openWindow").AppSpec, openAppOptions?: import("../ipc/openWindow").OpenAppOptions | undefined) => void) => Electron.IpcMain;
+    registerGetDownloadableApps: (handler: (() => import("../ipc/apps").GetDownloadableAppsResult) | (() => Promise<import("../ipc/apps").GetDownloadableAppsResult>)) => void;
+    registerInstallDownloadableApp: (handler: ((app: import("../ipc/apps").DownloadableApp, version?: string | undefined) => import("../ipc/apps").DownloadableApp) | ((app: import("../ipc/apps").DownloadableApp, version?: string | undefined) => Promise<import("../ipc/apps").DownloadableApp>)) => void;
+    registerOpenApp: (handler: (app: import("../ipc/apps").AppSpec, openAppOptions?: import("../ipc/openWindow").OpenAppOptions | undefined) => void) => Electron.IpcMain;
     registerOpenLauncher: (handler: () => void) => Electron.IpcMain;
 };
-export type { OpenAppOptions } from '../ipc/openWindow';
 export declare const SERIALPORT_CHANNEL: {
     OPEN: string;
     CLOSE: string;

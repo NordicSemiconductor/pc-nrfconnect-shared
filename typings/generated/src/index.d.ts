@@ -68,6 +68,7 @@ export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSe
 export { openApp, openLauncher } from '../ipc/openWindow';
 export type { AppDispatch, AppThunk, NrfConnectState } from './store';
 export { type DeviceSetupConfig, type DeviceSetup, prepareDevice, } from './Device/deviceSetup';
-export type { AppInfo, AppVersions, PackageJson, SourceJson, UrlString, WithdrawnJson, } from './utils/AppTypes';
+export type { AppInfo, AppVersions, PackageJson, SourceJson, UrlString, WithdrawnJson, } from '../ipc/MetaFiles';
 export { addNewMessage, newCopiedFlashMessage, newInfoFlashMessage, newWarningFlashMessage, newErrorFlashMessage, newSuccessFlashMessage, } from './FlashMessage/FlashMessageSlice';
+export { getDownloadableApps, installDownloadableApp } from '../ipc/apps';
 //# sourceMappingURL=index.d.ts.map

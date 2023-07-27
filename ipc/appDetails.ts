@@ -6,6 +6,7 @@
 
 import { ipcMain, WebContents } from 'electron';
 
+import { LaunchableApp } from './apps';
 import { handleWithSender, invoke } from './infrastructure/rendererToMain';
 
 const channel = {
@@ -22,30 +23,7 @@ interface AppDetails {
     path: string;
 }
 
-interface LaunchableApp {
-    name?: string;
-    displayName?: string;
-    description?: string;
-    homepage?: string;
-    currentVersion?: string;
-    latestVersion?: string;
-    engineVersion?: string;
-    iconPath?: string;
-    shortcutIconPath?: string;
-    isOfficial?: string;
-    sharedVersion?: string;
-    source?: string;
-    url?: string;
-    releaseNote?: string;
-    upgradeAvailable?: string;
-    repositoryUrl?: string;
-    installed: {
-        path: string;
-        shasum?: string;
-    };
-}
-
-export interface AppDetailsFromLauncher extends AppDetails, LaunchableApp {}
+export type AppDetailsFromLauncher = AppDetails & LaunchableApp;
 
 type GetAppDetails = () => AppDetailsFromLauncher;
 

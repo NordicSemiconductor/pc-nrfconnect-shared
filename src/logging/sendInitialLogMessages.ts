@@ -32,16 +32,14 @@ export default async () => {
         engineVersion,
         coreVersion,
         corePath,
-        isOfficial,
         installed,
         homeDir,
         tmpDir,
         bundledJlink,
+        source,
     } = details;
 
-    const official = isOfficial ? 'official' : 'local';
-
-    logger.debug(`App ${name} v${currentVersion} ${official}`);
+    logger.debug(`App ${name} v${currentVersion} (${source})`);
     logger.debug(`App path: ${installed.path}`);
     logger.debug(
         `nRFConnect ${coreVersion}, required by the app is (${engineVersion})`

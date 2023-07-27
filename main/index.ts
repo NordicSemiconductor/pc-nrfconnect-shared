@@ -5,15 +5,19 @@
  */
 
 import { registerGetAppDetails } from '../ipc/appDetails';
+import {
+    registerGetDownloadableApps,
+    registerInstallDownloadableApp,
+} from '../ipc/apps';
 import { registerOpenApp, registerOpenLauncher } from '../ipc/openWindow';
 
 export const ipc = {
     registerGetAppDetails,
+    registerGetDownloadableApps,
+    registerInstallDownloadableApp,
     registerOpenApp,
     registerOpenLauncher,
 };
-
-export type { OpenAppOptions } from '../ipc/openWindow';
 
 export const SERIALPORT_CHANNEL = {
     OPEN: 'serialport:open',

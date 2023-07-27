@@ -1,7 +1,4 @@
-export interface AppSpec {
-    name: string;
-    source: string;
-}
+import type { AppSpec } from './apps';
 export interface OpenAppOptions {
     device?: {
         serialNumber: string;
