@@ -6,7 +6,7 @@
 
 import { getModuleVersions } from '@nordicsemiconductor/nrf-device-lib-js';
 
-import { getAppDetails } from '../../ipc/appDetails';
+import { inMain as appDetails } from '../../ipc/appDetails';
 import {
     getDeviceLibContext,
     getModuleVersion,
@@ -24,7 +24,7 @@ export default async () => {
     logLibVersions();
     logger.debug(`Application data folder: ${getAppDataDir()}`);
 
-    const details = await getAppDetails();
+    const details = await appDetails.getAppDetails();
 
     const {
         name,

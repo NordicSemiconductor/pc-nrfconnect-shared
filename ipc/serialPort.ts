@@ -61,73 +61,107 @@ type Open = (
     options: SerialPortOpenOptions<AutoDetectTypes>,
     overwriteOptions: OverwriteOptions
 ) => void;
-export const open = invoke<Open>(channel.open);
-export const registerOpen = handleWithSender<Open>(channel.open);
+const open = invoke<Open>(channel.open);
+const registerOpen = handleWithSender<Open>(channel.open);
 
 type Close = (path: string) => void;
-export const close = invoke<Close>(channel.close);
-export const registerClose = handleWithSender<Close>(channel.close);
+const close = invoke<Close>(channel.close);
+const registerClose = handleWithSender<Close>(channel.close);
 
 type Write = (path: string, data: string | number[] | Buffer) => void;
-export const write = invoke<Write>(channel.write);
-export const registerWrite = handle<Write>(channel.write);
+const write = invoke<Write>(channel.write);
+const registerWrite = handle<Write>(channel.write);
 
 type Update = (path: string, options: UpdateOptions) => void;
-export const update = invoke<Update>(channel.update);
-export const registerUpdate = handle<Update>(channel.update);
+const update = invoke<Update>(channel.update);
+const registerUpdate = handle<Update>(channel.update);
 
 type Set = (path: string, set: SetOptions) => void;
-export const set = invoke<Set>(channel.set);
-export const registerSet = handle<Set>(channel.set);
+const set = invoke<Set>(channel.set);
+const registerSet = handle<Set>(channel.set);
 
 // **************
 // Queries (from the renderer processes of apps to the main process)
 // **************
 
 type IsOpen = (path: string) => boolean;
-export const isOpen = invoke<IsOpen>(channel.isOpen);
-export const registerIsOpen = handle<IsOpen>(channel.isOpen);
+const isOpen = invoke<IsOpen>(channel.isOpen);
+const registerIsOpen = handle<IsOpen>(channel.isOpen);
 
 type GetOptions = (
     path: string
 ) => SerialPortOpenOptions<AutoDetectTypes> | undefined;
-export const getOptions = invoke<GetOptions>(channel.getOptions);
-export const registerGetOptions = handle<GetOptions>(channel.getOptions);
+const getOptions = invoke<GetOptions>(channel.getOptions);
+const registerGetOptions = handle<GetOptions>(channel.getOptions);
 
 // **************
 // Callbacks (from the the main process to the renderer processes of apps)
 // **************
 
 type OnDataReceived = (data: unknown) => void;
-export const broadcastDataReceived = broadcast<OnDataReceived>(
-    channel.onDataReived
-);
-export const registerOnDataReceived = (path: string) =>
+const broadcastDataReceived = broadcast<OnDataReceived>(channel.onDataReived);
+const registerOnDataReceived = (path: string) =>
     onBroadcasted<OnDataReceived>(channel.onDataReived, path);
 
 type OnDataWritten = (data: string | number[] | Buffer) => void;
-export const broadcastDataWritten = broadcast<OnDataWritten>(
-    channel.onDataWritten
-);
-export const registerOnDataWritten = (path: string) =>
+const broadcastDataWritten = broadcast<OnDataWritten>(channel.onDataWritten);
+const registerOnDataWritten = (path: string) =>
     onBroadcasted<OnDataWritten>(channel.onDataWritten, path);
 
 type OnClosed = () => void;
-export const broadcastClosed = broadcast<OnClosed>(channel.onClosed);
-export const registerOnClosed = (path: string) =>
+const broadcastClosed = broadcast<OnClosed>(channel.onClosed);
+const registerOnClosed = (path: string) =>
     onBroadcasted<OnClosed>(channel.onClosed, path);
 
 type OnUpdate = (newOptions: UpdateOptions) => void;
-export const broadcastUpdated = broadcast<OnUpdate>(channel.onUpdated);
-export const registerOnUpdated = (path: string) =>
+const broadcastUpdated = broadcast<OnUpdate>(channel.onUpdated);
+const registerOnUpdated = (path: string) =>
     onBroadcasted<OnUpdate>(channel.onUpdated, path);
 
 type OnSet = (newOptions: SetOptions) => void;
-export const broadcastSet = broadcast<OnSet>(channel.onSet);
-export const registerOnSet = (path: string) =>
+const broadcastSet = broadcast<OnSet>(channel.onSet);
+const registerOnSet = (path: string) =>
     onBroadcasted<OnSet>(channel.onSet, path);
 
 type OnChanged = (newOptions: SerialPortOpenOptions<AutoDetectTypes>) => void;
-export const broadcastChanged = broadcast<OnChanged>(channel.onChanged);
-export const registerOnChanged = (path: string) =>
+const broadcastChanged = broadcast<OnChanged>(channel.onChanged);
+const registerOnChanged = (path: string) =>
     onBroadcasted<OnChanged>(channel.onChanged, path);
+
+export const inRenderer = {
+    broadcastChanged,
+    broadcastClosed,
+    broadcastDataReceived,
+    broadcastDataWritten,
+    broadcastSet,
+    broadcastUpdated,
+};
+
+export const forRenderer = {
+    registerClose,
+    registerGetOptions,
+    registerIsOpen,
+    registerOpen,
+    registerSet,
+    registerUpdate,
+    registerWrite,
+};
+
+export const inMain = {
+    open,
+    close,
+    write,
+    update,
+    set,
+    isOpen,
+    getOptions,
+};
+
+export const forMain = {
+    registerOnDataReceived,
+    registerOnDataWritten,
+    registerOnClosed,
+    registerOnUpdated,
+    registerOnSet,
+    registerOnChanged,
+};

@@ -11,7 +11,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import { useDispatch, useSelector } from 'react-redux';
 import { Reducer } from 'redux';
 
-import { openLauncher } from '../../ipc/openWindow';
+import { inMain as openWindow } from '../../ipc/openWindow';
 import About from '../About/About';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
 import { setAutoReselect } from '../Device/deviceAutoSelectSlice';
@@ -102,7 +102,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
         hotKey: 'alt+l',
         title: 'Open launcher',
         isGlobal: true,
-        action: openLauncher,
+        action: openWindow.openLauncher,
     });
 
     useEffect(() => {

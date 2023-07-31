@@ -4,4 +4,5 @@ export type { App, AppSpec, AppWithError, DownloadableApp, InstalledDownloadable
 export type { OpenAppOptions } from './openWindow';
 export { LOCAL, OFFICIAL, allStandardSourceNames, type Source, type SourceName, type SourceUrl, } from './sources';
 export type { OverwriteOptions } from './serialPort';
+export type { AppInfo, AppVersions, PackageJson, SourceJson, UrlString, WithdrawnJson, } from './MetaFiles';
 //# sourceMappingURL=index.d.ts.map

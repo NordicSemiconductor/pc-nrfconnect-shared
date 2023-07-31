@@ -128,8 +128,6 @@ export {
 } from './SerialPort/SerialPort';
 export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSettingsDialog';
 
-export { openApp, openLauncher } from '../ipc/openWindow';
-
 export type { AppDispatch, AppThunk, NrfConnectState } from './store';
 
 export {
@@ -137,15 +135,6 @@ export {
     type DeviceSetup,
     prepareDevice,
 } from './Device/deviceSetup';
-
-export type {
-    AppInfo,
-    AppVersions,
-    PackageJson,
-    SourceJson,
-    UrlString,
-    WithdrawnJson,
-} from '../ipc/MetaFiles';
 
 export {
     addNewMessage,
@@ -156,4 +145,5 @@ export {
     newSuccessFlashMessage,
 } from './FlashMessage/FlashMessageSlice';
 
-export { getDownloadableApps, installDownloadableApp } from '../ipc/apps';
+export { inMain as apps } from '../ipc/apps';
+export { inMain as openWindow } from '../ipc/openWindow';

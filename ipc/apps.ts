@@ -80,8 +80,7 @@ const channel = {
 export type SourceWithError = { source: Source; reason?: string };
 
 // getDownloadableApps
-
-export type GetDownloadableAppsResult = {
+type GetDownloadableAppsResult = {
     apps: DownloadableApp[];
     appsWithErrors: AppWithError[];
     sourcesWithErrors: SourceWithError[];
@@ -89,10 +88,10 @@ export type GetDownloadableAppsResult = {
 
 type GetDownloadableApps = () => GetDownloadableAppsResult;
 
-export const getDownloadableApps = invoke<GetDownloadableApps>(
+const getDownloadableApps = invoke<GetDownloadableApps>(
     channel.getDownloadableApps
 );
-export const registerGetDownloadableApps = handle<GetDownloadableApps>(
+const registerGetDownloadableApps = handle<GetDownloadableApps>(
     channel.getDownloadableApps
 );
 
@@ -102,9 +101,19 @@ type InstallDownloadableApp = (
     version?: string
 ) => DownloadableApp;
 
-export const installDownloadableApp = invoke<InstallDownloadableApp>(
+const installDownloadableApp = invoke<InstallDownloadableApp>(
     channel.installDownloadableApp
 );
-export const registerInstallDownloadableApp = handle<InstallDownloadableApp>(
+const registerInstallDownloadableApp = handle<InstallDownloadableApp>(
     channel.installDownloadableApp
 );
+
+export const forRenderer = {
+    registerGetDownloadableApps,
+    registerInstallDownloadableApp,
+};
+
+export const inMain = {
+    getDownloadableApps,
+    installDownloadableApp,
+};

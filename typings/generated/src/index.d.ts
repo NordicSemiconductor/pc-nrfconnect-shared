@@ -64,10 +64,9 @@ export { defaultInitPacket, type DfuImage, FwType, HashType, } from './Device/in
 export { default as describeError } from './logging/describeError';
 export { createSerialPort, getSerialPortOptions, type SerialPort, } from './SerialPort/SerialPort';
 export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSettingsDialog';
-export { openApp, openLauncher } from '../ipc/openWindow';
 export type { AppDispatch, AppThunk, NrfConnectState } from './store';
 export { type DeviceSetupConfig, type DeviceSetup, prepareDevice, } from './Device/deviceSetup';
-export type { AppInfo, AppVersions, PackageJson, SourceJson, UrlString, WithdrawnJson, } from '../ipc/MetaFiles';
 export { addNewMessage, newCopiedFlashMessage, newInfoFlashMessage, newWarningFlashMessage, newErrorFlashMessage, newSuccessFlashMessage, } from './FlashMessage/FlashMessageSlice';
-export { getDownloadableApps, installDownloadableApp } from '../ipc/apps';
+export { inMain as apps } from '../ipc/apps';
+export { inMain as openWindow } from '../ipc/openWindow';
 //# sourceMappingURL=index.d.ts.map

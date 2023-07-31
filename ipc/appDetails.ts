@@ -27,9 +27,9 @@ export type AppDetailsFromLauncher = AppDetails & LaunchableApp;
 
 type GetAppDetails = () => AppDetailsFromLauncher;
 
-export const getAppDetails = invoke<GetAppDetails>(channel.request);
+const getAppDetails = invoke<GetAppDetails>(channel.request);
 
-export const registerGetAppDetails = (
+const registerGetAppDetails = (
     onGetAppDetails: (webContents: WebContents) => AppDetailsFromLauncher
 ) => {
     handleWithSender<GetAppDetails>(channel.request)(onGetAppDetails);
@@ -42,3 +42,6 @@ export const registerGetAppDetails = (
         event.sender.send(channel.response, onGetAppDetails(event.sender));
     });
 };
+
+export const forRenderer = { registerGetAppDetails };
+export const inMain = { getAppDetails };

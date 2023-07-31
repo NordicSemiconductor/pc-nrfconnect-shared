@@ -6,10 +6,14 @@ export interface OpenAppOptions {
     };
 }
 type OpenApp = (app: AppSpec, openAppOptions?: OpenAppOptions) => void;
-export declare const openApp: (app: AppSpec, openAppOptions?: OpenAppOptions | undefined) => void;
-export declare const registerOpenApp: (handler: OpenApp) => Electron.IpcMain;
 type OpenLauncher = () => void;
-export declare const openLauncher: () => void;
-export declare const registerOpenLauncher: (handler: OpenLauncher) => Electron.IpcMain;
+export declare const forRenderer: {
+    registerOpenApp: (handler: OpenApp) => Electron.IpcMain;
+    registerOpenLauncher: (handler: OpenLauncher) => Electron.IpcMain;
+};
+export declare const inMain: {
+    openApp: (app: AppSpec, openAppOptions?: OpenAppOptions | undefined) => void;
+    openLauncher: () => void;
+};
 export {};
 //# sourceMappingURL=openWindow.d.ts.map

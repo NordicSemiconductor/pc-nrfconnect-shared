@@ -50,14 +50,18 @@ export type SourceWithError = {
     source: Source;
     reason?: string;
 };
-export type GetDownloadableAppsResult = {
+type GetDownloadableAppsResult = {
     apps: DownloadableApp[];
     appsWithErrors: AppWithError[];
     sourcesWithErrors: SourceWithError[];
 };
-export declare const getDownloadableApps: () => Promise<GetDownloadableAppsResult>;
-export declare const registerGetDownloadableApps: (handler: (() => GetDownloadableAppsResult) | (() => Promise<GetDownloadableAppsResult>)) => void;
-export declare const installDownloadableApp: (app: DownloadableApp, version?: string | undefined) => Promise<DownloadableApp>;
-export declare const registerInstallDownloadableApp: (handler: ((app: DownloadableApp, version?: string | undefined) => DownloadableApp) | ((app: DownloadableApp, version?: string | undefined) => Promise<DownloadableApp>)) => void;
+export declare const forRenderer: {
+    registerGetDownloadableApps: (handler: (() => GetDownloadableAppsResult) | (() => Promise<GetDownloadableAppsResult>)) => void;
+    registerInstallDownloadableApp: (handler: ((app: DownloadableApp, version?: string | undefined) => DownloadableApp) | ((app: DownloadableApp, version?: string | undefined) => Promise<DownloadableApp>)) => void;
+};
+export declare const inMain: {
+    getDownloadableApps: () => Promise<GetDownloadableAppsResult>;
+    installDownloadableApp: (app: DownloadableApp, version?: string | undefined) => Promise<DownloadableApp>;
+};
 export {};
 //# sourceMappingURL=apps.d.ts.map

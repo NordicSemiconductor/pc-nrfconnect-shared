@@ -1,7 +1,6 @@
 {
     "extends": "./config/tsconfig.json",
     "include": [
-        "./ipc/**/*.ts",
         "./main/**/*.ts",
         "./src/**/*.ts",
         "./src/**/*.tsx",

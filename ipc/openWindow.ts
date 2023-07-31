@@ -16,15 +16,20 @@ export interface OpenAppOptions {
     device?: { serialNumber: string; serialPortPath?: string };
 }
 
-// open app
 type OpenApp = (app: AppSpec, openAppOptions?: OpenAppOptions) => void;
-
-export const openApp = send<OpenApp>(channel.app);
-export const registerOpenApp = on<OpenApp>(channel.app);
-
-// open launcher
+const openApp = send<OpenApp>(channel.app);
+const registerOpenApp = on<OpenApp>(channel.app);
 
 type OpenLauncher = () => void;
+const openLauncher = send<OpenLauncher>(channel.launcher);
+const registerOpenLauncher = on<OpenLauncher>(channel.launcher);
 
-export const openLauncher = send<OpenLauncher>(channel.launcher);
-export const registerOpenLauncher = on<OpenLauncher>(channel.launcher);
+export const forRenderer = {
+    registerOpenApp,
+    registerOpenLauncher,
+};
+
+export const inMain = {
+    openApp,
+    openLauncher,
+};

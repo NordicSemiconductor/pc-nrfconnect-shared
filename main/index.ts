@@ -4,45 +4,32 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { registerGetAppDetails } from '../ipc/appDetails';
+import { forRenderer as forRendererAppDetails } from '../ipc/appDetails';
+import { forRenderer as forRendererApps } from '../ipc/apps';
+import { forRenderer as forRendererOpenWindow } from '../ipc/openWindow';
 import {
-    registerGetDownloadableApps,
-    registerInstallDownloadableApp,
-} from '../ipc/apps';
-import { registerOpenApp, registerOpenLauncher } from '../ipc/openWindow';
-import {
-    broadcastChanged,
-    broadcastClosed,
-    broadcastDataReceived,
-    broadcastDataWritten,
-    broadcastSet,
-    broadcastUpdated,
-    registerClose,
-    registerGetOptions,
-    registerIsOpen,
-    registerOpen,
-    registerSet,
-    registerUpdate,
-    registerWrite,
+    forRenderer as forRendererSerialPort,
+    inRenderer as inRendererSerialPort,
 } from '../ipc/serialPort';
 
-export const ipc = {
-    broadcastChanged,
-    broadcastClosed,
-    broadcastDataReceived,
-    broadcastDataWritten,
-    broadcastSet,
-    broadcastUpdated,
-    registerClose,
-    registerGetAppDetails,
-    registerGetDownloadableApps,
-    registerGetOptions,
-    registerInstallDownloadableApp,
-    registerIsOpen,
-    registerOpen,
-    registerOpenApp,
-    registerOpenLauncher,
-    registerSet,
-    registerUpdate,
-    registerWrite,
+export const appDetails = {
+    forRenderer: forRendererAppDetails,
 };
+
+export const apps = { forRenderer: forRendererApps };
+
+export const openWindow = {
+    forRenderer: forRendererOpenWindow,
+};
+
+export const serialPort = {
+    inRenderer: inRendererSerialPort,
+    forRenderer: forRendererSerialPort,
+};
+
+export * from '../ipc/MetaFiles';
+
+export { type OverwriteOptions } from '../ipc/serialPort';
+export { type OpenAppOptions } from '../ipc/openWindow';
+
+export { registerLauncherWindowFromMain } from '../ipc/infrastructure/mainToRenderer';
