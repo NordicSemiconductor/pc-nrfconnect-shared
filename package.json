@@ -22,6 +22,7 @@
         "check:lint": "eslint --color .",
         "check:types": "tsc --noEmit",
         "check:license": "ts-node scripts/nrfconnect-license.ts check",
+        "clean-generate-types": "rimraf ./typings/generated",
         "generate-types": "tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./typings/generated --rootDir .",
         "prepare": "ts-node scripts/installHusky.ts",
         "compile:publish": "esbuild scripts/nordic-publish.ts --bundle --outfile=scripts/nordic-publish.js --platform=node --log-level=warning --minify",

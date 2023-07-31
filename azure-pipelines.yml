@@ -8,6 +8,7 @@ steps:
     set -o errexit -o pipefail
     npm ci
     npm run check
+    npm run clean-generate-types
     npm run generate-types
     [[ $(git status --porcelain) ]] && printf "Generate types found changes:\n$(git status --porcelain)\n" && exit 1
     npm test -- --coverage --coverageReporters=cobertura
