@@ -27,7 +27,10 @@
 
     *,
     ::before,
-    ::after {
+    ::after,
+    &,
+    &::before,
+    &::after {
         box-sizing: border-box; /* 1 */
         border-width: 0; /* 2 */
         border-style: solid; /* 2 */
@@ -35,7 +38,9 @@
     }
 
     ::before,
-    ::after {
+    ::after,
+    &::before,
+    &::after {
         --tw-content: '';
     }
 
@@ -48,7 +53,8 @@
     6. Use the user's configured `sans` font-variation-settings by default.
     */
 
-    html {
+    html,
+    &:is(html) {
         line-height: 1.5; /* 1 */
         -webkit-text-size-adjust: 100%; /* 2 */
         -moz-tab-size: 4; /* 3 */
@@ -63,7 +69,8 @@
     2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.
     */
 
-    body {
+    body,
+    &:is(body) {
         margin: 0; /* 1 */
         line-height: inherit; /* 2 */
     }
@@ -74,7 +81,8 @@
     3. Ensure horizontal rules are visible by default.
     */
 
-    hr {
+    hr,
+    &:is(hr) {
         height: 0; /* 1 */
         color: inherit; /* 2 */
         border-top-width: 1px; /* 3 */
@@ -84,7 +92,8 @@
     Add the correct text decoration in Chrome, Edge, and Safari.
     */
 
-    abbr:where([title]) {
+    abbr:where([title]),
+    &:is(abbr):where([title]) {
         text-decoration: underline dotted;
     }
 
@@ -97,7 +106,8 @@
     h3,
     h4,
     h5,
-    h6 {
+    h6,
+    &:is(h1, h2, h3, h4, h5, h6) {
         font-size: inherit;
         font-weight: inherit;
     }
@@ -106,7 +116,8 @@
     Reset links to optimize for opt-in styling instead of opt-out.
     */
 
-    a {
+    a,
+    &:is(a) {
         color: inherit;
         text-decoration: inherit;
     }
@@ -116,7 +127,8 @@
     */
 
     b,
-    strong {
+    strong,
+    &:is(b, strong) {
         font-weight: bolder;
     }
 
@@ -128,7 +140,8 @@
     code,
     kbd,
     samp,
-    pre {
+    pre,
+    &:is(code, kbd, samp, pre) {
         font-family: theme('fontFamily.mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace); /* 1 */
         font-size: 1em; /* 2 */
     }
@@ -137,7 +150,8 @@
     Add the correct font size in all browsers.
     */
 
-    small {
+    small,
+    &:is(small) {
         font-size: 80%;
     }
 
@@ -146,18 +160,21 @@
     */
 
     sub,
-    sup {
+    sup,
+    &:is(sub, sup) {
         font-size: 75%;
         line-height: 0;
         position: relative;
         vertical-align: baseline;
     }
 
-    sub {
+    sub,
+    &:is(sub) {
         bottom: -0.25em;
     }
 
-    sup {
+    sup,
+    &:is(sup) {
         top: -0.5em;
     }
 
@@ -167,7 +184,8 @@
     3. Remove gaps between table borders by default.
     */
 
-    table {
+    table,
+    &:is(table) {
         text-indent: 0; /* 1 */
         border-color: inherit; /* 2 */
         border-collapse: collapse; /* 3 */
@@ -183,7 +201,8 @@
     input,
     optgroup,
     select,
-    textarea {
+    textarea,
+    &:is(button, input, optgroup, select, textarea) {
         font-family: inherit; /* 1 */
         font-feature-settings: inherit; /* 1 */
         font-variation-settings: inherit; /* 1 */
@@ -200,7 +219,8 @@
     */
 
     button,
-    select {
+    select,
+    &:is(button, select) {
         text-transform: none;
     }
 
@@ -212,7 +232,9 @@
     button,
     [type='button'],
     [type='reset'],
-    [type='submit'] {
+    [type='submit'],
+    &:is(button),
+    &:where([type='button'], [type='reset'], [type='submit']) {
         -webkit-appearance: button; /* 1 */
         background-color: transparent; /* 2 */
         background-image: none; /* 2 */
@@ -222,7 +244,8 @@
     Use the modern Firefox focus style for all focusable elements.
     */
 
-    :-moz-focusring {
+    :-moz-focusring,
+    &:-moz-focusring {
         outline: auto;
     }
 
@@ -230,7 +253,8 @@
     Remove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)
     */
 
-    :-moz-ui-invalid {
+    :-moz-ui-invalid,
+    &:-moz-ui-invalid {
         box-shadow: none;
     }
 
@@ -238,7 +262,8 @@
     Add the correct vertical alignment in Chrome and Firefox.
     */
 
-    progress {
+    progress,
+    &:is(progress) {
         vertical-align: baseline;
     }
 
@@ -247,7 +272,9 @@
     */
 
     ::-webkit-inner-spin-button,
-    ::-webkit-outer-spin-button {
+    ::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
         height: auto;
     }
 
@@ -256,7 +283,8 @@
     2. Correct the outline style in Safari.
     */
 
-    [type='search'] {
+    [type='search'],
+    &[type='search'] {
         -webkit-appearance: textfield; /* 1 */
         outline-offset: -2px; /* 2 */
     }
@@ -265,7 +293,8 @@
     Remove the inner padding in Chrome and Safari on macOS.
     */
 
-    ::-webkit-search-decoration {
+    ::-webkit-search-decoration,
+    &::-webkit-search-decoration {
         -webkit-appearance: none;
     }
 
@@ -274,7 +303,8 @@
     2. Change font properties to `inherit` in Safari.
     */
 
-    ::-webkit-file-upload-button {
+    ::-webkit-file-upload-button,
+    &::-webkit-file-upload-button {
         -webkit-appearance: button; /* 1 */
         font: inherit; /* 2 */
     }
@@ -283,7 +313,8 @@
     Add the correct display in Chrome and Safari.
     */
 
-    summary {
+    summary,
+    &:is(summary) {
         display: list-item;
     }
 
@@ -303,28 +334,33 @@
     hr,
     figure,
     p,
-    pre {
+    pre,
+    &:is(blockquote, dl, dd, h1, h2, h3, h4, h5, h6, hr, figure, p, pre) {
         margin: 0;
     }
 
-    fieldset {
+    fieldset,
+    &:is(fieldset) {
         margin: 0;
         padding: 0;
     }
 
-    legend {
+    legend,
+    &:is(legend) {
         padding: 0;
     }
 
     ol,
     ul,
-    menu {
+    menu,
+    &:is(ol, ul, menu) {
         list-style: none;
         margin: 0;
         padding: 0;
     }
 
-    dialog {
+    dialog,
+    &:is(dialog) {
         padding: 0;
     }
 
@@ -332,7 +368,8 @@
     Prevent resizing textareas horizontally by default.
     */
 
-    textarea {
+    textarea,
+    &:is(textarea) {
         resize: vertical;
     }
 
@@ -342,7 +379,8 @@
     */
 
     input::placeholder,
-    textarea::placeholder {
+    textarea::placeholder,
+    &:is(input, textarea):where([placeholder]) {
         opacity: 1; /* 1 */
         color: theme('colors.gray.400', #9ca3af); /* 2 */
     }
@@ -352,14 +390,17 @@
     */
 
     button,
-    [role="button"] {
+    [role="button"],
+    &:is(button),
+    &[role="button"] {
         cursor: pointer;
     }
 
     /*
     Make sure disabled buttons don't get the pointer cursor.
     */
-    :disabled {
+    :disabled,
+    &:disabled {
         cursor: default;
     }
 
@@ -376,7 +417,8 @@
     audio,
     iframe,
     embed,
-    object {
+    object,
+    &:is(img, svg, video, canvas, audio, iframe, embed, object) {
         display: block; /* 1 */
         vertical-align: middle; /* 2 */
     }
@@ -386,13 +428,15 @@
     */
 
     img,
-    video {
+    video,
+    &:is(img, video) {
         max-width: 100%;
         height: auto;
     }
 
     /* Make elements with the HTML hidden attribute stay hidden by default */
-    [hidden] {
+    [hidden],
+    &:where([hidden]) {
         display: none;
     }
 
