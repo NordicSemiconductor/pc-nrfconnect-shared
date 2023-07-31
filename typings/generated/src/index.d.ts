@@ -69,4 +69,5 @@ export { type DeviceSetupConfig, type DeviceSetup, prepareDevice, } from './Devi
 export { addNewMessage, newCopiedFlashMessage, newInfoFlashMessage, newWarningFlashMessage, newErrorFlashMessage, newSuccessFlashMessage, } from './FlashMessage/FlashMessageSlice';
 export { inMain as apps } from '../ipc/apps';
 export { inMain as openWindow } from '../ipc/openWindow';
+export { inMain as preventSleep } from '../ipc/preventSleep';
 //# sourceMappingURL=index.d.ts.map

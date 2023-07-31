@@ -1,4 +1,5 @@
 /// <reference types="node" />
+export { registerLauncherWindowFromMain } from '../ipc/infrastructure/mainToRenderer';
 export declare const appDetails: {
     forRenderer: {
         registerGetAppDetails: (onGetAppDetails: (webContents: Electron.WebContents) => import("../ipc/appDetails").AppDetailsFromLauncher) => void;
@@ -24,6 +25,12 @@ export declare const openWindow: {
         registerOpenLauncher: (handler: () => void) => Electron.IpcMain;
     };
 };
+export declare const preventSleep: {
+    forRenderer: {
+        registerStart: (handler: (() => number) | (() => Promise<number>)) => void;
+        registerEnd: (handler: (id: number) => void) => Electron.IpcMain;
+    };
+};
 export declare const serialPort: {
     inRenderer: {
         broadcastChanged: (subChannel: string, targets?: Pick<Electron.WebContents, "send">[], newOptions: import("serialport").SerialPortOpenOptions<import("@serialport/bindings-cpp").AutoDetectTypes>) => void;
@@ -46,5 +53,4 @@ export declare const serialPort: {
 export * from '../ipc/MetaFiles';
 export { type OverwriteOptions } from '../ipc/serialPort';
 export { type OpenAppOptions } from '../ipc/openWindow';
-export { registerLauncherWindowFromMain } from '../ipc/infrastructure/mainToRenderer';
 //# sourceMappingURL=index.d.ts.map
