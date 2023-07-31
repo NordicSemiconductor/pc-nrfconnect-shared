@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-export * from './infrastructure/rendererToMain';
+export * as rendererToMain from './infrastructure/rendererToMain';
+export * as mainToRenderer from './infrastructure/mainToRenderer';
 
 export type {
     App,
@@ -29,3 +30,5 @@ export {
     type SourceName,
     type SourceUrl,
 } from './sources';
+
+export type { OverwriteOptions } from './serialPort';

@@ -1,4 +1,4 @@
-declare const ErrorDialogActions: {
+export declare const ErrorDialogActions: {
     hideDialog: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"errorDialog/hideDialog">;
     showDialog: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[message: string, errorResolutions?: import("./ErrorDialog/errorDialogSlice").ErrorResolutions | undefined, detail?: string | undefined], {
         message: {
@@ -8,7 +8,6 @@ declare const ErrorDialogActions: {
         errorResolutions: import("./ErrorDialog/errorDialogSlice").ErrorResolutions | undefined;
     }, "errorDialog/showDialog", never, never>;
 };
-export { ErrorDialogActions };
 export { default as App, type PaneProps } from './App/App';
 export { default as Logo } from './Logo/Logo';
 export { default as DeviceSelector, type Props as DeviceSelectorProps, } from './Device/DeviceSelector/DeviceSelector';

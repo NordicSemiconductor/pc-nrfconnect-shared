@@ -5,9 +5,7 @@
  */
 import { hideDialog, showDialog } from './ErrorDialog/errorDialogSlice';
 
-const ErrorDialogActions = { hideDialog, showDialog };
-
-export { ErrorDialogActions };
+export const ErrorDialogActions = { hideDialog, showDialog };
 
 export { default as App, type PaneProps } from './App/App';
 export { default as Logo } from './Logo/Logo';
