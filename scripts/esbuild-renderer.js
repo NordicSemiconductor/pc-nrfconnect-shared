@@ -22,7 +22,9 @@ const projectSpecificTailwindConfigPath = path.join(
 const tailwindConfig = () =>
     fs.existsSync(projectSpecificTailwindConfigPath)
         ? projectSpecificTailwindConfigPath
-        : require.resolve('pc-nrfconnect-shared/config/tailwind.config.js');
+        : require.resolve(
+              '@nordicsemiconductor/pc-nrfconnect-shared/config/tailwind.config.js'
+          );
 
 function options(additionalOptions) {
     const { dependencies } = JSON.parse(
