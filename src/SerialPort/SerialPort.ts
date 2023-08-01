@@ -9,11 +9,10 @@ import type {
     SetOptions,
     UpdateOptions,
 } from '@serialport/bindings-cpp';
-import { ipcRenderer } from 'electron';
 import EventEmitter from 'events';
 import type { SerialPortOpenOptions } from 'serialport';
 
-import { OverwriteOptions, SERIALPORT_CHANNEL } from '../../main';
+import { forMain, inMain, OverwriteOptions } from '../../ipc/serialPort';
 import logger from '../logging';
 
 export type SerialPort = Awaited<ReturnType<typeof createSerialPort>>;
@@ -29,48 +28,53 @@ export const createSerialPort = async (
     const eventEmitter = new EventEmitter();
     let closed = false;
 
-    ipcRenderer.on(`${SERIALPORT_CHANNEL.ON_DATA}_${path}`, (_event, data) =>
+    forMain.registerOnDataReceived(path)(data =>
         eventEmitter.emit('onData', data)
     );
-    ipcRenderer.on(`${SERIALPORT_CHANNEL.ON_CLOSED}_${path}`, () => {
-        eventEmitter.emit('onClosed');
-        closed = true;
-    });
-    ipcRenderer.on(
-        `${SERIALPORT_CHANNEL.ON_UPDATE}_${path}`,
-        (_event, newOptions) => eventEmitter.emit('onUpdate', newOptions)
-    );
-    ipcRenderer.on(
-        `${SERIALPORT_CHANNEL.ON_SET}_${path}`,
-        (_event, newOptions) => eventEmitter.emit('onSet', newOptions)
-    );
-    ipcRenderer.on(
-        `${SERIALPORT_CHANNEL.ON_CHANGED}_${path}`,
-        (_event, newOptions) => eventEmitter.emit('onChange', newOptions)
-    );
-
-    // The origin of this event is emitted when a renderer writes to the port.
-    ipcRenderer.on(`${SERIALPORT_CHANNEL.ON_WRITE}_${path}`, (_event, data) =>
+    forMain.registerOnDataWritten(path)(data =>
         eventEmitter.emit('onDataWritten', data)
     );
 
-    const write = (data: string | number[] | Buffer): void => {
-        ipcRenderer.invoke(SERIALPORT_CHANNEL.WRITE, path, data);
-    };
+    forMain.registerOnClosed(path)(() => {
+        eventEmitter.emit('onClosed');
+        closed = true;
+    });
+    forMain.registerOnUpdated(path)(newOptions =>
+        eventEmitter.emit('onUpdate', newOptions)
+    );
+    forMain.registerOnSet(path)(newOptions =>
+        eventEmitter.emit('onSet', newOptions)
+    );
+    forMain.registerOnChanged(path)(newOptions =>
+        eventEmitter.emit('onChange', newOptions)
+    );
 
-    const isOpen = (): Promise<boolean> =>
-        ipcRenderer.invoke(SERIALPORT_CHANNEL.IS_OPEN, path);
+    const openWithRetries = async (retryCount: number) => {
+        try {
+            return await inMain.open(options, overwriteOptions);
+        } catch (error) {
+            if (
+                (error as Error).message.includes(
+                    'PORT_IS_ALREADY_BEING_OPENED'
+                ) &&
+                retryCount > 0
+            ) {
+                return new Promise<void | string>(resolve => {
+                    setTimeout(async () => {
+                        resolve(await openWithRetries(retryCount - 1));
+                    }, 50 + Math.random() * 100);
+                });
+            }
+            return (error as Error).message;
+        }
+    };
 
     const close = async () => {
         if (closed) return;
-        const error = await ipcRenderer.invoke(SERIALPORT_CHANNEL.CLOSE, path);
-        if (error) {
-            // IPC only carries the error message, that's why we throw new Error.
-            throw new Error(error);
-        }
+        await inMain.close(path);
 
         try {
-            if (await isOpen()) {
+            if (await inMain.isOpen(path)) {
                 logger.info(
                     `Port ${options.path} still in use by other window(s)`
                 );
@@ -80,44 +84,11 @@ export const createSerialPort = async (
         }
     };
 
-    // Only supports baudRate, same as serialport.io
-    const update = (newOptions: UpdateOptions) => {
-        ipcRenderer.invoke(SERIALPORT_CHANNEL.UPDATE, path, newOptions);
-    };
-
-    const set = (newOptions: SetOptions) => {
-        ipcRenderer.invoke(SERIALPORT_CHANNEL.SET, path, newOptions);
-    };
-
-    const getOptions = ():
-        | Promise<SerialPortOpenOptions<AutoDetectTypes>>
-        | undefined => ipcRenderer.invoke(SERIALPORT_CHANNEL.GET_OPTIONS, path);
-
-    const openWithRetries = async (retryCount: number) => {
-        try {
-            return (await ipcRenderer.invoke(
-                SERIALPORT_CHANNEL.OPEN,
-                options,
-                overwriteOptions
-            )) as string;
-        } catch (error) {
-            if (
-                (error as Error).message.includes(
-                    'PORT_IS_ALREADY_BEING_OPENED'
-                ) &&
-                retryCount > 0
-            ) {
-                return new Promise<string>(resolve => {
-                    setTimeout(async () => {
-                        resolve(
-                            (await openWithRetries(retryCount - 1)) as string
-                        );
-                    }, 50 + Math.random() * 100);
-                });
-            }
-            return Promise.resolve<string>((error as Error).message);
-        }
-    };
+    const write = (data: string | number[] | Buffer) =>
+        inMain.write(path, data);
+    const update = (newOptions: UpdateOptions) =>
+        inMain.update(path, newOptions); // Only supports baudRate, same as serialport.io
+    const set = (newOptions: SetOptions) => inMain.set(path, newOptions);
 
     const error = await openWithRetries(3);
 
@@ -138,12 +109,15 @@ export const createSerialPort = async (
 
     return {
         path,
-        write,
+
         close,
-        isOpen,
+        write,
         update,
         set,
-        getOptions,
+
+        isOpen: () => inMain.isOpen(path),
+        getOptions: () => inMain.getOptions(path),
+
         onData: (handler: (data: Uint8Array) => void) => {
             eventEmitter.on('onData', handler);
             return () => {
@@ -187,15 +161,11 @@ export const createSerialPort = async (
     };
 };
 
-export const getSerialPortOptions = async (
-    path: string
-): Promise<SerialPortOpenOptions<AutoDetectTypes> | undefined> => {
+export const getSerialPortOptions = async (path: string) => {
     try {
         console.log('will fetch options from path=', path);
-        return (await ipcRenderer.invoke(
-            SERIALPORT_CHANNEL.GET_OPTIONS,
-            path
-        )) as SerialPortOpenOptions<AutoDetectTypes> | undefined;
+
+        return await inMain.getOptions(path);
     } catch (error) {
         logger.error(`Failed to get options for port: ${path}`);
     }

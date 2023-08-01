@@ -4,29 +4,27 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-export const SERIALPORT_CHANNEL = {
-    OPEN: 'serialport:open',
-    CLOSE: 'serialport:close',
-    WRITE: 'serialport:write',
-    UPDATE: 'serialport:update',
-    SET: 'serialport:set',
+import { forRenderer as forRendererAppDetails } from '../ipc/appDetails';
+import { forRenderer as forRendererApps } from '../ipc/apps';
+import { forRenderer as forRendererOpenWindow } from '../ipc/openWindow';
+import { forRenderer as forRendererPreventSleep } from '../ipc/preventSleep';
+import {
+    forRenderer as forRendererSerialPort,
+    inRenderer as inRendererSerialPort,
+} from '../ipc/serialPort';
 
-    ON_CLOSED: 'serialport:on-close',
-    ON_DATA: 'serialport:on-data',
-    ON_UPDATE: 'serialport:on-update',
-    ON_SET: 'serialport:on-set',
-    ON_CHANGED: 'serialport:on-changed',
-    ON_WRITE: 'serialport:on-write',
+export { registerLauncherWindowFromMain } from '../ipc/infrastructure/mainToRenderer';
 
-    IS_OPEN: 'serialport:is-open',
-    GET_OPTIONS: 'serialport:get-options',
+export const appDetails = { forRenderer: forRendererAppDetails };
+export const apps = { forRenderer: forRendererApps };
+export const openWindow = { forRenderer: forRendererOpenWindow };
+export const preventSleep = { forRenderer: forRendererPreventSleep };
+export const serialPort = {
+    inRenderer: inRendererSerialPort,
+    forRenderer: forRendererSerialPort,
 };
 
-export type OverwriteOptions = {
-    overwrite?: boolean;
-    settingsLocked?: boolean;
-};
+export * from '../ipc/MetaFiles';
 
-export type OpenAppOptions = {
-    device?: { serialNumber: string; serialPortPath?: string };
-};
+export { type OverwriteOptions } from '../ipc/serialPort';
+export { type OpenAppOptions } from '../ipc/openWindow';

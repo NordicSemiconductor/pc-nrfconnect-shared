@@ -7,8 +7,8 @@
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import type Systeminformation from 'systeminformation';
 
+import type { PackageJson } from '../../ipc/MetaFiles';
 import logger from '../logging';
-import type { PackageJson } from './AppTypes';
 import { isDevelopment } from './environment';
 import {
     deleteIsSendingUsageData,

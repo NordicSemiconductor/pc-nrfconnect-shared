@@ -1,4 +1,4 @@
-declare const ErrorDialogActions: {
+export declare const ErrorDialogActions: {
     hideDialog: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"errorDialog/hideDialog">;
     showDialog: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[message: string, errorResolutions?: import("./ErrorDialog/errorDialogSlice").ErrorResolutions | undefined, detail?: string | undefined], {
         message: {
@@ -8,7 +8,6 @@ declare const ErrorDialogActions: {
         errorResolutions: import("./ErrorDialog/errorDialogSlice").ErrorResolutions | undefined;
     }, "errorDialog/showDialog", never, never>;
 };
-export { ErrorDialogActions };
 export { default as App, type PaneProps } from './App/App';
 export { default as Logo } from './Logo/Logo';
 export { default as DeviceSelector, type Props as DeviceSelectorProps, } from './Device/DeviceSelector/DeviceSelector';
@@ -65,9 +64,10 @@ export { defaultInitPacket, type DfuImage, FwType, HashType, } from './Device/in
 export { default as describeError } from './logging/describeError';
 export { createSerialPort, getSerialPortOptions, type SerialPort, } from './SerialPort/SerialPort';
 export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSettingsDialog';
-export { openAppWindow } from './OpenApp/openApp';
 export type { AppDispatch, AppThunk, NrfConnectState } from './store';
 export { type DeviceSetupConfig, type DeviceSetup, prepareDevice, } from './Device/deviceSetup';
-export type { AppInfo, AppVersions, PackageJson, SourceJson, } from './utils/AppTypes';
 export { addNewMessage, newCopiedFlashMessage, newInfoFlashMessage, newWarningFlashMessage, newErrorFlashMessage, newSuccessFlashMessage, } from './FlashMessage/FlashMessageSlice';
+export { inMain as apps } from '../ipc/apps';
+export { inMain as openWindow } from '../ipc/openWindow';
+export { inMain as preventSleep } from '../ipc/preventSleep';
 //# sourceMappingURL=index.d.ts.map

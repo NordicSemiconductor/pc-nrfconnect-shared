@@ -1,4 +1,4 @@
-import type { PackageJson } from './AppTypes';
+import type { PackageJson } from '../../ipc/MetaFiles';
 /**
  * Initialize instance to send user data
  * @param {*} packageJson the app's package json

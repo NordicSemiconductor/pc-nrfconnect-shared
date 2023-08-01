@@ -1,1 +1,1 @@
-{"version":3,"file":"packageJson.d.ts","sourceRoot":"","sources":["../../../../src/utils/packageJson.ts"],"names":[],"mappings":"AAmCA,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,YAAY,CAAC;AAI9C,eAAO,MAAM,eAAe,oBAAqB,MAAM,SAUtD,CAAC;;AAEF,wBAQE"}
+{"version":3,"file":"packageJson.d.ts","sourceRoot":"","sources":["../../../../src/utils/packageJson.ts"],"names":[],"mappings":"AAmCA,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,qBAAqB,CAAC;AAIvD,eAAO,MAAM,eAAe,oBAAqB,MAAM,SAUtD,CAAC;;AAEF,wBAQE"}

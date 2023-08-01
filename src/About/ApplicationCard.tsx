@@ -5,51 +5,22 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { ipcRenderer } from 'electron';
 
+import {
+    AppDetailsFromLauncher,
+    inMain as appDetails,
+} from '../../ipc/appDetails';
 import Card from '../Card/Card';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import AboutButton from './AboutButton';
 import Section from './Section';
 import ShortcutButton from './ShortcutButton';
 
-interface AppDetails {
-    coreVersion: string;
-    corePath: string;
-    homeDir: string;
-    tmpDir: string;
-}
-
-interface LauncerApp {
-    name?: string;
-    displayName?: string;
-    description?: string;
-    homepage?: string;
-    currentVersion?: string;
-    latestVersion?: string;
-    engineVersion?: string;
-    path?: string;
-    iconPath?: string;
-    shortcutIconPath?: string;
-    isOfficial?: string;
-    sharedVersion?: string;
-    source?: string;
-    url?: string;
-    releaseNote?: string;
-    upgradeAvailable?: string;
-    repositoryUrl?: string;
-}
-
-type DetailsFromLauncher = AppDetails & LauncerApp;
-
 export default () => {
-    const [appInfo, setAppInfo] = useState<DetailsFromLauncher>();
+    const [appInfo, setAppInfo] = useState<AppDetailsFromLauncher>();
 
     useEffect(() => {
-        ipcRenderer.once('app-details', (_, details: DetailsFromLauncher) => {
-            setAppInfo(details);
-        });
-        ipcRenderer.send('get-app-details');
+        appDetails.getAppDetails().then(setAppInfo);
     }, [setAppInfo]);
 
     if (appInfo == null) return null;
