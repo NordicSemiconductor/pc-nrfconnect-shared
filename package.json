@@ -1,5 +1,5 @@
 {
-    "name": "pc-nrfconnect-shared",
+    "name": "@nordicsemiconductor/pc-nrfconnect-shared",
     "version": "76.0.0",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
