@@ -15,6 +15,21 @@
         "nrfconnect-license": "./scripts/nrfconnect-license.ts",
         "run-esbuild": "./scripts/esbuild.js"
     },
+    "files": [
+        "./config",
+        "./dist",
+        "fw",
+        "main",
+        "mocks",
+        "./scripts",
+        "./src",
+        "./test",
+        "./typings",
+        "./styles.scss",
+        "LICENSE",
+        "Changelog.md",
+        "README.md"
+    ],
     "main": "src",
     "scripts": {
         "test": "jest",
@@ -24,11 +39,8 @@
         "check:license": "ts-node scripts/nrfconnect-license.ts check",
         "generate-types": "tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./typings/generated --rootDir .",
         "prepare": "ts-node scripts/installHusky.ts",
-        "compile:publish": "esbuild scripts/nordic-publish.ts --bundle --outfile=scripts/nordic-publish.js --platform=node --log-level=warning --minify",
-        "compile:bootstrap": "node scripts/esbuild-bootstrap.js",
         "release-shared": "ts-node scripts/release-shared.ts",
-        "prepare-shared-release": "ts-node scripts/prepare-shared-release.ts",
-        "postinstall": "run-p compile:*"
+        "prepare-shared-release": "ts-node scripts/prepare-shared-release.ts"
     },
     "peerDependencies": {
         "@nordicsemiconductor/nrf-device-lib-js": "*"
