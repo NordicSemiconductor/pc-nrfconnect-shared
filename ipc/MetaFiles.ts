@@ -3,8 +3,6 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
-export type WithRequired<T, K extends keyof T> = T & Required<Pick<T, K>>;
-
 export type UrlString = string;
 
 export interface SourceJson {
