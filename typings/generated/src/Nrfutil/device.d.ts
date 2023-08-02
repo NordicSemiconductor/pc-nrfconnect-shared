@@ -22,3 +22,4 @@ declare const setLogLevel: (level: LogLevel) => Promise<void>;
 declare const setVerboseLogging: (verbose: boolean) => Promise<void>;
 declare const getModuleVersion: () => Promise<import("./sandboxTypes").ModuleVersion>;
 export { program, programBuffer, erase, recover, reset, getProtectionStatus, setProtectionStatus, getFwInfo, setMcuState, getCoreInfo, list, firmwareRead, onLogging, setLogLevel, setVerboseLogging, getModuleVersion, };
+//# sourceMappingURL=device.d.ts.map

@@ -18,3 +18,4 @@ declare const setLogLevel: jest.Mock<any, any, any>;
 declare const setVerboseLogging: jest.Mock<any, any, any>;
 declare const getModuleVersion: jest.Mock<any, any, any>;
 export { program, programBuffer, erase, recover, reset, getProtectionStatus, setProtectionStatus, getFwInfo, setMcuState, getCoreInfo, list, firmwareRead, onLogging, setLogLevel, setVerboseLogging, getModuleVersion, };
+//# sourceMappingURL=device.d.ts.map

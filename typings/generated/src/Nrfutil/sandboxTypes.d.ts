@@ -113,3 +113,4 @@ export declare const isStringVersion: (version?: SubDependency) => version is Su
     version: string;
 };
 export {};
+//# sourceMappingURL=sandboxTypes.d.ts.map

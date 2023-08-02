@@ -27,3 +27,4 @@ export declare const prepareSandbox: (baseDir: string, module: string, version?:
 }>;
 export declare const prepareAndCreate: <Module>(baseDir: string, module: string, createModule: (sandbox: NrfutilSandboxType) => Module, version?: string) => Promise<Module>;
 export {};
+//# sourceMappingURL=sandbox.d.ts.map

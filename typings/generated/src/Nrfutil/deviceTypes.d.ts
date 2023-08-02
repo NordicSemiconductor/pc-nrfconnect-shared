@@ -191,3 +191,4 @@ export interface SerialPort {
     path: string | null;
 }
 export {};
+//# sourceMappingURL=deviceTypes.d.ts.map
