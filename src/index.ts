@@ -97,6 +97,7 @@ export type {
     DeviceCoreInfo,
     SerialPort as DeviceSerialPort,
     ImageType as FWInfoImageType,
+    NrfutilDevice,
 } from './Nrfutil/deviceTypes';
 export {
     program,
