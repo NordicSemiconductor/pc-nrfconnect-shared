@@ -32,7 +32,7 @@ import { readFileSync } from 'fs';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore This will be available when the app uses it.
 // eslint-disable-next-line import/no-unresolved
-import packageJsons from '../../../../package.json';
+import packageJsons from '../../../../../package.json';
 import type { PackageJson } from '../../ipc/MetaFiles';
 
 let packageJson: PackageJson = packageJsons;

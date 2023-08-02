@@ -16,6 +16,19 @@ every new version is a new major version.
     and use the new name `@nordicsemiconductor/pc-nrfconnect-shared` when
     importing components from shared
 
+### Steps to upgrade when using this package
+
+-   Change all references from `pc-nrfconnect-shared` to
+    `@nordicsemiconductor/pc-nrfconnect-shared`
+
+```diff
+- import { App } from 'pc-nrfconnect-shared';
++ import { App } from '@nordicsemiconductor/pc-nrfconnect-shared';
+```
+
+-   Also check references in `tsconfig.json`, s`jest.config.js` and
+    `.scss`-files.
+
 ## 77 - 2023-08-01
 
 ### Added
