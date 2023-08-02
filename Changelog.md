@@ -16,6 +16,36 @@ every new version is a new major version.
     and use the new name `@nordicsemiconductor/pc-nrfconnect-shared` when
     importing components from shared
 
+## 77 - 2023-08-01
+
+### Added
+
+-   Functions to invoke functionality in the main process via IPC:
+
+    -   `apps.getDownloadableApps()`
+    -   `apps.installDownloadableApp(app, version?)`
+    -   `openWindow.openApp(app, openAppOptions?)` (This was previously exported
+        as `openAppWindow``)
+    -   `openWindow.openLauncher()`
+    -   `preventSleep.start()`
+    -   `preventSleep.end(id)`
+
+### Removed
+
+-   Export of the serialport IPC channel names.
+
+### Changed
+
+-   On the build server the generated types are removed before regenerating
+    them, so we make sure that we do not have stale declaration files for source
+    files we already removed.
+
+### Steps to upgrade when using this package
+
+-   Replace all code that still uses `ipcRenderer` with invocations of the
+    appropriate functions.
+-   Replace invocations of `openAppWindow` with `openWindow.openApp`.
+
 ## 76 - 2023-07-28
 
 ### Changed

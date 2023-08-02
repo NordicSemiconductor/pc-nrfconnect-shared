@@ -9,9 +9,9 @@ import 'focus-visible';
 import React, { FC, ReactNode, useEffect, useMemo } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import { useDispatch, useSelector } from 'react-redux';
-import { ipcRenderer } from 'electron';
 import { Reducer } from 'redux';
 
+import { inMain as openWindow } from '../../ipc/openWindow';
 import About from '../About/About';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
 import { setAutoReselect } from '../Device/deviceAutoSelectSlice';
@@ -102,7 +102,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
         hotKey: 'alt+l',
         title: 'Open launcher',
         isGlobal: true,
-        action: () => ipcRenderer.send('open-app-launcher'),
+        action: openWindow.openLauncher,
     });
 
     useEffect(() => {

@@ -13,7 +13,7 @@ import FtpClient from 'ftp';
 import semver from 'semver';
 import calculateShasum from 'shasum';
 
-import { AppInfo, PackageJson, SourceJson } from '../src/utils/AppTypes';
+import { AppInfo, PackageJson, SourceJson } from '../ipc/MetaFiles';
 import checkAppProperties from './check-app-properties';
 
 interface LegacyAppInfo {

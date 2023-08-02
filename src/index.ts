@@ -5,9 +5,7 @@
  */
 import { hideDialog, showDialog } from './ErrorDialog/errorDialogSlice';
 
-const ErrorDialogActions = { hideDialog, showDialog };
-
-export { ErrorDialogActions };
+export const ErrorDialogActions = { hideDialog, showDialog };
 
 export { default as App, type PaneProps } from './App/App';
 export { default as Logo } from './Logo/Logo';
@@ -130,8 +128,6 @@ export {
 } from './SerialPort/SerialPort';
 export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSettingsDialog';
 
-export { openAppWindow } from './OpenApp/openApp';
-
 export type { AppDispatch, AppThunk, NrfConnectState } from './store';
 
 export {
@@ -139,13 +135,6 @@ export {
     type DeviceSetup,
     prepareDevice,
 } from './Device/deviceSetup';
-
-export type {
-    AppInfo,
-    AppVersions,
-    PackageJson,
-    SourceJson,
-} from './utils/AppTypes';
 
 export {
     addNewMessage,
@@ -155,3 +144,7 @@ export {
     newErrorFlashMessage,
     newSuccessFlashMessage,
 } from './FlashMessage/FlashMessageSlice';
+
+export { inMain as apps } from '../ipc/apps';
+export { inMain as openWindow } from '../ipc/openWindow';
+export { inMain as preventSleep } from '../ipc/preventSleep';

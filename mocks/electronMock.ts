@@ -10,6 +10,8 @@ export const match = jest.fn();
 export const app = jest.fn();
 export const dialog = jest.fn();
 export const ipcRenderer = {
+    on: jest.fn(),
     once: jest.fn(),
+    invoke: jest.fn().mockResolvedValue(undefined),
     send: jest.fn(),
 };
