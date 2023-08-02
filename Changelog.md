@@ -7,6 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 78 - 2023-08-02
+
+### Changed
+
+-   New name for the shared package, it is now under the `@nordicsemiconductor`
+    namespace on npm. The idea is that apps will now install shared from npm,
+    and use the new name `@nordicsemiconductor/pc-nrfconnect-shared` when
+    importing components from shared
+
 ## 76 - 2023-07-28
 
 ### Changed
