@@ -8,6 +8,12 @@ This project does _not_ adhere to
 every new version is a new major version.
 
 ## 78 - 2023-08-03
+
+### Changed
+
+-   Shared now only uses `device.jlink.boardversion` instead of
+    `jlink.boardVersion`.
+
 ### Fixed
 
 -   `deviceInfo` can now be used in applications that don't make use of the

@@ -20,11 +20,11 @@ const Row = ({ children }: { children: ReactNode }) => (
 );
 
 const PcaNumber = ({ device }: { device: Device }) => {
-    if (device.boardVersion == null) {
+    if (!device.jlink?.boardVersion) {
         return null;
     }
 
-    return <div>{device.boardVersion}</div>;
+    return <div>{device.jlink.boardVersion}</div>;
 };
 
 const MaybeDeviceName = ({ device }: { device: Device }) => {

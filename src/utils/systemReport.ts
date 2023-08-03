@@ -95,9 +95,9 @@ const allDevicesReport = (allDevices: Device[] = []) => [
     '- Connected devices:',
     ...allDevices.map(
         d =>
-            `    - ${d.serialNumber} ${d.boardVersion || ''}: ${d.serialPorts
-                ?.map(s => s.comName)
-                .join(', ')}`
+            `    - ${d.serialNumber} ${
+                d.jlink?.boardVersion || ''
+            }: ${d.serialPorts?.map(s => s.comName).join(', ')}`
     ),
     '',
 ];
