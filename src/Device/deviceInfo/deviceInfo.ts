@@ -181,7 +181,7 @@ const devicesByPca: { [P in DevicePCA]: DeviceInfo } = {
 };
 
 const deviceByPca = (device: Device) =>
-    devicesByPca[String(device.boardVersion).toUpperCase() as DevicePCA];
+    devicesByPca[String(device.jlink?.boardVersion).toUpperCase() as DevicePCA];
 
 const NORDIC_VENDOR_ID = '1915';
 const isNordicDevice = (device: Device) =>
@@ -240,7 +240,7 @@ export const displayedDeviceName = (
         return device.nickname;
     }
 
-    return deviceInfo(device).name || device.boardVersion || 'Unknown';
+    return deviceInfo(device).name || device.jlink?.boardVersion || 'Unknown';
 };
 
 export const productPageUrl = (device: Device) =>

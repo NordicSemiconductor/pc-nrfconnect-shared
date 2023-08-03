@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 78 - 2023-08-03
+### Fixed
+
+-   `deviceInfo` can now be used in applications that don't make use of the
+    shared redux store.
+
 ## 77 - 2023-08-01
 
 ### Added
