@@ -130,6 +130,9 @@ export {
 export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSettingsDialog';
 
 export type { AppDispatch, AppThunk, NrfConnectState } from './store';
+
+export { default as NrfutilDevice } from './Nrfutil/device/device';
+
 export { default as prepareSandbox } from './Nrfutil/sandbox';
 export { NrfutilSandbox } from './Nrfutil/sandbox';
 export { type Progress } from './Nrfutil/sandboxTypes';
