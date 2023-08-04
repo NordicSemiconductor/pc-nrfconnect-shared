@@ -17,6 +17,7 @@ export type AppVersions = {
     [version: string]: {
         shasum?: string;
         tarballUrl: UrlString;
+        nrfutilModules?: nrfutilModules;
     };
 };
 
