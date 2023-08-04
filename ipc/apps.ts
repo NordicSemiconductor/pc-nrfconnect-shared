@@ -79,6 +79,33 @@ const channel = {
 
 export type SourceWithError = { source: Source; reason?: string };
 
+export const isDownloadable = (app?: App): app is DownloadableApp =>
+    app != null && app?.source !== LOCAL;
+
+export const isInstalled = (app?: App): app is LaunchableApp =>
+    app != null && 'installed' in app;
+
+export const isWithdrawn = (app?: App): app is WithdrawnApp =>
+    isDownloadable(app) && app.isWithdrawn;
+
+const latestVersionHasDifferentChecksum = (app: InstalledDownloadableApp) => {
+    const shaOfLatest = app.versions?.[app.latestVersion]?.shasum;
+    const shaOfInstalled = app.installed.shasum;
+
+    return (
+        shaOfLatest != null &&
+        shaOfInstalled != null &&
+        shaOfInstalled !== shaOfLatest
+    );
+};
+
+export const isUpdatable = (app?: App): app is InstalledDownloadableApp =>
+    !isWithdrawn(app) &&
+    isInstalled(app) &&
+    isDownloadable(app) &&
+    (app.currentVersion !== app.latestVersion ||
+        latestVersionHasDifferentChecksum(app));
+
 // getDownloadableApps
 type GetDownloadableAppsResult = {
     apps: DownloadableApp[];
@@ -116,4 +143,9 @@ export const forRenderer = {
 export const inMain = {
     getDownloadableApps,
     installDownloadableApp,
+
+    isDownloadable,
+    isInstalled,
+    isWithdrawn,
+    isUpdatable,
 };

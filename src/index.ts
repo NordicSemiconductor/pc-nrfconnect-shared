@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
+
 import { hideDialog, showDialog } from './ErrorDialog/errorDialogSlice';
 
 export const ErrorDialogActions = { hideDialog, showDialog };
@@ -145,6 +146,18 @@ export {
     newSuccessFlashMessage,
 } from './FlashMessage/FlashMessageSlice';
 
-export { inMain as apps } from '../ipc/apps';
+export {
+    inMain as apps,
+    type App as AppType,
+    type AppSpec,
+    type AppWithError,
+    type DownloadableApp,
+    type InstalledDownloadableApp,
+    type LaunchableApp,
+    type LocalApp,
+    type SourceWithError,
+    type UninstalledDownloadableApp,
+    type WithdrawnApp,
+} from '../ipc/apps';
 export { inMain as openWindow } from '../ipc/openWindow';
 export { inMain as preventSleep } from '../ipc/preventSleep';
