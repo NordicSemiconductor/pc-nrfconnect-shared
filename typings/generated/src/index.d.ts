@@ -67,7 +67,7 @@ export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSe
 export type { AppDispatch, AppThunk, NrfConnectState } from './store';
 export { type DeviceSetupConfig, type DeviceSetup, prepareDevice, } from './Device/deviceSetup';
 export { addNewMessage, newCopiedFlashMessage, newInfoFlashMessage, newWarningFlashMessage, newErrorFlashMessage, newSuccessFlashMessage, } from './FlashMessage/FlashMessageSlice';
-export { inMain as apps } from '../ipc/apps';
+export { inMain as apps, type App as AppType, type AppSpec, type AppWithError, type DownloadableApp, type InstalledDownloadableApp, type LaunchableApp, type LocalApp, type SourceWithError, type UninstalledDownloadableApp, type WithdrawnApp, } from '../ipc/apps';
 export { inMain as openWindow } from '../ipc/openWindow';
 export { inMain as preventSleep } from '../ipc/preventSleep';
 //# sourceMappingURL=index.d.ts.map

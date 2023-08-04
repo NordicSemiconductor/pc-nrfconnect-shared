@@ -50,6 +50,10 @@ export type SourceWithError = {
     source: Source;
     reason?: string;
 };
+export declare const isDownloadable: (app?: App) => app is DownloadableApp;
+export declare const isInstalled: (app?: App) => app is LaunchableApp;
+export declare const isWithdrawn: (app?: App) => app is WithdrawnApp;
+export declare const isUpdatable: (app?: App) => app is InstalledDownloadableApp;
 type GetDownloadableAppsResult = {
     apps: DownloadableApp[];
     appsWithErrors: AppWithError[];
@@ -62,6 +66,10 @@ export declare const forRenderer: {
 export declare const inMain: {
     getDownloadableApps: () => Promise<GetDownloadableAppsResult>;
     installDownloadableApp: (app: DownloadableApp, version?: string | undefined) => Promise<DownloadableApp>;
+    isDownloadable: (app?: App) => app is DownloadableApp;
+    isInstalled: (app?: App) => app is LaunchableApp;
+    isWithdrawn: (app?: App) => app is WithdrawnApp;
+    isUpdatable: (app?: App) => app is InstalledDownloadableApp;
 };
 export {};
 //# sourceMappingURL=apps.d.ts.map
