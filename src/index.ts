@@ -131,11 +131,22 @@ export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSe
 
 export type { AppDispatch, AppThunk, NrfConnectState } from './store';
 
-export { default as NrfutilDevice } from './Nrfutil/device/device';
+export { default as NrfutilDeviceLib } from './Nrfutil/device/device';
+
+export type {
+    DeviceCore,
+    DeviceTraits,
+    ProtectionStatus,
+    SerialPort as DeviceSerialPort,
+    NrfutilDevice,
+} from './Nrfutil/device/common';
+
+export type { DeviceCoreInfo } from './Nrfutil/device/getCoreInfo';
+export type { ImageType } from './Nrfutil/device/getFwInfo';
 
 export { default as prepareSandbox } from './Nrfutil/sandbox';
 export { NrfutilSandbox } from './Nrfutil/sandbox';
-export { type Progress } from './Nrfutil/sandboxTypes';
+export type { Progress } from './Nrfutil/sandboxTypes';
 
 export {
     type DeviceSetupConfig,
