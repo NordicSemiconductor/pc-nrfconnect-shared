@@ -36,7 +36,7 @@ export default () => {
         );
     }
 
-    const pca = device.boardVersion;
+    const pca = device.jlink?.boardVersion;
     const { name, cores } = deviceInfo(device);
 
     return (

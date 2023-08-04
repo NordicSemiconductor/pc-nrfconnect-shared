@@ -1,6 +1,6 @@
 {
     "name": "@nordicsemiconductor/pc-nrfconnect-shared",
-    "version": "78.0.0",
+    "version": "79.0.0",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -15,21 +15,6 @@
         "nrfconnect-license": "./scripts/nrfconnect-license.ts",
         "run-esbuild": "./scripts/esbuild.js"
     },
-    "files": [
-        "./config",
-        "./dist",
-        "fw",
-        "main",
-        "mocks",
-        "./scripts",
-        "./src",
-        "./test",
-        "./typings",
-        "./styles.scss",
-        "LICENSE",
-        "Changelog.md",
-        "README.md"
-    ],
     "main": "src",
     "scripts": {
         "test": "jest",
