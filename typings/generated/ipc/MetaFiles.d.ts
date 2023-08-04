@@ -8,6 +8,7 @@ export type AppVersions = {
     [version: string]: {
         shasum?: string;
         tarballUrl: UrlString;
+        nrfutilModules?: nrfutilModules;
     };
 };
 export interface AppInfo {
@@ -27,6 +28,12 @@ export interface AppInfo {
 interface ObjectContainingOptionalStrings {
     [index: string]: string | undefined;
 }
+interface nrfConnectForDesktop {
+    nrfutil?: nrfutilModules;
+}
+interface nrfutilModules {
+    [index: string]: string[] | undefined;
+}
 export interface PackageJson {
     name: string;
     version: string;
@@ -38,6 +45,7 @@ export interface PackageJson {
     devDependencies?: ObjectContainingOptionalStrings;
     displayName?: string;
     engines?: ObjectContainingOptionalStrings;
+    nrfConnectForDesktop?: nrfConnectForDesktop;
     files?: readonly string[];
     license?: string;
     main?: string;
