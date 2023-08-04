@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 80 - 2023-08-07
+
+### Changed
+
+-   Linux: Check for and log `nrf-udev` install on startup.
+
 ## 79 - 2023-08-04
 
 ### Added

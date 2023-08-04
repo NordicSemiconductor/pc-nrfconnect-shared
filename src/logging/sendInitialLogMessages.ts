@@ -14,6 +14,7 @@ import {
 import { getAppDataDir } from '../utils/appDirs';
 import describeVersion from '../utils/describeVersion';
 import logLibVersions from '../utils/logLibVersions';
+import udevInstalled from '../utils/udevInstalled';
 import logger from '.';
 
 let initialMessagesSent = false;
@@ -57,5 +58,11 @@ export default async () => {
                 `Installed JLink version does not match the provided version (${bundledJlink})`
             );
         }
+    }
+
+    if (!udevInstalled()) {
+        logger.warn(
+            'Required component nrf-udev is not detected. Install it from https://github.com/NordicSemiconductor/nrf-udev and restart the application'
+        );
     }
 };
