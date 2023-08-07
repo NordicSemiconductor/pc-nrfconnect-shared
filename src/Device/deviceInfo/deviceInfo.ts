@@ -28,7 +28,7 @@
    through CSS, e.g. to change the colours.
 */
 
-import { Device } from '../deviceSlice';
+import type { Device } from '../deviceSlice';
 
 import nrf51logo from '!!@svgr!./nRF51-Series-logo.svg';
 import nrf52logo from '!!@svgr!./nRF52-Series-logo.svg';
