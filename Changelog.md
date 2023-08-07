@@ -7,7 +7,7 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 79 - Unreleased
+## 80 - Unreleased
 
 ### Changed
 
@@ -28,6 +28,12 @@ every new version is a new major version.
 
 -   Also check references in `tsconfig.json`, s`jest.config.js` and
     `.scss`-files.
+
+## 79 - 2023-08-04
+
+### Added
+
+-   Export app utility functions (like `isInstalled`) and types.
 
 ## 78 - 2023-08-03
 
