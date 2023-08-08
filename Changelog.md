@@ -7,7 +7,7 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 80 - Unreleased
+## 81 - Unreleased
 
 ### Changed
 
@@ -28,6 +28,12 @@ every new version is a new major version.
 
 -   Also check references in `tsconfig.json`, s`jest.config.js` and
     `.scss`-files.
+
+## 80 - 2023-08-07
+
+### Changed
+
+-   Linux: Check for and log `nrf-udev` install on startup.
 
 ## 79 - 2023-08-04
 
