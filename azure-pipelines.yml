@@ -14,7 +14,7 @@ steps:
           npm run check
           npm run generate-types
           npm test -- --coverage --coverageReporters=cobertura
-          npx esbuild scripts/nordic-publish.ts --bundle --outfile=scripts/nordic-publish.js --platform=node --log-level=warning --minify
+          ./scripts/compile-scripts.js
           node scripts/esbuild-bootstrap.js
           npm pack
       displayName: 'Build, Test, Compile and Pack'
