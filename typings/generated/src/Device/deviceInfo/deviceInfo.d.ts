@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { Device } from '../deviceSlice';
+import type { Device } from '../deviceSlice';
 interface DeviceInfo {
     name?: string | null;
     cores?: number;
