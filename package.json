@@ -42,7 +42,8 @@
         "generate-types": "tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./typings/generated --rootDir .",
         "prepare": "ts-node scripts/installHusky.ts",
         "release-shared": "ts-node scripts/release-shared.ts",
-        "prepare-shared-release": "ts-node scripts/prepare-shared-release.ts"
+        "prepare-shared-release": "ts-node scripts/prepare-shared-release.ts",
+        "postinstall": "node scripts/postinstall.js"
     },
     "peerDependencies": {
         "@nordicsemiconductor/nrf-device-lib-js": "*"

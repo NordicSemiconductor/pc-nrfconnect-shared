@@ -13,15 +13,14 @@ steps:
           npm ci
           npm run check
           npm run generate-types
+          npm run postinstall
           npm test -- --coverage --coverageReporters=cobertura
-          ./scripts/compile-scripts.js
-          node scripts/esbuild-bootstrap.js
           npm pack
       displayName: 'Build, Test, Compile and Pack'
     - bash: |
           set -o errexit -o pipefail
           cp *.tgz "$(Build.ArtifactStagingDirectory)"
-          condition: ne(variables['Build.Reason'], 'PullRequest')
+      condition: ne(variables['Build.Reason'], 'PullRequest')
       displayName: 'Copy Artifacts'
     - task: PublishCodeCoverageResults@1
       displayName: Publish code coverage
