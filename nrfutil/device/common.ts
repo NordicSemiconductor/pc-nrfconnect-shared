@@ -247,9 +247,26 @@ export const deviceSingleTaskEndOperation = async <T = void>(
     args: string[] = []
 ) => {
     const box = await getDeviceSandbox();
-    return box.singleTaskEndOperation<T>(command, onProgress, controller, [
-        ...args,
-        '--serial-number',
-        device.serialNumber,
-    ]);
+    return box.singleTaskEndOperationWithData<T>(
+        command,
+        onProgress,
+        controller,
+        [...args, '--serial-number', device.serialNumber]
+    );
+};
+
+export const deviceSingleTaskEndOperationVoid = async (
+    device: NrfutilDeviceWithSerialnumber,
+    command: string,
+    onProgress?: (progress: Progress) => void,
+    controller?: AbortController,
+    args: string[] = []
+) => {
+    const box = await getDeviceSandbox();
+    await box.singleTaskEndOperationOptionalData(
+        command,
+        onProgress,
+        controller,
+        [...args, '--serial-number', device.serialNumber]
+    );
 };
