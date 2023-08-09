@@ -12,7 +12,7 @@ module.exports = {
     prefix: 'tw-',
     content: [
         './src/**/*.{html,jsx,tsx}',
-        './node_modules/pc-nrfconnect-shared/src/**/*.tsx',
+        './node_modules/@nordicsemiconductor/pc-nrfconnect-shared/src/**/*.tsx',
     ],
     theme: {
         colors,
