@@ -1,4 +1,4 @@
-import { DeviceTraits, NrfutilDevice } from '../Nrfutil/device/common';
+import { DeviceTraits, NrfutilDevice } from '../../nrfutil/device/common';
 import type { AppThunk, RootState } from '../store';
 import { Device } from './deviceSlice';
 /**

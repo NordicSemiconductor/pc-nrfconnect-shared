@@ -24,7 +24,8 @@ export declare class NrfutilSandbox {
         isRunning: () => boolean;
         onClosed: (handler: (error?: Error) => void) => () => ((error?: Error) => void)[];
     };
-    singleTaskEndOperation: <T = void>(command: string, onProgress?: ((progress: Progress) => void) | undefined, controller?: AbortController, args?: string[]) => Promise<NonNullable<T>>;
+    singleTaskEndOperationWithData: <T>(command: string, onProgress?: ((progress: Progress) => void) | undefined, controller?: AbortController, args?: string[]) => Promise<NonNullable<Awaited<T>>>;
+    singleTaskEndOperationOptionalData: <T = void>(command: string, onProgress?: ((progress: Progress) => void) | undefined, controller?: AbortController, args?: string[]) => Promise<T | undefined>;
     onLogging: (handler: (logging: LogMessage) => void) => () => ((logging: LogMessage) => void)[];
     setLogLevel: (level: LogLevel) => void;
 }

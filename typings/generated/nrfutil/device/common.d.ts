@@ -119,5 +119,6 @@ export interface SerialPort {
     path: string | null;
 }
 export declare const getDeviceSandbox: () => Promise<NrfutilSandbox>;
-export declare const deviceSingleTaskEndOperation: <T = void>(device: NrfutilDeviceWithSerialnumber, command: string, onProgress?: ((progress: Progress) => void) | undefined, controller?: AbortController, args?: string[]) => Promise<NonNullable<T>>;
+export declare const deviceSingleTaskEndOperation: <T = void>(device: NrfutilDeviceWithSerialnumber, command: string, onProgress?: ((progress: Progress) => void) | undefined, controller?: AbortController, args?: string[]) => Promise<NonNullable<Awaited<T>>>;
+export declare const deviceSingleTaskEndOperationVoid: (device: NrfutilDeviceWithSerialnumber, command: string, onProgress?: ((progress: Progress) => void) | undefined, controller?: AbortController, args?: string[]) => Promise<void>;
 //# sourceMappingURL=common.d.ts.map

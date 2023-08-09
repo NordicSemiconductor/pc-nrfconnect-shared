@@ -1,1 +1,0 @@
-{"version":3,"file":"setMcuState.d.ts","sourceRoot":"","sources":["../../../../../src/Nrfutil/device/setMcuState.ts"],"names":[],"mappings":"AAMA,OAAO,EAAE,QAAQ,EAAE,MAAM,iBAAiB,CAAC;AAC3C,OAAO,EAEH,6BAA6B,EAChC,MAAM,UAAU,CAAC;AAElB,MAAM,MAAM,QAAQ,GAAG,aAAa,GAAG,aAAa,CAAC;iCAGzC,6BAA6B,SAC9B,QAAQ,2BACS,QAAQ,KAAK,IAAI,4BAC5B,eAAe;AAJhC,wBAYM"}
