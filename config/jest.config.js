@@ -23,9 +23,6 @@ module.exports = (disabledMocks = []) => ({
             : {
                   packageJson$: `${mockDir}/packageJsonMock.ts`,
               }),
-        ...(disabledMocks.includes('react-ga')
-            ? {}
-            : { '^react-ga$': `${mockDir}/gaMock.ts` }),
         ...(disabledMocks.includes('serialport')
             ? {}
             : { serialport: `${mockDir}/emptyMock.ts` }),
@@ -33,7 +30,9 @@ module.exports = (disabledMocks = []) => ({
     transform: {
         '^.+\\.[jt]sx?$': '@swc/jest',
     },
-    transformIgnorePatterns: ['node_modules/(?!(pc-nrfconnect-shared)/)'],
+    transformIgnorePatterns: [
+        'node_modules/(?!(@nordicsemiconductor/pc-nrfconnect-shared)/)',
+    ],
     setupFilesAfterEnv: [`${__dirname}/../test/setupTests.ts`],
     snapshotSerializers: ['enzyme-to-json/serializer'],
     resolver: `${__dirname}/../test/jestResolver.js`,
