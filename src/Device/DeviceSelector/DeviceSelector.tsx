@@ -7,7 +7,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { DeviceTraits } from '../../Nrfutil/device/common';
+import { DeviceTraits } from '../../../nrfutil/device/common';
 import useHotKey from '../../utils/useHotKey';
 import {
     getWaitingToAutoReselect,

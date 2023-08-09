@@ -6,7 +6,7 @@
 
 import React, { ReactNode } from 'react';
 
-import { SerialPort } from '../../../Nrfutil/device/common';
+import { SerialPort } from '../../../../nrfutil/device/common';
 import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
 import { Device } from '../../deviceSlice';
 

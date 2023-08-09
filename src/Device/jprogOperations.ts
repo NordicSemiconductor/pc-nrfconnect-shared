@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import NrfutilDeviceLib from '../../nrfutil/device/device';
+import { FWInfo } from '../../nrfutil/device/getFwInfo';
 import logger from '../logging';
-import NrfutilDeviceLib from '../Nrfutil/device/device';
-import { FWInfo } from '../Nrfutil/device/getFwInfo';
 import type { AppThunk, RootState } from '../store';
 import { DeviceSetup, JprogEntry } from './deviceSetup';
 import { Device, setReadbackProtected } from './deviceSlice';

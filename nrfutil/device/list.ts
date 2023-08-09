@@ -52,18 +52,24 @@ export default async (
                     d => d.serialNumber
                 ) as NrfutilDeviceWithSerialnumber[]
             );
-        } else if (onHotplugEvent && isHotplugEvent(data)) {
-            if (
-                data.event === 'Arrived' &&
-                data.device &&
-                data.device.serialNumber
-            ) {
-                onHotplugEvent.onDeviceArrived(
-                    data.device as NrfutilDeviceWithSerialnumber
-                );
-            } else if (data.event === 'Left') {
-                onHotplugEvent.onDeviceLeft(data.id);
-            }
+
+            return;
+        }
+
+        if (!onHotplugEvent || !isHotplugEvent(data)) {
+            return;
+        }
+
+        if (
+            data.event === 'Arrived' &&
+            data.device &&
+            data.device.serialNumber
+        ) {
+            onHotplugEvent.onDeviceArrived(
+                data.device as NrfutilDeviceWithSerialnumber
+            );
+        } else if (data.event === 'Left') {
+            onHotplugEvent.onDeviceLeft(data.id);
         }
     };
 

@@ -10,8 +10,8 @@ import os from 'os';
 import path from 'path';
 import winston from 'winston';
 
-import describeError from '../logging/describeError';
-import packageJson from '../utils/packageJson';
+import describeError from '../src/logging/describeError';
+import packageJson from '../src/utils/packageJson';
 import {
     BackgroundTask,
     LogLevel,
@@ -401,8 +401,9 @@ export default async (
     const env = { ...process.env };
     let overrideVersion: string | undefined;
     if (
-        env.NODE_ENV !== 'production' ||
-        (env.NODE_ENV === 'production' && !!env.NRF_OVERRIDE_NRFUTIL_SETTINGS)
+        process.env.NODE_ENV !== 'production' ||
+        (process.env.NODE_ENV === 'production' &&
+            !!process.env.NRF_OVERRIDE_NRFUTIL_SETTINGS)
     ) {
         overrideVersion =
             env[`NRF_OVERRIDE_VERSION_${module.toLocaleUpperCase()}`] ??

@@ -17,6 +17,9 @@ import {
     NrfutilDeviceWithSerialnumber,
 } from './common';
 
+export type FileExtensions = 'zip' | 'hex';
+export type FirmwareType = { buffer: Buffer; type: FileExtensions } | string;
+
 export type ProgrammingOptions =
     | JLinkProgrammingOptions
     | McuBootProgrammingOptions
@@ -118,7 +121,7 @@ const program = (
 const programBuffer = async (
     device: NrfutilDeviceWithSerialnumber,
     firmware: Buffer,
-    type: 'hex' | 'zip',
+    type: FileExtensions,
     onProgress?: (progress: Progress) => void,
     core?: DeviceCore,
     programmingOptions?: ProgrammingOptions,
@@ -152,7 +155,7 @@ const programBuffer = async (
 
 export default async (
     device: NrfutilDeviceWithSerialnumber,
-    firmware: { buffer: Buffer; type: 'hex' | 'zip' } | string,
+    firmware: FirmwareType,
     onProgress?: (progress: Progress) => void,
     core?: DeviceCore,
     programmingOptions?: ProgrammingOptions,

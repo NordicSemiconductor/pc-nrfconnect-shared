@@ -17,7 +17,7 @@ import { addDevice, Device, removeDevice } from '../deviceSlice';
 import { jprogDeviceSetup } from '../jprogOperations';
 import DeviceSelector from './DeviceSelector';
 
-jest.mock('../../Nrfutil/device/device');
+jest.mock('../../../nrfutil/device/device');
 
 const testDevice: Device = {
     id: 1,
