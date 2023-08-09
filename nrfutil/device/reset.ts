@@ -6,7 +6,7 @@
 
 import { Progress } from '../sandboxTypes';
 import {
-    deviceSingleTaskEndOperation,
+    deviceSingleTaskEndOperationVoid,
     NrfutilDeviceWithSerialnumber,
 } from './common';
 
@@ -14,4 +14,4 @@ export default (
     device: NrfutilDeviceWithSerialnumber,
     onProgress?: (progress: Progress) => void,
     controller?: AbortController
-) => deviceSingleTaskEndOperation(device, 'reset', onProgress, controller);
+) => deviceSingleTaskEndOperationVoid(device, 'reset', onProgress, controller);

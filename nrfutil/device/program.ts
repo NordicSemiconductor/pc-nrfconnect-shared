@@ -12,7 +12,7 @@ import { v4 as uuid } from 'uuid';
 import { Progress } from '../sandboxTypes';
 import {
     DeviceCore,
-    deviceSingleTaskEndOperation,
+    deviceSingleTaskEndOperationVoid,
     DeviceTraits,
     NrfutilDeviceWithSerialnumber,
 } from './common';
@@ -107,13 +107,19 @@ const program = (
     programmingOptions?: ProgrammingOptions,
     controller?: AbortController
 ) =>
-    deviceSingleTaskEndOperation(device, 'program', onProgress, controller, [
-        '--firmware',
-        firmwarePath,
-        ...deviceTraitsToArgs(device.traits),
-        ...(core ? ['--core', core] : []),
-        ...programmingOptionsToArgs(programmingOptions),
-    ]);
+    deviceSingleTaskEndOperationVoid(
+        device,
+        'program',
+        onProgress,
+        controller,
+        [
+            '--firmware',
+            firmwarePath,
+            ...deviceTraitsToArgs(device.traits),
+            ...(core ? ['--core', core] : []),
+            ...programmingOptionsToArgs(programmingOptions),
+        ]
+    );
 
 const programBuffer = async (
     device: NrfutilDeviceWithSerialnumber,
