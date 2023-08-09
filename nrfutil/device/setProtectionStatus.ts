@@ -7,7 +7,7 @@
 import { Progress } from '../sandboxTypes';
 import {
     DeviceCore,
-    deviceSingleTaskEndOperation,
+    deviceSingleTaskEndOperationVoid,
     NrfutilDeviceWithSerialnumber,
 } from './common';
 
@@ -18,7 +18,7 @@ export default (
     onProgress?: (progress: Progress) => void,
     controller?: AbortController
 ) =>
-    deviceSingleTaskEndOperation(
+    deviceSingleTaskEndOperationVoid(
         device,
         'protection-set',
         onProgress,

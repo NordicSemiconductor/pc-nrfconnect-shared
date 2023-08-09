@@ -383,7 +383,26 @@ export class NrfutilSandbox {
         };
     };
 
-    public singleTaskEndOperation = async <T = void>(
+    public singleTaskEndOperationWithData = async <T>(
+        command: string,
+        onProgress?: (progress: Progress) => void,
+        controller?: AbortController,
+        args: string[] = []
+    ) => {
+        const data = await this.singleTaskEndOperationOptionalData<T>(
+            command,
+            onProgress,
+            controller,
+            args
+        );
+
+        if (data != null) {
+            return data;
+        }
+        throw new Error('Unexpected result');
+    };
+
+    public singleTaskEndOperationOptionalData = async <T = void>(
         command: string,
         onProgress?: (progress: Progress) => void,
         controller?: AbortController,
@@ -396,7 +415,7 @@ export class NrfutilSandbox {
             controller
         );
 
-        if (results.taskEnd.length === 1 && results.taskEnd[0].data) {
+        if (results.taskEnd.length === 1) {
             return results.taskEnd[0].data;
         }
         throw new Error('Unexpected result');
