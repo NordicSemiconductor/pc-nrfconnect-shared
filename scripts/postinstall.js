@@ -8,6 +8,7 @@
 
 const { execSync } = require('child_process');
 const { existsSync } = require('fs');
+const { resolve } = require('path');
 const { build } = require('./esbuild-renderer');
 
 const scripts = [
@@ -21,7 +22,7 @@ scripts.forEach(script => {
     // compile scripts if they don't exist
     if (!existsSync(`scripts/${script}.js`)) {
         const command = `npx esbuild scripts/${script}.ts --bundle --outfile=scripts/${script}.js --platform=node --log-level=warning --minify`;
-        execSync(command);
+        execSync(command, { encoding: 'utf-8' });
     }
 });
 
@@ -34,7 +35,10 @@ if (!existsSync(`dist/bootstrap.css`)) {
     });
 }
 
+const root = resolve(__dirname, '..');
+
 // Generate types
 execSync(
-    'npx tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./typings/generated --rootDir .'
+    `npx tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./typings/generated --rootDir ${root}`,
+    { encoding: 'utf-8' }
 );
