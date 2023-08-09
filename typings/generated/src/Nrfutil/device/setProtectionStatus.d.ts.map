@@ -1,1 +1,0 @@
-{"version":3,"file":"setProtectionStatus.d.ts","sourceRoot":"","sources":["../../../../../src/Nrfutil/device/setProtectionStatus.ts"],"names":[],"mappings":"AAMA,OAAO,EAAE,QAAQ,EAAE,MAAM,iBAAiB,CAAC;AAC3C,OAAO,EACH,UAAU,EAEV,6BAA6B,EAChC,MAAM,UAAU,CAAC;iCAGN,6BAA6B,UAC7B,KAAK,GAAG,eAAe,GAAG,SAAS,GAAG,gBAAgB,SACvD,UAAU,2BACO,QAAQ,KAAK,IAAI,4BAC5B,eAAe;AALhC,wBAaM"}

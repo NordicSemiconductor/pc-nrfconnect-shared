@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { DeviceTraits } from '../../Nrfutil/device/common';
+import { DeviceTraits } from '../../../nrfutil/device/common';
 import { DeviceSetupConfig } from '../deviceSetup';
 import { Device } from '../deviceSlice';
 export interface Props {

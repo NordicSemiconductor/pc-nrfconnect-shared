@@ -1,0 +1,1 @@
+{"version":3,"file":"moduleVersion.d.ts","sourceRoot":"","sources":["../../../nrfutil/moduleVersion.ts"],"names":[],"mappings":"AAMA,OAAO,EACH,UAAU,EAIV,aAAa,EAChB,MAAM,gBAAgB,CAAC;AAExB,eAAO,MAAM,eAAe,aAAc,aAAa,GAAG,MAAM,WAc/D,CAAC;AAEF,KAAK,WAAW,GAAG,OAAO,GAAG,OAAO,GAAG,UAAU,CAAC;AAsBlD,eAAO,MAAM,oBAAoB,WACrB,WAAW,aACT,UAAU,EAAE,KACvB,UAAU,GAAG,aAAa,GAAG,SAC0C,CAAC"}
