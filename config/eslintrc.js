@@ -48,6 +48,7 @@ module.exports = {
                     'serialport',
                     'electron',
                     'pc-nrfconnect-shared',
+                    '@nordicsemiconductor/pc-nrfconnect-shared',
                     '@electron/remote',
                 ],
             },

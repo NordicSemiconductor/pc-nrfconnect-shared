@@ -26,8 +26,28 @@ every new version is a new major version.
 + import { App } from '@nordicsemiconductor/pc-nrfconnect-shared';
 ```
 
--   Also check references in `tsconfig.json`, s`jest.config.js` and
+-   Also check references in `tsconfig.json`, `jest.config.js` and
     `.scss`-files.
+
+The tsconfig can use the namespace directly like this
+
+```json
+{
+    "extends": "@nordicsemiconductor/pc-nrfconnect-shared/config/tsconfig.json"
+}
+
+```
+
+The package.json can be changed as follows:
+
+```json
+{
+    "eslintConfig": {
+        "extends": "./node_modules/@nordicsemiconductor/pc-nrfconnect-shared/config/eslintrc"
+    },
+    "prettier": "@nordicsemiconductor/pc-nrfconnect-shared/config/prettier.config.js"
+}
+```
 
 ## 80 - 2023-08-07
 
