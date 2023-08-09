@@ -21,8 +21,7 @@ steps:
     - bash: |
           set -o errexit -o pipefail
           cp *.tgz "$(Build.ArtifactStagingDirectory)"
-          #Leave for now, testing purposes.
-          #condition: ne(variables['Build.Reason'], 'PullRequest')
+          condition: ne(variables['Build.Reason'], 'PullRequest')
       displayName: 'Copy Artifacts'
     - task: PublishCodeCoverageResults@1
       displayName: Publish code coverage
