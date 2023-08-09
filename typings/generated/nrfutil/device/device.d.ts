@@ -16,7 +16,7 @@ declare const _default: {
     list: (traits: import("./common").DeviceTraits, onEnumerated: (devices: import("./common").NrfutilDeviceWithSerialnumber[]) => void, onError: (error: Error) => void, onHotplugEvent?: {
         onDeviceArrived: (device: import("./common").NrfutilDeviceWithSerialnumber) => void;
         onDeviceLeft: (id: number) => void;
-    } | undefined) => Promise<{
+    } | undefined, timeout?: number) => Promise<{
         stop: (handler: () => void) => void;
         isRunning: () => boolean;
         onClosed: (handler: (error?: Error | undefined) => void) => () => ((error?: Error | undefined) => void)[];
