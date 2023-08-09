@@ -6,7 +6,6 @@
 
 import path from 'path';
 
-import logger from '../../src/logging';
 import { getAppDataDir } from '../../src/utils/appDirs';
 import {
     getIsLoggingVerbose,
@@ -14,6 +13,7 @@ import {
 } from '../../src/utils/persistentStore';
 import sandbox, { type NrfutilSandbox } from '../sandbox';
 import { Progress } from '../sandboxTypes';
+import { getDeviceLogger } from './deviceLogger';
 
 export const deviceTraitsToArgs = (traits: DeviceTraits) => {
     const args: string[] = [];
@@ -191,35 +191,37 @@ export const getDeviceSandbox = async () => {
         return deviceSandbox;
     }
 
+    const deviceLogger = getDeviceLogger();
+
     if (!promiseDeviceSandbox) {
         promiseDeviceSandbox = sandbox(
             path.join(getAppDataDir(), '../'),
             'device',
             undefined,
             undefined,
-            logger
+            deviceLogger
         );
         deviceSandbox = await promiseDeviceSandbox;
 
         deviceSandbox.onLogging(evt => {
             switch (evt.level) {
                 case 'TRACE':
-                    logger.verbose(evt.message);
+                    deviceLogger?.verbose(evt.message);
                     break;
                 case 'DEBUG':
-                    logger.debug(evt.message);
+                    deviceLogger?.debug(evt.message);
                     break;
                 case 'INFO':
-                    logger.info(evt.message);
+                    deviceLogger?.info(evt.message);
                     break;
                 case 'WARN':
-                    logger.warn(evt.message);
+                    deviceLogger?.warn(evt.message);
                     break;
                 case 'ERROR':
-                    logger.error(evt.message);
+                    deviceLogger?.error(evt.message);
                     break;
                 case 'CRITICAL':
-                    logger.error(evt.message);
+                    deviceLogger?.error(evt.message);
                     break;
                 case 'OFF':
                 default:
