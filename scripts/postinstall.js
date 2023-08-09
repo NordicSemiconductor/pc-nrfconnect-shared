@@ -33,3 +33,8 @@ if (!existsSync(`dist/bootstrap.css`)) {
         sourcemap: false,
     });
 }
+
+// Generate types
+execSync(
+    'npx tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./typings/generated --rootDir .'
+);

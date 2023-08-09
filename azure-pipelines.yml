@@ -12,7 +12,6 @@ steps:
           set -o errexit -o pipefail
           npm ci
           npm run check
-          npm run generate-types
           npm run postinstall
           npm test -- --coverage --coverageReporters=cobertura
           npm pack
