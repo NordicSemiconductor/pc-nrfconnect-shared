@@ -10,8 +10,8 @@ import os from 'os';
 import path from 'path';
 import winston from 'winston';
 
-import describeError from '../logging/describeError';
-import packageJson from '../utils/packageJson';
+import describeError from '../src/logging/describeError';
+import packageJson from '../src/utils/packageJson';
 import {
     BackgroundTask,
     LogLevel,
@@ -41,7 +41,10 @@ const prepareEnv = (baseDir: string, module: string, version: string) => {
 
     env.NRFUTIL_EXEC_PATH = path.join(env.NRFUTIL_HOME, 'bin');
 
-    if (env.NODE_ENV === 'production' && !env.NRF_OVERRIDE_NRFUTIL_SETTINGS) {
+    if (
+        process.env.NODE_ENV === 'production' &&
+        !process.env.NRF_OVERRIDE_NRFUTIL_SETTINGS
+    ) {
         delete env.NRFUTIL_BOOTSTRAP_CONFIG_URL;
         delete env.NRFUTIL_BOOTSTRAP_TARBALL_PATH;
         delete env.NRFUTIL_DEVICE_PLUGINS_DIR_FORCE_NRFDL_LOCATION;
@@ -401,8 +404,9 @@ export default async (
     const env = { ...process.env };
     let overrideVersion: string | undefined;
     if (
-        env.NODE_ENV !== 'production' ||
-        (env.NODE_ENV === 'production' && !!env.NRF_OVERRIDE_NRFUTIL_SETTINGS)
+        process.env.NODE_ENV !== 'production' ||
+        (process.env.NODE_ENV === 'production' &&
+            !!process.env.NRF_OVERRIDE_NRFUTIL_SETTINGS)
     ) {
         overrideVersion =
             env[`NRF_OVERRIDE_VERSION_${module.toLocaleUpperCase()}`] ??

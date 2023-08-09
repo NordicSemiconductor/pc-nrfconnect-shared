@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import logger from '../logging';
 import {
     DeviceTraits,
     NrfutilDevice,
     NrfutilDeviceWithSerialnumber,
-} from '../Nrfutil/device/common';
-import NrfutilDeviceLib from '../Nrfutil/device/device';
+} from '../../nrfutil/device/common';
+import NrfutilDeviceLib from '../../nrfutil/device/device';
+import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
 import {
     clearWaitForDeviceTimeout,

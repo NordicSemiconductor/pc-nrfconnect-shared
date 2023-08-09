@@ -9,9 +9,9 @@ import { createHash } from 'crypto';
 import fs from 'fs';
 import MemoryMap from 'nrf-intel-hex';
 
+import NrfutilDeviceLib from '../../nrfutil/device/device';
+import { McuState } from '../../nrfutil/device/setMcuState';
 import logger from '../logging';
-import NrfutilDeviceLib from '../Nrfutil/device/device';
-import { McuState } from '../Nrfutil/device/setMcuState';
 import { AppThunk, RootState } from '../store';
 import { getAppFile } from '../utils/appDirs';
 import { setWaitForDevice } from './deviceAutoSelectSlice';

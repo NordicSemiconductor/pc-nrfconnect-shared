@@ -7,13 +7,13 @@
 import { spawn } from 'child_process';
 import os from 'os';
 
-import logger from '../logging';
-import NrfutilDeviceLib from '../Nrfutil/device/device';
+import NrfutilDeviceLib from '../../nrfutil/device/device';
 import {
     describeVersion,
     resolveModuleVersion,
-} from '../Nrfutil/moduleVersion';
-import { SubDependency } from '../Nrfutil/sandboxTypes';
+} from '../../nrfutil/moduleVersion';
+import { SubDependency } from '../../nrfutil/sandboxTypes';
+import logger from '../logging';
 
 const log = (description: string, moduleVersion?: SubDependency | string) => {
     if (moduleVersion == null) {

@@ -5,11 +5,11 @@
  */
 
 import { inMain as appDetails } from '../../ipc/appDetails';
-import NrfutilDeviceLib from '../Nrfutil/device/device';
+import NrfutilDeviceLib from '../../nrfutil/device/device';
 import {
     describeVersion,
     resolveModuleVersion,
-} from '../Nrfutil/moduleVersion';
+} from '../../nrfutil/moduleVersion';
 import { getAppDataDir } from '../utils/appDirs';
 import logLibVersions from '../utils/logLibVersions';
 import udevInstalled from '../utils/udevInstalled';
