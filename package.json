@@ -27,9 +27,10 @@
         "./test",
         "./typings",
         "./styles.scss",
-        "LICENSE",
-        "Changelog.md",
-        "README.md"
+        "./tsconfig.json",
+        "./LICENSE",
+        "./Changelog.md",
+        "./README.md"
     ],
     "main": "src",
     "scripts": {
