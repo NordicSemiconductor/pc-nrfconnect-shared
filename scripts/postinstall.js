@@ -36,9 +36,10 @@ if (!existsSync(`dist/bootstrap.css`)) {
 }
 
 const root = resolve(__dirname, '..');
+const typingsFolder = resolve(__dirname, '../typings/generated');
 
 // Generate types
 execSync(
-    `npx tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./typings/generated --rootDir ${root}`,
+    `npx tsc --emitDeclarationOnly --declaration --declarationMap --outDir ${typingsFolder} --rootDir ${root}`,
     { encoding: 'utf-8' }
 );
