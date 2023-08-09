@@ -10,17 +10,17 @@ import path from 'path';
 import pretty from 'prettysize';
 import type Systeminformation from 'systeminformation';
 
+import NrfutilDeviceLib from '../../nrfutil/device/device';
+import {
+    describeVersion,
+    resolveModuleVersion,
+} from '../../nrfutil/moduleVersion';
 import {
     deviceInfo as getDeviceInfo,
     productPageUrl,
 } from '../Device/deviceInfo/deviceInfo';
 import { Device } from '../Device/deviceSlice';
 import logger from '../logging';
-import NrfutilDeviceLib from '../Nrfutil/device/device';
-import {
-    describeVersion,
-    resolveModuleVersion,
-} from '../Nrfutil/moduleVersion';
 import { getAppDataDir } from './appDirs';
 import { openFile } from './open';
 

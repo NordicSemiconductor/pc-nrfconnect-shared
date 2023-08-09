@@ -6,12 +6,12 @@
 
 import path from 'path';
 
-import logger from '../../logging';
-import { getAppDataDir } from '../../utils/appDirs';
+import logger from '../../src/logging';
+import { getAppDataDir } from '../../src/utils/appDirs';
 import {
     getIsLoggingVerbose,
     persistIsLoggingVerbose,
-} from '../../utils/persistentStore';
+} from '../../src/utils/persistentStore';
 import sandbox, { type NrfutilSandbox } from '../sandbox';
 import { Progress } from '../sandboxTypes';
 

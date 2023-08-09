@@ -10,8 +10,8 @@ import os from 'os';
 import path from 'path';
 import winston from 'winston';
 
-import describeError from '../logging/describeError';
-import packageJson from '../utils/packageJson';
+import describeError from '../src/logging/describeError';
+import packageJson from '../src/utils/packageJson';
 import {
     BackgroundTask,
     LogLevel,

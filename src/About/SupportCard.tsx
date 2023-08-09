@@ -8,6 +8,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
 
+import NrfutilDeviceLib from '../../nrfutil/device/device';
 import Button from '../Button/Button';
 import Card from '../Card/Card';
 import {
@@ -16,7 +17,6 @@ import {
     selectedSerialNumber,
 } from '../Device/deviceSlice';
 import { isLoggingVerbose, setIsLoggingVerbose } from '../Log/logSlice';
-import NrfutilDeviceLib from '../Nrfutil/device/device';
 import { Toggle } from '../Toggle/Toggle';
 import { persistIsLoggingVerbose } from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
