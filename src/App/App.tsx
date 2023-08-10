@@ -6,12 +6,13 @@
 
 import 'focus-visible';
 
-import React, { FC, ReactNode, useEffect, useMemo } from 'react';
+import React, { FC, ReactNode, useEffect, useMemo, useRef } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import { useDispatch, useSelector } from 'react-redux';
 import { Reducer } from 'redux';
 
 import { inMain as openWindow } from '../../ipc/openWindow';
+import { setDeviceLogger } from '../../nrfutil/device/deviceLogger';
 import About from '../About/About';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
 import { setAutoReselect } from '../Device/deviceAutoSelectSlice';
@@ -24,6 +25,7 @@ import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import FlashMessages from '../FlashMessage/FlashMessage';
 import LogViewer from '../Log/LogViewer';
+import logger from '../logging';
 import NavBar from '../NavBar/NavBar';
 import FeedbackPane, { FeedbackPaneProps } from '../Panes/FeedbackPane';
 import classNames from '../utils/classNames';
@@ -92,6 +94,14 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     children,
     autoReselectByDefault = false,
 }) => {
+    const initialised = useRef(false);
+
+    if (!initialised.current) {
+        logger.initialise();
+        setDeviceLogger(logger);
+        initialised.current = true;
+    }
+
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
@@ -121,6 +131,11 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
 
     const isSidePanelVisible =
         useSelector(isSidePanelVisibleSelector) && currentSidePanel;
+
+    useEffect(() => {
+        logger.initialise();
+        setDeviceLogger(logger);
+    }, []);
 
     useEffect(() => {
         if (reportUsageData) {

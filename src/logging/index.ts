@@ -10,7 +10,6 @@ import { SPLAT } from 'triple-beam';
 import { createLogger, format, LogEntry, Logger, transports } from 'winston';
 import Transport from 'winston-transport';
 
-import { setDeviceLogger } from '../../nrfutil/device/deviceLogger';
 import { getAppLogDir } from '../utils/appDirs';
 import { openFile } from '../utils/open';
 import AppTransport from './appTransport';
@@ -82,7 +81,6 @@ logger.initialise = () => {
             level: 'debug',
         })
     );
-    setDeviceLogger(logger);
 };
 
 logger.getAndClearEntries = () => logBuffer.clear();
