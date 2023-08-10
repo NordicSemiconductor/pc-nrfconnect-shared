@@ -30,6 +30,12 @@ export const deviceTraitsToArgs = (traits: DeviceTraits) => {
     return args;
 };
 
+export type ResetKind =
+    | 'RESET_SYSTEM'
+    | 'RESET_HARD'
+    | 'RESET_DEBUG'
+    | 'RESET_PIN';
+
 export interface DeviceArrivedEvent {
     device: NrfutilDevice;
 }

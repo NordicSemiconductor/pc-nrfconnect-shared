@@ -15,6 +15,7 @@ import {
     deviceSingleTaskEndOperationVoid,
     DeviceTraits,
     NrfutilDeviceWithSerialnumber,
+    ResetKind,
 } from './common';
 
 export type FileExtensions = 'zip' | 'hex';
@@ -27,12 +28,7 @@ export type ProgrammingOptions =
 
 export interface JLinkProgrammingOptions {
     chipEraseMode?: 'ERASE_ALL' | 'ERASE_NONE';
-    reset?:
-        | 'RESET_DEBUG'
-        | 'RESET_HARD'
-        | 'RESET_NONE'
-        | 'RESET_PIN'
-        | 'RESET_SYSTEM';
+    reset?: ResetKind;
     verify?: 'VERIFY_HASH' | 'VERIFY_NONE' | 'VERIFY_READ';
 }
 
