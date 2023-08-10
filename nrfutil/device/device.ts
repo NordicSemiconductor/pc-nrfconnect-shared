@@ -5,6 +5,7 @@
  */
 
 import { LogLevel, LogMessage } from '../sandboxTypes';
+import { Batch } from './batch';
 import { getDeviceSandbox } from './common';
 import erase from './erase';
 import firmwareRead from './firmwareRead';
@@ -57,4 +58,5 @@ export default {
     setLogLevel,
     setVerboseLogging,
     getModuleVersion,
+    batch: () => new Batch(),
 };

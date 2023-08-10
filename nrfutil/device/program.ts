@@ -38,17 +38,17 @@ export interface NordicDfuProgrammingOptions {
     mcuEndState?: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
 }
 
-const isJLinkProgrammingOptions = (
+export const isJLinkProgrammingOptions = (
     options: ProgrammingOptions
 ): options is JLinkProgrammingOptions =>
     (options as JLinkProgrammingOptions).chipEraseMode !== undefined;
 
-const isMcuBootProgrammingOptions = (
+export const isMcuBootProgrammingOptions = (
     options: ProgrammingOptions
 ): options is McuBootProgrammingOptions =>
     (options as McuBootProgrammingOptions).netCoreUploadDelay !== undefined;
 
-const isNordicDfuProgrammingOptions = (
+export const isNordicDfuProgrammingOptions = (
     options: ProgrammingOptions
 ): options is NordicDfuProgrammingOptions =>
     !isMcuBootProgrammingOptions(options) &&

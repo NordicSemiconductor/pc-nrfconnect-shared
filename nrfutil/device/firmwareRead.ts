@@ -11,7 +11,7 @@ import {
     NrfutilDeviceWithSerialnumber,
 } from './common';
 
-interface DeviceBuffer {
+export interface DeviceBuffer {
     serialNumber: string;
     buffer: string;
 }
