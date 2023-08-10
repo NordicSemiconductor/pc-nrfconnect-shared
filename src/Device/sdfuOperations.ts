@@ -11,7 +11,7 @@ import fs from 'fs';
 import MemoryMap from 'nrf-intel-hex';
 
 import logger from '../logging';
-import { AppDispatch } from '../store';
+import { AppThunk, RootState } from '../store';
 import { getAppFile } from '../utils/appDirs';
 import { setWaitForDevice } from './deviceAutoSelectSlice';
 import { getDeviceLibContext } from './deviceLibWrapper';
@@ -87,8 +87,8 @@ const updateBootloader =
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void,
         onProgress: (progress: number, message?: string) => void
-    ) =>
-    async (dispatch: AppDispatch) => {
+    ): AppThunk =>
+    async dispatch => {
         logger.info(`Update Bootloader ${device}`);
         const zip = new AdmZip(getAppFile(LATEST_BOOTLOADER));
         const zipBuffer = zip.toBuffer();
@@ -153,8 +153,8 @@ const switchToDeviceMode =
         mcuState: nrfDeviceLib.MCUState,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void
-    ) =>
-    (dispatch: AppDispatch) => {
+    ): AppThunk =>
+    dispatch => {
         nrfDeviceLib
             .deviceControlSetMcuState(
                 getDeviceLibContext(),
@@ -183,8 +183,8 @@ export const switchToBootloaderMode =
         device: Device,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void
-    ) =>
-    (dispatch: AppDispatch) => {
+    ): AppThunk =>
+    dispatch => {
         if (!isDeviceInDFUBootloader(device)) {
             dispatch(
                 switchToDeviceMode(
@@ -210,22 +210,28 @@ export const switchToApplicationMode =
         device: Device,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void
-    ) =>
-    (dispatch: AppDispatch) => {
-        dispatch(
-            switchToDeviceMode(
-                device,
-                'NRFDL_MCU_STATE_APPLICATION',
-                d => {
-                    if (isDeviceInDFUBootloader(d))
-                        onFail(
-                            new Error('Failed to switch to Application Mode')
-                        );
-                    else onSuccess(d);
-                },
-                onFail
-            )
-        );
+    ): AppThunk =>
+    dispatch => {
+        if (isDeviceInDFUBootloader(device)) {
+            dispatch(
+                switchToDeviceMode(
+                    device,
+                    'NRFDL_MCU_STATE_APPLICATION',
+                    d => {
+                        if (isDeviceInDFUBootloader(d))
+                            onFail(
+                                new Error(
+                                    'Failed to switch to Application Mode'
+                                )
+                            );
+                        else onSuccess(d);
+                    },
+                    onFail
+                )
+            );
+        } else {
+            onSuccess(device);
+        }
     };
 
 const isLatestBootloader = async (device: Device) => {
@@ -253,8 +259,8 @@ const askAndUpdateBootloader =
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void,
         onProgress: (progress: number, message?: string) => void
-    ) =>
-    (dispatch: AppDispatch) => {
+    ): AppThunk =>
+    dispatch => {
         dispatch(
             switchToBootloaderMode(
                 device,
@@ -413,8 +419,8 @@ const programInDFUBootloader =
         onProgress: (progress: number, message?: string) => void,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void
-    ) =>
-    async (dispatch: AppDispatch) => {
+    ): AppThunk<RootState, Promise<void>> =>
+    async dispatch => {
         logger.debug(
             `${device.serialNumber} on ${device.serialport?.comName} is now in DFU-Bootloader...`
         );
@@ -526,8 +532,8 @@ const programDeviceWithFw =
         device: Device,
         selectedFw: DfuEntry,
         onProgress: (progress: number, message?: string) => void
-    ) =>
-    (dispatch: AppDispatch) =>
+    ): AppThunk<RootState, Promise<Device>> =>
+    dispatch =>
         new Promise<Device>((resolve, reject) => {
             const action = (d: Device) => {
                 dispatch(
@@ -560,7 +566,7 @@ export const sdfuDeviceSetup = (
         dfuFirmware.map(firmwareOption => ({
             key: firmwareOption.key,
             description: firmwareOption.description,
-            programDevice: onProgress => (dispatch: AppDispatch) =>
+            programDevice: onProgress => dispatch =>
                 dispatch(
                     programDeviceWithFw(device, firmwareOption, onProgress)
                 ),
@@ -577,12 +583,12 @@ export const sdfuDeviceSetup = (
 
                 const { semVer } = device.dfuTriggerVersion;
 
-                if (dfuFirmware.filter(fw => fw.semver === semVer).length > 0) {
-                    resolve({
-                        device,
-                        validFirmware: true,
-                    });
-                }
+                resolve({
+                    device,
+                    validFirmware:
+                        dfuFirmware.filter(fw => fw.semver === semVer).length >
+                        0,
+                });
             } else {
                 resolve({
                     device,
@@ -590,7 +596,7 @@ export const sdfuDeviceSetup = (
                 });
             }
         }),
-    tryToSwitchToApplicationMode: device => (dispatch: AppDispatch) =>
+    tryToSwitchToApplicationMode: device => dispatch =>
         new Promise<Device>((resolve, reject) => {
             dispatch(switchToApplicationMode(device, resolve, reject));
         }),

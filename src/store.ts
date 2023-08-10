@@ -4,10 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { configureStore } from '@reduxjs/toolkit';
+import { AnyAction, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { Reducer } from 'redux';
 
-import { reducer as documentation } from './About/documentationSlice';
 import { reducer as shortcuts } from './About/shortcutSlice';
 import { reducer as appLayout } from './App/appLayout';
 import { reducer as brokenDeviceDialog } from './Device/BrokenDeviceDialog/brokenDeviceDialogSlice';
@@ -32,7 +31,6 @@ export const rootReducerSpec = (appReducer: Reducer = noopReducer) => ({
     brokenDeviceDialog,
     errorDialog,
     log,
-    documentation,
     shortcuts,
     flashMessages,
 });
@@ -52,6 +50,13 @@ const store = (appReducer?: Reducer) =>
 
 // Needed only to infer the types below
 const concreteStore = store();
+
+export type AppThunk<AppLayout = RootState, ReturnType = void> = ThunkAction<
+    ReturnType,
+    AppLayout,
+    unknown,
+    AnyAction
+>;
 export type RootState = ReturnType<typeof concreteStore.getState>;
 export type AppDispatch = typeof concreteStore.dispatch;
 

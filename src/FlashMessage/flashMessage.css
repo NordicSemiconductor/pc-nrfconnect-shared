@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-@keyframes flash-message {
+@keyframes flash-message-loader {
     from {
         width: 100%;
     }
@@ -15,9 +15,18 @@
 
 @keyframes slide-in {
     from {
-        transform: translateX(200%);
+        transform: translateX(110%);
     }
     to {
         transform: translateX(0);
+    }
+}
+
+@keyframes slide-out {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(110%);
     }
 }

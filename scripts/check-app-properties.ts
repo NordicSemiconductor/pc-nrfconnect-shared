@@ -10,7 +10,7 @@ import { execSync } from 'child_process';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import property from 'lodash/property';
 
-import { PackageJson } from '../src/utils/AppTypes';
+import { PackageJson } from '../ipc/MetaFiles';
 
 const format = (strings: string[]) =>
     strings.map(string => `\`${string}\``).join(', ');

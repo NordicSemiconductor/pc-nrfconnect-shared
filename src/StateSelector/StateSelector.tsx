@@ -57,7 +57,7 @@ export default ({ items, onSelect, disabled = false, selectedItem }: Props) => {
     };
 
     return (
-        <ButtonGroup className="w-100 d-flex flex-row channel-selection">
+        <ButtonGroup className="w-100 d-flex channel-selection flex-row">
             {items.map((item, index) => selectionButton(item, index))}
         </ButtonGroup>
     );

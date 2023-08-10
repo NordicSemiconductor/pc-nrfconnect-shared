@@ -4,22 +4,41 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import Button from '../Button/Button';
+import Dropdown, { DropdownItem } from '../Dropdown/Dropdown';
 import logger from '../logging';
 import { isDevelopment } from '../utils/environment';
 import packageJson from '../utils/packageJson';
 
-export default () => {
+export interface FeedbackPaneProps {
+    categories?: string[];
+}
+
+export default ({ categories }: FeedbackPaneProps) => {
     const [feedback, setFeedback] = useState('');
     const [sayThankYou, setSayThankYou] = useState(false);
 
+    const categoryItems = useMemo(() => {
+        if (!categories?.length) return undefined;
+
+        const items = ['Select a category', ...categories].map(category => ({
+            label: category,
+            value: category,
+        }));
+        return items;
+    }, [categories]);
+
+    const [selectedCategory, setSelectedCategory] = useState<
+        DropdownItem | undefined
+    >(categoryItems ? categoryItems[0] : undefined);
+
     if (sayThankYou === true) {
         return (
-            <div className="w-100 d-flex justify-content-center">
-                <div className="d-flex flex-column justify-content-center align-items-start bg-white px-3 py-4">
-                    <b className="mb-3">Thank you!</b>
+            <div className="tw-preflight tw-flex tw-w-full tw-justify-center">
+                <div className="tw-mb-3 tw-flex tw-flex-col tw-items-start tw-justify-center tw-bg-white tw-px-3 tw-py-4">
+                    <b className="tw-mb-3">Thank you!</b>
                     <section>
                         <p>
                             We value your feedback and any ideas you may have
@@ -32,7 +51,7 @@ export default () => {
                     </section>
                     <Button
                         large
-                        className="align-self-end"
+                        className="tw-align-self-end tw-self-end"
                         onClick={() => {
                             setSayThankYou(false);
                             setFeedback('');
@@ -47,56 +66,67 @@ export default () => {
     }
 
     return (
-        <div className="w-100 d-flex justify-content-center">
-            <div className="d-flex flex-column justify-content-center align-items-start bg-white px-3 py-4">
-                <b className="mb-3">Give Feedback</b>
-                <section>
-                    <p>
-                        We value your feedback and any ideas you may have for
-                        improving our applications. Please use the form below to
-                        give feedback.
-                    </p>
-                    <p>
-                        Note: this is not a support channel, and you will not
-                        receive a response. For help and support, visit the{' '}
-                        <a
-                            href="https://devzone.nordicsemi.com/"
-                            target="_blank"
-                            rel="noreferrer noopener"
-                        >
-                            Nordic DevZone
-                        </a>
-                        .
-                    </p>
-                </section>
-                <form className="d-flex flex-column w-100">
-                    <label htmlFor="feedback-text">
+        <div className="tw-preflight tw-flex tw-w-full tw-justify-center">
+            <div className="tw-mb-3 tw-flex tw-flex-col tw-items-start tw-justify-center tw-gap-4 tw-bg-white tw-px-3 tw-py-4">
+                <b>Give Feedback</b>
+                <p>
+                    We value your feedback and any ideas you may have for
+                    improving our applications. Please use the form below to
+                    give feedback.
+                </p>
+                <p>
+                    Note: this is not a support channel, and you will not
+                    receive a response. For help and support, visit the{' '}
+                    <a
+                        href="https://devzone.nordicsemi.com/"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="tw-text-nordicBlue"
+                    >
+                        Nordic DevZone
+                    </a>
+                    .
+                </p>
+                <form className="tw-flex tw-w-full tw-flex-col tw-gap-4">
+                    {categoryItems?.length && (
+                        <div className="tw-w-52">
+                            <Dropdown
+                                items={categoryItems}
+                                onSelect={setSelectedCategory}
+                                selectedItem={
+                                    selectedCategory || categoryItems[0]
+                                }
+                            />
+                        </div>
+                    )}
+                    <div>
                         <b>What is your feedback?</b>
                         <textarea
                             name="feedback-text"
-                            className="w-100 mb-3"
-                            style={{ height: '8rem' }}
+                            className="tw-h-32 tw-w-full tw-border tw-border-gray-700"
                             required
                             value={feedback}
                             onChange={e => setFeedback(e.target.value)}
                         />
-                    </label>
+                    </div>
                 </form>
-                <section>
-                    <p>
-                        We only collect this information when you send feedback:
-                    </p>
-                    <ul>
-                        <li>Application name</li>
-                        <li>Your feedback</li>
-                        <li>Operating system</li>
-                    </ul>
-                </section>
+                <p>We only collect this information when you send feedback:</p>
+                <ul className="tw-list-disc tw-pl-8">
+                    <li>Application name</li>
+                    <li>Your feedback</li>
+                    <li>Operating system</li>
+                </ul>
                 <Button
                     large
-                    className="align-self-end"
+                    className="tw-self-end"
                     variant="primary"
-                    onClick={() => handleFormData(feedback, setSayThankYou)}
+                    onClick={() =>
+                        handleFormData(
+                            feedback,
+                            setSayThankYou,
+                            selectedCategory?.value
+                        )
+                    }
                     disabled={feedback === ''}
                 >
                     Send Feedback
@@ -108,18 +138,23 @@ export default () => {
 
 const formURL =
     isDevelopment === true
-        ? 'https://formkeep.com/f/8deb409a565'
+        ? 'https://formkeep.com/f/87deb409a565'
         : 'https://formkeep.com/f/36b394b92851';
 
 const handleFormData = async (
     feedback: string,
-    setResponse: (response: boolean) => void
+    setResponse: (response: boolean) => void,
+    category?: string
 ) => {
-    const data = {
+    const data: Record<string, unknown> = {
         name: getAppName(),
         feedback,
         platform: process.platform,
     };
+
+    if (category && category !== 'Select a category') {
+        data.category = category;
+    }
 
     try {
         const response = await fetch(formURL, {

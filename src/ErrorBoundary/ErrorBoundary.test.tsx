@@ -5,23 +5,16 @@
  */
 
 import React from 'react';
-import reactGA from 'react-ga';
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 
 import render from '../../test/testrenderer';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
 import { generateSystemReport } from '../utils/systemReport';
 import ErrorBoundary from './ErrorBoundary';
 
-const mockReactGA = reactGA;
-
 jest.mock('../utils/systemReport');
-jest.mock('react-ga');
 jest.mock('../utils/usageData', () => ({
     ...jest.requireActual('../utils/usageData'),
-    init: jest.fn(() => {
-        mockReactGA.initialize('');
-    }),
     sendErrorReport: jest.fn(),
     isEnabled: () => true,
 }));
@@ -48,16 +41,6 @@ describe('ErrorBoundary', () => {
 
     afterEach(() => {
         jest.clearAllMocks();
-    });
-
-    it('should send GA event', async () => {
-        render(
-            <ErrorBoundary>
-                <Child />
-            </ErrorBoundary>
-        );
-
-        await waitFor(() => expect(reactGA.initialize).toHaveBeenCalled());
     });
 
     it('can take custom reporting functions', () => {

@@ -7,7 +7,6 @@
 import React from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
-import Button from '../Button/Button';
 import classNames from '../utils/classNames';
 
 import './stepper.scss';
@@ -54,9 +53,9 @@ const isStringCaption = (
     (!isToolTipCaption(caption) && !isActionCaption(caption));
 
 const StepActionCaption = ({ caption }: { caption: ActionCaption }) => (
-    <Button variant="custom" className="action-link" onClick={caption.action}>
+    <button type="button" className="action-link" onClick={caption.action}>
         {`${caption.caption}`}
-    </Button>
+    </button>
 );
 
 const StepTooltipCaption = ({ caption }: { caption: TooltipCaption }) => (

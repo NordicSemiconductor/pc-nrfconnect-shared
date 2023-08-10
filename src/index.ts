@@ -3,11 +3,10 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
+
 import { hideDialog, showDialog } from './ErrorDialog/errorDialogSlice';
 
-const ErrorDialogActions = { hideDialog, showDialog };
-
-export { ErrorDialogActions };
+export const ErrorDialogActions = { hideDialog, showDialog };
 
 export { default as App, render, type PaneProps } from './App/App';
 export { default as Logo } from './Logo/Logo';
@@ -45,10 +44,12 @@ export { Group, CollapsibleGroup } from './SidePanel/Group';
 
 export { default as InlineInput } from './InlineInput/InlineInput';
 export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
+export { default as NumberInputSliderWithUnit } from './NumberInputWithSlider/NumberInputSliderWithUnit';
 
 export { default as MasonryLayout } from './MasonryLayout/MasonryLayout';
 
 export { default as useStopwatch } from './utils/useStopwatch';
+export { default as useFocusedOnVisible } from './utils/useFocusedOnVisible';
 
 export { reducer as errorDialogReducer } from './ErrorDialog/errorDialogSlice';
 export { default as logger } from './logging';
@@ -81,6 +82,8 @@ export {
     getAppSpecificStore as getPersistentStore,
     persistTerminalSettings,
     getPersistedTerminalSettings,
+    persistNickname,
+    getPersistedNickname,
 } from './utils/persistentStore';
 
 export { jprogDeviceSetup } from './Device/jprogOperations';
@@ -125,24 +128,13 @@ export {
 } from './SerialPort/SerialPort';
 export { default as ConflictingSettingsDialog } from './SerialPort/ConflictingSettingsDialog';
 
-export { openAppWindow } from './OpenApp/openApp';
-
-export type { NrfConnectState } from './store';
+export type { AppDispatch, AppThunk, NrfConnectState } from './store';
 
 export {
     type DeviceSetupConfig,
     type DeviceSetup,
     prepareDevice,
 } from './Device/deviceSetup';
-
-export type {
-    AppInfo,
-    AppVersions,
-    PackageJson,
-    SourceJson,
-} from './utils/AppTypes';
-
-export { default as FeedbackPane } from './Panes/FeedbackPane';
 
 export {
     addNewMessage,
@@ -152,3 +144,19 @@ export {
     newErrorFlashMessage,
     newSuccessFlashMessage,
 } from './FlashMessage/FlashMessageSlice';
+
+export {
+    inMain as apps,
+    type App as AppType,
+    type AppSpec,
+    type AppWithError,
+    type DownloadableApp,
+    type InstalledDownloadableApp,
+    type LaunchableApp,
+    type LocalApp,
+    type SourceWithError,
+    type UninstalledDownloadableApp,
+    type WithdrawnApp,
+} from '../ipc/apps';
+export { inMain as openWindow } from '../ipc/openWindow';
+export { inMain as preventSleep } from '../ipc/preventSleep';

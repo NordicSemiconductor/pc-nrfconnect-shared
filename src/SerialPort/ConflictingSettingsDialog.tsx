@@ -10,6 +10,7 @@ import { SerialPortOpenOptions } from 'serialport';
 
 import { ConfirmationDialog } from '../Dialog/Dialog';
 import logger from '../logging';
+import classNames from '../utils/classNames';
 import {
     createSerialPort,
     getSerialPortOptions,
@@ -49,10 +50,10 @@ const ConflictingSettingsDialog = ({
         useState<SerialPortOpenOptions<AutoDetectTypes>>();
 
     useEffect(() => {
-        if (!activeSettings) {
+        if (isVisible) {
             getCurrentOptions(localSettings.path, setSettings);
         }
-    }, [isVisible, activeSettings, localSettings.path]);
+    }, [isVisible, localSettings.path]);
 
     const connectToSelectedSerialPort = async (
         overwrite: boolean,
@@ -81,6 +82,7 @@ const ConflictingSettingsDialog = ({
             title={`Conflicting Serial Settings for ${localSettings.path}`}
             isVisible={isVisible}
             size="lg"
+            className="tw-preflight"
             onCancel={onCancel}
             optionalLabel="Overwrite with Selected"
             onOptional={onOverwrite}
@@ -96,29 +98,32 @@ const ConflictingSettingsDialog = ({
                 }
             }}
         >
-            <p>
-                You are about to connect to <code>{localSettings.path}</code>.
-                This port is already active with different serial settings -
-                most likely it is opened by another nRF Connect app running on
-                your computer.
-            </p>
-            <p>
-                You may continue with the active serial port settings or choose
-                to overwrite these with the settings you have selected. If you
-                choose to overwrite the active settings, the port will be closed
-                and reopened with the new settings. Alternatively, you can close
-                the port in the other app and try again.
-            </p>
-            <p>
-                The serial settings depend on the attached device and it&apos;s
-                embedded application, and normally the serial port settings for
-                all nRF Connect apps should be the same for a given serial port.
-            </p>
-
-            <DisplayConflictingSettings
-                activeSettings={activeSettings}
-                localSettings={localSettings}
-            />
+            <div className="tw-flex tw-flex-col tw-gap-4">
+                <p>
+                    You are about to connect to{' '}
+                    <code>{localSettings.path}</code>. This port is already
+                    active with different serial settings - most likely it is
+                    opened by another nRF Connect app running on your computer.
+                </p>
+                <p>
+                    You may continue with the active serial port settings or
+                    choose to overwrite these with the settings you have
+                    selected. If you choose to overwrite the active settings,
+                    the port will be closed and reopened with the new settings.
+                    Alternatively, you can close the port in the other app and
+                    try again.
+                </p>
+                <p>
+                    The serial settings depend on the attached device and
+                    it&apos;s embedded application, and normally the serial port
+                    settings for all nRF Connect apps should be the same for a
+                    given serial port.
+                </p>
+                <DisplayConflictingSettings
+                    activeSettings={activeSettings}
+                    localSettings={localSettings}
+                />
+            </div>
         </ConfirmationDialog>
     );
 };
@@ -140,6 +145,7 @@ const DisplayConflictingSettings = ({
             }
         });
     }
+    allKeys.splice(allKeys.indexOf('path'), 1);
 
     const conflictingSettings = activeSettings
         ? allKeys.filter(
@@ -150,30 +156,21 @@ const DisplayConflictingSettings = ({
         : [];
 
     return (
-        <div
-            style={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'flex-start',
-                margin: '32px 0',
-            }}
-        >
-            <div style={{ marginRight: '128px' }}>
-                <b>Active settings</b>
+        <div className="tw-preflight tw-my-4 tw-flex tw-w-full tw-justify-start">
+            <div className="tw-pr-7">
                 {activeSettings ? (
-                    <ul style={listStyle}>
+                    <ul>
+                        <li className="tw-p-1 tw-font-bold">Active settings</li>
                         {allKeys.map(key => (
                             <li
                                 key={key}
-                                style={{
-                                    ...listItemStyle,
-                                    backgroundColor:
-                                        conflictingSettings.includes(key)
-                                            ? '#FFCDD2'
-                                            : undefined,
-                                }}
+                                className={`tw-p-1 ${classNames(
+                                    conflictingSettings.includes(key)
+                                        ? 'tw-bg-red-100'
+                                        : 'tw-bg-green-100'
+                                )}`}
                             >
-                                {key}:
+                                <span className="tw-font-semibold">{`${key}: `}</span>
                                 {prettifyValue(
                                     activeSettings[
                                         key as keyof typeof activeSettings
@@ -186,22 +183,19 @@ const DisplayConflictingSettings = ({
                     <p>Could not retrieve the current settings</p>
                 )}
             </div>
-            <div>
-                <b>Selected settings</b>
-                <ul style={listStyle}>
+            <div className="tw-pr-7">
+                <ul>
+                    <li className="tw-p-1 tw-font-bold">Selected settings</li>
                     {allKeys.map(key => (
                         <li
+                            className={`tw-p-1 ${classNames(
+                                conflictingSettings.includes(key)
+                                    ? 'tw-bg-red-100'
+                                    : 'tw-bg-green-100'
+                            )}`}
                             key={key}
-                            style={{
-                                ...listItemStyle,
-                                backgroundColor: conflictingSettings.includes(
-                                    key
-                                )
-                                    ? '#FFCDD2'
-                                    : undefined,
-                            }}
                         >
-                            {key}:
+                            <span className="tw-font-semibold">{`${key}: `}</span>
                             {prettifyValue(
                                 localSettings[key as keyof typeof localSettings]
                             )}
@@ -230,13 +224,3 @@ const prettifyValue = (value: unknown) => {
 };
 
 export default ConflictingSettingsDialog;
-
-const listStyle: React.CSSProperties = {
-    listStyleType: 'none',
-    margin: 0,
-    padding: 0,
-};
-
-const listItemStyle: React.CSSProperties = {
-    padding: '4px 0',
-};

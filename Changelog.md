@@ -7,6 +7,318 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 82 - 09.08.2023
+
+### Fixed
+
+-   Jest tests were broken due to missing config changes.
+
+## 81 - 09.08.2023
+
+### Changed
+
+-   New name for the shared package, it is now under the `@nordicsemiconductor`
+    namespace on npm. The idea is that apps will now install shared from npm,
+    and use the new name `@nordicsemiconductor/pc-nrfconnect-shared` when
+    importing components from shared
+
+### Steps to upgrade when using this package
+
+-   Change all references from `pc-nrfconnect-shared` to
+    `@nordicsemiconductor/pc-nrfconnect-shared`
+
+```diff
+- import { App } from 'pc-nrfconnect-shared';
++ import { App } from '@nordicsemiconductor/pc-nrfconnect-shared';
+```
+
+-   Also check references in `tsconfig.json`, `jest.config.js` and
+    `.scss`-files.
+
+The tsconfig can use the namespace directly like this
+
+```json
+{
+    "extends": "@nordicsemiconductor/pc-nrfconnect-shared/config/tsconfig.json"
+}
+
+```
+
+The package.json can be changed as follows:
+
+```json
+{
+    "eslintConfig": {
+        "extends": "./node_modules/@nordicsemiconductor/pc-nrfconnect-shared/config/eslintrc"
+    },
+    "prettier": "@nordicsemiconductor/pc-nrfconnect-shared/config/prettier.config.js"
+}
+```
+
+## 80 - 2023-08-07
+
+### Changed
+
+-   Linux: Check for and log `nrf-udev` install on startup.
+
+## 79 - 2023-08-04
+
+### Added
+
+-   Export app utility functions (like `isInstalled`) and types.
+
+## 78 - 2023-08-03
+
+### Changed
+
+-   Shared now only uses `device.jlink.boardversion` instead of
+    `jlink.boardVersion`.
+
+### Fixed
+
+-   `deviceInfo` can now be used in applications that don't make use of the
+    shared redux store.
+
+## 77 - 2023-08-01
+
+### Added
+
+-   Functions to invoke functionality in the main process via IPC:
+
+    -   `apps.getDownloadableApps()`
+    -   `apps.installDownloadableApp(app, version?)`
+    -   `openWindow.openApp(app, openAppOptions?)` (This was previously exported
+        as `openAppWindow``)
+    -   `openWindow.openLauncher()`
+    -   `preventSleep.start()`
+    -   `preventSleep.end(id)`
+
+### Removed
+
+-   Export of the serialport IPC channel names.
+
+### Changed
+
+-   On the build server the generated types are removed before regenerating
+    them, so we make sure that we do not have stale declaration files for source
+    files we already removed.
+
+### Steps to upgrade when using this package
+
+-   Replace all code that still uses `ipcRenderer` with invocations of the
+    appropriate functions.
+-   Replace invocations of `openAppWindow` with `openWindow.openApp`.
+
+## 76 - 2023-07-28
+
+### Changed
+
+-   Turn on tree-shaking for tailwind classes during a development build.
+
+## 75 - 2023-07-26
+
+### Added
+
+-   Material UI color shades 50-900 for 'red', 'indigo', 'amber', 'purple',
+    'green', 'deepPurple', 'orange', 'lime', 'lightGreen', 'lightBlue', 'pink',
+    such as e.g. `tw-bg-red-300`
+-   Default Material UI color for 'red', 'indigo', 'amber', 'purple', 'green',
+    'deepPurple', 'orange', 'lime', 'lightGreen', 'lightBlue', 'pink' which uses
+    the 500 shade e.g `tw-bg-red`
+-   NordicBlue shades 50-900 e.g. `tw-bg-nordicBlue-300`
+-   `NumberInputSliderWithUnit` component that merges a number input with unit
+    and a slider with one element
+-   `Button` variant `link-button` with white background, and nordic blue text
+    and border
+
+### Changed
+
+-   `Button` converted to tailwind
+-   `DisplayConflictingSettings` converted to tailwind
+-   `About` converted to tailwind
+-   `Feedback` converted to tailwind
+
+### Fixed
+
+-   `DisplayConflictingSettings` spacing and minor UI inconsistencies
+
+## 74 - 2023-07-18
+
+### Fixed
+
+-   `ConflictingSettingsDialog` used stale/old `active` serial settings
+    information.
+
+## 73 - 2023-07-14
+
+### Removed
+
+-   `custom` variant for the `Button` component.
+
+### Steps to upgrade when using this package
+
+-   `custom` variant `Button`s have to be replaced with `button` elements.
+
+## 72 - 2023-07-13
+
+### Added
+
+-   export `persistNickname` and `getPersistedNickname`.
+
+## 71 - 2023-07-11
+
+### Fixed
+
+-   `SwitchToApplicationMode` does not call on success when device is already in
+    application mode
+
+## 70 - 2023-07-07
+
+### Fixed
+
+-   `Dropdown` UI broken due to lack of `tw-preflight` class
+
+## 69 - 2023-07-07
+
+### Added
+
+-   Turn off tree-shaking for tailwind classes during a development build.
+-   Added .tw-preflight css class to be used when transitioning to tailwind. For
+    more details:
+    https://github.com/NordicSemiconductor/pc-nrfconnect-shared/blob/main/src/App/preflight.scss
+
+### Changed
+
+-   Borders for all button variants except `secondary` are now the same as their
+    background colour.
+-   The project specific tailwind config will now be used for post-processing if
+    it exists.
+-   Device setup dialog hides prompt message while in progress.
+
+### Fixed
+
+-   Button x-padding adapts to large vs small button
+-   Device setup fails report sdfu different FW version
+-   Device setup does not show the choices radio boxes
+
+## 68 - 2023-07-05
+
+### Added
+
+-   `prettier-plugin-tailwindcss` for ordering Tailwind classes.
+
+### Fixed
+
+-   A fresh npm i without `package-lock.json` and no `node_modules` folder
+    resulted in `util.promisify` is not a function
+-   Button lost x-padding with the addition of tailwind
+
+## 67 - 2023-07-04
+
+### Added
+
+-   Tailwind support. Use `tw-` prefix for tailwind classes and no prefix for
+    bootstrap classes.
+
+### Fixed
+
+-   Usage data (`insights` object) was possibly undefined.
+
+### Steps to upgrade when using this package
+
+-   While technically not necessary in production, to use the tailwind language
+    server you will have to create a `tailwind.config.js` file with the
+    following contents in your project root:
+
+```js
+/*
+ * Copyright (c) 2023 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
+const baseConfig = require('pc-nrfconnect-shared/config/tailwind.config.js');
+
+module.exports = {
+    ...baseConfig,
+};
+```
+
+## 66 - 2023-07-03
+
+### Fixed
+
+-   `Restart application with verbose logging` button did not restart
+    application
+-   Margin on feedback pane
+-   Improve `NavBar` layout when there are a lot of tabs
+
+## 65 - 2023-07-03
+
+### Changed
+
+-   'AppThunk<ReturnType>' to 'AppThunk<AppLayout, ReturnType>'
+
+### Steps to upgrade when using this package
+
+-   If 'AppThunk' is used with return type generic, add AppLayout (RootState)
+    'AppThunk<AppLayout, ReturnType>'
+
+## 64 - 2023-07-03
+
+### Added
+
+-   Export 'AppThunk<ReturnType>' for apps to use
+-   Export 'AppDispatch' for apps to use
+
+### Changed
+
+-   Replace Google Analytics with Application Insights.
+
+## 63 - 2023-06-27
+
+### Added
+
+-   Hook `useFocusedOnVisible` to focus an element when a dialog becomes
+    visible.
+
+### Changed
+
+-   Flash Messages: slide-in effect duration reduced to 300ms.
+-   Flash Messages: loader effect ends before slide-out effect begins.
+
+## 62 - 2023-06-26
+
+### Added
+
+-   Slide-out effect for Flash messages.
+
+### Changed
+
+-   Reduced time for CopiedFlashMessage, from 12s to 3s.
+-   Faster slide-in effect for Flash messages.
+
+## 61 - 2023-06-23
+
+### Added
+
+-   `Dropdown` component now accepts className.
+-   `feedback` property in `App` component to add the feedback pane and
+    alternatively add custom categories.
+
+### Changed
+
+-   `documentation` is now supplied to the `About` pane through props.
+
+### Removed
+
+-   `FeedbackPane` is no longer exported.
+
+### Steps to upgrade when using this package
+
+-   If you want to include the `FeedbackPane` in your app, provide the
+    `feedback` property to the `App` component.
+
 ## 60 - 2023-06-21
 
 ### Added

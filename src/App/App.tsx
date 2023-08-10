@@ -10,11 +10,10 @@ import React, { FC, ReactNode, useEffect, useMemo } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import ReactDOM from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { ipcRenderer } from 'electron';
 import { Reducer } from 'redux';
 
+import { inMain as openWindow } from '../../ipc/openWindow';
 import About from '../About/About';
-import { setDocumentationSections } from '../About/documentationSlice';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
 import { setAutoReselect } from '../Device/deviceAutoSelectSlice';
 import {
@@ -27,6 +26,7 @@ import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import FlashMessages from '../FlashMessage/FlashMessage';
 import LogViewer from '../Log/LogViewer';
 import NavBar from '../NavBar/NavBar';
+import FeedbackPane, { FeedbackPaneProps } from '../Panes/FeedbackPane';
 import classNames from '../utils/classNames';
 import packageJson from '../utils/packageJson';
 import { getPersistedCurrentPane } from '../utils/persistentStore';
@@ -45,6 +45,7 @@ import VisibilityBar from './VisibilityBar';
 
 import './app.scss';
 import './shared.scss';
+import './tailwind.css';
 
 let usageDataAlreadyInitialised = false;
 const initialiseUsageData = () => {
@@ -76,6 +77,7 @@ interface ConnectedAppProps {
     showLogByDefault?: boolean;
     reportUsageData?: boolean;
     documentation?: ReactNode[];
+    feedback?: boolean | FeedbackPaneProps;
     children?: ReactNode;
     autoReselectByDefault?: boolean;
 }
@@ -87,20 +89,21 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     showLogByDefault = true,
     reportUsageData = false,
     documentation,
+    feedback,
     children,
     autoReselectByDefault = false,
 }) => {
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
-    const allPanes = useAllPanes(panes);
+    const allPanes = useAllPanes(panes, documentation, feedback);
     const dispatch = useDispatch();
 
     useHotKey({
         hotKey: 'alt+l',
         title: 'Open launcher',
         isGlobal: true,
-        action: () => ipcRenderer.send('open-app-launcher'),
+        action: openWindow.openLauncher,
     });
 
     useEffect(() => {
@@ -112,10 +115,6 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
             dispatch(toggleLogVisible());
         }
     }, [dispatch, showLogByDefault]);
-
-    useEffect(() => {
-        if (documentation) dispatch(setDocumentationSections(documentation));
-    }, [dispatch, documentation]);
 
     const SidePanelComponent = allPanes[currentPane].SidePanel;
     const currentSidePanel =
@@ -214,13 +213,37 @@ const usePersistedPane = () => {
     }, [dispatch]);
 };
 
-const useAllPanes = (panes: Pane[]) => {
+const useAllPanes = (
+    panes: Pane[],
+    documentation: ReactNode[] | undefined,
+    feedback: boolean | FeedbackPaneProps | undefined
+) => {
     const dispatch = useDispatch();
 
-    const allPanes = useMemo(
-        () => [...panes, { name: 'About', Main: About }] as Pane[],
-        [panes]
-    );
+    const allPanes = useMemo(() => {
+        const newPanes = [...panes];
+
+        if (feedback) {
+            newPanes.push({
+                name: 'Feedback',
+                Main: props => (
+                    <FeedbackPane
+                        {...(typeof feedback === 'object'
+                            ? feedback
+                            : undefined)}
+                        {...props}
+                    />
+                ),
+            });
+        }
+
+        newPanes.push({
+            name: 'About',
+            Main: props => <About documentation={documentation} {...props} />,
+        });
+
+        return newPanes;
+    }, [panes, documentation, feedback]);
 
     useEffect(() => {
         dispatch(setPanes(allPanes));

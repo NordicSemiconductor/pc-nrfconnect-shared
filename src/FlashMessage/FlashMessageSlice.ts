@@ -4,15 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import {
-    AnyAction,
-    createSlice,
-    nanoid,
-    PayloadAction,
-    ThunkAction,
-} from '@reduxjs/toolkit';
+import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
 
-import type { RootState } from '../store';
+import type { AppThunk, RootState } from '../store';
 
 export interface FlashMessages {
     messages: FlashMessage[];
@@ -37,52 +31,45 @@ const slice = createSlice({
     name: 'flashMessages',
     initialState,
     reducers: {
-        addNewMessage: {
-            reducer: (state, action: PayloadAction<FlashMessage>) => {
-                state.messages.push(action.payload);
-            },
-            prepare: (message: FlashMessagePayload) => ({
-                payload: {
-                    id: nanoid(),
-                    ...message,
-                },
-            }),
+        addNewMessage: (
+            state,
+            { payload: message }: PayloadAction<FlashMessagePayload>
+        ) => {
+            state.messages.push({ ...message, id: nanoid() });
         },
-        removeMessage: (state, action: PayloadAction<{ id: string }>) => {
+        removeMessage: (state, { payload: id }: PayloadAction<string>) => {
             state.messages = state.messages.filter(
-                message => message.id !== action.payload.id
+                message => message.id !== id
             );
         },
     },
 });
 
-type TAction = ThunkAction<void, RootState, null, AnyAction>;
-
-export const newCopiedFlashMessage = (): TAction => dispatch =>
-    dispatch(newInfoFlashMessage('Copied to clipboard!', 12000));
+export const newCopiedFlashMessage = (): AppThunk => dispatch =>
+    dispatch(newInfoFlashMessage('Copied to clipboard!', 3000));
 
 export const newSuccessFlashMessage =
-    (message: string, dismissTime?: number): TAction =>
+    (message: string, dismissTime?: number): AppThunk =>
     dispatch =>
         dispatch(newFlashMessage({ message, variant: 'success', dismissTime }));
 
 export const newWarningFlashMessage =
-    (message: string, dismissTime?: number): TAction =>
+    (message: string, dismissTime?: number): AppThunk =>
     dispatch =>
         dispatch(newFlashMessage({ message, variant: 'warning', dismissTime }));
 
 export const newErrorFlashMessage =
-    (message: string, dismissTime?: number): TAction =>
+    (message: string, dismissTime?: number): AppThunk =>
     dispatch =>
         dispatch(newFlashMessage({ message, variant: 'error', dismissTime }));
 
 export const newInfoFlashMessage =
-    (message: string, dismissTime?: number): TAction =>
+    (message: string, dismissTime?: number): AppThunk =>
     dispatch =>
         dispatch(newFlashMessage({ message, variant: 'info', dismissTime }));
 
 const newFlashMessage =
-    ({ message, variant, dismissTime }: FlashMessagePayload): TAction =>
+    ({ message, variant, dismissTime }: FlashMessagePayload): AppThunk =>
     dispatch => {
         dispatch(
             addNewMessage({

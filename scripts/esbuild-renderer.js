@@ -9,6 +9,22 @@ const join = require('path').join;
 const { sassPlugin, postcssModules } = require('esbuild-sass-plugin');
 const esbuild = require('esbuild');
 const svgr = require('@svgr/core').transform;
+const builtinModules = require('module').builtinModules;
+const postCssPlugin = require('esbuild-style-plugin');
+const tailwindcss = require('tailwindcss');
+const autoprefixer = require('autoprefixer');
+const path = require('path');
+
+const projectSpecificTailwindConfigPath = path.join(
+    process.cwd(),
+    'tailwind.config.js'
+);
+const tailwindConfig = () =>
+    fs.existsSync(projectSpecificTailwindConfigPath)
+        ? projectSpecificTailwindConfigPath
+        : require.resolve(
+              '@nordicsemiconductor/pc-nrfconnect-shared/config/tailwind.config.js'
+          );
 
 function options(additionalOptions) {
     const { dependencies } = JSON.parse(
@@ -32,21 +48,7 @@ function options(additionalOptions) {
         bundle: true,
         logLevel: 'info',
         external: [
-            // node
-            'fs',
-            'zlib',
-            'os',
-            'http',
-            'child_process',
-            'crypto',
-            'path',
-            'https',
-            'net',
-            'stream',
-            'url',
-            'module',
-            'constants',
-            'buffer',
+            ...builtinModules,
 
             // launcher includes
             'electron',
@@ -80,6 +82,11 @@ function options(additionalOptions) {
                 cssImports: true,
                 quietDeps: false,
             }),
+            postCssPlugin({
+                postcss: {
+                    plugins: [tailwindcss(tailwindConfig()), autoprefixer],
+                },
+            }),
             {
                 name: 'svgr',
                 setup(builder) {
@@ -88,8 +95,11 @@ function options(additionalOptions) {
                     builder.onResolve({ filter }, args => {
                         // Rename file to .svgr to let this plugin handle it.
                         const [, shortpath] = filter.exec(args.path);
-                        const path = `${join(args.resolveDir, shortpath)}r`;
-                        return { path };
+                        const resolvedPath = `${join(
+                            args.resolveDir,
+                            shortpath
+                        )}r`;
+                        return { path: resolvedPath };
                     });
 
                     builder.onLoad({ filter: /\.svgr$/ }, async args => {

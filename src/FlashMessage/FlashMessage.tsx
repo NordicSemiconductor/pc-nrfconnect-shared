@@ -11,15 +11,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { mdiClose } from '@mdi/js';
 import Icon from '@mdi/react';
 
+import classNames from '../utils/classNames';
 import { colors } from '../utils/colors';
-import {
-    FlashMessage,
-    FlashMessageVariant,
-    getMessages,
-    removeMessage,
-} from './FlashMessageSlice';
+import { FlashMessage, getMessages, removeMessage } from './FlashMessageSlice';
 
 import './flashMessage.css';
+
+const SLIDE_IN_DURATION_MS = 300;
+const SLIDE_IN_ANIMATION = `${SLIDE_IN_DURATION_MS}ms slide-in`;
+
+const SLIDE_OUT_DURATION_MS = 1000;
+const SLIDE_OUT_ANIMATION = (dismissTime: number) =>
+    `${SLIDE_OUT_DURATION_MS}ms slide-out ${
+        dismissTime - SLIDE_OUT_DURATION_MS
+    }ms`;
+
+const LOADER_ANIMATION = (dismissTime: number) =>
+    `${
+        dismissTime - SLIDE_OUT_DURATION_MS
+    }ms flash-message-loader linear forwards`;
 
 interface FlashMessageProps {
     flashMessage: FlashMessage;
@@ -37,19 +47,19 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
 
     if (timeoutHandler.current == null && dismissTime != null) {
         timeoutHandler.current = setTimeout(() => {
-            dispatch(removeMessage({ id }));
+            dispatch(removeMessage(id));
         }, dismissTime);
     }
 
     const close = () => {
         clearTimeout(timeoutHandler.current);
-        dispatch(removeMessage({ id }));
+        dispatch(removeMessage(id));
     };
 
     const addFadeout = () => {
         if (dismissTime) {
             timeoutHandler.current = setTimeout(() => {
-                dispatch(removeMessage({ id }));
+                dispatch(removeMessage(id));
             }, dismissTime);
             setFadeoutTimer(`${dismissTime}ms`);
         }
@@ -65,27 +75,23 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
     return (
         <div
             ref={divRef}
+            className={`tw-flex tw-w-full tw-flex-col tw-justify-between tw-p-4  tw-text-white ${classNames(
+                variant === 'error' && 'tw-bg-red',
+                variant === 'success' && 'tw-bg-green',
+                variant === 'info' && 'tw-bg-nordicBlue',
+                variant === 'warning' && 'tw-bg-orange'
+            )}`}
             style={{
-                backgroundColor: getBackgroundColorFromVariant(variant),
-                color: colors.white,
                 zIndex: 1000,
-                animation: initialRender() ? 'slide-in 1s' : 'unset',
-                width: '100%',
-                padding: '16px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
+                animation:
+                    fadeoutTimer !== 'unset'
+                        ? flashMessageAnimations(initialRender(), dismissTime)
+                        : 'unset',
             }}
             onMouseEnter={removeFadeout}
             onMouseLeave={addFadeout}
         >
-            <div
-                style={{
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                }}
-            >
+            <div className="tw-flex tw-w-full tw-justify-between">
                 {message}
                 <div onClick={close}>
                     <Icon path={mdiClose} size={0.8} />
@@ -101,7 +107,7 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
                         marginTop: '8px',
                         animation:
                             fadeoutTimer !== 'unset'
-                                ? `flash-message ${dismissTime}ms linear`
+                                ? LOADER_ANIMATION(dismissTime)
                                 : 'unset',
                     }}
                 />
@@ -118,13 +124,14 @@ const FlashMessages = () => {
     return (
         <div
             style={{
+                position: 'absolute',
+                bottom: '32px',
+                right: '16px',
                 width: '256px',
                 gap: '16px',
-                marginBottom: '32px',
                 display: 'flex',
                 flexDirection: 'column-reverse',
             }}
-            className="message-container"
         >
             {messages.map(flashMessage => (
                 <FlashMessage
@@ -136,19 +143,17 @@ const FlashMessages = () => {
     );
 };
 
-const getBackgroundColorFromVariant = (variant: FlashMessageVariant) => {
-    switch (variant) {
-        case 'error':
-            return colors.red;
-        case 'success':
-            return colors.green;
-        case 'info':
-            return colors.nordicBlue;
-        case 'warning':
-            return colors.orange;
-
-        default:
-            return '' as never;
+const flashMessageAnimations = (
+    initialRender2: boolean,
+    dismissTime2?: number
+): string => {
+    if (!dismissTime2) {
+        return initialRender2 ? SLIDE_IN_ANIMATION : 'unset';
     }
+
+    return `${SLIDE_OUT_ANIMATION(dismissTime2)},${
+        initialRender2 ? SLIDE_IN_ANIMATION : ''
+    }`;
 };
+
 export default FlashMessages;
