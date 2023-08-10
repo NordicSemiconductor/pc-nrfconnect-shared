@@ -46,7 +46,7 @@
         "postinstall": "ts-node scripts/postinstall.ts"
     },
     "peerDependencies": {
-        "@nordicsemiconductor/nrf-device-lib-js": "*"
+        "@nordicsemiconductor/nrf-device-lib-js": ">=0.6.13"
     },
     "dependencies": {
         "@electron/remote": "^2.0.4",
