@@ -19,6 +19,8 @@ import {
     ModuleVersion,
     NrfutilJson,
     Progress,
+    Task,
+    TaskBegin,
     TaskEnd,
 } from './sandboxTypes';
 
@@ -57,8 +59,9 @@ const prepareEnv = (baseDir: string, module: string, version: string) => {
 const commonParser = <Result>(
     data: Buffer,
     callbacks: {
-        onProgress?: (progress: Progress) => void;
+        onProgress?: (progress: Progress, task?: Task) => void;
         onInfo?: (info: Result) => void;
+        onTaskBegin?: (taskEnd: TaskBegin) => void;
         onTaskEnd?: (taskEnd: TaskEnd<Result>) => void;
         onLogging?: (logging: LogMessage) => void;
     }
@@ -70,10 +73,13 @@ const commonParser = <Result>(
         return data;
     }
 
-    parsedData.forEach(item => {
+    const processItem = (item: NrfutilJson<Result>) => {
         switch (item.type) {
             case 'task_progress':
-                callbacks.onProgress?.(item.data.progress);
+                callbacks.onProgress?.(item.data.progress, item.data.task);
+                break;
+            case 'task_begin':
+                callbacks.onTaskBegin?.(item.data);
                 break;
             case 'task_end':
                 callbacks.onTaskEnd?.(item.data);
@@ -84,8 +90,13 @@ const commonParser = <Result>(
             case 'log':
                 callbacks.onLogging?.(item.data);
                 break;
+            case 'batch_update':
+                processItem(item.data.data);
+                break;
         }
-    });
+    };
+
+    parsedData.forEach(processItem);
 };
 
 export class NrfutilSandbox {
@@ -147,7 +158,7 @@ export class NrfutilSandbox {
     };
 
     public prepareSandbox = async (
-        onProgress?: (progress: Progress) => void,
+        onProgress?: (progress: Progress, task?: Task) => void,
         logger?: winston.Logger
     ) => {
         try {
@@ -174,7 +185,9 @@ export class NrfutilSandbox {
     private execNrfutil = async <Result>(
         command: string,
         args: string[],
-        onProgress?: (progress: Progress) => void,
+        onProgress?: (progress: Progress, task?: Task) => void,
+        onTaskBegin?: (taskBegin: TaskBegin) => void,
+        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
         controller?: AbortController
     ) => {
         const info: Result[] = [];
@@ -187,8 +200,10 @@ export class NrfutilSandbox {
                 data =>
                     commonParser<Result>(data, {
                         onProgress,
+                        onTaskBegin,
                         onTaskEnd: end => {
                             taskEnd.push(end);
+                            onTaskEnd?.(end);
                         },
                         onInfo: i => {
                             info.push(i);
@@ -233,16 +248,20 @@ export class NrfutilSandbox {
         }
     };
 
-    private execSubcommand = <Result>(
+    public execSubcommand = <Result>(
         command: string,
         args: string[],
-        onProgress?: (progress: Progress) => void,
+        onProgress?: (progress: Progress, task?: Task) => void,
+        onTaskBegin?: (taskBegin: TaskBegin) => void,
+        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
         controller?: AbortController
     ) =>
         this.execNrfutil<Result>(
             this.module,
             [command, ...args],
             onProgress,
+            onTaskBegin,
+            onTaskEnd,
             controller
         );
 
@@ -382,7 +401,7 @@ export class NrfutilSandbox {
 
     public singleTaskEndOperationWithData = async <T>(
         command: string,
-        onProgress?: (progress: Progress) => void,
+        onProgress?: (progress: Progress, task?: Task) => void,
         controller?: AbortController,
         args: string[] = []
     ) => {
@@ -401,7 +420,7 @@ export class NrfutilSandbox {
 
     public singleTaskEndOperationOptionalData = async <T = void>(
         command: string,
-        onProgress?: (progress: Progress) => void,
+        onProgress?: (progress: Progress, task?: Task) => void,
         controller?: AbortController,
         args: string[] = []
     ) => {
@@ -409,6 +428,8 @@ export class NrfutilSandbox {
             command,
             args,
             onProgress,
+            undefined,
+            undefined,
             controller
         );
 
@@ -437,7 +458,7 @@ export default async (
     baseDir: string,
     module: string,
     version?: string,
-    onProgress?: (progress: Progress) => void,
+    onProgress?: (progress: Progress, task?: Task) => void,
     logger?: winston.Logger
 ) => {
     const env = { ...process.env };
