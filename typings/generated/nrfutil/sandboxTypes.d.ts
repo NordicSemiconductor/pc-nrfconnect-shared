@@ -8,15 +8,22 @@ export type Task = {
     id: string;
     description: string;
     name: string;
+    data: {
+        serialNumber: string;
+    };
+};
+export type TaskError = {
+    code: number;
+    description: string;
+};
+export type TaskBegin = {
+    task: Task;
 };
 export type TaskEnd<T = void> = {
     task: Task;
     message?: string;
     result?: 'success' | 'fail';
-    error?: {
-        code: number;
-        description: string;
-    };
+    error?: TaskError;
     name: string;
     data?: T;
 };
@@ -36,10 +43,27 @@ type NrfutilJsonEnd<T> = {
     type: 'task_end';
     data: TaskEnd<T>;
 };
+type NrfutilJsonBegin = {
+    type: 'task_begin';
+    data: TaskBegin;
+};
+type NrfutilJsonBatch<T = unknown> = {
+    batch: {
+        id: string;
+        data: {
+            serialNumber: string;
+        };
+    };
+    data: NrfutilJson<T>;
+};
+export type NrfutilJsonBatchUpdate<T = unknown> = {
+    type: 'batch_update';
+    data: NrfutilJsonBatch<T>;
+};
 export type NrfutilJson<T = unknown> = {
-    type: 'task_begin' | 'info';
+    type: 'info';
     data: T;
-} | NrfutilJsonEnd<T> | NrfutilJsonProgress | NrfutilJsonLog;
+} | NrfutilJsonBegin | NrfutilJsonEnd<T> | NrfutilJsonProgress | NrfutilJsonLog | NrfutilJsonBatchUpdate<T>;
 export type Progress = {
     progressPercentage: number;
     message?: string;

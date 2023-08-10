@@ -1,0 +1,1 @@
+{"version":3,"file":"eraseBatch.d.ts","sourceRoot":"","sources":["../../../../nrfutil/device/eraseBatch.ts"],"names":[],"mappings":"AAMA,OAAO,EACH,qBAAqB,EACrB,SAAS,EAET,cAAc,EACjB,MAAM,cAAc,CAAC;AACtB,OAAO,EAAE,UAAU,EAAE,MAAM,UAAU,CAAC;+BAG5B,UAAU,cACJ;IACR,SAAS,CAAC,EAAE,SAAS,CAAC;CACzB,KACF,sBAAsB,cAAc,CAAC;AALxC,wBAaG"}

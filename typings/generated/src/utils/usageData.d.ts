@@ -1,3 +1,4 @@
+import winston from 'winston';
 import type { PackageJson } from '../../ipc/MetaFiles';
 /**
  * Initialize instance to send user data
@@ -50,6 +51,7 @@ export declare const sendUsageData: <T extends string>(action: T, label?: string
  * @returns {void}
  */
 export declare const sendErrorReport: (error: string) => void;
+export declare const setUsageLogger: (log: winston.Logger) => void;
 declare const _default: {
     disable: () => void;
     enable: () => void;

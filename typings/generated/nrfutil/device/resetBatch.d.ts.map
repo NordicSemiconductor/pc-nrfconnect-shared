@@ -1,0 +1,1 @@
+{"version":3,"file":"resetBatch.d.ts","sourceRoot":"","sources":["../../../../nrfutil/device/resetBatch.ts"],"names":[],"mappings":"AAMA,OAAO,EACH,qBAAqB,EACrB,SAAS,EAET,cAAc,EACjB,MAAM,cAAc,CAAC;AACtB,OAAO,EAAE,UAAU,EAAE,SAAS,EAAE,MAAM,UAAU,CAAC;gCAGtC,UAAU,cACL;IACR,KAAK,CAAC,EAAE,SAAS,CAAC;IAClB,SAAS,CAAC,EAAE,SAAS,CAAC;CACzB,KACF,sBAAsB,cAAc,CAAC;AANxC,wBAeG"}

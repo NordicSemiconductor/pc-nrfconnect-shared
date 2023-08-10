@@ -1,5 +1,6 @@
 /// <reference types="node" />
 import { LogLevel, LogMessage } from '../sandboxTypes';
+import { Batch } from './batch';
 declare const _default: {
     program: (device: import("./common").NrfutilDeviceWithSerialnumber, firmware: string | {
         buffer: Buffer;
@@ -7,7 +8,7 @@ declare const _default: {
     }, onProgress?: ((progress: import("../sandboxTypes").Progress) => void) | undefined, core?: import("./common").DeviceCore | undefined, programmingOptions?: import("./program").ProgrammingOptions | undefined, controller?: AbortController | undefined) => Promise<void>;
     erase: (device: import("./common").NrfutilDeviceWithSerialnumber, core?: import("./common").DeviceCore | undefined, onProgress?: ((progress: import("../sandboxTypes").Progress) => void) | undefined, controller?: AbortController | undefined) => Promise<void>;
     recover: (device: import("./common").NrfutilDeviceWithSerialnumber, core?: import("./common").DeviceCore | undefined, onProgress?: ((progress: import("../sandboxTypes").Progress) => void) | undefined, controller?: AbortController | undefined) => Promise<void>;
-    reset: (device: import("./common").NrfutilDeviceWithSerialnumber, onProgress?: ((progress: import("../sandboxTypes").Progress) => void) | undefined, controller?: AbortController | undefined) => Promise<void>;
+    reset: (device: import("./common").NrfutilDeviceWithSerialnumber, core?: import("./common").DeviceCore | undefined, resetKind?: import("./common").ResetKind | undefined, onProgress?: ((progress: import("../sandboxTypes").Progress) => void) | undefined, controller?: AbortController | undefined) => Promise<void>;
     getProtectionStatus: (device: import("./common").NrfutilDeviceWithSerialnumber, core?: import("./common").DeviceCore | undefined, onProgress?: ((progress: import("../sandboxTypes").Progress) => void) | undefined, controller?: AbortController | undefined) => Promise<import("./getProtectionStatus").GetProtectionStatusResult>;
     setProtectionStatus: (device: import("./common").NrfutilDeviceWithSerialnumber, region: "All" | "SecureRegions" | "Region0" | "Region0Region1", core?: import("./common").DeviceCore | undefined, onProgress?: ((progress: import("../sandboxTypes").Progress) => void) | undefined, controller?: AbortController | undefined) => Promise<void>;
     getFwInfo: (device: import("./common").NrfutilDeviceWithSerialnumber, core?: import("./common").DeviceCore | undefined, onProgress?: ((progress: import("../sandboxTypes").Progress) => void) | undefined, controller?: AbortController | undefined) => Promise<import("./getFwInfo").FWInfo>;
@@ -26,6 +27,7 @@ declare const _default: {
     setLogLevel: (level: LogLevel) => Promise<void>;
     setVerboseLogging: (verbose: boolean) => Promise<void>;
     getModuleVersion: () => Promise<import("../sandboxTypes").ModuleVersion>;
+    batch: () => Batch;
 };
 export default _default;
 //# sourceMappingURL=device.d.ts.map
