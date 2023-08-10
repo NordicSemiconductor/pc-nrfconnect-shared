@@ -35,8 +35,9 @@ if (!existsSync(`dist/bootstrap.css`)) {
     });
 }
 
-const root = resolve(__dirname, '..');
-process.chdir(root);
+if (!existsSync(`typings/generated/src/index.d.ts`)) {
+    const root = resolve(__dirname, '..');
+    process.chdir(root);
 
-// Generate types
-execSync('npm run generate-types', { encoding: 'utf-8' });
+    execSync('npm run generate-types', { encoding: 'utf-8' });
+}
