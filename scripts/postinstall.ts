@@ -13,11 +13,13 @@ import { resolve } from 'path';
 import { build } from './esbuild-renderer';
 
 if (!existsSync(`scripts/nordic-publish.js`)) {
+    console.log('Building nordic-publish.js');
     const command = `npx esbuild scripts/nordic-publish.ts --bundle --outfile=scripts/nordic-publish.js --platform=node --log-level=warning --minify`;
     execSync(command, { encoding: 'utf-8' });
 }
 
 if (!existsSync(`dist/bootstrap.css`)) {
+    console.log('Building bootstrap.css');
     build({
         logLevel: 'warning',
         entryPoints: ['./src/bootstrap.scss'],
@@ -27,6 +29,7 @@ if (!existsSync(`dist/bootstrap.css`)) {
 }
 
 if (!existsSync(`typings/generated/src/index.d.ts`)) {
+    console.log('Generating types');
     const root = resolve(__dirname, '..');
     process.chdir(root);
 
