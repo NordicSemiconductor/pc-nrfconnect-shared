@@ -6,12 +6,36 @@
 
 import { Progress } from '../sandboxTypes';
 import {
+    DeviceCore,
     deviceSingleTaskEndOperationVoid,
     NrfutilDeviceWithSerialnumber,
+    ResetKind,
 } from './common';
 
-export default (
+export default async (
     device: NrfutilDeviceWithSerialnumber,
+    core?: DeviceCore,
+    resetKind?: ResetKind,
     onProgress?: (progress: Progress) => void,
     controller?: AbortController
-) => deviceSingleTaskEndOperationVoid(device, 'reset', onProgress, controller);
+) => {
+    const args: string[] = [];
+
+    if (resetKind) {
+        args.push('--reset-kind');
+        args.push(resetKind);
+    }
+
+    if (core) {
+        args.push('--core');
+        args.push(core);
+    }
+
+    await deviceSingleTaskEndOperationVoid(
+        device,
+        'reset',
+        onProgress,
+        controller,
+        args
+    );
+};
