@@ -43,7 +43,7 @@
         "release-shared": "ts-node scripts/release-shared.ts",
         "prepare-shared-release": "ts-node scripts/prepare-shared-release.ts",
         "clean": "rimraf dist typings/generated dist scripts/nordic-publish.js",
-        "postinstall": "node scripts/postinstall.js"
+        "postinstall": "ts-node scripts/postinstall.ts"
     },
     "peerDependencies": {
         "@nordicsemiconductor/nrf-device-lib-js": "*"
