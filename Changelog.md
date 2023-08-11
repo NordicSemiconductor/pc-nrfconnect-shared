@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 84 - Unreleased
+
+### Changed
+
+-   Re-added underline (mistakenly removed) on hover for `link` variant of
+    `Button` component.
+
 ## 83 - 2023-08-11
 
 ### Added
