@@ -8,10 +8,11 @@ import { spawn } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import winston from 'winston';
 
 import describeError from '../src/logging/describeError';
 import packageJson from '../src/utils/packageJson';
+import { sendErrorReport, sendUsageData } from '../src/utils/usageData';
+import { getNrfutilLogger } from './nrfutilLogger';
 import {
     BackgroundTask,
     LogLevel,
@@ -79,9 +80,17 @@ const commonParser = <Result>(
                 callbacks.onProgress?.(item.data.progress, item.data.task);
                 break;
             case 'task_begin':
+                sendUsageData(
+                    `Nrfutil ${item.data.task.name} begin`,
+                    `${item.data.task.name}`
+                );
                 callbacks.onTaskBegin?.(item.data);
                 break;
             case 'task_end':
+                sendUsageData(
+                    `Nrfutil ${item.data.task.name} complete`,
+                    `${item.data.task.name}`
+                );
                 callbacks.onTaskEnd?.(item.data);
                 break;
             case 'info':
@@ -158,26 +167,28 @@ export class NrfutilSandbox {
     };
 
     public prepareSandbox = async (
-        onProgress?: (progress: Progress, task?: Task) => void,
-        logger?: winston.Logger
+        onProgress?: (progress: Progress, task?: Task) => void
     ) => {
         try {
-            logger?.info(
+            getNrfutilLogger()?.info(
                 `Preparing nrfutil-${this.module} version: ${this.version}`
             );
+            sendUsageData(`Preparing nrfutil-${this.module}`, this.version);
             await this.execNrfutil(
                 'install',
                 [`${this.module}=${this.version}`, '--force'],
                 onProgress
             );
-            logger?.info(
-                `Successfully installed nrfutil-${this.module} version: ${this.version}`
+            getNrfutilLogger()?.info(
+                `Successfully installed nrfutil-${this.module} version ${this.version}`
             );
+            sendUsageData(`Installed nrfutil-${this.module}`, this.version);
         } catch (error) {
-            logger?.error(
-                `Error while installing nrfutil-${this.module} version: ${this.version}`
+            sendErrorReport(
+                `Error while installing nrfutil-${this.module} version: ${
+                    this.version
+                }. describeError: ${describeError(error)}`
             );
-            logger?.error(describeError(error));
             throw error;
         }
     };
@@ -223,8 +234,17 @@ export class NrfutilSandbox {
             if (!taskEnd.find(end => end.result === 'fail')) {
                 return { taskEnd, info };
             }
-
-            throw new Error(stdErr ?? 'Unknown error');
+            const errorMessage = taskEnd
+                .filter(end => end.result === 'fail')
+                .map(
+                    end =>
+                        `error: Code '${end.error?.code}' ${end.error?.description}, message: ${end.message}`
+                )
+                .join('\n');
+            sendErrorReport(
+                `stdError: ${stdErr}, errorMessage: ${errorMessage}`
+            );
+            throw new Error(stdErr ?? errorMessage);
         } catch (e) {
             const error = e as Error;
             let msg = error.message;
@@ -239,11 +259,12 @@ export class NrfutilSandbox {
             }
 
             if (stdErr) {
-                msg += `\n${stdErr}`;
+                msg += `\nstdErr: ${stdErr}`;
             }
 
             error.message = msg;
 
+            sendErrorReport(error.message);
             throw error;
         }
     };
@@ -458,8 +479,7 @@ export default async (
     baseDir: string,
     module: string,
     version?: string,
-    onProgress?: (progress: Progress, task?: Task) => void,
-    logger?: winston.Logger
+    onProgress?: (progress: Progress, task?: Task) => void
 ) => {
     const env = { ...process.env };
     let overrideVersion: string | undefined;
@@ -491,7 +511,7 @@ export default async (
     const result = await sandbox.isSandboxInstalled();
 
     if (!result) {
-        await sandbox.prepareSandbox(onProgress, logger);
+        await sandbox.prepareSandbox(onProgress);
     }
 
     onProgress?.({ progressPercentage: 100 });

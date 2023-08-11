@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Reducer } from 'redux';
 
 import { inMain as openWindow } from '../../ipc/openWindow';
-import { setDeviceLogger } from '../../nrfutil/device/deviceLogger';
+import { setNrfutilLogger } from '../../nrfutil/nrfutilLogger';
 import About from '../About/About';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
 import { setAutoReselect } from '../Device/deviceAutoSelectSlice';
@@ -99,7 +99,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
 
     if (!initialisedLogger.current) {
         logger.initialise();
-        setDeviceLogger(logger);
+        setNrfutilLogger(logger);
         setUsageLogger(logger);
         initialisedLogger.current = true;
     }

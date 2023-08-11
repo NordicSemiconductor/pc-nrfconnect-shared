@@ -11,9 +11,9 @@ import {
     getIsLoggingVerbose,
     persistIsLoggingVerbose,
 } from '../../src/utils/persistentStore';
+import { getNrfutilLogger } from '../nrfutilLogger';
 import sandbox, { type NrfutilSandbox } from '../sandbox';
 import { Progress } from '../sandboxTypes';
-import { getDeviceLogger } from './deviceLogger';
 
 export const deviceTraitsToArgs = (traits: DeviceTraits) => {
     const args: string[] = [];
@@ -197,19 +197,17 @@ export const getDeviceSandbox = async () => {
         return deviceSandbox;
     }
 
-    const deviceLogger = getDeviceLogger();
-
     if (!promiseDeviceSandbox) {
         promiseDeviceSandbox = sandbox(
             path.join(getAppDataDir(), '../'),
             'device',
             undefined,
-            undefined,
-            deviceLogger
+            undefined
         );
         deviceSandbox = await promiseDeviceSandbox;
 
         deviceSandbox.onLogging(evt => {
+            const deviceLogger = getNrfutilLogger();
             switch (evt.level) {
                 case 'TRACE':
                     deviceLogger?.verbose(evt.message);
