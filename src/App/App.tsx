@@ -31,7 +31,7 @@ import FeedbackPane, { FeedbackPaneProps } from '../Panes/FeedbackPane';
 import classNames from '../utils/classNames';
 import packageJson from '../utils/packageJson';
 import { getPersistedCurrentPane } from '../utils/persistentStore';
-import { init as usageDataInit } from '../utils/usageData';
+import { init as usageDataInit, setUsageLogger } from '../utils/usageData';
 import useHotKey from '../utils/useHotKey';
 import {
     currentPane as currentPaneSelector,
@@ -94,12 +94,13 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     children,
     autoReselectByDefault = false,
 }) => {
-    const initialised = useRef(false);
+    const initialisedLogger = useRef(false);
 
-    if (!initialised.current) {
+    if (!initialisedLogger.current) {
         logger.initialise();
         setDeviceLogger(logger);
-        initialised.current = true;
+        setUsageLogger(logger);
+        initialisedLogger.current = true;
     }
 
     usePersistedPane();
@@ -131,11 +132,6 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
 
     const isSidePanelVisible =
         useSelector(isSidePanelVisibleSelector) && currentSidePanel;
-
-    useEffect(() => {
-        logger.initialise();
-        setDeviceLogger(logger);
-    }, []);
 
     useEffect(() => {
         if (reportUsageData) {
