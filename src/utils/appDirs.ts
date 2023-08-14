@@ -7,29 +7,9 @@
 import { getGlobal } from '@electron/remote';
 import path from 'path';
 
-import { loadPackageJson } from './packageJson';
+import packageJson from './packageJson';
 
 const getUserDataDir = () => getGlobal('userDataDir');
-
-declare global {
-    interface Window {
-        appDir: string;
-        appDataDir: string;
-        appLogDir: string;
-    }
-}
-
-function setAppDirs(
-    newAppDir: string,
-    newAppDataDir: string,
-    newAppLogDir: string
-) {
-    window.appDir = newAppDir;
-    window.appDataDir = newAppDataDir;
-    window.appLogDir = newAppLogDir;
-
-    loadPackageJson(getAppFile('package.json'));
-}
 
 /**
  * Get the filesystem path of the currently loaded app.
@@ -37,7 +17,8 @@ function setAppDirs(
  * @returns {string|undefined} Absolute path of current app.
  */
 function getAppDir() {
-    return window.appDir;
+    const html = packageJson()?.html ?? '';
+    return __filename.replace(html, '');
 }
 
 /**
@@ -56,7 +37,7 @@ function getAppFile(filename: string) {
  * @returns {string|undefined} Absolute path of data directory of the current app.
  */
 function getAppDataDir() {
-    return window.appDataDir;
+    return `${getUserDataDir()}${path.basename(getAppDir())}`;
 }
 
 /**
@@ -65,14 +46,7 @@ function getAppDataDir() {
  * @returns {string|undefined} Absolute path of data directory of the current app.
  */
 function getAppLogDir() {
-    return window.appLogDir;
+    return `${getAppDataDir()}/logs`;
 }
 
-export {
-    setAppDirs,
-    getAppDir,
-    getAppFile,
-    getAppDataDir,
-    getAppLogDir,
-    getUserDataDir,
-};
+export { getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir };
