@@ -1,6 +1,6 @@
 {
     "name": "@nordicsemiconductor/pc-nrfconnect-shared",
-    "version": "82.0.0",
+    "version": "83.0.0",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -9,10 +9,9 @@
     "author": "Nordic Semiconductor ASA",
     "license": "ISC",
     "bin": {
-        "check-for-typescript": "./scripts/check-for-typescript.js",
-        "check-app-properties": "./scripts/check-app-properties.js",
-        "nordic-publish": "./scripts/nordic-publish.js",
-        "nrfconnect-license": "./scripts/nrfconnect-license.js",
+        "check-for-typescript": "./scripts/check-for-typescript.ts",
+        "check-app-properties": "./scripts/check-app-properties.ts",
+        "nrfconnect-license": "./scripts/nrfconnect-license.ts",
         "run-esbuild": "./scripts/esbuild.js"
     },
     "files": [
@@ -39,15 +38,15 @@
         "check:lint": "eslint --color .",
         "check:types": "tsc --noEmit",
         "check:license": "ts-node scripts/nrfconnect-license.ts check",
-        "clean-generate-types": "rimraf ./typings/generated",
         "generate-types": "tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./typings/generated --rootDir .",
         "prepare": "ts-node scripts/installHusky.ts",
         "release-shared": "ts-node scripts/release-shared.ts",
         "prepare-shared-release": "ts-node scripts/prepare-shared-release.ts",
-        "postinstall": "node scripts/postinstall.js"
+        "clean": "rimraf dist typings/generated dist scripts/nordic-publish.js",
+        "postinstall": "ts-node scripts/postinstall.ts"
     },
     "peerDependencies": {
-        "@nordicsemiconductor/nrf-device-lib-js": "*"
+        "@nordicsemiconductor/nrf-device-lib-js": ">=0.6.13"
     },
     "dependencies": {
         "@electron/remote": "^2.0.4",

@@ -7,13 +7,26 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 82 - 09.08.2023
+## 84 - Unreleased
+
+### Changed
+
+-   Re-added underline (mistakenly removed) on hover for `link` variant of
+    `Button` component.
+
+## 83 - 2023-08-11
+
+### Added
+
+-   `Spinner` component.
+
+## 82 - 2023-08-09
 
 ### Fixed
 
 -   Jest tests were broken due to missing config changes.
 
-## 81 - 09.08.2023
+## 81 - 2023-08-09
 
 ### Changed
 
@@ -24,6 +37,7 @@ every new version is a new major version.
 
 ### Steps to upgrade when using this package
 
+-   Remove the old dependency by running `npm rm pc-nrfconnect-shared`.
 -   Change all references from `pc-nrfconnect-shared` to
     `@nordicsemiconductor/pc-nrfconnect-shared`
 
@@ -41,7 +55,6 @@ The tsconfig can use the namespace directly like this
 {
     "extends": "@nordicsemiconductor/pc-nrfconnect-shared/config/tsconfig.json"
 }
-
 ```
 
 The package.json can be changed as follows:

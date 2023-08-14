@@ -5,13 +5,13 @@
  */
 
 import React, { ReactNode } from 'react';
-import { Spinner } from 'react-bootstrap';
 import { getCurrentWindow } from '@electron/remote';
 
 import Button from '../Button/Button';
 import { Device } from '../Device/deviceSlice';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { CollapsibleGroup } from '../SidePanel/Group';
+import Spinner from '../Spinner/Spinner';
 import { openUrl } from '../utils/open';
 import packageJson from '../utils/packageJson';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
@@ -159,7 +159,7 @@ class ErrorBoundary extends React.Component<
                             <h2 className="loading-header">
                                 Generating system report...
                             </h2>
-                            <Spinner size="sm" animation="border" />
+                            <Spinner size="sm" className="tw-pl-4" />
                         </div>
                     )}
                     <p>

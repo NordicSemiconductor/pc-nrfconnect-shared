@@ -5,10 +5,10 @@
  */
 
 import React, { ReactNode } from 'react';
-import { Spinner } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 
 import Button, { ButtonVariants } from '../Button/Button';
+import Spinner from '../Spinner/Spinner';
 
 import './dialog.scss';
 
@@ -67,7 +67,7 @@ Dialog.Header = ({
     <Modal.Header closeButton={false}>
         <div>
             <b>{title}</b>
-            {showSpinner && <Spinner size="sm" animation="border" />}
+            {showSpinner && <Spinner size="sm" className="tw-pl-4" />}
         </div>
         {headerIcon && <span className={`mdi mdi-${headerIcon}`} />}
     </Modal.Header>
