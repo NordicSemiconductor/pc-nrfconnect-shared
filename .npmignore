@@ -1,0 +1,5 @@
+node_modules
+nordicsemiconductor-pc-nrfconnect-shared-*.tgz
+.vscode/settings.json
+azure-pipelines.yml
+.github

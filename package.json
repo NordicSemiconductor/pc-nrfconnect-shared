@@ -14,23 +14,6 @@
         "nrfconnect-license": "./scripts/nrfconnect-license.ts",
         "run-esbuild": "./scripts/esbuild.js"
     },
-    "files": [
-        "./config",
-        "./dist",
-        "./fw",
-        "./ipc",
-        "./main",
-        "./mocks",
-        "./scripts",
-        "./src",
-        "./test",
-        "./typings",
-        "./styles.scss",
-        "./tsconfig.json",
-        "./LICENSE",
-        "./Changelog.md",
-        "./README.md"
-    ],
     "main": "src",
     "scripts": {
         "test": "jest",
