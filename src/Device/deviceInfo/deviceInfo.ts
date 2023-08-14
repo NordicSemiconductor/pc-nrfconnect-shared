@@ -224,7 +224,9 @@ export const deviceInfo = (device: Device): DeviceInfo =>
 const hasNickname = (
     device: Device
 ): device is WrappedDevice & Required<Pick<WrappedDevice, 'nickname'>> =>
-    'nickname' in device && device.nickname !== undefined;
+    'nickname' in device &&
+    device.nickname !== undefined &&
+    device.nickname.length > 0;
 
 export const displayedDeviceName = (
     device: Device,
