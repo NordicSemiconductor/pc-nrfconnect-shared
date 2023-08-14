@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 86 - Unreleased
+
+### Changed
+
+-   Use npmignore instead of files array in package.json for deciding what gets
+    packed.
+
 ## 85 - 2023-08-14
 
 ### Fixed
@@ -36,7 +43,7 @@ every new version is a new major version.
 
 ```json
 {
-    "index": "dist/index.html"
+    "html": "dist/index.html"
 }
 ```
 
