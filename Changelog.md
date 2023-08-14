@@ -7,7 +7,7 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 84 - Unreleased
+## 84 - 2023-08-14
 
 ### Changed
 
@@ -16,6 +16,11 @@ every new version is a new major version.
 -   Apps now have to load themselves, i.e. there is no `ReactDOM.render` done
     from the launcher anymore. The app chooses which html-page will be the
     entrypoint.
+-   Passing devices of type nrf-device-lib-js `Device` to calls from
+    `deviceInfo.ts` is not allowed. Passing the nrf-device-lib-js version of
+    `Device` is now allowed.
+-   `ErrorBoundary` now only requires nrf-device-lib-js `Device` type.
+-   `systemreport` now only required nrf-device-lib-js `Device` type.
 
 ### Steps to upgrade when using this package
 
