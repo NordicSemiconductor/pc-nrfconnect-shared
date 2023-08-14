@@ -16,8 +16,11 @@ every new version is a new major version.
 -   Apps now have to load themselves, i.e. there is no `ReactDOM.render` done
     from the launcher anymore. The app chooses which html-page will be the
     entrypoint.
--   Removed `deviceInfo` dependency on the internally wrapped `Device` type.
-    Passing the nrf-device-lib-js version of `Device` is now allowed.
+-   Passing devices of type nrf-device-lib-js `Device` to calls from
+    `deviceInfo.ts` is not allowed. Passing the nrf-device-lib-js version of
+    `Device` is now allowed.
+-   `ErrorBoundary` now only requires nrf-device-lib-js `Device` type.
+-   `systemreport` now only required nrf-device-lib-js `Device` type.
 
 ### Steps to upgrade when using this package
 
