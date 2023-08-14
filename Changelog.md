@@ -16,6 +16,8 @@ every new version is a new major version.
 -   Apps now have to load themselves, i.e. there is no `ReactDOM.render` done
     from the launcher anymore. The app chooses which html-page will be the
     entrypoint.
+-   Removed `deviceInfo` dependency on the internally wrapped `Device` type.
+    Passing the nrf-device-lib-js version of `Device` is now allowed.
 
 ### Steps to upgrade when using this package
 
