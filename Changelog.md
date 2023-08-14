@@ -13,6 +13,29 @@ every new version is a new major version.
 
 -   Re-added underline (mistakenly removed) on hover for `link` variant of
     `Button` component.
+-   Apps now have to load themselves, i.e. there is no `ReactDOM.render` done
+    from the launcher anymore. The app chooses which html-page will be the
+    entrypoint.
+
+### Steps to upgrade when using this package
+
+-   Add an `index`-property to package.json. The following example will use the
+    index bundled with shared that works with our apps, but apps can also make
+    their own instead if needed.
+
+```json
+{
+    "index": "dist/index.html"
+}
+```
+
+-   Render the app
+
+```typescript
+import { App, render } from '@nordicsemiconductor/pc-nrfconnect-shared';
+...
+render(<App />);
+```
 
 ## 83 - 2023-08-11
 
