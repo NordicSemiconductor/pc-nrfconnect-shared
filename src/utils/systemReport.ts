@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import nrfDeviceLib from '@nordicsemiconductor/nrf-device-lib-js';
+import nrfDeviceLib, { Device } from '@nordicsemiconductor/nrf-device-lib-js';
 import fs from 'fs';
 import { EOL } from 'os';
 import path from 'path';
@@ -19,7 +19,6 @@ import {
     getDeviceLibContext,
     getModuleVersion,
 } from '../Device/deviceLibWrapper';
-import { Device } from '../Device/deviceSlice';
 import logger from '../logging';
 import { getAppDataDir } from './appDirs';
 import describeVersion from './describeVersion';
