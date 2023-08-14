@@ -159,7 +159,7 @@ class ErrorBoundary extends React.Component<
                             <h2 className="loading-header">
                                 Generating system report...
                             </h2>
-                            <Spinner size="sm" className="tw-pl-4" />
+                            <Spinner size="sm" />
                         </div>
                     )}
                     <p>

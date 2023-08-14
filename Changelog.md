@@ -7,12 +7,16 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 86 - Unreleased
+## 86 - 2023-08-14
 
 ### Changed
 
 -   Use npmignore instead of files array in package.json for deciding what gets
     packed.
+
+### Fixed
+
+-   `Spinner` now has old padding which was mistakenly removed.
 
 ## 85 - 2023-08-14
 
