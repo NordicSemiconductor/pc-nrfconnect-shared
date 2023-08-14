@@ -65,7 +65,7 @@ Dialog.Header = ({
     showSpinner?: boolean;
 }) => (
     <Modal.Header closeButton={false}>
-        <div>
+        <div className="tw-flex tw-flex-row">
             <b>{title}</b>
             {showSpinner && (
                 <div className="tw-pl-4">
