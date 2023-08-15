@@ -58,9 +58,10 @@ every new version is a new major version.
 
 ### Steps to upgrade when using this package
 
--   Add an `index`-property to package.json. The following example will use the
-    index bundled with shared that works with our apps, but apps can also make
-    their own instead if needed.
+-   Following this step will make the app incompatible with the currently
+    released launcher (v4.1.2): Add an `index`-property to package.json. The
+    following example will use the index bundled with shared that works with our
+    apps, but apps can also make their own instead if needed.
 
 ```json
 {
