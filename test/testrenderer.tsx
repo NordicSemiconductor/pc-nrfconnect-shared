@@ -7,16 +7,13 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
-import { Action, Reducer } from 'redux';
+import { Action as SimpleAction, Reducer } from 'redux';
 
 import createStore, { AppThunk } from '../src/store';
 
-type TAction = AppThunk<never>;
+type Action = SimpleAction | AppThunk<never>;
 
-const createPreparedStore = (
-    actions: (Action | TAction)[],
-    appReducer?: Reducer
-) => {
+const createPreparedStore = (actions: Action[], appReducer?: Reducer) => {
     const store = createStore(appReducer);
     actions.forEach(store.dispatch);
 
@@ -24,7 +21,7 @@ const createPreparedStore = (
 };
 
 const preparedProvider =
-    (actions: (Action | TAction)[], appReducer?: Reducer) => (props: object) =>
+    (actions: Action[], appReducer?: Reducer) => (props: object) =>
         (
             <Provider
                 store={createPreparedStore(actions, appReducer)}
@@ -34,11 +31,11 @@ const preparedProvider =
 
 export const testRendererForApps =
     (appReducer?: Reducer) =>
-    (element: React.ReactElement, actions: (Action | TAction)[] = []) =>
+    (element: React.ReactElement, actions: Action[] = []) =>
         render(element, { wrapper: preparedProvider(actions, appReducer) });
 
 export default (
     element: React.ReactElement,
-    actions: (Action | TAction)[] = [], // eslint-disable-line default-param-last -- Because we want to allow people to specify actions but no specifix reducer
+    actions: Action[] = [], // eslint-disable-line default-param-last -- Because we want to allow people to specify actions but no specifix reducer
     appReducer?: Reducer
 ) => render(element, { wrapper: preparedProvider(actions, appReducer) });
