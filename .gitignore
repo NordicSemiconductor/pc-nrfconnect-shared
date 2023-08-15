@@ -1,5 +1,5 @@
 /node_modules
-/pc-nrfconnect-shared-*.tgz
+/nordicsemiconductor-pc-nrfconnect-shared-*.tgz
 /coverage
 /scripts/nordic-publish.js
 /scripts/check-app-properties.js
@@ -7,4 +7,4 @@
 /scripts/nrfconnect-license.js
 /dist
 /typings/generated/*
-.vscode/settings.json
+/.vscode/settings.json
