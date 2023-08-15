@@ -46,24 +46,36 @@ export default async (
     }
 
     const onData = (data: HotplugEvent | ListEvent) => {
+        // general check I write always. Keep if it makes sense.
+        // Safeguard if undefined is passed so accessing any object property won't break with exception
+        // same can be applied to the functions above
+        if (!data) return;
+
         if (isListEvent(data)) {
             onEnumerated(
                 data.devices.filter(
                     d => d.serialNumber
                 ) as NrfutilDeviceWithSerialnumber[]
             );
-        } else if (onHotplugEvent && isHotplugEvent(data)) {
-            if (
-                data.event === 'Arrived' &&
-                data.device &&
-                data.device.serialNumber
-            ) {
-                onHotplugEvent.onDeviceArrived(
-                    data.device as NrfutilDeviceWithSerialnumber
-                );
-            } else if (data.event === 'Left') {
-                onHotplugEvent.onDeviceLeft(data.id);
-            }
+
+            return;
+        }
+
+        if (!onHotplugEvent || !isHotplugEvent(data)) {
+            return;
+        }
+
+        const newDeviceArrived =
+            data.event === 'Arrived' && data.device && data.device.serialNumber;
+
+        if (newDeviceArrived) {
+            onHotplugEvent.onDeviceArrived(
+                data.device as NrfutilDeviceWithSerialnumber
+            );
+        }
+
+        if (data.event === 'Left') {
+            onHotplugEvent.onDeviceLeft(data.id);
         }
     };
 

@@ -176,3 +176,11 @@ export const isStringVersion = (
     version?: SubDependency
 ): version is SubDependency & { version: string } =>
     version?.versionFormat === 'string';
+
+export interface CommonParserCallbacks<Result> {
+    onProgress?: (progress: Progress, task?: Task) => void;
+    onInfo?: (info: Result) => void;
+    onTaskBegin?: (taskEnd: TaskBegin) => void;
+    onTaskEnd?: (taskEnd: TaskEnd<Result>) => void;
+    onLogging?: (logging: LogMessage) => void;
+}

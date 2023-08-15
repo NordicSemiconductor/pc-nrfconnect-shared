@@ -4,12 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import {
-    BatchOperationWrapper,
-    Callbacks,
-    convertDeviceCoreType,
-    ResetOperation,
-} from './batchTypes';
+import { convertDeviceCoreType } from './batchHelpers';
+import { BatchOperationWrapper, Callbacks, ResetOperation } from './batchTypes';
 import { DeviceCore, ResetKind } from './common';
 
 export default (

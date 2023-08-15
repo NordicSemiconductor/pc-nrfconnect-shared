@@ -10,13 +10,16 @@ import path from 'path';
 import { v4 as uuid } from 'uuid';
 
 import {
-    BatchOperationWrapper,
-    Callbacks,
     convertDeviceCoreType,
     convertProgrammingOptionsType,
+} from './batchHelpers';
+import {
+    BatchOperationWrapper,
+    Callbacks,
     ProgrammingOperation,
 } from './batchTypes';
-import { DeviceCore } from './common';
+import { DeviceCore, FileExtensions } from './common';
+import { saveTempFile } from './helpers';
 import { ProgrammingOptions } from './program';
 
 const program = (
@@ -41,7 +44,7 @@ const program = (
 });
 
 export default (
-    firmware: { buffer: Buffer; type: 'hex' | 'zip' } | string,
+    firmware: { buffer: Buffer; type: FileExtensions } | string,
     core: DeviceCore,
     optionals?: {
         programmingOptions?: ProgrammingOptions;
@@ -52,18 +55,7 @@ export default (
         return program(firmware, core, optionals);
     }
 
-    const saveTemp = (): string => {
-        let tempFilePath;
-        do {
-            tempFilePath = path.join(os.tmpdir(), `${uuid()}.${firmware.type}`);
-        } while (fs.existsSync(tempFilePath));
-
-        fs.writeFileSync(tempFilePath, firmware.buffer);
-
-        return tempFilePath;
-    };
-
-    const tempFilePath = saveTemp();
+    const tempFilePath = saveTempFile(firmware.buffer, firmware.type);
 
     return program(tempFilePath, core, optionals);
 };

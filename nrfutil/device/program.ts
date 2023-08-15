@@ -5,18 +5,17 @@
  */
 
 import fs from 'fs';
-import os from 'os';
-import path from 'path';
-import { v4 as uuid } from 'uuid';
 
 import { Progress } from '../sandboxTypes';
 import {
     DeviceCore,
     deviceSingleTaskEndOperationVoid,
-    DeviceTraits,
+    deviceTraitsToArgs,
+    FileExtensions,
     NrfutilDeviceWithSerialnumber,
     ResetKind,
 } from './common';
+import { saveTempFile } from './helpers';
 
 export type ProgrammingOptions =
     | JLinkProgrammingOptions
@@ -54,26 +53,13 @@ export const isNordicDfuProgrammingOptions = (
     !isMcuBootProgrammingOptions(options) &&
     (options as NordicDfuProgrammingOptions).mcuEndState !== undefined;
 
-const deviceTraitsToArgs = (traits: DeviceTraits) => {
-    const args: string[] = [];
-    const traitsString = Object.keys(traits)
-        .map(trait => (traits[trait as keyof DeviceTraits] ? trait : null))
-        .filter(t => t !== null)
-        .join(',');
-
-    if (traitsString.length > 0) {
-        args.push('--traits');
-        args.push(traitsString);
-    }
-
-    return args;
-};
-
 const programmingOptionsToArgs = (options?: ProgrammingOptions) => {
     if (!options) return [];
 
     const args: string[] = [];
 
+    // if we trust isJLinkProgrammingOptions() / isMcuBootProgrammingOptions() / isNordicDfuProgrammingOptions()
+    // ...methods, "else" can be removed
     if (isJLinkProgrammingOptions(options)) {
         if (options.chipEraseMode)
             args.push(`chip_erase_mode=${options.chipEraseMode}`);
@@ -120,24 +106,14 @@ const program = (
 const programBuffer = async (
     device: NrfutilDeviceWithSerialnumber,
     firmware: Buffer,
-    type: 'hex' | 'zip',
+    type: FileExtensions,
     onProgress?: (progress: Progress) => void,
     core?: DeviceCore,
     programmingOptions?: ProgrammingOptions,
     controller?: AbortController
 ) => {
-    const saveTemp = (): string => {
-        let tempFilePath;
-        do {
-            tempFilePath = path.join(os.tmpdir(), `${uuid()}.${type}`);
-        } while (fs.existsSync(tempFilePath));
+    const tempFilePath = saveTempFile(firmware, type);
 
-        fs.writeFileSync(tempFilePath, firmware);
-
-        return tempFilePath;
-    };
-
-    const tempFilePath = saveTemp();
     try {
         await program(
             device,
@@ -154,7 +130,7 @@ const programBuffer = async (
 
 export default async (
     device: NrfutilDeviceWithSerialnumber,
-    firmware: { buffer: Buffer; type: 'hex' | 'zip' } | string,
+    firmware: { buffer: Buffer; type: FileExtensions } | string,
     onProgress?: (progress: Progress) => void,
     core?: DeviceCore,
     programmingOptions?: ProgrammingOptions,
@@ -169,15 +145,17 @@ export default async (
             programmingOptions,
             controller
         );
-    } else {
-        await programBuffer(
-            device,
-            firmware.buffer,
-            firmware.type,
-            onProgress,
-            core,
-            programmingOptions,
-            controller
-        );
+
+        return;
     }
+
+    await programBuffer(
+        device,
+        firmware.buffer,
+        firmware.type,
+        onProgress,
+        core,
+        programmingOptions,
+        controller
+    );
 };

@@ -14,7 +14,12 @@ import packageJson from '../src/utils/packageJson';
 import { sendErrorReport, sendUsageData } from '../src/utils/usageData';
 import { getNrfutilLogger } from './nrfutilLogger';
 import {
+    prepareExecNrfutilError,
+    prepareExecNrfutilErrorMessage,
+} from './sandboxHelpers';
+import {
     BackgroundTask,
+    CommonParserCallbacks,
     LogLevel,
     LogMessage,
     ModuleVersion,
@@ -26,10 +31,15 @@ import {
 } from './sandboxTypes';
 
 const parseJsonBuffers = <T>(data: Buffer): T[] | undefined => {
+    // bcz if data is undefined data.toString().trim() will throw an exception
+    if (!data) return undefined;
+
     const dataString = data.toString().trim();
+
     if (!dataString.endsWith('}')) {
         return undefined;
     }
+
     try {
         return JSON.parse(`[${dataString.replaceAll('}\n{', '}\n,{')}]`) ?? [];
     } catch {
@@ -59,13 +69,7 @@ const prepareEnv = (baseDir: string, module: string, version: string) => {
 
 const commonParser = <Result>(
     data: Buffer,
-    callbacks: {
-        onProgress?: (progress: Progress, task?: Task) => void;
-        onInfo?: (info: Result) => void;
-        onTaskBegin?: (taskEnd: TaskBegin) => void;
-        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void;
-        onLogging?: (logging: LogMessage) => void;
-    }
+    callbacks: CommonParserCallbacks<Result>
 ): Buffer | undefined => {
     const parsedData: NrfutilJson<Result>[] | undefined =
         parseJsonBuffers(data);
@@ -146,23 +150,20 @@ export class NrfutilSandbox {
     };
 
     public isSandboxInstalled = async () => {
-        if (
-            fs.existsSync(
-                path.join(
-                    this.baseDir,
-                    'nrfutil-sandboxes',
-                    this.module,
-                    this.version,
-                    'bin',
-                    `nrfutil-${this.module}${
-                        os.platform() === 'win32' ? '.exe' : ''
-                    }`
-                )
-            )
-        ) {
+        const pathToSandbox = path.join(
+            this.baseDir,
+            'nrfutil-sandboxes',
+            this.module,
+            this.version,
+            'bin',
+            `nrfutil-${this.module}${os.platform() === 'win32' ? '.exe' : ''}`
+        );
+
+        if (fs.existsSync(pathToSandbox)) {
             const moduleVersion = await this.getModuleVersion();
             return moduleVersion.version === this.version;
         }
+
         return false;
     };
 
@@ -173,15 +174,19 @@ export class NrfutilSandbox {
             getNrfutilLogger()?.info(
                 `Preparing nrfutil-${this.module} version: ${this.version}`
             );
+
             sendUsageData(`Preparing nrfutil-${this.module}`, this.version);
+
             await this.execNrfutil(
                 'install',
                 [`${this.module}=${this.version}`, '--force'],
                 onProgress
             );
+
             getNrfutilLogger()?.info(
                 `Successfully installed nrfutil-${this.module} version ${this.version}`
             );
+
             sendUsageData(`Installed nrfutil-${this.module}`, this.version);
         } catch (error) {
             sendErrorReport(
@@ -189,6 +194,7 @@ export class NrfutilSandbox {
                     this.version
                 }. describeError: ${describeError(error)}`
             );
+
             throw error;
         }
     };
@@ -226,6 +232,8 @@ export class NrfutilSandbox {
                         },
                     }),
                 data => {
+                    // maybe add any separator for this log? like
+                    // stdErr += `${data.toString()} |||`;
                     stdErr += data.toString();
                 },
                 controller
@@ -234,35 +242,16 @@ export class NrfutilSandbox {
             if (!taskEnd.find(end => end.result === 'fail')) {
                 return { taskEnd, info };
             }
-            const errorMessage = taskEnd
-                .filter(end => end.result === 'fail')
-                .map(
-                    end =>
-                        `error: Code '${end.error?.code}' ${end.error?.description}, message: ${end.message}`
-                )
-                .join('\n');
+
+            const errorMessage = prepareExecNrfutilErrorMessage(taskEnd);
+
             sendErrorReport(
                 `stdError: ${stdErr}, errorMessage: ${errorMessage}`
             );
+
             throw new Error(stdErr ?? errorMessage);
         } catch (e) {
-            const error = e as Error;
-            let msg = error.message;
-
-            const taskEndMsg = taskEnd
-                .map(end => (end.message ? `Message: ${end.message}` : ''))
-                .filter(message => !!message)
-                .join('\n');
-
-            if (taskEndMsg) {
-                msg += `\n${taskEndMsg}`;
-            }
-
-            if (stdErr) {
-                msg += `\nstdErr: ${stdErr}`;
-            }
-
-            error.message = msg;
+            const error = prepareExecNrfutilError(e as Error, taskEnd, stdErr);
 
             sendErrorReport(error.message);
             throw error;
@@ -320,9 +309,10 @@ export class NrfutilSandbox {
                 const remainingBytes = parser(buffer);
                 if (remainingBytes) {
                     buffer = remainingBytes;
-                } else {
-                    buffer = Buffer.from('');
+                    return;
                 }
+
+                buffer = Buffer.from('');
             });
 
             nrfutil.stderr.on('data', (data: Buffer) => {
@@ -359,10 +349,11 @@ export class NrfutilSandbox {
                 }
 
                 parsedData.forEach(item => {
-                    if (!this.processLoggingData(item)) {
-                        if (item.type === 'info') {
-                            processors.onData(item.data);
-                        }
+                    if (
+                        !this.processLoggingData(item) &&
+                        item.type === 'info'
+                    ) {
+                        processors.onData(item.data);
                     }
                 });
             },

@@ -7,11 +7,11 @@
 import {
     BatchOperationWrapper,
     Callbacks,
-    convertDeviceCoreType,
     GetCoreInfoOperation,
 } from './batchTypes';
 import { DeviceCore } from './common';
 import { DeviceCoreInfo } from './getCoreInfo';
+import {convertDeviceCoreType} from "./batchHelpers";
 
 export default (
     core: DeviceCore,

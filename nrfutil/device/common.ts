@@ -15,26 +15,13 @@ import { getNrfutilLogger } from '../nrfutilLogger';
 import sandbox, { type NrfutilSandbox } from '../sandbox';
 import { Progress } from '../sandboxTypes';
 
-export const deviceTraitsToArgs = (traits: DeviceTraits) => {
-    const args: string[] = [];
-    const traitsString = Object.keys(traits)
-        .map(trait => (traits[trait as keyof DeviceTraits] ? trait : null))
-        .filter(t => t !== null)
-        .join(',');
-
-    if (traitsString.length > 0) {
-        args.push('--traits');
-        args.push(traitsString);
-    }
-
-    return args;
-};
-
 export type ResetKind =
     | 'RESET_SYSTEM'
     | 'RESET_HARD'
     | 'RESET_DEBUG'
     | 'RESET_PIN';
+
+export type FileExtensions = 'hex' | 'zip';
 
 export interface DeviceArrivedEvent {
     device: NrfutilDevice;
@@ -188,6 +175,21 @@ export interface SerialPort {
     vcom: number;
     path: string | null;
 }
+
+export const deviceTraitsToArgs = (traits: DeviceTraits) => {
+    const args: string[] = [];
+    const traitsString = Object.keys(traits)
+        .map(trait => (traits[trait as keyof DeviceTraits] ? trait : null))
+        .filter(t => t !== null)
+        .join(',');
+
+    if (traitsString.length > 0) {
+        args.push('--traits');
+        args.push(traitsString);
+    }
+
+    return args;
+};
 
 let deviceSandbox: NrfutilSandbox | undefined;
 let promiseDeviceSandbox: Promise<NrfutilSandbox> | undefined;

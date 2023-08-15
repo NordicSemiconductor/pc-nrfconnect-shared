@@ -2,6 +2,7 @@ import { type NrfutilSandbox } from '../sandbox';
 import { Progress } from '../sandboxTypes';
 export declare const deviceTraitsToArgs: (traits: DeviceTraits) => string[];
 export type ResetKind = 'RESET_SYSTEM' | 'RESET_HARD' | 'RESET_DEBUG' | 'RESET_PIN';
+export type FileExtensions = 'hex' | 'zip';
 export interface DeviceArrivedEvent {
     device: NrfutilDevice;
 }

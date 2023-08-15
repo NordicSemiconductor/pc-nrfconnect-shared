@@ -7,11 +7,11 @@
 import {
     BatchOperationWrapper,
     Callbacks,
-    convertDeviceCoreType,
     GetFwInfoOperation,
 } from './batchTypes';
 import { DeviceCore } from './common';
 import { FWInfo } from './getFwInfo';
+import {convertDeviceCoreType} from "./batchHelpers";
 
 export default (
     core: DeviceCore,
