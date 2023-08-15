@@ -7,9 +7,11 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
-import { Action, Reducer } from 'redux';
+import { Action as SimpleAction, Reducer } from 'redux';
 
-import createStore from '../src/store';
+import createStore, { AppThunk } from '../src/store';
+
+type Action = SimpleAction | AppThunk<never>;
 
 const createPreparedStore = (actions: Action[], appReducer?: Reducer) => {
     const store = createStore(appReducer);
