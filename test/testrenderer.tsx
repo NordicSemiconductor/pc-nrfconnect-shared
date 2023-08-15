@@ -7,13 +7,11 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
-import { Action, AnyAction, Reducer } from 'redux';
-import { ThunkAction } from 'redux-thunk';
+import { Action, Reducer } from 'redux';
 
-import createStore from '../src/store';
+import createStore, { AppThunk } from '../src/store';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TAction = ThunkAction<void, any, null, AnyAction>;
+type TAction = AppThunk<never>;
 
 const createPreparedStore = (
     actions: (Action | TAction)[],
