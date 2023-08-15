@@ -7,6 +7,17 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 88 - 2023-08-15
+
+### Changed
+
+-   `html` package json property has been moved to `nrfConnectForDesktop.html`.
+-   `nrfConnectForDesktop.html` is now opt-in and apps can be built without it.
+
+### Steps to upgrade
+
+-   Change `html` to `nrfConnectForDesktop.html` in the app package json.
+
 ## 87 - 2023-08-14
 
 ### Fixed
