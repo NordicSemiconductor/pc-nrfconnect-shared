@@ -66,7 +66,7 @@ export default async (
         }
 
         const newDeviceArrived =
-            data.event === 'Arrived' && data.device && data.device.serialNumber;
+            data.event === 'Arrived' && data.device?.serialNumber;
 
         if (newDeviceArrived) {
             onHotplugEvent.onDeviceArrived(
