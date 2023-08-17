@@ -61,5 +61,7 @@ export interface PackageJson {
         url: UrlString;
     };
     scripts?: ObjectContainingOptionalStrings;
-    html?: string;
+    nrfConnectForDesktop?: {
+        html?: string;
+    };
 }

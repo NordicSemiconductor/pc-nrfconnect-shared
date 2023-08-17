@@ -27,7 +27,7 @@ const tailwindConfig = () =>
           );
 
 function options(additionalOptions) {
-    const { dependencies } = JSON.parse(
+    const { dependencies, nrfConnectForDesktop } = JSON.parse(
         fs.readFileSync('package.json', 'utf8')
     );
 
@@ -37,8 +37,10 @@ function options(additionalOptions) {
             : undefined;
     const outdir = outfile ? undefined : './dist';
 
+    const appHasOwnHtml = nrfConnectForDesktop?.html !== undefined;
+
     return {
-        format: 'iife',
+        format: appHasOwnHtml ? 'iife' : 'cjs',
         outfile,
         outdir,
         target: 'chrome89',
@@ -55,6 +57,7 @@ function options(additionalOptions) {
             'serialport',
             '@electron/remote',
             '@nordicsemiconductor/nrf-device-lib-js',
+            ...(appHasOwnHtml ? [] : ['react']),
 
             // App dependencies
             ...Object.keys(dependencies ?? {}),

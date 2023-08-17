@@ -68,7 +68,6 @@ const checkMandatoryProperties = (packageJson: PackageJson) => {
         `description`,
         `displayName`,
         `engines.nrfconnect`,
-        `html`,
     ];
 
     const missingProperties = mandatoryProperties.filter(
@@ -84,6 +83,12 @@ const checkMandatoryProperties = (packageJson: PackageJson) => {
 const checkOptionalProperties = (packageJson: PackageJson) => {
     if (propertyIsMissing(packageJson)('homepage')) {
         warn('Please provide a property `homepage` in package.json.');
+    }
+
+    if (propertyIsMissing(packageJson)('nrfConnectForDesktop')) {
+        warn(
+            'Please provide a property `nrfConnectForDesktop.html` in package.json'
+        );
     }
 
     if (propertyIsMissing(packageJson)('repository.url')) {
