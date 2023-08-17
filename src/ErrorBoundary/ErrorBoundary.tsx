@@ -6,9 +6,9 @@
 
 import React, { ReactNode } from 'react';
 import { getCurrentWindow } from '@electron/remote';
-import { Device } from '@nordicsemiconductor/nrf-device-lib-js';
 
 import Button from '../Button/Button';
+import { Device } from '../Device/deviceSlice';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { CollapsibleGroup } from '../SidePanel/Group';
 import Spinner from '../Spinner/Spinner';
