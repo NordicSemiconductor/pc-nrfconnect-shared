@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 89 - 2023-08-17
+
+### Changed
+
+-   Updated nrf-device-lib-js to version 0.7.1.
+
 ## 88 - 2023-08-17
 
 ### Changed
