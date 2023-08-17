@@ -257,6 +257,7 @@ export class NrfutilSandbox {
         controller?: AbortController
     ) =>
         new Promise<void>((resolve, reject) => {
+            let aborting = false;
             const nrfutil = spawn(
                 path.join(this.baseDir, 'nrfutil'),
                 [
@@ -272,13 +273,23 @@ export class NrfutilSandbox {
                 }
             );
 
-            controller?.signal.addEventListener('abort', () => {
+            const listener = () => {
+                getNrfutilLogger()?.info(
+                    `Aborting ongoing nrfutil ${
+                        this.module
+                    } ${command} ${JSON.stringify(args)}`
+                );
+                aborting = true;
                 nrfutil.kill('SIGINT');
-            });
+            };
+
+            controller?.signal.addEventListener('abort', listener);
 
             let buffer = Buffer.from('');
 
             nrfutil.stdout.on('data', (data: Buffer) => {
+                if (controller?.signal.aborted) return;
+
                 buffer = Buffer.concat([buffer, data]);
                 const remainingBytes = parser(buffer);
                 if (remainingBytes) {
@@ -293,6 +304,18 @@ export class NrfutilSandbox {
             });
 
             nrfutil.on('close', code => {
+                controller?.signal.removeEventListener('abort', listener);
+                if (aborting) {
+                    reject(
+                        new Error(
+                            `Aborted ongoing nrfutil ${
+                                this.module
+                            } ${command} ${JSON.stringify(args)}`
+                        )
+                    );
+                    return;
+                }
+
                 if (code === 0) {
                     resolve();
                 } else {
