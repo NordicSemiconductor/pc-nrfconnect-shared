@@ -44,6 +44,7 @@ interface ObjectContainingOptionalStrings {
 
 interface nrfConnectForDesktop {
     nrfutil?: nrfutilModules;
+    html?: string;
 }
 
 interface nrfutilModules {
@@ -73,7 +74,4 @@ export interface PackageJson {
         url: UrlString;
     };
     scripts?: ObjectContainingOptionalStrings;
-    nrfConnectForDesktop?: {
-        html?: string;
-    };
 }
