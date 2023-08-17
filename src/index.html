@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="bundle.css">
     <script>
         const path = require('path');
-        const launcherPath = require('@electron/remote').app.getAppPath()
+        const params = new URL(window.location).searchParams;
+        const launcherPath = params.get('launcherPath')
         module.paths.unshift(path.join(launcherPath, '/node_modules'));
         document.write(
             '<link rel="stylesheet" href="'+launcherPath+'/dist/fonts.css" type="text/css" />'
