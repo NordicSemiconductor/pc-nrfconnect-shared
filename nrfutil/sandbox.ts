@@ -39,24 +39,29 @@ const parseJsonBuffers = <T>(data: Buffer): T[] | undefined => {
     }
 };
 
-const prepareEnv = (baseDir: string, module: string, version: string) => {
+const cleanedEnv = () => {
     const env = { ...process.env };
-    env.NRFUTIL_HOME = path.join(baseDir, 'nrfutil-sandboxes', module, version);
-    fs.mkdirSync(env.NRFUTIL_HOME, { recursive: true });
-
-    env.NRFUTIL_EXEC_PATH = path.join(env.NRFUTIL_HOME, 'bin');
-
-    if (env.NODE_ENV === 'production' && !env.NRF_OVERRIDE_NRFUTIL_SETTINGS) {
-        delete env.NRFUTIL_BOOTSTRAP_CONFIG_URL;
-        delete env.NRFUTIL_BOOTSTRAP_TARBALL_PATH;
-        delete env.NRFUTIL_DEVICE_PLUGINS_DIR_FORCE_NRFDL_LOCATION;
-        delete env.NRFUTIL_DEVICE_PLUGINS_DIR_FORCE_NRFUTIL_LIBDIR;
-        delete env.NRFUTIL_IGNORE_MISSING_SUBCOMMAND;
-        delete env.NRFUTIL_LOG;
-        delete env.NRFUTIL_PACKAGE_INDEX_URL;
+    if (
+        process.env.NODE_ENV === 'production' &&
+        !process.env.NRF_OVERRIDE_NRFUTIL_SETTINGS
+    ) {
+        Object.keys(env)
+            .filter(name => name.startsWith('NRFUTIL_'))
+            .forEach(name => delete env[name]);
     }
 
     return env;
+};
+
+const prepareEnv = (baseDir: string, module: string, version: string) => {
+    const home = path.join(baseDir, 'nrfutil-sandboxes', module, version);
+    fs.mkdirSync(home, { recursive: true });
+
+    return {
+        ...cleanedEnv(),
+        NRFUTIL_HOME: home,
+        NRFUTIL_EXEC_PATH: path.join(home, 'bin'),
+    };
 };
 
 const commonParser = <Result>(
