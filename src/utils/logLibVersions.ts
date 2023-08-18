@@ -11,8 +11,8 @@ import NrfutilDeviceLib from '../../nrfutil/device/device';
 import {
     describeVersion,
     resolveModuleVersion,
+    SubDependency,
 } from '../../nrfutil/moduleVersion';
-import { SubDependency } from '../../nrfutil/sandboxTypes';
 import logger from '../logging';
 
 const log = (description: string, moduleVersion?: SubDependency | string) => {

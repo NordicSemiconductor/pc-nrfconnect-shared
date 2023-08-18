@@ -19,7 +19,8 @@ export type { ImageType } from './device/getFwInfo';
 
 export { default as prepareSandbox } from './sandbox';
 export { NrfutilSandbox } from './sandbox';
-export type { Progress, SemanticVersion } from './sandboxTypes';
+export type { Progress } from './sandboxTypes';
+export type { SemanticVersion } from './moduleVersion';
 export type { Batch as DeviceBatch } from './device/batch';
 export type { Callbacks as BatchCallbacks } from './device/batchTypes';
 export type { GetProtectionStatusResult } from './device/getProtectionStatus';

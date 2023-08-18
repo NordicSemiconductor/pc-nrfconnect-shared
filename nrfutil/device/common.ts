@@ -200,9 +200,7 @@ export const getDeviceSandbox = async () => {
     if (!promiseDeviceSandbox) {
         promiseDeviceSandbox = sandbox(
             path.join(getAppDataDir(), '../'),
-            'device',
-            undefined,
-            undefined
+            'device'
         );
         deviceSandbox = await promiseDeviceSandbox;
 

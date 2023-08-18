@@ -10,14 +10,16 @@ import os from 'os';
 import path from 'path';
 
 import describeError from '../src/logging/describeError';
-import packageJson from '../src/utils/packageJson';
 import { sendErrorReport, sendUsageData } from '../src/utils/usageData';
+import {
+    getRequiredNrfutilModuleVersion,
+    ModuleVersion,
+} from './moduleVersion';
 import { getNrfutilLogger } from './nrfutilLogger';
 import {
     BackgroundTask,
     LogLevel,
     LogMessage,
-    ModuleVersion,
     NrfutilJson,
     Progress,
     Task,
@@ -478,34 +480,10 @@ export class NrfutilSandbox {
 export default async (
     baseDir: string,
     module: string,
-    version?: string,
-    onProgress?: (progress: Progress, task?: Task) => void
+    onProgress?: (progress: Progress, task?: Task) => void,
+    version: string = getRequiredNrfutilModuleVersion(module)
 ) => {
-    const env = { ...process.env };
-    let overrideVersion: string | undefined;
-    if (
-        process.env.NODE_ENV !== 'production' ||
-        (process.env.NODE_ENV === 'production' &&
-            !!process.env.NRF_OVERRIDE_NRFUTIL_SETTINGS)
-    ) {
-        overrideVersion =
-            env[`NRF_OVERRIDE_VERSION_${module.toLocaleUpperCase()}`] ??
-            undefined;
-    }
-
-    const moduleVersions = overrideVersion
-        ? [overrideVersion]
-        : packageJson().nrfConnectForDesktop?.nrfutil?.[module];
-
-    if (!version && (!moduleVersions || moduleVersions.length === 0)) {
-        throw new Error(`No version specified for nrfutil-${module}`);
-    }
-
-    const sandbox = new NrfutilSandbox(
-        baseDir,
-        module,
-        version ?? (moduleVersions?.[0] as string)
-    );
+    const sandbox = new NrfutilSandbox(baseDir, module, version);
 
     onProgress?.({ progressPercentage: 0 });
     const result = await sandbox.isSandboxInstalled();

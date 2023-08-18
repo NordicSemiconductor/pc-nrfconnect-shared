@@ -11,12 +11,6 @@ export interface BackgroundTask<T> {
 
 export type LogLevel = 'off' | 'error' | 'warn' | 'info' | 'debug' | 'trace';
 
-export type FeatureClassification =
-    | 'nrf-internal-confidential'
-    | 'nrf-internal'
-    | 'nrf-external-confidential'
-    | 'nrf-external';
-
 export type Task = {
     id: string;
     description: string;
@@ -112,67 +106,3 @@ export type LogMessage = {
     level: 'OFF' | 'ERROR' | 'WARN' | 'INFO' | 'DEBUG' | 'TRACE' | 'CRITICAL';
     message: string;
 };
-
-export interface SemanticVersion {
-    major: number;
-    minor: number;
-    patch: number;
-    semverPreNumeric?: number;
-    semverPreAlphaNumeric?: number;
-    semverMetadataNumeric?: number;
-    semverMetadataAlphaNumeric?: number;
-}
-
-type VersionFormat = 'incremental' | 'semantic' | 'string';
-
-export type Plugin = {
-    dependencies: Dependency[];
-    name: string;
-    versionFormat: VersionFormat;
-    version: VersionType;
-};
-
-export type Dependency = {
-    classification?: FeatureClassification;
-    name: string;
-    plugins?: Plugin[];
-    dependencies?: SubDependency[];
-    versionFormat: VersionFormat;
-    version: VersionType;
-};
-
-export type VersionType = SemanticVersion | string | number;
-
-export interface SubDependency {
-    name: string;
-    description?: string;
-    dependencies?: SubDependency[];
-    versionFormat: VersionFormat;
-    version: VersionType;
-}
-
-export type ModuleVersion = {
-    build_timestamp: string;
-    classification: FeatureClassification;
-    commit_date: string;
-    commit_hash: string;
-    dependencies: Dependency[];
-    host: string;
-    name: string;
-    version: string;
-};
-
-export const isSemanticVersion = (
-    version?: SubDependency
-): version is SubDependency & { version: SemanticVersion } =>
-    version?.versionFormat === 'semantic';
-
-export const isIncrementalVersion = (
-    version?: SubDependency
-): version is SubDependency & { version: number } =>
-    version?.versionFormat === 'incremental';
-
-export const isStringVersion = (
-    version?: SubDependency
-): version is SubDependency & { version: string } =>
-    version?.versionFormat === 'string';
