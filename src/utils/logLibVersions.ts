@@ -12,10 +12,14 @@ import {
     Dependency,
     describeVersion,
     findDependency,
+    ModuleVersion,
 } from '../../nrfutil/moduleVersion';
 import logger from '../logging';
 
-const log = (description: string, moduleVersion?: Dependency | string) => {
+const log = (
+    description: string,
+    moduleVersion?: Dependency | ModuleVersion
+) => {
     if (moduleVersion == null) {
         logger.warn(`Unable to detect version of ${description}.`);
     } else {
@@ -72,7 +76,7 @@ export default async () => {
         const moduleVersion = await NrfutilDeviceLib.getModuleVersion();
         const dependencies = moduleVersion.dependencies;
 
-        log('nrfutil-device', moduleVersion.version);
+        log('nrfutil-device', moduleVersion);
         log('nrf-device-lib', findDependency('nrfdl', dependencies));
         log('nrfjprog DLL', findDependency('jprog', dependencies));
         log('JLink', findDependency('JlinkARM', dependencies));

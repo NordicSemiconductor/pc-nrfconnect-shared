@@ -57,32 +57,32 @@ export type ModuleVersion = {
     version: string;
 };
 
-const isSemanticVersion = (
-    version?: Dependency
-): version is Dependency & { version: SemanticVersion } =>
-    version?.versionFormat === 'semantic';
+const isDependency = (
+    versioned?: Dependency | ModuleVersion
+): versioned is Dependency => versioned != null && 'versionFormat' in versioned;
 
-const isIncrementalVersion = (
-    version?: Dependency
-): version is Dependency & { version: number } =>
-    version?.versionFormat === 'incremental';
+const hasSemanticVersion = (
+    versioned?: Dependency | ModuleVersion
+): versioned is Dependency & { version: SemanticVersion } =>
+    isDependency(versioned) && versioned.versionFormat === 'semantic';
 
-const isStringVersion = (
-    version?: Dependency
-): version is Dependency & { version: string } =>
-    version?.versionFormat === 'string';
+const hasIncrementalVersion = (
+    versioned?: Dependency | ModuleVersion
+): versioned is Dependency & { version: number } =>
+    isDependency(versioned) && versioned.versionFormat === 'incremental';
 
-export const describeVersion = (version?: Dependency | string) => {
-    if (typeof version === 'string') {
-        return version;
+const hasStringVersion = (
+    versioned?: Dependency | ModuleVersion
+): versioned is ModuleVersion | (Dependency & { version: string }) =>
+    !isDependency(versioned) || versioned.versionFormat === 'string';
+
+export const describeVersion = (dependency?: Dependency | ModuleVersion) => {
+    if (hasSemanticVersion(dependency)) {
+        return `${dependency.version.major}.${dependency.version.minor}.${dependency.version.patch}`;
     }
 
-    if (isSemanticVersion(version)) {
-        return `${version.version.major}.${version.version.minor}.${version.version.patch}`;
-    }
-
-    if (isIncrementalVersion(version) || isStringVersion(version)) {
-        return String(version.version);
+    if (hasIncrementalVersion(dependency) || hasStringVersion(dependency)) {
+        return String(dependency.version);
     }
 
     return 'Unknown';
