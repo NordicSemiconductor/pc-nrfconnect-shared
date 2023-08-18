@@ -9,9 +9,31 @@ every new version is a new major version.
 
 ## 90 - UNRELEASED
 
+### Changed
+
+-   Replaced `device-lib-js` with `nrfutil device`.
+
+### Steps to upgrade
+
+-   Any usage in the app of `@nordicsemiconductor/pc-nrfconnect-shared` should
+    be replaced with the functions in `NrfutilDeviceLib` that can be imported
+    from `@nordicsemiconductor/pc-nrfconnect-shared/nrfutil`.
+-   Apps must add `nrfConnectForDesktop.nrfutil.device` and an array of
+    supported versions in there package.json file. Example
+
+```json
+{
+    "nrfConnectForDesktop": {
+        "nrfutil": {
+            "device": ["1.3.0"]
+        }
+    }
+}
+```
+
 ### Fixed
 
--   Fixed get getAppData() path.
+-   Fixed get `getAppData()` path.
 
 ## 89 - 2023-08-17
 
