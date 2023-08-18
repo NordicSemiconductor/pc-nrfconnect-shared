@@ -4,9 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import path from 'path';
-
-import { getAppDataDir } from '../../src/utils/appDirs';
+import { getUserDataDir } from '../../src/utils/appDirs';
 import {
     getIsLoggingVerbose,
     persistIsLoggingVerbose,
@@ -199,7 +197,7 @@ export const getDeviceSandbox = async () => {
 
     if (!promiseDeviceSandbox) {
         promiseDeviceSandbox = sandbox(
-            path.join(getAppDataDir(), '../'),
+            getUserDataDir(),
             'device',
             undefined,
             undefined
