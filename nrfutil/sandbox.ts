@@ -11,7 +11,6 @@ import path from 'path';
 
 import describeError from '../src/logging/describeError';
 import packageJson from '../src/utils/packageJson';
-import { sendErrorReport, sendUsageData } from '../src/utils/usageData';
 import { getNrfutilLogger } from './nrfutilLogger';
 import {
     BackgroundTask,
@@ -83,17 +82,9 @@ const commonParser = <Result>(
                 callbacks.onProgress?.(item.data.progress, item.data.task);
                 break;
             case 'task_begin':
-                sendUsageData(
-                    `Nrfutil ${item.data.task.name} begin`,
-                    `${item.data.task.name}`
-                );
                 callbacks.onTaskBegin?.(item.data);
                 break;
             case 'task_end':
-                sendUsageData(
-                    `Nrfutil ${item.data.task.name} complete`,
-                    `${item.data.task.name}`
-                );
                 callbacks.onTaskEnd?.(item.data);
                 break;
             case 'info':
@@ -176,7 +167,6 @@ export class NrfutilSandbox {
             getNrfutilLogger()?.info(
                 `Preparing nrfutil-${this.module} version: ${this.version}`
             );
-            sendUsageData(`Preparing nrfutil-${this.module}`, this.version);
             await this.execNrfutil(
                 'install',
                 [`${this.module}=${this.version}`, '--force'],
@@ -185,9 +175,8 @@ export class NrfutilSandbox {
             getNrfutilLogger()?.info(
                 `Successfully installed nrfutil-${this.module} version ${this.version}`
             );
-            sendUsageData(`Installed nrfutil-${this.module}`, this.version);
         } catch (error) {
-            sendErrorReport(
+            getNrfutilLogger()?.error(
                 `Error while installing nrfutil-${this.module} version: ${
                     this.version
                 }. describeError: ${describeError(error)}`
@@ -244,9 +233,6 @@ export class NrfutilSandbox {
                         `error: Code '${end.error?.code}' ${end.error?.description}, message: ${end.message}`
                 )
                 .join('\n');
-            sendErrorReport(
-                `stdError: ${stdErr}, errorMessage: ${errorMessage}`
-            );
             throw new Error(stdErr ?? errorMessage);
         } catch (e) {
             const error = e as Error;
@@ -266,8 +252,6 @@ export class NrfutilSandbox {
             }
 
             error.message = msg;
-
-            sendErrorReport(error.message);
             throw error;
         }
     };
