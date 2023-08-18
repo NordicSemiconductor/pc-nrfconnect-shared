@@ -5,7 +5,18 @@
  */
 
 import { TaskEnd } from '../sandboxTypes';
-import { BatchOperationWrapper, Callbacks } from './batchTypes';
+import {
+    BatchOperationWrapper,
+    Callbacks,
+    EraseOperation,
+    FirmwareReadOperation,
+    GetCoreInfoOperation,
+    GetFwInfoOperation,
+    ProgrammingOperation,
+    ProtectionGetOperation,
+    RecoverOperation,
+    ResetOperation,
+} from './batchTypes';
 import {
     DeviceCore,
     getDeviceSandbox,
@@ -13,6 +24,7 @@ import {
     ResetKind,
 } from './common';
 import eraseBatch from './eraseBatch';
+import { DeviceBuffer } from './firmwareRead';
 import firmwareReadBatch from './firmwareReadBatch';
 import { DeviceCoreInfo } from './getCoreInfo';
 import getCoreInfoBatch from './getCoreInfoBatch';
@@ -25,25 +37,38 @@ import programBatch from './programBatch';
 import recoverBatch from './recoverBatch';
 import resetBatch from './resetBatch';
 
-type BatchOperationWrapperUnknown = BatchOperationWrapper<unknown, unknown>;
+type BatchResult =
+    | void
+    | DeviceBuffer
+    | DeviceCoreInfo
+    | FWInfo
+    | GetProtectionStatusResult;
+
+type BatchOperation =
+    | BatchOperationWrapper<EraseOperation>
+    | BatchOperationWrapper<FirmwareReadOperation, DeviceBuffer>
+    | BatchOperationWrapper<GetCoreInfoOperation, DeviceCoreInfo>
+    | BatchOperationWrapper<GetFwInfoOperation, FWInfo>
+    | BatchOperationWrapper<ProgrammingOperation>
+    | BatchOperationWrapper<ProtectionGetOperation, GetProtectionStatusResult>
+    | BatchOperationWrapper<RecoverOperation>
+    | BatchOperationWrapper<ResetOperation>;
 
 export class Batch {
-    private operations: BatchOperationWrapperUnknown[];
+    private operations: BatchOperation[];
 
     private collectOperations: {
-        callback: (completedTasks: TaskEnd<unknown>[]) => void;
+        callback: (completedTasks: TaskEnd<BatchResult>[]) => void;
         operationId: number;
         count: number;
     }[] = [];
 
-    constructor(operations?: BatchOperationWrapperUnknown[]) {
+    constructor(operations?: BatchOperation[]) {
         this.operations = operations ?? [];
     }
 
     public erase(core: DeviceCore, callbacks?: Callbacks) {
-        this.operations.push(
-            eraseBatch(core, { callbacks }) as BatchOperationWrapperUnknown
-        );
+        this.operations.push(eraseBatch(core, { callbacks }));
 
         return this;
     }
@@ -52,7 +77,7 @@ export class Batch {
         this.operations.push(
             firmwareReadBatch(core, {
                 callbacks,
-            }) as BatchOperationWrapperUnknown
+            })
         );
 
         return this;
@@ -65,7 +90,7 @@ export class Batch {
         this.operations.push(
             getCoreInfoBatch(core, {
                 callbacks,
-            }) as BatchOperationWrapperUnknown
+            })
         );
 
         return this;
@@ -75,7 +100,7 @@ export class Batch {
         this.operations.push(
             getFwInfoBatch(core, {
                 callbacks,
-            }) as BatchOperationWrapperUnknown
+            })
         );
 
         return this;
@@ -88,7 +113,7 @@ export class Batch {
         this.operations.push(
             getProtectionStatusBatch(core, {
                 callbacks,
-            }) as BatchOperationWrapperUnknown
+            })
         );
 
         return this;
@@ -104,16 +129,14 @@ export class Batch {
             programBatch(firmware, core, {
                 programmingOptions,
                 callbacks,
-            }) as BatchOperationWrapperUnknown
+            })
         );
 
         return this;
     }
 
     public recover(core: DeviceCore, callbacks?: Callbacks) {
-        this.operations.push(
-            recoverBatch(core, { callbacks }) as BatchOperationWrapperUnknown
-        );
+        this.operations.push(recoverBatch(core, { callbacks }));
 
         return this;
     }
@@ -123,7 +146,7 @@ export class Batch {
             resetBatch(core, {
                 reset,
                 callbacks,
-            }) as BatchOperationWrapperUnknown
+            })
         );
 
         return this;
@@ -131,7 +154,7 @@ export class Batch {
 
     public collect(
         count: number,
-        callback: (completedTasks: TaskEnd<unknown>[]) => void
+        callback: (completedTasks: TaskEnd<BatchResult>[]) => void
     ) {
         this.collectOperations.push({
             callback,
@@ -145,10 +168,10 @@ export class Batch {
     public async run(
         device: NrfutilDeviceWithSerialnumber,
         controller?: AbortController | undefined
-    ): Promise<unknown[]> {
+    ): Promise<BatchResult[]> {
         let beginId = 0;
         let endId = 0;
-        const results: TaskEnd<unknown>[] = [];
+        const results: TaskEnd<BatchResult>[] = [];
 
         const operations = {
             operations: this.operations.map((operation, index) => ({
@@ -159,7 +182,7 @@ export class Batch {
 
         const sandbox = await getDeviceSandbox();
         try {
-            await sandbox.execSubcommand<unknown>(
+            await sandbox.execSubcommand<BatchResult>(
                 'execute-batch',
                 [
                     '--serial-number',
@@ -179,7 +202,9 @@ export class Batch {
                 taskEnd => {
                     results.push(taskEnd);
 
-                    this.operations[endId].onTaskEnd?.(taskEnd);
+                    this.operations[endId].onTaskEnd?.(
+                        taskEnd as TaskEnd<never>
+                    );
 
                     this.collectOperations
                         .filter(operation => operation.operationId === endId)
