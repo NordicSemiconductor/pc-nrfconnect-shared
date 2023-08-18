@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 90 - UNRELEASED
+
+### Fixed
+
+-   Fixed get getAppData() path.
+
 ## 89 - 2023-08-17
 
 ### Changed
