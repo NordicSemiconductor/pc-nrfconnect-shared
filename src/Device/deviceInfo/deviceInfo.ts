@@ -28,8 +28,7 @@
    through CSS, e.g. to change the colours.
 */
 
-import type { Device as NrfdlDevice } from '@nordicsemiconductor/nrf-device-lib-js';
-
+import { NrfutilDevice } from '../../../nrfutil';
 import type { Device as WrappedDevice } from '../deviceSlice';
 
 import nrf51logo from '!!@svgr!./nRF51-Series-logo.svg';
@@ -41,7 +40,7 @@ import ppkLogo from '!!@svgr!./ppk-logo.svg';
 import unknownLogo from '!!@svgr!./unknown-logo.svg';
 import unknownNordicLogo from '!!@svgr!./unknown-nordic-logo.svg';
 
-type Device = NrfdlDevice | WrappedDevice;
+type Device = NrfutilDevice | WrappedDevice;
 
 type DevicePCA =
     | 'PCA10028'
