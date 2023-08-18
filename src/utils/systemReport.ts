@@ -11,10 +11,7 @@ import pretty from 'prettysize';
 import type Systeminformation from 'systeminformation';
 
 import NrfutilDeviceLib from '../../nrfutil/device/device';
-import {
-    describeVersion,
-    resolveModuleVersion,
-} from '../../nrfutil/moduleVersion';
+import { describeVersion, findDependency } from '../../nrfutil/moduleVersion';
 import {
     deviceInfo as getDeviceInfo,
     productPageUrl,
@@ -75,10 +72,10 @@ const generalInfoReport = async () => {
         `    - python3: ${python3}`,
         `    - nrfutil-device: ${moduleVersion.version}`,
         `    - nrfjprog DLL: ${describeVersion(
-            resolveModuleVersion('jprog', dependencies)
+            findDependency('jprog', dependencies)
         )}`,
         `    - JLink: ${describeVersion(
-            resolveModuleVersion('JlinkARM', dependencies)
+            findDependency('JlinkARM', dependencies)
         )}`,
         '',
     ];

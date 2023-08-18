@@ -92,18 +92,20 @@ export const describeVersion = (version?: SubDependency | string) => {
     return 'Unknown';
 };
 
-type KnownModule = 'nrfdl' | 'jprog' | 'JlinkARM';
+type KnownDependencies = 'nrfdl' | 'jprog' | 'JlinkARM';
 
-const findTopLevel = (module: KnownModule, dependencies: Dependency[]) =>
-    dependencies.find(dependency => dependency.name === module);
+const findTopLevel = (
+    dependencyName: KnownDependencies,
+    dependencies: Dependency[]
+) => dependencies.find(dependency => dependency.name === dependencyName);
 
 const findInDependencies = (
-    module: KnownModule,
+    dependencyName: KnownDependencies,
     dependencies: Dependency[]
 ) => {
     if (dependencies.length > 0) {
-        return resolveModuleVersion(
-            module,
+        return findDependency(
+            dependencyName,
             dependencies.flatMap(dependency => [
                 ...(dependency.dependencies ?? []),
                 ...(dependency.plugins?.flatMap(
@@ -114,11 +116,12 @@ const findInDependencies = (
     }
 };
 
-export const resolveModuleVersion = (
-    module: KnownModule,
+export const findDependency = (
+    dependencyName: KnownDependencies,
     versions: Dependency[] = []
 ): Dependency | SubDependency | undefined =>
-    findTopLevel(module, versions) ?? findInDependencies(module, versions);
+    findTopLevel(dependencyName, versions) ??
+    findInDependencies(dependencyName, versions);
 
 const getOverriddenVersion = (module: string) => {
     const allowOverride =

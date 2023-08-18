@@ -6,10 +6,7 @@
 
 import { inMain as appDetails } from '../../ipc/appDetails';
 import NrfutilDeviceLib from '../../nrfutil/device/device';
-import {
-    describeVersion,
-    resolveModuleVersion,
-} from '../../nrfutil/moduleVersion';
+import { describeVersion, findDependency } from '../../nrfutil/moduleVersion';
 import { getAppDataDir } from '../utils/appDirs';
 import logLibVersions from '../utils/logLibVersions';
 import udevInstalled from '../utils/udevInstalled';
@@ -50,7 +47,7 @@ export default async () => {
     if (bundledJlink) {
         const dependencies = (await NrfutilDeviceLib.getModuleVersion())
             .dependencies;
-        const jlinkVersion = resolveModuleVersion('JlinkARM', dependencies);
+        const jlinkVersion = findDependency('JlinkARM', dependencies);
 
         if (!describeVersion(jlinkVersion).includes(bundledJlink)) {
             logger.info(

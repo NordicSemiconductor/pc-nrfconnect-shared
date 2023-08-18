@@ -10,7 +10,7 @@ import os from 'os';
 import NrfutilDeviceLib from '../../nrfutil/device/device';
 import {
     describeVersion,
-    resolveModuleVersion,
+    findDependency,
     SubDependency,
 } from '../../nrfutil/moduleVersion';
 import logger from '../logging';
@@ -73,9 +73,9 @@ export default async () => {
         const dependencies = moduleVersion.dependencies;
 
         log('nrfutil-device', moduleVersion.version);
-        log('nrf-device-lib', resolveModuleVersion('nrfdl', dependencies));
-        log('nrfjprog DLL', resolveModuleVersion('jprog', dependencies));
-        log('JLink', resolveModuleVersion('JlinkARM', dependencies));
+        log('nrf-device-lib', findDependency('nrfdl', dependencies));
+        log('nrfjprog DLL', findDependency('jprog', dependencies));
+        log('JLink', findDependency('JlinkARM', dependencies));
         if (
             process.platform === 'darwin' &&
             os.cpus()[0].model.includes('Apple')
