@@ -9,13 +9,13 @@ import os from 'os';
 
 import NrfutilDeviceLib from '../../nrfutil/device/device';
 import {
+    Dependency,
     describeVersion,
     findDependency,
-    SubDependency,
 } from '../../nrfutil/moduleVersion';
 import logger from '../logging';
 
-const log = (description: string, moduleVersion?: SubDependency | string) => {
+const log = (description: string, moduleVersion?: Dependency | string) => {
     if (moduleVersion == null) {
         logger.warn(`Unable to detect version of ${description}.`);
     } else {

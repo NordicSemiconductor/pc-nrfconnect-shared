@@ -25,27 +25,23 @@ export interface SemanticVersion {
 type VersionFormat = 'incremental' | 'semantic' | 'string';
 
 type Plugin = {
-    dependencies: Dependency[];
+    dependencies: TopLevelDependency[];
     name: string;
     versionFormat: VersionFormat;
     version: VersionType;
 };
 
-type Dependency = {
+interface TopLevelDependency extends Dependency {
     classification?: FeatureClassification;
-    name: string;
     plugins?: Plugin[];
-    dependencies?: SubDependency[];
-    versionFormat: VersionFormat;
-    version: VersionType;
-};
+}
 
 type VersionType = SemanticVersion | string | number;
 
-export interface SubDependency {
+export interface Dependency {
     name: string;
     description?: string;
-    dependencies?: SubDependency[];
+    dependencies?: Dependency[];
     versionFormat: VersionFormat;
     version: VersionType;
 }
@@ -55,28 +51,28 @@ export type ModuleVersion = {
     classification: FeatureClassification;
     commit_date: string;
     commit_hash: string;
-    dependencies: Dependency[];
+    dependencies: TopLevelDependency[];
     host: string;
     name: string;
     version: string;
 };
 
 const isSemanticVersion = (
-    version?: SubDependency
-): version is SubDependency & { version: SemanticVersion } =>
+    version?: Dependency
+): version is Dependency & { version: SemanticVersion } =>
     version?.versionFormat === 'semantic';
 
 const isIncrementalVersion = (
-    version?: SubDependency
-): version is SubDependency & { version: number } =>
+    version?: Dependency
+): version is Dependency & { version: number } =>
     version?.versionFormat === 'incremental';
 
 const isStringVersion = (
-    version?: SubDependency
-): version is SubDependency & { version: string } =>
+    version?: Dependency
+): version is Dependency & { version: string } =>
     version?.versionFormat === 'string';
 
-export const describeVersion = (version?: SubDependency | string) => {
+export const describeVersion = (version?: Dependency | string) => {
     if (typeof version === 'string') {
         return version;
     }
@@ -96,12 +92,12 @@ type KnownDependencies = 'nrfdl' | 'jprog' | 'JlinkARM';
 
 const findTopLevel = (
     dependencyName: KnownDependencies,
-    dependencies: Dependency[]
+    dependencies: TopLevelDependency[]
 ) => dependencies.find(dependency => dependency.name === dependencyName);
 
 const findInDependencies = (
     dependencyName: KnownDependencies,
-    dependencies: Dependency[]
+    dependencies: TopLevelDependency[]
 ) => {
     if (dependencies.length > 0) {
         return findDependency(
@@ -118,8 +114,8 @@ const findInDependencies = (
 
 export const findDependency = (
     dependencyName: KnownDependencies,
-    versions: Dependency[] = []
-): Dependency | SubDependency | undefined =>
+    versions: TopLevelDependency[] = []
+): Dependency | undefined =>
     findTopLevel(dependencyName, versions) ??
     findInDependencies(dependencyName, versions);
 
