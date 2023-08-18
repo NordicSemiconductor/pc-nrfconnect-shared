@@ -16,10 +16,10 @@ const getUserDataDir = () => getGlobal('userDataDir');
  *
  * @returns {string|undefined} Absolute path of current app.
  */
-function getAppDir() {
+const getAppDir = () => {
     const html = packageJson()?.nrfConnectForDesktop?.html ?? '';
     return __filename.replace(html, '');
-}
+};
 
 /**
  * Get the filesystem path of a file for the currently loaded app.
@@ -27,26 +27,21 @@ function getAppDir() {
  * @param {string} filename relative name of file in the app directory
  * @returns {string|undefined} Absolute path of file.
  */
-function getAppFile(filename: string) {
-    return path.resolve(getAppDir(), filename);
-}
+const getAppFile = (filename: string) => path.resolve(getAppDir(), filename);
 
 /**
  * Get the filesystem path of the data directory of currently loaded app.
  *
  * @returns {string|undefined} Absolute path of data directory of the current app.
  */
-function getAppDataDir() {
-    return `${getUserDataDir()}${path.basename(getAppDir())}`;
-}
+const getAppDataDir = () =>
+    path.join(getUserDataDir(), path.basename(getAppDir()));
 
 /**
  * Get the filesystem path of the log directory of currently loaded app.
  *
  * @returns {string|undefined} Absolute path of data directory of the current app.
  */
-function getAppLogDir() {
-    return `${getAppDataDir()}/logs`;
-}
+const getAppLogDir = () => path.join(getAppDataDir(), 'logs');
 
 export { getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir };
