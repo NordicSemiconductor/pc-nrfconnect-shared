@@ -8,18 +8,15 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
 
+import NrfutilDeviceLib from '../../nrfutil/device/device';
 import Button from '../Button/Button';
 import Card from '../Card/Card';
-import { setVerboseDeviceLibLogging } from '../Device/deviceLibWrapper';
 import {
     deviceInfo,
     getDevices,
     selectedSerialNumber,
 } from '../Device/deviceSlice';
-import {
-    isLoggingVerboseSelector,
-    toggleIsLoggingVerbose,
-} from '../Log/logSlice';
+import { isLoggingVerbose, setIsLoggingVerbose } from '../Log/logSlice';
 import { Toggle } from '../Toggle/Toggle';
 import { persistIsLoggingVerbose } from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
@@ -30,7 +27,7 @@ export default () => {
     const dispatch = useDispatch();
     const devices = useSelector(getDevices);
     const currentSerialNumber = useSelector(selectedSerialNumber);
-    const verboseLogging = useSelector(isLoggingVerboseSelector);
+    const verboseLogging = useSelector(isLoggingVerbose);
     const currentDevice = useSelector(deviceInfo);
 
     return (
@@ -74,9 +71,9 @@ export default () => {
                         <Toggle
                             id="enableVerboseLoggin"
                             label="VERBOSE LOGGING"
-                            onToggle={() => {
-                                setVerboseDeviceLibLogging(!verboseLogging);
-                                dispatch(toggleIsLoggingVerbose());
+                            onToggle={isToggled => {
+                                NrfutilDeviceLib.setVerboseLogging(isToggled);
+                                dispatch(setIsLoggingVerbose(isToggled));
                             }}
                             isToggled={verboseLogging}
                             variant="primary"

@@ -7,23 +7,10 @@
 import { app } from '@electron/remote';
 import {
     createContext,
-    Error,
-    LogEvent,
     ModuleVersion,
-    setLogLevel,
-    setLogPattern,
     setTimeoutConfig,
-    startLogEvents,
-    stopLogEvents,
 } from '@nordicsemiconductor/nrf-device-lib-js';
 import path from 'path';
-
-import { isLoggingVerbose } from '../Log/logSlice';
-import logger from '../logging';
-import {
-    getIsLoggingVerbose,
-    persistIsLoggingVerbose,
-} from '../utils/persistentStore';
 
 let deviceLibContext = 0n;
 export const getDeviceLibContext = () => {
@@ -54,59 +41,6 @@ const initDeviceLib = () => {
         enumerateMs: 3 * 60 * 1000,
     });
 };
-
-export const logNrfdlLogs = (evt: LogEvent) => {
-    if (process.env.NODE_ENV === 'production' && !isLoggingVerbose()) return;
-    switch (evt.level) {
-        case 'NRFDL_LOG_TRACE':
-            logger.verbose(evt.message);
-            break;
-        case 'NRFDL_LOG_DEBUG':
-            logger.debug(evt.message);
-            break;
-        case 'NRFDL_LOG_INFO':
-            logger.info(evt.message);
-            break;
-        case 'NRFDL_LOG_WARNING':
-            logger.warn(evt.message);
-            break;
-        case 'NRFDL_LOG_ERROR':
-            logger.error(evt.message);
-            break;
-        case 'NRFDL_LOG_CRITICAL':
-            logger.error(evt.message);
-            break;
-    }
-};
-
-export const forwardLogEventsFromDeviceLib = () => {
-    setLogPattern(getDeviceLibContext(), '[%n][%l](%T.%e) %v');
-    setVerboseDeviceLibLogging(getIsLoggingVerbose());
-
-    // Only the first reset after selecting "reset with verbose logging" is relevant
-    persistIsLoggingVerbose(false);
-
-    const taskId = startLogEvents(
-        getDeviceLibContext(),
-        (err?: Error) => {
-            if (err)
-                logger.logError(
-                    'Error while listening to log messages from nrf-device-lib',
-                    err
-                );
-        },
-        (evt: LogEvent) => logNrfdlLogs(evt)
-    );
-    return () => {
-        stopLogEvents(taskId);
-    };
-};
-
-export const setVerboseDeviceLibLogging = (verboseLogging: boolean) =>
-    setLogLevel(
-        getDeviceLibContext(),
-        verboseLogging ? 'NRFDL_LOG_TRACE' : 'NRFDL_LOG_ERROR'
-    );
 
 type KnownModule = 'nrfdl' | 'nrfdl-js' | 'jprog' | 'JlinkARM';
 

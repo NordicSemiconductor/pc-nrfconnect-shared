@@ -6,9 +6,9 @@
 
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import type Systeminformation from 'systeminformation';
+import winston from 'winston';
 
 import type { PackageJson } from '../../ipc/MetaFiles';
-import logger from '../logging';
 import { isDevelopment } from './environment';
 import {
     deleteIsSendingUsageData,
@@ -67,7 +67,7 @@ export const init = (packageJson: PackageJson) => {
         };
     });
 
-    logger.debug(
+    logger?.debug(
         `Application Insights for category ${applicationName} has initialized`
     );
 
@@ -85,7 +85,7 @@ export const init = (packageJson: PackageJson) => {
  * @returns {Boolean} returns whether the setting is on, off or undefined
  */
 export const isInitialized = () => {
-    logger.debug(
+    logger?.debug(
         `Usage report instance is${
             insights !== undefined ? '' : ' not'
         } initialized`
@@ -100,7 +100,7 @@ export const isInitialized = () => {
  */
 export const isEnabled = () => {
     const isSendingUsageData = getIsSendingUsageData();
-    logger.debug(`Usage data is ${isSendingUsageData}`);
+    logger?.debug(`Usage data is ${isSendingUsageData}`);
     return isSendingUsageData;
 };
 
@@ -111,7 +111,7 @@ export const isEnabled = () => {
  */
 export const enable = () => {
     persistIsSendingUsageData(true);
-    logger.debug('Usage data has been enabled');
+    logger?.debug('Usage data has been enabled');
 };
 
 /**
@@ -121,7 +121,7 @@ export const enable = () => {
  */
 export const disable = () => {
     persistIsSendingUsageData(false);
-    logger.debug('Usage data has been disabled');
+    logger?.debug('Usage data has been disabled');
 };
 
 /**
@@ -132,7 +132,7 @@ export const disable = () => {
  */
 export const reset = () => {
     deleteIsSendingUsageData();
-    logger.debug('Usage data setting has been reset');
+    logger?.debug('Usage data setting has been reset');
 };
 
 /**
@@ -145,7 +145,7 @@ const sendEvent = ({ action, label }: EventAction) => {
     const isSendingUsageData = getIsSendingUsageData();
 
     if (isSendingUsageData && insights !== undefined) {
-        logger.debug(`Sending usage data ${action} ${label}`);
+        logger?.debug(`Sending usage data ${action} ${label}`);
         insights.trackEvent({
             name: action,
             properties: label ? { label } : undefined,
@@ -174,7 +174,7 @@ export const sendUsageData = <T extends string>(action: T, label?: string) => {
  * @returns {void}
  */
 export const sendErrorReport = (error: string) => {
-    logger.error(error);
+    logger?.error(error);
     insights?.trackException({
         exception: new Error(error),
     });
@@ -182,6 +182,11 @@ export const sendErrorReport = (error: string) => {
         'Report error',
         `${process.platform}; ${process.arch}; ${error}`
     );
+};
+
+let logger: winston.Logger | undefined;
+export const setUsageLogger = (log: winston.Logger) => {
+    logger = log;
 };
 
 export default {

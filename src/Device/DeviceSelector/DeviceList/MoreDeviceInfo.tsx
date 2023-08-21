@@ -5,8 +5,8 @@
  */
 
 import React, { ReactNode } from 'react';
-import { SerialPort } from '@nordicsemiconductor/nrf-device-lib-js';
 
+import { SerialPort } from '../../../../nrfutil/device/common';
 import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
 import { Device } from '../../deviceSlice';
 

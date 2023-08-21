@@ -14,10 +14,13 @@ export interface SourceJson {
 export type WithdrawnJson = UrlString[];
 
 export type AppVersions = {
-    [version: string]: {
-        shasum?: string;
-        tarballUrl: UrlString;
-    };
+    [version: string]: AppVersion;
+};
+
+export type AppVersion = {
+    shasum?: string;
+    tarballUrl: UrlString;
+    nrfutilModules?: nrfutilModules;
 };
 
 export interface AppInfo {
@@ -39,6 +42,15 @@ interface ObjectContainingOptionalStrings {
     [index: string]: string | undefined;
 }
 
+interface nrfConnectForDesktop {
+    nrfutil?: nrfutilModules;
+    html?: string;
+}
+
+interface nrfutilModules {
+    [index: string]: string[] | undefined;
+}
+
 export interface PackageJson {
     name: string;
     version: string;
@@ -52,6 +64,7 @@ export interface PackageJson {
     devDependencies?: ObjectContainingOptionalStrings;
     displayName?: string;
     engines?: ObjectContainingOptionalStrings;
+    nrfConnectForDesktop?: nrfConnectForDesktop;
     files?: readonly string[];
     license?: string;
     main?: string;
@@ -61,7 +74,4 @@ export interface PackageJson {
         url: UrlString;
     };
     scripts?: ObjectContainingOptionalStrings;
-    nrfConnectForDesktop?: {
-        html?: string;
-    };
 }

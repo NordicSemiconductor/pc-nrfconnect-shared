@@ -7,11 +7,33 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 90 - UNRELEASED
+## 90 - 2023-08-21
+
+### Changed
+
+-   Replaced `device-lib-js` with `nrfutil device`.
+
+### Steps to upgrade
+
+-   Any usage in the app of `@nordicsemiconductor/pc-nrfconnect-shared` should
+    be replaced with the functions in `NrfutilDeviceLib` that can be imported
+    from `@nordicsemiconductor/pc-nrfconnect-shared/nrfutil`.
+-   Apps must add `nrfConnectForDesktop.nrfutil.device` and an array of
+    supported versions in there package.json file. Example
+
+```json
+{
+    "nrfConnectForDesktop": {
+        "nrfutil": {
+            "device": ["1.3.0"]
+        }
+    }
+}
+```
 
 ### Fixed
 
--   Fixed get getAppData() path.
+-   Fixed get `getAppData()` path.
 
 ## 89 - 2023-08-17
 

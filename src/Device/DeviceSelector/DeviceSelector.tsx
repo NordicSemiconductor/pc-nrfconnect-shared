@@ -6,8 +6,8 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { DeviceTraits } from '@nordicsemiconductor/nrf-device-lib-js';
 
+import { DeviceTraits } from '../../../nrfutil/device/common';
 import useHotKey from '../../utils/useHotKey';
 import {
     getWaitingToAutoReselect,
@@ -31,13 +31,8 @@ import DeviceList from './DeviceList/DeviceList';
 import SelectDevice from './SelectDevice';
 import SelectedDevice from './SelectedDevice';
 
-interface OutdatedDeviceTraits {
-    serialPort?: boolean;
-    serialport?: boolean;
-}
-
 export interface Props {
-    deviceListing: DeviceTraits & OutdatedDeviceTraits;
+    deviceListing: DeviceTraits;
     deviceSetupConfig?: DeviceSetupConfig;
     onDeviceSelected?: (device: Device, autoReselected: boolean) => void;
     onDeviceDeselected?: () => void;
@@ -104,13 +99,9 @@ export default ({
     );
 
     const doStartWatchingDevices = useCallback(() => {
-        const patchedDeviceListing = {
-            serialPorts: deviceListing.serialPort || deviceListing.serialport,
-            ...deviceListing,
-        };
         dispatch(
             startWatchingDevices(
-                patchedDeviceListing,
+                deviceListing,
                 onDeviceConnected,
                 onDeviceDisconnected,
                 onDeviceDeselected,

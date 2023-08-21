@@ -15,6 +15,10 @@ jest.mock('../Log/LogViewer', () => ({
     default: () => null,
 }));
 
+jest.mock('../logging/index.ts', () => ({
+    initialise: () => {},
+}));
+
 const renderApp = (panes: Pane[]) => {
     const dummyReducer = (s = null) => s;
     const dummyNode = <div />;
