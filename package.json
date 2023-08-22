@@ -28,9 +28,6 @@
         "clean": "rimraf dist typings/generated dist scripts/nordic-publish.js",
         "postinstall": "ts-node scripts/postinstall.ts"
     },
-    "peerDependencies": {
-        "@nordicsemiconductor/nrf-device-lib-js": ">=0.7.1"
-    },
     "dependencies": {
         "@electron/remote": "^2.0.4",
         "@mdi/font": "7.2.96",

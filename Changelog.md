@@ -30,6 +30,8 @@ every new version is a new major version.
 ### Removed
 
 -   Exported, obsolete function `getDeviceLibContext()`.
+-   Peer dependency and any remaining support for
+    `@nordicsemiconductor/nrf-device-lib-js`.
 
 ## 90 - 2023-08-21
 
