@@ -27,6 +27,10 @@ every new version is a new major version.
 }
 ```
 
+### Removed
+
+-   Exported, obsolete function `getDeviceLibContext()`.
+
 ## 90 - 2023-08-21
 
 ### Changed

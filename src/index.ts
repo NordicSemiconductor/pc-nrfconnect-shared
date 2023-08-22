@@ -107,7 +107,6 @@ export {
 } from './Device/deviceAutoSelectSlice';
 export { clearWaitForDevice } from './Device/deviceLister';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
-export { getDeviceLibContext } from './Device/deviceLibWrapper';
 export { isDeviceInDFUBootloader } from './Device/sdfuOperations';
 export {
     default as sdfuOperations,
