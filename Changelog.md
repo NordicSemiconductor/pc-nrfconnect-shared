@@ -7,6 +7,26 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 91 - 2023-08-22
+
+### Changed
+
+-   Assert that the properties of objects in `nrfConnectForDesktop.nrfutil` in
+    `package.json` are really arrays with at least one entry. So e.g. all of
+    these entries would be rejected:
+
+```json
+{
+    "nrfConnectForDesktop": {
+        "nrfutil": {
+            "device": [], // Wrong: Empty array
+            "legacy": null, // Wrong: null
+            "toolchain-manager": "1.0.0" // Wrong: Not an array
+        }
+    }
+}
+```
+
 ## 90 - 2023-08-21
 
 ### Changed

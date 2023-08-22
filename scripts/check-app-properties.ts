@@ -89,6 +89,22 @@ const checkOptionalProperties = (packageJson: PackageJson) => {
         warn(
             'Please provide a property `nrfConnectForDesktop.html` in package.json'
         );
+    } else {
+        const nrfutilModules = packageJson.nrfConnectForDesktop?.nrfutil;
+        if (nrfutilModules != null) {
+            Object.entries(nrfutilModules).forEach(
+                ([moduleName, moduleVersions]) => {
+                    if (
+                        !Array.isArray(moduleVersions) ||
+                        moduleVersions.length === 0
+                    ) {
+                        fail(
+                            `For each module in \`nrfConnectForDesktop.nrfutil\` in package.json at least one version must be specified, but for \`${moduleName}\` none was specified.`
+                        );
+                    }
+                }
+            );
+        }
     }
 
     if (propertyIsMissing(packageJson)('repository.url')) {

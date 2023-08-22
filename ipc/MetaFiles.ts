@@ -53,7 +53,10 @@ export type NrfutilModuleName = string;
 export type NrfutilModuleVersion = SemverString;
 
 export interface NrfutilModules {
-    [name: NrfutilModuleName]: NrfutilModuleVersion[] | undefined;
+    [name: NrfutilModuleName]: [
+        NrfutilModuleVersion,
+        ...NrfutilModuleVersion[]
+    ];
 }
 
 export interface PackageJson {
