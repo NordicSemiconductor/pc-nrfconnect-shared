@@ -20,7 +20,7 @@ export type AppVersions = {
 export type AppVersion = {
     shasum?: string;
     tarballUrl: UrlString;
-    nrfutilModules?: nrfutilModules;
+    nrfutilModules?: NrfutilModules;
 };
 
 export interface AppInfo {
@@ -42,18 +42,26 @@ interface ObjectContainingOptionalStrings {
     [index: string]: string | undefined;
 }
 
-interface nrfConnectForDesktop {
-    nrfutil?: nrfutilModules;
+interface NrfConnectForDesktop {
+    nrfutil?: NrfutilModules;
     html?: string;
 }
 
-interface nrfutilModules {
-    [index: string]: string[] | undefined;
+type SemverString = string;
+
+export type NrfutilModuleName = string;
+export type NrfutilModuleVersion = SemverString;
+
+export interface NrfutilModules {
+    [name: NrfutilModuleName]: [
+        NrfutilModuleVersion,
+        ...NrfutilModuleVersion[]
+    ];
 }
 
 export interface PackageJson {
     name: string;
-    version: string;
+    version: SemverString;
 
     // Several optional properties
     author?: string;
@@ -64,7 +72,7 @@ export interface PackageJson {
     devDependencies?: ObjectContainingOptionalStrings;
     displayName?: string;
     engines?: ObjectContainingOptionalStrings;
-    nrfConnectForDesktop?: nrfConnectForDesktop;
+    nrfConnectForDesktop?: NrfConnectForDesktop;
     files?: readonly string[];
     license?: string;
     main?: string;

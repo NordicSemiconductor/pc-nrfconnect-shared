@@ -56,7 +56,6 @@ function options(additionalOptions) {
             'electron',
             'serialport',
             '@electron/remote',
-            '@nordicsemiconductor/nrf-device-lib-js',
             ...(appHasOwnHtml ? [] : ['react']),
 
             // App dependencies

@@ -40,5 +40,15 @@ export default () => {
 - Or if the app was packaged without a package.json, but in that case the launcher should not even launch this app.`);
     }
 
-    return packageJson as PackageJson;
+    /* We need an intermediate, less safe typecast to `unknown`: TypeScript
+       assumes for the properties of NrfutilModules that they are string[] but
+       we type them as [string, ...string[]] in PackageJson. And TypeScript
+       considers these two types as not compatible. We hopefully can remove this
+       typecast when we check the format of package.json with zod.
+
+       Rationale for typing the properties as [string, ...string[]]: We require
+       that always at least one version is provided and also check this in
+       `check-app-properties.ts`)
+      */
+    return packageJson as unknown as PackageJson;
 };

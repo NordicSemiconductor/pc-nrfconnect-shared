@@ -1,6 +1,6 @@
 {
     "name": "@nordicsemiconductor/pc-nrfconnect-shared",
-    "version": "90.0.0",
+    "version": "91.0.0",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -27,9 +27,6 @@
         "prepare-shared-release": "ts-node scripts/prepare-shared-release.ts",
         "clean": "rimraf dist typings/generated dist scripts/nordic-publish.js",
         "postinstall": "ts-node scripts/postinstall.ts"
-    },
-    "peerDependencies": {
-        "@nordicsemiconductor/nrf-device-lib-js": ">=0.7.1"
     },
     "dependencies": {
         "@electron/remote": "^2.0.4",
