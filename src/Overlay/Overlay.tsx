@@ -50,7 +50,7 @@ export default ({
                 <Tooltip
                     id={tooltipId}
                     show={show}
-                    className="tooltip"
+                    className="shared-tooltip"
                     onMouseEnter={() => {
                         if (keepShowingOnHoverTooltip) {
                             setShow(true);
