@@ -99,6 +99,10 @@ every new version is a new major version.
 -   Nrfutil device now support nrfutil device 1.4.x only
 -   Nrfutil device will not log in production unless verbose logging is on
 
+### Added
+
+-   `Overlay` component.
+
 ### Fixed
 
 -   Nrfutil device std error message string
