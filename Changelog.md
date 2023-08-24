@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 92 - 2023-08-24
+
+### Added
+
+-   Add functionality to send metrics and traces to telemetry.
+
 ## 91 - 2023-08-23
 
 ### Changed
