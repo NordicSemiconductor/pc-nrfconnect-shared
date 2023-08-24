@@ -60,8 +60,6 @@ const Button: React.FC<ButtonProps> = ({
                     'tw-bg-orange tw-text-white active:enabled:tw-bg-orange-700',
                 variant === 'danger' &&
                     'tw-bg-red tw-text-white active:enabled:tw-bg-red-700',
-                variant === 'link' &&
-                    'tw-bg-transparent tw-p-0 tw-text-nordicBlue hover:tw-underline',
                 variant === 'link-button' &&
                     'tw-border tw-border-nordicBlue tw-bg-white tw-text-nordicBlue active:enabled:tw-bg-gray-50',
                 className
