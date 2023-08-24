@@ -65,7 +65,7 @@ export default ({
                 </Tooltip>
             }
         >
-            <div>{children}</div>
+            <div className="tw-cursor-help">{children}</div>
         </OverlayTrigger>
     );
 };
