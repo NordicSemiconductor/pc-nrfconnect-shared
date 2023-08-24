@@ -13,7 +13,7 @@ import FtpClient from 'ftp';
 import semver from 'semver';
 import calculateShasum from 'shasum';
 
-import { AppInfo, PackageJson, SourceJson } from '../src/utils/AppTypes';
+import { AppInfo, PackageJson, SourceJson } from '../ipc/MetaFiles';
 import checkAppProperties from './check-app-properties';
 
 interface LegacyAppInfo {
@@ -378,8 +378,16 @@ const failBecauseOfMissingProperty = () => {
 const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
     const versions = await downloadExistingVersions(app);
 
-    const { name, displayName, description, homepage, version } =
-        app.packageJson;
+    const {
+        name,
+        displayName,
+        description,
+        homepage,
+        version,
+        nrfConnectForDesktop,
+    } = app.packageJson;
+
+    const nrfutilModules = nrfConnectForDesktop?.nrfutil;
 
     return {
         name,
@@ -394,6 +402,7 @@ const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
             [version]: {
                 tarballUrl: `${app.sourceUrl}/${app.filename}`,
                 shasum: app.shasum,
+                nrfutilModules,
             },
         },
     };

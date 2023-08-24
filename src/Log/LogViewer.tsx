@@ -7,8 +7,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { forwardLogEventsFromDeviceLib } from '../Device/deviceLibWrapper';
-import logger from '../logging';
 import sendInitialLogMessages from '../logging/sendInitialLogMessages';
 import LogEntry from './LogEntry';
 import {
@@ -22,8 +20,6 @@ import './log-viewer.scss';
 export const useInitialisedLog = () => {
     const dispatch = useDispatch();
     useEffect(() => {
-        logger.initialise();
-        forwardLogEventsFromDeviceLib();
         sendInitialLogMessages();
         const stopSyncLogToStore = startSyncLogToStore(dispatch);
 

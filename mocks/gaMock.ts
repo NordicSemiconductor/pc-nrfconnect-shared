@@ -1,9 +1,0 @@
-/*
- * Copyright (c) 2021 Nordic Semiconductor ASA
- *
- * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
- */
-
-export default jest.fn(() => ({
-    initialize: jest.fn(),
-}));

@@ -6,12 +6,14 @@
 
 import 'focus-visible';
 
-import React, { FC, ReactNode, useEffect, useMemo } from 'react';
+import React, { FC, ReactNode, useEffect, useMemo, useRef } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
+import ReactDOM from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { ipcRenderer } from 'electron';
 import { Reducer } from 'redux';
 
+import { inMain as openWindow } from '../../ipc/openWindow';
+import { setNrfutilLogger } from '../../nrfutil/nrfutilLogger';
 import About from '../About/About';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
 import { setAutoReselect } from '../Device/deviceAutoSelectSlice';
@@ -24,12 +26,13 @@ import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
 import FlashMessages from '../FlashMessage/FlashMessage';
 import LogViewer from '../Log/LogViewer';
+import logger from '../logging';
 import NavBar from '../NavBar/NavBar';
 import FeedbackPane, { FeedbackPaneProps } from '../Panes/FeedbackPane';
 import classNames from '../utils/classNames';
 import packageJson from '../utils/packageJson';
 import { getPersistedCurrentPane } from '../utils/persistentStore';
-import { init as usageDataInit } from '../utils/usageData';
+import { init as usageDataInit, setUsageLogger } from '../utils/usageData';
 import useHotKey from '../utils/useHotKey';
 import {
     currentPane as currentPaneSelector,
@@ -44,6 +47,7 @@ import VisibilityBar from './VisibilityBar';
 
 import './app.scss';
 import './shared.scss';
+import './tailwind.css';
 
 let usageDataAlreadyInitialised = false;
 const initialiseUsageData = () => {
@@ -91,6 +95,15 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     children,
     autoReselectByDefault = false,
 }) => {
+    const initialisedLogger = useRef(false);
+
+    if (!initialisedLogger.current) {
+        logger.initialise();
+        setNrfutilLogger(logger);
+        setUsageLogger(logger);
+        initialisedLogger.current = true;
+    }
+
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
@@ -101,7 +114,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
         hotKey: 'alt+l',
         title: 'Open launcher',
         isGlobal: true,
-        action: () => ipcRenderer.send('open-app-launcher'),
+        action: openWindow.openLauncher,
     });
 
     useEffect(() => {
@@ -248,4 +261,12 @@ const useAllPanes = (
     }, [dispatch, allPanes]);
 
     return allPanes;
+};
+
+export const render = (App: React.ReactElement) => {
+    const container = document.getElementById('webapp');
+    if (container == null) {
+        throw new Error('Unable to find root element <div id="webapp"></div>');
+    }
+    ReactDOM.render(App, container);
 };

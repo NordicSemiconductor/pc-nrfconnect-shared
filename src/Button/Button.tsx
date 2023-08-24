@@ -8,8 +8,6 @@ import React from 'react';
 
 import classNames from '../utils/classNames';
 
-import styles from './button.module.scss';
-
 export type ButtonVariants =
     | 'primary'
     | 'secondary'
@@ -18,7 +16,7 @@ export type ButtonVariants =
     | 'warning'
     | 'danger'
     | 'link'
-    | 'custom';
+    | 'link-button';
 
 type ButtonProps = {
     id?: string;
@@ -40,27 +38,39 @@ const Button: React.FC<ButtonProps> = ({
     title,
     large = false,
 }) => (
-    <button
-        type="button"
-        id={id}
-        className={classNames(
-            variant !== 'custom' && styles.button,
-            large && styles.large,
-            variant === 'primary' && styles.primary,
-            variant === 'secondary' && styles.secondary,
-            variant === 'success' && styles.success,
-            variant === 'info' && styles.info,
-            variant === 'warning' && styles.warning,
-            variant === 'danger' && styles.danger,
-            variant === 'link' && styles.link,
-            className
-        )}
-        disabled={disabled}
-        onClick={onClick}
-        title={title}
-    >
-        {children}
-    </button>
+    <div className={`tw-preflight ${className}`}>
+        <button
+            type="button"
+            id={id}
+            className={`${classNames(
+                large
+                    ? 'tw-h-8 tw-px-4 tw-text-sm'
+                    : 'tw-h-6 tw-px-2 tw-text-xs',
+                variant === 'primary' &&
+                    'tw-bg-nordicBlue tw-text-white active:enabled:tw-bg-nordicBlue-700',
+                variant === 'secondary' &&
+                    'tw-border tw-border-gray-700 tw-bg-white tw-text-gray-700  active:enabled:tw-bg-gray-50',
+                variant === 'success' &&
+                    'tw-bg-green tw-text-white  active:enabled:tw-bg-green-700',
+                variant === 'info' &&
+                    'tw-bg-nordicBlue tw-text-white active:enabled:tw-bg-nordicBlue-700',
+                variant === 'warning' &&
+                    'tw-bg-orange tw-text-white active:enabled:tw-bg-orange-700',
+                variant === 'danger' &&
+                    'tw-bg-red tw-text-white active:enabled:tw-bg-red-700',
+                variant === 'link' &&
+                    'tw-bg-transparent tw-p-0 tw-text-nordicBlue hover:tw-underline',
+                variant === 'link-button' &&
+                    'tw-border tw-border-nordicBlue tw-bg-white tw-text-nordicBlue active:enabled:tw-bg-gray-50',
+                className
+            )}`}
+            disabled={disabled}
+            onClick={onClick}
+            title={title}
+        >
+            {children}
+        </button>
+    </div>
 );
 
 export default Button;

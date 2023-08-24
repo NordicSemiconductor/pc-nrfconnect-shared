@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { readFileSync } from 'fs';
-
 /* Explanation for that cascade of eslint-disable-next-line and @ts-ignore:
    '../../../../package.json' will resolve correctly when `shared` is used in
    a real app, so it is fine.
@@ -32,22 +30,8 @@ import { readFileSync } from 'fs';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore This will be available when the app uses it.
 // eslint-disable-next-line import/no-unresolved
-import packageJsons from '../../../../package.json';
-import type { PackageJson } from './AppTypes';
-
-let packageJson: PackageJson = packageJsons;
-
-export const loadPackageJson = (packageJsonPath: string) => {
-    try {
-        packageJson = JSON.parse(
-            readFileSync(packageJsonPath, 'utf8')
-        ) as PackageJson;
-    } catch (e) {
-        console.error(
-            'Failed to read "package.json" of the app. Please tell the app developer to package it correctly.'
-        );
-    }
-};
+import packageJson from '../../../../../package.json';
+import type { PackageJson } from '../../ipc/MetaFiles';
 
 export default () => {
     if (packageJson == null) {
@@ -56,5 +40,15 @@ export default () => {
 - Or if the app was packaged without a package.json, but in that case the launcher should not even launch this app.`);
     }
 
-    return packageJson;
+    /* We need an intermediate, less safe typecast to `unknown`: TypeScript
+       assumes for the properties of NrfutilModules that they are string[] but
+       we type them as [string, ...string[]] in PackageJson. And TypeScript
+       considers these two types as not compatible. We hopefully can remove this
+       typecast when we check the format of package.json with zod.
+
+       Rationale for typing the properties as [string, ...string[]]: We require
+       that always at least one version is provided and also check this in
+       `check-app-properties.ts`)
+      */
+    return packageJson as unknown as PackageJson;
 };

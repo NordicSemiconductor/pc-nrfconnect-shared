@@ -1,19 +1,33 @@
+trigger:
+    - main
 pool:
-  vmImage: 'ubuntu-latest'
+    vmImage: 'ubuntu-latest'
+variables:
+    - group: wayland
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: 18
-- bash: |
-    set -o errexit -o pipefail
-    npm ci
-    npm run check
-    npm run generate-types
-    [[ $(git status --porcelain) ]] && echo "Generate types found changes" && exit 1
-    npm test -- --coverage --coverageReporters=cobertura
-  displayName: "Lint & test"
-- task: PublishCodeCoverageResults@1
-  displayName: Publish code coverage
-  inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml
+    - task: NodeTool@0
+      inputs:
+          versionSpec: 18
+    - script: |
+          set -o errexit -o pipefail
+          npm ci
+          npm run check
+          npm run postinstall
+          npm test -- --coverage --coverageReporters=cobertura
+          npm pack
+      displayName: 'Build, Test, Compile and Pack'
+    - bash: |
+          set -o errexit -o pipefail
+          cp *.tgz "$(Build.ArtifactStagingDirectory)"
+      condition: ne(variables['Build.Reason'], 'PullRequest')
+      displayName: 'Copy Artifacts'
+    - task: PublishCodeCoverageResults@1
+      displayName: Publish code coverage
+      inputs:
+          codeCoverageTool: Cobertura
+          summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml
+    - task: PublishPipelineArtifact@1
+      inputs:
+          targetPath: $(Build.ArtifactStagingDirectory)
+          publishLocation: 'pipeline'
+      displayName: 'Publish artifacts to artifact storage'

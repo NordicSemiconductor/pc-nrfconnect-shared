@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import reactGA from 'react-ga';
+import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import type Systeminformation from 'systeminformation';
+import winston from 'winston';
 
-import logger from '../logging';
-import { PackageJson } from './AppTypes';
+import type { PackageJson } from '../../ipc/MetaFiles';
 import { isDevelopment } from './environment';
 import {
     deleteIsSendingUsageData,
@@ -17,18 +17,15 @@ import {
     persistIsSendingUsageData,
 } from './persistentStore';
 
-const trackId = 'UA-22498474-5';
-const categoryName = () =>
-    isDevelopment ? `${appJson.name}-dev` : appJson.name;
+const instrumentationKey = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
 
 interface EventAction {
     action: string;
     label?: string;
 }
 
-let initialized = false;
-let appJson: PackageJson;
 let eventQueue: EventAction[] = [];
+let insights: ApplicationInsights | undefined;
 
 /**
  * Initialize instance to send user data
@@ -37,45 +34,49 @@ let eventQueue: EventAction[] = [];
  * @returns {Promise<void>} void
  */
 export const init = (packageJson: PackageJson) => {
-    appJson = packageJson;
+    const applicationName = isDevelopment
+        ? `${packageJson.name}-dev`
+        : packageJson.name;
+    const applicationVersion = packageJson.version;
 
     if (!getIsSendingUsageData()) return;
 
+    const accountId = getUsageDataClientId();
+
+    insights = new ApplicationInsights({
+        config: {
+            instrumentationKey,
+            accountId,
+        },
+    });
+
+    insights.loadAppInsights();
+    insights.trackPageView({ name: applicationName });
+
+    // Add app name and version to every event
+    insights.addTelemetryInitializer(envelope => {
+        const trace = {
+            ...(envelope.ext?.trace ?? {}),
+            name: applicationName,
+        };
+        envelope.ext = { ...envelope.ext, trace };
+        envelope.data = {
+            ...envelope.data,
+            applicationName,
+            applicationVersion,
+        };
+    });
+
+    logger?.debug(
+        `Application Insights for category ${applicationName} has initialized`
+    );
+
+    // Add 5 second delay to prevent inital rendering from beeing frozen.
     setTimeout(async () => {
-        const clientId = getUsageDataClientId();
-
-        logger.debug(`Client Id: ${clientId}`);
-
-        reactGA.initialize(trackId, {
-            debug: false,
-            titleCase: false,
-            gaOptions: {
-                storage: 'none',
-                storeGac: false,
-                clientId,
-            },
-        });
-
-        reactGA.set({
-            checkProtocolTask: null,
-            // According to Nordic Personal Data Processing Protocol for nRF Connect for Desktop
-            // https://projecttools.nordicsemi.no/confluence/display/ISMS/nRF+Connect+for+Desktop
-            // we set ip as anonymized in Google Analytics as described on page
-            // https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#anonymizeIp
-            anonymizeIp: true,
-        });
-
-        reactGA.pageview(appJson.name);
-
         // eslint-disable-next-line global-require
         const si = require('systeminformation') as typeof Systeminformation;
         sendUsageData('architecture', (await si.osInfo()).arch);
-
-        initialized = true;
-        logger.debug(
-            `Google Analytics for category ${categoryName()} has initialized`
-        );
-    }, 5000); // Add 5 second delay to prevent inital rendering from beeing frozen.
+    }, 5_000);
 };
 
 /**
@@ -84,10 +85,12 @@ export const init = (packageJson: PackageJson) => {
  * @returns {Boolean} returns whether the setting is on, off or undefined
  */
 export const isInitialized = () => {
-    logger.debug(
-        `Usage report instance is${initialized ? '' : ' not'} initialized`
+    logger?.debug(
+        `Usage report instance is${
+            insights !== undefined ? '' : ' not'
+        } initialized`
     );
-    return initialized;
+    return insights !== undefined;
 };
 
 /**
@@ -97,7 +100,7 @@ export const isInitialized = () => {
  */
 export const isEnabled = () => {
     const isSendingUsageData = getIsSendingUsageData();
-    logger.debug(`Usage data is ${isSendingUsageData}`);
+    logger?.debug(`Usage data is ${isSendingUsageData}`);
     return isSendingUsageData;
 };
 
@@ -108,7 +111,7 @@ export const isEnabled = () => {
  */
 export const enable = () => {
     persistIsSendingUsageData(true);
-    logger.debug('Usage data has enabled');
+    logger?.debug('Usage data has been enabled');
 };
 
 /**
@@ -118,7 +121,7 @@ export const enable = () => {
  */
 export const disable = () => {
     persistIsSendingUsageData(false);
-    logger.debug('Usage data has disabled');
+    logger?.debug('Usage data has been disabled');
 };
 
 /**
@@ -129,7 +132,7 @@ export const disable = () => {
  */
 export const reset = () => {
     deleteIsSendingUsageData();
-    logger.debug('Usage data has reset');
+    logger?.debug('Usage data setting has been reset');
 };
 
 /**
@@ -140,41 +143,59 @@ export const reset = () => {
  */
 const sendEvent = ({ action, label }: EventAction) => {
     const isSendingUsageData = getIsSendingUsageData();
-    const category = categoryName();
 
-    if (isSendingUsageData) {
-        const data = JSON.stringify({ category, action, label });
-        logger.debug(`Sending usage data ${data}`);
-        reactGA.event({ category, action, label });
+    if (isSendingUsageData && insights !== undefined) {
+        logger?.debug(`Sending usage data ${action} ${label}`);
+        insights.trackEvent({
+            name: action,
+            properties: label ? { label } : undefined,
+        });
     }
 };
 
 /**
- * Send usage data event to Google Analytics
+ * Send usage data event to Application Insights
  * @param {string} action The event action
  * @param {string} label The event label
  * @returns {void}
  */
 export const sendUsageData = <T extends string>(action: T, label?: string) => {
     eventQueue.push({ action, label });
-    if (!initialized) {
+    if (!isInitialized()) {
         return;
     }
     eventQueue.forEach(sendEvent);
     eventQueue = [];
 };
 
+export const sendMetric = (name: string, average: number) => {
+    insights?.trackMetric({
+        name,
+        average,
+    });
+};
+
+export const sendTrace = (message: string) => {
+    insights?.trackTrace({
+        message,
+    });
+};
+
 /**
- * Send error usage data event to Google Analytics and also show it in the logger view
+ * Send error usage data event to Application Insights and also show it in the logger view
  * @param {string} error The event action
  * @returns {void}
  */
 export const sendErrorReport = (error: string) => {
-    logger.error(error);
-    sendUsageData(
-        'Report error',
-        `${process.platform}; ${process.arch}; v${appJson?.version}; ${error}`
-    );
+    logger?.error(error);
+    insights?.trackException({
+        exception: new Error(error),
+    });
+};
+
+let logger: winston.Logger | undefined;
+export const setUsageLogger = (log: winston.Logger) => {
+    logger = log;
 };
 
 export default {

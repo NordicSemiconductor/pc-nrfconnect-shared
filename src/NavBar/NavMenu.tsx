@@ -36,12 +36,11 @@ const NavMenu = () => {
     });
 
     return (
-        <div data-testid="nav-menu">
+        <div data-testid="nav-menu" className="d-flex ml-3 flex-wrap">
             {paneNames.map((name, index: number) => (
                 <NavMenuItem
                     key={name}
                     index={index}
-                    isFirst={index === 0}
                     isSelected={currentPane === index}
                     label={name}
                 />

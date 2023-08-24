@@ -40,9 +40,11 @@ export default () => {
                 headerIcon=""
             />
             <Dialog.Body>
-                <Form.Group>
-                    <div>{message}</div>
-                </Form.Group>
+                {!progress && !progressMessage && (
+                    <Form.Group>
+                        <div>{message}</div>
+                    </Form.Group>
+                )}
                 {choices && (
                     <Form.Group>
                         {choices.map((choice, index) => (
@@ -53,6 +55,7 @@ export default () => {
                                 disabled={isInProgress}
                                 onClick={() => setSelectedChoices(index)}
                                 label={choice}
+                                checked={index === selectedChoices}
                             />
                         ))}
                     </Form.Group>

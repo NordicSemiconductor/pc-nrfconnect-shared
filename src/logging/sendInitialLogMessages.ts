@@ -4,61 +4,64 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { getModuleVersions } from '@nordicsemiconductor/nrf-device-lib-js';
-import { ipcRenderer } from 'electron';
-
+import { inMain as appDetails } from '../../ipc/appDetails';
+import NrfutilDeviceLib from '../../nrfutil/device/device';
 import {
-    getDeviceLibContext,
-    getModuleVersion,
-} from '../Device/deviceLibWrapper';
+    describeVersion,
+    resolveModuleVersion,
+} from '../../nrfutil/moduleVersion';
 import { getAppDataDir } from '../utils/appDirs';
-import describeVersion from '../utils/describeVersion';
 import logLibVersions from '../utils/logLibVersions';
+import udevInstalled from '../utils/udevInstalled';
 import logger from '.';
 
 let initialMessagesSent = false;
-export default () => {
+export default async () => {
     if (initialMessagesSent) return;
     initialMessagesSent = true;
 
     logLibVersions();
     logger.debug(`Application data folder: ${getAppDataDir()}`);
 
-    ipcRenderer.once('app-details', async (_event, details) => {
-        const {
-            name,
-            currentVersion,
-            engineVersion,
-            coreVersion,
-            corePath,
-            isOfficial,
-            installed,
-            homeDir,
-            tmpDir,
-            bundledJlink,
-        } = details;
+    const details = await appDetails.getAppDetails();
 
-        const official = isOfficial ? 'official' : 'local';
+    const {
+        name,
+        currentVersion,
+        engineVersion,
+        coreVersion,
+        corePath,
+        installed,
+        homeDir,
+        tmpDir,
+        bundledJlink,
+        source,
+    } = details;
 
-        logger.debug(`App ${name} v${currentVersion} ${official}`);
-        logger.debug(`App path: ${installed.path}`);
-        logger.debug(
-            `nRFConnect ${coreVersion}, required by the app is (${engineVersion})`
-        );
-        logger.debug(`nRFConnect path: ${corePath}`);
-        logger.debug(`HomeDir: ${homeDir}`);
-        logger.debug(`TmpDir: ${tmpDir}`);
+    logger.debug(`App ${name} v${currentVersion} (${source})`);
+    logger.debug(`App path: ${installed.path}`);
+    logger.debug(
+        `nRFConnect ${coreVersion}, required by the app is (${engineVersion})`
+    );
+    logger.debug(`nRFConnect path: ${corePath}`);
+    logger.debug(`HomeDir: ${homeDir}`);
+    logger.debug(`TmpDir: ${tmpDir}`);
 
-        if (bundledJlink) {
-            const versions = await getModuleVersions(getDeviceLibContext());
-            const jlinkVersion = getModuleVersion('JlinkARM', versions);
+    if (bundledJlink) {
+        const dependencies = (await NrfutilDeviceLib.getModuleVersion())
+            .dependencies;
+        const jlinkVersion = resolveModuleVersion('JlinkARM', dependencies);
 
-            if (!describeVersion(jlinkVersion).includes(bundledJlink)) {
-                logger.info(
-                    `Installed JLink version does not match the provided version (${bundledJlink})`
-                );
-            }
+        if (!describeVersion(jlinkVersion).includes(bundledJlink)) {
+            logger.info(
+                `Installed JLink version does not match the provided version (${bundledJlink})`
+            );
         }
-    });
-    ipcRenderer.send('get-app-details');
+    }
+
+    if (!udevInstalled()) {
+        logger.warn(
+            'Required component nrf-udev is not detected. Install it from https://github.com/NordicSemiconductor/nrf-udev and restart the application'
+        );
+    }
 };

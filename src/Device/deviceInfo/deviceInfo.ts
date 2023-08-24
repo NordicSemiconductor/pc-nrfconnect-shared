@@ -28,8 +28,8 @@
    through CSS, e.g. to change the colours.
 */
 
-import logger from '../../logging';
-import { Device } from '../deviceSlice';
+import { NrfutilDevice } from '../../../nrfutil';
+import type { Device as WrappedDevice } from '../deviceSlice';
 
 import nrf51logo from '!!@svgr!./nRF51-Series-logo.svg';
 import nrf52logo from '!!@svgr!./nRF52-Series-logo.svg';
@@ -39,6 +39,8 @@ import nrf91logo from '!!@svgr!./nRF91-Series-logo.svg';
 import ppkLogo from '!!@svgr!./ppk-logo.svg';
 import unknownLogo from '!!@svgr!./unknown-logo.svg';
 import unknownNordicLogo from '!!@svgr!./unknown-nordic-logo.svg';
+
+type Device = NrfutilDevice | WrappedDevice;
 
 type DevicePCA =
     | 'PCA10028'
@@ -181,11 +183,11 @@ const devicesByPca: { [P in DevicePCA]: DeviceInfo } = {
 };
 
 const deviceByPca = (device: Device) =>
-    devicesByPca[String(device.boardVersion).toUpperCase() as DevicePCA];
+    devicesByPca[String(device.jlink?.boardVersion).toUpperCase() as DevicePCA];
 
 const NORDIC_VENDOR_ID = '1915';
 const isNordicDevice = (device: Device) =>
-    device.serialport?.vendorId === NORDIC_VENDOR_ID;
+    device.serialPorts?.[0]?.vendorId === NORDIC_VENDOR_ID;
 
 const ppkDeviceInfo = (device: Device): DeviceInfo => ({
     name: device.usb?.product,
@@ -209,38 +211,31 @@ const deviceByUsb = (device: Device) => {
     return null;
 };
 
-let hasShownUdevWarning = false;
-const unknownDevice = (device: Device): DeviceInfo => {
-    if (
-        isNordicDevice(device) &&
-        process.platform === 'linux' &&
-        !hasShownUdevWarning
-    ) {
-        logger.warn(
-            'Could not properly detect an unknown device. Please make sure you have nrf-udev installed: https://github.com/NordicSemiconductor/nrf-udev'
-        );
-        hasShownUdevWarning = true;
-    }
-
-    return {
-        name: device.usb?.product,
-        icon: isNordicDevice(device) ? unknownNordicLogo : unknownLogo,
-        website: {},
-    };
-};
+const unknownDevice = (device: Device): DeviceInfo => ({
+    name: device.usb?.product,
+    icon: isNordicDevice(device) ? unknownNordicLogo : unknownLogo,
+    website: {},
+});
 
 export const deviceInfo = (device: Device): DeviceInfo =>
     deviceByPca(device) || deviceByUsb(device) || unknownDevice(device);
+
+const hasNickname = (
+    device: Device
+): device is WrappedDevice & Required<Pick<WrappedDevice, 'nickname'>> =>
+    'nickname' in device &&
+    device.nickname !== undefined &&
+    device.nickname.length > 0;
 
 export const displayedDeviceName = (
     device: Device,
     { respectNickname = true } = {}
 ) => {
-    if (respectNickname && device.nickname) {
+    if (respectNickname && hasNickname(device)) {
         return device.nickname;
     }
 
-    return deviceInfo(device).name || device.boardVersion || 'Unknown';
+    return deviceInfo(device).name || device.jlink?.boardVersion || 'Unknown';
 };
 
 export const productPageUrl = (device: Device) =>

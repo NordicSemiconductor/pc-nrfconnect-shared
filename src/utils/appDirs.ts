@@ -7,38 +7,19 @@
 import { getGlobal } from '@electron/remote';
 import path from 'path';
 
-import { loadPackageJson } from './packageJson';
+import packageJson from './packageJson';
 
 const getUserDataDir = () => getGlobal('userDataDir');
-
-declare global {
-    interface Window {
-        appDir: string;
-        appDataDir: string;
-        appLogDir: string;
-    }
-}
-
-function setAppDirs(
-    newAppDir: string,
-    newAppDataDir: string,
-    newAppLogDir: string
-) {
-    window.appDir = newAppDir;
-    window.appDataDir = newAppDataDir;
-    window.appLogDir = newAppLogDir;
-
-    loadPackageJson(getAppFile('package.json'));
-}
 
 /**
  * Get the filesystem path of the currently loaded app.
  *
  * @returns {string|undefined} Absolute path of current app.
  */
-function getAppDir() {
-    return window.appDir;
-}
+const getAppDir = () => {
+    const html = packageJson()?.nrfConnectForDesktop?.html ?? '';
+    return __filename.replace(html, '');
+};
 
 /**
  * Get the filesystem path of a file for the currently loaded app.
@@ -46,33 +27,21 @@ function getAppDir() {
  * @param {string} filename relative name of file in the app directory
  * @returns {string|undefined} Absolute path of file.
  */
-function getAppFile(filename: string) {
-    return path.resolve(getAppDir(), filename);
-}
+const getAppFile = (filename: string) => path.resolve(getAppDir(), filename);
 
 /**
  * Get the filesystem path of the data directory of currently loaded app.
  *
  * @returns {string|undefined} Absolute path of data directory of the current app.
  */
-function getAppDataDir() {
-    return window.appDataDir;
-}
+const getAppDataDir = () =>
+    path.join(getUserDataDir(), path.basename(getAppDir()));
 
 /**
  * Get the filesystem path of the log directory of currently loaded app.
  *
  * @returns {string|undefined} Absolute path of data directory of the current app.
  */
-function getAppLogDir() {
-    return window.appLogDir;
-}
+const getAppLogDir = () => path.join(getAppDataDir(), 'logs');
 
-export {
-    setAppDirs,
-    getAppDir,
-    getAppFile,
-    getAppDataDir,
-    getAppLogDir,
-    getUserDataDir,
-};
+export { getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir };
