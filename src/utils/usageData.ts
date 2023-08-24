@@ -168,6 +168,19 @@ export const sendUsageData = <T extends string>(action: T, label?: string) => {
     eventQueue = [];
 };
 
+export const sendMetric = (name: string, average: number) => {
+    insights?.trackMetric({
+        name,
+        average,
+    });
+};
+
+export const sendTrace = (message: string) => {
+    insights?.trackTrace({
+        message,
+    });
+};
+
 /**
  * Send error usage data event to Application Insights and also show it in the logger view
  * @param {string} error The event action
@@ -178,10 +191,6 @@ export const sendErrorReport = (error: string) => {
     insights?.trackException({
         exception: new Error(error),
     });
-    sendUsageData(
-        'Report error',
-        `${process.platform}; ${process.arch}; ${error}`
-    );
 };
 
 let logger: winston.Logger | undefined;
