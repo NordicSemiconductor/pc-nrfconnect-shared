@@ -38,6 +38,8 @@ export { default as StartStopButton } from './StartStopButton/StartStopButton';
 export { default as DocumentationSection } from './About/DocumentationSection';
 export { default as Stepper } from './Stepper/Stepper';
 export type { Step } from './Stepper/Stepper';
+export { default as ExternalLink } from './Link/ExternalLink';
+export { default as FileLink } from './Link/FileLink';
 
 export { default as SidePanel } from './SidePanel/SidePanel';
 export { Group, CollapsibleGroup } from './SidePanel/Group';
