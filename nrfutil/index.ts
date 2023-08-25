@@ -12,6 +12,7 @@ export type {
     ProtectionStatus,
     SerialPort as DeviceSerialPort,
     NrfutilDevice,
+    NrfutilDeviceWithSerialnumber,
 } from './device/common';
 
 export type { DeviceCoreInfo } from './device/getCoreInfo';
