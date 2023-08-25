@@ -15,7 +15,7 @@ import classNames from '../utils/classNames';
 import { colors } from '../utils/colors';
 import { FlashMessage, getMessages, removeMessage } from './FlashMessageSlice';
 
-import './flashMessage.css';
+import './FlashMessage.css';
 
 const SLIDE_IN_DURATION_MS = 300;
 const SLIDE_IN_ANIMATION = `${SLIDE_IN_DURATION_MS}ms slide-in`;
