@@ -507,24 +507,21 @@ export default async (
     return sandbox;
 };
 
-const defaultProgress: Progress = {
-    totalProgressPercentage: 0,
-    stepProgressPercentage: 0,
-    amountOfSteps: 1,
-    step: 1,
-};
-
 const convertNrfutilProgress = (progress: NrfutilProgress): Progress => {
-    const out = {
-        ...defaultProgress,
-        stepProgressPercentage: progress.progressPercentage,
+    const amountOfSteps = progress.amountOfSteps ?? 1;
+    const step = progress.step ?? 1;
+
+    const singleStepWeight = (1 / amountOfSteps) * 100;
+
+    const totalProgressPercentage =
+        singleStepWeight * (step - 1) +
+        progress.progressPercentage / amountOfSteps;
+
+    return {
         ...progress,
+        stepProgressPercentage: progress.progressPercentage,
+        totalProgressPercentage,
+        amountOfSteps,
+        step,
     };
-
-    const singleStepWeight = (1 / out.amountOfSteps) * 100;
-
-    out.totalProgressPercentage =
-        singleStepWeight * (out.step - 1) +
-        out.stepProgressPercentage / out.amountOfSteps;
-    return out;
 };
