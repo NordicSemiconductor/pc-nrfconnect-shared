@@ -8,7 +8,7 @@ import 'focus-visible';
 
 import React, { FC, ReactNode, useEffect, useMemo, useRef } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { useDispatch, useSelector } from 'react-redux';
 import { Reducer } from 'redux';
 
@@ -268,5 +268,5 @@ export const render = (App: React.ReactElement) => {
     if (container == null) {
         throw new Error('Unable to find root element <div id="webapp"></div>');
     }
-    ReactDOM.render(App, container);
+    createRoot(container).render(App);
 };
