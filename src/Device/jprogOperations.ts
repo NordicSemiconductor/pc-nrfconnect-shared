@@ -63,7 +63,7 @@ const programDeviceWithFw =
                 selectedFw.fw,
                 progress => {
                     onProgress(
-                        progress.progressPercentage,
+                        progress.totalProgressPercentage,
                         progress.message ?? 'programming'
                     );
                 },

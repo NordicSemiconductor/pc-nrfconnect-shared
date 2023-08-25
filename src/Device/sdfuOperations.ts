@@ -110,7 +110,7 @@ const updateBootloader =
                 { buffer: zipBuffer, type: 'zip' },
                 progress => {
                     onProgress(
-                        progress.progressPercentage,
+                        progress.totalProgressPercentage,
                         progress.message ?? 'Programming bootloader'
                     );
                 }
@@ -480,7 +480,10 @@ const programInDFUBootloader =
             device,
             { buffer: zipBuffer, type: 'zip' },
             progress => {
-                onProgress(progress.progressPercentage, progress.message ?? '');
+                onProgress(
+                    progress.totalProgressPercentage,
+                    progress.message ?? ''
+                );
             }
         )
             .then(() => {

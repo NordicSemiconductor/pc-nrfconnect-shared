@@ -18,6 +18,7 @@ import {
     LogMessage,
     ModuleVersion,
     NrfutilJson,
+    NrfutilProgress,
     Progress,
     Task,
     TaskBegin,
@@ -79,7 +80,10 @@ const commonParser = <Result>(
     const processItem = (item: NrfutilJson<Result>) => {
         switch (item.type) {
             case 'task_progress':
-                callbacks.onProgress?.(item.data.progress, item.data.task);
+                callbacks.onProgress?.(
+                    convertNrfutilProgress(item.data.progress),
+                    item.data.task
+                );
                 break;
             case 'task_begin':
                 callbacks.onTaskBegin?.(item.data);
@@ -492,13 +496,35 @@ export default async (
         version ?? (moduleVersions?.[0] as string)
     );
 
-    onProgress?.({ progressPercentage: 0 });
+    onProgress?.(convertNrfutilProgress({ progressPercentage: 0 }));
     const result = await sandbox.isSandboxInstalled();
 
     if (!result) {
         await sandbox.prepareSandbox(onProgress);
     }
 
-    onProgress?.({ progressPercentage: 100 });
+    onProgress?.(convertNrfutilProgress({ progressPercentage: 100 }));
     return sandbox;
+};
+
+const defaultProgress: Progress = {
+    totalProgressPercentage: 0,
+    stepProgressPercentage: 0,
+    amountOfSteps: 1,
+    step: 1,
+};
+
+const convertNrfutilProgress = (progress: NrfutilProgress): Progress => {
+    const out = {
+        ...defaultProgress,
+        stepProgressPercentage: progress.progressPercentage,
+        ...progress,
+    };
+
+    const singleStepWeight = (1 / out.amountOfSteps) * 100;
+
+    out.totalProgressPercentage =
+        singleStepWeight * (out.step - 1) +
+        out.stepProgressPercentage / out.amountOfSteps;
+    return out;
 };
