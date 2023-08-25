@@ -7,6 +7,25 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 93 - 2023-08-25
+
+### Added
+
+-   Nrfutil progress now has a new property `totalProgressPercentage` that
+    computes the progress across all steps
+
+### Changed
+
+-   Nrfutil progress properties `step` and `amountOfSteps` are now always
+    present
+-   Nrfutil progress properties `progressPercentage` has been renamed to
+    `stepProgressPercentage`
+
+### Steps to upgrade
+
+-   Any usage of Nrfutil property `progressPercentage` need to be renamed to
+    `stepProgressPercentage`
+
 ## 92 - 2023-08-24
 
 ### Added

@@ -18,6 +18,7 @@ import {
     LogMessage,
     ModuleVersion,
     NrfutilJson,
+    NrfutilProgress,
     Progress,
     Task,
     TaskBegin,
@@ -79,7 +80,10 @@ const commonParser = <Result>(
     const processItem = (item: NrfutilJson<Result>) => {
         switch (item.type) {
             case 'task_progress':
-                callbacks.onProgress?.(item.data.progress, item.data.task);
+                callbacks.onProgress?.(
+                    convertNrfutilProgress(item.data.progress),
+                    item.data.task
+                );
                 break;
             case 'task_begin':
                 callbacks.onTaskBegin?.(item.data);
@@ -492,13 +496,32 @@ export default async (
         version ?? (moduleVersions?.[0] as string)
     );
 
-    onProgress?.({ progressPercentage: 0 });
+    onProgress?.(convertNrfutilProgress({ progressPercentage: 0 }));
     const result = await sandbox.isSandboxInstalled();
 
     if (!result) {
         await sandbox.prepareSandbox(onProgress);
     }
 
-    onProgress?.({ progressPercentage: 100 });
+    onProgress?.(convertNrfutilProgress({ progressPercentage: 100 }));
     return sandbox;
+};
+
+const convertNrfutilProgress = (progress: NrfutilProgress): Progress => {
+    const amountOfSteps = progress.amountOfSteps ?? 1;
+    const step = progress.step ?? 1;
+
+    const singleStepWeight = (1 / amountOfSteps) * 100;
+
+    const totalProgressPercentage =
+        singleStepWeight * (step - 1) +
+        progress.progressPercentage / amountOfSteps;
+
+    return {
+        ...progress,
+        stepProgressPercentage: progress.progressPercentage,
+        totalProgressPercentage,
+        amountOfSteps,
+        step,
+    };
 };

@@ -44,9 +44,22 @@ export type TaskEnd<T = void> = {
     data?: T;
 };
 
+export type NrfutilProgress = {
+    progressPercentage: number;
+    message?: string;
+    description?: string;
+    amountOfSteps?: number;
+    duration?: number;
+    name?: string;
+    operation?: string;
+    result?: string;
+    state?: string;
+    step?: number;
+};
+
 export type TaskProgress = {
     task: Task;
-    progress: Progress;
+    progress: NrfutilProgress;
 };
 
 type NrfutilJsonProgress = {
@@ -96,16 +109,17 @@ export type NrfutilJson<T = unknown> =
     | NrfutilJsonBatchUpdate<T>;
 
 export type Progress = {
-    progressPercentage: number;
+    totalProgressPercentage: number;
+    stepProgressPercentage: number;
     message?: string;
     description?: string;
-    amountOfSteps?: number;
+    amountOfSteps: number;
     duration?: number;
     name?: string;
     operation?: string;
     result?: string;
     state?: string;
-    step?: number;
+    step: number;
 };
 
 export type LogMessage = {
