@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 95 - Unreleased
+
+### Fixed
+
+-   Worked around an issue where the esbuild currently has issues with
+    .css-files that are named the same as their components.
+
 ## 94 - 2023-08-25
 
 ### Changed
