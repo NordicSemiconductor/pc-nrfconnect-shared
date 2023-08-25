@@ -395,8 +395,8 @@ export class NrfutilSandbox {
             });
 
         return {
-            stop: (handler: () => void) => {
-                closedHandlers.push(handler);
+            stop: (handler?: () => void) => {
+                if (handler) closedHandlers.push(handler);
                 controller.abort();
             },
             isRunning: () => running,
