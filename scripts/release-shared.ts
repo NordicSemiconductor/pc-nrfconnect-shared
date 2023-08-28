@@ -178,6 +178,7 @@ const doRelease = (nextReleaseNumber: number) => {
                 nextReleaseName,
                 '--notes',
                 latestChangelogEntry,
+                '--latest',
             ],
             {
                 stdio: 'inherit',
