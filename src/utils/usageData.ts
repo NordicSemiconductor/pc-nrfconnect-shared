@@ -75,7 +75,7 @@ export const init = (packageJson: PackageJson) => {
     setTimeout(async () => {
         // eslint-disable-next-line global-require
         const si = require('systeminformation') as typeof Systeminformation;
-        sendUsageData('architecture', (await si.osInfo()).arch);
+        sendTrace('architecture', { arch: (await si.osInfo()).arch });
     }, 5_000);
 };
 
@@ -168,16 +168,38 @@ export const sendUsageData = <T extends string>(action: T, label?: string) => {
     eventQueue = [];
 };
 
-export const sendMetric = (name: string, average: number) => {
-    insights?.trackMetric({
-        name,
-        average,
-    });
+export const sendMetric = (
+    name: string,
+    average: number,
+    props?: Record<string, string>
+) => {
+    insights?.trackMetric(
+        {
+            name,
+            average,
+        },
+        props
+    );
 };
 
-export const sendTrace = (message: string) => {
-    insights?.trackTrace({
-        message,
+export const sendTrace = (message: string, props?: Record<string, string>) => {
+    insights?.trackTrace(
+        {
+            message,
+        },
+        props
+    );
+};
+
+export const sendDependency = (request: Promise<Response>) => {
+    const now = performance.now();
+
+    request.then(response => {
+        insights?.trackDependencyData({
+            id: response.url,
+            responseCode: response.status,
+            duration: performance.now() - now,
+        });
     });
 };
 
@@ -207,4 +229,7 @@ export default {
     reset,
     sendErrorReport,
     sendUsageData,
+    sendMetric,
+    sendTrace,
+    sendDependency,
 };
