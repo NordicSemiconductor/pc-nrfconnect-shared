@@ -20,7 +20,7 @@ const registerEncryptionAvailable = handle<EncryptionAvailable>(
     channel.encryptionAvailable
 );
 
-type EncryptString = (plainText: string) => void;
+type EncryptString = (plainText: string) => string;
 const encryptString = send<EncryptString>(channel.encryptString);
 const registerEncryptString = on<EncryptString>(channel.encryptString);
 
