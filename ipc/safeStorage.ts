@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { handle, invoke, on, send } from './infrastructure/rendererToMain';
+import { handle, invoke, on } from './infrastructure/rendererToMain';
 
 const channel = {
     encryptionAvailable: 'safe-storage:encryptionAvailable',
@@ -21,11 +21,11 @@ const registerEncryptionAvailable = handle<EncryptionAvailable>(
 );
 
 type EncryptString = (plainText: string) => string;
-const encryptString = send<EncryptString>(channel.encryptString);
+const encryptString = invoke<EncryptString>(channel.encryptString);
 const registerEncryptString = on<EncryptString>(channel.encryptString);
 
-type DecryptString = (encryptString: string) => string;
-const decryptString = send<DecryptString>(channel.decryptString);
+type DecryptString = (encryptedString: string) => string;
+const decryptString = invoke<DecryptString>(channel.decryptString);
 const registerDecryptString = on<DecryptString>(channel.decryptString);
 
 export const forRenderer = {
