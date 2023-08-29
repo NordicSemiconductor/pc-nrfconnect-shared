@@ -20,11 +20,11 @@ const registerEncryptionAvailable = handle<EncryptionAvailable>(
     channel.encryptionAvailable
 );
 
-type EncryptString = (plainText: string) => string;
+type EncryptString = (plainText: string) => Buffer;
 const encryptString = invoke<EncryptString>(channel.encryptString);
 const registerEncryptString = handle<EncryptString>(channel.encryptString);
 
-type DecryptString = (encryptedString: string) => string;
+type DecryptString = (encrypted: Buffer) => string;
 const decryptString = invoke<DecryptString>(channel.decryptString);
 const registerDecryptString = handle<DecryptString>(channel.decryptString);
 
