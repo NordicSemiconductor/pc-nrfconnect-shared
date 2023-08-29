@@ -15,6 +15,10 @@ every new version is a new major version.
     -   `safeStorage.encryptionAvailable()`
     -   `safeStorage.encryptString(plainText)`
     -   `safeStorage.decryptString(encrypted)`
+-   Icons and links for:
+    -   `PCA10152`
+    -   `PCA10153`
+    -   `PCA20049`
 
 ## 96 - 2023-08-25
 
