@@ -13,7 +13,7 @@ const channel = {
 };
 
 type EncryptionAvailable = () => boolean;
-const encryptionAvailable = invoke<EncryptionAvailable>(
+const isEncryptionAvailable = invoke<EncryptionAvailable>(
     channel.encryptionAvailable
 );
 const registerEncryptionAvailable = handle<EncryptionAvailable>(
@@ -33,4 +33,4 @@ export const forRenderer = {
     registerEncryptString,
     registerDecryptString,
 };
-export const inMain = { encryptionAvailable, encryptString, decryptString };
+export const inMain = { isEncryptionAvailable, encryptString, decryptString };
