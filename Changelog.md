@@ -7,6 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 96 - 2023-08-29
+
+### Added
+
+-   Added Icons and links for:
+    -   `PCA10152`
+    -   `PCA10153`
+    -   `PCA20049`
+
 ## 96 - 2023-08-25
 
 ### Added
