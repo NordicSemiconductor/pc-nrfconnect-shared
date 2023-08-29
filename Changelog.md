@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 98 - UNRELEASED
+
+### Added
+
+-   Logging for nrf-probe-lib
+
 ## 97 - 2023-08-29
 
 ### Added

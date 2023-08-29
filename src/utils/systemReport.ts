@@ -77,6 +77,9 @@ const generalInfoReport = async () => {
         `    - nrfjprog DLL: ${describeVersion(
             resolveModuleVersion('jprog', dependencies)
         )}`,
+        `    - nrf-probe-lib: ${describeVersion(
+            resolveModuleVersion('nrf-probe-lib', dependencies)
+        )}`,
         `    - JLink: ${describeVersion(
             resolveModuleVersion('JlinkARM', dependencies)
         )}`,
