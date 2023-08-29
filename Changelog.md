@@ -7,6 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 97 - 2023-08-29
+
+### Added
+
+-   Functions to invoke functionality in the main process via IPC:
+    -   `safeStorage.encryptionAvailable()`
+    -   `safeStorage.encryptString(plainText)`
+    -   `safeStorage.decryptString(encrypted)`
+
 ## 96 - 2023-08-25
 
 ### Added
