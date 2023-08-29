@@ -31,6 +31,7 @@
 import { NrfutilDevice } from '../../../nrfutil';
 import type { Device as WrappedDevice } from '../deviceSlice';
 
+import nPMFamilyLogo from '!!@svgr!./nPM-Family-Series-logo.svg';
 import nrf51logo from '!!@svgr!./nRF51-Series-logo.svg';
 import nrf52logo from '!!@svgr!./nRF52-Series-logo.svg';
 import nrf53logo from '!!@svgr!./nRF53-Series-logo.svg';
@@ -54,7 +55,10 @@ type DevicePCA =
     | 'PCA10121'
     | 'PCA20020'
     | 'PCA20035'
-    | 'PCA10143';
+    | 'PCA10143'
+    | 'PCA10152'
+    | 'PCA10153'
+    | 'PCA20049';
 
 interface DeviceInfo {
     name?: string | null;
@@ -178,6 +182,33 @@ const devicesByPca: { [P in DevicePCA]: DeviceInfo } = {
         website: {
             productPagePath: 'Products/Development-hardware/nRF7002-DK',
             buyOnlineParams: 'search_token=nRF7002-DK&series_token=nRF7002',
+        },
+    },
+    PCA10152: {
+        name: 'nPM 1300 EK',
+        cores: 2,
+        icon: nPMFamilyLogo,
+        website: {
+            productPagePath: 'Products/Development-hardware/nPM1300-EK',
+            buyOnlineParams: 'search_token=NPM1300EK',
+        },
+    },
+    PCA10153: {
+        name: 'nRF9161 DK',
+        cores: 1,
+        icon: nrf91logo,
+        website: {
+            productPagePath: 'Products/Development-hardware/nrf9161dk',
+            buyOnlineParams: 'search_token=NRF9161-dk',
+        },
+    },
+    PCA20049: {
+        name: 'Nordic Thingy:91x',
+        cores: 1,
+        icon: nrf91logo,
+        website: {
+            productPagePath: 'Products/Development-hardware/thingy91x',
+            buyOnlineParams: 'search_token=nRF9161-Thingy91x',
         },
     },
 };
