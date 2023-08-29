@@ -8,6 +8,7 @@ import { forRenderer as forRendererAppDetails } from '../ipc/appDetails';
 import { forRenderer as forRendererApps } from '../ipc/apps';
 import { forRenderer as forRendererOpenWindow } from '../ipc/openWindow';
 import { forRenderer as forRendererPreventSleep } from '../ipc/preventSleep';
+import { forRenderer as forRendererSafeStorage } from '../ipc/safeStorage';
 import {
     forRenderer as forRendererSerialPort,
     inRenderer as inRendererSerialPort,
@@ -19,6 +20,9 @@ export const appDetails = { forRenderer: forRendererAppDetails };
 export const apps = { forRenderer: forRendererApps };
 export const openWindow = { forRenderer: forRendererOpenWindow };
 export const preventSleep = { forRenderer: forRendererPreventSleep };
+export const safeStorage = {
+    forRenderer: forRendererSafeStorage,
+};
 export const serialPort = {
     inRenderer: inRendererSerialPort,
     forRenderer: forRendererSerialPort,

@@ -11,7 +11,11 @@ every new version is a new major version.
 
 ### Added
 
--   Added Icons and links for:
+-   Functions to invoke functionality in the main process via IPC:
+    -   `safeStorage.encryptionAvailable()`
+    -   `safeStorage.encryptString(plainText)`
+    -   `safeStorage.decryptString(encrypted)`
+-   Icons and links for:
     -   `PCA10152`
     -   `PCA10153`
     -   `PCA20049`

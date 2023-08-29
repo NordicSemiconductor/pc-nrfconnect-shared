@@ -161,3 +161,4 @@ export {
 } from '../ipc/apps';
 export { inMain as openWindow } from '../ipc/openWindow';
 export { inMain as preventSleep } from '../ipc/preventSleep';
+export { inMain as safeStorage } from '../ipc/safeStorage';
