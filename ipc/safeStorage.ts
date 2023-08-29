@@ -24,7 +24,7 @@ type EncryptString = (plainText: string) => void;
 const encryptString = send<EncryptString>(channel.encryptString);
 const registerEncryptString = on<EncryptString>(channel.encryptString);
 
-type DecryptString = (plainText: string) => void;
+type DecryptString = (encryptString: string) => void;
 const decryptString = send<DecryptString>(channel.decryptString);
 const registerDecryptString = on<DecryptString>(channel.decryptString);
 
