@@ -10,7 +10,7 @@ import {
     NrfutilDeviceWithSerialnumber,
 } from './common';
 
-export default async (
+export default (
     device: NrfutilDeviceWithSerialnumber,
     command: string,
     vCom?: number,
@@ -24,7 +24,7 @@ export default async (
         args.push(vCom.toString());
     }
 
-    await deviceSingleTaskEndOperation<string>(
+    return deviceSingleTaskEndOperation<string>(
         device,
         'uart-write',
         onProgress,
