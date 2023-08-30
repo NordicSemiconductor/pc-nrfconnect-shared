@@ -18,6 +18,7 @@ import recover from './recover';
 import reset from './reset';
 import setMcuState from './setMcuState';
 import setProtectionStatus from './setProtectionStatus';
+import uartWrite from './uartWrite';
 
 const onLogging = async (handler: (logging: LogMessage) => void) => {
     const sandbox = await getDeviceSandbox();
@@ -57,5 +58,6 @@ export default {
     setLogLevel,
     setVerboseLogging,
     getModuleVersion,
+    uartWrite,
     batch: () => new Batch(),
 };
