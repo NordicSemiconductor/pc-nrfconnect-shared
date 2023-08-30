@@ -22,7 +22,7 @@ export default (
     onProgress?: (progress: Progress) => void,
     controller?: AbortController
 ) => {
-    const args: string[] = ['-b', command];
+    const args: string[] = ['-b', command, '-r'];
 
     if (vCom) {
         args.push('--vcom');
