@@ -9,6 +9,7 @@ import Store from 'electron-store';
 import { SerialPortOpenOptions } from 'serialport';
 import { v4 as uuid } from 'uuid';
 
+import { inMain as safeStorage } from '../../ipc/safeStorage';
 import logger from '../logging';
 import packageJson from './packageJson';
 
@@ -44,6 +45,31 @@ export const persistIsFavorite = (serialNumber: string, value: boolean) =>
     sharedStore.set(`${serialNumber}.fav`, value);
 export const getPersistedIsFavorite = (serialNumber: string) =>
     sharedStore.get(`${serialNumber}.fav`, false) as boolean;
+
+export const persistApiKey = async (keyName: string, apiKey: string) => {
+    const canEncrypt = await safeStorage.isEncryptionAvailable();
+    if (!canEncrypt) {
+        throw new Error('Encryption not available');
+    }
+
+    const encrypted = await safeStorage.encryptString(apiKey);
+    sharedStore.set(`apiKey.${keyName}`, Uint8Array.from(encrypted));
+};
+export const getPersistedApiKey = async (keyName: string) => {
+    const canDecrypt = await safeStorage.isEncryptionAvailable();
+    if (!canDecrypt) {
+        throw new Error('Decryption not available');
+    }
+
+    const encryptedBytes = sharedStore.get(
+        `apiKey.${keyName}`,
+        Uint8Array.from([])
+    );
+
+    return encryptedBytes.length > 0
+        ? safeStorage.decryptString(Buffer.from(encryptedBytes))
+        : '';
+};
 
 export const persistSerialPortSettings = (
     serialNumber: string,
