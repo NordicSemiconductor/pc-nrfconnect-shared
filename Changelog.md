@@ -13,6 +13,10 @@ every new version is a new major version.
 
 -   Logging for nrf-probe-lib
 
+### Fixed
+
+-   `MasonryLayout` ResizeObserver loop limit exceeded error
+
 ## 97 - 2023-08-29
 
 ### Added
