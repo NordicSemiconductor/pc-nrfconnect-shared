@@ -89,7 +89,6 @@ export default ({
     minWidth,
     className,
 }: PropsWithChildren<MasonryLayoutProperties>) => {
-    const [width, setWidth] = useState(-1);
     const [maxHeight, setMaxHeight] = useState(0);
     const [columns, setColumns] = useState(-1);
     const [orders, setOrders] = useState<number[]>([]);
@@ -154,10 +153,7 @@ export default ({
             });
 
             return {
-                maxHeight: Math.max(
-                    ...heights,
-                    masonryLayoutRef.current?.scrollHeight ?? 0
-                ),
+                maxHeight: Math.max(...heights, 0),
                 order: newOrder,
                 columnHeights: heights,
                 columns: Math.min(
@@ -174,10 +170,6 @@ export default ({
                 current.clientWidth /
                     (minWidth + Number.parseInt(styles.margin, 10))
             );
-
-            if (current.clientWidth !== width) {
-                setWidth(current.clientWidth);
-            }
 
             const data = calcData(noOfColumns);
             if (data) {
@@ -204,7 +196,7 @@ export default ({
             current && observer.unobserve(current);
             current && mutationObserver.disconnect();
         };
-    }, [columns, maxHeight, minWidth, width]);
+    }, [columns, maxHeight, minWidth]);
 
     return (
         <div className={styles.masonryLayoutOut}>
@@ -215,7 +207,7 @@ export default ({
             >
                 <WrappedChildren
                     hiddenChildren={hiddenChildren}
-                    width={width}
+                    width={masonryLayoutRef.current?.clientWidth ?? -1}
                     columns={columns}
                     minWidth={minWidth}
                     orders={orders}
@@ -225,7 +217,7 @@ export default ({
                 <Fillers
                     maxHeight={maxHeight}
                     columns={columns}
-                    width={width}
+                    width={masonryLayoutRef.current?.clientWidth ?? -1}
                     columnHeights={columnHeights}
                 />
             </div>
