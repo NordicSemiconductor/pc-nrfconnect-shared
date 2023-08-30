@@ -222,7 +222,7 @@ export class NrfutilSandbox {
                         },
                     }),
                 data => {
-                    stdErr += data.toString();
+                    stdErr = (stdErr ?? '') + data.toString();
                 },
                 controller
             );
@@ -252,7 +252,7 @@ export class NrfutilSandbox {
             }
 
             if (stdErr) {
-                msg += `\nstdErr: ${stdErr}`;
+                msg += `\n${stdErr}`;
             }
 
             error.message = msg;
