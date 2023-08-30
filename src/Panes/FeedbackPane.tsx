@@ -50,7 +50,7 @@ export default ({ categories }: FeedbackPaneProps) => {
                         </p>
                     </section>
                     <Button
-                        large
+                        size="lg"
                         className="tw-align-self-end tw-self-end"
                         onClick={() => {
                             setSayThankYou(false);
@@ -117,7 +117,7 @@ export default ({ categories }: FeedbackPaneProps) => {
                     <li>Operating system</li>
                 </ul>
                 <Button
-                    large
+                    size="lg"
                     className="tw-self-end"
                     variant="primary"
                     onClick={() =>

@@ -7,16 +7,25 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 98 - UNRELEASED
+## 98 - 2023-08-30
 
 ### Added
 
 -   Logging for nrf-probe-lib
 -   Persisted api keys securely using `getPersistedApiKey` and `persistApiKey`
+-   `xl` size for `Button` component with bigger font.
 
 ### Fixed
 
 -   `MasonryLayout` ResizeObserver loop limit exceeded error
+
+### Changed
+
+-   `Button` component now uses a `size` property instead of a boolean `large`.
+
+### Steps to upgrade
+
+-   Replace `large` properties of the `Button` component with `size="lg"`
 
 ## 97 - 2023-08-29
 

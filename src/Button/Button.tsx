@@ -18,6 +18,8 @@ export type ButtonVariants =
     | 'link'
     | 'link-button';
 
+export type ButtonSize = 'sm' | 'lg' | 'xl';
+
 type ButtonProps = {
     id?: string;
     variant: ButtonVariants;
@@ -25,7 +27,7 @@ type ButtonProps = {
     onClick: React.MouseEventHandler<HTMLButtonElement>;
     disabled?: boolean;
     title?: string;
-    large?: boolean;
+    size?: ButtonSize;
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -36,16 +38,16 @@ const Button: React.FC<ButtonProps> = ({
     onClick,
     disabled = false,
     title,
-    large = false,
+    size = 'sm',
 }) => (
     <div className={`tw-preflight ${className}`}>
         <button
             type="button"
             id={id}
             className={`${classNames(
-                large
-                    ? 'tw-h-8 tw-px-4 tw-text-sm'
-                    : 'tw-h-6 tw-px-2 tw-text-xs',
+                size === 'sm' && 'tw-h-6 tw-px-2 tw-text-xs',
+                size === 'lg' && 'tw-h-8 tw-px-4 tw-text-sm',
+                size === 'xl' && 'tw-h-8 tw-px-4 tw-text-base',
                 variant === 'primary' &&
                     'tw-bg-nordicBlue tw-text-white active:enabled:tw-bg-nordicBlue-700',
                 variant === 'secondary' &&

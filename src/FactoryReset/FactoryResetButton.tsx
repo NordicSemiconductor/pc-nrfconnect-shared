@@ -41,7 +41,7 @@ const FactoryResetButton: FC<Props> = ({
     return (
         <>
             <Button
-                large={large}
+                size={large ? 'lg' : 'sm'}
                 variant={variant}
                 onClick={() => setShowDialog(true)}
                 className={classNames}
