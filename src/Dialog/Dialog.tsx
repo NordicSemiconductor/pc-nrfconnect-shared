@@ -101,7 +101,7 @@ export const DialogButton = ({
     children,
 }: DialogButtonProps) => (
     <Button
-        large
+        size="lg"
         variant={variant}
         onClick={onClick}
         className={className}

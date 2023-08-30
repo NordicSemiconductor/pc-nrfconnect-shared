@@ -47,7 +47,7 @@ const StartStopButton: FC<Props> = ({
                 className
             )}
             disabled={disabled}
-            large={large}
+            size={large ? 'lg' : 'sm'}
             onClick={() => onClick()}
             variant={variant}
         >
