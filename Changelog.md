@@ -14,6 +14,8 @@ every new version is a new major version.
 -   Logging for nrf-probe-lib
 -   Persisted api keys securely using `getPersistedApiKey` and `persistApiKey`
 -   `xl` size for `Button` component with bigger font.
+-   `ExternalLink` component.
+-   `FileLink` component.
 
 ### Fixed
 
@@ -23,9 +25,15 @@ every new version is a new major version.
 
 -   `Button` component now uses a `size` property instead of a boolean `large`.
 
+### Removed
+
+-   `link` variant of `Button` component.
+
 ### Steps to upgrade
 
 -   Replace `large` properties of the `Button` component with `size="lg"`
+-   Replace any occurrence of `link` variant `Button`s with `ExternalLink` or
+    `FileLink`.
 
 ## 97 - 2023-08-29
 
