@@ -10,6 +10,11 @@ import {
     NrfutilDeviceWithSerialnumber,
 } from './common';
 
+export interface UartWrite {
+    name: 'uart-write';
+    responses: string[];
+}
+
 export default (
     device: NrfutilDeviceWithSerialnumber,
     command: string,
@@ -24,7 +29,7 @@ export default (
         args.push(vCom.toString());
     }
 
-    return deviceSingleTaskEndOperation<string>(
+    return deviceSingleTaskEndOperation<UartWrite>(
         device,
         'uart-write',
         onProgress,
