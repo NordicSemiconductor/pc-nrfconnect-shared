@@ -8,223 +8,142 @@
 
 import { execSync } from 'child_process';
 import { existsSync, readdirSync, readFileSync } from 'fs';
-import property from 'lodash/property';
+import { z } from 'zod';
 
-import { PackageJson } from '../ipc/MetaFiles';
+import { PackageJson, PackageJsonSchema } from '../ipc/MetaFiles';
 
-const format = (strings: string[]) =>
-    strings.map(string => `\`${string}\``).join(', ');
-
-const propertyIsMissing = (obj: unknown) => (propertyPath: string) => {
-    const value = property(propertyPath)(obj);
-    return value == null || value === '';
-};
-
-const fail = (message: string) => {
-    console.error(message);
-    process.exit(1);
-};
-
-const warn = (message: string) => {
-    console.warn(message);
-};
-
-const mustBeEmpty = (array: string[], errorMessage: string) => {
-    if (array.length !== 0) {
-        fail(`${errorMessage}: ${format(array)}`);
-    }
-};
-
-const mustContain = (
-    existingEntries: readonly string[],
-    mandatoryEntries: string[],
-    errorMessage: string
-) => {
-    const missingFileEntries = mandatoryEntries.filter(
-        entry => !existingEntries.includes(entry)
-    );
-
-    mustBeEmpty(missingFileEntries, errorMessage);
-};
-
-const mustContainOneOf = (
-    existingEntries: readonly string[],
-    oneOfTheseEntriesIsMandatory: string[],
-    errorMessage: string
-) => {
-    if (
-        !oneOfTheseEntriesIsMandatory.some(entry =>
-            existingEntries.includes(entry)
-        )
-    ) {
-        fail(`${errorMessage}: ${format(oneOfTheseEntriesIsMandatory)}`);
-    }
-};
-
-const checkMandatoryProperties = (packageJson: PackageJson) => {
-    const mandatoryProperties = [
-        `name`,
-        `version`,
-        `description`,
-        `displayName`,
-        `engines.nrfconnect`,
-    ];
-
-    const missingProperties = mandatoryProperties.filter(
-        propertyIsMissing(packageJson)
-    );
-
-    mustBeEmpty(
-        missingProperties,
-        'package.json is missing these mandatory properties'
-    );
-};
-
-const checkNrfutilProperties = (packageJson: PackageJson) => {
-    const nrfutilModules = packageJson.nrfConnectForDesktop?.nrfutil;
-    if (nrfutilModules != null) {
-        Object.entries(nrfutilModules).forEach(
-            ([moduleName, moduleVersions]) => {
-                if (
-                    !Array.isArray(moduleVersions) ||
-                    moduleVersions.length === 0
-                ) {
-                    fail(
-                        `For each module in \`nrfConnectForDesktop.nrfutil\` in package.json at least one version must be specified, but for \`${moduleName}\` none was specified.`
-                    );
-                }
-            }
-        );
-    }
-};
-
-const checkRepoUrl = (packageJson: PackageJson) => {
+const getGitUrlSchema = () => {
     if (!existsSync('./.git')) {
-        return;
+        return z.string();
     }
 
-    const realGitUrl = execSync('git remote get-url origin', {
-        encoding: 'utf-8',
-    }).trimEnd();
-    const declaredGitUrl = packageJson.repository?.url;
-
-    const withoutPostfix = (gitUrl?: string) => gitUrl?.replace(/\.git$/, '');
-
-    const withoutProtocol = (gitUrl?: string) =>
+    const stripped = (gitUrl: string) =>
         gitUrl
-            ?.replace(/^git@github\.com:/, 'github.com/')
+            .replace(/\.git$/, '')
+            .replace(/^git@github\.com:/, 'github.com')
             .replace(/^https:\/\//, '');
 
-    const stripped = (gitUrl?: string) =>
-        withoutProtocol(withoutPostfix(gitUrl));
-
-    if (stripped(realGitUrl) !== stripped(declaredGitUrl)) {
-        fail(
-            `package.json says the repository is located at \`${declaredGitUrl}\` but \`git remote get-url origin\` says it is at \`${realGitUrl}\`.`
-        );
-    }
-};
-
-const checkOptionalProperties = (packageJson: PackageJson) => {
-    if (propertyIsMissing(packageJson)('homepage')) {
-        warn('Please provide a property `homepage` in package.json.');
-    }
-
-    if (propertyIsMissing(packageJson)('nrfConnectForDesktop')) {
-        warn(
-            'Please provide a property `nrfConnectForDesktop.html` in package.json'
-        );
-    } else {
-        checkNrfutilProperties(packageJson);
-    }
-
-    if (propertyIsMissing(packageJson)('repository.url')) {
-        warn('Please provide a property `repository.url` in package.json.');
-    } else {
-        checkRepoUrl(packageJson);
-    }
-};
-
-const checkFileProperty = (packageJson: PackageJson) => {
-    mustContain(
-        packageJson.files ?? [],
-        ['LICENSE', 'dist/', 'Changelog.md'],
-        'These entries are missing in the property `files` in package.json'
+    const remoteGitUrl = z.string().parse(
+        execSync('git remote get-url origin', {
+            encoding: 'utf-8',
+        }).trimEnd()
     );
 
-    mustContainOneOf(
-        packageJson.files ?? [],
-        ['resources/*', 'resources/icon.*', 'resources/'],
-        'One of these entries must be in the property `files` in package.json'
+    return z.string().refine(
+        url => stripped(url) === stripped(remoteGitUrl),
+        url => ({
+            message: `package.json says the repository is located at \`${url}\` but \`git remote get-url origin\` says it is at \`${remoteGitUrl}\`.`,
+        })
     );
 };
 
+const getFilesSchema = () =>
+    z.array(z.string()).superRefine((files, ctx) => {
+        const format = (strings: string[]) =>
+            strings.map(string => `\`${string}\``).join(', ');
+
+        const missingFileEntries = ['LICENSE', 'dist/', 'Changelog.md'].filter(
+            file => !files.includes(file)
+        );
+        if (missingFileEntries.length) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `These entries are missing in the property ${'`files`'} in package.json: ${format(
+                    missingFileEntries
+                )}`,
+            });
+        }
+
+        const anyRequiredEntries = [
+            'resources/*',
+            'resources/icon.*',
+            'resources/',
+        ];
+        if (!files.some(entry => anyRequiredEntries.includes(entry))) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `One of these entries must be in the property ${'`files`'} in package.json: ${format(
+                    anyRequiredEntries
+                )}`,
+            });
+        }
+
+        const resourceDir = './resources';
+        try {
+            const resourceFiles = readdirSync(resourceDir);
+            const missingResourceFiles = [
+                'icon.svg',
+                'icon.icns',
+                'icon.ico',
+                'icon.png',
+            ].filter(file => !resourceFiles.includes(file));
+            if (missingResourceFiles.length) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: `In the directory \`${resourceDir}\` these files are missing: ${format(
+                        missingResourceFiles
+                    )}`,
+                });
+            }
+        } catch (error) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Unable to read directory \`${resourceDir}\``,
+            });
+        }
+    });
+
+const getChangelog = () => readFileSync('./Changelog.md', 'utf8');
 const changelogEntryRegexp = (version?: string) =>
     new RegExp(`^## ${version}`, 'mi');
-
-const checkChangelog = (
+const getVersionSchema = (
     packageJson: PackageJson,
     checkChangelogHasCurrentEntry: boolean
 ) => {
-    if (!existsSync('./Changelog.md')) {
-        fail('The mandatory file `Changelog.md` is missing.');
+    if (!checkChangelogHasCurrentEntry) {
+        return z.string();
     }
 
-    if (checkChangelogHasCurrentEntry) {
-        if (packageJson.version == null) {
-            fail('package.json must specify a `version`.');
-        }
-
-        const changelog = readFileSync('./Changelog.md', 'utf8');
-        if (!changelog.match(changelogEntryRegexp(packageJson.version))) {
-            fail(
-                `Found no entry for the current version packageJson.version ${packageJson.version} in \`Changelog.md\`.`
-            );
-        }
-
-        if (changelog.match(changelogEntryRegexp('unreleased'))) {
-            fail('There must not be an entry `unreleased` in `Changelog.md`.');
-        }
-    }
+    return z
+        .string()
+        .refine(
+            () => existsSync('./Changelog.md'),
+            'The mandatory `Changelog.md` is missing.'
+        )
+        .refine(
+            version => getChangelog().match(changelogEntryRegexp(version)),
+            `Found no entry for the current version ${packageJson.version} in \`Changelog.md\`.`
+        )
+        .refine(
+            () => !getChangelog().match(changelogEntryRegexp('unreleased')),
+            'There must not be an entry `unreleased` in `Changelog.md`.'
+        );
 };
 
-const filesIn = (directory: string) => {
-    try {
-        return readdirSync(directory);
-    } catch (error) {
-        fail(`Unable to read directory \`${directory}\`.`);
-        // Unreachable, but not understood by Typescript
-        throw new Error();
-    }
-};
-
-const checkMandatoryResources = () => {
-    mustContain(
-        filesIn('./resources'),
-        ['icon.svg', 'icon.icns', 'icon.ico', 'icon.png'],
-        'In the directory `resources` these files are missing'
-    );
-};
-
-const runChecks = ({
-    checkChangelogHasCurrentEntry,
-}: {
-    checkChangelogHasCurrentEntry: boolean;
-}) => {
+const validatePackageJson = (checkChangelogHasCurrentEntry: boolean) => {
     const packageJson = <PackageJson>(
         JSON.parse(readFileSync('./package.json', 'utf8'))
     );
 
-    checkMandatoryProperties(packageJson);
-    checkOptionalProperties(packageJson);
-    checkFileProperty(packageJson);
-    checkChangelog(packageJson, checkChangelogHasCurrentEntry);
-    checkMandatoryResources();
+    const newPackageJson = PackageJsonSchema.extend({
+        repository: z.object({
+            type: z.literal('git'),
+            url: getGitUrlSchema(),
+        }),
+        files: getFilesSchema(),
+        version: getVersionSchema(packageJson, checkChangelogHasCurrentEntry),
+    });
+
+    const result = newPackageJson.safeParse(packageJson);
+    if (!result.success) {
+        console.error(result.error.flatten());
+        process.exit(1);
+    }
 };
 
 const isRanAsAScript = require.main === module; // https://nodejs.org/docs/latest/api/modules.html#accessing-the-main-module
 if (isRanAsAScript) {
-    runChecks({ checkChangelogHasCurrentEntry: false });
+    validatePackageJson(false);
 }
 
-export default runChecks;
+export default validatePackageJson;

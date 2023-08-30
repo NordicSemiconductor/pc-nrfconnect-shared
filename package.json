@@ -118,7 +118,8 @@
         "typescript": "4.9.5",
         "util": "0.12.5",
         "uuid": "8.3.2",
-        "winston": "3.8.2"
+        "winston": "3.8.2",
+        "zod": "^3.22.2"
     },
     "typings": "./typings/generated/src/index.d.ts",
     "eslintConfig": {

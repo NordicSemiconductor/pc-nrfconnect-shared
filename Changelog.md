@@ -13,6 +13,11 @@ every new version is a new major version.
 
 -   Logging for nrf-probe-lib
 
+### Changed
+
+-   Added zod schema inferred type for packageJson.
+-   `check-app-properties.ts` now uses zod to validate the `package.json`.
+
 ## 97 - 2023-08-29
 
 ### Added
