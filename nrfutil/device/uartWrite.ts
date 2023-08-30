@@ -6,7 +6,7 @@
 
 import { Progress } from '../sandboxTypes';
 import {
-    deviceSingleTaskEndOperationVoid,
+    deviceSingleTaskEndOperation,
     NrfutilDeviceWithSerialnumber,
 } from './common';
 
@@ -24,7 +24,7 @@ export default async (
         args.push(vCom.toString());
     }
 
-    await deviceSingleTaskEndOperationVoid(
+    await deviceSingleTaskEndOperation<string>(
         device,
         'uart-write',
         onProgress,
