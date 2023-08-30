@@ -86,6 +86,8 @@ export {
     getPersistedTerminalSettings,
     persistNickname,
     getPersistedNickname,
+    getPersistedApiKey,
+    persistApiKey,
 } from './utils/persistentStore';
 
 export { jprogDeviceSetup } from './Device/jprogOperations';

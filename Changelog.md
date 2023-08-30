@@ -12,6 +12,7 @@ every new version is a new major version.
 ### Added
 
 -   Logging for nrf-probe-lib
+-   Persisted api keys securely using `getPersistedApiKey` and `persistApiKey`
 
 ### Fixed
 
