@@ -53,7 +53,7 @@ export const persistApiKey = async (keyName: string, apiKey: string) => {
     }
 
     const encrypted = await safeStorage.encryptString(apiKey);
-    sharedStore.set(`apiKey.${keyName}`, Uint8Array.from(encrypted));
+    sharedStore.set(`apiKey.${keyName}`, encrypted.toString('base64'));
 };
 export const getPersistedApiKey = async (keyName: string) => {
     const canDecrypt = await safeStorage.isEncryptionAvailable();
@@ -61,13 +61,13 @@ export const getPersistedApiKey = async (keyName: string) => {
         throw new Error('Decryption not available');
     }
 
-    const encryptedBytes = sharedStore.get(
-        `apiKey.${keyName}`,
-        Uint8Array.from([])
-    );
+    const encrypted = sharedStore
+        .get(`apiKey.${keyName}`, '')
+        .split(',')
+        .map(s => Number.parseInt(s, 10));
 
-    return encryptedBytes.length > 0
-        ? safeStorage.decryptString(Buffer.from(encryptedBytes))
+    return encrypted.length > 0
+        ? safeStorage.decryptString(Buffer.from(encrypted))
         : '';
 };
 
