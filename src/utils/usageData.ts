@@ -8,8 +8,8 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import type Systeminformation from 'systeminformation';
 import winston from 'winston';
 
-import type { PackageJson } from '../../ipc/MetaFiles';
 import { isDevelopment } from './environment';
+import packageJson from './packageJson';
 import {
     deleteIsSendingUsageData,
     getIsSendingUsageData,
@@ -33,11 +33,11 @@ let insights: ApplicationInsights | undefined;
  *
  * @returns {Promise<void>} void
  */
-export const init = (packageJson: PackageJson) => {
+export const init = () => {
     const applicationName = isDevelopment
-        ? `${packageJson.name}-dev`
+        ? `${packageJson().name}-dev`
         : packageJson.name;
-    const applicationVersion = packageJson.version;
+    const applicationVersion = packageJson().version;
 
     if (!getIsSendingUsageData()) return;
 
@@ -203,6 +203,13 @@ export const sendDependency = (request: Promise<Response>) => {
     });
 };
 
+const sendFetch = (url: string, requestInit?: never) => {
+    const request = fetch(url, requestInit);
+
+    sendDependency(request);
+    return request;
+};
+
 /**
  * Send error usage data event to Application Insights and also show it in the logger view
  * @param {string} error The event action
@@ -232,4 +239,5 @@ export default {
     sendMetric,
     sendTrace,
     sendDependency,
+    fetch: sendFetch,
 };

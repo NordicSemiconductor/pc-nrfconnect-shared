@@ -30,7 +30,6 @@ import logger from '../logging';
 import NavBar from '../NavBar/NavBar';
 import FeedbackPane, { FeedbackPaneProps } from '../Panes/FeedbackPane';
 import classNames from '../utils/classNames';
-import packageJson from '../utils/packageJson';
 import { getPersistedCurrentPane } from '../utils/persistentStore';
 import { init as usageDataInit, setUsageLogger } from '../utils/usageData';
 import useHotKey from '../utils/useHotKey';
@@ -54,7 +53,7 @@ const initialiseUsageData = () => {
     if (!usageDataAlreadyInitialised) {
         usageDataAlreadyInitialised = true;
         try {
-            usageDataInit(packageJson());
+            usageDataInit();
         } catch (error) {
             // No need to display the error message for the user
             console.log(error);

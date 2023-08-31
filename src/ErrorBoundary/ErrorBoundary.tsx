@@ -17,21 +17,21 @@ import packageJson from '../utils/packageJson';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
 import { generateSystemReport } from '../utils/systemReport';
 import {
-    init as initGA,
+    init as initTelemetry,
     isEnabled,
-    isInitialized as isGAInitialized,
+    isInitialized as isTelemetryInitialized,
     sendErrorReport,
 } from '../utils/usageData';
 import bugIcon from './bug.svg';
 
 import './error-boundary.scss';
 
-const sendGAEvent = (error: string) => {
+const sendTelemetryError = (error: string) => {
     if (!isEnabled()) {
         return;
     }
-    if (!isGAInitialized()) {
-        initGA(packageJson());
+    if (!isTelemetryInitialized()) {
+        initTelemetry();
     }
     sendErrorReport(error);
 };
@@ -76,7 +76,7 @@ class ErrorBoundary extends React.Component<
             this.props;
         sendUsageData != null
             ? sendUsageData(error.message)
-            : sendGAEvent(error.message);
+            : sendTelemetryError(error.message);
 
         generateSystemReport(
             new Date().toISOString().replace(/:/g, '-'),
