@@ -11,7 +11,7 @@ every new version is a new major version.
 
 ### Added
 
--   nrfutil device list now supports --timeout-ms parameter
+-   nrfutil device list now supports optional timeout parameter
 
 ### Changed
 
