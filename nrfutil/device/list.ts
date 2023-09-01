@@ -36,7 +36,8 @@ export default async (
     onHotplugEvent?: {
         onDeviceArrived: (device: NrfutilDeviceWithSerialnumber) => void;
         onDeviceLeft: (id: number) => void;
-    }
+    },
+    timeout = 3000
 ) => {
     const args: string[] = [];
     args.concat(deviceTraitsToArgs(traits));
@@ -44,6 +45,9 @@ export default async (
     if (onHotplugEvent) {
         args.push('--hotplug');
     }
+
+    args.push('--timeout-ms');
+    args.push(timeout.toString());
 
     const onData = (data: HotplugEvent | ListEvent) => {
         if (isListEvent(data)) {

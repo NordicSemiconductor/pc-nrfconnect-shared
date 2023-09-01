@@ -9,6 +9,15 @@ every new version is a new major version.
 
 ## 99 - UNRELEASED
 
+### Added
+
+-   nrfutil device list now supports optional timeout parameter
+
+### Changed
+
+-   nrfutil device list now default to 3000ms timeout when enumerating (was
+    1000ms)
+
 ### Fixed
 
 -   Nrfutil device std error message string
