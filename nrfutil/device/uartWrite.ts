@@ -12,21 +12,26 @@ import {
 
 export interface UartWrite {
     name: 'uart-write';
-    responses: string[];
+    responses?: string[];
 }
 
 export default (
     device: NrfutilDeviceWithSerialnumber,
     command: string,
     vCom?: number,
+    readAfterWrite?: boolean,
     onProgress?: (progress: Progress) => void,
     controller?: AbortController
 ) => {
-    const args: string[] = ['-b', command, '-r'];
+    const args: string[] = ['-b', command];
 
     if (vCom) {
         args.push('--vcom');
         args.push(vCom.toString());
+    }
+
+    if (readAfterWrite) {
+        args.push('-r');
     }
 
     return deviceSingleTaskEndOperation<UartWrite>(
