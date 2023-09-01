@@ -10,14 +10,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DeviceTraits } from '../../../nrfutil/device/common';
 import useHotKey from '../../utils/useHotKey';
 import {
+    clearWaitForDevice,
     getWaitingToAutoReselect,
     setAutoSelectDevice,
 } from '../deviceAutoSelectSlice';
-import {
-    clearWaitForDevice,
-    startWatchingDevices,
-    stopWatchingDevices,
-} from '../deviceLister';
+import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
 import { DeviceSetupConfig, setupDevice } from '../deviceSetup';
 import DeviceSetupView from '../DeviceSetup/DeviceSetupView';
 import {
