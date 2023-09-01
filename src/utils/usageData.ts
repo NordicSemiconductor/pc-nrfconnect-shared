@@ -77,6 +77,14 @@ export const init = () => {
         const si = require('systeminformation') as typeof Systeminformation;
         sendTrace('architecture', { arch: (await si.osInfo()).arch });
     }, 5_000);
+
+    // Instrument fetch
+    const originalFetch = window.fetch;
+    window.fetch = (...params: Parameters<typeof window.fetch>) => {
+        const request = originalFetch(...params);
+        sendDependency(request);
+        return request;
+    };
 };
 
 /**
@@ -159,7 +167,7 @@ const sendEvent = ({ action, label }: EventAction) => {
  * @param {string} label The event label
  * @returns {void}
  */
-export const sendUsageData = <T extends string>(action: T, label?: string) => {
+const sendUsageData = <T extends string>(action: T, label?: string) => {
     eventQueue.push({ action, label });
     if (!isInitialized()) {
         return;
@@ -168,7 +176,7 @@ export const sendUsageData = <T extends string>(action: T, label?: string) => {
     eventQueue = [];
 };
 
-export const sendMetric = (
+const sendMetric = (
     name: string,
     average: number,
     props?: Record<string, string>
@@ -182,7 +190,7 @@ export const sendMetric = (
     );
 };
 
-export const sendTrace = (message: string, props?: Record<string, string>) => {
+const sendTrace = (message: string, props?: Record<string, string>) => {
     insights?.trackTrace(
         {
             message,
@@ -191,7 +199,7 @@ export const sendTrace = (message: string, props?: Record<string, string>) => {
     );
 };
 
-export const sendDependency = (request: Promise<Response>) => {
+const sendDependency = (request: Promise<Response>) => {
     const now = performance.now();
 
     request.then(response => {
@@ -201,13 +209,6 @@ export const sendDependency = (request: Promise<Response>) => {
             duration: performance.now() - now,
         });
     });
-};
-
-const sendFetch = (url: string, requestInit?: never) => {
-    const request = fetch(url, requestInit);
-
-    sendDependency(request);
-    return request;
 };
 
 /**
@@ -238,6 +239,4 @@ export default {
     sendUsageData,
     sendMetric,
     sendTrace,
-    sendDependency,
-    fetch: sendFetch,
 };
