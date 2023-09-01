@@ -6,7 +6,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import type { RootState } from '../store';
+import type { AppThunk, RootState } from '../store';
 import type { Device } from './deviceSlice';
 
 export interface WaitForDevice {
@@ -148,3 +148,10 @@ export const getLastArrivedDeviceId = (state: RootState) =>
     state.deviceAutoSelect.lastArrivedDeviceId;
 export const getArrivedButWrongWhen = (state: RootState) =>
     state.deviceAutoSelect.arrivedButWrongWhen;
+
+export const clearWaitForDevice = (): AppThunk => (dispatch, getState) => {
+    if (getState().deviceAutoSelect.autoReconnectTimeout) {
+        getState().deviceAutoSelect.onCancelTimeout?.();
+    }
+    dispatch(clearWaitForDeviceTimeout(true));
+};

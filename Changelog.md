@@ -12,6 +12,7 @@ every new version is a new major version.
 ### Fixed
 
 -   Nrfutil device std error message string
+-   When SDFU MCU State change fails, wait for device is now canceled
 
 ## 98 - 2023-08-30
 

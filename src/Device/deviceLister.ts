@@ -13,6 +13,7 @@ import NrfutilDeviceLib from '../../nrfutil/device/device';
 import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
 import {
+    clearWaitForDevice,
     clearWaitForDeviceTimeout,
     setArrivedButWrongWhen,
     setDisconnectedTime,
@@ -363,13 +364,6 @@ const getAutoSelectDeviceCLISerial = () => {
     const { argv } = process;
     const serialIndex = argv.findIndex(arg => arg === '--deviceSerial');
     return serialIndex > -1 ? argv[serialIndex + 1] : undefined;
-};
-
-export const clearWaitForDevice = (): AppThunk => (dispatch, getState) => {
-    if (getState().deviceAutoSelect.autoReconnectTimeout) {
-        getState().deviceAutoSelect.onCancelTimeout?.();
-    }
-    dispatch(clearWaitForDeviceTimeout(true));
 };
 
 export const stopWatchingDevices = (callback?: () => void) => {

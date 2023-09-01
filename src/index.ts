@@ -108,8 +108,8 @@ export {
     getWaitingForDeviceTimeout,
     getWaitingToAutoReselect,
     getWaitForDevice,
+    clearWaitForDevice,
 } from './Device/deviceAutoSelectSlice';
-export { clearWaitForDevice } from './Device/deviceLister';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
 export { isDeviceInDFUBootloader } from './Device/sdfuOperations';
 export {

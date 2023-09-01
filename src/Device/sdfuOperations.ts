@@ -14,7 +14,7 @@ import { McuState } from '../../nrfutil/device/setMcuState';
 import logger from '../logging';
 import { AppThunk, RootState } from '../store';
 import { getAppFile } from '../utils/appDirs';
-import { setWaitForDevice } from './deviceAutoSelectSlice';
+import { clearWaitForDevice, setWaitForDevice } from './deviceAutoSelectSlice';
 import { DeviceSetup, DfuEntry } from './deviceSetup';
 import { openDeviceSetupDialog } from './deviceSetupSlice';
 import { Device } from './deviceSlice';
@@ -161,9 +161,10 @@ const switchToDeviceMode =
                 onFail,
             })
         );
-        NrfutilDeviceLib.setMcuState(device, mcuState).catch(err =>
-            onFail(err)
-        );
+        NrfutilDeviceLib.setMcuState(device, mcuState).catch(err => {
+            dispatch(clearWaitForDevice());
+            onFail(err);
+        });
     };
 
 export const switchToBootloaderMode =
