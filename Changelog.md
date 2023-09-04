@@ -24,6 +24,10 @@ every new version is a new major version.
 -   Nrfutil device std error message string
 -   When SDFU MCU State change fails, wait for device is now canceled
 
+### Removed
+
+-   Logging for nrf-probe-lib version
+
 ## 98 - 2023-08-30
 
 ### Added
