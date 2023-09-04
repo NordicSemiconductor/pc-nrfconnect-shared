@@ -31,11 +31,10 @@ const setLogLevel = async (level: LogLevel) => {
 
 const setVerboseLogging = async (verbose: boolean) => {
     const sandbox = await getDeviceSandbox();
-    if (process.env.NODE_ENV === 'production' && !verbose) {
-        sandbox.setLogLevel('off');
-    } else {
-        sandbox.setLogLevel(verbose ? 'trace' : 'error');
-    }
+    const fallbackLevel =
+        process.env.NODE_ENV === 'production' ? 'off' : 'error';
+
+    sandbox.setLogLevel(verbose ? 'trace' : fallbackLevel);
 };
 const getModuleVersion = async () => {
     const sandbox = await getDeviceSandbox();

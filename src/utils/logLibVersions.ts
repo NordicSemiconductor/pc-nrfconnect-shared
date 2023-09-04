@@ -75,10 +75,6 @@ export default async () => {
         log('nrfutil-device', moduleVersion.version);
         log('nrf-device-lib', resolveModuleVersion('nrfdl', dependencies));
         log('nrfjprog DLL', resolveModuleVersion('jprog', dependencies));
-        log(
-            'nrf-probe-lib',
-            resolveModuleVersion('nrf-probe-lib', dependencies)
-        );
         log('JLink', resolveModuleVersion('JlinkARM', dependencies));
         if (
             process.platform === 'darwin' &&
