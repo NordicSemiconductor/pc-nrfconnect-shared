@@ -15,7 +15,6 @@ export type ButtonVariants =
     | 'info'
     | 'warning'
     | 'danger'
-    | 'link'
     | 'link-button';
 
 export type ButtonSize = 'sm' | 'lg' | 'xl';
