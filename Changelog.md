@@ -7,6 +7,16 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 101 - 2023-09-05
+
+### Fixed
+
+-   Removed un styled variant type `link` from of `Button` component
+
+### Removed
+
+-   `link` variant type from of `Button` component.
+
 ## 100 - 2023-09-05
 
 ### Fixed
