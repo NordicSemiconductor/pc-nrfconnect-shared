@@ -15,9 +15,10 @@ every new version is a new major version.
 
 ### Changed
 
--   nrfutil device list now default to 3000ms timeout when enumerating (was
+-   Nrfutil device list now default to 3000ms timeout when enumerating (was
     1000ms)
 -   Nrfutil device now support nrfutil device 1.4.x only
+-   Nrfutil device will not log in production unless verbose logging is on
 
 ### Fixed
 
