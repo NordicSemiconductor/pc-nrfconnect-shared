@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 100 - 2023-09-05
+
+### Fixed
+
+-   Unable to use nrfutil device in production due to issue with nrfutil device
+    logging when set to off.
+
 ## 99 - 2023-09-04
 
 ### Added
