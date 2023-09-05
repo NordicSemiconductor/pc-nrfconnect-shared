@@ -11,7 +11,7 @@ every new version is a new major version.
 
 ### Fixed
 
--   Trace logging did not in production
+-   Trace logging did not work in production
 
 ## 101 - 2023-09-05
 
