@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 102 - 2023-09-05
+
+### Fixed
+
+-   Trace logging did not in production
+
 ## 101 - 2023-09-05
 
 ### Fixed

@@ -205,7 +205,10 @@ export const getDeviceSandbox = async () => {
         deviceSandbox = await promiseDeviceSandbox;
 
         deviceSandbox.onLogging(evt => {
-            if (process.env.NODE_ENV === 'production' && !getIsLoggingVerbose())
+            if (
+                process.env.NODE_ENV === 'production' &&
+                deviceSandbox?.logLevel !== 'trace'
+            )
                 return;
 
             const deviceLogger = getNrfutilLogger();
