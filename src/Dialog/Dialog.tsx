@@ -82,7 +82,9 @@ Dialog.Body = ({ children }: { children: ReactNode }) => (
 );
 
 Dialog.Footer = ({ children }: { children: ReactNode }) => (
-    <Modal.Footer>{children}</Modal.Footer>
+    <Modal.Footer className="tw-preflight tw-flex tw-flex-row-reverse tw-justify-start tw-gap-1 tw-border-none tw-p-4">
+        {children}
+    </Modal.Footer>
 );
 
 export interface DialogButtonProps {

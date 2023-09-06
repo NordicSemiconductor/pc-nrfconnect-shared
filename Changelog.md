@@ -13,6 +13,11 @@ every new version is a new major version.
 
 -   Explicit export of `sendFeedback` which was a part of the `FeedbackPane`.
 
+### Changed
+
+-   `Button` no longer has a div wrapper
+-   `Dialog.Footer` now now uses `tw-preflight`
+
 ## 102 - 2023-09-05
 
 ### Fixed
