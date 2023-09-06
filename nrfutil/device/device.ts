@@ -31,11 +31,10 @@ const setLogLevel = async (level: LogLevel) => {
 
 const setVerboseLogging = async (verbose: boolean) => {
     const sandbox = await getDeviceSandbox();
-    // Temporary until nrfutil fixes off log level NRFU-616
-    // const fallbackLevel =
-    //     process.env.NODE_ENV === 'production' ? 'off' : 'error';
+    const fallbackLevel =
+        process.env.NODE_ENV === 'production' ? 'off' : 'error';
 
-    sandbox.setLogLevel(verbose ? 'trace' : 'error');
+    sandbox.setLogLevel(verbose ? 'trace' : fallbackLevel);
 };
 const getModuleVersion = async () => {
     const sandbox = await getDeviceSandbox();

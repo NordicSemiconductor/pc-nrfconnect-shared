@@ -205,12 +205,6 @@ export const getDeviceSandbox = async () => {
         deviceSandbox = await promiseDeviceSandbox;
 
         deviceSandbox.onLogging(evt => {
-            if (
-                process.env.NODE_ENV === 'production' &&
-                deviceSandbox?.logLevel !== 'trace'
-            )
-                return;
-
             const deviceLogger = getNrfutilLogger();
             switch (evt.level) {
                 case 'TRACE':
@@ -238,10 +232,11 @@ export const getDeviceSandbox = async () => {
             }
         });
 
-        // Temporary until nrfutil fixes off log level NRFU-616
-        // const fallbackLevel =
-        //     process.env.NODE_ENV === 'production' ? 'off' : 'error';
-        deviceSandbox.setLogLevel(getIsLoggingVerbose() ? 'trace' : 'error');
+        const fallbackLevel =
+            process.env.NODE_ENV === 'production' ? 'off' : 'error';
+        deviceSandbox.setLogLevel(
+            getIsLoggingVerbose() ? 'trace' : fallbackLevel
+        );
         // Only the first reset after selecting "reset with verbose logging" is relevant
         persistIsLoggingVerbose(false);
     }
