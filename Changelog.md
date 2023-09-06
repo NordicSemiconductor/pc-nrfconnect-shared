@@ -18,6 +18,10 @@ every new version is a new major version.
 -   `Button` no longer has a div wrapper
 -   `Dialog.Footer` now now uses `tw-preflight`
 
+### Steps to upgrade
+
+-   Update `nrfConnectForDesktop.nrfutil` to version 1.4.2 in `package.json`
+
 ## 102 - 2023-09-05
 
 ### Fixed
