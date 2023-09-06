@@ -9,8 +9,8 @@ import React, { useMemo, useState } from 'react';
 import Button from '../Button/Button';
 import Dropdown, { DropdownItem } from '../Dropdown/Dropdown';
 import logger from '../logging';
-import { isDevelopment } from '../utils/environment';
-import packageJson from '../utils/packageJson';
+import describeError from '../logging/describeError';
+import sendFeedback from './sendFeedback';
 
 export interface FeedbackPaneProps {
     categories?: string[];
@@ -136,49 +136,18 @@ export default ({ categories }: FeedbackPaneProps) => {
     );
 };
 
-const formURL =
-    isDevelopment === true
-        ? 'https://formkeep.com/f/87deb409a565'
-        : 'https://formkeep.com/f/36b394b92851';
-
 const handleFormData = async (
     feedback: string,
     setResponse: (response: boolean) => void,
     category?: string
 ) => {
-    const data: Record<string, unknown> = {
-        name: getAppName(),
-        feedback,
-        platform: process.platform,
-    };
-
-    if (category && category !== 'Select a category') {
-        data.category = category;
-    }
-
     try {
-        const response = await fetch(formURL, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json',
-                enctype: 'multipart/form-data',
-            },
-        });
+        await sendFeedback(feedback, category);
 
-        if (response.ok) {
-            setResponse(true);
-            return;
-        }
-
-        logger.error(
-            `FeedbackForm: Server responded with status code ${response.status}`
-        );
+        setResponse(true);
     } catch (error: unknown) {
         logger.error(
-            `FeedbackForm: Could not send feedback. ${JSON.stringify(error)}`
+            `FeedbackForm: Could not send feedback. ${describeError(error)}`
         );
     }
 };
-
-const getAppName = () => packageJson().name;

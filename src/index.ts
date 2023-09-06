@@ -52,6 +52,8 @@ export { default as Spinner } from './Spinner/Spinner';
 
 export { default as MasonryLayout } from './MasonryLayout/MasonryLayout';
 
+export { default as sendFeedback } from './Feedback/sendFeedback';
+
 export { default as useStopwatch } from './utils/useStopwatch';
 export { default as useFocusedOnVisible } from './utils/useFocusedOnVisible';
 
