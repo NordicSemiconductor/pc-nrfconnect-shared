@@ -24,11 +24,11 @@ import {
 } from '../Device/deviceSlice';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
+import FeedbackPane, { FeedbackPaneProps } from '../Feedback/FeedbackPane';
 import FlashMessages from '../FlashMessage/FlashMessage';
 import LogViewer from '../Log/LogViewer';
 import logger from '../logging';
 import NavBar from '../NavBar/NavBar';
-import FeedbackPane, { FeedbackPaneProps } from '../Panes/FeedbackPane';
 import classNames from '../utils/classNames';
 import packageJson from '../utils/packageJson';
 import { getPersistedCurrentPane } from '../utils/persistentStore';
