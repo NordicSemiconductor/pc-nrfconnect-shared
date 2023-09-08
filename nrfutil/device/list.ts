@@ -39,8 +39,7 @@ export default async (
     },
     timeout = 3000
 ) => {
-    const args: string[] = [];
-    args.concat(deviceTraitsToArgs(traits));
+    const args: string[] = deviceTraitsToArgs(traits);
 
     if (onHotplugEvent) {
         args.push('--hotplug');

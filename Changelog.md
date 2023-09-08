@@ -17,6 +17,7 @@ every new version is a new major version.
 ### Fixed
 
 -   Batch programming will now cleanup temporary files
+-   Device list will use the passed devices traits
 
 ## 103 - 2023-09-06
 
