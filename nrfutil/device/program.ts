@@ -72,7 +72,7 @@ const deviceTraitsToArgs = (traits: DeviceTraits) => {
     return args;
 };
 
-const programmingOptionsToArgs = (options?: ProgrammingOptions) => {
+export const programmingOptionsToArgs = (options?: ProgrammingOptions) => {
     if (!options) return [];
 
     const args: string[] = [];

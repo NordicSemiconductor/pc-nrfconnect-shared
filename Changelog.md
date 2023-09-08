@@ -7,6 +7,18 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 104 - 2023-09-08
+
+### Changed
+
+-   `Nrfutil Device` batch now generate batch JSON using the CLI. Requires
+    nrfutil device 1.4.2
+
+### Fixed
+
+-   Batch programming will now cleanup temporary files
+-   Device list will use the passed devices traits
+
 ## 103 - 2023-09-06
 
 ### Added

@@ -82,6 +82,11 @@ type NrfutilJsonBegin = {
     data: TaskBegin;
 };
 
+type NrfutilJsonInfo<T> = {
+    type: 'info';
+    data: T;
+};
+
 type NrfutilJsonBatch<T = unknown> = {
     batch: {
         id: string;
@@ -98,10 +103,7 @@ export type NrfutilJsonBatchUpdate<T = unknown> = {
 };
 
 export type NrfutilJson<T = unknown> =
-    | {
-          type: 'info';
-          data: T;
-      }
+    | NrfutilJsonInfo<T>
     | NrfutilJsonBegin
     | NrfutilJsonEnd<T>
     | NrfutilJsonProgress
