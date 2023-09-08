@@ -12,7 +12,7 @@ every new version is a new major version.
 ### Changed
 
 -   `Nrfutil Device` batch now generate batch JSON using the CLI. Requires
-    nrfutil 1.4.2
+    nrfutil device 1.4.2
 
 ### Fixed
 
