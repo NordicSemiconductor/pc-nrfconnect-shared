@@ -6,11 +6,16 @@
 
 import fs from 'fs';
 import os from 'os';
+// import pReflect, {
+//     PromiseFulfilledResult,
+//     PromiseRejectedResult,
+//     PromiseResult,
+// } from '';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
 
 import { TaskEnd } from '../sandboxTypes';
-import { BatchOperationWrapper2, Callbacks } from './batchTypes';
+import { BatchOperationWrapper, Callbacks } from './batchTypes';
 import {
     DeviceCore,
     DeviceTraits,
@@ -29,10 +34,12 @@ import {
     programmingOptionsToArgs,
 } from './program';
 
-type BatchOperationWrapperUnknown = BatchOperationWrapper2<unknown>;
+type BatchOperationWrapperUnknown = BatchOperationWrapper<unknown>;
 type CallbacksUnknown = Callbacks<unknown>;
 
 export class Batch {
+    private operationBatchGeneration: Promise<BatchOperationWrapperUnknown>[] =
+        [];
     private operations: BatchOperationWrapperUnknown[];
 
     private collectOperations: {
@@ -41,27 +48,37 @@ export class Batch {
         count: number;
     }[] = [];
 
-    private async enqueueBatchOperationObject(
+    private enqueueBatchOperationObject(
         command: string,
         core: DeviceCore,
         callbacks?: Callbacks<unknown>,
         args: string[] = []
     ) {
-        const box = await getDeviceSandbox();
-        box.singleInfoOperationOptionalData<object>(
-            command,
-            undefined,
-            [' --serial-number', '123', '--generate', '--core', core].concat(
-                args
-            )
-        ).then(batchOperation =>
-            this.operations.push({
+        const getPromise = async () => {
+            const box = await getDeviceSandbox();
+
+            const batchOperation =
+                await box.singleInfoOperationOptionalData<object>(
+                    command,
+                    undefined,
+                    [
+                        '--serial-number',
+                        '123',
+                        '--generate',
+                        '--core',
+                        core,
+                    ].concat(args)
+                );
+
+            return {
                 operation: {
                     ...batchOperation,
                 },
                 ...callbacks,
-            })
-        );
+            };
+        };
+
+        this.operationBatchGeneration.push(getPromise());
     }
 
     constructor(operations?: BatchOperationWrapperUnknown[]) {
@@ -222,6 +239,17 @@ export class Batch {
         let beginId = 0;
         let endId = 0;
         const results: TaskEnd<unknown>[] = [];
+
+        const promiseResults =
+            await Promise.allSettled<BatchOperationWrapperUnknown>(
+                this.operationBatchGeneration
+            );
+        promiseResults.forEach(r => {
+            if (r.status === 'rejected') {
+                throw r.reason;
+            }
+            this.operations.push(r.value);
+        });
 
         const operations = {
             operations: this.operations.map((operation, index) => ({

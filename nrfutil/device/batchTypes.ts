@@ -13,15 +13,7 @@ import {
     ProgrammingOptions,
 } from './program';
 
-export interface BatchOperationWrapper<OperationType, T = void> {
-    operation: GenericOperation<OperationType>;
-    onProgress?: (progress: Progress, task?: Task) => void;
-    onTaskBegin?: TaskBeginCallback;
-    onTaskEnd?: TaskEndCallback<T>;
-    onException?: (error: Error) => void;
-}
-
-export interface BatchOperationWrapper2<T = void> {
+export interface BatchOperationWrapper<T = void> {
     operation: object;
     onProgress?: (progress: Progress, task?: Task) => void;
     onTaskBegin?: TaskBeginCallback;
