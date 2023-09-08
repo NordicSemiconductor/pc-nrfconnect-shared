@@ -61,7 +61,7 @@ export class Batch {
                     command,
                     undefined,
                     [
-                        '--serial-number',
+                        '--serial-number', // this is a workaround this param should now be needed with --generate
                         '123',
                         '--generate',
                         '--core',
