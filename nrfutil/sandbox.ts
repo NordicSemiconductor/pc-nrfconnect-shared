@@ -449,6 +449,26 @@ export class NrfutilSandbox {
         throw new Error('Unexpected result');
     };
 
+    public singleInfoOperationOptionalData = async <T = void>(
+        command: string,
+        controller?: AbortController,
+        args: string[] = []
+    ) => {
+        const results = await this.execSubcommand<T>(
+            command,
+            args,
+            undefined,
+            undefined,
+            undefined,
+            controller
+        );
+
+        if (results.info.length === 1) {
+            return results.info[0];
+        }
+        throw new Error('Unexpected result');
+    };
+
     public onLogging = (handler: (logging: LogMessage) => void) => {
         this.onLoggingHandlers.push(handler);
 

@@ -21,6 +21,14 @@ export interface BatchOperationWrapper<OperationType, T = void> {
     onException?: (error: Error) => void;
 }
 
+export interface BatchOperationWrapper2<T = void> {
+    operation: object;
+    onProgress?: (progress: Progress, task?: Task) => void;
+    onTaskBegin?: TaskBeginCallback;
+    onTaskEnd?: TaskEndCallback<T>;
+    onException?: (error: Error) => void;
+}
+
 export type Callbacks<T = void> = {
     onTaskBegin?: TaskBeginCallback;
     onTaskEnd?: TaskEndCallback<T>;
