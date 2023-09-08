@@ -14,6 +14,10 @@ every new version is a new major version.
 -   `Nrfutil Device` batch now generate batch JSON using the CLI. Requires
     nrfutil 1.4.2
 
+### Fixed
+
+-   Batch programming will now cleanup temporary files
+
 ## 103 - 2023-09-06
 
 ### Added

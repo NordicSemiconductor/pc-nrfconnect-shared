@@ -6,11 +6,6 @@
 
 import fs from 'fs';
 import os from 'os';
-// import pReflect, {
-//     PromiseFulfilledResult,
-//     PromiseRejectedResult,
-//     PromiseResult,
-// } from '';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
 
@@ -155,6 +150,8 @@ export class Batch {
             ...(deviceTraits ? deviceTraitsToArgs(deviceTraits) : []),
             ...programmingOptionsToArgs(programmingOptions),
         ];
+        let newCallbacks = { ...callbacks };
+
         if (typeof firmware === 'string') {
             args = ['--firmware', firmware].concat(args);
         } else {
@@ -174,7 +171,7 @@ export class Batch {
             const tempFilePath = saveTemp();
             args = ['--firmware', tempFilePath].concat(args);
 
-            callbacks = {
+            newCallbacks = {
                 ...callbacks,
                 onTaskEnd: (taskEnd: TaskEnd<void>) => {
                     fs.unlinkSync(tempFilePath);
@@ -186,7 +183,7 @@ export class Batch {
         this.enqueueBatchOperationObject(
             'program',
             core,
-            callbacks as CallbacksUnknown,
+            newCallbacks as CallbacksUnknown,
             args
         );
 
@@ -220,7 +217,7 @@ export class Batch {
     ) {
         this.collectOperations.push({
             callback,
-            operationId: this.operationBatchGeneration.length - 1,
+            operationId: this.operations.length - 1,
             count,
         });
 
@@ -234,21 +231,24 @@ export class Batch {
         let beginId = 0;
         let endId = 0;
         const results: TaskEnd<unknown>[] = [];
-        const operations: BatchOperationWrapperUnknown[] = [];
 
         const promiseResults =
             await Promise.allSettled<BatchOperationWrapperUnknown>(
                 this.operationBatchGeneration
             );
-        promiseResults.forEach(r => {
-            if (r.status === 'rejected') {
-                throw r.reason;
-            }
-            operations.push(r.value);
+        const errors = promiseResults.filter(
+            r => r.status === 'rejected'
+        ) as PromiseRejectedResult[];
+        if (errors.length > 0) throw errors.map(e => e.reason).join('\n');
+
+        const promiseResultsSuccess =
+            promiseResults as PromiseFulfilledResult<BatchOperationWrapperUnknown>[];
+        promiseResultsSuccess.forEach(r => {
+            this.operations.push(r.value);
         });
 
-        const batchOperation = {
-            operations: operations.map((operation, index) => ({
+        const operations = {
+            operations: this.operations.map((operation, index) => ({
                 operationId: index.toString(),
                 ...operation.operation,
             })),
@@ -262,21 +262,21 @@ export class Batch {
                     '--serial-number',
                     device.serialNumber,
                     '--batch-json',
-                    JSON.stringify(batchOperation),
+                    JSON.stringify(operations),
                 ],
                 (progress, task) => {
                     if (task) {
-                        operations[endId].onProgress?.(progress, task);
+                        this.operations[endId].onProgress?.(progress, task);
                     }
                 },
                 onTaskBegin => {
                     beginId += 1;
-                    operations[endId].onTaskBegin?.(onTaskBegin);
+                    this.operations[endId].onTaskBegin?.(onTaskBegin);
                 },
                 taskEnd => {
                     results.push(taskEnd);
 
-                    operations[endId].onTaskEnd?.(taskEnd);
+                    this.operations[endId].onTaskEnd?.(taskEnd);
 
                     this.collectOperations
                         .filter(operation => operation.operationId === endId)
@@ -301,12 +301,12 @@ export class Batch {
                         .map(e => `error: ${e.error}, message: ${e.message}`)
                         .join('\n')}`
                 );
-                operations[endId].onException?.(error);
+                this.operations[endId].onException?.(error);
                 throw error;
             }
         } catch (error) {
             if (beginId !== endId) {
-                operations[beginId].onException?.(error as Error);
+                this.operations[beginId].onException?.(error as Error);
             }
             throw error;
         }
