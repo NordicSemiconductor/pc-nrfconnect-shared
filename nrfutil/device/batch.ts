@@ -217,7 +217,7 @@ export class Batch {
     ) {
         this.collectOperations.push({
             callback,
-            operationId: this.operations.length - 1,
+            operationId: this.operationBatchGeneration.length - 1,
             count,
         });
 
@@ -231,24 +231,21 @@ export class Batch {
         let beginId = 0;
         let endId = 0;
         const results: TaskEnd<unknown>[] = [];
+        const operations: BatchOperationWrapperUnknown[] = [];
 
         const promiseResults =
             await Promise.allSettled<BatchOperationWrapperUnknown>(
                 this.operationBatchGeneration
             );
-        const errors = promiseResults.filter(
-            r => r.status === 'rejected'
-        ) as PromiseRejectedResult[];
-        if (errors.length > 0) throw errors.map(e => e.reason).join('\n');
-
-        const promiseResultsSuccess =
-            promiseResults as PromiseFulfilledResult<BatchOperationWrapperUnknown>[];
-        promiseResultsSuccess.forEach(r => {
-            this.operations.push(r.value);
+        promiseResults.forEach(r => {
+            if (r.status === 'rejected') {
+                throw r.reason;
+            }
+            operations.push(r.value);
         });
 
-        const operations = {
-            operations: this.operations.map((operation, index) => ({
+        const batchOperation = {
+            operations: operations.map((operation, index) => ({
                 operationId: index.toString(),
                 ...operation.operation,
             })),
@@ -262,21 +259,21 @@ export class Batch {
                     '--serial-number',
                     device.serialNumber,
                     '--batch-json',
-                    JSON.stringify(operations),
+                    JSON.stringify(batchOperation),
                 ],
                 (progress, task) => {
                     if (task) {
-                        this.operations[endId].onProgress?.(progress, task);
+                        operations[endId].onProgress?.(progress, task);
                     }
                 },
                 onTaskBegin => {
                     beginId += 1;
-                    this.operations[endId].onTaskBegin?.(onTaskBegin);
+                    operations[endId].onTaskBegin?.(onTaskBegin);
                 },
                 taskEnd => {
                     results.push(taskEnd);
 
-                    this.operations[endId].onTaskEnd?.(taskEnd);
+                    operations[endId].onTaskEnd?.(taskEnd);
 
                     this.collectOperations
                         .filter(operation => operation.operationId === endId)
@@ -301,12 +298,12 @@ export class Batch {
                         .map(e => `error: ${e.error}, message: ${e.message}`)
                         .join('\n')}`
                 );
-                this.operations[endId].onException?.(error);
+                operations[endId].onException?.(error);
                 throw error;
             }
         } catch (error) {
             if (beginId !== endId) {
-                this.operations[beginId].onException?.(error as Error);
+                operations[beginId].onException?.(error as Error);
             }
             throw error;
         }
