@@ -1,7 +1,9 @@
 trigger:
     - main
 pool:
-    name: wl-node-test-17
+    name: wayland_pool_sw_only
+    demands:
+        - agent.name -equals wl-node-test-17
 variables:
     - group: wayland
 steps:
