@@ -7,7 +7,7 @@ pool:
 variables:
     - group: wayland
 steps:
-    - task: NodeTool@1
+    - task: NodeTool@0
       inputs:
         versionSource: 'spec'
         versionSpec: '18.x'
@@ -15,6 +15,7 @@ steps:
     - script: |
           set -o errexit -o pipefail
           node -p "process.arch"
+          node -v
       displayName: 'Build, Test, Compile and Pack'
     - bash: |
           set -o errexit -o pipefail
