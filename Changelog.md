@@ -7,6 +7,16 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 105 - UNRELEASED
+
+### Added
+
+-   Log warning for any nrfutil device that was not enumerated
+
+### Fixed
+
+-   Log device list errors.
+
 ## 104 - 2023-09-08
 
 ### Changed
