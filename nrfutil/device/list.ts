@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import logger from '../../src/logging';
 import {
     DeviceTraits,
     deviceTraitsToArgs,
@@ -50,6 +51,16 @@ export default async (
 
     const onData = (data: HotplugEvent | ListEvent) => {
         if (isListEvent(data)) {
+            data.devices
+                .filter(d => !d.serialNumber)
+                .forEach(d => {
+                    logger.warn(
+                        `Device was skipped as it has no Serial number ${JSON.stringify(
+                            d
+                        )}`
+                    );
+                });
+
             onEnumerated(
                 data.devices.filter(
                     d => d.serialNumber
@@ -63,14 +74,18 @@ export default async (
             return;
         }
 
-        if (
-            data.event === 'Arrived' &&
-            data.device &&
-            data.device.serialNumber
-        ) {
-            onHotplugEvent.onDeviceArrived(
-                data.device as NrfutilDeviceWithSerialnumber
-            );
+        if (data.event === 'Arrived' && data.device) {
+            if (data.device.serialNumber) {
+                onHotplugEvent.onDeviceArrived(
+                    data.device as NrfutilDeviceWithSerialnumber
+                );
+            } else {
+                logger.warn(
+                    `Device was skipped as it has no Serial number ${JSON.stringify(
+                        data.device
+                    )}`
+                );
+            }
         } else if (data.event === 'Left') {
             onHotplugEvent.onDeviceLeft(data.id);
         }
