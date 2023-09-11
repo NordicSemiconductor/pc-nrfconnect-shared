@@ -1,5 +1,7 @@
 trigger:
     - main
+pool:
+    name: wl-node-test-17
 variables:
     - group: wayland
 steps:
