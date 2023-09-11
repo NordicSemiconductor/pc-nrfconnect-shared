@@ -13,11 +13,6 @@ steps:
     - script: |
           set -o errexit -o pipefail
           node -p "process.arch"
-        #   npm ci
-        #   npm run check
-        #   npm run postinstall
-        #   npm test -- --coverage --coverageReporters=cobertura
-        #   npm pack
       displayName: 'Build, Test, Compile and Pack'
     - bash: |
           set -o errexit -o pipefail
