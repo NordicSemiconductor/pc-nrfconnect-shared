@@ -335,7 +335,9 @@ export const startWatchingDevices =
             const operation = await NrfutilDeviceLib.list(
                 deviceListing,
                 d => d.forEach(onDeviceArrived),
-                logger.error,
+                error => {
+                    logger.error(error);
+                },
                 { onDeviceArrived, onDeviceLeft }
             );
 
