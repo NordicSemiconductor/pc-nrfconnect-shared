@@ -67,7 +67,7 @@
 
     .core19-side-panel-container {
         width: $side-panel-width;
-        padding: 0 24px;
+        padding: 0 10px 0 24px; // 24-14(scrollbar width)=10
         background-color: $gray-50;
         height: 100%;
         margin-left: 0;
@@ -77,7 +77,8 @@
             margin-left: -$side-panel-width;
         }
 
-        overflow-y: overlay;
+        overflow-y: scroll;
+
         @include scrollbars($gray-50);
     }
 }
