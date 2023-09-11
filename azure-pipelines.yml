@@ -14,8 +14,8 @@ steps:
         checkLatest: true
     - script: |
           set -o errexit -o pipefail
-          /Users/wayland_ci/myagent/_work/_tool/node/18.17.1/node -p "process.arch"
-          /Users/wayland_ci/myagent/_work/_tool/node/18.17.1/node -v
+          /Users/wayland_ci/myagent/_work/_tool/node/18.17.1/bin/node -p "process.arch"
+          /Users/wayland_ci/myagent/_work/_tool/node/18.17.1/bin/node -v
       displayName: 'Build, Test, Compile and Pack'
     - bash: |
           set -o errexit -o pipefail
