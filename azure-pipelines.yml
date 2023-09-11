@@ -12,10 +12,15 @@ steps:
         versionSource: 'spec'
         versionSpec: '18.x'
         checkLatest: true
+      condition: ne( variables['Agent.OS'], 'Darwin' )
+    - bash: |
+          export PATH=$PATH:/Users/wayland_ci/myagent/_work/_tool/node/18.17.1/bin
+      condition: eq( variables['Agent.OS'], 'Darwin' )
+      displayName: 'Set up node path on mac'
     - script: |
           set -o errexit -o pipefail
-          /Users/wayland_ci/myagent/_work/_tool/node/18.17.1/bin/node -p "process.arch"
-          /Users/wayland_ci/myagent/_work/_tool/node/18.17.1/bin/node -v
+          node -p "process.arch"
+          node -v
       displayName: 'Build, Test, Compile and Pack'
     - bash: |
           set -o errexit -o pipefail
