@@ -9,7 +9,7 @@ variables:
 steps:
     - task: NodeTool@1
       inputs:
-          versionSpec: 18
+          versionSpec: '18.x'
     - script: |
           set -o errexit -o pipefail
           node -p "process.arch"
