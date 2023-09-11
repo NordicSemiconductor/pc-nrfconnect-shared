@@ -9,7 +9,9 @@ variables:
 steps:
     - task: NodeTool@1
       inputs:
+          versionSource: 'spec'
           versionSpec: '18.x'
+          checkLatest: true
     - script: |
           set -o errexit -o pipefail
           node -p "process.arch"
