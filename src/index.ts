@@ -143,7 +143,11 @@ export {
     prepareDevice,
 } from './Device/deviceSetup';
 
-export { shellParser } from './Parsers/shellParser';
+export {
+    shellParser,
+    xTerminalShellParserWrapper,
+    type ShellParser,
+} from './Parsers/shellParser';
 
 export {
     addNewMessage,

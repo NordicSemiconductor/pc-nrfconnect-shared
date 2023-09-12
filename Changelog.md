@@ -11,7 +11,7 @@ every new version is a new major version.
 
 ### Added
 
--   `ShellParser` utility
+-   `shellParser` utility
 
 ## 105 - 2023-09-11
 
