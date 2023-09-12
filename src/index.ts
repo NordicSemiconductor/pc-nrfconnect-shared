@@ -143,6 +143,8 @@ export {
     prepareDevice,
 } from './Device/deviceSetup';
 
+export { shellParser } from './Parsers/shellParser';
+
 export {
     addNewMessage,
     newCopiedFlashMessage,

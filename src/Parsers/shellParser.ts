@@ -32,7 +32,7 @@ type CommandEnqueue = {
     timeout?: number;
 };
 
-export type ShellParser = Awaited<ReturnType<typeof hookModemToShellParser>>;
+export type ShellParser = Awaited<ReturnType<typeof shellParser>>;
 export type XTerminalShellParser = ReturnType<
     typeof xTerminalShellParserWrapper
 >;
@@ -64,7 +64,7 @@ export const xTerminalShellParserWrapper = (terminal: Terminal) => ({
         terminal.write(data, callback),
 });
 
-export const hookModemToShellParser = async (
+export const shellParser = async (
     serialPort: SerialPort,
     xTerminalShellParser: XTerminalShellParser,
     settings: ShellParserSettings = {

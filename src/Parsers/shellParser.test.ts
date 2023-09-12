@@ -13,7 +13,7 @@ import type { SerialPortOpenOptions } from 'serialport';
 
 import { SerialPort } from '../SerialPort/SerialPort';
 import {
-    hookModemToShellParser,
+    shellParser as CreateShellParser,
     ShellParserSettings,
     XTerminalShellParser,
 } from './shellParser';
@@ -184,7 +184,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify that shell init char is sent on open', async () => {
-        await hookModemToShellParser(mockModem(), mockTerminal());
+        await CreateShellParser(mockModem(), mockTerminal());
 
         expect(mockWrite).toBeCalledTimes(1);
         expect(mockWrite).toBeCalledWith(
@@ -201,7 +201,7 @@ describe('shell command parser', () => {
             })
         );
 
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal()
         );
@@ -228,7 +228,7 @@ describe('shell command parser', () => {
             })
         );
 
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal()
         );
@@ -238,7 +238,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify one time onSuccess callback is called when we have a response in one stream', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -267,7 +267,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify one time onSuccess callback is called when we have a response in multiple streams', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -298,7 +298,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify one time onFail callback is called when we have a response in one stream', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -330,7 +330,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify one time onFail callback is called when we have a response in multiple streams', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -366,7 +366,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify that only one command is send at a time until we get a response', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -416,7 +416,7 @@ describe('shell command parser', () => {
         const mockOnSuccess1 = jest.fn(() => '');
         const mockOnSuccess2 = jest.fn(() => '');
 
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -461,7 +461,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify onError and onSuccess is called for the appropriate responses', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -505,7 +505,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify permanent onSuccess callback is called when we have a response in one stream', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -546,7 +546,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify permanent onSuccess callback is called when we have a response in multiple streams', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -581,7 +581,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify onAnyCommand is called with success when we have a response', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -604,7 +604,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify onAnyCommand is called with error when we have a response', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -627,7 +627,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify permanent onFail callback is called when we have a response in one stream', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -673,7 +673,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify one time onFail callback is called when we have a response in multiple streams', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -711,7 +711,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify permanent and one time onSuccess both callback is called when we have a response', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -746,7 +746,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify permanent and one time onFail callback is called when we have a response', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -783,7 +783,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify onShellLogging callback is called when we have a response logging shell in one stream', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -809,7 +809,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify onShellLogging callback is called when we have a response logging shell in multiple streams', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -837,7 +837,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify onShellLogging callback is called large timestamp', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -863,7 +863,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify onUnknown callback is called when we have a response that is not logging nor is it a registered command one stream', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -885,7 +885,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify onUnknown callback is called when we have a response that is not logging nor is it a registered command multiple streams', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -910,7 +910,7 @@ describe('shell command parser', () => {
     });
 
     test('Verify permanent callback unregister removes the callback', async () => {
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
@@ -953,7 +953,7 @@ describe('shell command parser', () => {
         const mockOnSuccess2 = jest.fn(() => '');
         const mockOnSuccess3 = jest.fn(() => '');
 
-        const shellParser = await hookModemToShellParser(
+        const shellParser = await CreateShellParser(
             mockModem(),
             mockTerminal(),
             settings
