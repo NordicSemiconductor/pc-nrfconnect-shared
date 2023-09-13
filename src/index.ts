@@ -144,6 +144,12 @@ export {
 } from './Device/deviceSetup';
 
 export {
+    shellParser,
+    xTerminalShellParserWrapper,
+    type ShellParser,
+} from './Parsers/shellParser';
+
+export {
     addNewMessage,
     newCopiedFlashMessage,
     newInfoFlashMessage,

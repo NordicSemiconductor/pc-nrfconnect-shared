@@ -11,6 +11,7 @@ every new version is a new major version.
 
 ### Added
 
+-   `shellParser` utility
 -   `StartStopButton` now also takes in optional `title` property
 
 ## 105 - 2023-09-11
