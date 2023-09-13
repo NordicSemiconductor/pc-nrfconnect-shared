@@ -18,7 +18,8 @@ const getUserDataDir = () => getGlobal('userDataDir');
  */
 const getAppDir = () => {
     const html = packageJson()?.nrfConnectForDesktop?.html ?? '';
-    return __filename.replace(html, '');
+    const dir = path.parse(html).dir;
+    return path.parse(__filename).dir.replace(dir, '');
 };
 
 /**
