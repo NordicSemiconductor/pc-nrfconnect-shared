@@ -10,27 +10,27 @@ import { Terminal } from 'xterm-headless';
 import logger from '../logging';
 import { SerialPort } from '../SerialPort/SerialPort';
 
-export interface ICallbacks {
+interface Callbacks {
     onSuccess: (response: string, command: string) => void;
     onError: (message: string, command: string) => void;
     onTimeout?: (message: string, command: string) => void;
 }
 
-export type ShellParserSettings = {
+export interface ShellParserSettings {
     shellPromptUart?: string;
     logRegex: RegExp;
     errorRegex: RegExp;
     timeout: number;
     columnWidth: number;
-};
+}
 
-type CommandEnqueue = {
+interface CommandEnqueue {
     command: string;
-    callbacks: ICallbacks[];
+    callbacks: Callbacks[];
     sent: boolean;
     sentTime: number;
     timeout?: number;
-};
+}
 
 export type ShellParser = Awaited<ReturnType<typeof shellParser>>;
 export type XTerminalShellParser = ReturnType<
@@ -79,8 +79,8 @@ export const shellParser = async (
     const eventEmitter = new EventEmitter();
 
     let commandBuffer = '';
-    let commandQueueCallbacks = new Map<string, ICallbacks[]>();
-    let commandQueue: CommandEnqueue[] = [];
+    const commandQueueCallbacks = new Map<string, Callbacks[]>();
+    const commandQueue: CommandEnqueue[] = [];
     let cr = false;
     let crnl = false;
     let pausedState = true; // Assume we have some command in the shell that has user has started typing
@@ -89,20 +89,9 @@ export const shellParser = async (
 
     if (await serialPort.isOpen()) {
         serialPort.write(
-            `${String.fromCharCode(12).toString()}${String.fromCharCode(
-                21
-            ).toString()}`
+            `${String.fromCharCode(12)}${String.fromCharCode(21)}`
         );
     }
-
-    const reset = () => {
-        commandBuffer = '';
-        commandQueueCallbacks = new Map();
-        commandQueue = [];
-        xTerminalShellParser.clear();
-        cr = false;
-        crnl = false;
-    };
 
     const initDataSend = async () => {
         if (!(await serialPort.isOpen())) return;
@@ -457,7 +446,7 @@ export const shellParser = async (
         },
         enqueueRequest: async (
             command: string,
-            callbacks?: ICallbacks,
+            callbacks?: Callbacks,
             timeout?: number,
             unique = false
         ) => {
@@ -534,7 +523,6 @@ export const shellParser = async (
             unregisterOnResponse();
             unregisterOnDataWritten();
             unregisterOnClosed();
-            reset();
         },
         isPaused: () => pausedState,
         unPause,
