@@ -23,6 +23,7 @@ interface Props {
     showIcon?: boolean;
     variant?: ButtonVariants;
     className?: string;
+    title?: string;
 }
 
 const StartStopButton: FC<Props> = ({
@@ -35,12 +36,14 @@ const StartStopButton: FC<Props> = ({
     className,
     large = true,
     showIcon = true,
+    title,
 }) => {
     const label = started ? stopText : startText;
     const src = started ? stopSvg : playSvg;
 
     return (
         <Button
+            title={title}
             className={classNames(
                 'start-stop',
                 `${started ? 'active-animation' : ''}`,
