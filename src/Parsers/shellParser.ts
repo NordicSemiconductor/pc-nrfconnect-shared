@@ -10,7 +10,7 @@ import { Terminal } from 'xterm-headless';
 import logger from '../logging';
 import { SerialPort } from '../SerialPort/SerialPort';
 
-interface Callbacks {
+export interface Callbacks {
     onSuccess: (response: string, command: string) => void;
     onError: (message: string, command: string) => void;
     onTimeout?: (message: string, command: string) => void;

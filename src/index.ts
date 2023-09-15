@@ -146,6 +146,7 @@ export {
 export {
     shellParser,
     xTerminalShellParserWrapper,
+    type Callbacks as ShellParserCallbacks,
     type ShellParser,
 } from './Parsers/shellParser';
 
