@@ -126,7 +126,7 @@ export default ({
                             row[columnIndex] = 0;
                             zeroHeightChildren.push(true);
                         } else {
-                            row[columnIndex] = child.offsetHeight + 1;
+                            row[columnIndex] = child.scrollHeight + 9; // 8 border bottom + 1px to round as value might be decimal
                             zeroHeightChildren.push(false);
                         }
                     }
