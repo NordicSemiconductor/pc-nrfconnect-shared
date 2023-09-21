@@ -227,35 +227,35 @@ export class NrfutilSandbox {
                 controller
             );
 
-            if (!taskEnd.find(end => end.result === 'fail')) {
-                return { taskEnd, info };
-            }
-            const errorMessage = taskEnd
-                .filter(end => end.result === 'fail')
-                .map(
-                    end =>
-                        `error: Code '${end.error?.code}' ${end.error?.description}, message: ${end.message}`
-                )
-                .join('\n');
-            throw new Error(stdErr ?? errorMessage);
+            if (
+                stdErr ||
+                taskEnd.filter(end => end.result === 'fail').length > 0
+            )
+                throw new Error('Task failed.');
+
+            return { taskEnd, info };
         } catch (e) {
             const error = e as Error;
-            let msg = error.message;
 
-            const taskEndMsg = taskEnd
-                .map(end => (end.message ? `Message: ${end.message}` : ''))
-                .filter(message => !!message)
-                .join('\n');
-
-            if (taskEndMsg) {
-                msg += `\n${taskEndMsg}`;
-            }
+            const addPunctuation = (str: string) =>
+                str.endsWith('.') ? str.trim() : `${str.trim()}.`;
 
             if (stdErr) {
-                msg += `\n${stdErr}`;
+                error.message += `\n${addPunctuation(stdErr)}`;
             }
 
-            error.message = msg;
+            const taskEndErrorMsg = taskEnd
+                .filter(end => end.result === 'fail' && !!end.message)
+                .map(end =>
+                    end.message ? `Message: ${addPunctuation(end.message)}` : ''
+                )
+                .join('\n');
+
+            if (taskEndErrorMsg) {
+                error.message += `\n${taskEndErrorMsg}`;
+            }
+
+            error.message = error.message.replaceAll('Error: ', '');
             throw error;
         }
     };
@@ -345,7 +345,7 @@ export class NrfutilSandbox {
                 if (code === 0) {
                     resolve();
                 } else {
-                    reject(new Error(`Failed with exit code ${code}`));
+                    reject(new Error(`Failed with exit code ${code}.`));
                 }
             });
         });
