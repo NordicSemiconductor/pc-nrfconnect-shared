@@ -226,6 +226,14 @@ export class NrfutilSandbox {
                 },
                 controller
             );
+
+            if (
+                stdErr ||
+                taskEnd.filter(end => end.result === 'fail').length > 0
+            )
+                throw new Error('Task failed.');
+
+            return { taskEnd, info };
         } catch (e) {
             const error = e as Error;
 
@@ -234,33 +242,17 @@ export class NrfutilSandbox {
                 throw error;
             }
 
-            let msg = error.message;
-
-            const taskEndMsg = taskEnd
+            const taskEndErrorMsg = taskEnd
                 .filter(end => end.result === 'fail' && !!end.message)
                 .map(end => (end.message ? `Message: ${end.message}` : ''))
                 .join('\n');
 
-            if (taskEndMsg) {
-                msg += `\n${taskEndMsg}`;
+            if (taskEndErrorMsg) {
+                error.message += `\n${taskEndErrorMsg}`;
             }
 
-            error.message = msg;
             throw error;
         }
-
-        if (!taskEnd.find(end => end.result === 'fail')) {
-            return { taskEnd, info };
-        }
-
-        const errorMessage = taskEnd
-            .filter(end => end.result === 'fail')
-            .map(
-                end =>
-                    `error: Code '${end.error?.code}' ${end.error?.description}, message: ${end.message}`
-            )
-            .join('\n');
-        throw new Error(stdErr ?? errorMessage);
     };
 
     public execSubcommand = <Result>(
