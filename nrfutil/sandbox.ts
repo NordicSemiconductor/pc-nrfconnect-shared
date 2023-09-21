@@ -237,13 +237,18 @@ export class NrfutilSandbox {
         } catch (e) {
             const error = e as Error;
 
+            const addPunctuation = (str: string) =>
+                str.endsWith('.') ? str : `${str}.`;
+
             if (stdErr) {
-                error.message += `\n${stdErr}.`;
+                error.message += `\n${addPunctuation(stdErr)}`;
             }
 
             const taskEndErrorMsg = taskEnd
                 .filter(end => end.result === 'fail' && !!end.message)
-                .map(end => (end.message ? `Message: ${end.message}.` : ''))
+                .map(end =>
+                    end.message ? `Message: ${addPunctuation(end.message)}` : ''
+                )
                 .join('\n');
 
             if (taskEndErrorMsg) {
