@@ -102,7 +102,8 @@ export default ({
 
         const generateMetaData = (col: number) => {
             let child = masonryLayoutRef.current?.firstElementChild;
-            const heightMatrix: number[][] = [];
+            const offsetHeightMatrix: number[][] = [];
+            const scrollHeightMatrix: number[][] = [];
             const zeroHeightChildren: boolean[] = [];
 
             let i = 0;
@@ -111,11 +112,14 @@ export default ({
                     if (!child.hasAttribute('data-filler')) {
                         const rowIndex = Math.floor(i / col);
 
-                        if (heightMatrix[rowIndex] === undefined) {
-                            heightMatrix[rowIndex] = [];
+                        if (offsetHeightMatrix[rowIndex] === undefined) {
+                            offsetHeightMatrix[rowIndex] = [];
+                            scrollHeightMatrix[rowIndex] = [];
                         }
 
-                        const row = heightMatrix[rowIndex];
+                        const offsetHeightRow = offsetHeightMatrix[rowIndex];
+                        const scrollHeightRow = scrollHeightMatrix[rowIndex];
+                        let scrollHeightRowDiff = 0;
                         const columnIndex = i % col;
 
                         i += 1;
@@ -123,19 +127,34 @@ export default ({
                             child.offsetHeight <=
                             Number.parseInt(styles.margin, 10)
                         ) {
-                            row[columnIndex] = 0;
+                            offsetHeightRow[columnIndex] = 0;
                             zeroHeightChildren.push(true);
                         } else {
-                            row[columnIndex] = child.scrollHeight + 9; // 8 border bottom + 1px to round as value might be decimal
+                            offsetHeightRow[columnIndex] =
+                                child.offsetHeight + 1; // 1px to round as value might be decimal
+                            scrollHeightRowDiff =
+                                child.scrollHeight +
+                                9 -
+                                offsetHeightRow[columnIndex]; // 8 border bottom + 1px to round as value might be decimal
                             zeroHeightChildren.push(false);
                         }
+
+                        scrollHeightRow[columnIndex] =
+                            offsetHeightMatrix.reduce(
+                                (p, c) => p + c[columnIndex],
+                                0
+                            ) + scrollHeightRowDiff;
                     }
 
                     child = child.nextElementSibling;
                 }
             }
 
-            return { heightMatrix, hiddenChildren: zeroHeightChildren };
+            return {
+                offsetHeightMatrix,
+                scrollHeightMatrix,
+                hiddenChildren: zeroHeightChildren,
+            };
         };
 
         const calcData = (col: number) => {
@@ -143,7 +162,7 @@ export default ({
             const heights: number[] = Array(col).fill(0);
             const newOrder: number[] = [];
 
-            metaData.heightMatrix.forEach(row => {
+            metaData.offsetHeightMatrix.forEach(row => {
                 row.forEach(itemHeight => {
                     const smallest =
                         heights.findIndex(h => h === Math.min(...heights)) ?? 0;
@@ -153,7 +172,10 @@ export default ({
             });
 
             return {
-                maxHeight: Math.max(...heights, 0),
+                maxHeight: Math.max(
+                    ...heights,
+                    ...metaData.scrollHeightMatrix.flat()
+                ),
                 order: newOrder,
                 columnHeights: heights,
                 columns: Math.min(
