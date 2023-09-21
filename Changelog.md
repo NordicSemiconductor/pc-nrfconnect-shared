@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 109 - 2023-09-21
+
+### Change
+
+-   Improve `Nrfutil Sandbox` error messages.
+
 ## 108 - 2023-09-15
 
 ### Fixed
