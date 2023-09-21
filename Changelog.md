@@ -9,9 +9,13 @@ every new version is a new major version.
 
 ## 109 - 2023-09-21
 
-### Change
+### Changed
 
 -   Improve `Nrfutil Sandbox` error messages.
+
+### Added
+
+-   `Overlay` component.
 
 ## 108 - 2023-09-15
 
