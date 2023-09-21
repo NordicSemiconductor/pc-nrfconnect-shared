@@ -238,7 +238,7 @@ export class NrfutilSandbox {
             const error = e as Error;
 
             const addPunctuation = (str: string) =>
-                str.endsWith('.') ? str : `${str}.`;
+                str.endsWith('.') ? str.trim() : `${str.trim()}.`;
 
             if (stdErr) {
                 error.message += `\n${addPunctuation(stdErr)}`;
