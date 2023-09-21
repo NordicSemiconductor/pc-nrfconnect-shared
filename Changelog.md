@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 109 - 2023-09-21
+
+### Added
+
+-   `Overlay` component.
+
 ## 108 - 2023-09-15
 
 ### Fixed
@@ -98,10 +104,6 @@ every new version is a new major version.
     1000ms)
 -   Nrfutil device now support nrfutil device 1.4.x only
 -   Nrfutil device will not log in production unless verbose logging is on
-
-### Added
-
--   `Overlay` component.
 
 ### Fixed
 
