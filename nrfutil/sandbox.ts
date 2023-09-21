@@ -238,19 +238,19 @@ export class NrfutilSandbox {
             const error = e as Error;
 
             if (stdErr) {
-                error.message += `\n${stdErr}`;
-                throw error;
+                error.message += `\n${stdErr}.`;
             }
 
             const taskEndErrorMsg = taskEnd
                 .filter(end => end.result === 'fail' && !!end.message)
-                .map(end => (end.message ? `Message: ${end.message}` : ''))
+                .map(end => (end.message ? `Message: ${end.message}.` : ''))
                 .join('\n');
 
             if (taskEndErrorMsg) {
                 error.message += `\n${taskEndErrorMsg}`;
             }
 
+            error.message = error.message.replaceAll('Error: ', '');
             throw error;
         }
     };
@@ -340,7 +340,7 @@ export class NrfutilSandbox {
                 if (code === 0) {
                     resolve();
                 } else {
-                    reject(new Error(`Failed with exit code ${code}`));
+                    reject(new Error(`Failed with exit code ${code}.`));
                 }
             });
         });
