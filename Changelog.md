@@ -13,6 +13,7 @@ every new version is a new major version.
 
 -   Optional property `nrfConnectForDesktop.supportedDevices` in `package.json`.
     Will for now only be used by the Quickstart app.
+-   Output link to where in Azure a release should be created.
 
 ### Fixed
 
