@@ -14,6 +14,12 @@ every new version is a new major version.
 -   Optional property `nrfConnectForDesktop.supportedDevices` in `package.json`.
     Will for now only be used by the Quickstart app.
 
+### Fixed
+
+-   List items in dialog bodies had the wrong size: They inherited the size from
+    the document body instead of using the same size as was used in the dialog
+    in paragraphs.
+
 ## 110 - 2023-09-22
 
 ### Fixed
