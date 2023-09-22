@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 110 - 2023-09-22
+
+### Fixed
+
+-   `MasonryLayout` dropdown component forced cards on different row to shift.
+
 ## 109 - 2023-09-21
 
 ### Changed
