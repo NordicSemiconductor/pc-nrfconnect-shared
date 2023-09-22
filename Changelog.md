@@ -77,7 +77,8 @@ every new version is a new major version.
 
 ### Steps to upgrade
 
--   Update `nrfConnectForDesktop.nrfutil` to version 1.4.2 in `package.json`
+-   Update `nrfConnectForDesktop.nrfutil.device` to version 1.4.2 in
+    `package.json`
 
 ## 102 - 2023-09-05
 
