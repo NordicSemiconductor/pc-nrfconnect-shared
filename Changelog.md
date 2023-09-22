@@ -7,6 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 112 - 2023-09-25
+
+### Fixed
+
+-   Type problem when wrong `setTimeout` is chosen by TypeScript. The
+    `setTimeout` functions in node or in the browser return different types.
+    Sometimes TypeScript gets confused from which one to choose the types. Using
+    explicitly the version from the browser fixes this.
+
 ## 111 - 2023-09-22
 
 ### Added

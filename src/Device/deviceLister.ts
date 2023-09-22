@@ -81,7 +81,7 @@ const initAutoReconnectTimeout =
 
         dispatch(
             setWaitForDeviceTimeout(
-                setTimeout(() => {
+                window.setTimeout(() => {
                     dispatch(closeDeviceSetupDialog());
                     if (waitForDevice?.onFail)
                         waitForDevice?.onFail(

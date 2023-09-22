@@ -27,7 +27,7 @@ export interface DeviceAutoSelectState {
     device?: Device;
     disconnectionTime?: number;
     waitForDevice?: WaitForDevice;
-    autoReconnectTimeout?: NodeJS.Timeout;
+    autoReconnectTimeout?: number;
     lastArrivedDeviceId?: number;
     arrivedButWrongWhen?: boolean;
     onCancelTimeout?: () => void;
@@ -41,10 +41,7 @@ const slice = createSlice({
     name: 'deviceAutoSelect',
     initialState,
     reducers: {
-        setWaitForDeviceTimeout: (
-            state,
-            action: PayloadAction<NodeJS.Timeout>
-        ) => {
+        setWaitForDeviceTimeout: (state, action: PayloadAction<number>) => {
             clearTimeout(state.autoReconnectTimeout);
             state.autoReconnectTimeout = action.payload;
         },
