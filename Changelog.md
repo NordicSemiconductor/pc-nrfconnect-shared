@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## Unreleased
+
+### Added
+
+-   Optional property `nrfConnectForDesktop.supportedDevices` in `package.json`.
+    Will for now only be used by the Quickstart app.
+
 ## 110 - 2023-09-22
 
 ### Fixed
