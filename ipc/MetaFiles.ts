@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import { DevicePCA } from '../src/Device/deviceInfo/deviceInfo';
+
 export type UrlString = string;
 
 export interface SourceJson {
@@ -43,6 +45,7 @@ interface ObjectContainingOptionalStrings {
 }
 
 interface NrfConnectForDesktop {
+    supportedDevices?: DevicePCA[];
     nrfutil?: NrfutilModules;
     html?: string;
 }

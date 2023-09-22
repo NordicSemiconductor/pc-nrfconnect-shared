@@ -43,7 +43,7 @@ import unknownNordicLogo from '!!@svgr!./unknown-nordic-logo.svg';
 
 type Device = NrfutilDevice | WrappedDevice;
 
-type DevicePCA =
+export type DevicePCA =
     | 'PCA10028'
     | 'PCA10031'
     | 'PCA10040'

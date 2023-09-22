@@ -7,6 +7,20 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 111 - 2023-09-22
+
+### Added
+
+-   Optional property `nrfConnectForDesktop.supportedDevices` in `package.json`.
+    Will for now only be used by the Quickstart app.
+-   Output link to where in Azure a release should be created.
+
+### Fixed
+
+-   List items in dialog bodies had the wrong size: They inherited the size from
+    the document body instead of using the same size as was used in the dialog
+    in paragraphs.
+
 ## 110 - 2023-09-22
 
 ### Fixed
@@ -77,7 +91,8 @@ every new version is a new major version.
 
 ### Steps to upgrade
 
--   Update `nrfConnectForDesktop.nrfutil` to version 1.4.2 in `package.json`
+-   Update `nrfConnectForDesktop.nrfutil.device` to version 1.4.2 in
+    `package.json`
 
 ## 102 - 2023-09-05
 
