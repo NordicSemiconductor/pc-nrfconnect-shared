@@ -21,6 +21,18 @@ every new version is a new major version.
     the document body instead of using the same size as was used in the dialog
     in paragraphs.
 
+### Steps to upgrade
+
+-   If you get compilation errors, you may have to create a TypeScript type
+    definition file (e.g. svg.d.ts) in your project containing this:
+
+```ts
+declare module '!!@svgr!*.svg' {
+    const svg: React.ElementType;
+    export default svg;
+}
+```
+
 ## 110 - 2023-09-22
 
 ### Fixed
