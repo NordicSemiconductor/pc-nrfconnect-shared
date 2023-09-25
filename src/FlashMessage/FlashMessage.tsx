@@ -43,10 +43,10 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
     const [fadeoutTimer, setFadeoutTimer] = useState<string>(
         dismissTime == null ? 'unset' : `${dismissTime}ms`
     );
-    const timeoutHandler = useRef<NodeJS.Timeout | undefined>(undefined);
+    const timeoutHandler = useRef<number | undefined>(undefined);
 
     if (timeoutHandler.current == null && dismissTime != null) {
-        timeoutHandler.current = setTimeout(() => {
+        timeoutHandler.current = window.setTimeout(() => {
             dispatch(removeMessage(id));
         }, dismissTime);
     }
@@ -58,7 +58,7 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
 
     const addFadeout = () => {
         if (dismissTime) {
-            timeoutHandler.current = setTimeout(() => {
+            timeoutHandler.current = window.setTimeout(() => {
                 dispatch(removeMessage(id));
             }, dismissTime);
             setFadeoutTimer(`${dismissTime}ms`);

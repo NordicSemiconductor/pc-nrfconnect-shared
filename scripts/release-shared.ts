@@ -200,7 +200,7 @@ const main = () => {
     if (noErrors) {
         doRelease(nextReleaseNumber);
         console.log(
-            'All done on GitHub. Now go to Azure and create a release there:\nhttps://dev.azure.com/NordicSemiconductor/Wayland/_release?definitionId=33'
+            '\nAll done on GitHub. Now go to Azure and create a release there:\nhttps://dev.azure.com/NordicSemiconductor/Wayland/_release?definitionId=33'
         );
     }
 };

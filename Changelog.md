@@ -7,6 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 112 - 2023-09-25
+
+### Fixed
+
+-   Type problem when wrong `setTimeout` is chosen by TypeScript. The
+    `setTimeout` functions in node or in the browser return different types.
+    Sometimes TypeScript gets confused from which one to choose the types. Using
+    explicitly the version from the browser fixes this.
+
 ## 111 - 2023-09-22
 
 ### Added
@@ -20,6 +29,18 @@ every new version is a new major version.
 -   List items in dialog bodies had the wrong size: They inherited the size from
     the document body instead of using the same size as was used in the dialog
     in paragraphs.
+
+### Steps to upgrade
+
+-   If you get compilation errors, you may have to create a TypeScript type
+    definition file (e.g. svg.d.ts) in your project containing this:
+
+```ts
+declare module '!!@svgr!*.svg' {
+    const svg: React.ElementType;
+    export default svg;
+}
+```
 
 ## 110 - 2023-09-22
 
