@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 113 - 2023-09-25
+
+### Fixed
+
+-   The buttons in a dialog footer had too little space between them.
+
 ## 112 - 2023-09-25
 
 ### Fixed
