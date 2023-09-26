@@ -103,7 +103,7 @@ export default ({
         const generateMetaData = (col: number) => {
             let child = masonryLayoutRef.current?.firstElementChild;
             const offsetHeightMatrix: number[][] = [];
-            const scrollHeightMatrix: number[][] = [];
+            const scrollHeightOffsetMatrix: number[][] = [];
             const zeroHeightChildren: boolean[] = [];
 
             let i = 0;
@@ -114,12 +114,12 @@ export default ({
 
                         if (offsetHeightMatrix[rowIndex] === undefined) {
                             offsetHeightMatrix[rowIndex] = [];
-                            scrollHeightMatrix[rowIndex] = [];
+                            scrollHeightOffsetMatrix[rowIndex] = [];
                         }
 
                         const offsetHeightRow = offsetHeightMatrix[rowIndex];
-                        const scrollHeightRow = scrollHeightMatrix[rowIndex];
-                        let scrollHeightRowDiff = 0;
+                        const scrollHeightRow =
+                            scrollHeightOffsetMatrix[rowIndex];
                         const columnIndex = i % col;
 
                         i += 1;
@@ -128,22 +128,17 @@ export default ({
                             Number.parseInt(styles.margin, 10)
                         ) {
                             offsetHeightRow[columnIndex] = 0;
+                            scrollHeightRow[columnIndex] = 0;
                             zeroHeightChildren.push(true);
                         } else {
                             offsetHeightRow[columnIndex] =
                                 child.offsetHeight + 1; // 1px to round as value might be decimal
-                            scrollHeightRowDiff =
+                            scrollHeightRow[columnIndex] =
                                 child.scrollHeight +
                                 9 -
                                 offsetHeightRow[columnIndex]; // 8 border bottom + 1px to round as value might be decimal
                             zeroHeightChildren.push(false);
                         }
-
-                        scrollHeightRow[columnIndex] =
-                            offsetHeightMatrix.reduce(
-                                (p, c) => p + c[columnIndex],
-                                0
-                            ) + scrollHeightRowDiff;
                     }
 
                     child = child.nextElementSibling;
@@ -152,7 +147,7 @@ export default ({
 
             return {
                 offsetHeightMatrix,
-                scrollHeightMatrix,
+                scrollHeightOffsetMatrix,
                 hiddenChildren: zeroHeightChildren,
             };
         };
@@ -160,22 +155,32 @@ export default ({
         const calcData = (col: number) => {
             const metaData = generateMetaData(col);
             const heights: number[] = Array(col).fill(0);
+            const individualHeights: number[][] = [];
             const newOrder: number[] = [];
 
-            metaData.offsetHeightMatrix.forEach(row => {
-                row.forEach(itemHeight => {
+            metaData.offsetHeightMatrix.forEach((row, rowIndex) => {
+                row.forEach((itemHeight, columnIndex) => {
                     const smallest =
                         heights.findIndex(h => h === Math.min(...heights)) ?? 0;
                     heights[smallest] += itemHeight;
+
+                    if (individualHeights[rowIndex] === undefined) {
+                        individualHeights[rowIndex] = [];
+                    }
+
+                    // add all offset heights of above items excluding scroll height of above items but including scoll geight of this item
+                    individualHeights[rowIndex][smallest] =
+                        heights[smallest] +
+                        metaData.scrollHeightOffsetMatrix[rowIndex][
+                            columnIndex
+                        ];
+
                     newOrder.push(smallest + 1);
                 });
             });
 
             return {
-                maxHeight: Math.max(
-                    ...heights,
-                    ...metaData.scrollHeightMatrix.flat()
-                ),
+                maxHeight: Math.max(...individualHeights.flat()),
                 order: newOrder,
                 columnHeights: heights,
                 columns: Math.min(
