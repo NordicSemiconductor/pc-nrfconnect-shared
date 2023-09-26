@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 114 - 2023-09-26
+
+### Fixed
+
+-   `MasonryLayout` excess scrolling white space.
+
 ## 113 - 2023-09-25
 
 ### Fixed
