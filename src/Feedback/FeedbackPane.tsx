@@ -103,7 +103,7 @@ export default ({ categories }: FeedbackPaneProps) => {
                         <b>What is your feedback?</b>
                         <textarea
                             name="feedback-text"
-                            className="tw-h-32 tw-w-full tw-border tw-border-gray-700"
+                            className="tw-h-32 tw-w-full tw-border tw-border-gray-700 tw-p-2"
                             required
                             value={feedback}
                             onChange={e => setFeedback(e.target.value)}

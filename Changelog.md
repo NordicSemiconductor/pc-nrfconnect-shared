@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 115 - 2023-09-28
+
+### Fixed
+
+-   `Feedback` cursor is missing when no text is typed in.
+
 ## 114 - 2023-09-26
 
 ### Fixed
