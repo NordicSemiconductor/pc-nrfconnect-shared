@@ -193,12 +193,16 @@ export default ({
         };
 
         const action = () => {
-            const noOfColumns = Math.floor(
-                current.clientWidth /
-                    (minWidth + Number.parseInt(styles.margin, 10))
-            );
+            const noOfColumns =
+                current.clientWidth >= minWidth
+                    ? Math.floor(
+                          current.clientWidth /
+                              (minWidth + Number.parseInt(styles.margin, 10))
+                      )
+                    : 1;
 
             const data = calcData(noOfColumns);
+
             if (data) {
                 setOrders(data.order);
                 setColumnHeights(data.columnHeights);
@@ -236,7 +240,10 @@ export default ({
                     hiddenChildren={hiddenChildren}
                     width={masonryLayoutRef.current?.clientWidth ?? -1}
                     columns={columns}
-                    minWidth={minWidth}
+                    minWidth={Math.min(
+                        minWidth,
+                        masonryLayoutRef.current?.clientWidth ?? minWidth
+                    )}
                     orders={orders}
                 >
                     {children}

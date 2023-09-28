@@ -11,6 +11,7 @@ every new version is a new major version.
 
 ### Fixed
 
+-   `MasonryLayout` content disappeared if space is less then min width
 -   `Feedback` cursor is missing when no text is typed in.
 
 ## 114 - 2023-09-26
