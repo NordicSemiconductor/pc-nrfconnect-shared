@@ -33,26 +33,30 @@ stages:
   dependsOn: Build
   condition: ne(variables['Build.Reason'], 'PullRequest')
   jobs:
-  - job: 'Release'
-    displayName: 'Release to internal'
+  - deployment: 'Deploy'
+    displayName: 'Deploy to internal'
     pool:
       name: wayland_pool_sw_only
       demands:
       - Agent.OS -equals Linux
     variables:
     - group: wayland
-    steps:
-    - task: NodeTool@0
-      displayName: 'Use Node 18'
-      inputs:
-        versionSpec: 18.x
-    - download: current
-      artifact: package
-    - bash: |
-        export REPO_HOST=$(NORDIC_DEVELOPER_HOST)
-        export REPO_USER=$(NORDIC_DEVELOPER_USER)
-        export REPO_PASS=$(NORDIC_DEVELOPER_PASS)
+    environment: Internal
+    strategy:
+      runOnce:
+        deploy:
+          steps:    
+          - task: NodeTool@0
+            displayName: 'Use Node 18'
+            inputs:
+              versionSpec: 18.x
+          - download: current
+            artifact: package
+          - bash: |
+              export REPO_HOST=$(NORDIC_DEVELOPER_HOST)
+              export REPO_USER=$(NORDIC_DEVELOPER_USER)
+              export REPO_PASS=$(NORDIC_DEVELOPER_PASS)
 
-        cp $(Pipeline.Workspace)/package/* .
-        node nordic-publish.js -n -s internal
-      displayName: 'Release script'
+              cp $(Pipeline.Workspace)/package/* .
+              node nordic-publish.js -n -s internal
+            displayName: 'Release script'
