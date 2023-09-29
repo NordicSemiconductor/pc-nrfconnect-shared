@@ -1,21 +1,24 @@
 trigger:
     - main
-pool:
+
+jobs:
+- job:
+  pool:
     vmImage: 'ubuntu-22.04'
-variables:
-    - group: wayland
-steps:
-  - script: |
-        set -o errexit -o pipefail
-        npm ci
-        npm run check
-        npm run test
-        npm run build:prod
+  variables:
+  - group: wayland
+  steps:
+  - bash: |
+      set -o errexit -o pipefail
+      npm ci
+      npm run check
+      npm run test
+      npm run build:prod
     displayName: 'Build'
   - bash: |
-        set -o errexit -o pipefail
-        npm pack
-        cp *.tgz "$(Build.ArtifactStagingDirectory)"
+      set -o errexit -o pipefail
+      npm pack
+      cp *.tgz "$(Build.ArtifactStagingDirectory)"
     condition: ne(variables['Build.Reason'], 'PullRequest')
     displayName: 'Copy artifacts'
   - publish: $(Build.ArtifactStagingDirectory)
