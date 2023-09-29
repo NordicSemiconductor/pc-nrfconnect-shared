@@ -36,10 +36,16 @@ stages:
   - job: 'Release'
     displayName: 'Release to internal'
     pool:
-      vmImage: 'ubuntu-22.04'
+      name: wayland_pool_sw_only
+      demands:
+      - Agent.OS -equals Linux
     variables:
     - group: wayland
     steps:
+    - task: NodeTool@0
+      displayName: 'Use Node 18'
+      inputs:
+        versionSpec: 18.x
     - download: current
       artifact: package
     - bash: |
