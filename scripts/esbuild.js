@@ -24,13 +24,13 @@ if (!fs.existsSync(distFolder)) {
     fs.mkdirSync(distFolder);
 }
 
-const sharedPath = join(
-    process.cwd(),
-    'node_modules/@nordicsemiconductor/pc-nrfconnect-shared'
-);
+const fileInShared = file =>
+    require.resolve(`@nordicsemiconductor/pc-nrfconnect-shared/${file}`);
+
+const fileInDist = file => join(distFolder, basename(file));
 
 const copyFileToDist = file =>
-    fs.copyFileSync(join(sharedPath, file), join(distFolder, basename(file)));
+    fs.copyFileSync(fileInShared(file), fileInDist(file));
 
 copyFileToDist('scripts/nordic-publish.js');
 copyFileToDist('dist/bootstrap.css');
@@ -42,9 +42,8 @@ if (process.argv.includes('--include-bootloader')) {
     }
 
     fs.copyFileSync(
-        join(
-            sharedPath,
-            '/fw/bootloader/graviton_bootloader_v1.0.1-[nRF5_SDK_15.0.1-1.alpha_f76d012].zip'
+        fileInShared(
+            'fw/bootloader/graviton_bootloader_v1.0.1-[nRF5_SDK_15.0.1-1.alpha_f76d012].zip'
         ),
         join(
             process.cwd(),
