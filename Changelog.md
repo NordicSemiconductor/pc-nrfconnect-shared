@@ -394,7 +394,7 @@ declare module '!!@svgr!*.svg' {
 ### Steps to upgrade when using this package
 
 -   Following this step will make the app incompatible with the currently
-    released launcher (v4.1.2): Add an `index`-property to package.json. The
+    released launcher (v4.1.2): Add an `html`-property to package.json. The
     following example will use the index bundled with shared that works with our
     apps, but apps can also make their own instead if needed.
 
