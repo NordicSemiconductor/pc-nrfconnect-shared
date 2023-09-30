@@ -6,19 +6,19 @@ parameters:
 
 stages:
 - stage: 'Release'
-  displayName: $(parameters.environment)
+  displayName: ${{ parameters.environment }}
   dependsOn: Build
   condition: ne(variables['Build.Reason'], 'PullRequest')
   jobs:
-  - deployment: $(parameters.environment)
-    displayName: Deploy to  + $(parameters.environment)
+  - deployment: ${{ parameters.environment }}
+    displayName: Deploy to  + ${{ parameters.environment }}
     pool:
       name: wayland_pool_sw_only
       demands:
       - Agent.OS -equals Linux
     variables:
     - group: wayland
-    environment: $(parameters.environment)
+    environment: ${{ parameters.environment }}
     strategy:
       runOnce:
         deploy:
@@ -35,5 +35,5 @@ stages:
               export REPO_PASS=$(NORDIC_DEVELOPER_PASS)
 
               cp $(Pipeline.Workspace)/package/* .
-              node nordic-publish.js -n -s $(parameters.source)
+              node nordic-publish.js -n -s ${{ parameters.source }}
             displayName: 'Release script'
