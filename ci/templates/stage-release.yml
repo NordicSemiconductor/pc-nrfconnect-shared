@@ -1,6 +1,8 @@
 parameters:
   - name: environment
     type: string
+  - name: source
+    type: string
 
 stages:
 - stage: 'Release'
@@ -33,5 +35,5 @@ stages:
               export REPO_PASS=$(NORDIC_DEVELOPER_PASS)
 
               cp $(Pipeline.Workspace)/package/* .
-              node nordic-publish.js -n -s $(parameters.environment)
+              node nordic-publish.js -n -s $(parameters.source)
             displayName: 'Release script'

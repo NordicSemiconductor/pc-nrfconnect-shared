@@ -6,11 +6,14 @@ stages:
 - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
   - template: templates/stage-release.yml
     parameters:
-      environment: internal
+      environment: Internal
+      source: internal
   # - template: templates/stage-release.yml
   #   parameters:
   #     environment: release-test
+  #     source: release-test
   # - template: templates/stage-release.yml
   #   parameters:
-  #     environment: official  
+  #     environment: Official  
+  #     source: Official
   
