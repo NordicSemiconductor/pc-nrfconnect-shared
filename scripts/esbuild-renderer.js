@@ -15,10 +15,6 @@ const tailwindcss = require('tailwindcss');
 const autoprefixer = require('autoprefixer');
 const path = require('path');
 
-const packageJsonOfApp = fs.readFileSync(
-    path.join(process.cwd(), 'package.json'),
-    'utf8'
-);
 const projectSpecificTailwindConfigPath = path.join(
     process.cwd(),
     'tailwind.config.js'
@@ -44,9 +40,6 @@ function options(additionalOptions) {
     const appHasOwnHtml = nrfConnectForDesktop?.html !== undefined;
 
     return {
-        define: {
-            'process.env.PACKAGE_JSON_OF_APP': JSON.stringify(packageJsonOfApp),
-        },
         format: appHasOwnHtml ? 'iife' : 'cjs',
         outfile,
         outdir,

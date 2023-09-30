@@ -7,7 +7,13 @@
 
 const fs = require('fs');
 const { join, basename } = require('path');
+const path = require('path');
 const { build } = require('./esbuild-renderer');
+
+const packageJsonOfApp = fs.readFileSync(
+    path.join(process.cwd(), 'package.json'),
+    'utf8'
+);
 
 const entry = [
     './src/index.jsx',
@@ -16,7 +22,12 @@ const entry = [
     './src/index.tsx',
 ].find(fs.existsSync);
 
-build({ entryPoints: [entry] });
+build({
+    define: {
+        'process.env.PACKAGE_JSON_OF_APP': JSON.stringify(packageJsonOfApp),
+    },
+    entryPoints: [entry],
+});
 
 const distFolder = join(process.cwd(), 'dist');
 
