@@ -10,6 +10,7 @@ stages:
     - group: wayland
     steps:
     - bash: |
+        set -o errexit -o pipefail
         npm ci
         npm run check
         npm run test
@@ -18,11 +19,11 @@ stages:
       failOnStderr: true
     - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
       - bash: |
+          set -o errexit -o pipefail
           npm pack
           cp *.tgz "$(Build.ArtifactStagingDirectory)"
           cp dist/nordic-publish.js "$(Build.ArtifactStagingDirectory)"
         displayName: 'Copy artifacts'
-        failOnStderr: true
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: package
         displayName: 'Publish artifacts to artifact storage'
