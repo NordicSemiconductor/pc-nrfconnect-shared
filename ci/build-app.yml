@@ -1,0 +1,16 @@
+trigger:
+  - main
+
+stages:
+- template: ci/stage-build.yml
+- ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+  - template: ci/stage-release.yml
+    parameters:
+      environment: internal
+  # - template: ci/stage-release.yml
+  #   parameters:
+  #     environment: release-test
+  # - template: ci/stage-release.yml
+  #   parameters:
+  #     environment: official  
+  
