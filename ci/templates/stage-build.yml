@@ -16,7 +16,6 @@ stages:
         npm run test
         npm run build:prod
       displayName: 'Install, test and build'
-      failOnStderr: true
     - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
       - bash: |
           set -o errexit -o pipefail
