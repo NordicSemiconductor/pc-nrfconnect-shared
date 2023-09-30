@@ -34,7 +34,7 @@ const logError = (message: string) => {
 const parseJson = <Result>(jsonString: string) =>
     JSON.parse(jsonString) as Result;
 
-const git = (...commands) =>
+const git = (...commands: string[]) =>
     spawnSync('git', commands, {
         stdio: ['inherit', 'pipe', 'inherit'],
         encoding: 'utf-8',

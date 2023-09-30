@@ -1,6 +1,7 @@
 {
     "extends": "./config/tsconfig.json",
     "include": [
+        "./scripts/**/*.ts",
         "./nrfutil/**/*.ts",
         "./main/**/*.ts",
         "./src/**/*.ts",
