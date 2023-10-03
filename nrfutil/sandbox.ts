@@ -336,7 +336,9 @@ export class NrfutilSandbox {
                 if (aborting) {
                     reject(
                         new Error(
-                            `Aborted ongoing nrfutil ${this.module} ${command}`
+                            `Aborted ongoing nrfutil ${command} ${
+                                args[0] ?? ''
+                            }`
                         )
                     );
                     return;
