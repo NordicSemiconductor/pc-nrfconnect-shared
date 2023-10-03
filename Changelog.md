@@ -11,8 +11,9 @@ every new version is a new major version.
 
 ### Fixed
 
--   `nrfutil` abort log messages
--   `nrfutil device batch` call on exception callback when task are complete
+-   `nrfutil` abort log messages is now more descriptive
+-   `nrfutil device batch` could previously call the `onException` when task was
+    complete.
 
 ## 115 - 2023-09-28
 
