@@ -7,6 +7,14 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 116 - 2023-10-03
+
+### Fixed
+
+-   `nrfutil` abort log messages is now more descriptive
+-   `nrfutil device batch` could previously call the `onException` when task was
+    complete.
+
 ## 115 - 2023-09-28
 
 ### Fixed

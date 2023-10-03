@@ -228,8 +228,8 @@ export class Batch {
         device: NrfutilDeviceWithSerialnumber,
         controller?: AbortController | undefined
     ): Promise<unknown[]> {
-        let beginId = 0;
-        let endId = 0;
+        let currentOperationIndex = -1;
+        let lastCompletedOperationIndex = -1;
         const results: TaskEnd<unknown>[] = [];
         const operations: BatchOperationWrapperUnknown[] = [];
 
@@ -262,21 +262,29 @@ export class Batch {
                     JSON.stringify(batchOperation),
                 ],
                 (progress, task) => {
-                    if (task) {
-                        operations[endId].onProgress?.(progress, task);
+                    if (task && currentOperationIndex !== -1) {
+                        operations[currentOperationIndex].onProgress?.(
+                            progress,
+                            task
+                        );
                     }
                 },
                 onTaskBegin => {
-                    beginId += 1;
-                    operations[endId].onTaskBegin?.(onTaskBegin);
+                    currentOperationIndex += 1;
+                    operations[currentOperationIndex].onTaskBegin?.(
+                        onTaskBegin
+                    );
                 },
                 taskEnd => {
                     results.push(taskEnd);
 
-                    operations[endId].onTaskEnd?.(taskEnd);
+                    operations[currentOperationIndex].onTaskEnd?.(taskEnd);
 
                     this.collectOperations
-                        .filter(operation => operation.operationId === endId)
+                        .filter(
+                            operation =>
+                                operation.operationId === currentOperationIndex
+                        )
                         .forEach(operation => {
                             operation.callback(
                                 results.slice(
@@ -286,7 +294,7 @@ export class Batch {
                             );
                         });
 
-                    endId += 1;
+                    lastCompletedOperationIndex += 1;
                 },
                 controller
             );
@@ -298,12 +306,16 @@ export class Batch {
                         .map(e => `error: ${e.error}, message: ${e.message}`)
                         .join('\n')}`
                 );
-                operations[endId].onException?.(error);
+                if (currentOperationIndex !== -1) {
+                    operations[currentOperationIndex].onException?.(error);
+                }
                 throw error;
             }
         } catch (error) {
-            if (beginId !== endId) {
-                operations[beginId].onException?.(error as Error);
+            if (currentOperationIndex !== lastCompletedOperationIndex) {
+                operations[currentOperationIndex]?.onException?.(
+                    error as Error
+                );
             }
             throw error;
         }
