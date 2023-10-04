@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 117 - 2023-10-04
+
+### Fixed
+
+-   `nrfutil device program` did now throw error when files buffers where used
+
 ## 116 - 2023-10-03
 
 ### Fixed

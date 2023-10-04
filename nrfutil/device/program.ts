@@ -152,6 +152,7 @@ const programBuffer = async (
         );
     } catch (error) {
         fs.unlinkSync(tempFilePath);
+        throw error;
     }
 };
 
