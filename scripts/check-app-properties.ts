@@ -9,8 +9,9 @@
 import { execSync } from 'child_process';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import property from 'lodash/property';
+import { fromZodError } from 'zod-validation-error';
 
-import { PackageJson } from '../ipc/MetaFiles';
+import { PackageJson, parsePackageJson } from '../ipc/MetaFiles';
 
 const format = (strings: string[]) =>
     strings.map(string => `\`${string}\``).join(', ');
@@ -61,43 +62,6 @@ const mustContainOneOf = (
     }
 };
 
-const checkMandatoryProperties = (packageJson: PackageJson) => {
-    const mandatoryProperties = [
-        `name`,
-        `version`,
-        `description`,
-        `displayName`,
-        `engines.nrfconnect`,
-    ];
-
-    const missingProperties = mandatoryProperties.filter(
-        propertyIsMissing(packageJson)
-    );
-
-    mustBeEmpty(
-        missingProperties,
-        'package.json is missing these mandatory properties'
-    );
-};
-
-const checkNrfutilProperties = (packageJson: PackageJson) => {
-    const nrfutilModules = packageJson.nrfConnectForDesktop?.nrfutil;
-    if (nrfutilModules != null) {
-        Object.entries(nrfutilModules).forEach(
-            ([moduleName, moduleVersions]) => {
-                if (
-                    !Array.isArray(moduleVersions) ||
-                    moduleVersions.length === 0
-                ) {
-                    fail(
-                        `For each module in \`nrfConnectForDesktop.nrfutil\` in package.json at least one version must be specified, but for \`${moduleName}\` none was specified.`
-                    );
-                }
-            }
-        );
-    }
-};
-
 const checkRepoUrl = (packageJson: PackageJson) => {
     if (!existsSync('./.git')) {
         return;
@@ -130,14 +94,6 @@ const checkOptionalProperties = (packageJson: PackageJson) => {
         warn('Please provide a property `homepage` in package.json.');
     }
 
-    if (propertyIsMissing(packageJson)('nrfConnectForDesktop')) {
-        warn(
-            'Please provide a property `nrfConnectForDesktop.html` in package.json'
-        );
-    } else {
-        checkNrfutilProperties(packageJson);
-    }
-
     if (propertyIsMissing(packageJson)('repository.url')) {
         warn('Please provide a property `repository.url` in package.json.');
     } else {
@@ -157,6 +113,30 @@ const checkFileProperty = (packageJson: PackageJson) => {
         ['resources/*', 'resources/icon.*', 'resources/'],
         'One of these entries must be in the property `files` in package.json'
     );
+};
+
+const readAndCheckPackageJson = () => {
+    const packageJsonResult = parsePackageJson(
+        readFileSync('./package.json', 'utf8')
+    );
+
+    if (!packageJsonResult.success) {
+        console.error(
+            fromZodError(packageJsonResult.error, {
+                prefix: 'Error in package.json',
+                prefixSeparator: ':\n- ',
+                issueSeparator: '\n- ',
+            }).message
+        );
+        process.exit(1);
+    }
+
+    const packageJson = packageJsonResult.data;
+
+    checkOptionalProperties(packageJson);
+    checkFileProperty(packageJson);
+
+    return packageJson;
 };
 
 const changelogEntryRegexp = (version?: string) =>
@@ -211,13 +191,8 @@ const runChecks = ({
 }: {
     checkChangelogHasCurrentEntry: boolean;
 }) => {
-    const packageJson = <PackageJson>(
-        JSON.parse(readFileSync('./package.json', 'utf8'))
-    );
+    const packageJson = readAndCheckPackageJson();
 
-    checkMandatoryProperties(packageJson);
-    checkOptionalProperties(packageJson);
-    checkFileProperty(packageJson);
     checkChangelog(packageJson, checkChangelogHasCurrentEntry);
     checkMandatoryResources();
 };
