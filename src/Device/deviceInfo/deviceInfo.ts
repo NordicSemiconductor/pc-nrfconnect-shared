@@ -28,6 +28,7 @@
    through CSS, e.g. to change the colours.
 */
 
+import { KnownDevicePCA } from '../../../ipc/device';
 import { NrfutilDevice } from '../../../nrfutil';
 import type { Device as WrappedDevice } from '../deviceSlice';
 
@@ -43,23 +44,6 @@ import unknownNordicLogo from '!!@svgr!./unknown-nordic-logo.svg';
 
 type Device = NrfutilDevice | WrappedDevice;
 
-export type DevicePCA =
-    | 'PCA10028'
-    | 'PCA10031'
-    | 'PCA10040'
-    | 'PCA10056'
-    | 'PCA10059'
-    | 'PCA10090'
-    | 'PCA10095'
-    | 'PCA10100'
-    | 'PCA10121'
-    | 'PCA20020'
-    | 'PCA20035'
-    | 'PCA10143'
-    | 'PCA10152'
-    | 'PCA10153'
-    | 'PCA20049';
-
 interface DeviceInfo {
     name?: string | null;
     cores?: number;
@@ -70,7 +54,7 @@ interface DeviceInfo {
     };
 }
 
-const devicesByPca: { [P in DevicePCA]: DeviceInfo } = {
+const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
     PCA10028: {
         name: 'nRF51 DK',
         cores: 1,
@@ -214,7 +198,9 @@ const devicesByPca: { [P in DevicePCA]: DeviceInfo } = {
 };
 
 const deviceByPca = (device: Device) =>
-    devicesByPca[String(device.jlink?.boardVersion).toUpperCase() as DevicePCA];
+    devicesByPca[
+        String(device.jlink?.boardVersion).toUpperCase() as KnownDevicePCA
+    ];
 
 const NORDIC_VENDOR_ID = '1915';
 const isNordicDevice = (device: Device) =>
