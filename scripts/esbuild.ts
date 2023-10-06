@@ -7,8 +7,25 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { fromZodError } from 'zod-validation-error';
 
+import { parsePackageJson } from '../main';
 import { build } from './esbuild-renderer';
+
+const validate = (packageJson: string) => {
+    const result = parsePackageJson(packageJson);
+
+    if (!result.success) {
+        console.log(
+            fromZodError(result.error, {
+                prefix: 'Error in package.json',
+                prefixSeparator: ':\n- ',
+                issueSeparator: '\n- ',
+            }).message
+        );
+        process.exit(1);
+    }
+};
 
 const entry = () => {
     const result = [
@@ -27,6 +44,8 @@ const entry = () => {
 
 const bundle = () => {
     const packageJson = fs.readFileSync('package.json', 'utf8');
+
+    validate(packageJson);
 
     build({
         define: {
