@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import type { PackageJson } from '../../ipc/MetaFiles';
+import { type PackageJson, parsePackageJson } from '../../ipc/MetaFiles';
 
 let cache: PackageJson | undefined;
 
@@ -13,11 +13,12 @@ const parsedPackageJson = () => {
         return cache;
     }
 
-    const json = process.env.PACKAGE_JSON_OF_APP;
-    cache = JSON.parse(json ?? 'null');
-    if (cache == null) {
+    const parsed = parsePackageJson(process.env.PACKAGE_JSON_OF_APP ?? 'null');
+    if (parsed.success) {
+        cache = parsed.data;
+    } else {
         throw new Error(
-            "The env variable PACKAGE_JSON_OF_APP must be defined during bundling (through the bundler settings) but wasn't. Fix this."
+            `The env variable PACKAGE_JSON_OF_APP must be defined during bundling (through the bundler settings) with a valid package.json but wasn't. Fix this. Error: ${parsed.error.message}`
         );
     }
 
