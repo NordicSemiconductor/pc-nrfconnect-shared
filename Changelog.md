@@ -7,6 +7,16 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## Unreleased
+
+### Changed
+
+-   Checking whether the `package.json` contains all required fields is now also
+    down before building.
+-   Use `zod` for the `package.json` schema for apps. This is used verify that
+    apps have the right fields in `package.json` and also generates the right
+    TypeScript type for it.
+
 ## 117 - 2023-10-04
 
 ### Fixed
