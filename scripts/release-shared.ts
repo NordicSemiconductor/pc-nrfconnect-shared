@@ -25,7 +25,7 @@
 */
 import { execSync, spawnSync } from 'node:child_process';
 
-import { PackageJson } from '../ipc/MetaFiles';
+import { PackageJson } from '../ipc/schema/packageJson';
 
 const logError = (message: string) => {
     console.error(message);

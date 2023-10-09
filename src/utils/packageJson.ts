@@ -4,7 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { type PackageJson, parsePackageJson } from '../../ipc/MetaFiles';
+import {
+    type PackageJson,
+    parsePackageJson,
+} from '../../ipc/schema/packageJson';
 
 let cache: PackageJson | undefined;
 

@@ -11,7 +11,7 @@ import { existsSync, readdirSync, readFileSync } from 'fs';
 import property from 'lodash/property';
 import { fromZodError } from 'zod-validation-error';
 
-import { PackageJson, parsePackageJson } from '../ipc/MetaFiles';
+import { PackageJson, parsePackageJson } from '../ipc/schema/packageJson';
 
 const format = (strings: string[]) =>
     strings.map(string => `\`${string}\``).join(', ');

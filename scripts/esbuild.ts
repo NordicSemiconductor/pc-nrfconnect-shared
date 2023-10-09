@@ -9,7 +9,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fromZodError } from 'zod-validation-error';
 
-import { parsePackageJson } from '../main';
+import { parsePackageJson } from '../ipc/schema/packageJson';
 import { build } from './esbuild-renderer';
 
 const validate = (packageJson: string) => {

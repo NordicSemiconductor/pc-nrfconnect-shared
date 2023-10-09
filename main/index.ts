@@ -29,6 +29,7 @@ export const serialPort = {
 };
 
 export * from '../ipc/MetaFiles';
+export * from '../ipc/schema/packageJson';
 
 export { type OverwriteOptions } from '../ipc/serialPort';
 export { type OpenAppOptions } from '../ipc/openWindow';
