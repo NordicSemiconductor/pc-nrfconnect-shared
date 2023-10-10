@@ -9,6 +9,10 @@ every new version is a new major version.
 
 ## Unreleased
 
+### Added
+
+-   Option to configure external React to support legacy apps in the launcher.
+
 ### Changed
 
 -   Checking whether the `package.json` contains all required fields is now also

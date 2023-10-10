@@ -35,7 +35,10 @@ const outfileOrDir = (additionalOptions: AdditionalOptions) =>
         ? { outfile: './dist/bundle.js' }
         : { outdir: './dist' };
 
-const options = (additionalOptions: AdditionalOptions) =>
+const options = (
+    additionalOptions: AdditionalOptions,
+    externalReact: boolean
+) =>
     ({
         format: 'iife',
         ...outfileOrDir(additionalOptions),
@@ -119,13 +122,18 @@ const options = (additionalOptions: AdditionalOptions) =>
         ...additionalOptions,
     } satisfies BuildOptions);
 
-export const build = async (additionalOptions: AdditionalOptions) => {
+export const build = async (
+    additionalOptions: AdditionalOptions,
+    { externalReact = false } = {}
+) => {
     if (process.argv.includes('--watch')) {
-        const context = await esbuild.context(options(additionalOptions));
+        const context = await esbuild.context(
+            options(additionalOptions, externalReact)
+        );
 
         await context.rebuild();
         await context.watch();
     } else {
-        esbuild.build(options(additionalOptions));
+        esbuild.build(options(additionalOptions, externalReact));
     }
 };
