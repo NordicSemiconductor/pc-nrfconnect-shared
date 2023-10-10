@@ -21,7 +21,7 @@ const parsedPackageJson = () => {
         cache = parsed.data;
     } else {
         throw new Error(
-            `The env variable PACKAGE_JSON_OF_APP must be defined during bundling (through the bundler settings) with a valid package.json but wasn't. Fix this. Error: ${parsed.error.message}`
+            `The env variable PACKAGE_JSON_OF_APP must be defined during bundling (through the bundler settings) with a valid package.json but wasn't. Fix this. Error: ${parsed.error.details}`
         );
     }
 

@@ -7,7 +7,6 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { fromZodError } from 'zod-validation-error';
 
 import { parsePackageJson } from '../ipc/schema/packageJson';
 import { build } from './esbuild-renderer';
@@ -16,13 +15,7 @@ const validate = (packageJson: string) => {
     const result = parsePackageJson(packageJson);
 
     if (!result.success) {
-        console.log(
-            fromZodError(result.error, {
-                prefix: 'Error in package.json',
-                prefixSeparator: ':\n- ',
-                issueSeparator: '\n- ',
-            }).message
-        );
+        console.log(result.error.message);
         process.exit(1);
     }
 };

@@ -8,6 +8,7 @@ import { z } from 'zod';
 
 import { knownDevicePcas } from '../device';
 import { nrfModules, semver } from '../MetaFiles';
+import { parseWithPrettifiedErrorMessage } from './parseJson';
 
 const nrfConnectForDesktop = z.object({
     supportedDevices: z.enum(knownDevicePcas).array().nonempty().optional(),
@@ -47,22 +48,22 @@ const packageJson = z.object({
     scripts: recordOfOptionalStrings.optional(),
 });
 
-export const parsePackageJson = (packageJsonContents: string) =>
-    packageJson.safeParse(JSON.parse(packageJsonContents));
-
 export type PackageJson = z.infer<typeof packageJson>;
 
-// In the launcher we want to handle that the html in nrfConnectForDesktop
-// can also be undefined, so there we need to use this variant
-const legacyNrfConnectForDesktop = nrfConnectForDesktop.partial({ html: true });
+export const parsePackageJson =
+    parseWithPrettifiedErrorMessage<PackageJson>(packageJson);
 
+// In the launcher we want to handle that the whole nrfConnectForDesktop may be missing
+// and the html in it can also be undefined, so there we need to use this legacy variant
 const legacyPackageJson = packageJson.merge(
     z.object({
-        nrfConnectForDesktop: legacyNrfConnectForDesktop,
+        nrfConnectForDesktop: nrfConnectForDesktop
+            .partial({ html: true })
+            .optional(),
     })
 );
 
-export const parseLegacyPackageJson = (packageJsonContents: string) =>
-    legacyPackageJson.safeParse(JSON.parse(packageJsonContents));
-
 export type LegacyPackageJson = z.infer<typeof legacyPackageJson>;
+
+export const parseLegacyPackageJson =
+    parseWithPrettifiedErrorMessage<LegacyPackageJson>(legacyPackageJson);

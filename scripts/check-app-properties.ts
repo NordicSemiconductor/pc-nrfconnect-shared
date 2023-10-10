@@ -9,7 +9,6 @@
 import { execSync } from 'child_process';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import property from 'lodash/property';
-import { fromZodError } from 'zod-validation-error';
 
 import { PackageJson, parsePackageJson } from '../ipc/schema/packageJson';
 
@@ -121,13 +120,7 @@ const readAndCheckPackageJson = () => {
     );
 
     if (!packageJsonResult.success) {
-        console.error(
-            fromZodError(packageJsonResult.error, {
-                prefix: 'Error in package.json',
-                prefixSeparator: ':\n- ',
-                issueSeparator: '\n- ',
-            }).message
-        );
+        console.error(packageJsonResult.error.message);
         process.exit(1);
     }
 
