@@ -16,6 +16,8 @@ every new version is a new major version.
 -   Use `zod` for the `package.json` schema for apps. This is used verify that
     apps have the right fields in `package.json` and also generates the right
     TypeScript type for it.
+-   `nrfConnectForDesktop.html` is not optional anymore, it must always be
+    specified in `package.json`.
 
 ## 117 - 2023-10-04
 

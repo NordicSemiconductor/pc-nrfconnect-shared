@@ -30,8 +30,6 @@ const tailwindConfig = () =>
 type AdditionalOptions = Required<Pick<BuildOptions, 'entryPoints'>> &
     Partial<BuildOptions>;
 
-const appHasOwnHtml = packageJson.nrfConnectForDesktop?.html !== undefined;
-
 const outfileOrDir = (additionalOptions: AdditionalOptions) =>
     additionalOptions.entryPoints.length === 1
         ? { outfile: './dist/bundle.js' }
@@ -39,7 +37,7 @@ const outfileOrDir = (additionalOptions: AdditionalOptions) =>
 
 const options = (additionalOptions: AdditionalOptions) =>
     ({
-        format: appHasOwnHtml ? 'iife' : 'cjs',
+        format: 'iife',
         ...outfileOrDir(additionalOptions),
         target: 'chrome89',
         sourcemap: true,
@@ -54,7 +52,7 @@ const options = (additionalOptions: AdditionalOptions) =>
             'electron',
             'serialport',
             '@electron/remote',
-            ...(appHasOwnHtml ? [] : ['react']),
+            ...(externalReact ? ['react', 'react-dom'] : []),
 
             // App dependencies
             ...Object.keys(packageJson.dependencies ?? {}),
