@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
+import { DeviceInfo } from '../../nrfutil/device/deviceInfo';
 import logger from '../logging';
 import describeError from '../logging/describeError';
 import { AppThunk, RootState } from '../store';
@@ -33,15 +34,24 @@ export interface JprogEntry {
 }
 
 export interface DeviceSetup {
-    supportsProgrammingMode: (device: Device) => boolean; // Return true if this device can be programed using this interface e.g. MCU Boot or DFU
-    getFirmwareOptions: (device: Device) => {
+    supportsProgrammingMode: (
+        device: Device,
+        deviceInfo?: DeviceInfo
+    ) => boolean; // Return true if this device can be programed using this interface e.g. MCU Boot or DFU
+    getFirmwareOptions: (
+        device: Device,
+        deviceInfo?: DeviceInfo
+    ) => {
         key: string;
         description?: string;
         programDevice: (
             onProgress: (progress: number, message?: string) => void
         ) => AppThunk<RootState, Promise<Device>>;
     }[]; // The list of all firmware that can be applied for this device with the program function for that fw item
-    isExpectedFirmware: (device: Device) => AppThunk<
+    isExpectedFirmware: (
+        device: Device,
+        deviceInfo?: DeviceInfo
+    ) => AppThunk<
         RootState,
         Promise<{
             device: Device;
@@ -66,6 +76,7 @@ export const prepareDevice =
         deviceSetupConfig: DeviceSetupConfig,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void,
+        deviceInfo: DeviceInfo | undefined,
         checkCurrentFirmwareVersion = true,
         requireUserConfirmation = true
     ): AppThunk<RootState, Promise<void>> =>
@@ -74,18 +85,22 @@ export const prepareDevice =
             onSuccess(d);
             dispatch(closeDeviceSetupDialog());
         };
+
         const validDeviceSetups = deviceSetupConfig.deviceSetups.filter(
-            deviceSetup => deviceSetup.supportsProgrammingMode(device)
+            deviceSetup =>
+                deviceSetup.supportsProgrammingMode(device, deviceInfo)
         );
 
         const possibleFirmware = validDeviceSetups
-            .map(deviceSetup => deviceSetup.getFirmwareOptions(device))
+            .map(deviceSetup =>
+                deviceSetup.getFirmwareOptions(device, deviceInfo)
+            )
             .flat();
 
         if (possibleFirmware.length === 0) {
             logger.info(
                 `Connected to device with serial number: ${device.serialNumber} ` +
-                    `and family: ${device.jlink?.deviceFamily || 'Unknown'} `
+                    `and family: ${device.devkit?.deviceFamily || 'Unknown'} `
             );
             if (deviceSetupConfig.allowCustomDevice) {
                 logger.info(
@@ -110,7 +125,7 @@ export const prepareDevice =
                 try {
                     // eslint-disable-next-line no-await-in-loop
                     const result = await dispatch(
-                        deviceSetup.isExpectedFirmware(device)
+                        deviceSetup.isExpectedFirmware(device, deviceInfo)
                     );
                     device = result.device;
                     if (result.validFirmware) {
@@ -227,7 +242,8 @@ export const setupDevice =
         device: Device,
         deviceSetupConfig: DeviceSetupConfig,
         onDeviceIsReady: (device: Device) => void,
-        doDeselectDevice: () => void
+        doDeselectDevice: () => void,
+        deviceInfo: DeviceInfo | undefined
     ): AppThunk<RootState> =>
     (dispatch, getState) =>
         dispatch(
@@ -242,7 +258,7 @@ export const setupDevice =
                     // while that is still in progress select some other device
                     // if both were to call onDeviceIsReady the app might have unexpected side effects
                     if (
-                        getState().device.selectedSerialNumber ===
+                        getState().device.selectedDevice?.serialNumber ===
                         d.serialNumber
                     ) {
                         onDeviceIsReady(d);
@@ -255,6 +271,7 @@ export const setupDevice =
                     );
                     logger.error(describeError(error));
                     doDeselectDevice();
-                }
+                },
+                deviceInfo
             )
         );

@@ -4,9 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { DeviceInfo, NrfutilDeviceLib } from '../../../nrfutil';
 import { DeviceTraits } from '../../../nrfutil/device/common';
 import useHotKey from '../../utils/useHotKey';
 import {
@@ -22,7 +23,8 @@ import {
     Device,
     deviceIsSelected as deviceIsSelectedSelector,
     selectDevice,
-    selectedSerialNumber,
+    selectedDevice,
+    setSelectedDeviceInfo,
 } from '../deviceSlice';
 import DeviceList from './DeviceList/DeviceList';
 import SelectDevice from './SelectDevice';
@@ -54,7 +56,7 @@ export default ({
     const [deviceListVisible, setDeviceListVisible] = useState(false);
 
     const deviceIsSelected = useSelector(deviceIsSelectedSelector);
-    const selectedSN = useSelector(selectedSerialNumber);
+    const currentDevice = useSelector(selectedDevice);
     const waitingToAutoReconnect = useSelector(getWaitingToAutoReselect);
     const showSelectedDevice = deviceIsSelected || waitingToAutoReconnect;
 
@@ -65,23 +67,42 @@ export default ({
         dispatch(deselectDevice());
     }, [dispatch, onDeviceDeselected]);
 
+    const abortController = useRef<AbortController>();
+
     // Ensure that useCallback is
     // not updated frequently as this
     // will have a side effect to stop and start the hotplug events
     const doSelectDevice = useCallback(
-        (device: Device, autoReselected: boolean) => {
+        async (device: Device, autoReselected: boolean) => {
             dispatch(clearWaitForDevice());
             setDeviceListVisible(false);
             dispatch(selectDevice(device));
             dispatch(setAutoSelectDevice(device));
             onDeviceSelected(device, autoReselected);
+
+            let deviceInfo: DeviceInfo | undefined;
+            try {
+                abortController.current?.abort();
+                abortController.current = new AbortController();
+                deviceInfo = await NrfutilDeviceLib.deviceInfo(
+                    device,
+                    undefined,
+                    undefined,
+                    abortController.current
+                );
+                setSelectedDeviceInfo(deviceInfo);
+            } catch (e) {
+                // Do Nothing
+            }
+
             if (deviceSetupConfig) {
                 dispatch(
                     setupDevice(
                         device,
                         deviceSetupConfig,
                         onDeviceIsReady,
-                        doDeselectDevice
+                        doDeselectDevice,
+                        deviceInfo
                     )
                 );
             }
@@ -145,7 +166,7 @@ export default ({
             <DeviceList
                 isVisible={deviceListVisible}
                 doSelectDevice={(device, autoReselected) => {
-                    if (device.serialNumber === selectedSN) {
+                    if (device.serialNumber === currentDevice?.serialNumber) {
                         setDeviceListVisible(false);
                         return;
                     }

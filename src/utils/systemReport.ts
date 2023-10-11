@@ -89,7 +89,7 @@ const allDevicesReport = (allDevices: Device[] = []) => [
     ...allDevices.map(
         d =>
             `    - ${d.serialNumber} ${
-                d.jlink?.boardVersion || ''
+                d.devkit?.boardVersion || ''
             }: ${d.serialPorts?.map(s => s.comName).join(', ')}`
     ),
     '',
@@ -129,14 +129,14 @@ export const generateSystemReport = async (
 export default async (
     allDevices: Device[],
     currentSerialNumber: string,
-    currentDevice: Device | null
+    currentDevice?: Device
 ) => {
     logger.info('Generating system report...');
     const timestamp = new Date().toISOString().replace(/:/g, '-');
     const report = await generateSystemReport(
         timestamp,
         allDevices,
-        currentDevice ?? undefined,
+        currentDevice,
         currentSerialNumber
     );
 

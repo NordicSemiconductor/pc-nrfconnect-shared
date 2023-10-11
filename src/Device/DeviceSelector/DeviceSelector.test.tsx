@@ -16,13 +16,6 @@ jest.mock('../../../nrfutil/device/device');
 
 const testDevice: Device = {
     id: 1,
-    hwInfo: {
-        romSize: 123,
-        ramSize: 456,
-        romPageSize: 789,
-        deviceFamily: 'PCATest',
-        deviceVersion: 'PCATest',
-    },
     broken: null,
     usb: {
         serialNumber: '000000001',
@@ -66,7 +59,6 @@ const testDevice: Device = {
             vcom: 2,
         },
     ],
-    boardVersion: 'PCATest',
     serialport: {
         path: 'COM1',
         manufacturer: 'testManufacturer',
@@ -80,12 +72,9 @@ const testDevice: Device = {
     traits: {
         jlink: true,
     },
-    jlink: {
+    devkit: {
         boardVersion: 'PCATest',
-        serialNumber: 'PCATest',
-        jlinkObFirmwareVersion: 'PCATest',
         deviceFamily: 'PCATest',
-        deviceVersion: 'PCATest',
     },
 };
 

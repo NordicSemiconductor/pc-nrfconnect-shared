@@ -103,6 +103,7 @@ export { sdfuDeviceSetup } from './Device/sdfuOperations';
 
 export {
     selectedDevice,
+    selectedDeviceInfo,
     getReadbackProtection,
     persistSerialPortOptions,
     type Device,

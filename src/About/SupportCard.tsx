@@ -12,8 +12,8 @@ import NrfutilDeviceLib from '../../nrfutil/device/device';
 import Button from '../Button/Button';
 import Card from '../Card/Card';
 import {
-    deviceInfo,
     getDevices,
+    selectedDevice,
     selectedSerialNumber,
 } from '../Device/deviceSlice';
 import { isLoggingVerbose, setIsLoggingVerbose } from '../Log/logSlice';
@@ -28,7 +28,7 @@ export default () => {
     const devices = useSelector(getDevices);
     const currentSerialNumber = useSelector(selectedSerialNumber);
     const verboseLogging = useSelector(isLoggingVerbose);
-    const currentDevice = useSelector(deviceInfo);
+    const currentDevice = useSelector(selectedDevice);
 
     return (
         <Card title="Support">

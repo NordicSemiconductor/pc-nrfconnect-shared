@@ -75,6 +75,16 @@ export class Batch {
         this.operationBatchGeneration.push(getPromise());
     }
 
+    public getDeviceInfo(core: DeviceCore, callbacks?: Callbacks<FWInfo>) {
+        this.enqueueBatchOperationObject(
+            'device-info',
+            core,
+            callbacks as CallbacksUnknown
+        );
+
+        return this;
+    }
+
     public erase(core: DeviceCore, callbacks?: Callbacks) {
         this.enqueueBatchOperationObject(
             'erase',

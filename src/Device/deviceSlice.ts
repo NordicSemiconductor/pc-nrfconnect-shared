@@ -8,6 +8,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 import { SerialPortOpenOptions } from 'serialport';
 
+import { DeviceInfo } from '../../nrfutil';
 import { NrfutilDevice, SerialPort } from '../../nrfutil/device/common';
 import type { RootState } from '../store';
 import {
@@ -21,7 +22,6 @@ import {
 
 export interface Device extends NrfutilDevice {
     serialNumber: string;
-    boardVersion?: string;
     nickname?: string;
     serialport?: SerialPort;
     favorite?: boolean;
@@ -42,15 +42,13 @@ const updateDevice = (
 
 export interface DeviceState {
     devices: Map<string, Device>;
-    deviceInfo: Device | null;
-    selectedSerialNumber: string | null;
     readbackProtection: 'unknown' | 'protected' | 'unprotected';
+    selectedDevice?: Device;
+    selectedDeviceInfo?: DeviceInfo;
 }
 
 const initialState: DeviceState = {
     devices: new Map(),
-    selectedSerialNumber: null,
-    deviceInfo: null,
     readbackProtection: 'unknown',
 };
 
@@ -89,15 +87,22 @@ const slice = createSlice({
          * Indicates that a device has been selected.
          */
         selectDevice: (state, action: PayloadAction<Device>) => {
-            state.selectedSerialNumber = action.payload.serialNumber;
+            state.selectedDevice = action.payload;
+        },
+
+        setSelectedDeviceInfo: (
+            state,
+            action: PayloadAction<DeviceInfo | undefined>
+        ) => {
+            state.selectedDeviceInfo = action.payload;
         },
 
         /*
          * Indicates that the currently selected device has been deselected.
          */
         deselectDevice: state => {
-            state.selectedSerialNumber = null;
-            state.deviceInfo = null;
+            state.selectedDevice = undefined;
+            state.selectedDeviceInfo = undefined;
             state.readbackProtection = 'unknown';
         },
 
@@ -112,11 +117,9 @@ const slice = createSlice({
             state,
             action: PayloadAction<SerialPortOpenOptions<AutoDetectTypes>>
         ) => {
-            if (state.selectedSerialNumber === null) return;
+            if (!state.selectedDevice) return;
 
-            const selectedDevice = state.devices.get(
-                state.selectedSerialNumber
-            );
+            const selectedDevice = state.selectedDevice;
 
             if (selectedDevice) {
                 const vComIndex = selectedDevice.serialPorts?.findIndex(
@@ -128,14 +131,14 @@ const slice = createSlice({
                     const { path: _, ...serialPortOptions } = action.payload;
 
                     persistSerialPortSettingsToStore(
-                        state.selectedSerialNumber,
+                        selectedDevice.serialNumber,
                         {
                             serialPortOptions,
                             vComIndex,
                         }
                     );
 
-                    state.devices.set(state.selectedSerialNumber, {
+                    state.devices.set(selectedDevice.serialNumber, {
                         ...selectedDevice,
                         persistedSerialPortOptions: action.payload,
                     });
@@ -146,9 +149,11 @@ const slice = createSlice({
         removeDevice: (state, action: PayloadAction<Device>) => {
             state.devices.delete(action.payload.serialNumber);
 
-            if (state.selectedSerialNumber === action.payload.serialNumber) {
-                state.selectedSerialNumber = null;
-                state.deviceInfo = null;
+            if (
+                action.payload.serialNumber ===
+                state.selectedDevice?.serialNumber
+            ) {
+                state.selectedDevice = undefined;
             }
         },
 
@@ -204,6 +209,7 @@ export const {
         deselectDevice,
         resetDeviceNickname,
         selectDevice,
+        setSelectedDeviceInfo,
         addDevice,
         removeDevice,
         setDeviceNickname,
@@ -219,16 +225,15 @@ export const getDevice = (serialNumber: string) => (state: RootState) =>
 export const getDevices = (state: RootState) => state.device.devices;
 
 export const deviceIsSelected = (state: RootState) =>
-    state.device.selectedSerialNumber != null;
+    !!state.device.selectedDevice;
 
-export const selectedDevice = (state: RootState) =>
-    state.device.selectedSerialNumber !== null
-        ? state.device.devices.get(state.device.selectedSerialNumber)
-        : undefined;
+export const selectedDevice = (state: RootState) => state.device.selectedDevice;
 
-export const deviceInfo = (state: RootState) => state.device.deviceInfo;
+export const selectedDeviceInfo = (state: RootState) =>
+    state.device.selectedDevice ? state.device.selectedDeviceInfo : undefined;
+
 export const selectedSerialNumber = (state: RootState) =>
-    state.device.selectedSerialNumber;
+    state.device.selectedDevice?.serialNumber;
 
 export const getReadbackProtection = (state: RootState) =>
     state.device.readbackProtection;

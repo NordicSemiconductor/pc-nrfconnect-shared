@@ -6,6 +6,7 @@
 
 const program = jest.fn();
 const programBuffer = jest.fn();
+const deviceInfo = jest.fn(() => Promise.resolve({}));
 const erase = jest.fn();
 const recover = jest.fn();
 const reset = jest.fn();
@@ -26,6 +27,7 @@ const getModuleVersion = jest.fn();
 export default {
     program,
     programBuffer,
+    deviceInfo,
     erase,
     recover,
     reset,

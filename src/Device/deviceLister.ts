@@ -6,10 +6,10 @@
 
 import {
     DeviceTraits,
-    NrfutilDevice,
     NrfutilDeviceWithSerialnumber,
 } from '../../nrfutil/device/common';
 import NrfutilDeviceLib from '../../nrfutil/device/device';
+import { DeviceInfo } from '../../nrfutil/device/deviceInfo';
 import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
 import {
@@ -23,7 +23,13 @@ import {
     WaitForDevice,
 } from './deviceAutoSelectSlice';
 import { closeDeviceSetupDialog } from './deviceSetupSlice';
-import { addDevice, Device, removeDevice } from './deviceSlice';
+import {
+    addDevice,
+    Device,
+    removeDevice,
+    selectDevice,
+    setSelectedDeviceInfo,
+} from './deviceSlice';
 import { isDeviceInDFUBootloader } from './sdfuOperations';
 
 let stopNrfutilDevice: (callback?: () => void) => void;
@@ -106,11 +112,11 @@ const initAutoReconnectTimeout =
  * @param {NrfutilDevice} device The input device from nrfutil-device
  * @returns {NrfutilDevice} The updated device
  */
-export const wrapDeviceFromNrfdl = (device: NrfutilDevice): Device => ({
+export const wrapDeviceFromNrfdl = (
+    device: NrfutilDeviceWithSerialnumber
+): Device => ({
     ...device,
-    boardVersion: device.jlink?.boardVersion ?? undefined,
     serialport: device.serialPorts?.[0] ?? undefined,
-    serialNumber: device.serialNumber ?? `fallback-serialnumber-${device.id}`,
 });
 
 /**
@@ -119,8 +125,9 @@ export const wrapDeviceFromNrfdl = (device: NrfutilDevice): Device => ({
  * @param {NrfutilDevice[]} devices The input devices from nrfutil-device
  * @returns {NrfutilDevice[]} The updated devices
  */
-export const wrapDevicesFromNrfdl = (devices: NrfutilDevice[]): Device[] =>
-    devices.map(wrapDeviceFromNrfdl);
+export const wrapDevicesFromNrfdl = (
+    devices: NrfutilDeviceWithSerialnumber[]
+): Device[] => devices.map(wrapDeviceFromNrfdl);
 
 export const hasValidDeviceTraits = (
     deviceTraits: DeviceTraits,
@@ -144,7 +151,7 @@ const removeDeviceFromList =
     (dispatch, getState) => {
         if (
             removedDevice.serialNumber !==
-            getState().device.selectedSerialNumber
+            getState().device.selectedDevice?.serialNumber
         ) {
             dispatch(removeDevice(removedDevice));
             onDeviceDisconnected(removedDevice);
@@ -176,7 +183,9 @@ export const startWatchingDevices =
         doSelectDevice: (device: Device, autoReselected: boolean) => void
     ): AppThunk<RootState, void> =>
     (dispatch, getState) => {
-        const onDeviceArrived = (device: NrfutilDeviceWithSerialnumber) => {
+        const onDeviceArrived = async (
+            device: NrfutilDeviceWithSerialnumber
+        ) => {
             if (hasValidDeviceTraits(device.traits, deviceListing)) {
                 device = wrapDeviceFromNrfdl(device);
                 if (
@@ -186,12 +195,10 @@ export const startWatchingDevices =
                     onDeviceConnected(device);
                 }
 
-                const sn = getState().device.selectedSerialNumber;
                 const disconnectionTime =
                     getState().deviceAutoSelect.disconnectionTime;
                 const autoSelectDevice = getState().deviceAutoSelect.device;
-                const selectedDevice =
-                    sn !== null ? getState().device.devices.get(sn) : undefined;
+                const selectedDevice = getState().device.selectedDevice;
 
                 const result = shouldAutoReselect(
                     device,
@@ -209,16 +216,31 @@ export const startWatchingDevices =
                 if (!deviceWithPersistedData) return;
 
                 if (result) {
+                    let deviceInfo: DeviceInfo | undefined;
+                    try {
+                        deviceInfo = await NrfutilDeviceLib.deviceInfo(device);
+                    } catch (e) {
+                        // DO nothing
+                    }
+
                     logger.info(
                         `Auto Reconnecting Device SN: ${deviceWithPersistedData.serialNumber}`
                     );
                     doSelectDevice(deviceWithPersistedData, true);
+                    dispatch(setSelectedDeviceInfo(deviceInfo));
                 } else if (
                     deviceWithPersistedData.serialNumber ===
                     getState().deviceAutoSelect.device?.serialNumber
                 ) {
                     const waitForDevice =
                         getState().deviceAutoSelect.waitForDevice;
+
+                    let deviceInfo: DeviceInfo | undefined;
+                    try {
+                        deviceInfo = await NrfutilDeviceLib.deviceInfo(device);
+                    } catch (e) {
+                        // DO nothing
+                    }
 
                     // Device lib might fail to advertise that a device has left before it rejoins (Mainly OSx)
                     // but we still need to trigger the onSuccess if a device 'reappeared' with a different 'id'
@@ -245,8 +267,7 @@ export const startWatchingDevices =
                                     deviceWithPersistedData
                                 )) ||
                             (waitForDevice.when === 'applicationMode' &&
-                                deviceWithPersistedData.dfuTriggerInfo !==
-                                    null) ||
+                                deviceInfo?.dfuTriggerVersion) ||
                             (selectedDevice &&
                                 waitForDevice.when === 'sameTraits' &&
                                 hasSameDeviceTraits(
@@ -268,6 +289,9 @@ export const startWatchingDevices =
                             dispatch(
                                 clearWaitForDeviceTimeout(waitForDevice.once)
                             );
+
+                            dispatch(selectDevice(deviceWithPersistedData));
+                            dispatch(setSelectedDeviceInfo(deviceInfo));
 
                             if (waitForDevice.onSuccess)
                                 waitForDevice.onSuccess(

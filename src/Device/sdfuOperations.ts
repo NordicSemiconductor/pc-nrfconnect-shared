@@ -545,9 +545,9 @@ export const sdfuDeviceSetup = (
     dfuFirmware: DfuEntry[],
     needSerialport = false
 ): DeviceSetup => ({
-    supportsProgrammingMode: (device: Device) =>
-        ((!!device.dfuTriggerVersion &&
-            device.dfuTriggerVersion.semVer.length > 0) ||
+    supportsProgrammingMode: (device, deviceInfo) =>
+        ((!!deviceInfo?.dfuTriggerVersion &&
+            deviceInfo.dfuTriggerVersion.semVer.length > 0) ||
             isDeviceInDFUBootloader(device)) &&
         (needSerialport === device.traits.serialPorts || !needSerialport),
     getFirmwareOptions: device =>
@@ -559,31 +559,26 @@ export const sdfuDeviceSetup = (
                     programDeviceWithFw(device, firmwareOption, onProgress)
                 ),
         })),
-    isExpectedFirmware: (device: Device) => () =>
-        new Promise<{
-            device: Device;
-            validFirmware: boolean;
-        }>(resolve => {
-            if (device.dfuTriggerVersion) {
-                logger.debug(
-                    'Device has DFU trigger interface, the device is in Application mode'
-                );
+    isExpectedFirmware: (device, deviceInfo) => () => {
+        if (deviceInfo?.dfuTriggerVersion) {
+            logger.debug(
+                'Device has DFU trigger interface, the device is in Application mode'
+            );
 
-                const { semVer } = device.dfuTriggerVersion;
+            const { semVer } = deviceInfo.dfuTriggerVersion;
 
-                resolve({
-                    device,
-                    validFirmware:
-                        dfuFirmware.filter(fw => fw.semver === semVer).length >
-                        0,
-                });
-            } else {
-                resolve({
-                    device,
-                    validFirmware: false,
-                });
-            }
-        }),
+            return Promise.resolve({
+                device,
+                validFirmware:
+                    dfuFirmware.filter(fw => fw.semver === semVer).length > 0,
+            });
+        }
+
+        return Promise.resolve({
+            device,
+            validFirmware: false,
+        });
+    },
     tryToSwitchToApplicationMode: device => dispatch =>
         new Promise<Device>((resolve, reject) => {
             dispatch(switchToApplicationMode(device, resolve, reject));

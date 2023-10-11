@@ -13,7 +13,7 @@ import {
     deviceInfo,
     productPageUrl,
 } from '../Device/deviceInfo/deviceInfo';
-import { selectedDevice } from '../Device/deviceSlice';
+import { selectedDevice, selectedDeviceInfo } from '../Device/deviceSlice';
 import AboutButton from './AboutButton';
 import Section from './Section';
 
@@ -27,6 +27,7 @@ const memorySize = (memoryInBytes: number) => {
 
 export default () => {
     const device = useSelector(selectedDevice);
+    const info = useSelector(selectedDeviceInfo);
 
     if (device == null) {
         return (
@@ -36,7 +37,7 @@ export default () => {
         );
     }
 
-    const pca = device.jlink?.boardVersion;
+    const pca = device.devkit?.boardVersion;
     const { name, cores } = deviceInfo(device);
 
     return (
@@ -47,13 +48,13 @@ export default () => {
                 <Section title="PCA">{pca || 'Unknown'}</Section>
                 <Section title="Cores">{cores || 'Unknown'}</Section>
 
-                {device.hwInfo && (
+                {info?.hwInfo && (
                     <>
                         <Section title="RAM">
-                            {memorySize(device.hwInfo.ramSize)}
+                            {memorySize(info.hwInfo.ramSize)}
                         </Section>
                         <Section title="Flash">
-                            {memorySize(device.hwInfo.romSize)}
+                            {memorySize(info.hwInfo.romSize)}
                         </Section>
                     </>
                 )}
