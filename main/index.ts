@@ -28,8 +28,20 @@ export const serialPort = {
     forRenderer: forRendererSerialPort,
 };
 
-export * from '../ipc/MetaFiles';
-export * from '../ipc/schema/packageJson';
+export {
+    type AppInfo,
+    type NrfutilModuleName,
+    type NrfutilModules,
+    type NrfutilModuleVersion,
+    type SourceJson,
+    type WithdrawnJson,
+} from '../ipc/MetaFiles';
+export {
+    type LegacyPackageJson,
+    type PackageJson,
+    parseLegacyPackageJson,
+    parsePackageJson,
+} from '../ipc/schema/packageJson';
 
 export { type OverwriteOptions } from '../ipc/serialPort';
 export { type OpenAppOptions } from '../ipc/openWindow';
