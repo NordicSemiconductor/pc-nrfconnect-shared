@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 119 - 2023-10-13
+
+### Changed
+
+-   Remove default 3000ms timeout from `nrfutil device list`
+
 ## 118 - 2023-10-13
 
 ### Added
