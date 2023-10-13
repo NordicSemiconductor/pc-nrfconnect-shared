@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import packageJson from '../src/utils/packageJson';
 import {
     Dependency,
     isIncrementalVersion,
@@ -55,3 +56,27 @@ export const resolveModuleVersion = (
     versions: Dependency[] = []
 ): Dependency | SubDependency | undefined =>
     findTopLevel(module, versions) ?? findInDependencies(module, versions);
+
+const overriddenVersion = (module: string) => {
+    const env = { ...process.env };
+    if (
+        process.env.NODE_ENV !== 'production' ||
+        (process.env.NODE_ENV === 'production' &&
+            !!process.env.NRF_OVERRIDE_NRFUTIL_SETTINGS)
+    ) {
+        return env[`NRF_OVERRIDE_VERSION_${module.toLocaleUpperCase()}`];
+    }
+};
+
+const versionFromPackageJson = (module: string) =>
+    packageJson().nrfConnectForDesktop.nrfutil?.[module][0];
+
+const failToDetermineVersion = (module: string) => {
+    throw new Error(`No version specified for nrfutil-${module}`);
+};
+
+export const versionToInstall = (module: string, version?: string) =>
+    version ??
+    overriddenVersion(module) ??
+    versionFromPackageJson(module) ??
+    failToDetermineVersion(module);
