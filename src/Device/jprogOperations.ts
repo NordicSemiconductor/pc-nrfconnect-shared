@@ -51,7 +51,7 @@ const programDeviceWithFw =
     ): AppThunk<RootState, Promise<Device>> =>
     async (dispatch, getState) => {
         try {
-            if (getState().device.readbackProtection === 'protected') {
+            if (getState().device.readbackProtection !== 'unprotected') {
                 logger.info('Recovering device');
                 onProgress(0, 'Recovering device');
                 await NrfutilDeviceLib.recover(device, 'Application');
