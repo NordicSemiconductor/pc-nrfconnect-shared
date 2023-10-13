@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2023 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
+export const knownDevicePcas = [
+    'PCA10028',
+    'PCA10031',
+    'PCA10040',
+    'PCA10056',
+    'PCA10059',
+    'PCA10090',
+    'PCA10095',
+    'PCA10100',
+    'PCA10121',
+    'PCA20020',
+    'PCA20035',
+    'PCA10143',
+    'PCA10152',
+    'PCA10153',
+    'PCA20049',
+] as const;
+
+export type KnownDevicePCA = (typeof knownDevicePcas)[number];

@@ -8,7 +8,6 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import type Systeminformation from 'systeminformation';
 import winston from 'winston';
 
-import type { PackageJson } from '../../ipc/MetaFiles';
 import { isDevelopment } from './environment';
 import {
     deleteIsSendingUsageData,
@@ -33,7 +32,7 @@ let insights: ApplicationInsights | undefined;
  *
  * @returns {Promise<void>} void
  */
-export const init = (packageJson: PackageJson) => {
+export const init = (packageJson: { name: string; version: string }) => {
     const applicationName = isDevelopment
         ? `${packageJson.name}-dev`
         : packageJson.name;

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { DevicePCA } from '../src/Device/deviceInfo/deviceInfo';
+import { z } from 'zod';
 
 export type UrlString = string;
 
@@ -40,49 +40,21 @@ export interface AppInfo {
     };
 }
 
-interface ObjectContainingOptionalStrings {
-    [index: string]: string | undefined;
-}
+export const semver = z.string().regex(
+    // From https://semver.org
+    /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/,
+    'Is not a valid string for a semantic version'
+);
 
-interface NrfConnectForDesktop {
-    supportedDevices?: DevicePCA[];
-    nrfutil?: NrfutilModules;
-    html?: string;
-}
+const nrfutilModuleName = z.string();
+const nrfutilModuleVersion = semver;
 
-type SemverString = string;
+export type NrfutilModuleName = z.infer<typeof nrfutilModuleName>;
+export type NrfutilModuleVersion = z.infer<typeof nrfutilModuleVersion>;
 
-export type NrfutilModuleName = string;
-export type NrfutilModuleVersion = SemverString;
+export const nrfModules = z.record(
+    nrfutilModuleName,
+    nrfutilModuleVersion.array().nonempty()
+);
 
-export interface NrfutilModules {
-    [name: NrfutilModuleName]: [
-        NrfutilModuleVersion,
-        ...NrfutilModuleVersion[]
-    ];
-}
-
-export interface PackageJson {
-    name: string;
-    version: SemverString;
-
-    // Several optional properties
-    author?: string;
-    bin?: ObjectContainingOptionalStrings | string;
-    dependencies?: ObjectContainingOptionalStrings;
-    description?: string;
-    homepage?: UrlString;
-    devDependencies?: ObjectContainingOptionalStrings;
-    displayName?: string;
-    engines?: ObjectContainingOptionalStrings;
-    nrfConnectForDesktop?: NrfConnectForDesktop;
-    files?: readonly string[];
-    license?: string;
-    main?: string;
-    peerDependencies?: ObjectContainingOptionalStrings;
-    repository?: {
-        type: string;
-        url: UrlString;
-    };
-    scripts?: ObjectContainingOptionalStrings;
-}
+export type NrfutilModules = z.infer<typeof nrfModules>;

@@ -26,7 +26,7 @@ const parseJson = <Result>(jsonString: string) =>
     JSON.parse(jsonString) as Result;
 
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-const npm = (...commands) =>
+const npm = (...commands: string[]) =>
     spawnSync(npmCommand, commands, {
         stdio: ['inherit', 'pipe', 'inherit'],
         encoding: 'utf-8',

@@ -7,6 +7,22 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 118 - 2023-10-13
+
+### Added
+
+-   Option to configure external React to support legacy apps in the launcher.
+
+### Changed
+
+-   Checking whether the `package.json` contains all required fields is now also
+    down before building.
+-   Use `zod` for the `package.json` schema for apps. This is used verify that
+    apps have the right fields in `package.json` and also generates the right
+    TypeScript type for it.
+-   `nrfConnectForDesktop.html` is not optional anymore, it must always be
+    specified in `package.json`.
+
 ## 117 - 2023-10-04
 
 ### Fixed
@@ -394,7 +410,7 @@ declare module '!!@svgr!*.svg' {
 ### Steps to upgrade when using this package
 
 -   Following this step will make the app incompatible with the currently
-    released launcher (v4.1.2): Add an `index`-property to package.json. The
+    released launcher (v4.1.2): Add an `html`-property to package.json. The
     following example will use the index bundled with shared that works with our
     apps, but apps can also make their own instead if needed.
 

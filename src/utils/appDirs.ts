@@ -17,7 +17,7 @@ const getUserDataDir = () => getGlobal('userDataDir');
  * @returns {string|undefined} Absolute path of current app.
  */
 const getAppDir = () => {
-    const html = packageJson()?.nrfConnectForDesktop?.html ?? '';
+    const html = packageJson().nrfConnectForDesktop.html;
     const dir = path.parse(html).dir;
     return path.parse(__filename).dir.replace(dir, '');
 };

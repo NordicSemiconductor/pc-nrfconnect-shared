@@ -4,21 +4,18 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-const fs = require('fs');
-const join = require('path').join;
-const { sassPlugin, postcssModules } = require('esbuild-sass-plugin');
-const esbuild = require('esbuild');
-const svgr = require('@svgr/core').transform;
-const builtinModules = require('module').builtinModules;
-const postCssPlugin = require('esbuild-style-plugin');
-const tailwindcss = require('tailwindcss');
-const autoprefixer = require('autoprefixer');
-const path = require('path');
+import { transform as svgr } from '@svgr/core';
+import autoprefixer from 'autoprefixer';
+import esbuild, { BuildOptions } from 'esbuild';
+import { postcssModules, sassPlugin } from 'esbuild-sass-plugin';
+import postCssPlugin from 'esbuild-style-plugin';
+import * as fs from 'node:fs';
+import * as module from 'node:module';
+import * as path from 'node:path';
+import tailwindcss from 'tailwindcss';
 
-const packageJsonOfApp = fs.readFileSync(
-    path.join(process.cwd(), 'package.json'),
-    'utf8'
-);
+const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+
 const projectSpecificTailwindConfigPath = path.join(
     process.cwd(),
     'tailwind.config.js'
@@ -30,26 +27,21 @@ const tailwindConfig = () =>
               '@nordicsemiconductor/pc-nrfconnect-shared/config/tailwind.config.js'
           );
 
-function options(additionalOptions) {
-    const { dependencies, nrfConnectForDesktop } = JSON.parse(
-        fs.readFileSync('package.json', 'utf8')
-    );
+type AdditionalOptions = Required<Pick<BuildOptions, 'entryPoints'>> &
+    Partial<BuildOptions>;
 
-    const outfile =
-        additionalOptions.entryPoints.length === 1
-            ? './dist/bundle.js'
-            : undefined;
-    const outdir = outfile ? undefined : './dist';
+const outfileOrDir = (additionalOptions: AdditionalOptions) =>
+    additionalOptions.entryPoints.length === 1
+        ? { outfile: './dist/bundle.js' }
+        : { outdir: './dist' };
 
-    const appHasOwnHtml = nrfConnectForDesktop?.html !== undefined;
-
-    return {
-        define: {
-            'process.env.PACKAGE_JSON_OF_APP': JSON.stringify(packageJsonOfApp),
-        },
-        format: appHasOwnHtml ? 'iife' : 'cjs',
-        outfile,
-        outdir,
+const options = (
+    additionalOptions: AdditionalOptions,
+    externalReact: boolean
+) =>
+    ({
+        format: 'iife',
+        ...outfileOrDir(additionalOptions),
         target: 'chrome89',
         sourcemap: true,
         metafile: false,
@@ -57,16 +49,16 @@ function options(additionalOptions) {
         bundle: true,
         logLevel: 'info',
         external: [
-            ...builtinModules,
+            ...module.builtinModules,
 
             // launcher includes
             'electron',
             'serialport',
             '@electron/remote',
-            ...(appHasOwnHtml ? [] : ['react']),
+            ...(externalReact ? ['react', 'react-dom'] : []),
 
             // App dependencies
-            ...Object.keys(dependencies ?? {}),
+            ...Object.keys(packageJson.dependencies ?? {}),
         ],
         loader: {
             '.json': 'json',
@@ -103,8 +95,8 @@ function options(additionalOptions) {
 
                     builder.onResolve({ filter }, args => {
                         // Rename file to .svgr to let this plugin handle it.
-                        const [, shortpath] = filter.exec(args.path);
-                        const resolvedPath = `${join(
+                        const [, shortpath] = filter.exec(args.path)!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+                        const resolvedPath = `${path.join(
                             args.resolveDir,
                             shortpath
                         )}r`;
@@ -118,7 +110,7 @@ function options(additionalOptions) {
                             'utf8'
                         );
                         const plugins = ['@svgr/plugin-jsx'];
-                        const contents = await svgr(svg, { filePath, plugins });
+                        const contents = await svgr(svg, { plugins });
                         return {
                             contents,
                             loader: 'jsx',
@@ -128,22 +120,20 @@ function options(additionalOptions) {
             },
         ],
         ...additionalOptions,
-    };
-}
+    } satisfies BuildOptions);
 
-const build = additionalOptions => esbuild.build(options(additionalOptions));
-
-const watch = async additionalOptions => {
-    const context = await esbuild.context(options(additionalOptions));
-
-    await context.rebuild();
-    await context.watch();
-};
-
-module.exports.build = additionalOptions => {
+export const build = async (
+    additionalOptions: AdditionalOptions,
+    { externalReact = false } = {}
+) => {
     if (process.argv.includes('--watch')) {
-        watch(additionalOptions);
+        const context = await esbuild.context(
+            options(additionalOptions, externalReact)
+        );
+
+        await context.rebuild();
+        await context.watch();
     } else {
-        build(additionalOptions);
+        esbuild.build(options(additionalOptions, externalReact));
     }
 };
