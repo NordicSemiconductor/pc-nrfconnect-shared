@@ -7,6 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 120 - 2023-10-13
+
+### Fixed
+
+-   `prepareSandbox()` couldn't be called from the launcher any longer. Even
+    when the version to install was provided, `prepareSandbox()` tried to look
+    into the `package.json`, which didn't exist any longer in the launcher,
+    because it is only supplied during build time by apps now.
+
 ## 119 - 2023-10-13
 
 ### Changed
@@ -42,6 +51,10 @@ every new version is a new major version.
 -   `nrfutil` abort log messages is now more descriptive
 -   `nrfutil device batch` could previously call the `onException` when task was
     complete.
+
+### Changed
+
+-   Read the `package.json` already during compile time, but only for apps.
 
 ## 115 - 2023-09-28
 

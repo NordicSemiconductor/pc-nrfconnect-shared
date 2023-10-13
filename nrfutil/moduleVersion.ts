@@ -61,6 +61,10 @@ export const versionToInstall = (
     module: string,
     version: string | undefined
 ) => {
+    if (version != null) {
+        return version;
+    }
+
     const env = { ...process.env };
     let overrideVersion: string | undefined;
     if (
@@ -81,5 +85,5 @@ export const versionToInstall = (
         throw new Error(`No version specified for nrfutil-${module}`);
     }
 
-    return version ?? (moduleVersions?.[0] as string);
+    return moduleVersions?.[0] as string;
 };
