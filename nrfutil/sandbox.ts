@@ -10,7 +10,7 @@ import os from 'os';
 import path from 'path';
 
 import describeError from '../src/logging/describeError';
-import packageJson from '../src/utils/packageJson';
+import { versionToInstall } from './moduleVersion';
 import { getNrfutilLogger } from './nrfutilLogger';
 import {
     BackgroundTask,
@@ -492,30 +492,10 @@ export default async (
     version?: string,
     onProgress?: (progress: Progress, task?: Task) => void
 ) => {
-    const env = { ...process.env };
-    let overrideVersion: string | undefined;
-    if (
-        process.env.NODE_ENV !== 'production' ||
-        (process.env.NODE_ENV === 'production' &&
-            !!process.env.NRF_OVERRIDE_NRFUTIL_SETTINGS)
-    ) {
-        overrideVersion =
-            env[`NRF_OVERRIDE_VERSION_${module.toLocaleUpperCase()}`] ??
-            undefined;
-    }
-
-    const moduleVersions = overrideVersion
-        ? [overrideVersion]
-        : packageJson().nrfConnectForDesktop?.nrfutil?.[module];
-
-    if (!version && (!moduleVersions || moduleVersions.length === 0)) {
-        throw new Error(`No version specified for nrfutil-${module}`);
-    }
-
     const sandbox = new NrfutilSandbox(
         baseDir,
         module,
-        version ?? (moduleVersions?.[0] as string)
+        versionToInstall(module, version)
     );
 
     onProgress?.(convertNrfutilProgress({ progressPercentage: 0 }));
