@@ -57,33 +57,26 @@ export const resolveModuleVersion = (
 ): Dependency | SubDependency | undefined =>
     findTopLevel(module, versions) ?? findInDependencies(module, versions);
 
-export const versionToInstall = (
-    module: string,
-    version: string | undefined
-) => {
-    if (version != null) {
-        return version;
-    }
-
+const overriddenVersion = (module: string) => {
     const env = { ...process.env };
-    let overrideVersion: string | undefined;
     if (
         process.env.NODE_ENV !== 'production' ||
         (process.env.NODE_ENV === 'production' &&
             !!process.env.NRF_OVERRIDE_NRFUTIL_SETTINGS)
     ) {
-        overrideVersion =
-            env[`NRF_OVERRIDE_VERSION_${module.toLocaleUpperCase()}`] ??
-            undefined;
+        return env[`NRF_OVERRIDE_VERSION_${module.toLocaleUpperCase()}`];
     }
-
-    const moduleVersions = overrideVersion
-        ? [overrideVersion]
-        : packageJson().nrfConnectForDesktop?.nrfutil?.[module];
-
-    if (!version && (!moduleVersions || moduleVersions.length === 0)) {
-        throw new Error(`No version specified for nrfutil-${module}`);
-    }
-
-    return moduleVersions?.[0] as string;
 };
+
+const versionFromPackageJson = (module: string) =>
+    packageJson().nrfConnectForDesktop.nrfutil?.[module][0];
+
+const failToDetermineVersion = (module: string) => {
+    throw new Error(`No version specified for nrfutil-${module}`);
+};
+
+export const versionToInstall = (module: string, version?: string) =>
+    version ??
+    overriddenVersion(module) ??
+    versionFromPackageJson(module) ??
+    failToDetermineVersion(module);
