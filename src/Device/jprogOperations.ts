@@ -51,29 +51,50 @@ const programDeviceWithFw =
     ): AppThunk<RootState, Promise<Device>> =>
     async (dispatch, getState) => {
         try {
+            const batch = NrfutilDeviceLib.batch();
             if (getState().device.readbackProtection !== 'unprotected') {
-                logger.info('Recovering device');
-                onProgress(0, 'Recovering device');
-                await NrfutilDeviceLib.recover(device, 'Application');
+                batch.recover('Application', {
+                    onTaskBegin: () =>
+                        logger.info(`Device protected, recovering device`),
+                    onTaskEnd: () => logger.info(`Finished recovering device.`),
+                    onException: () =>
+                        logger.error(`Failed to recover device.`),
+                    onProgress: progress => {
+                        onProgress(
+                            progress.totalProgressPercentage,
+                            'Recovering device'
+                        );
+                    },
+                });
             }
 
-            logger.debug(
-                `Programming ${device.serialNumber} with ${selectedFw.fw}`
-            );
-            await NrfutilDeviceLib.program(
-                device,
-                selectedFw.fw,
-                progress => {
+            batch.program(selectedFw.fw, 'Application', undefined, undefined, {
+                onTaskBegin: () => logger.info(`Programming device`),
+                onTaskEnd: () => logger.info(`Finished programming device.`),
+                onException: () => logger.error(`Failed to program device.`),
+                onProgress: progress => {
                     onProgress(
                         progress.totalProgressPercentage,
                         progress.message ?? 'programming'
                     );
                 },
-                'Application'
-            );
-            logger.debug(`Resetting ${device.serialNumber}`);
-            onProgress(100, 'Resetting device');
+            });
+
+            batch.reset('Application', undefined, {
+                onTaskBegin: () => logger.info(`Resting device`),
+                onTaskEnd: () => logger.info(`Finished resting device.`),
+                onException: () => logger.error(`Failed to reset device.`),
+                onProgress: progress => {
+                    onProgress(
+                        progress.totalProgressPercentage,
+                        'Resetting device'
+                    );
+                },
+            });
+
+            await batch.run(device);
             await NrfutilDeviceLib.reset(device);
+            onProgress(0, 'Updating readback protection');
             const { readbackProtection } = await getDeviceReadProtection(
                 device
             );
