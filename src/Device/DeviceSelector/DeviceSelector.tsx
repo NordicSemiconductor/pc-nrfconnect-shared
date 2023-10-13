@@ -90,6 +90,7 @@ export default ({
                     undefined,
                     abortController.current
                 );
+                abortController.current = undefined;
                 setSelectedDeviceInfo(deviceInfo);
             } catch (e) {
                 // Do Nothing
