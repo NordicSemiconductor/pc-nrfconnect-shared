@@ -38,12 +38,12 @@ export const FavoriteIndicator: FC<{ device: Device }> = ({ device }) => {
         dispatch(toggleDeviceFavorited(device));
     };
 
-    return (
+    return device ? (
         <PseudoButton
             className={`mdi ${
                 device.favorite ? 'mdi-star' : 'mdi-star-outline'
             }`}
             onClick={toggleFavorite}
         />
-    );
+    ) : null;
 };
