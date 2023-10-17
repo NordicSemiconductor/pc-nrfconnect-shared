@@ -28,8 +28,7 @@ const PcaNumber = ({ device }: { device: Device }) => {
 };
 
 const MaybeDeviceName = ({ device }: { device: Device }) => {
-    const hasNickname = device.nickname !== '';
-    if (!hasNickname) {
+    if (!device.nickname) {
         return null;
     }
 
