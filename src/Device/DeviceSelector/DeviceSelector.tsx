@@ -106,7 +106,7 @@ export default ({
                 }
             } else {
                 logger.warn(
-                    `Device ${device.id} has no serial number. Device setup is not supported`
+                    `Selected device has no serial number. Device setup is not supported`
                 );
                 onDeviceIsReady(device);
             }
