@@ -37,10 +37,10 @@ export const FavoriteIndicator: FC<{ device: Device }> = ({ device }) => {
         dispatch(toggleDeviceFavorited(device));
     };
 
-    return device ? (
+    return device.serialNumber ? (
         <PseudoButton
             className={classNames(
-                !device.favorite && 'tw-hidden hover:tw-visible',
+                !device.favorite && 'tw-invisible group-hover:tw-visible',
                 `mdi ${device.favorite ? 'mdi-star' : 'mdi-star-outline'}`
             )}
             onClick={toggleFavorite}

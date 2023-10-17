@@ -103,7 +103,7 @@ export default ({
     return (
         <div className="basic-device-info tw-h-[42px]">
             <DeviceIcon device={device} />
-            <div className="details">
+            <div className="details tw-flex tw-flex-col">
                 <DeviceName
                     device={device}
                     inputRef={deviceNameInputRef}
@@ -111,7 +111,7 @@ export default ({
                 />
                 <DeviceSerialNumber device={device} />
             </div>
-            <div className="tw-mr-2.5 tw-flex tw-w-11 tw-flex-col tw-items-center">
+            <div className="tw-mr-2.5 tw-flex tw-h-full tw-w-11 tw-flex-col tw-items-center tw-justify-center">
                 {toggles}
             </div>
         </div>
