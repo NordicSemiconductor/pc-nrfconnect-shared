@@ -11,7 +11,11 @@ import { Toggle } from '../../../Toggle/Toggle';
 import classNames from '../../../utils/classNames';
 import { getAutoReselect, setAutoReselect } from '../../deviceAutoSelectSlice';
 import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
-import { Device as DeviceProps, getDevices } from '../../deviceSlice';
+import {
+    Device as DeviceProps,
+    getDevices,
+    selectedDevice,
+} from '../../deviceSlice';
 import { AnimatedItem, AnimatedList } from './AnimatedList';
 import BrokenDevice from './BrokenDevice';
 import Device from './Device';
@@ -60,6 +64,7 @@ const DeviceList: FC<Props> = ({
     const dispatch = useDispatch();
     const autoReconnect = useSelector(getAutoReselect);
     const devices = useSelector(getDevices);
+    const currentDevice = useSelector(selectedDevice);
 
     const sortedDevices = useMemo(
         () => sorted([...devices.values()]),
@@ -71,13 +76,26 @@ const DeviceList: FC<Props> = ({
         [deviceFilter, sortedDevices]
     );
 
+    const canUseAutoReconnect =
+        (!!currentDevice && !!currentDevice?.serialNumber) || !currentDevice;
+
     return (
         <div className={classNames('device-list', isVisible || 'hidden')}>
             <div className="global-auto-reconnect">
                 <Toggle
                     id="toggle-global-auto-reconnect"
                     label="Auto Reconnect"
-                    isToggled={autoReconnect}
+                    title={
+                        !canUseAutoReconnect
+                            ? 'Cannot auto reconnect to a device with no serial number'
+                            : ''
+                    }
+                    disabled={!canUseAutoReconnect}
+                    isToggled={
+                        autoReconnect &&
+                        ((!!currentDevice && !!currentDevice?.serialNumber) ||
+                            !currentDevice)
+                    }
                     onToggle={value => {
                         dispatch(setAutoReselect(value));
                     }}
