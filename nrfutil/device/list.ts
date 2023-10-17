@@ -52,16 +52,6 @@ export default async (
 
     const onData = (data: HotplugEvent | ListEvent) => {
         if (isListEvent(data)) {
-            data.devices
-                .filter(d => !d.serialNumber)
-                .forEach(d => {
-                    logger.warn(
-                        `Device was skipped as it has no Serial number ${JSON.stringify(
-                            d
-                        )}`
-                    );
-                });
-
             onEnumerated(data.devices);
 
             return;
