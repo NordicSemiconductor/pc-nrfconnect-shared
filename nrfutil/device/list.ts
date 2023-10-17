@@ -10,7 +10,6 @@ import {
     deviceTraitsToArgs,
     getDeviceSandbox,
     NrfutilDevice,
-    NrfutilDeviceWithSerialnumber,
 } from './common';
 
 export interface HotplugEvent {
@@ -32,10 +31,10 @@ const isHotplugEvent = (
 
 export default async (
     traits: DeviceTraits,
-    onEnumerated: (devices: NrfutilDeviceWithSerialnumber[]) => void,
+    onEnumerated: (devices: NrfutilDevice[]) => void,
     onError: (error: Error) => void,
     onHotplugEvent?: {
-        onDeviceArrived: (device: NrfutilDeviceWithSerialnumber) => void;
+        onDeviceArrived: (device: NrfutilDevice) => void;
         onDeviceLeft: (id: number) => void;
     },
     timeout?: number
@@ -63,11 +62,7 @@ export default async (
                     );
                 });
 
-            onEnumerated(
-                data.devices.filter(
-                    d => d.serialNumber
-                ) as NrfutilDeviceWithSerialnumber[]
-            );
+            onEnumerated(data.devices);
 
             return;
         }
@@ -77,17 +72,7 @@ export default async (
         }
 
         if (data.event === 'Arrived' && data.device) {
-            if (data.device.serialNumber) {
-                onHotplugEvent.onDeviceArrived(
-                    data.device as NrfutilDeviceWithSerialnumber
-                );
-            } else {
-                logger.warn(
-                    `Device was skipped as it has no Serial number ${JSON.stringify(
-                        data.device
-                    )}`
-                );
-            }
+            onHotplugEvent.onDeviceArrived(data.device);
         } else if (data.event === 'Left') {
             onHotplugEvent.onDeviceLeft(data.id);
         }

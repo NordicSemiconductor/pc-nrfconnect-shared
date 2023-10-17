@@ -8,7 +8,7 @@ import { Progress } from '../sandboxTypes';
 import {
     DeviceCore,
     deviceSingleTaskEndOperation,
-    NrfutilDeviceWithSerialnumber,
+    NrfutilDevice,
 } from './common';
 
 type DeviceFamily =
@@ -32,7 +32,7 @@ export interface GetProtectionStatusResult {
 }
 
 export default (
-    device: NrfutilDeviceWithSerialnumber,
+    device: NrfutilDevice,
     core?: DeviceCore,
     onProgress?: (progress: Progress) => void,
     controller?: AbortController

@@ -4,10 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import {
-    DeviceTraits,
-    NrfutilDeviceWithSerialnumber,
-} from '../../nrfutil/device/common';
+import { DeviceTraits, NrfutilDevice } from '../../nrfutil/device/common';
 import NrfutilDeviceLib from '../../nrfutil/device/device';
 import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
@@ -25,6 +22,7 @@ import { closeDeviceSetupDialog } from './deviceSetupSlice';
 import {
     addDevice,
     Device,
+    getDevice,
     removeDevice,
     selectDevice,
     setSelectedDeviceInfo,
@@ -105,29 +103,6 @@ const initAutoReconnectTimeout =
         );
     };
 
-/**
- * Wrap the device form nrfutil-device to make the Device type consistent
- *
- * @param {NrfutilDevice} device The input device from nrfutil-device
- * @returns {NrfutilDevice} The updated device
- */
-export const wrapDeviceFromNrfdl = (
-    device: NrfutilDeviceWithSerialnumber
-): Device => ({
-    ...device,
-    serialport: device.serialPorts?.[0] ?? undefined,
-});
-
-/**
- * Wrap the device form nrfutil-device to make the Device type consistent
- *
- * @param {NrfutilDevice[]} devices The input devices from nrfutil-device
- * @returns {NrfutilDevice[]} The updated devices
- */
-export const wrapDevicesFromNrfdl = (
-    devices: NrfutilDeviceWithSerialnumber[]
-): Device[] => devices.map(wrapDeviceFromNrfdl);
-
 export const hasValidDeviceTraits = (
     deviceTraits: DeviceTraits,
     requiredTraits: DeviceTraits
@@ -182,14 +157,13 @@ export const startWatchingDevices =
         doSelectDevice: (device: Device, autoReselected: boolean) => void
     ): AppThunk<RootState, void> =>
     (dispatch, getState) => {
-        const onDeviceArrived = async (
-            device: NrfutilDeviceWithSerialnumber
-        ) => {
+        const onDeviceArrived = async (device: NrfutilDevice) => {
             if (hasValidDeviceTraits(device.traits, deviceListing)) {
-                device = wrapDeviceFromNrfdl(device);
                 if (
                     device.serialNumber &&
-                    !getState().device.devices.has(device.serialNumber)
+                    !getState().device.devices.find(
+                        d => d.serialNumber === device.serialNumber
+                    )
                 ) {
                     onDeviceConnected(device);
                 }
@@ -208,8 +182,8 @@ export const startWatchingDevices =
                 );
 
                 dispatch(addDevice(device));
-                const deviceWithPersistedData = getState().device.devices.get(
-                    device.serialNumber
+                const deviceWithPersistedData = getState().device.devices.find(
+                    d => d.serialNumber === device.serialNumber
                 );
 
                 if (!deviceWithPersistedData) return;
@@ -378,8 +352,10 @@ export const startWatchingDevices =
                 const autoSelectSN = getAutoSelectDeviceCLISerial();
 
                 if (autoSelectSN !== undefined) {
-                    const autoSelectDevice =
-                        getState().device.devices.get(autoSelectSN);
+                    const autoSelectDevice = getDevice(
+                        getState(),
+                        autoSelectSN
+                    );
 
                     if (autoSelectDevice)
                         doSelectDevice(autoSelectDevice, true);

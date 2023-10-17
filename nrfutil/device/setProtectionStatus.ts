@@ -8,11 +8,11 @@ import { Progress } from '../sandboxTypes';
 import {
     DeviceCore,
     deviceSingleTaskEndOperationVoid,
-    NrfutilDeviceWithSerialnumber,
+    NrfutilDevice,
 } from './common';
 
 export default (
-    device: NrfutilDeviceWithSerialnumber,
+    device: NrfutilDevice,
     region: 'All' | 'SecureRegions' | 'Region0' | 'Region0Region1',
     core?: DeviceCore,
     onProgress?: (progress: Progress) => void,

@@ -8,7 +8,7 @@ import { Progress } from '../sandboxTypes';
 import {
     DeviceCore,
     deviceSingleTaskEndOperation,
-    NrfutilDeviceWithSerialnumber,
+    NrfutilDevice,
 } from './common';
 
 export interface DeviceBuffer {
@@ -17,7 +17,7 @@ export interface DeviceBuffer {
 }
 
 export default async (
-    device: NrfutilDeviceWithSerialnumber,
+    device: NrfutilDevice,
     core?: DeviceCore,
     onProgress?: (progress: Progress) => void,
     controller?: AbortController

@@ -16,7 +16,7 @@ export const MakeDeviceFavorite: FC<{ device: Device }> = ({ device }) => {
     const dispatch = useDispatch();
 
     const toggleFavorite = () => {
-        dispatch(toggleDeviceFavorited(device.serialNumber));
+        dispatch(toggleDeviceFavorited(device));
     };
 
     return (
@@ -35,7 +35,7 @@ export const FavoriteIndicator: FC<{ device: Device }> = ({ device }) => {
     const dispatch = useDispatch();
 
     const toggleFavorite = () => {
-        dispatch(toggleDeviceFavorited(device.serialNumber));
+        dispatch(toggleDeviceFavorited(device));
     };
 
     return (

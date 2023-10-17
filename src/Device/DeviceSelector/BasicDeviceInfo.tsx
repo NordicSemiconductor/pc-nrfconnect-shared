@@ -28,13 +28,15 @@ interface Props {
 const DeviceName = ({ device, inputRef, messageType }: Props) => {
     const dispatch = useDispatch();
     const setOrResetNickname = (name: string) => {
+        if (!device.serialNumber) return;
+
         const newNameIsEqualToDefaultName =
             name === displayedDeviceName(device, { respectNickname: false });
 
         if (newNameIsEqualToDefaultName) {
-            dispatch(resetDeviceNickname(device.serialNumber));
+            dispatch(resetDeviceNickname(device));
         } else {
-            dispatch(setDeviceNickname(device.serialNumber, name));
+            dispatch(setDeviceNickname(device, name));
         }
     };
 

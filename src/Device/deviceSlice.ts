@@ -9,7 +9,7 @@ import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 import { SerialPortOpenOptions } from 'serialport';
 
 import { DeviceInfo } from '../../nrfutil';
-import { NrfutilDevice, SerialPort } from '../../nrfutil/device/common';
+import { NrfutilDevice } from '../../nrfutil/device/common';
 import type { RootState } from '../store';
 import {
     getPersistedIsFavorite,
@@ -21,62 +21,74 @@ import {
 } from '../utils/persistentStore';
 
 export interface Device extends NrfutilDevice {
-    serialNumber: string;
     nickname?: string;
-    serialport?: SerialPort;
     favorite?: boolean;
-    id: number;
     persistedSerialPortOptions?: SerialPortOpenOptions<AutoDetectTypes>;
 }
 
+const findDeviceItem = (
+    devices: Device[],
+    id: number,
+    serialNumber?: string
+) => {
+    const index = devices.findIndex(
+        d => d.id === id || d.serialNumber === serialNumber
+    );
+
+    return { index, device: devices[index] };
+};
+
 const updateDevice = (
     state: DeviceState,
-    serialNumber: string,
-    updateToMergeIn: Partial<Device>
+    updateToMergeIn: Partial<Device>,
+    id: number,
+    serialNumber?: string
 ) => {
-    const device = state.devices.get(serialNumber);
+    const device = findDeviceItem(state.devices, id, serialNumber).device;
     if (device) {
         Object.assign(device, updateToMergeIn);
     }
 };
 
 export interface DeviceState {
-    devices: Map<string, Device>;
+    devices: Device[];
     readbackProtection: 'unknown' | 'protected' | 'unprotected';
     selectedDevice?: Device;
     selectedDeviceInfo?: DeviceInfo;
 }
 
 const initialState: DeviceState = {
-    devices: new Map(),
+    devices: [],
     readbackProtection: 'unknown',
 };
 
 const setPersistedData = (device: Device) => {
-    const newDevice = {
-        ...device,
-        favorite: getPersistedIsFavorite(device.serialNumber),
-        nickname: getPersistedNickname(device.serialNumber),
-    };
+    if (device.serialNumber) {
+        const newDevice = { ...device };
+        newDevice.favorite = getPersistedIsFavorite(device.serialNumber);
+        newDevice.nickname = getPersistedNickname(device.serialNumber);
 
-    const persistedSerialPortSettings = getPersistedSerialPortSettings(
-        newDevice.serialNumber
-    );
+        const persistedSerialPortSettings = getPersistedSerialPortSettings(
+            device.serialNumber
+        );
 
-    if (persistedSerialPortSettings) {
-        const path =
-            newDevice.serialPorts?.[persistedSerialPortSettings.vComIndex]
-                ?.comName;
+        if (persistedSerialPortSettings) {
+            const path =
+                newDevice.serialPorts?.[persistedSerialPortSettings.vComIndex]
+                    ?.comName;
 
-        if (path) {
-            newDevice.persistedSerialPortOptions = {
-                ...persistedSerialPortSettings.serialPortOptions,
-                path,
-            };
+            if (path) {
+                newDevice.persistedSerialPortOptions = {
+                    ...persistedSerialPortSettings.serialPortOptions,
+                    path,
+                };
+            }
         }
+
+        return newDevice;
     }
 
-    return newDevice;
+    return device;
 };
 
 const slice = createSlice({
@@ -107,10 +119,18 @@ const slice = createSlice({
         },
 
         addDevice: (state, action: PayloadAction<Device>) => {
-            state.devices.set(
-                action.payload.serialNumber,
-                setPersistedData(action.payload)
+            const index = state.devices.findIndex(
+                item =>
+                    item.serialNumber === action.payload.serialNumber ||
+                    item.id === action.payload.id
             );
+
+            setPersistedData(action.payload);
+            if (index !== -1) {
+                state.devices[index] = action.payload;
+            } else {
+                state.devices.push(action.payload);
+            }
         },
 
         persistSerialPortOptions: (
@@ -126,7 +146,11 @@ const slice = createSlice({
                     e => e.comName === action.payload.path
                 );
 
-                if (vComIndex !== undefined && vComIndex !== -1) {
+                if (
+                    selectedDevice.serialNumber &&
+                    vComIndex !== undefined &&
+                    vComIndex !== -1
+                ) {
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars -- used to filter out the path property
                     const { path: _, ...serialPortOptions } = action.payload;
 
@@ -138,60 +162,95 @@ const slice = createSlice({
                         }
                     );
 
-                    state.devices.set(selectedDevice.serialNumber, {
-                        ...selectedDevice,
-                        persistedSerialPortOptions: action.payload,
-                    });
+                    updateDevice(
+                        state,
+                        {
+                            ...selectedDevice,
+                            persistedSerialPortOptions: action.payload,
+                        },
+                        selectedDevice.id,
+                        selectedDevice.serialNumber
+                    );
                 }
             }
         },
 
         removeDevice: (state, action: PayloadAction<Device>) => {
-            state.devices.delete(action.payload.serialNumber);
+            const index = findDeviceItem(
+                state.devices,
+                action.payload.id,
+                action.payload.serialNumber
+            ).index;
+            state.devices.splice(index, 1);
 
-            if (
-                action.payload.serialNumber ===
-                state.selectedDevice?.serialNumber
-            ) {
+            if (action.payload.id === state.selectedDevice?.id) {
                 state.selectedDevice = undefined;
+                state.selectedDeviceInfo = undefined;
             }
         },
 
-        toggleDeviceFavorited: (state, action: PayloadAction<string>) => {
-            const newFavoriteState = !state.devices.get(action.payload)
-                ?.favorite;
-            persistIsFavorite(action.payload, newFavoriteState);
-            updateDevice(state, action.payload, {
-                favorite: newFavoriteState,
-            });
+        toggleDeviceFavorited: (state, action: PayloadAction<Device>) => {
+            const device = findDeviceItem(
+                state.devices,
+                action.payload.id,
+                action.payload.serialNumber
+            ).device;
+
+            if (!device.serialNumber) return;
+
+            const newFavoriteState = !device.favorite;
+
+            persistIsFavorite(device.serialNumber, newFavoriteState);
+            updateDevice(
+                state,
+                {
+                    favorite: newFavoriteState,
+                },
+                action.payload.id,
+                action.payload.serialNumber
+            );
         },
 
         setDeviceNickname: {
-            prepare: (serialNumber: string, nickname: string) => ({
-                payload: { serialNumber, nickname },
+            prepare: (device: Device, nickname: string) => ({
+                payload: { device, nickname },
             }),
             reducer: (
                 state,
                 action: PayloadAction<{
-                    serialNumber: string;
+                    device: Device;
                     nickname: string;
                 }>
             ) => {
+                if (!action.payload.device.serialNumber) return;
+
                 persistNickname(
-                    action.payload.serialNumber,
+                    action.payload.device.serialNumber,
                     action.payload.nickname
                 );
-                updateDevice(state, action.payload.serialNumber, {
-                    nickname: action.payload.nickname,
-                });
+                updateDevice(
+                    state,
+                    {
+                        nickname: action.payload.nickname,
+                    },
+                    action.payload.device.id,
+                    action.payload.device.serialNumber
+                );
             },
         },
 
-        resetDeviceNickname: (state, action: PayloadAction<string>) => {
-            persistNickname(action.payload, '');
-            updateDevice(state, action.payload, {
-                nickname: '',
-            });
+        resetDeviceNickname: (state, action: PayloadAction<Device>) => {
+            if (!action.payload.serialNumber) return;
+
+            persistNickname(action.payload.serialNumber, '');
+            updateDevice(
+                state,
+                {
+                    nickname: '',
+                },
+                action.payload.id,
+                action.payload.serialNumber
+            );
         },
 
         setReadbackProtected: (
@@ -219,8 +278,8 @@ export const {
     },
 } = slice;
 
-export const getDevice = (serialNumber: string) => (state: RootState) =>
-    state.device.devices.get(serialNumber);
+export const getDevice = (state: RootState, serialNumber: string) =>
+    state.device.devices.find(d => d.serialNumber === serialNumber);
 
 export const getDevices = (state: RootState) => state.device.devices;
 

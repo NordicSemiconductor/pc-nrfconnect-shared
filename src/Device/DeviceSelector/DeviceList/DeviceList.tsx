@@ -90,8 +90,8 @@ const DeviceList: FC<Props> = ({
                 <AnimatedList devices={sortedDevices}>
                     {filteredDevices.map(device => (
                         <AnimatedItem
-                            key={device.serialNumber}
-                            itemKey={device.serialNumber}
+                            key={device.id.toString()}
+                            itemKey={device.id.toString()}
                         >
                             {device.traits.broken ? (
                                 <BrokenDevice device={device} />
