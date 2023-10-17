@@ -101,7 +101,7 @@ export default ({
     ]);
 
     return (
-        <div className="basic-device-info">
+        <div className="basic-device-info tw-h-[42px]">
             <DeviceIcon device={device} />
             <div className="details">
                 <DeviceName
