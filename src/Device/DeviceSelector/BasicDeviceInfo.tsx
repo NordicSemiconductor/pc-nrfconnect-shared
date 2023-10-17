@@ -111,7 +111,9 @@ export default ({
                 />
                 <DeviceSerialNumber device={device} />
             </div>
-            <div className="toggles">{toggles}</div>
+            <div className="tw-mr-2.5 tw-flex tw-w-11 tw-flex-col tw-items-center">
+                {toggles}
+            </div>
         </div>
     );
 };
