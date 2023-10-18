@@ -44,7 +44,7 @@ const showAllDevices = () => true;
 
 const sorted = (devices: DeviceProps[]) =>
     [...devices].sort((a, b) => {
-        if (a.favorite !== b.favorite) {
+        if (!!a.favorite !== !!b.favorite) {
             return a.favorite ? -1 : 1;
         }
 
