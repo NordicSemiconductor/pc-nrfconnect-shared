@@ -125,11 +125,11 @@ const slice = createSlice({
                     item.id === action.payload.id
             );
 
-            setPersistedData(action.payload);
+            const device = setPersistedData(action.payload);
             if (index !== -1) {
-                state.devices[index] = action.payload;
+                state.devices[index] = device;
             } else {
-                state.devices.push(action.payload);
+                state.devices.push(device);
             }
         },
 
