@@ -53,7 +53,7 @@ export default ({ device, doSelectDevice, allowMoreInfoVisible }: Props) => {
     return (
         <PseudoButton
             className={classNames(
-                'tw-flex tw-flex-col tw-gap-2.5 tw-py-3 tw-font-light group-hover:tw-bg-white',
+                'tw-flex tw-flex-col tw-gap-2 tw-py-3 tw-font-light group-hover:tw-bg-white',
                 moreVisible && 'tw-bg-white',
                 moreVisible && device.serialNumber && 'tw-pb-0'
             )}
