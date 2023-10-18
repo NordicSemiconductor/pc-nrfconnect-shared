@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import logger from '../../src/logging';
 import {
     DeviceTraits,
     deviceTraitsToArgs,
