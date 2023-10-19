@@ -18,7 +18,7 @@ import {
 
 const instrumentationKey = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
 
-interface Metadata {
+export interface Metadata {
     [key: string]: unknown;
 }
 
