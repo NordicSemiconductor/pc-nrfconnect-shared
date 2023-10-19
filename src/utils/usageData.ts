@@ -151,7 +151,7 @@ const sendEvent = ({ action, metadata }: EventAction) => {
         logger?.debug(`Sending usage data ${action}`);
         insights.trackEvent(
             {
-                name: action,
+                name: isDevelopment ? `Dev: ${action}` : `Prod: ${action}`,
             },
             metadata
         );
