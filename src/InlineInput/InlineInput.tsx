@@ -149,7 +149,7 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
                     isValid(internalValue) || 'invalid',
                     disabled && 'disabled',
                     className
-                )} ${textAlignLeft && 'tw-pl-1 tw-text-left'}`}
+                )} ${textAlignLeft && 'tw-pl-2 tw-text-left'}`}
                 size={
                     Math.max(1, internalValue.length) +
                     (process.platform === 'darwin' ? 2 : 0)
