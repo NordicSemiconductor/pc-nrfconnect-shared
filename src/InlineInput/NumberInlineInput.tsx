@@ -23,8 +23,10 @@ export interface Props {
     disabled?: boolean;
     value: number;
     range: RangeOrValues;
+    className?: string;
     onChange: (value: number) => void;
     onChangeComplete?: (value: number) => void;
+    textAlignLeft?: boolean;
 }
 
 const isInValues = (value: number, values: Values) => values.includes(value);
@@ -81,14 +83,16 @@ const NumberInlineInput: FC<Props> = ({
     disabled,
     value,
     range,
+    className,
     onChange,
     onChangeComplete = () => {},
+    textAlignLeft,
 }) => {
     useValidatedRangeOrValues(range);
 
     return (
         <InlineInput
-            className="number-inline-input"
+            className={`${className} number-inline-input`}
             disabled={disabled}
             value={String(value)}
             isValid={newValue => isValid(Number(newValue), range)}
@@ -100,6 +104,7 @@ const NumberInlineInput: FC<Props> = ({
             onKeyboardDecrementAction={() =>
                 changeValueStepwise(value, range, -1).toString()
             }
+            textAlignLeft={textAlignLeft}
         />
     );
 };

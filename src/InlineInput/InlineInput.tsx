@@ -57,6 +57,7 @@ interface Props {
     onKeyboardIncrementAction?: () => string;
     onKeyboardDecrementAction?: () => string;
     className?: string;
+    textAlignLeft?: boolean;
 }
 
 const InlineInput = React.forwardRef<HTMLInputElement, Props>(
@@ -70,6 +71,7 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
             onKeyboardIncrementAction = () => externalValue,
             onKeyboardDecrementAction = () => externalValue,
             className = '',
+            textAlignLeft = false,
         },
         ref
     ) => {
@@ -142,12 +144,12 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
             <input
                 ref={ref}
                 type="text"
-                className={classNames(
+                className={`${classNames(
                     'inline-input',
                     isValid(internalValue) || 'invalid',
                     disabled && 'disabled',
                     className
-                )}
+                )} ${textAlignLeft && 'tw-pl-1 tw-text-left'}`}
                 size={
                     Math.max(1, internalValue.length) +
                     (process.platform === 'darwin' ? 2 : 0)

@@ -1,47 +1,53 @@
 /*
- * Copyright (c) 2015 Nordic Semiconductor ASA
+ * Copyright (c) 2023 Nordic Semiconductor ASA
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
 import React, { useState } from 'react';
-import FormLabel from 'react-bootstrap/FormLabel';
+import FormLabel from 'react-bootstrap/esm/FormLabel';
 
+import { DropdownItem } from '../Dropdown/Dropdown';
 import classNames from '../utils/classNames';
+import NumberInlineInput from './NumberInlineInput';
 
-import styles from './Dropdown.module.scss';
+import styles from '../Dropdown/Dropdown.module.scss';
 
-export interface DropdownItem<T = string> {
-    label: React.ReactNode;
-    value: T;
-}
+export type NumberDropdownItem = DropdownItem<number>;
 
-export interface DropdownProps {
+interface DropdownProps {
     id?: string;
     label?: React.ReactNode;
-    items: DropdownItem[];
-    onSelect: (item: DropdownItem) => void;
-    disabled?: boolean;
-    selectedItem: DropdownItem;
+    items: NumberDropdownItem[];
+    value: number;
+    onChange: (value: number) => void;
     numItemsBeforeScroll?: number;
     className?: string;
+    disabled?: boolean;
 }
 
 export default ({
     id,
     label,
     items,
-    onSelect,
-    disabled = false,
-    selectedItem,
+    value,
+    onChange,
     numItemsBeforeScroll = 0,
     className = '',
+    disabled = false,
 }: DropdownProps) => {
     const [isActive, setIsActive] = useState(false);
+    const [inlineValue, setInlineValue] = useState(value);
 
-    const onClickItem = (item: DropdownItem) => {
-        onSelect(item);
+    const setNewValue = (newValue: number) => {
+        setInlineValue(newValue);
+        onChange(newValue);
         setIsActive(false);
+    };
+    const onClickItem = (item: NumberDropdownItem) => {
+        if (item.value != null && typeof item.value === 'number') {
+            setNewValue(item.value);
+        }
     };
 
     return (
@@ -53,27 +59,30 @@ export default ({
                 }
             }}
         >
-            {label && (
-                <FormLabel className="tw-mb-1 tw-text-xs">{label}</FormLabel>
-            )}
-            <button
-                id={id}
-                type="button"
-                className="tw-flex tw-h-8 tw-w-full tw-items-center tw-justify-between tw-border-0 tw-bg-gray-700 tw-px-2 tw-text-white"
-                onClick={() => setIsActive(!isActive)}
-                disabled={disabled}
-            >
-                <span>
-                    {items.findIndex(e => e.value === selectedItem.value) === -1
-                        ? ''
-                        : selectedItem.label}
-                </span>
-                <span
-                    className={`mdi mdi-chevron-down tw-text-lg ${classNames(
-                        isActive && 'tw-rotate-180'
-                    )}`}
+            <FormLabel className="tw-mb-1 tw-text-xs">{label}</FormLabel>
+            <div className="tw-flex tw-h-8 tw-w-full">
+                <NumberInlineInput
+                    value={inlineValue}
+                    range={{ min: 1, max: 1_000_000, step: 1, decimals: 0 }}
+                    onChange={val => setInlineValue(val)}
+                    onChangeComplete={val => setNewValue(val)}
+                    className="tw-x-2 tw-h-full tw-w-full tw-bg-gray-700 tw-text-white tw-outline-white"
+                    textAlignLeft
                 />
-            </button>
+                <button
+                    id={id}
+                    type="button"
+                    className="tw-overflow-hidden tw-border-b tw-border-solid tw-border-b-gray-200 tw-bg-gray-700 tw-px-2 tw-text-white"
+                    onClick={() => setIsActive(!isActive)}
+                    disabled={disabled}
+                >
+                    <span
+                        className={`mdi mdi-chevron-down tw-text-lg ${classNames(
+                            isActive && 'tw-rotate-180'
+                        )}`}
+                    />
+                </button>
+            </div>
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions -- We need an interactive handler as described below */}
             <div
                 onMouseDown={ev => {

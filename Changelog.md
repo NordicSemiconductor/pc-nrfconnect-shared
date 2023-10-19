@@ -9,6 +9,12 @@ every new version is a new major version.
 
 ## 121 - 2023-10-20
 
+### Added
+
+-   **NumberInputWithDropdown** component, which combines the
+    **NumberInlineInput** and the **Dropdown** components. Example usage found
+    in `Baudrate.tsx` in `pc-nrfconnect-serial-terminal`.
+
 ### Fixed
 
 -   Device might end up stuck in device list of left event occurred while we are
