@@ -41,15 +41,17 @@ every new version is a new major version.
 -   `deviceInfo` is populate automatically when a device is selected and can be
     retrieve using the redux selector `selectedDeviceInfo`.
 
-### Steps to upgrade when using this package
-
--   Change `nrfConnectForDesktop.nrfutil.device` to 2.0.0.
--   Update all device properties to match the changes above.
-
 ### Fixed
 
 -   Check installed JLink version against expected version given by nrfutil
     (previously this was the version bundled by the launcher).
+
+### Steps to upgrade when using this package
+
+-   Change `nrfConnectForDesktop.nrfutil.device` to 2.0.0.
+-   Update all device properties to match the changes above.
+-   Analytic events names are now distinct with a prefix of the app name
+    `<AppName>:` e.g `npm:` or `ppk:`
 
 ## 121 - 2023-10-24
 
