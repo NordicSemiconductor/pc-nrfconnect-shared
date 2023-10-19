@@ -18,9 +18,13 @@ import {
 
 const instrumentationKey = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
 
+interface Metadata {
+    [key: string]: unknown;
+}
+
 interface EventAction {
     action: string;
-    label?: string;
+    metadata?: Metadata;
 }
 
 let eventQueue: EventAction[] = [];
@@ -74,7 +78,7 @@ export const init = (packageJson: { name: string; version: string }) => {
     setTimeout(async () => {
         // eslint-disable-next-line global-require
         const si = require('systeminformation') as typeof Systeminformation;
-        sendUsageData('architecture', (await si.osInfo()).arch);
+        sendUsageData('architecture', { arch: (await si.osInfo()).arch });
     }, 5_000);
 };
 
@@ -140,26 +144,25 @@ export const reset = () => {
  *
  * @returns {void}
  */
-const sendEvent = ({ action, label }: EventAction) => {
+const sendEvent = ({ action, metadata }: EventAction) => {
     const isSendingUsageData = getIsSendingUsageData();
 
     if (isSendingUsageData && insights !== undefined) {
-        logger?.debug(`Sending usage data ${action} ${label}`);
-        insights.trackEvent({
-            name: action,
-            properties: label ? { label } : undefined,
-        });
+        logger?.debug(`Sending usage data ${action}`);
+        insights.trackEvent(
+            {
+                name: action,
+            },
+            metadata
+        );
     }
 };
 
-/**
- * Send usage data event to Application Insights
- * @param {string} action The event action
- * @param {string} label The event label
- * @returns {void}
- */
-export const sendUsageData = <T extends string>(action: T, label?: string) => {
-    eventQueue.push({ action, label });
+export const sendUsageData = <T extends string>(
+    action: T,
+    metadata?: Metadata
+) => {
+    eventQueue.push({ action, metadata });
     if (!isInitialized()) {
         return;
     }
