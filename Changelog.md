@@ -35,6 +35,8 @@ every new version is a new major version.
 
 -   Change `nrfConnectForDesktop.nrfutil.device` to 2.0.0
 -   Update all device properties in to match the changed above.
+-   Analytic events names are now distinct with a prefix of the app name
+    `<AppName>:`  e.g `npm:` or `ppk:`
 
 ## 121 - 2023-10-24
 
