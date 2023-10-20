@@ -55,6 +55,11 @@ const shouldAutoReselect = (
     // device is still connected
     if (disconnectionTime === undefined) return false;
 
+    // device does not have sn
+    if (!addedDevice.serialNumber) {
+        return false;
+    }
+
     // The device that was selected when disconnection occurred is not yet connected
     if (addedDevice.serialNumber !== autoReselectDevice.serialNumber) {
         return false;
@@ -289,8 +294,9 @@ export const startWatchingDevices =
                     const waitForDevice =
                         getState().deviceAutoSelect.waitForDevice;
                     if (
+                        device.serialNumber &&
                         device.serialNumber ===
-                        getState().deviceAutoSelect.device?.serialNumber
+                            getState().deviceAutoSelect.device?.serialNumber
                     ) {
                         if (waitForDevice) {
                             dispatch(setArrivedButWrongWhen(undefined));

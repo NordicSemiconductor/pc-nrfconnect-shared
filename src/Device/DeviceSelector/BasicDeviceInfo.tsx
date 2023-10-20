@@ -81,7 +81,9 @@ export default ({
     const autoReselectDevice = useSelector(getAutoReselectDevice);
     const waitingToAutoReselect = useSelector(getWaitingToAutoReselect);
     const waitingForDevice = useSelector(getWaitingForDeviceTimeout);
-    const thisDevice = device.serialNumber === autoReselectDevice?.serialNumber;
+    const thisDevice =
+        device.serialNumber &&
+        device.serialNumber === autoReselectDevice?.serialNumber;
 
     useEffect(() => {
         if (!showWaitingStatus) {
