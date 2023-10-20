@@ -5,12 +5,7 @@
  */
 
 import React from 'react';
-import {
-    fireEvent,
-    screen,
-    waitFor,
-    waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import render from '../../../test/testrenderer';
 import { addDevice, Device, removeDevice } from '../deviceSlice';
