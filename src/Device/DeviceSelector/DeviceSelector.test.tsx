@@ -337,14 +337,19 @@ describe('DeviceSelector', () => {
 
         fireEvent.click(screen.getByText('Select device'));
         fireEvent.click(screen.getByText(testDevice.serialNumber));
-        await screen.findByText('No');
+
+        await screen.findByText(
+            'Device must be programmed, do you want to proceed?'
+        );
+
         fireEvent.click(screen.getByText('No'));
 
-        await waitForElementToBeRemoved(() =>
+        expect(
             screen.queryByText(
                 'Device must be programmed, do you want to proceed?'
             )
-        );
+        ).toBeNull();
+
         expect(screen.getAllByText(testDevice.serialNumber)).toHaveLength(2);
     });
 });

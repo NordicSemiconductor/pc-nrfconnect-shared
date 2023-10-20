@@ -13,6 +13,7 @@ every new version is a new major version.
 
 -   Device might end up stuck in device list of left event occurred while we are
     waiting for device
+-   Device setup dialog is closed immediately pressing no to programming it
 
 ## 120 - 2023-10-13
 
