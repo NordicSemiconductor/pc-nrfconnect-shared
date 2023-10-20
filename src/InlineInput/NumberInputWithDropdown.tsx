@@ -12,6 +12,7 @@ import classNames from '../utils/classNames';
 import NumberInlineInput from './NumberInlineInput';
 
 import styles from '../Dropdown/Dropdown.module.scss';
+import { RangeOrValues } from '../Slider/range';
 
 export type NumberDropdownItem = DropdownItem<number>;
 
@@ -21,6 +22,7 @@ interface DropdownProps {
     items: NumberDropdownItem[];
     value: number;
     onChange: (value: number) => void;
+    range: RangeOrValues;
     numItemsBeforeScroll?: number;
     className?: string;
     disabled?: boolean;
@@ -32,6 +34,7 @@ export default ({
     items,
     value,
     onChange,
+    range,
     numItemsBeforeScroll = 0,
     className = '',
     disabled = false,
@@ -63,7 +66,7 @@ export default ({
             <div className="tw-flex tw-h-8 tw-w-full">
                 <NumberInlineInput
                     value={inlineValue}
-                    range={{ min: 1, max: 1_000_000, step: 1, decimals: 0 }}
+                    range={range}
                     onChange={val => setInlineValue(val)}
                     onChangeComplete={val => setNewValue(val)}
                     className="tw-x-2 tw-h-full tw-w-full tw-bg-gray-700 tw-text-white tw-outline-white"

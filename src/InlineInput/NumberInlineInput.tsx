@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC } from 'react';
+import React from 'react';
 
 import { isFactor } from '../Slider/factor';
 import {
@@ -19,7 +19,7 @@ import InlineInput from './InlineInput';
 
 import './number-inline-input.scss';
 
-export interface Props {
+export interface NumberInlineInput {
     disabled?: boolean;
     value: number;
     range: RangeOrValues;
@@ -79,7 +79,7 @@ const changeValueStepwise = (
     return nextValue != null ? nextValue : current;
 };
 
-const NumberInlineInput: FC<Props> = ({
+export default ({
     disabled,
     value,
     range,
@@ -87,7 +87,8 @@ const NumberInlineInput: FC<Props> = ({
     onChange,
     onChangeComplete = () => {},
     textAlignLeft,
-}) => {
+    valueIsInvalidCallback,
+}: NumberInlineInput) => {
     useValidatedRangeOrValues(range);
 
     return (
@@ -108,5 +109,3 @@ const NumberInlineInput: FC<Props> = ({
         />
     );
 };
-
-export default NumberInlineInput;
