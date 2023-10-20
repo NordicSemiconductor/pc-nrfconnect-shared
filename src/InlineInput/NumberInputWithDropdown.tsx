@@ -41,6 +41,7 @@ export default ({
 }: DropdownProps) => {
     const [isActive, setIsActive] = useState(false);
     const [inlineValue, setInlineValue] = useState(value);
+    const [valueIsValid, setValueIsValid] = useState(true);
 
     const setNewValue = (newValue: number) => {
         setInlineValue(newValue);
@@ -69,8 +70,11 @@ export default ({
                     range={range}
                     onChange={val => setInlineValue(val)}
                     onChangeComplete={val => setNewValue(val)}
-                    className="tw-x-2 tw-h-full tw-w-full tw-bg-gray-700 tw-text-white tw-outline-white"
+                    className={`tw-underline tw-underline-offset-2 tw-decoration-white tw-x-2 tw-h-full tw-w-full tw-bg-gray-700 tw-text-white tw-outline-white ${
+                        valueIsValid ? '' : 'tw-decoration-red'
+                    }`}
                     textAlignLeft
+                    valueIsValidCallback={setValueIsValid}
                 />
                 <button
                     id={id}
@@ -103,7 +107,7 @@ export default ({
                     numItemsBeforeScroll > 0 &&
                     items.length > numItemsBeforeScroll
                 }
-                className={`tw-text-while tw-absolute tw-right-0 tw-z-10 tw-w-full tw-border-t-2 tw-border-solid tw-border-gray-600 tw-bg-gray-700 tw-p-0 ${classNames(
+                className={`tw-text-while tw-absolute tw-right-0 tw-z-10 tw-w-full tw-bg-gray-700 tw-p-0 ${classNames(
                     styles.content,
                     !isActive && 'tw-hidden'
                 )}`}

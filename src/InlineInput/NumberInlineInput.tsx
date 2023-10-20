@@ -27,6 +27,7 @@ export interface NumberInlineInput {
     onChange: (value: number) => void;
     onChangeComplete?: (value: number) => void;
     textAlignLeft?: boolean;
+    valueIsValidCallback?: (validity: boolean) => void;
 }
 
 const isInValues = (value: number, values: Values) => values.includes(value);
@@ -87,7 +88,7 @@ export default ({
     onChange,
     onChangeComplete = () => {},
     textAlignLeft,
-    valueIsInvalidCallback,
+    valueIsValidCallback,
 }: NumberInlineInput) => {
     useValidatedRangeOrValues(range);
 
@@ -96,7 +97,15 @@ export default ({
             className={`${className} number-inline-input`}
             disabled={disabled}
             value={String(value)}
-            isValid={newValue => isValid(Number(newValue), range)}
+            isValid={newValue => {
+                const validity = isValid(Number(newValue), range);
+                if (valueIsValidCallback != null) {
+                    // Then propagate the validity back to parent
+                    valueIsValidCallback(validity);
+                    return true;
+                }
+                return validity;
+            }}
             onChange={newValue => onChange(Number(newValue))}
             onChangeComplete={newValue => onChangeComplete(Number(newValue))}
             onKeyboardIncrementAction={() =>
