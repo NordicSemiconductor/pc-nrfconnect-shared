@@ -144,12 +144,13 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
             <input
                 ref={ref}
                 type="text"
-                className={`${classNames(
+                className={classNames(
                     'inline-input',
                     isValid(internalValue) || 'invalid',
                     disabled && 'disabled',
+                    textAlignLeft && 'tw-pl-2 tw-text-left',
                     className
-                )} ${textAlignLeft && 'tw-pl-2 tw-text-left'}`}
+                )}
                 size={
                     Math.max(1, internalValue.length) +
                     (process.platform === 'darwin' ? 2 : 0)
