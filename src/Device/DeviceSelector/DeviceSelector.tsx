@@ -170,7 +170,7 @@ export default ({
             <DeviceList
                 isVisible={deviceListVisible}
                 doSelectDevice={(device, autoReselected) => {
-                    if (device.serialNumber === currentDevice?.serialNumber) {
+                    if (device.id === currentDevice?.id) {
                         setDeviceListVisible(false);
                         return;
                     }
