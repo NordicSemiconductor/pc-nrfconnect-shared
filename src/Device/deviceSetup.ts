@@ -153,6 +153,7 @@ export const prepareDevice =
         };
 
         const cancelAction = async () => {
+            dispatch(closeDeviceSetupDialog());
             let i = 0;
             do {
                 const deviceSetup = validDeviceSetups[i];
