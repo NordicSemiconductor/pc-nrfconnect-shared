@@ -143,17 +143,17 @@ const removeDeviceFromList =
     ): AppThunk =>
     (dispatch, getState) => {
         if (
-            removedDevice.serialNumber ===
+            removedDevice.serialNumber !==
             getState().device.selectedSerialNumber
         ) {
-            onDeviceDeselected();
+            dispatch(removeDevice(removedDevice));
+            onDeviceDisconnected(removedDevice);
+            return;
         }
 
-        if (
-            removedDevice.serialNumber ===
-                getState().device.selectedSerialNumber &&
-            !getState().deviceAutoSelect.waitForDevice
-        ) {
+        onDeviceDeselected();
+
+        if (!getState().deviceAutoSelect.waitForDevice) {
             dispatch(closeDeviceSetupDialog());
         }
 

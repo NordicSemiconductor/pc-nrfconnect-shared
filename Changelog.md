@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 121 - 2023-10-20
+
+### Fixed
+
+-   Device might end up stuck in device list of left event occurred while we are
+    waiting for device
+
 ## 120 - 2023-10-13
 
 ### Fixed
