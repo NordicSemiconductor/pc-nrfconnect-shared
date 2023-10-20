@@ -215,7 +215,16 @@ export const startWatchingDevices =
 
                 if (!deviceWithPersistedData) return;
 
-                if (result) {
+                // We might get multiple events with the same info so no to trigger auto reconnect multiple times we
+                // only do it once per device id
+                if (
+                    result &&
+                    getState().deviceAutoSelect.lastArrivedDeviceId !==
+                        deviceWithPersistedData.id
+                ) {
+                    dispatch(
+                        setLastArrivedDeviceId(deviceWithPersistedData.id)
+                    );
                     let deviceInfo: DeviceInfo | undefined;
                     try {
                         deviceInfo = await NrfutilDeviceLib.deviceInfo(device);
