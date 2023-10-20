@@ -59,10 +59,10 @@ export default ({
     const showSelectedDevice = deviceIsSelected || waitingToAutoReconnect;
 
     const doDeselectDevice = useCallback(() => {
-        onDeviceDeselected();
-        dispatch(deselectDevice());
         dispatch(clearWaitForDevice());
         dispatch(setAutoSelectDevice(undefined));
+        onDeviceDeselected();
+        dispatch(deselectDevice());
     }, [dispatch, onDeviceDeselected]);
 
     // Ensure that useCallback is
