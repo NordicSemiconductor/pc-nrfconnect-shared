@@ -8,11 +8,11 @@ import React, { useState } from 'react';
 import FormLabel from 'react-bootstrap/esm/FormLabel';
 
 import { DropdownItem } from '../Dropdown/Dropdown';
+import { RangeOrValues } from '../Slider/range';
 import classNames from '../utils/classNames';
 import NumberInlineInput from './NumberInlineInput';
 
 import styles from '../Dropdown/Dropdown.module.scss';
-import { RangeOrValues } from '../Slider/range';
 
 export type NumberDropdownItem = DropdownItem<number>;
 
@@ -70,8 +70,10 @@ export default ({
                     range={range}
                     onChange={val => setInlineValue(val)}
                     onChangeComplete={val => setNewValue(val)}
-                    className={`tw-underline tw-underline-offset-2 tw-decoration-white tw-x-2 tw-h-full tw-w-full tw-bg-gray-700 tw-text-white tw-outline-white ${
-                        valueIsValid ? '' : 'tw-decoration-red'
+                    className={`tw-x-2 tw-h-full tw-w-full tw-bg-gray-700 tw-text-white tw-underline tw-underline-offset-2 ${
+                        valueIsValid
+                            ? 'tw-decoration-white'
+                            : 'tw-decoration-red'
                     }`}
                     textAlignLeft
                     valueIsValidCallback={setValueIsValid}
