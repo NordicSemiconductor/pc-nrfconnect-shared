@@ -26,6 +26,7 @@ interface DropdownProps {
     numItemsBeforeScroll?: number;
     className?: string;
     disabled?: boolean;
+    title?: string;
 }
 
 export default ({
@@ -38,6 +39,7 @@ export default ({
     numItemsBeforeScroll = 0,
     className = '',
     disabled = false,
+    title,
 }: DropdownProps) => {
     const [isActive, setIsActive] = useState(false);
     const [inlineValue, setInlineValue] = useState(value);
@@ -62,6 +64,7 @@ export default ({
                     setIsActive(false);
                 }
             }}
+            title={title}
         >
             <FormLabel className="tw-mb-1 tw-text-xs">{label}</FormLabel>
             <div className="tw-flex tw-h-8 tw-w-full">
