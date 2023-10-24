@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC } from 'react';
+import React from 'react';
 
 import { isFactor } from '../Slider/factor';
 import {
@@ -19,12 +19,16 @@ import InlineInput from './InlineInput';
 
 import './number-inline-input.scss';
 
-export interface Props {
+export interface NumberInlineInput {
     disabled?: boolean;
     value: number;
     range: RangeOrValues;
+    className?: string;
     onChange: (value: number) => void;
     onChangeComplete?: (value: number) => void;
+    textAlignLeft?: boolean;
+    onValidityChanged?: (validity: boolean) => void;
+    preventDefaultInvalidStyle?: boolean;
 }
 
 const isInValues = (value: number, values: Values) => values.includes(value);
@@ -77,21 +81,24 @@ const changeValueStepwise = (
     return nextValue != null ? nextValue : current;
 };
 
-const NumberInlineInput: FC<Props> = ({
+export default ({
     disabled,
     value,
     range,
+    className,
     onChange,
     onChangeComplete = () => {},
-}) => {
+    textAlignLeft,
+    onValidityChanged,
+    preventDefaultInvalidStyle,
+}: NumberInlineInput) => {
     useValidatedRangeOrValues(range);
 
     return (
         <InlineInput
-            className="number-inline-input"
+            className={`${className} number-inline-input`}
             disabled={disabled}
             value={String(value)}
-            isValid={newValue => isValid(Number(newValue), range)}
             onChange={newValue => onChange(Number(newValue))}
             onChangeComplete={newValue => onChangeComplete(Number(newValue))}
             onKeyboardIncrementAction={() =>
@@ -100,8 +107,17 @@ const NumberInlineInput: FC<Props> = ({
             onKeyboardDecrementAction={() =>
                 changeValueStepwise(value, range, -1).toString()
             }
+            textAlignLeft={textAlignLeft}
+            isValid={newValue => {
+                const validity = isValid(Number(newValue), range);
+                if (onValidityChanged != null) {
+                    // Then propagate the validity back to parent
+                    onValidityChanged(validity);
+                }
+                return validity;
+            }}
+            onValidityChanged={onValidityChanged}
+            preventDefaultInvalidStyle={preventDefaultInvalidStyle}
         />
     );
 };
-
-export default NumberInlineInput;

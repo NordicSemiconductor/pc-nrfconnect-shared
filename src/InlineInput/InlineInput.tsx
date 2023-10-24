@@ -57,6 +57,9 @@ interface Props {
     onKeyboardIncrementAction?: () => string;
     onKeyboardDecrementAction?: () => string;
     className?: string;
+    textAlignLeft?: boolean;
+    onValidityChanged?: (validity: boolean) => void;
+    preventDefaultInvalidStyle?: boolean;
 }
 
 const InlineInput = React.forwardRef<HTMLInputElement, Props>(
@@ -70,19 +73,28 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
             onKeyboardIncrementAction = () => externalValue,
             onKeyboardDecrementAction = () => externalValue,
             className = '',
+            textAlignLeft = false,
+            onValidityChanged,
+            preventDefaultInvalidStyle,
         },
         ref
     ) => {
         const [internalValue, setInternalValue] = useState(externalValue);
         const [initialValue, setInitialValue] = useState(externalValue);
         useSynchronisationIfChangedFromOutside(externalValue, setInternalValue);
+
         const onChangeIfValid = (newValue: string) => {
             if (disabled) {
                 return;
             }
 
+            const validity = isValid(newValue);
+            if (onValidityChanged != null) {
+                onValidityChanged(validity);
+            }
+
             setInternalValue(newValue);
-            if (isValid(newValue)) {
+            if (validity) {
                 if (externalValue !== newValue) {
                     onChange(newValue);
                 }
@@ -94,13 +106,20 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
                 return;
             }
 
-            if (isValid(internalValue)) {
+            const validity = isValid(internalValue);
+
+            if (validity) {
                 if (initialValue !== internalValue) {
                     setInitialValue(internalValue);
                     onChangeComplete(internalValue);
                 }
             } else {
                 setInternalValue(externalValue);
+            }
+
+            // Should always end up valid in this case
+            if (onValidityChanged != null) {
+                onValidityChanged(true);
             }
         };
 
@@ -144,8 +163,11 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
                 type="text"
                 className={classNames(
                     'inline-input',
-                    isValid(internalValue) || 'invalid',
+                    preventDefaultInvalidStyle
+                        ? null
+                        : isValid(internalValue) || 'invalid',
                     disabled && 'disabled',
+                    textAlignLeft && 'tw-pl-2 tw-text-left',
                     className
                 )}
                 size={

@@ -11,9 +11,9 @@ import classNames from '../utils/classNames';
 
 import styles from './Dropdown.module.scss';
 
-export interface DropdownItem {
+export interface DropdownItem<T = string> {
     label: React.ReactNode;
-    value: string;
+    value: T;
 }
 
 export interface DropdownProps {
