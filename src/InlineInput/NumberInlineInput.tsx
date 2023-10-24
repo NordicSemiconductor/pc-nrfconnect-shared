@@ -27,7 +27,8 @@ export interface NumberInlineInput {
     onChange: (value: number) => void;
     onChangeComplete?: (value: number) => void;
     textAlignLeft?: boolean;
-    valueIsValidCallback?: (validity: boolean) => void;
+    onValidityChanged?: (validity: boolean) => void;
+    preventDefaultInvalidStyle?: boolean;
 }
 
 const isInValues = (value: number, values: Values) => values.includes(value);
@@ -88,7 +89,8 @@ export default ({
     onChange,
     onChangeComplete = () => {},
     textAlignLeft,
-    valueIsValidCallback,
+    onValidityChanged,
+    preventDefaultInvalidStyle,
 }: NumberInlineInput) => {
     useValidatedRangeOrValues(range);
 
@@ -97,15 +99,6 @@ export default ({
             className={`${className} number-inline-input`}
             disabled={disabled}
             value={String(value)}
-            isValid={newValue => {
-                const validity = isValid(Number(newValue), range);
-                if (valueIsValidCallback != null) {
-                    // Then propagate the validity back to parent
-                    valueIsValidCallback(validity);
-                    return true;
-                }
-                return validity;
-            }}
             onChange={newValue => onChange(Number(newValue))}
             onChangeComplete={newValue => onChangeComplete(Number(newValue))}
             onKeyboardIncrementAction={() =>
@@ -115,6 +108,16 @@ export default ({
                 changeValueStepwise(value, range, -1).toString()
             }
             textAlignLeft={textAlignLeft}
+            isValid={newValue => {
+                const validity = isValid(Number(newValue), range);
+                if (onValidityChanged != null) {
+                    // Then propagate the validity back to parent
+                    onValidityChanged(validity);
+                }
+                return validity;
+            }}
+            onValidityChanged={onValidityChanged}
+            preventDefaultInvalidStyle={preventDefaultInvalidStyle}
         />
     );
 };

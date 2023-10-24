@@ -43,7 +43,7 @@ export default ({
 }: DropdownProps) => {
     const [isActive, setIsActive] = useState(false);
     const [inlineValue, setInlineValue] = useState(value);
-    const [valueIsValid, setValueIsValid] = useState(true);
+    const [isValid, setIsValid] = useState(true);
 
     const setNewValue = (newValue: number) => {
         setInlineValue(newValue);
@@ -74,12 +74,11 @@ export default ({
                     onChange={val => setInlineValue(val)}
                     onChangeComplete={val => setNewValue(val)}
                     className={`tw-x-2 tw-h-full tw-w-full tw-bg-gray-700 tw-text-white tw-underline tw-underline-offset-2 ${
-                        valueIsValid
-                            ? 'tw-decoration-white'
-                            : 'tw-decoration-red'
+                        isValid ? 'tw-decoration-white' : 'tw-decoration-red'
                     }`}
                     textAlignLeft
-                    valueIsValidCallback={setValueIsValid}
+                    onValidityChanged={setIsValid}
+                    preventDefaultInvalidStyle
                 />
                 <button
                     id={id}
