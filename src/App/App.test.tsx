@@ -17,6 +17,7 @@ jest.mock('../Log/LogViewer', () => ({
 
 jest.mock('../logging/index.ts', () => ({
     initialise: () => {},
+    debug: () => {},
 }));
 
 const renderApp = (panes: Pane[]) => {
