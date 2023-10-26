@@ -8,7 +8,9 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import type Systeminformation from 'systeminformation';
 import winston from 'winston';
 
+import { PackageJson } from '../../ipc/schema/packageJson';
 import { isDevelopment } from './environment';
+import packageJson from './packageJson';
 import {
     deleteIsSendingUsageData,
     getIsSendingUsageData,
@@ -17,6 +19,9 @@ import {
 } from './persistentStore';
 
 const instrumentationKey = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
+
+const getFriendlyAppName = (json: PackageJson | undefined) =>
+    (json?.name ?? '').replace('pc-nrfconnect-', '');
 
 export interface Metadata {
     [key: string]: unknown;
@@ -148,10 +153,10 @@ const sendEvent = ({ action, metadata }: EventAction) => {
     const isSendingUsageData = getIsSendingUsageData();
 
     if (isSendingUsageData && insights !== undefined) {
-        logger?.debug(`Sending usage data ${action}`);
+        logger?.debug(`Sending usage data ${JSON.stringify(action)}`);
         insights.trackEvent(
             {
-                name: isDevelopment ? `Dev: ${action}` : `Prod: ${action}`,
+                name: `${getFriendlyAppName(packageJson())}: ${action}`,
             },
             metadata
         );
