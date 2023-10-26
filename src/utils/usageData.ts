@@ -11,6 +11,7 @@ import winston from 'winston';
 import { PackageJson } from '../../ipc/schema/packageJson';
 import { getAppSource } from './appDirs';
 import { isDevelopment } from './environment';
+import packageJson from './packageJson';
 import {
     deleteIsSendingUsageData,
     getIsSendingUsageData,
