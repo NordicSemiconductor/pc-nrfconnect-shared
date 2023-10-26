@@ -7,6 +7,7 @@
 import { getGlobal } from '@electron/remote';
 import path from 'path';
 
+import { OFFICIAL } from '../../ipc/sources';
 import packageJson from './packageJson';
 
 const getUserDataDir = () => getGlobal('userDataDir');
@@ -45,4 +46,19 @@ const getAppDataDir = () =>
  */
 const getAppLogDir = () => path.join(getAppDataDir(), 'logs');
 
-export { getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir };
+const getAppSource = () => {
+    const source = path
+        .parse(path.resolve(getAppDir(), '../'))
+        .base.toLowerCase();
+
+    return source === 'node_modules' ? OFFICIAL : source;
+};
+
+export {
+    getAppDir,
+    getAppFile,
+    getAppDataDir,
+    getAppLogDir,
+    getUserDataDir,
+    getAppSource,
+};

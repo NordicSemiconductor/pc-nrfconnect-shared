@@ -70,6 +70,7 @@ export {
     getAppFile,
     getAppDataDir,
     getAppLogDir,
+    getAppSource,
     getUserDataDir,
 } from './utils/appDirs';
 
