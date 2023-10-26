@@ -19,7 +19,7 @@ import InlineInput from './InlineInput';
 
 import './number-inline-input.scss';
 
-export interface NumberInlineInput {
+interface NumberInlineInput {
     disabled?: boolean;
     value: number;
     range: RangeOrValues;
