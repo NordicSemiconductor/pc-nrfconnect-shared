@@ -33,6 +33,7 @@ interface EventAction {
 }
 
 let eventQueue: EventAction[] = [];
+let eventPageViews: string[] = [];
 let insights: ApplicationInsights | undefined;
 
 /**
@@ -59,7 +60,6 @@ export const init = (packageJson: { name: string; version: string }) => {
     });
 
     insights.loadAppInsights();
-    insights.trackPageView({ name: applicationName });
 
     // Add app name and version to every event
     insights.addTelemetryInitializer(envelope => {
@@ -173,6 +173,19 @@ export const sendUsageData = <T extends string>(
     }
     eventQueue.forEach(sendEvent);
     eventQueue = [];
+};
+
+export const sendPageView = (pageName: string) => {
+    eventPageViews.push(pageName);
+    if (!isInitialized()) {
+        return;
+    }
+    eventPageViews.forEach(name => {
+        insights?.trackPageView({
+            name: `${getFriendlyAppName(packageJson())} - ${name}`,
+        });
+    });
+    eventPageViews = [];
 };
 
 export const sendMetric = (name: string, average: number) => {

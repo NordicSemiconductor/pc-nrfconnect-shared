@@ -30,9 +30,12 @@ import LogViewer from '../Log/LogViewer';
 import logger from '../logging';
 import NavBar from '../NavBar/NavBar';
 import classNames from '../utils/classNames';
-import packageJson from '../utils/packageJson';
 import { getPersistedCurrentPane } from '../utils/persistentStore';
-import { init as usageDataInit, setUsageLogger } from '../utils/usageData';
+import {
+    init as usageDataInit,
+    sendPageView,
+    setUsageLogger,
+} from '../utils/usageData';
 import useHotKey from '../utils/useHotKey';
 import {
     currentPane as currentPaneSelector,
@@ -108,6 +111,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
     const allPanes = useAllPanes(panes, documentation, feedback);
+    const paneName = useRef(allPanes.map(({ name }) => name));
     const dispatch = useDispatch();
 
     useHotKey({
@@ -116,6 +120,14 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
         isGlobal: true,
         action: openWindow.openLauncher,
     });
+
+    useEffect(() => {
+        paneName.current = allPanes.map(({ name }) => name);
+    }, [allPanes]);
+
+    useEffect(() => {
+        sendPageView(paneName.current[currentPane]);
+    }, [currentPane]);
 
     useEffect(() => {
         dispatch(setAutoReselect(autoReselectByDefault));
