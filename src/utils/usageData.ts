@@ -9,8 +9,8 @@ import type Systeminformation from 'systeminformation';
 import winston from 'winston';
 
 import { PackageJson } from '../../ipc/schema/packageJson';
+import { getAppSource } from './appDirs';
 import { isDevelopment } from './environment';
-import packageJson from './packageJson';
 import {
     deleteIsSendingUsageData,
     getIsSendingUsageData,
@@ -38,15 +38,13 @@ let insights: ApplicationInsights | undefined;
 
 /**
  * Initialize instance to send user data
- * @param {*} packageJson the app's package json
  *
  * @returns {Promise<void>} void
  */
-export const init = (packageJson: { name: string; version: string }) => {
-    const applicationName = isDevelopment
-        ? `${packageJson.name}-dev`
-        : packageJson.name;
-    const applicationVersion = packageJson.version;
+export const init = () => {
+    const appPackageJson = packageJson();
+    const applicationName = appPackageJson.name;
+    const applicationVersion = appPackageJson.version;
 
     if (!getIsSendingUsageData()) return;
 
@@ -72,6 +70,8 @@ export const init = (packageJson: { name: string; version: string }) => {
             ...envelope.data,
             applicationName,
             applicationVersion,
+            isDevelopment,
+            source: getAppSource(),
         };
     });
 

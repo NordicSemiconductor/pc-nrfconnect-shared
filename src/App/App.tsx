@@ -57,7 +57,7 @@ const initialiseUsageData = () => {
     if (!usageDataAlreadyInitialised) {
         usageDataAlreadyInitialised = true;
         try {
-            usageDataInit(packageJson());
+            usageDataInit();
         } catch (error) {
             // No need to display the error message for the user
             console.log(error);
