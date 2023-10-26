@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NrfutilDeviceLib } from '../../../nrfutil';
 import { DeviceTraits } from '../../../nrfutil/device/common';
 import logger from '../../logging';
+import { sendUsageData } from '../../utils/usageData';
 import useHotKey from '../../utils/useHotKey';
 import {
     clearWaitForDevice,
@@ -91,6 +92,8 @@ export default ({
             );
             abortController.current = undefined;
             setSelectedDeviceInfo(deviceInfo);
+
+            sendUsageData('SelectedDevice', { ...device, ...deviceInfo });
 
             if (deviceSetupConfig) {
                 if (device.serialNumber) {

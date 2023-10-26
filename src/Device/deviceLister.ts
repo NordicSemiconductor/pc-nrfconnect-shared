@@ -8,6 +8,7 @@ import { DeviceTraits, NrfutilDevice } from '../../nrfutil/device/common';
 import NrfutilDeviceLib from '../../nrfutil/device/device';
 import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
+import { sendUsageData } from '../utils/usageData';
 import {
     clearWaitForDevice,
     clearWaitForDeviceTimeout,
@@ -170,6 +171,7 @@ export const startWatchingDevices =
                         d => d.serialNumber === device.serialNumber
                     )
                 ) {
+                    sendUsageData('DeviceConnected', { ...device });
                     onDeviceConnected(device);
                 }
 
