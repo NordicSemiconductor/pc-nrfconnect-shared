@@ -92,8 +92,8 @@ export default ({
             abortController.current = undefined;
             setSelectedDeviceInfo(deviceInfo);
 
-            if (device.serialNumber) {
-                if (deviceSetupConfig) {
+            if (deviceSetupConfig) {
+                if (device.serialNumber) {
                     dispatch(
                         setupDevice(
                             device,
@@ -103,12 +103,12 @@ export default ({
                             deviceInfo
                         )
                     );
+                } else {
+                    logger.warn(
+                        `Selected device has no serial number. Device setup is not supported`
+                    );
+                    onDeviceIsReady(device);
                 }
-            } else {
-                logger.warn(
-                    `Selected device has no serial number. Device setup is not supported`
-                );
-                onDeviceIsReady(device);
             }
         },
         [
