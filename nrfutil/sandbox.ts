@@ -10,6 +10,7 @@ import os from 'os';
 import path from 'path';
 
 import describeError from '../src/logging/describeError';
+import { sendErrorReport, sendUsageData } from '../src/utils/usageData';
 import { versionToInstall } from './moduleVersion';
 import { getNrfutilLogger } from './nrfutilLogger';
 import {
@@ -256,6 +257,7 @@ export class NrfutilSandbox {
             }
 
             error.message = error.message.replaceAll('Error: ', '');
+            sendErrorReport(describeError(error));
             throw error;
         }
     };
@@ -286,6 +288,7 @@ export class NrfutilSandbox {
     ) =>
         new Promise<void>((resolve, reject) => {
             let aborting = false;
+            sendUsageData(`running nrfutil ${command}`, { args });
             const nrfutil = spawn(
                 path.join(this.baseDir, 'nrfutil'),
                 [
@@ -392,6 +395,7 @@ export class NrfutilSandbox {
                 closedHandlers.forEach(callback => callback());
             })
             .catch(error => {
+                sendErrorReport(describeError(error));
                 running = false;
                 closedHandlers.forEach(callback => callback(error));
             });
