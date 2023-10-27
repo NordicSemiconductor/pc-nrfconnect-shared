@@ -25,7 +25,7 @@
 */
 import { execSync, spawnSync } from 'node:child_process';
 
-import { PackageJson } from '../ipc/schema/packageJson';
+import { AppPackageJson } from '../ipc/schema/packageJson';
 
 const logError = (message: string) => {
     console.error(message);
@@ -88,7 +88,7 @@ export const packageJsonIsCorrect = (
     }
 ) => {
     const expectedVersionString = `${expectedVersionNumber}.0.0`;
-    const actualVersionString = parseJson<PackageJson>(packageJson).version;
+    const actualVersionString = parseJson<AppPackageJson>(packageJson).version;
 
     return equality(
         expectedVersionString,

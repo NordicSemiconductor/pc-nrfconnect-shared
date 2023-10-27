@@ -8,11 +8,11 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { parsePackageJson } from '../ipc/schema/packageJson';
+import { parseAppPackageJson } from '../ipc/schema/packageJson';
 import { build } from './esbuild-renderer';
 
 const validate = (packageJson: string) => {
-    const result = parsePackageJson(packageJson);
+    const result = parseAppPackageJson(packageJson);
 
     if (!result.success) {
         console.log(result.error.message);
