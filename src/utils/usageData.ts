@@ -40,6 +40,25 @@ let eventQueue: EventAction[] = [];
 let eventPageViews: string[] = [];
 let insights: ApplicationInsights | undefined;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const flattenObject = (obj: any, parentKey?: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let result: any = {};
+
+    Object.keys(obj).forEach(key => {
+        const value = obj[key];
+        const newKey = parentKey ? `${parentKey}.${key}` : key;
+        if (typeof value === 'object') {
+            result = { ...result, ...flattenObject(value, newKey) };
+        } else {
+            result[newKey] = value;
+        }
+        console.log(`parentKey: "${parentKey}", _key: "${newKey}"`);
+    });
+
+    return result;
+};
+
 /**
  * Initialize instance to send user data
  *
@@ -162,7 +181,7 @@ const sendEvent = ({ action, metadata }: EventAction) => {
             {
                 name: `${getFriendlyAppName(packageJson())}: ${action}`,
             },
-            metadata
+            flattenObject(metadata)
         );
     }
 };
