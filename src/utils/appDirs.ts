@@ -8,7 +8,7 @@ import { getGlobal } from '@electron/remote';
 import path from 'path';
 
 import { OFFICIAL } from '../../ipc/sources';
-import packageJson from './packageJson';
+import { parsedAppPackageJson } from './packageJson';
 
 const getUserDataDir = () => getGlobal('userDataDir');
 
@@ -18,7 +18,7 @@ const getUserDataDir = () => getGlobal('userDataDir');
  * @returns {string|undefined} Absolute path of current app.
  */
 const getAppDir = () => {
-    const html = packageJson().nrfConnectForDesktop.html;
+    const html = parsedAppPackageJson().nrfConnectForDesktop.html;
     const dir = path.parse(html).dir;
     return path.parse(__filename).dir.replace(dir, '');
 };

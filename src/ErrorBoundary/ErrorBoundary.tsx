@@ -7,6 +7,7 @@
 import React, { ReactNode } from 'react';
 import { getCurrentWindow } from '@electron/remote';
 
+import { AppPackageJson } from '../../main';
 import Button from '../Button/Button';
 import { Device } from '../Device/deviceSlice';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
@@ -97,7 +98,10 @@ class ErrorBoundary extends React.Component<
             return children;
         }
 
-        const appDisplayName = appName || packageJson().displayName;
+        const appDisplayName =
+            appName ||
+            ((packageJson() as AppPackageJson).displayName ??
+                packageJson()?.name);
 
         return (
             <div className="error-boundary__container">

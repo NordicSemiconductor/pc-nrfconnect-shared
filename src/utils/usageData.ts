@@ -8,7 +8,10 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import type Systeminformation from 'systeminformation';
 import winston from 'winston';
 
-import { PackageJson } from '../../ipc/schema/packageJson';
+import {
+    AppPackageJson,
+    LauncherPackageJson,
+} from '../../ipc/schema/packageJson';
 import { getAppSource } from './appDirs';
 import { isDevelopment } from './environment';
 import packageJson from './packageJson';
@@ -21,8 +24,8 @@ import {
 
 const instrumentationKey = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
 
-const getFriendlyAppName = (json: PackageJson | undefined) =>
-    (json?.name ?? '').replace('pc-nrfconnect-', '');
+const getFriendlyAppName = (json: AppPackageJson | LauncherPackageJson) =>
+    (json.name ?? '').replace('pc-nrfconnect-', '');
 
 export interface Metadata {
     [key: string]: unknown;

@@ -22,7 +22,7 @@ const engines = recordOfOptionalStrings.and(
     z.object({ nrfconnect: z.string() })
 );
 
-const packageJson = z.object({
+const appPackageJson = z.object({
     name: z.string(),
     version: semver,
 
@@ -48,14 +48,14 @@ const packageJson = z.object({
     scripts: recordOfOptionalStrings.optional(),
 });
 
-export type PackageJson = z.infer<typeof packageJson>;
+export type AppPackageJson = z.infer<typeof appPackageJson>;
 
-export const parsePackageJson =
-    parseWithPrettifiedErrorMessage<PackageJson>(packageJson);
+export const parseAppPackageJson =
+    parseWithPrettifiedErrorMessage<AppPackageJson>(appPackageJson);
 
 // In the launcher we want to handle that the whole nrfConnectForDesktop may be missing
 // and the html in it can also be undefined, so there we need to use this legacy variant
-const legacyPackageJson = packageJson.merge(
+const legacyAppPackageJson = appPackageJson.merge(
     z.object({
         nrfConnectForDesktop: nrfConnectForDesktop
             .partial({ html: true })
@@ -63,7 +63,30 @@ const legacyPackageJson = packageJson.merge(
     })
 );
 
-export type LegacyPackageJson = z.infer<typeof legacyPackageJson>;
+export type LegacyAppPackageJson = z.infer<typeof legacyAppPackageJson>;
 
-export const parseLegacyPackageJson =
-    parseWithPrettifiedErrorMessage<LegacyPackageJson>(legacyPackageJson);
+export const parseAppLegacyPackageJson =
+    parseWithPrettifiedErrorMessage<LegacyAppPackageJson>(legacyAppPackageJson);
+
+const launcherPackageJson = z.object({
+    name: z.string(),
+    version: semver,
+    description: z.string(),
+    repository: z
+        .object({
+            type: z.string(),
+            url: z.string().url(),
+        })
+        .optional(),
+    main: z.string().optional(),
+    scripts: recordOfOptionalStrings.optional(),
+    author: z.string().optional(),
+    license: z.string().optional(),
+    dependencies: recordOfOptionalStrings.optional(),
+    devDependencies: recordOfOptionalStrings.optional(),
+});
+
+export type LauncherPackageJson = z.infer<typeof launcherPackageJson>;
+
+export const parseLauncherPackageJson =
+    parseWithPrettifiedErrorMessage<LauncherPackageJson>(launcherPackageJson);
