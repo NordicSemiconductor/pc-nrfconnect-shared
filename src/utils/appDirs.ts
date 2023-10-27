@@ -4,13 +4,23 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { getGlobal } from '@electron/remote';
 import path from 'path';
 
 import { OFFICIAL } from '../../ipc/sources';
 import { parsedAppPackageJson } from './packageJson';
 
-const getUserDataDir = () => getGlobal('userDataDir');
+const getUserDataDir = () => {
+    const argv = process.argv;
+    const userDataDir = argv.findIndex(arg =>
+        arg.startsWith('--user-data-dir')
+    );
+
+    if (userDataDir === -1) {
+        throw new Error('Could not find --user-data-dir argument');
+    }
+
+    return argv[userDataDir].split('=')[1];
+};
 
 /**
  * Get the filesystem path of the currently loaded app.
