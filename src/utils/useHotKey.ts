@@ -18,7 +18,7 @@ const useNewHotKey = (shortcut: Shortcut, deps: DependencyList = []) => {
 
         Mousetrap.bind(shortcut.hotKey, (_e, combo) => {
             shortcut.action();
-            sendUsageData('Pressed hotkey', { combo });
+            sendUsageData('pressed hotkey', { combo });
         });
 
         return () => {
