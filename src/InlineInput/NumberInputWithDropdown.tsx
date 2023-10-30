@@ -5,7 +5,6 @@
  */
 
 import React, { useState } from 'react';
-import FormLabel from 'react-bootstrap/esm/FormLabel';
 
 import { DropdownItem } from '../Dropdown/Dropdown';
 import { RangeOrValues } from '../Slider/range';
@@ -66,7 +65,7 @@ export default ({
             }}
             title={title}
         >
-            <FormLabel className="tw-mb-1 tw-text-xs">{label}</FormLabel>
+            <div className="tw-mb-1 tw-text-xs">{label}</div>
             <div className="tw-flex tw-h-8 tw-w-full">
                 <NumberInlineInput
                     value={inlineValue}
