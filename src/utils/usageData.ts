@@ -55,7 +55,6 @@ export const flattenObject = (obj?: any, parentKey?: string) => {
         } else {
             result[newKey] = value;
         }
-        console.log(`parentKey: "${parentKey}", _key: "${newKey}"`);
     });
 
     return result;
