@@ -176,7 +176,6 @@ export default {
     setLogger,
     disable,
     enable,
-    init,
     isEnabled,
     reset,
     sendErrorReport,
