@@ -7,7 +7,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { DeviceInfo, NrfutilDeviceLib } from '../../../nrfutil';
+import { NrfutilDeviceLib } from '../../../nrfutil';
 import { DeviceTraits } from '../../../nrfutil/device/common';
 import useHotKey from '../../utils/useHotKey';
 import {
@@ -80,21 +80,16 @@ export default ({
             dispatch(setAutoSelectDevice(device));
             onDeviceSelected(device, autoReselected);
 
-            let deviceInfo: DeviceInfo | undefined;
-            try {
-                abortController.current?.abort();
-                abortController.current = new AbortController();
-                deviceInfo = await NrfutilDeviceLib.deviceInfo(
-                    device,
-                    undefined,
-                    undefined,
-                    abortController.current
-                );
-                abortController.current = undefined;
-                setSelectedDeviceInfo(deviceInfo);
-            } catch (e) {
-                // Do Nothing
-            }
+            abortController.current?.abort();
+            abortController.current = new AbortController();
+            const deviceInfo = await NrfutilDeviceLib.deviceInfo(
+                device,
+                undefined,
+                undefined,
+                abortController.current
+            );
+            abortController.current = undefined;
+            setSelectedDeviceInfo(deviceInfo);
 
             if (deviceSetupConfig) {
                 dispatch(

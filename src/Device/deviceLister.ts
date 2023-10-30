@@ -9,7 +9,6 @@ import {
     NrfutilDeviceWithSerialnumber,
 } from '../../nrfutil/device/common';
 import NrfutilDeviceLib from '../../nrfutil/device/device';
-import { DeviceInfo } from '../../nrfutil/device/deviceInfo';
 import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
 import {
@@ -225,12 +224,10 @@ export const startWatchingDevices =
                     dispatch(
                         setLastArrivedDeviceId(deviceWithPersistedData.id)
                     );
-                    let deviceInfo: DeviceInfo | undefined;
-                    try {
-                        deviceInfo = await NrfutilDeviceLib.deviceInfo(device);
-                    } catch (e) {
-                        // DO nothing
-                    }
+
+                    const deviceInfo = await NrfutilDeviceLib.deviceInfo(
+                        device
+                    );
 
                     logger.info(
                         `Auto Reconnecting Device SN: ${deviceWithPersistedData.serialNumber}`
@@ -244,12 +241,9 @@ export const startWatchingDevices =
                     const waitForDevice =
                         getState().deviceAutoSelect.waitForDevice;
 
-                    let deviceInfo: DeviceInfo | undefined;
-                    try {
-                        deviceInfo = await NrfutilDeviceLib.deviceInfo(device);
-                    } catch (e) {
-                        // DO nothing
-                    }
+                    const deviceInfo = await NrfutilDeviceLib.deviceInfo(
+                        device
+                    );
 
                     // Device lib might fail to advertise that a device has left before it rejoins (Mainly OSx)
                     // but we still need to trigger the onSuccess if a device 'reappeared' with a different 'id'

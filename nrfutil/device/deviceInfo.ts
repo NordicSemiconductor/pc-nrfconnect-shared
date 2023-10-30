@@ -43,7 +43,7 @@ export interface DeviceInfo {
     hwInfo?: HwInfo;
     jlink?: JLinkDeviceInfo;
     dfuTriggerVersion?: DfuTriggerVersion;
-    dfuTriggerInfo: DfuTriggerInfo;
+    dfuTriggerInfo?: DfuTriggerInfo;
 }
 
 export interface DeviceInfoRaw {
@@ -57,12 +57,14 @@ export default async (
     onProgress?: (progress: Progress) => void,
     controller?: AbortController
 ) =>
-    (
-        await deviceSingleTaskEndOperation<DeviceInfoRaw>(
-            device,
-            'device-info',
-            onProgress,
-            controller,
-            core ? ['--core', core] : []
-        )
-    ).deviceInfo;
+    device.traits.jlink || device.traits.nordicDfu
+        ? (
+              await deviceSingleTaskEndOperation<DeviceInfoRaw>(
+                  device,
+                  'device-info',
+                  onProgress,
+                  controller,
+                  core ? ['--core', core] : []
+              )
+          ).deviceInfo
+        : undefined;
