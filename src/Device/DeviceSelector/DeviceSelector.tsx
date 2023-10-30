@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NrfutilDeviceLib } from '../../../nrfutil';
 import { DeviceTraits } from '../../../nrfutil/device/common';
 import logger from '../../logging';
+import { AppThunk } from '../../store';
 import { sendUsageData } from '../../utils/usageData';
 import useHotKey from '../../utils/useHotKey';
 import {
@@ -63,6 +64,12 @@ export default ({
     const showSelectedDevice = deviceIsSelected || waitingToAutoReconnect;
 
     const doDeselectDevice = useCallback(() => {
+        dispatch(
+            (): AppThunk => (_, getState) =>
+                sendUsageData('Deselect Device', {
+                    ...getState().device.selectedDevice,
+                })
+        );
         dispatch(clearWaitForDevice());
         dispatch(setAutoSelectDevice(undefined));
         onDeviceDeselected();
