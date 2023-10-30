@@ -66,7 +66,7 @@ export default ({
     const doDeselectDevice = useCallback(() => {
         dispatch(
             (): AppThunk => (_, getState) =>
-                sendUsageData('Deselect Device', {
+                sendUsageData('device deselected ', {
                     ...getState().device.selectedDevice,
                 })
         );
@@ -100,7 +100,7 @@ export default ({
             abortController.current = undefined;
             setSelectedDeviceInfo(deviceInfo);
 
-            sendUsageData('SelectedDevice', { ...device, ...deviceInfo });
+            sendUsageData('device selected', { ...device, ...deviceInfo });
 
             if (deviceSetupConfig) {
                 if (device.serialNumber) {

@@ -165,7 +165,7 @@ export const startWatchingDevices =
     (dispatch, getState) => {
         const onDeviceArrived = async (device: NrfutilDevice) => {
             if (hasValidDeviceTraits(device.traits, deviceListing)) {
-                sendUsageData('DeviceConnected', { ...device });
+                sendUsageData('device connected', { ...device });
                 if (
                     device.serialNumber &&
                     !getState().device.devices.find(
