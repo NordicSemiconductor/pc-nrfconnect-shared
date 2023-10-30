@@ -31,11 +31,7 @@ import logger from '../logging';
 import NavBar from '../NavBar/NavBar';
 import classNames from '../utils/classNames';
 import { getPersistedCurrentPane } from '../utils/persistentStore';
-import {
-    init as usageDataInit,
-    sendPageView,
-    setUsageLogger,
-} from '../utils/usageData';
+import usageData from '../utils/usageData';
 import useHotKey from '../utils/useHotKey';
 import {
     currentPane as currentPaneSelector,
@@ -51,19 +47,6 @@ import VisibilityBar from './VisibilityBar';
 import './app.scss';
 import './shared.scss';
 import './tailwind.css';
-
-let usageDataAlreadyInitialised = false;
-const initialiseUsageData = () => {
-    if (!usageDataAlreadyInitialised) {
-        usageDataAlreadyInitialised = true;
-        try {
-            usageDataInit();
-        } catch (error) {
-            // No need to display the error message for the user
-            console.log(error);
-        }
-    }
-};
 
 export interface PaneProps {
     active: boolean;
@@ -98,13 +81,16 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     children,
     autoReselectByDefault = false,
 }) => {
-    const initialisedLogger = useRef(false);
+    const initApp = useRef(false);
 
-    if (!initialisedLogger.current) {
+    if (!initApp.current) {
         logger.initialise();
         setNrfutilLogger(logger);
-        setUsageLogger(logger);
-        initialisedLogger.current = true;
+        usageData.setLogger(logger);
+        if (reportUsageData) {
+            usageData.reportArchitecture();
+        }
+        initApp.current = true;
     }
 
     usePersistedPane();
@@ -126,7 +112,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     }, [allPanes]);
 
     useEffect(() => {
-        sendPageView(paneName.current[currentPane]);
+        usageData.sendPageView(paneName.current[currentPane]);
     }, [currentPane]);
 
     useEffect(() => {
@@ -145,12 +131,6 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
 
     const isSidePanelVisible =
         useSelector(isSidePanelVisibleSelector) && currentSidePanel;
-
-    useEffect(() => {
-        if (reportUsageData) {
-            initialiseUsageData();
-        }
-    }, [reportUsageData]);
 
     return (
         <div className="core19-app">

@@ -17,24 +17,17 @@ import { openUrl } from '../utils/open';
 import packageJson from '../utils/packageJson';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
 import { generateSystemReport } from '../utils/systemReport';
-import {
-    init as initGA,
-    isEnabled,
-    isInitialized as isGAInitialized,
-    sendErrorReport,
-} from '../utils/usageData';
+import usageData from '../utils/usageData';
 import bugIcon from './bug.svg';
 
 import './error-boundary.scss';
 
 const sendGAEvent = (error: string) => {
-    if (!isEnabled()) {
+    if (!usageData.isEnabled()) {
         return;
     }
-    if (!isGAInitialized()) {
-        initGA();
-    }
-    sendErrorReport(error);
+
+    usageData.sendErrorReport(error);
 };
 
 interface Props {
