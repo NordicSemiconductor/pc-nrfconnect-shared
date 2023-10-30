@@ -4,24 +4,20 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import winston from 'winston';
 
 import {
     AppPackageJson,
     LauncherPackageJson,
 } from '../../ipc/schema/packageJson';
-import { getAppSource } from './appDirs';
-import { isDevelopment } from './environment';
 import packageJson from './packageJson';
 import {
     deleteIsSendingUsageData,
     getIsSendingUsageData,
-    getUsageDataClientId,
     persistIsSendingUsageData,
 } from './persistentStore';
-
-const instrumentationKey = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
+import usageDataMain from './usageDataMain';
+import usageDataRenderer from './usageDataRenderer';
 
 let logger: winston.Logger | undefined;
 const setLogger = (log: winston.Logger) => {
@@ -55,62 +51,7 @@ const flattenObject = (obj?: any, parentKey?: string) => {
     return result;
 };
 
-let insights: ApplicationInsights | undefined;
-
-const getInsights = (forceSend?: boolean) => {
-    if (!forceSend && !getIsSendingUsageData()) return;
-
-    if (insights) {
-        return insights;
-    }
-
-    if (!insights) {
-        insights = init();
-    }
-
-    return insights;
-};
-
-const init = () => {
-    const appPackageJson = packageJson();
-    const applicationName = appPackageJson.name;
-    const applicationVersion = appPackageJson.version;
-
-    if (!getIsSendingUsageData()) return;
-
-    const accountId = getUsageDataClientId();
-
-    const out = new ApplicationInsights({
-        config: {
-            instrumentationKey,
-            accountId,
-        },
-    });
-
-    out.loadAppInsights();
-
-    // Add app name and version to every event
-    out.addTelemetryInitializer(envelope => {
-        const trace = {
-            ...(envelope.ext?.trace ?? {}),
-            name: applicationName,
-        };
-        envelope.ext = { ...envelope.ext, trace };
-        envelope.data = {
-            ...envelope.data,
-            applicationName,
-            applicationVersion,
-            isDevelopment,
-            source: getAppSource(),
-        };
-    });
-
-    logger?.debug(
-        `Application Insights for category ${applicationName} has initialized`
-    );
-
-    return out;
-};
+const isRenderer = process && process.type === 'renderer';
 
 const isEnabled = () => {
     const isSendingUsageData = getIsSendingUsageData();
@@ -133,47 +74,49 @@ const reset = () => {
     logger?.debug('Usage data setting has been reset');
 };
 
+const getUsageData = () => {
+    if (isRenderer) {
+        return usageDataRenderer;
+    }
+
+    return usageDataMain;
+};
+
 const sendUsageData = <T extends string>(
     action: T,
     metadata?: Metadata,
     forceSend?: boolean
 ) => {
-    const result = getInsights(forceSend);
-    if (result !== undefined) {
+    if (
+        getUsageData().sendUsageData(
+            `${getFriendlyAppName(packageJson())}: ${action}`,
+            flattenObject(metadata),
+            forceSend
+        )
+    ) {
         logger?.debug(`Sending usage data ${JSON.stringify(action)}`);
-        result.trackEvent(
-            {
-                name: `${getFriendlyAppName(packageJson())}: ${action}`,
-            },
-            flattenObject(metadata)
-        );
     }
 };
 
 const sendPageView = (pageName: string) => {
-    getInsights()?.trackPageView({
-        name: `${getFriendlyAppName(packageJson())} - ${pageName}`,
-    });
+    getUsageData().sendPageView(
+        `${getFriendlyAppName(packageJson())} - ${pageName}`
+    );
 };
 
 const sendMetric = (name: string, average: number) => {
-    getInsights()?.trackMetric({
-        name,
-        average,
-    });
+    getUsageData().sendMetric(name, average);
 };
 
 const sendTrace = (message: string) => {
-    getInsights()?.trackTrace({
-        message,
-    });
+    getUsageData()?.sendTrace(message);
 };
 
-const sendErrorReport = (error: string) => {
+const sendErrorReport = (error: string | Error) => {
     logger?.error(error);
-    getInsights()?.trackException({
-        exception: new Error(error),
-    });
+    getUsageData().sendErrorReport(
+        typeof error === 'string' ? new Error(error) : error
+    );
 };
 
 export default {
