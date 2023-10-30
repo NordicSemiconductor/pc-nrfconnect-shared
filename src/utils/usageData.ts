@@ -57,8 +57,8 @@ const flattenObject = (obj?: any, parentKey?: string) => {
 
 let insights: ApplicationInsights | undefined;
 
-const getInsights = () => {
-    if (!getIsSendingUsageData()) return;
+const getInsights = (forceSend?: boolean) => {
+    if (!forceSend && !getIsSendingUsageData()) return;
 
     if (insights) {
         return insights;
@@ -133,8 +133,12 @@ const reset = () => {
     logger?.debug('Usage data setting has been reset');
 };
 
-const sendUsageData = <T extends string>(action: T, metadata?: Metadata) => {
-    const result = getInsights();
+const sendUsageData = <T extends string>(
+    action: T,
+    metadata?: Metadata,
+    forceSend?: boolean
+) => {
+    const result = getInsights(forceSend);
     if (result !== undefined) {
         logger?.debug(`Sending usage data ${JSON.stringify(action)}`);
         result.trackEvent(
