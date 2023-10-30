@@ -41,9 +41,11 @@ let eventPageViews: string[] = [];
 let insights: ApplicationInsights | undefined;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const flattenObject = (obj: any, parentKey?: string) => {
+export const flattenObject = (obj?: any, parentKey?: string) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let result: any = {};
+
+    if (!obj) return result;
 
     Object.keys(obj).forEach(key => {
         const value = obj[key];
