@@ -10,7 +10,7 @@ import os from 'os';
 import path from 'path';
 
 import describeError from '../src/logging/describeError';
-import { sendErrorReport, sendUsageData } from '../src/utils/usageData';
+import usageData from '../src/utils/usageData';
 import { versionToInstall } from './moduleVersion';
 import { getNrfutilLogger } from './nrfutilLogger';
 import {
@@ -267,7 +267,7 @@ export class NrfutilSandbox {
             }
 
             error.message = error.message.replaceAll('Error: ', '');
-            sendErrorReport(
+            usageData.sendErrorReport(
                 `${
                     pid && this.logLevel === 'trace' ? `[PID:${pid}] ` : ''
                 }${describeError(error)}`
@@ -302,7 +302,7 @@ export class NrfutilSandbox {
     ) =>
         new Promise<void>((resolve, reject) => {
             let aborting = false;
-            sendUsageData(`running nrfutil ${command}`, { args });
+            usageData.sendUsageData(`running nrfutil ${command}`, { args });
             const nrfutil = spawn(
                 path.join(this.baseDir, 'nrfutil'),
                 [
@@ -409,7 +409,7 @@ export class NrfutilSandbox {
                 closedHandlers.forEach(callback => callback());
             })
             .catch(error => {
-                sendErrorReport(describeError(error));
+                usageData.sendErrorReport(describeError(error));
                 running = false;
                 closedHandlers.forEach(callback => callback(error));
             });

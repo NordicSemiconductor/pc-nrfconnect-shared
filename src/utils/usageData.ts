@@ -24,24 +24,20 @@ import {
 
 const instrumentationKey = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
 
-const getFriendlyAppName = (json: AppPackageJson | LauncherPackageJson) =>
-    (json.name ?? '').replace('pc-nrfconnect-', '');
+let logger: winston.Logger | undefined;
+const setLogger = (log: winston.Logger) => {
+    logger = log;
+};
 
 export interface Metadata {
     [key: string]: unknown;
 }
 
-interface EventAction {
-    action: string;
-    metadata?: Metadata;
-}
-
-let eventQueue: EventAction[] = [];
-let eventPageViews: string[] = [];
-let insights: ApplicationInsights | undefined;
+const getFriendlyAppName = (json: AppPackageJson | LauncherPackageJson) =>
+    (json.name ?? '').replace('pc-nrfconnect-', '');
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const flattenObject = (obj?: any, parentKey?: string) => {
+const flattenObject = (obj?: any, parentKey?: string) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let result: any = {};
 
@@ -60,12 +56,23 @@ export const flattenObject = (obj?: any, parentKey?: string) => {
     return result;
 };
 
-/**
- * Initialize instance to send user data
- *
- * @returns {Promise<void>} void
- */
-export const init = () => {
+let insights: ApplicationInsights | undefined;
+
+const getInsights = () => {
+    if (!getIsSendingUsageData()) return;
+
+    if (insights) {
+        return insights;
+    }
+
+    if (!insights) {
+        insights = init();
+    }
+
+    return insights;
+};
+
+const init = () => {
     const appPackageJson = packageJson();
     const applicationName = appPackageJson.name;
     const applicationVersion = appPackageJson.version;
@@ -74,17 +81,17 @@ export const init = () => {
 
     const accountId = getUsageDataClientId();
 
-    insights = new ApplicationInsights({
+    const out = new ApplicationInsights({
         config: {
             instrumentationKey,
             accountId,
         },
     });
 
-    insights.loadAppInsights();
+    out.loadAppInsights();
 
     // Add app name and version to every event
-    insights.addTelemetryInitializer(envelope => {
+    out.addTelemetryInitializer(envelope => {
         const trace = {
             ...(envelope.ext?.trace ?? {}),
             name: applicationName,
@@ -103,82 +110,35 @@ export const init = () => {
         `Application Insights for category ${applicationName} has initialized`
     );
 
-    // Add 5 second delay to prevent inital rendering from beeing frozen.
-    setTimeout(async () => {
-        // eslint-disable-next-line global-require
-        const si = require('systeminformation') as typeof Systeminformation;
-        sendUsageData('architecture', { arch: (await si.osInfo()).arch });
-    }, 5_000);
+    return out;
 };
 
-/**
- * Checks if usage report instance is initialized and ready to be sent
- *
- * @returns {Boolean} returns whether the setting is on, off or undefined
- */
-export const isInitialized = () => {
-    logger?.debug(
-        `Usage report instance is${
-            insights !== undefined ? '' : ' not'
-        } initialized`
-    );
-    return insights !== undefined;
-};
-
-/**
- * Check the status of usage data
- *
- * @returns {Boolean | undefined} returns whether the setting is on, off or undefined
- */
-export const isEnabled = () => {
+const isEnabled = () => {
     const isSendingUsageData = getIsSendingUsageData();
     logger?.debug(`Usage data is ${isSendingUsageData}`);
     return isSendingUsageData;
 };
 
-/**
- * Enable sending usage data
- *
- * @returns {void}
- */
-export const enable = () => {
+const enable = () => {
     persistIsSendingUsageData(true);
     logger?.debug('Usage data has been enabled');
 };
 
-/**
- * Disable sending usage data
- *
- * @returns {void}
- */
-export const disable = () => {
+const disable = () => {
     persistIsSendingUsageData(false);
     logger?.debug('Usage data has been disabled');
 };
 
-/**
- * Reset settings so that launcher is able to
- * ask the user to enable or disable sending usage data
- *
- * @returns {void}
- */
-export const reset = () => {
+const reset = () => {
     deleteIsSendingUsageData();
     logger?.debug('Usage data setting has been reset');
 };
 
-/**
- * Send event
- * @param {EventAction} event the event to send
- *
- * @returns {void}
- */
-const sendEvent = ({ action, metadata }: EventAction) => {
-    const isSendingUsageData = getIsSendingUsageData();
-
-    if (isSendingUsageData && insights !== undefined) {
+const sendUsageData = <T extends string>(action: T, metadata?: Metadata) => {
+    const result = getInsights();
+    if (result !== undefined) {
         logger?.debug(`Sending usage data ${JSON.stringify(action)}`);
-        insights.trackEvent(
+        result.trackEvent(
             {
                 name: `${getFriendlyAppName(packageJson())}: ${action}`,
             },
@@ -187,68 +147,51 @@ const sendEvent = ({ action, metadata }: EventAction) => {
     }
 };
 
-export const sendUsageData = <T extends string>(
-    action: T,
-    metadata?: Metadata
-) => {
-    eventQueue.push({ action, metadata });
-    if (!isInitialized()) {
-        return;
-    }
-    eventQueue.forEach(sendEvent);
-    eventQueue = [];
-};
-
-export const sendPageView = (pageName: string) => {
-    eventPageViews.push(pageName);
-    if (!isInitialized()) {
-        return;
-    }
-    eventPageViews.forEach(name => {
-        insights?.trackPageView({
-            name: `${getFriendlyAppName(packageJson())} - ${name}`,
-        });
+const sendPageView = (pageName: string) => {
+    getInsights()?.trackPageView({
+        name: `${getFriendlyAppName(packageJson())} - ${pageName}`,
     });
-    eventPageViews = [];
 };
 
-export const sendMetric = (name: string, average: number) => {
-    insights?.trackMetric({
+const sendMetric = (name: string, average: number) => {
+    getInsights()?.trackMetric({
         name,
         average,
     });
 };
 
-export const sendTrace = (message: string) => {
-    insights?.trackTrace({
+const sendTrace = (message: string) => {
+    getInsights()?.trackTrace({
         message,
     });
 };
 
-/**
- * Send error usage data event to Application Insights and also show it in the logger view
- * @param {string} error The event action
- * @returns {void}
- */
-export const sendErrorReport = (error: string) => {
+const sendErrorReport = (error: string) => {
     logger?.error(error);
-    insights?.trackException({
+    getInsights()?.trackException({
         exception: new Error(error),
     });
 };
 
-let logger: winston.Logger | undefined;
-export const setUsageLogger = (log: winston.Logger) => {
-    logger = log;
+const reportArchitecture = () => {
+    // eslint-disable-next-line global-require
+    const si = require('systeminformation') as typeof Systeminformation;
+    si.osInfo().then(osInfo => {
+        sendUsageData('architecture', { arch: osInfo.arch });
+    });
 };
 
 export default {
+    setLogger,
     disable,
     enable,
     init,
     isEnabled,
-    isInitialized,
     reset,
     sendErrorReport,
     sendUsageData,
+    reportArchitecture,
+    sendPageView,
+    sendMetric,
+    sendTrace,
 };
