@@ -63,7 +63,6 @@ interface ConnectedAppProps {
     panes: Pane[];
     sidePanel?: ReactNode;
     showLogByDefault?: boolean;
-    reportUsageData?: boolean;
     documentation?: ReactNode[];
     feedback?: boolean | FeedbackPaneProps;
     children?: ReactNode;
@@ -75,7 +74,6 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     panes,
     sidePanel,
     showLogByDefault = true,
-    reportUsageData = false,
     documentation,
     feedback,
     children,
@@ -87,9 +85,6 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
         logger.initialise();
         setNrfutilLogger(logger);
         usageData.setLogger(logger);
-        if (reportUsageData) {
-            usageData.reportArchitecture();
-        }
         initApp.current = true;
     }
 

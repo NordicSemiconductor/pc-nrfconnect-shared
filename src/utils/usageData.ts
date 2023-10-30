@@ -5,7 +5,6 @@
  */
 
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
-import type Systeminformation from 'systeminformation';
 import winston from 'winston';
 
 import {
@@ -173,14 +172,6 @@ const sendErrorReport = (error: string) => {
     });
 };
 
-const reportArchitecture = () => {
-    // eslint-disable-next-line global-require
-    const si = require('systeminformation') as typeof Systeminformation;
-    si.osInfo().then(osInfo => {
-        sendUsageData('architecture', { arch: osInfo.arch });
-    });
-};
-
 export default {
     setLogger,
     disable,
@@ -190,7 +181,6 @@ export default {
     reset,
     sendErrorReport,
     sendUsageData,
-    reportArchitecture,
     sendPageView,
     sendMetric,
     sendTrace,
