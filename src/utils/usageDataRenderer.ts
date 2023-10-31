@@ -64,10 +64,6 @@ const init = () => {
         };
     });
 
-    // logger?.debug(
-    //     `Application Insights for category ${applicationName} has initialized`
-    // );
-
     return out;
 };
 

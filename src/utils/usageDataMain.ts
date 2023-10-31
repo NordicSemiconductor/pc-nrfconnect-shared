@@ -6,7 +6,6 @@
 
 import { TelemetryClient } from 'applicationinsights';
 
-import { getAppSource } from './appDirs';
 import { isDevelopment } from './environment';
 import packageJson from './packageJson';
 import { getIsSendingUsageData } from './persistentStore';
@@ -37,39 +36,29 @@ const init = () => {
 
     if (!getIsSendingUsageData()) return;
 
-    // appInsights
-    //     .setup(CONNECTION_STRING)
-    //     .setAutoCollectConsole(false)
-    //     .setAutoCollectDependencies(false)
-    //     .setAutoCollectExceptions(false)
-    //     .setAutoCollectIncomingRequestAzureFunctions(false)
-    //     .setAutoCollectHeartbeat(false)
-    //     .setAutoCollectPerformance(false)
-    //     .setAutoCollectPreAggregatedMetrics(false)
-    //     .setAutoCollectRequests(false)
-    //     .setAutoDependencyCorrelation(false)
-    //     .start();
-
     const out = new TelemetryClient(INSTRUMENTATION_KEY);
+    out.config.enableAutoCollectConsole = false;
+    out.config.enableAutoCollectDependencies = false;
+    out.config.enableAutoCollectExceptions = false;
+    out.config.enableAutoCollectIncomingRequestAzureFunctions = false;
+    out.config.enableAutoCollectHeartbeat = false;
+    out.config.enableAutoCollectPerformance = false;
+    out.config.enableAutoCollectPreAggregatedMetrics = false;
+    out.config.enableAutoCollectRequests = false;
+    out.config.enableAutoDependencyCorrelation = false;
 
     // Add app name and version to every event
     out.addTelemetryProcessor(envelope => {
+        envelope.tags['ai.cloud.roleInstance'] = undefined; // remove PC name
         envelope.data.baseData = {
             ...envelope.data.baseData,
             applicationName,
             applicationVersion,
             isDevelopment,
-            source: getAppSource(),
         };
-
-        envelope.data;
 
         return true;
     });
-
-    // logger?.debug(
-    //     `Application Insights for category ${applicationName} has initialized`
-    // );
 
     return out;
 };
