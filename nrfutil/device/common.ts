@@ -172,26 +172,33 @@ export const getDeviceSandbox = async () => {
         );
         deviceSandbox = await promiseDeviceSandbox;
 
-        deviceSandbox.onLogging(evt => {
+        deviceSandbox.onLogging((evt, pid) => {
             const deviceLogger = getNrfutilLogger();
+            const formatMsg = (msg: string) =>
+                `${
+                    pid && deviceSandbox?.logLevel === 'trace'
+                        ? `[PID:${pid}] `
+                        : ''
+                }${msg}`;
+
             switch (evt.level) {
                 case 'TRACE':
-                    deviceLogger?.verbose(evt.message);
+                    deviceLogger?.verbose(formatMsg(evt.message));
                     break;
                 case 'DEBUG':
-                    deviceLogger?.debug(evt.message);
+                    deviceLogger?.debug(formatMsg(evt.message));
                     break;
                 case 'INFO':
-                    deviceLogger?.info(evt.message);
+                    deviceLogger?.info(formatMsg(evt.message));
                     break;
                 case 'WARN':
-                    deviceLogger?.warn(evt.message);
+                    deviceLogger?.warn(formatMsg(evt.message));
                     break;
                 case 'ERROR':
-                    deviceLogger?.error(evt.message);
+                    deviceLogger?.error(formatMsg(evt.message));
                     break;
                 case 'CRITICAL':
-                    deviceLogger?.error(evt.message);
+                    deviceLogger?.error(formatMsg(evt.message));
                     break;
                 case 'OFF':
                 default:

@@ -5,7 +5,7 @@
  */
 
 export interface BackgroundTask<T> {
-    onError: (error: Error) => void;
+    onError: (error: Error, pid?: number) => void;
     onData: (data: T) => void;
 }
 
