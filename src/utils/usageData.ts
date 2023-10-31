@@ -63,7 +63,7 @@ const flattenObject = (obj?: any, parentKey?: string) => {
     return result;
 };
 
-const isRenderer = process && process.type === 'renderer';
+const isRenderer = process.type === 'renderer';
 
 const isEnabled = () => {
     const isSendingUsageData = getIsSendingUsageData();
