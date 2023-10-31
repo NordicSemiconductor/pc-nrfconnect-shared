@@ -10,6 +10,7 @@ import {
     AppPackageJson,
     LauncherPackageJson,
 } from '../../ipc/schema/packageJson';
+import { type Device } from '../Device/deviceSlice';
 import packageJson from './packageJson';
 import {
     deleteIsSendingUsageData,
@@ -27,6 +28,17 @@ const setLogger = (log: winston.Logger) => {
 export interface Metadata {
     [key: string]: unknown;
 }
+
+export const simplifyDeviceForLogging = (device: Device) => ({
+    devkit: device.devkit,
+    serialPorts: device.serialPorts,
+    traits: device.traits,
+    usb: {
+        product: device.usb?.product,
+        manufacturer: device.usb?.manufacturer,
+        deviceDescriptor: device.usb?.device.descriptor,
+    },
+});
 
 const getFriendlyAppName = (json: AppPackageJson | LauncherPackageJson) =>
     (json.name ?? '').replace('pc-nrfconnect-', '');

@@ -11,7 +11,7 @@ import { NrfutilDeviceLib } from '../../../nrfutil';
 import { DeviceTraits } from '../../../nrfutil/device/common';
 import logger from '../../logging';
 import { AppThunk } from '../../store';
-import usageData from '../../utils/usageData';
+import usageData, { simplifyDeviceForLogging } from '../../utils/usageData';
 import useHotKey from '../../utils/useHotKey';
 import {
     clearWaitForDevice,
@@ -65,10 +65,15 @@ export default ({
 
     const doDeselectDevice = useCallback(() => {
         dispatch(
-            (): AppThunk => (_, getState) =>
-                usageData.sendUsageData('device deselected ', {
-                    ...getState().device.selectedDevice,
-                })
+            (): AppThunk => (_, getState) => {
+                const device = getState().device.selectedDevice;
+                if (device) {
+                    usageData.sendUsageData(
+                        'device deselected ',
+                        simplifyDeviceForLogging(device)
+                    );
+                }
+            }
         );
         dispatch(clearWaitForDevice());
         dispatch(setAutoSelectDevice(undefined));
@@ -101,8 +106,8 @@ export default ({
             setSelectedDeviceInfo(deviceInfo);
 
             usageData.sendUsageData('device selected', {
-                ...device,
-                ...deviceInfo,
+                device: simplifyDeviceForLogging(device),
+                deviceInfo,
             });
 
             if (deviceSetupConfig) {
