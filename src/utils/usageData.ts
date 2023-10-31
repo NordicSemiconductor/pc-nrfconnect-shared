@@ -33,6 +33,8 @@ export const simplifyDeviceForLogging = (device: Device) => ({
     devkit: device.devkit,
     serialPorts: device.serialPorts,
     traits: device.traits,
+    serialNumber: device.serialNumber,
+    enumerationID: device.id,
     usb: {
         product: device.usb?.product,
         manufacturer: device.usb?.manufacturer,
@@ -63,7 +65,7 @@ const flattenObject = (obj?: any, parentKey?: string) => {
     return result;
 };
 
-const isRenderer = process.type === 'renderer';
+const isRenderer = process && process.type === 'renderer';
 
 const isEnabled = () => {
     const isSendingUsageData = getIsSendingUsageData();
