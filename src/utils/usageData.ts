@@ -74,13 +74,13 @@ const isEnabled = () => {
 };
 
 const enable = () => {
-    getUsageData().sendUsageData('Data Usage Opt-In', { enabled: true }, true);
+    sendUsageData('Data Usage Opt-In', { enabled: true }, true);
     persistIsSendingUsageData(true);
     logger?.debug('Usage data has been enabled');
 };
 
 const disable = () => {
-    getUsageData().sendUsageData('Data Usage Opt-In', { enabled: false }, true);
+    sendUsageData('Data Usage Opt-In', { enabled: false }, true);
     persistIsSendingUsageData(false);
     logger?.debug('Usage data has been disabled');
 };
