@@ -35,8 +35,6 @@ const init = () => {
     const applicationName = appPackageJson.name;
     const applicationVersion = appPackageJson.version;
 
-    if (!getIsSendingUsageData()) return;
-
     const accountId = getUsageDataClientId();
 
     const out = new ApplicationInsights({
