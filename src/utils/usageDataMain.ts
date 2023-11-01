@@ -34,8 +34,6 @@ const init = () => {
     const applicationName = appPackageJson.name;
     const applicationVersion = appPackageJson.version;
 
-    if (!getIsSendingUsageData()) return;
-
     const out = new TelemetryClient(INSTRUMENTATION_KEY);
     out.config.enableAutoCollectConsole = false;
     out.config.enableAutoCollectDependencies = false;
