@@ -8,7 +8,7 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 
 import { getAppSource } from './appDirs';
 import { isDevelopment } from './environment';
-import packageJson from './packageJson';
+import { packageJson } from './packageJson';
 import { getIsSendingUsageData, getUsageDataClientId } from './persistentStore';
 import { type Metadata } from './usageData';
 

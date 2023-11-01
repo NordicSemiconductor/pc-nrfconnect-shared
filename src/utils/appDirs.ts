@@ -7,7 +7,7 @@
 import path from 'path';
 
 import { OFFICIAL } from '../../ipc/sources';
-import { parsedAppPackageJson } from './packageJson';
+import { packageJsonApp } from './packageJson';
 
 const getUserDataDir = () => {
     const argv = process.argv;
@@ -28,7 +28,7 @@ const getUserDataDir = () => {
  * @returns {string|undefined} Absolute path of current app.
  */
 const getAppDir = () => {
-    const html = parsedAppPackageJson().nrfConnectForDesktop.html;
+    const html = packageJsonApp().nrfConnectForDesktop.html;
     const dir = path.parse(html).dir;
     return path.parse(__filename).dir.replace(dir, '');
 };

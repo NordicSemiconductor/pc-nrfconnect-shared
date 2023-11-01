@@ -8,11 +8,11 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { parseAppPackageJson } from '../ipc/schema/packageJson';
+import { parsePackageJsonApp } from '../ipc/schema/packageJson';
 import { build } from './esbuild-renderer';
 
 const validate = (packageJson: string) => {
-    const result = parseAppPackageJson(packageJson);
+    const result = parsePackageJsonApp(packageJson);
 
     if (!result.success) {
         console.log(result.error.message);
@@ -42,7 +42,7 @@ const bundle = () => {
 
     build({
         define: {
-            'process.env.PACKAGE_JSON_OF_APP': JSON.stringify(packageJson),
+            'process.env.PACKAGE_JSON': JSON.stringify(packageJson),
         },
         entryPoints: [entry()],
     });

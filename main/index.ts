@@ -37,10 +37,10 @@ export {
     type WithdrawnJson,
 } from '../ipc/MetaFiles';
 export {
-    type LegacyAppPackageJson,
-    type AppPackageJson,
-    parseAppLegacyPackageJson,
-    parseAppPackageJson,
+    type PackageJsonLegacyApp,
+    type PackageJsonApp,
+    parsePackageJsonLegacyApp,
+    parsePackageJsonApp,
 } from '../ipc/schema/packageJson';
 
 export { type OverwriteOptions } from '../ipc/serialPort';

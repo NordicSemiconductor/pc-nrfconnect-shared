@@ -5,18 +5,16 @@
  */
 
 import { isDevelopment } from '../utils/environment';
-import packageJson from '../utils/packageJson';
+import { packageJson } from '../utils/packageJson';
 
 const formURL =
     isDevelopment === true
         ? 'https://formkeep.com/f/87deb409a565'
         : 'https://formkeep.com/f/36b394b92851';
 
-const getAppName = () => packageJson().name;
-
 export default async (feedback: string, category?: string) => {
     const data: Record<string, unknown> = {
-        name: getAppName(),
+        name: packageJson().name,
         feedback,
         platform: process.platform,
     };

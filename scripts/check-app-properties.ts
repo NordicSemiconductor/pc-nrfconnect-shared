@@ -10,7 +10,7 @@ import { execSync } from 'child_process';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import property from 'lodash/property';
 
-import { AppPackageJson, parseAppPackageJson } from '../ipc/schema/packageJson';
+import { PackageJsonApp, parsePackageJsonApp } from '../ipc/schema/packageJson';
 
 const format = (strings: string[]) =>
     strings.map(string => `\`${string}\``).join(', ');
@@ -61,7 +61,7 @@ const mustContainOneOf = (
     }
 };
 
-const checkRepoUrl = (packageJson: AppPackageJson) => {
+const checkRepoUrl = (packageJson: PackageJsonApp) => {
     if (!existsSync('./.git')) {
         return;
     }
@@ -88,7 +88,7 @@ const checkRepoUrl = (packageJson: AppPackageJson) => {
     }
 };
 
-const checkOptionalProperties = (packageJson: AppPackageJson) => {
+const checkOptionalProperties = (packageJson: PackageJsonApp) => {
     if (propertyIsMissing(packageJson)('homepage')) {
         warn('Please provide a property `homepage` in package.json.');
     }
@@ -100,7 +100,7 @@ const checkOptionalProperties = (packageJson: AppPackageJson) => {
     }
 };
 
-const checkFileProperty = (packageJson: AppPackageJson) => {
+const checkFileProperty = (packageJson: PackageJsonApp) => {
     mustContain(
         packageJson.files ?? [],
         ['LICENSE', 'dist/', 'Changelog.md'],
@@ -115,7 +115,7 @@ const checkFileProperty = (packageJson: AppPackageJson) => {
 };
 
 const readAndCheckPackageJson = () => {
-    const packageJsonResult = parseAppPackageJson(
+    const packageJsonResult = parsePackageJsonApp(
         readFileSync('./package.json', 'utf8')
     );
 
@@ -136,7 +136,7 @@ const changelogEntryRegexp = (version?: string) =>
     new RegExp(`^## ${version}`, 'mi');
 
 const checkChangelog = (
-    packageJson: AppPackageJson,
+    packageJson: PackageJsonApp,
     checkChangelogHasCurrentEntry: boolean
 ) => {
     if (!existsSync('./Changelog.md')) {
