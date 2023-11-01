@@ -5,62 +5,68 @@
  */
 
 import {
-    type AppPackageJson,
-    LauncherPackageJson,
-    parseAppPackageJson,
-    parseLauncherPackageJson,
+    type PackageJson,
+    type PackageJsonApp,
+    parsePackageJson,
+    parsePackageJsonApp,
 } from '../../ipc/schema/packageJson';
 
-let cacheApp: AppPackageJson | undefined;
-let cacheLauncher: LauncherPackageJson | undefined;
+let cache:
+    | undefined
+    | { type: 'launcher'; data: PackageJson }
+    | { type: 'app'; data: PackageJsonApp };
 
-const parsedPackageJson = (): AppPackageJson | LauncherPackageJson => {
-    const launcherRenderer = !!process.env.PACKAGE_JSON_OF_RENDERER;
-
-    return launcherRenderer
-        ? parsedLauncherPackageJson()
-        : parsedAppPackageJson();
-};
-
-const parsedAppPackageJson = (): AppPackageJson => {
-    if (cacheApp != null) {
-        return cacheApp;
+const parsedPackageJson = () => {
+    if (cache != null) {
+        return cache.data;
     }
 
-    const parsed = parseAppPackageJson(
-        process.env.PACKAGE_JSON_OF_APP ?? 'null'
-    );
+    const unparsed = process.env.PACKAGE_JSON ?? 'null';
 
-    if (parsed.success) {
-        cacheApp = parsed.data;
-    } else {
+    const parsed = parsePackageJson(unparsed);
+
+    if (!parsed.success) {
         throw new Error(
-            `The env variable PACKAGE_JSON_OF_APP must be defined during bundling (through the bundler settings) with a valid package.json but wasn't. Fix this. Error: ${parsed.error.message}`
+            `The env variable PACKAGE_JSON must be defined during bundling (through the bundler settings) with a valid package.json but wasn't. Error: ${parsed.error.message}`
         );
     }
 
-    return cacheApp;
-};
+    const isLauncher = parsed.data.name === 'nrfconnect';
 
-const parsedLauncherPackageJson = (): LauncherPackageJson => {
-    if (cacheLauncher != null) {
-        return cacheLauncher;
+    if (isLauncher) {
+        cache = {
+            type: 'launcher',
+            data: parsed.data,
+        };
+    } else {
+        const parsedAppPackageJson = parsePackageJsonApp(unparsed);
+        if (!parsedAppPackageJson.success) {
+            throw new Error(
+                `The package.json must contain all values required for an app. Error: ${parsedAppPackageJson.error.message}`
+            );
+        }
+
+        cache = {
+            type: 'app',
+            data: parsedAppPackageJson.data,
+        };
     }
 
-    const parsed = parseLauncherPackageJson(
-        process.env.PACKAGE_JSON_OF_RENDERER ?? 'null'
-    );
+    return cache.data;
+};
 
-    if (parsed.success) {
-        cacheLauncher = parsed.data;
-    } else {
+export const packageJson = parsedPackageJson;
+
+export const packageJsonApp = () => {
+    parsedPackageJson();
+
+    if (cache?.type !== 'app') {
         throw new Error(
-            `The env variable PACKAGE_JSON_OF_RENDERER must be defined during bundling (through the bundler settings) with a valid package.json but wasn't. Fix this. Error: ${parsed.error.message}`
+            `Required the package.json of an app. Actual content: ${JSON.stringify(
+                cache
+            )}`
         );
     }
 
-    return cacheLauncher;
+    return cache.data;
 };
-export default () => parsedPackageJson();
-
-export { parsedLauncherPackageJson, parsedAppPackageJson };

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { parsedAppPackageJson } from '../src/utils/packageJson';
+import { packageJsonApp } from '../src/utils/packageJson';
 import {
     Dependency,
     isIncrementalVersion,
@@ -69,7 +69,7 @@ const overriddenVersion = (module: string) => {
 };
 
 const versionFromPackageJson = (module: string) =>
-    parsedAppPackageJson().nrfConnectForDesktop.nrfutil?.[module][0];
+    packageJsonApp().nrfConnectForDesktop.nrfutil?.[module][0];
 
 const failToDetermineVersion = (module: string) => {
     throw new Error(`No version specified for nrfutil-${module}`);

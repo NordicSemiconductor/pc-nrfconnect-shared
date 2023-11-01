@@ -7,7 +7,7 @@
 import { TelemetryClient } from 'applicationinsights';
 
 import { isDevelopment } from './environment';
-import packageJson from './packageJson';
+import { packageJson } from './packageJson';
 import { getIsSendingUsageData } from './persistentStore';
 import { type Metadata } from './usageData';
 

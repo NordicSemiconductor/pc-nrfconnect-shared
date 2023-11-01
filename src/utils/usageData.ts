@@ -6,12 +6,8 @@
 
 import winston from 'winston';
 
-import {
-    AppPackageJson,
-    LauncherPackageJson,
-} from '../../ipc/schema/packageJson';
 import { type Device } from '../Device/deviceSlice';
-import packageJson from './packageJson';
+import { packageJson } from './packageJson';
 import {
     deleteIsSendingUsageData,
     getIsSendingUsageData,
@@ -42,8 +38,8 @@ export const simplifyDeviceForLogging = (device: Device) => ({
     },
 });
 
-const getFriendlyAppName = (json: AppPackageJson | LauncherPackageJson) =>
-    (json.name ?? '').replace('pc-nrfconnect-', '');
+const getFriendlyAppName = () =>
+    packageJson().name.replace('pc-nrfconnect-', '');
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const flattenObject = (obj?: any, parentKey?: string) => {
@@ -105,7 +101,7 @@ const sendUsageData = <T extends string>(
 ) => {
     if (
         getUsageData().sendUsageData(
-            `${getFriendlyAppName(packageJson())}: ${action}`,
+            `${getFriendlyAppName()}: ${action}`,
             flattenObject(metadata),
             forceSend
         )
@@ -115,9 +111,7 @@ const sendUsageData = <T extends string>(
 };
 
 const sendPageView = (pageName: string) => {
-    getUsageData().sendPageView(
-        `${getFriendlyAppName(packageJson())} - ${pageName}`
-    );
+    getUsageData().sendPageView(`${getFriendlyAppName()} - ${pageName}`);
 };
 
 const sendMetric = (name: string, average: number) => {
