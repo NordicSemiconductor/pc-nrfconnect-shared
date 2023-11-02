@@ -16,7 +16,7 @@ import {
     DeviceTraits,
     deviceTraitsToArgs,
     getDeviceSandbox,
-    NrfutilDeviceWithSerialnumber,
+    NrfutilDevice,
     ResetKind,
 } from './common';
 import { DeviceBuffer } from './firmwareRead';
@@ -73,6 +73,16 @@ export class Batch {
         };
 
         this.operationBatchGeneration.push(getPromise());
+    }
+
+    public getDeviceInfo(core: DeviceCore, callbacks?: Callbacks<FWInfo>) {
+        this.enqueueBatchOperationObject(
+            'device-info',
+            core,
+            callbacks as CallbacksUnknown
+        );
+
+        return this;
     }
 
     public erase(core: DeviceCore, callbacks?: Callbacks) {
@@ -225,9 +235,15 @@ export class Batch {
     }
 
     public async run(
-        device: NrfutilDeviceWithSerialnumber,
+        device: NrfutilDevice,
         controller?: AbortController | undefined
     ): Promise<unknown[]> {
+        if (!device.serialNumber) {
+            throw new Error(
+                `Device does not have a serial number, no device operation is possible`
+            );
+        }
+
         let currentOperationIndex = -1;
         let lastCompletedOperationIndex = -1;
         const results: TaskEnd<unknown>[] = [];

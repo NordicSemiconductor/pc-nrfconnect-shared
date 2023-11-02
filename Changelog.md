@@ -7,6 +7,35 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 122 - UNRELEASED
+
+### Changed
+
+-   `nrfutil device list` version 2.0.0 no longer probes the device for specific
+    information to speed up enumeration and hotplug events.
+    -   new optional property in device object named `devkit`
+    -   `.jlink` property can be obtained by calling
+        `NrfutilDeviceLib.deviceInfo().jlink` on a Jlink device
+    -   `.hwInfo` property can be obtained by calling
+        `NrfutilDeviceLib.deviceInfo().hwInfo` on a device
+    -   `.dfuTriggerVersion` property can be obtained by calling
+        `NrfutilDeviceLib.deviceInfo().dfuTriggerVersion` on a Nordic DFU device
+    -   `.dfuTriggerInfo` property can be obtained by calling
+        `NrfutilDeviceLib.deviceInfo().dfuTriggerInfo` on a Nordic DFU device
+
+### Added
+
+-   `NrfutilDeviceLib.deviceInfo` to read protocol related device info such as
+    `JLink` and `NordicDFU`. Note of no info can be read this will throw (e.g.
+    mcuboot devices).
+-   `deviceInfo` is populate automatically when a device is selected and can be
+    retrieve using redux using `selectedDeviceInfo`.
+
+### Steps to upgrade when using this package
+
+-   Change `nrfConnectForDesktop.nrfutil.device` to 2.0.0
+-   Update all device properties in to match the changed above.
+
 ## 121 - 2023-10-24
 
 ### Added

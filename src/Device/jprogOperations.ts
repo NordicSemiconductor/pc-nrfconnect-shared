@@ -5,6 +5,7 @@
  */
 
 import NrfutilDeviceLib from '../../nrfutil/device/device';
+import { DeviceInfo } from '../../nrfutil/device/deviceInfo';
 import { FWInfo } from '../../nrfutil/device/getFwInfo';
 import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
@@ -18,14 +19,15 @@ const getDeviceReadProtection = async (
     readbackProtection: 'unknown' | 'protected' | 'unprotected';
 }> => {
     try {
+        logger.info('Checking readback protection on device');
         const info = await NrfutilDeviceLib.getFwInfo(device);
         return {
             fwInfo: info,
             readbackProtection: 'unprotected',
         };
-    } catch (error) {
-        // @ts-expect-error Wrongly typed in device lib at the moment
-        if (error.error_code === 24) {
+    } catch (e) {
+        const error = e as Error;
+        if (error.message.includes('NotAvailableBecauseProtection')) {
             logger.warn(
                 'Readback protection on device enabled. Unable to verify that the firmware version is correct.'
             );
@@ -49,29 +51,50 @@ const programDeviceWithFw =
     ): AppThunk<RootState, Promise<Device>> =>
     async (dispatch, getState) => {
         try {
-            if (getState().device.readbackProtection === 'protected') {
-                logger.info('Recovering device');
-                onProgress(0, 'Recovering device');
-                await NrfutilDeviceLib.recover(device, 'Application');
+            const batch = NrfutilDeviceLib.batch();
+            if (getState().device.readbackProtection !== 'unprotected') {
+                batch.recover('Application', {
+                    onTaskBegin: () =>
+                        logger.info(`Device protected, recovering device`),
+                    onTaskEnd: () => logger.info(`Finished recovering device.`),
+                    onException: () =>
+                        logger.error(`Failed to recover device.`),
+                    onProgress: progress => {
+                        onProgress(
+                            progress.totalProgressPercentage,
+                            'Recovering device'
+                        );
+                    },
+                });
             }
 
-            logger.debug(
-                `Programming ${device.serialNumber} with ${selectedFw.fw}`
-            );
-            await NrfutilDeviceLib.program(
-                device,
-                selectedFw.fw,
-                progress => {
+            batch.program(selectedFw.fw, 'Application', undefined, undefined, {
+                onTaskBegin: () => logger.info(`Programming device`),
+                onTaskEnd: () => logger.info(`Finished programming device.`),
+                onException: () => logger.error(`Failed to program device.`),
+                onProgress: progress => {
                     onProgress(
                         progress.totalProgressPercentage,
                         progress.message ?? 'programming'
                     );
                 },
-                'Application'
-            );
-            logger.debug(`Resetting ${device.serialNumber}`);
-            onProgress(100, 'Resetting device');
+            });
+
+            batch.reset('Application', undefined, {
+                onTaskBegin: () => logger.info(`Resting device`),
+                onTaskEnd: () => logger.info(`Finished resting device.`),
+                onException: () => logger.error(`Failed to reset device.`),
+                onProgress: progress => {
+                    onProgress(
+                        progress.totalProgressPercentage,
+                        'Resetting device'
+                    );
+                },
+            });
+
+            await batch.run(device);
             await NrfutilDeviceLib.reset(device);
+            onProgress(0, 'Updating readback protection');
             const { readbackProtection } = await getDeviceReadProtection(
                 device
             );
@@ -88,12 +111,18 @@ const programDeviceWithFw =
         return device;
     };
 
-const firmwareOptions = (device: Device, firmware: JprogEntry[]) =>
+const firmwareOptions = (
+    device: Device,
+    firmware: JprogEntry[],
+    deviceInfo?: DeviceInfo
+) =>
     firmware.filter(fw => {
-        const family = (device.jlink?.deviceFamily || '').toLowerCase();
-        const deviceType = (device.jlink?.deviceVersion || '').toLowerCase();
+        const family = (device.devkit?.deviceFamily || '').toLowerCase();
+        const deviceType = (
+            deviceInfo?.jlink?.deviceVersion || ''
+        ).toLowerCase();
         const shortDeviceType = deviceType.split('_').shift();
-        const boardVersion = (device.jlink?.boardVersion || '').toLowerCase();
+        const boardVersion = (device.devkit?.boardVersion || '').toLowerCase();
 
         const key = fw.key.toLowerCase();
         return (
@@ -108,11 +137,11 @@ export const jprogDeviceSetup = (
     firmware: JprogEntry[],
     needSerialport = false
 ): DeviceSetup => ({
-    supportsProgrammingMode: (device: Device) =>
+    supportsProgrammingMode: device =>
         (needSerialport === !!device.traits.serialPorts || !needSerialport) &&
         !!device.traits.jlink,
-    getFirmwareOptions: device =>
-        firmwareOptions(device, firmware).map(firmwareOption => ({
+    getFirmwareOptions: (device, deviceInfo) =>
+        firmwareOptions(device, firmware, deviceInfo).map(firmwareOption => ({
             key: firmwareOption.key,
             description: firmwareOption.description,
             programDevice: onProgress => dispatch =>
@@ -120,8 +149,8 @@ export const jprogDeviceSetup = (
                     programDeviceWithFw(device, firmwareOption, onProgress)
                 ),
         })),
-    isExpectedFirmware: (device: Device) => dispatch => {
-        const fwVersions = firmwareOptions(device, firmware);
+    isExpectedFirmware: (device, deviceInfo) => dispatch => {
+        const fwVersions = firmwareOptions(device, firmware, deviceInfo);
         if (fwVersions.length === 0) {
             return Promise.resolve({
                 device,

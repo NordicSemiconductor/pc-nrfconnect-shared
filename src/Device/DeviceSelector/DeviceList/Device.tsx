@@ -14,8 +14,6 @@ import { FavoriteIndicator } from '../Favorite';
 import EditDeviceButtons from './EditDeviceButtons';
 import MoreDeviceInfo from './MoreDeviceInfo';
 
-import './device.scss';
-
 const ShowMoreInfo = ({
     isVisible,
     toggleVisible,
@@ -24,7 +22,10 @@ const ShowMoreInfo = ({
     toggleVisible: () => void;
 }) => (
     <PseudoButton
-        className={`show-more mdi mdi-chevron-${isVisible ? 'up' : 'down'}`}
+        className={classNames(
+            isVisible ? 'tw-visible' : 'tw-invisible  group-hover:tw-visible',
+            `mdi mdi-chevron-${isVisible ? 'up' : 'down'}`
+        )}
         testId="show-more-device-info"
         onClick={toggleVisible}
     />
@@ -52,8 +53,9 @@ export default ({ device, doSelectDevice, allowMoreInfoVisible }: Props) => {
     return (
         <PseudoButton
             className={classNames(
-                'device',
-                moreVisible && 'more-infos-visible'
+                'tw-flex tw-flex-col tw-gap-2 tw-py-3 tw-font-light group-hover:tw-bg-white',
+                moreVisible && 'tw-bg-white',
+                moreVisible && device.serialNumber && 'tw-pb-0'
             )}
             onClick={() => doSelectDevice(device, false)}
         >

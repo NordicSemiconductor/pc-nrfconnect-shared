@@ -8,12 +8,12 @@ import { Progress } from '../sandboxTypes';
 import {
     DeviceCore,
     deviceSingleTaskEndOperationVoid,
-    NrfutilDeviceWithSerialnumber,
+    NrfutilDevice,
     ResetKind,
 } from './common';
 
 export default async (
-    device: NrfutilDeviceWithSerialnumber,
+    device: NrfutilDevice,
     core?: DeviceCore,
     resetKind?: ResetKind,
     onProgress?: (progress: Progress) => void,

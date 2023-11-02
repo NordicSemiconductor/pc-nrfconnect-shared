@@ -4,11 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import {
-    DeviceTraits,
-    NrfutilDevice,
-    NrfutilDeviceWithSerialnumber,
-} from '../../nrfutil/device/common';
+import { DeviceTraits, NrfutilDevice } from '../../nrfutil/device/common';
 import NrfutilDeviceLib from '../../nrfutil/device/device';
 import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
@@ -23,7 +19,14 @@ import {
     WaitForDevice,
 } from './deviceAutoSelectSlice';
 import { closeDeviceSetupDialog } from './deviceSetupSlice';
-import { addDevice, Device, removeDevice } from './deviceSlice';
+import {
+    addDevice,
+    Device,
+    getDevice,
+    removeDevice,
+    selectDevice,
+    setSelectedDeviceInfo,
+} from './deviceSlice';
 import { isDeviceInDFUBootloader } from './sdfuOperations';
 
 let stopNrfutilDevice: (callback?: () => void) => void;
@@ -51,6 +54,11 @@ const shouldAutoReselect = (
 
     // device is still connected
     if (disconnectionTime === undefined) return false;
+
+    // device does not have sn
+    if (!addedDevice.serialNumber) {
+        return false;
+    }
 
     // The device that was selected when disconnection occurred is not yet connected
     if (addedDevice.serialNumber !== autoReselectDevice.serialNumber) {
@@ -100,28 +108,6 @@ const initAutoReconnectTimeout =
         );
     };
 
-/**
- * Wrap the device form nrfutil-device to make the Device type consistent
- *
- * @param {NrfutilDevice} device The input device from nrfutil-device
- * @returns {NrfutilDevice} The updated device
- */
-export const wrapDeviceFromNrfdl = (device: NrfutilDevice): Device => ({
-    ...device,
-    boardVersion: device.jlink?.boardVersion ?? undefined,
-    serialport: device.serialPorts?.[0] ?? undefined,
-    serialNumber: device.serialNumber ?? `fallback-serialnumber-${device.id}`,
-});
-
-/**
- * Wrap the device form nrfutil-device to make the Device type consistent
- *
- * @param {NrfutilDevice[]} devices The input devices from nrfutil-device
- * @returns {NrfutilDevice[]} The updated devices
- */
-export const wrapDevicesFromNrfdl = (devices: NrfutilDevice[]): Device[] =>
-    devices.map(wrapDeviceFromNrfdl);
-
 export const hasValidDeviceTraits = (
     deviceTraits: DeviceTraits,
     requiredTraits: DeviceTraits
@@ -144,7 +130,7 @@ const removeDeviceFromList =
     (dispatch, getState) => {
         if (
             removedDevice.serialNumber !==
-            getState().device.selectedSerialNumber
+            getState().device.selectedDevice?.serialNumber
         ) {
             dispatch(removeDevice(removedDevice));
             onDeviceDisconnected(removedDevice);
@@ -176,22 +162,21 @@ export const startWatchingDevices =
         doSelectDevice: (device: Device, autoReselected: boolean) => void
     ): AppThunk<RootState, void> =>
     (dispatch, getState) => {
-        const onDeviceArrived = (device: NrfutilDeviceWithSerialnumber) => {
+        const onDeviceArrived = async (device: NrfutilDevice) => {
             if (hasValidDeviceTraits(device.traits, deviceListing)) {
-                device = wrapDeviceFromNrfdl(device);
                 if (
                     device.serialNumber &&
-                    !getState().device.devices.has(device.serialNumber)
+                    !getState().device.devices.find(
+                        d => d.serialNumber === device.serialNumber
+                    )
                 ) {
                     onDeviceConnected(device);
                 }
 
-                const sn = getState().device.selectedSerialNumber;
                 const disconnectionTime =
                     getState().deviceAutoSelect.disconnectionTime;
                 const autoSelectDevice = getState().deviceAutoSelect.device;
-                const selectedDevice =
-                    sn !== null ? getState().device.devices.get(sn) : undefined;
+                const selectedDevice = getState().device.selectedDevice;
 
                 const result = shouldAutoReselect(
                     device,
@@ -202,23 +187,42 @@ export const startWatchingDevices =
                 );
 
                 dispatch(addDevice(device));
-                const deviceWithPersistedData = getState().device.devices.get(
-                    device.serialNumber
+                const deviceWithPersistedData = getState().device.devices.find(
+                    d => d.serialNumber === device.serialNumber
                 );
 
                 if (!deviceWithPersistedData) return;
 
-                if (result) {
+                // We might get multiple events with the same info so no to trigger auto reconnect multiple times we
+                // only do it once per device id
+                if (
+                    result &&
+                    getState().deviceAutoSelect.lastArrivedDeviceId !==
+                        deviceWithPersistedData.id
+                ) {
+                    dispatch(
+                        setLastArrivedDeviceId(deviceWithPersistedData.id)
+                    );
+
+                    const deviceInfo = await NrfutilDeviceLib.deviceInfo(
+                        device
+                    );
+
                     logger.info(
                         `Auto Reconnecting Device SN: ${deviceWithPersistedData.serialNumber}`
                     );
                     doSelectDevice(deviceWithPersistedData, true);
+                    dispatch(setSelectedDeviceInfo(deviceInfo));
                 } else if (
                     deviceWithPersistedData.serialNumber ===
                     getState().deviceAutoSelect.device?.serialNumber
                 ) {
                     const waitForDevice =
                         getState().deviceAutoSelect.waitForDevice;
+
+                    const deviceInfo = await NrfutilDeviceLib.deviceInfo(
+                        device
+                    );
 
                     // Device lib might fail to advertise that a device has left before it rejoins (Mainly OSx)
                     // but we still need to trigger the onSuccess if a device 'reappeared' with a different 'id'
@@ -245,8 +249,7 @@ export const startWatchingDevices =
                                     deviceWithPersistedData
                                 )) ||
                             (waitForDevice.when === 'applicationMode' &&
-                                deviceWithPersistedData.dfuTriggerInfo !==
-                                    null) ||
+                                deviceInfo?.dfuTriggerVersion) ||
                             (selectedDevice &&
                                 waitForDevice.when === 'sameTraits' &&
                                 hasSameDeviceTraits(
@@ -269,6 +272,9 @@ export const startWatchingDevices =
                                 clearWaitForDeviceTimeout(waitForDevice.once)
                             );
 
+                            dispatch(selectDevice(deviceWithPersistedData));
+                            dispatch(setSelectedDeviceInfo(deviceInfo));
+
                             if (waitForDevice.onSuccess)
                                 waitForDevice.onSuccess(
                                     deviceWithPersistedData
@@ -288,8 +294,9 @@ export const startWatchingDevices =
                     const waitForDevice =
                         getState().deviceAutoSelect.waitForDevice;
                     if (
+                        device.serialNumber &&
                         device.serialNumber ===
-                        getState().deviceAutoSelect.device?.serialNumber
+                            getState().deviceAutoSelect.device?.serialNumber
                     ) {
                         if (waitForDevice) {
                             dispatch(setArrivedButWrongWhen(undefined));
@@ -351,8 +358,10 @@ export const startWatchingDevices =
                 const autoSelectSN = getAutoSelectDeviceCLISerial();
 
                 if (autoSelectSN !== undefined) {
-                    const autoSelectDevice =
-                        getState().device.devices.get(autoSelectSN);
+                    const autoSelectDevice = getDevice(
+                        getState(),
+                        autoSelectSN
+                    );
 
                     if (autoSelectDevice)
                         doSelectDevice(autoSelectDevice, true);

@@ -42,46 +42,23 @@ export interface DeviceLeftEvent {
     id: number;
 }
 
-export interface HwInfo {
-    romSize: number;
-    ramSize: number;
-    romPageSize: number;
-    deviceFamily: string;
-    deviceVersion: string;
-}
-
-export interface DfuTriggerInfo {
-    wAddress: number;
-    wVersionMajor: number;
-    wVersionMinor: number;
-    wFirmwareId: number;
-    wFlashSize: number;
-    wFlashPageSize: number;
-}
-
-export interface DfuTriggerVersion {
-    semVer: string;
+export interface NordicDevKit {
+    boardVersion?: string;
+    deviceFamily?: string;
 }
 
 export interface NrfutilDevice {
     id: number;
+    devkit?: NordicDevKit;
     serialNumber?: string; // undefined in case udev is not installed
     traits: DeviceTraits;
     usb?: USB;
-    jlink?: JLink;
     // non-Nordic devices may not have serialPorts property at all
     serialPorts?: Array<SerialPort>;
-    hwInfo?: HwInfo;
-    dfuTriggerInfo?: DfuTriggerInfo;
-    dfuTriggerVersion?: DfuTriggerVersion;
     broken?: null | {
         description: string;
         url: string;
     };
-}
-
-export interface NrfutilDeviceWithSerialnumber extends NrfutilDevice {
-    serialNumber: string;
 }
 
 export type DeviceFamily =
@@ -168,15 +145,6 @@ export interface USBDevice {
     descriptor: USBDeviceDescriptor;
     configList: USBConfiguration; // todo: check this prop
 }
-
-export interface JLink {
-    serialNumber: string;
-    boardVersion: string | null; // can be null for external jLink
-    jlinkObFirmwareVersion: string | null;
-    deviceFamily: string | null;
-    deviceVersion: string | null; // will be null if device is protected
-}
-
 export interface SerialPort {
     serialNumber: string | null;
     comName: string | null;
@@ -246,12 +214,17 @@ export const getDeviceSandbox = async () => {
 };
 
 export const deviceSingleTaskEndOperation = async <T = void>(
-    device: NrfutilDeviceWithSerialnumber,
+    device: NrfutilDevice,
     command: string,
     onProgress?: (progress: Progress) => void,
     controller?: AbortController,
     args: string[] = []
 ) => {
+    if (!device.serialNumber) {
+        throw new Error(
+            `Device does not have a serial number, no device operation is possible`
+        );
+    }
     const box = await getDeviceSandbox();
     return box.singleTaskEndOperationWithData<T>(
         command,
@@ -262,12 +235,18 @@ export const deviceSingleTaskEndOperation = async <T = void>(
 };
 
 export const deviceSingleTaskEndOperationVoid = async (
-    device: NrfutilDeviceWithSerialnumber,
+    device: NrfutilDevice,
     command: string,
     onProgress?: (progress: Progress) => void,
     controller?: AbortController,
     args: string[] = []
 ) => {
+    if (!device.serialNumber) {
+        throw new Error(
+            `Device does not have a serial number, no device operation is possible`
+        );
+    }
+
     const box = await getDeviceSandbox();
     await box.singleTaskEndOperationOptionalData(
         command,

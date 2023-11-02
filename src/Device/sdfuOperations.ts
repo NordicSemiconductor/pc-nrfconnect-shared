@@ -46,8 +46,9 @@ export const isDeviceInDFUBootloader = (device: Device) => {
             d.idProduct === NORDIC_DFU_PRODUCT_ID
         );
     }
-    if (device.serialport) {
-        const { vendorId, productId } = device.serialport;
+
+    if (device.serialPorts && device.serialPorts[0]) {
+        const { vendorId, productId } = device.serialPorts[0];
         return vendorId === '1915' && productId?.toUpperCase() === '521F';
     }
     return false;
@@ -410,9 +411,7 @@ const programInDFUBootloader =
         onFail: (reason?: unknown) => void
     ): AppThunk<RootState, Promise<void>> =>
     async dispatch => {
-        logger.debug(
-            `${device.serialNumber} on ${device.serialport?.comName} is now in DFU-Bootloader...`
-        );
+        logger.debug(`${device.serialNumber} on is now in DFU-Bootloader...`);
         const { application, softdevice } = dfu;
         const params: Partial<InitPacket> = dfu.params || {};
 
@@ -545,9 +544,9 @@ export const sdfuDeviceSetup = (
     dfuFirmware: DfuEntry[],
     needSerialport = false
 ): DeviceSetup => ({
-    supportsProgrammingMode: (device: Device) =>
-        ((!!device.dfuTriggerVersion &&
-            device.dfuTriggerVersion.semVer.length > 0) ||
+    supportsProgrammingMode: (device, deviceInfo) =>
+        ((!!deviceInfo?.dfuTriggerVersion &&
+            deviceInfo.dfuTriggerVersion.semVer.length > 0) ||
             isDeviceInDFUBootloader(device)) &&
         (needSerialport === device.traits.serialPorts || !needSerialport),
     getFirmwareOptions: device =>
@@ -559,31 +558,26 @@ export const sdfuDeviceSetup = (
                     programDeviceWithFw(device, firmwareOption, onProgress)
                 ),
         })),
-    isExpectedFirmware: (device: Device) => () =>
-        new Promise<{
-            device: Device;
-            validFirmware: boolean;
-        }>(resolve => {
-            if (device.dfuTriggerVersion) {
-                logger.debug(
-                    'Device has DFU trigger interface, the device is in Application mode'
-                );
+    isExpectedFirmware: (device, deviceInfo) => () => {
+        if (deviceInfo?.dfuTriggerVersion) {
+            logger.debug(
+                'Device has DFU trigger interface, the device is in Application mode'
+            );
 
-                const { semVer } = device.dfuTriggerVersion;
+            const { semVer } = deviceInfo.dfuTriggerVersion;
 
-                resolve({
-                    device,
-                    validFirmware:
-                        dfuFirmware.filter(fw => fw.semver === semVer).length >
-                        0,
-                });
-            } else {
-                resolve({
-                    device,
-                    validFirmware: false,
-                });
-            }
-        }),
+            return Promise.resolve({
+                device,
+                validFirmware:
+                    dfuFirmware.filter(fw => fw.semver === semVer).length > 0,
+            });
+        }
+
+        return Promise.resolve({
+            device,
+            validFirmware: false,
+        });
+    },
     tryToSwitchToApplicationMode: device => dispatch =>
         new Promise<Device>((resolve, reject) => {
             dispatch(switchToApplicationMode(device, resolve, reject));

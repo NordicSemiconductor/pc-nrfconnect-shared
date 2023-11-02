@@ -8,7 +8,7 @@ import { Progress } from '../sandboxTypes';
 import {
     DeviceCore,
     deviceSingleTaskEndOperation,
-    NrfutilDeviceWithSerialnumber,
+    NrfutilDevice,
 } from './common';
 
 export type DeviceCoreInfo = {
@@ -30,7 +30,7 @@ export type DeviceCoreInfo = {
 };
 
 export default (
-    device: NrfutilDeviceWithSerialnumber,
+    device: NrfutilDevice,
     core?: DeviceCore,
     onProgress?: (progress: Progress) => void,
     controller?: AbortController

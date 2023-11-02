@@ -7,6 +7,7 @@
 import { LogLevel, LogMessage } from '../sandboxTypes';
 import { Batch } from './batch';
 import { getDeviceSandbox } from './common';
+import deviceInfo from './deviceInfo';
 import erase from './erase';
 import firmwareRead from './firmwareRead';
 import getCoreInfo from './getCoreInfo';
@@ -43,6 +44,7 @@ const getModuleVersion = async () => {
 
 export default {
     program,
+    deviceInfo,
     erase,
     recover,
     reset,

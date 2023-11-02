@@ -199,7 +199,7 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
 
 const deviceByPca = (device: Device) =>
     devicesByPca[
-        String(device.jlink?.boardVersion).toUpperCase() as KnownDevicePCA
+        String(device.devkit?.boardVersion).toUpperCase() as KnownDevicePCA
     ];
 
 const NORDIC_VENDOR_ID = '1915';
@@ -252,7 +252,7 @@ export const displayedDeviceName = (
         return device.nickname;
     }
 
-    return deviceInfo(device).name || device.jlink?.boardVersion || 'Unknown';
+    return deviceInfo(device).name || device.devkit?.boardVersion || 'Unknown';
 };
 
 export const productPageUrl = (device: Device) =>
