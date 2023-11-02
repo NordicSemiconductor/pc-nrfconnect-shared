@@ -50,7 +50,7 @@ export interface NordicDevKit {
 export interface NrfutilDevice {
     id: number;
     devkit?: NordicDevKit;
-    serialNumber?: string; // undefined in case udev is not installed
+    serialNumber?: string | null; // undefined in case udev is not installed
     traits: DeviceTraits;
     usb?: USB;
     // non-Nordic devices may not have serialPorts property at all
