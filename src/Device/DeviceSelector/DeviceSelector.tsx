@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NrfutilDeviceLib } from '../../../nrfutil';
 import { DeviceTraits } from '../../../nrfutil/device/common';
 import logger from '../../logging';
-import { AppThunk } from '../../store';
 import usageData, { simplifyDeviceForLogging } from '../../utils/usageData';
 import useHotKey from '../../utils/useHotKey';
 import {
@@ -63,23 +62,22 @@ export default ({
     const waitingToAutoReconnect = useSelector(getWaitingToAutoReselect);
     const showSelectedDevice = deviceIsSelected || waitingToAutoReconnect;
 
-    const doDeselectDevice = useCallback(() => {
-        dispatch(
-            (): AppThunk => (_, getState) => {
-                const device = getState().device.selectedDevice;
-                if (device) {
-                    usageData.sendUsageData(
-                        'device deselected ',
-                        simplifyDeviceForLogging(device)
-                    );
-                }
+    const doDeselectDevice = useCallback(
+        (device?: Device) => {
+            if (device) {
+                usageData.sendUsageData(
+                    'device deselected ',
+                    simplifyDeviceForLogging(device)
+                );
             }
-        );
-        dispatch(clearWaitForDevice());
-        dispatch(setAutoSelectDevice(undefined));
-        onDeviceDeselected();
-        dispatch(deselectDevice());
-    }, [dispatch, onDeviceDeselected]);
+
+            dispatch(clearWaitForDevice());
+            dispatch(setAutoSelectDevice(undefined));
+            onDeviceDeselected();
+            dispatch(deselectDevice());
+        },
+        [dispatch, onDeviceDeselected]
+    );
 
     const abortController = useRef<AbortController>();
 
@@ -176,7 +174,7 @@ export default ({
         <div className="core19-device-selector">
             {showSelectedDevice ? (
                 <SelectedDevice
-                    doDeselectDevice={doDeselectDevice}
+                    doDeselectDevice={() => doDeselectDevice(currentDevice)}
                     toggleDeviceListVisible={toggleDeviceListVisible}
                 />
             ) : (
@@ -194,7 +192,7 @@ export default ({
                     }
 
                     if (deviceIsSelected) {
-                        doDeselectDevice();
+                        doDeselectDevice(currentDevice);
                     }
 
                     doSelectDevice(device, autoReselected);

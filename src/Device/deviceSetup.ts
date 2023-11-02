@@ -242,7 +242,7 @@ export const setupDevice =
         device: Device,
         deviceSetupConfig: DeviceSetupConfig,
         onDeviceIsReady: (device: Device) => void,
-        doDeselectDevice: () => void,
+        doDeselectDevice: (device?: Device) => void,
         deviceInfo: DeviceInfo | undefined
     ): AppThunk<RootState> =>
     (dispatch, getState) =>
@@ -270,7 +270,7 @@ export const setupDevice =
                         `Error while setting up device ${device.serialNumber}`
                     );
                     logger.error(describeError(error));
-                    doDeselectDevice();
+                    doDeselectDevice(getState().device.selectedDevice);
                 },
                 deviceInfo
             )
