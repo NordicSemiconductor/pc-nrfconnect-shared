@@ -11,6 +11,7 @@ import {
     isSemanticVersion,
     isStringVersion,
     SubDependency,
+    versionToString,
 } from './sandboxTypes';
 
 export const describeVersion = (version?: SubDependency | string) => {
@@ -49,6 +50,25 @@ const findInDependencies = (
             ])
         );
     }
+};
+
+export const getExpectedVersion = (dependency: Dependency) => {
+    const currentVersion = versionToString(
+        dependency.versionFormat,
+        dependency.version
+    );
+
+    const expectedVersion = dependency.expectedVersion
+        ? versionToString(
+              dependency.expectedVersion.versionFormat,
+              dependency.expectedVersion.version
+          )
+        : currentVersion;
+
+    return {
+        isExpectedVersion: currentVersion === expectedVersion,
+        expectedVersion,
+    };
 };
 
 export const resolveModuleVersion = (

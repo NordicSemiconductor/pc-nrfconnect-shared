@@ -155,6 +155,10 @@ export type Dependency = {
     dependencies?: SubDependency[];
     versionFormat: VersionFormat;
     version: VersionType;
+    expectedVersion?: {
+        versionFormat: VersionFormat;
+        version: VersionType;
+    };
 };
 
 export type VersionType = SemanticVersion | string | number;
@@ -165,6 +169,7 @@ export interface SubDependency {
     dependencies?: SubDependency[];
     versionFormat: VersionFormat;
     version: VersionType;
+    expectedVersion?: { versionFormat: VersionFormat; version: VersionType };
 }
 
 export type ModuleVersion = {
@@ -192,3 +197,12 @@ export const isStringVersion = (
     version?: SubDependency
 ): version is SubDependency & { version: string } =>
     version?.versionFormat === 'string';
+
+export const versionToString = (type: VersionFormat, version: VersionType) => {
+    if (type === 'incremental' || type === 'string') {
+        return `${version}`;
+    }
+
+    const v = version as SemanticVersion;
+    return `${v.major}.${v.minor}.${v.patch}`;
+};

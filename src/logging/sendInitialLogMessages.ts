@@ -7,7 +7,7 @@
 import { inMain as appDetails } from '../../ipc/appDetails';
 import NrfutilDeviceLib from '../../nrfutil/device/device';
 import {
-    describeVersion,
+    getExpectedVersion,
     resolveModuleVersion,
 } from '../../nrfutil/moduleVersion';
 import { getAppDataDir } from '../utils/appDirs';
@@ -34,7 +34,6 @@ export default async () => {
         installed,
         homeDir,
         tmpDir,
-        bundledJlink,
         source,
     } = details;
 
@@ -47,16 +46,21 @@ export default async () => {
     logger.debug(`HomeDir: ${homeDir}`);
     logger.debug(`TmpDir: ${tmpDir}`);
 
-    if (bundledJlink) {
-        const dependencies = (await NrfutilDeviceLib.getModuleVersion())
-            .dependencies;
-        const jlinkVersion = resolveModuleVersion('JlinkARM', dependencies);
+    const dependencies = (await NrfutilDeviceLib.getModuleVersion())
+        .dependencies;
+    const jlinkVersion = resolveModuleVersion('JlinkARM', dependencies);
 
-        if (!describeVersion(jlinkVersion).includes(bundledJlink)) {
-            logger.info(
-                `Installed JLink version does not match the provided version (${bundledJlink})`
+    if (jlinkVersion) {
+        const result = getExpectedVersion(jlinkVersion);
+        if (!result.isExpectedVersion) {
+            logger.warn(
+                `Installed JLink version does not match the expected version (${result.expectedVersion})`
             );
         }
+    } else {
+        logger.warn(
+            `JLink is not installed. Please install JLink from: https://www.segger.com/downloads/jlink`
+        );
     }
 
     if (!udevInstalled()) {
