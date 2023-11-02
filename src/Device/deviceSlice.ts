@@ -29,7 +29,7 @@ export interface Device extends NrfutilDevice {
 const findDeviceItem = (
     devices: Device[],
     id: number,
-    serialNumber?: string
+    serialNumber?: string | null
 ) => {
     const index = devices.findIndex(
         d => d.id === id || d.serialNumber === serialNumber
@@ -42,7 +42,7 @@ const updateDevice = (
     state: DeviceState,
     updateToMergeIn: Partial<Device>,
     id: number,
-    serialNumber?: string
+    serialNumber?: string | null
 ) => {
     const device = findDeviceItem(state.devices, id, serialNumber).device;
     if (device) {
