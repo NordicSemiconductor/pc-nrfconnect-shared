@@ -44,7 +44,7 @@ const MaybeDeviceName = ({ device }: { device: Device }) => {
 const Serialports = ({ ports }: { ports: SerialPort[] }) =>
     ports.length > 0 ? (
         <Row>
-            <ul className="tw-text-center tw-underline">
+            <ul className="tw-underline">
                 {ports.map(port => (
                     <li key={port.path}>{port.comName}</li>
                 ))}
