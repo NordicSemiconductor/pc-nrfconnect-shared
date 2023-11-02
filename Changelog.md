@@ -26,15 +26,15 @@ every new version is a new major version.
 ### Added
 
 -   `NrfutilDeviceLib.deviceInfo` to read protocol related device info such as
-    `JLink` and `NordicDFU`. Note of no info can be read this will throw (e.g.
+    `JLink` and `NordicDFU`. Note if no info can be read this will throw (e.g.
     mcuboot devices).
 -   `deviceInfo` is populate automatically when a device is selected and can be
-    retrieve using redux using `selectedDeviceInfo`.
+    retrieve using the redux selector `selectedDeviceInfo`.
 
 ### Steps to upgrade when using this package
 
--   Change `nrfConnectForDesktop.nrfutil.device` to 2.0.0
--   Update all device properties in to match the changed above.
+-   Change `nrfConnectForDesktop.nrfutil.device` to 2.0.0.
+-   Update all device properties to match the changes above.
 
 ### Fixed
 
