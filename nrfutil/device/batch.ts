@@ -55,13 +55,7 @@ export class Batch {
                 await box.singleInfoOperationOptionalData<object>(
                     command,
                     undefined,
-                    [
-                        '--serial-number', // this is a workaround this param should now be needed with --generate
-                        '123',
-                        '--generate',
-                        '--core',
-                        core,
-                    ].concat(args)
+                    ['--generate', '--core', core].concat(args)
                 );
 
             return {
