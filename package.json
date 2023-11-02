@@ -108,7 +108,6 @@
         "redux": "4.2.1",
         "redux-devtools-extension": "2.13.9",
         "redux-thunk": "2.4.2",
-        "remove": "^0.1.5",
         "rimraf": "3.0.2",
         "roboto-fontface": "0.10.0",
         "semver": "7.3.8",
