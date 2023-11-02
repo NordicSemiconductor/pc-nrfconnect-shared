@@ -18,11 +18,12 @@ interface Props {
     startEditingDeviceName: () => void;
 }
 
-const EditDeviceButtons: FC<Props> = ({ device, startEditingDeviceName }) => (
-    <ButtonGroup className="edit-device-buttons">
-        <MakeDeviceFavorite device={device} />
-        <RenameDevice startEditingDeviceName={startEditingDeviceName} />
-    </ButtonGroup>
-);
+const EditDeviceButtons: FC<Props> = ({ device, startEditingDeviceName }) =>
+    device.serialNumber ? (
+        <ButtonGroup className="edit-device-buttons">
+            <MakeDeviceFavorite device={device} />
+            <RenameDevice startEditingDeviceName={startEditingDeviceName} />
+        </ButtonGroup>
+    ) : null;
 
 export default EditDeviceButtons;

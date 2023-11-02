@@ -46,8 +46,9 @@ export const isDeviceInDFUBootloader = (device: Device) => {
             d.idProduct === NORDIC_DFU_PRODUCT_ID
         );
     }
-    if (device.serialport) {
-        const { vendorId, productId } = device.serialport;
+
+    if (device.serialPorts && device.serialPorts[0]) {
+        const { vendorId, productId } = device.serialPorts[0];
         return vendorId === '1915' && productId?.toUpperCase() === '521F';
     }
     return false;
@@ -410,9 +411,7 @@ const programInDFUBootloader =
         onFail: (reason?: unknown) => void
     ): AppThunk<RootState, Promise<void>> =>
     async dispatch => {
-        logger.debug(
-            `${device.serialNumber} on ${device.serialport?.comName} is now in DFU-Bootloader...`
-        );
+        logger.debug(`${device.serialNumber} on is now in DFU-Bootloader...`);
         const { application, softdevice } = dfu;
         const params: Partial<InitPacket> = dfu.params || {};
 

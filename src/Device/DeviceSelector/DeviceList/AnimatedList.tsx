@@ -57,6 +57,6 @@ export const AnimatedItem: FC<{
     children: ReactNode;
 }> = ({ children, itemKey }) => (
     <Flipped flipId={itemKey} onAppear={fadeIn} onExit={fadeOut}>
-        <li>{children}</li>
+        <li className="tw-group">{children}</li>
     </Flipped>
 );

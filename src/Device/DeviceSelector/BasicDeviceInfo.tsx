@@ -28,13 +28,15 @@ interface Props {
 const DeviceName = ({ device, inputRef, messageType }: Props) => {
     const dispatch = useDispatch();
     const setOrResetNickname = (name: string) => {
+        if (!device.serialNumber) return;
+
         const newNameIsEqualToDefaultName =
             name === displayedDeviceName(device, { respectNickname: false });
 
         if (newNameIsEqualToDefaultName) {
-            dispatch(resetDeviceNickname(device.serialNumber));
+            dispatch(resetDeviceNickname(device));
         } else {
-            dispatch(setDeviceNickname(device.serialNumber, name));
+            dispatch(setDeviceNickname(device, name));
         }
     };
 
@@ -79,7 +81,9 @@ export default ({
     const autoReselectDevice = useSelector(getAutoReselectDevice);
     const waitingToAutoReselect = useSelector(getWaitingToAutoReselect);
     const waitingForDevice = useSelector(getWaitingForDeviceTimeout);
-    const thisDevice = device.serialNumber === autoReselectDevice?.serialNumber;
+    const thisDevice =
+        device.serialNumber &&
+        device.serialNumber === autoReselectDevice?.serialNumber;
 
     useEffect(() => {
         if (!showWaitingStatus) {
@@ -99,9 +103,9 @@ export default ({
     ]);
 
     return (
-        <div className="basic-device-info">
+        <div className="basic-device-info tw-h-[42px]">
             <DeviceIcon device={device} />
-            <div className="details">
+            <div className="details tw-flex tw-flex-col">
                 <DeviceName
                     device={device}
                     inputRef={deviceNameInputRef}
@@ -109,7 +113,9 @@ export default ({
                 />
                 <DeviceSerialNumber device={device} />
             </div>
-            <div className="toggles">{toggles}</div>
+            <div className="tw-mr-2.5 tw-flex tw-h-full tw-w-11 tw-flex-col tw-items-center tw-justify-center">
+                {toggles}
+            </div>
         </div>
     );
 };

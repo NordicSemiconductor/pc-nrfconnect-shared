@@ -14,7 +14,7 @@ import {
     DeviceCore,
     deviceSingleTaskEndOperationVoid,
     DeviceTraits,
-    NrfutilDeviceWithSerialnumber,
+    NrfutilDevice,
     ResetKind,
 } from './common';
 
@@ -99,7 +99,7 @@ export const programmingOptionsToArgs = (options?: ProgrammingOptions) => {
     return args.length > 0 ? ['--options', `${args.join(',')}`] : [];
 };
 const program = (
-    device: NrfutilDeviceWithSerialnumber,
+    device: NrfutilDevice,
     firmwarePath: string,
     onProgress?: (progress: Progress) => void,
     core?: DeviceCore,
@@ -121,7 +121,7 @@ const program = (
     );
 
 const programBuffer = async (
-    device: NrfutilDeviceWithSerialnumber,
+    device: NrfutilDevice,
     firmware: Buffer,
     type: FileExtensions,
     onProgress?: (progress: Progress) => void,
@@ -157,7 +157,7 @@ const programBuffer = async (
 };
 
 export default async (
-    device: NrfutilDeviceWithSerialnumber,
+    device: NrfutilDevice,
     firmware: FirmwareType,
     onProgress?: (progress: Progress) => void,
     core?: DeviceCore,

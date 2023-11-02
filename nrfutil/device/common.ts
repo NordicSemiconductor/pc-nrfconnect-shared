@@ -61,10 +61,6 @@ export interface NrfutilDevice {
     };
 }
 
-export interface NrfutilDeviceWithSerialnumber extends NrfutilDevice {
-    serialNumber: string;
-}
-
 export type DeviceFamily =
     | 'NRF51_FAMILY'
     | 'NRF52_FAMILY'
@@ -218,12 +214,17 @@ export const getDeviceSandbox = async () => {
 };
 
 export const deviceSingleTaskEndOperation = async <T = void>(
-    device: NrfutilDeviceWithSerialnumber,
+    device: NrfutilDevice,
     command: string,
     onProgress?: (progress: Progress) => void,
     controller?: AbortController,
     args: string[] = []
 ) => {
+    if (!device.serialNumber) {
+        throw new Error(
+            `Device does not have a serial number, no device operation is possible`
+        );
+    }
     const box = await getDeviceSandbox();
     return box.singleTaskEndOperationWithData<T>(
         command,
@@ -234,12 +235,18 @@ export const deviceSingleTaskEndOperation = async <T = void>(
 };
 
 export const deviceSingleTaskEndOperationVoid = async (
-    device: NrfutilDeviceWithSerialnumber,
+    device: NrfutilDevice,
     command: string,
     onProgress?: (progress: Progress) => void,
     controller?: AbortController,
     args: string[] = []
 ) => {
+    if (!device.serialNumber) {
+        throw new Error(
+            `Device does not have a serial number, no device operation is possible`
+        );
+    }
+
     const box = await getDeviceSandbox();
     await box.singleTaskEndOperationOptionalData(
         command,

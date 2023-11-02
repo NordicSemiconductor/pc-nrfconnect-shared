@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { NrfutilDeviceLib } from '../../../nrfutil';
 import { DeviceTraits } from '../../../nrfutil/device/common';
+import logger from '../../logging';
 import useHotKey from '../../utils/useHotKey';
 import {
     clearWaitForDevice,
@@ -92,15 +93,22 @@ export default ({
             setSelectedDeviceInfo(deviceInfo);
 
             if (deviceSetupConfig) {
-                dispatch(
-                    setupDevice(
-                        device,
-                        deviceSetupConfig,
-                        onDeviceIsReady,
-                        doDeselectDevice,
-                        deviceInfo
-                    )
-                );
+                if (device.serialNumber) {
+                    dispatch(
+                        setupDevice(
+                            device,
+                            deviceSetupConfig,
+                            onDeviceIsReady,
+                            doDeselectDevice,
+                            deviceInfo
+                        )
+                    );
+                } else {
+                    logger.warn(
+                        `Selected device has no serial number. Device setup is not supported`
+                    );
+                    onDeviceIsReady(device);
+                }
             }
         },
         [
@@ -162,7 +170,7 @@ export default ({
             <DeviceList
                 isVisible={deviceListVisible}
                 doSelectDevice={(device, autoReselected) => {
-                    if (device.serialNumber === currentDevice?.serialNumber) {
+                    if (device.id === currentDevice?.id) {
                         setDeviceListVisible(false);
                         return;
                     }

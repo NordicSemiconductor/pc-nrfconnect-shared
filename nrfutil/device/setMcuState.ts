@@ -5,15 +5,12 @@
  */
 
 import { Progress } from '../sandboxTypes';
-import {
-    deviceSingleTaskEndOperationVoid,
-    NrfutilDeviceWithSerialnumber,
-} from './common';
+import { deviceSingleTaskEndOperationVoid, NrfutilDevice } from './common';
 
 export type McuState = 'Application' | 'Programming';
 
 export default (
-    device: NrfutilDeviceWithSerialnumber,
+    device: NrfutilDevice,
     state: McuState,
     onProgress?: (progress: Progress) => void,
     controller?: AbortController
