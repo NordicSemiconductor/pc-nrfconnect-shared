@@ -67,8 +67,9 @@ const commonParser = <Result>(
         onInfo?: (info: Result) => void;
         onTaskBegin?: (taskEnd: TaskBegin) => void;
         onTaskEnd?: (taskEnd: TaskEnd<Result>) => void;
-        onLogging?: (logging: LogMessage) => void;
-    }
+        onLogging?: (logging: LogMessage, pid?: number) => void;
+    },
+    pid?: number
 ): Buffer | undefined => {
     const parsedData: NrfutilJson<Result>[] | undefined =
         parseJsonBuffers(data);
@@ -95,7 +96,7 @@ const commonParser = <Result>(
                 callbacks.onInfo?.(item.data);
                 break;
             case 'log':
-                callbacks.onLogging?.(item.data);
+                callbacks.onLogging?.(item.data, pid);
                 break;
             case 'batch_update':
                 processItem(item.data.data);
@@ -110,7 +111,7 @@ export class NrfutilSandbox {
     baseDir: string;
     module: string;
     version: string;
-    onLoggingHandlers: ((logging: LogMessage) => void)[] = [];
+    onLoggingHandlers: ((logging: LogMessage, pid?: number) => void)[] = [];
     logLevel: LogLevel = 'info';
     env: ReturnType<typeof prepareEnv>;
 
@@ -122,9 +123,11 @@ export class NrfutilSandbox {
         this.env = prepareEnv(baseDir, module, version);
     }
 
-    private processLoggingData = (data: NrfutilJson) => {
+    private processLoggingData = (data: NrfutilJson, pid?: number) => {
         if (data.type === 'log') {
-            this.onLoggingHandlers.forEach(onLogging => onLogging(data.data));
+            this.onLoggingHandlers.forEach(onLogging =>
+                onLogging(data.data, pid)
+            );
             return true;
         }
 
@@ -200,28 +203,35 @@ export class NrfutilSandbox {
         const info: Result[] = [];
         const taskEnd: TaskEnd<Result>[] = [];
         let stdErr: string | undefined;
+        let pid: number | undefined;
+
         try {
             await this.execCommand(
                 command,
                 args,
-                data =>
-                    commonParser<Result>(data, {
-                        onProgress,
-                        onTaskBegin,
-                        onTaskEnd: end => {
-                            taskEnd.push(end);
-                            onTaskEnd?.(end);
+                (data, processId) =>
+                    commonParser<Result>(
+                        data,
+                        {
+                            onProgress,
+                            onTaskBegin,
+                            onTaskEnd: end => {
+                                taskEnd.push(end);
+                                onTaskEnd?.(end);
+                            },
+                            onInfo: i => {
+                                info.push(i);
+                            },
+                            onLogging: logging => {
+                                this.onLoggingHandlers.forEach(onLogging => {
+                                    onLogging(logging, processId);
+                                });
+                            },
                         },
-                        onInfo: i => {
-                            info.push(i);
-                        },
-                        onLogging: logging => {
-                            this.onLoggingHandlers.forEach(onLogging => {
-                                onLogging(logging);
-                            });
-                        },
-                    }),
-                data => {
+                        processId
+                    ),
+                (data, processId) => {
+                    pid = processId;
                     stdErr = (stdErr ?? '') + data.toString();
                 },
                 controller
@@ -256,6 +266,11 @@ export class NrfutilSandbox {
             }
 
             error.message = error.message.replaceAll('Error: ', '');
+            getNrfutilLogger()?.error(
+                `${
+                    pid && this.logLevel === 'trace' ? `[PID:${pid}] ` : ''
+                }${describeError(error)}`
+            );
             throw error;
         }
     };
@@ -280,8 +295,8 @@ export class NrfutilSandbox {
     private execCommand = (
         command: string,
         args: string[],
-        parser: (data: Buffer) => Buffer | undefined,
-        onStdError: (data: Buffer) => void,
+        parser: (data: Buffer, pid?: number) => Buffer | undefined,
+        onStdError: (data: Buffer, pid?: number) => void,
         controller?: AbortController
     ) =>
         new Promise<void>((resolve, reject) => {
@@ -319,7 +334,7 @@ export class NrfutilSandbox {
                 if (controller?.signal.aborted) return;
 
                 buffer = Buffer.concat([buffer, data]);
-                const remainingBytes = parser(buffer);
+                const remainingBytes = parser(buffer, nrfutil.pid);
                 if (remainingBytes) {
                     buffer = remainingBytes;
                 } else {
@@ -328,7 +343,7 @@ export class NrfutilSandbox {
             });
 
             nrfutil.stderr.on('data', (data: Buffer) => {
-                onStdError(data);
+                onStdError(data, nrfutil.pid);
             });
 
             nrfutil.on('close', code => {
@@ -364,7 +379,7 @@ export class NrfutilSandbox {
         const operation = this.execCommand(
             this.module,
             [command, ...args],
-            data => {
+            (data, pid) => {
                 const parsedData: NrfutilJson<Result>[] | undefined =
                     parseJsonBuffers(data);
 
@@ -373,15 +388,15 @@ export class NrfutilSandbox {
                 }
 
                 parsedData.forEach(item => {
-                    if (!this.processLoggingData(item)) {
+                    if (!this.processLoggingData(item, pid)) {
                         if (item.type === 'info') {
                             processors.onData(item.data);
                         }
                     }
                 });
             },
-            data => {
-                processors.onError(new Error(data.toString()));
+            (data, pid) => {
+                processors.onError(new Error(data.toString()), pid);
             },
             controller
         );
@@ -471,7 +486,9 @@ export class NrfutilSandbox {
         throw new Error('Unexpected result');
     };
 
-    public onLogging = (handler: (logging: LogMessage) => void) => {
+    public onLogging = (
+        handler: (logging: LogMessage, pid?: number) => void
+    ) => {
         this.onLoggingHandlers.push(handler);
 
         return () =>

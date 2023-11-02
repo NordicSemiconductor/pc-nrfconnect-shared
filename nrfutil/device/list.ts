@@ -31,7 +31,7 @@ const isHotplugEvent = (
 export default async (
     traits: DeviceTraits,
     onEnumerated: (devices: NrfutilDevice[]) => void,
-    onError: (error: Error) => void,
+    onError: (error: Error, pid?: number) => void,
     onHotplugEvent?: {
         onDeviceArrived: (device: NrfutilDevice) => void;
         onDeviceLeft: (id: number) => void;

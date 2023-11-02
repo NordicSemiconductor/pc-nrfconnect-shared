@@ -9,6 +9,10 @@ every new version is a new major version.
 
 ## 123 - UNRELEASED
 
+### Added
+
+-   PID to `nrfutil device` logs when trace is enabled
+
 ### Fixed
 
 -   Serial port in the device list where not aligned correctly
