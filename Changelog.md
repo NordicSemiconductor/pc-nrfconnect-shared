@@ -7,7 +7,7 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 122 - UNRELEASED
+## 122 - 2023-11-02
 
 ### Changed
 
@@ -35,6 +35,11 @@ every new version is a new major version.
 
 -   Change `nrfConnectForDesktop.nrfutil.device` to 2.0.0
 -   Update all device properties in to match the changed above.
+
+### Fixed
+
+-   Check installed JLink version against expected version given by nrfutil
+    (previously this was the version bundled by the launcher).
 
 ## 121 - 2023-10-24
 
