@@ -8,7 +8,8 @@ import { DeviceTraits, NrfutilDevice } from '../../nrfutil/device/common';
 import NrfutilDeviceLib from '../../nrfutil/device/device';
 import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
-import usageData, { simplifyDeviceForLogging } from '../utils/usageData';
+import usageData from '../utils/usageData';
+import { simplifyDeviceForLogging } from '../utils/usageDataCommon';
 import {
     clearWaitForDevice,
     clearWaitForDeviceTimeout,

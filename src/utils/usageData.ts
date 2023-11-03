@@ -4,39 +4,16 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import winston from 'winston';
+import si from 'systeminformation';
 
-import { type Device } from '../Device/deviceSlice';
 import { packageJson } from './packageJson';
 import {
     deleteIsSendingUsageData,
-    getIsSendingUsageData,
     persistIsSendingUsageData,
 } from './persistentStore';
+import usageDataCommon, { Metadata } from './usageDataCommon';
 import usageDataMain from './usageDataMain';
 import usageDataRenderer from './usageDataRenderer';
-
-let logger: winston.Logger | undefined;
-const setLogger = (log: winston.Logger) => {
-    logger = log;
-};
-
-export interface Metadata {
-    [key: string]: unknown;
-}
-
-export const simplifyDeviceForLogging = (device: Device) => ({
-    devkit: device.devkit,
-    serialPorts: device.serialPorts,
-    traits: device.traits,
-    serialNumber: device.serialNumber,
-    enumerationID: device.id,
-    usb: {
-        product: device.usb?.product,
-        manufacturer: device.usb?.manufacturer,
-        deviceDescriptor: device.usb?.device.descriptor,
-    },
-});
 
 const getFriendlyAppName = () =>
     packageJson().name.replace('pc-nrfconnect-', '');
@@ -61,30 +38,28 @@ const flattenObject = (obj?: any, parentKey?: string) => {
     return result;
 };
 
-const isRenderer = process && process.type === 'renderer';
-
-const isEnabled = () => {
-    const isSendingUsageData = getIsSendingUsageData();
-    logger?.debug(`Usage data is ${isSendingUsageData}`);
-    return isSendingUsageData;
-};
-
 const enable = () => {
-    sendUsageData('Data Usage Opt-In', { enabled: true }, true);
     persistIsSendingUsageData(true);
-    logger?.debug('Usage data has been enabled');
+    si.osInfo().then(({ platform, arch }) =>
+        getUsageData().sendUsageData('Report OS info', { platform, arch })
+    );
+    getUsageData().sendUsageData('Data Usage Opt-In', undefined);
+    usageDataCommon.getLogger()?.debug('Usage data has been enabled');
 };
 
 const disable = () => {
-    sendUsageData('Data Usage Opt-In', { enabled: false }, true);
+    getUsageData().sendUsageData('Data Usage Opt-Out', undefined, true);
     persistIsSendingUsageData(false);
-    logger?.debug('Usage data has been disabled');
+    usageDataCommon.getLogger()?.debug('Usage data has been disabled');
 };
 
 const reset = () => {
+    getUsageData().sendUsageData('Data Usage Opt-Reset', undefined, true);
     deleteIsSendingUsageData();
-    logger?.debug('Usage data setting has been reset');
+    usageDataCommon.getLogger()?.debug('Usage data setting has been reset');
 };
+
+const isRenderer = process && process.type === 'renderer';
 
 const getUsageData = () => {
     if (isRenderer) {
@@ -94,8 +69,8 @@ const getUsageData = () => {
     return usageDataMain;
 };
 
-const sendUsageData = <T extends string>(
-    action: T,
+const sendUsageData = (
+    action: string,
     metadata?: Metadata,
     forceSend?: boolean
 ) => {
@@ -106,7 +81,9 @@ const sendUsageData = <T extends string>(
             forceSend
         )
     ) {
-        logger?.debug(`Sending usage data ${JSON.stringify(action)}`);
+        usageDataCommon
+            .getLogger()
+            ?.debug(`Sending usage data ${JSON.stringify(action)}`);
     }
 };
 
@@ -119,25 +96,26 @@ const sendMetric = (name: string, average: number) => {
 };
 
 const sendTrace = (message: string) => {
-    getUsageData()?.sendTrace(message);
+    getUsageData().sendTrace(message);
 };
 
 const sendErrorReport = (error: string | Error) => {
-    logger?.error(error);
+    usageDataCommon.getLogger()?.error(error);
     getUsageData().sendErrorReport(
         typeof error === 'string' ? new Error(error) : error
     );
 };
 
 export default {
-    setLogger,
+    setLogger: usageDataCommon.setLogger,
     disable,
     enable,
-    isEnabled,
+    isEnabled: usageDataCommon.isEnabled,
     reset,
     sendErrorReport,
     sendUsageData,
     sendPageView,
     sendMetric,
     sendTrace,
+    enableTelemetry: usageDataCommon.enableTelemetry,
 };

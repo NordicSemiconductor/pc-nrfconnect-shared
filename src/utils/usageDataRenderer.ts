@@ -9,25 +9,26 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import { getAppSource } from './appDirs';
 import { isDevelopment } from './environment';
 import { packageJson } from './packageJson';
-import { getIsSendingUsageData, getUsageDataClientId } from './persistentStore';
-import { type Metadata } from './usageData';
+import { getUsageDataClientId } from './persistentStore';
+import usageDataCommon, {
+    INSTRUMENTATION_KEY,
+    Metadata,
+} from './usageDataCommon';
 
-const INSTRUMENTATION_KEY = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
-
-let insights: ApplicationInsights | undefined;
+let cachedInsights: ApplicationInsights | undefined;
 
 const getInsights = (forceSend?: boolean) => {
-    if (!forceSend && !getIsSendingUsageData()) return;
+    if (!usageDataCommon.getShouldSendTelemetry(forceSend)) return;
 
-    if (insights) {
-        return insights;
+    if (cachedInsights) {
+        return cachedInsights;
     }
 
-    if (!insights) {
-        insights = init();
+    if (!cachedInsights) {
+        cachedInsights = init();
     }
 
-    return insights;
+    return cachedInsights;
 };
 
 const init = () => {
@@ -40,7 +41,7 @@ const init = () => {
     const out = new ApplicationInsights({
         config: {
             instrumentationKey: INSTRUMENTATION_KEY,
-            accountId,
+            accountId, // to hide with removeAllMetadata
         },
     });
 
@@ -48,18 +49,28 @@ const init = () => {
 
     // Add app name and version to every event
     out.addTelemetryInitializer(envelope => {
-        const trace = {
-            ...(envelope.ext?.trace ?? {}),
-            name: applicationName,
-        };
-        envelope.ext = { ...envelope.ext, trace };
-        envelope.data = {
-            ...envelope.data,
-            applicationName,
-            applicationVersion,
-            isDevelopment,
-            source: getAppSource(),
-        };
+        if (envelope.data?.removeAllMetadata) {
+            envelope.data = {};
+            envelope.baseData = { name: envelope.baseData?.name };
+            envelope.ext = {};
+            envelope.tags = [];
+        } else {
+            const trace = {
+                ...(envelope.ext?.trace ?? {}),
+                name: applicationName,
+            };
+            envelope.ext = { ...envelope.ext, trace };
+            envelope.baseData = {
+                applicationName,
+                applicationVersion,
+                isDevelopment,
+                source:
+                    applicationName === 'nrfconnect'
+                        ? undefined
+                        : getAppSource(),
+                ...envelope.baseData,
+            };
+        }
     });
 
     return out;
@@ -76,7 +87,7 @@ const sendUsageData = (
             {
                 name: action,
             },
-            metadata
+            forceSend ? { removeAllMetadata: true } : metadata
         );
         return true;
     }
