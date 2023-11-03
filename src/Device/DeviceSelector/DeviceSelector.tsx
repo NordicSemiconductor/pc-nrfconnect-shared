@@ -23,6 +23,7 @@ import {
     deselectDevice,
     Device,
     deviceIsSelected as deviceIsSelectedSelector,
+    isDeviceWithSerialNumber,
     selectDevice,
     selectedDevice,
     setSelectedDeviceInfo,
@@ -93,7 +94,7 @@ export default ({
             setSelectedDeviceInfo(deviceInfo);
 
             if (deviceSetupConfig) {
-                if (device.serialNumber) {
+                if (isDeviceWithSerialNumber(device)) {
                     dispatch(
                         setupDevice(
                             device,

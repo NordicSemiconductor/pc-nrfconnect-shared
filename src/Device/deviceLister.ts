@@ -165,9 +165,11 @@ export const startWatchingDevices =
         const onDeviceArrived = async (device: NrfutilDevice) => {
             if (hasValidDeviceTraits(device.traits, deviceListing)) {
                 if (
-                    device.serialNumber &&
                     !getState().device.devices.find(
-                        d => d.serialNumber === device.serialNumber
+                        d =>
+                            d.id === device.id ||
+                            (device.serialNumber && // we want to disregard comparing devices with no sn
+                                d.serialNumber === device.serialNumber)
                     )
                 ) {
                     onDeviceConnected(device);
@@ -294,7 +296,7 @@ export const startWatchingDevices =
                     const waitForDevice =
                         getState().deviceAutoSelect.waitForDevice;
                     if (
-                        device.serialNumber &&
+                        device.serialNumber && // we want to disregard comparing devices with no sn
                         device.serialNumber ===
                             getState().deviceAutoSelect.device?.serialNumber
                     ) {
