@@ -9,19 +9,16 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import { getAppSource } from './appDirs';
 import { isDevelopment } from './environment';
 import { packageJson } from './packageJson';
-import { getIsSendingUsageData, getUsageDataClientId } from './persistentStore';
-import { type Metadata } from './usageData';
-
-const INSTRUMENTATION_KEY = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
+import { getUsageDataClientId } from './persistentStore';
+import usageDataCommon, {
+    INSTRUMENTATION_KEY,
+    Metadata,
+} from './usageDataCommon';
 
 let cachedInsights: ApplicationInsights | undefined;
 
 const getInsights = (forceSend?: boolean) => {
-    if (!forceSend && !getIsSendingUsageData()) return;
-
-    if (forceSend) {
-        return init(forceSend);
-    }
+    if (!usageDataCommon.getShouldSendTelemetry(forceSend)) return;
 
     if (cachedInsights) {
         return cachedInsights;
@@ -34,7 +31,7 @@ const getInsights = (forceSend?: boolean) => {
     return cachedInsights;
 };
 
-const init = (forceSend?: boolean) => {
+const init = () => {
     const appPackageJson = packageJson();
     const applicationName = appPackageJson.name;
     const applicationVersion = appPackageJson.version;
@@ -42,33 +39,39 @@ const init = (forceSend?: boolean) => {
     const accountId = getUsageDataClientId();
 
     const out = new ApplicationInsights({
-        config: !forceSend
-            ? {
-                  instrumentationKey: INSTRUMENTATION_KEY,
-                  accountId,
-              }
-            : { instrumentationKey: INSTRUMENTATION_KEY },
+        config: {
+            instrumentationKey: INSTRUMENTATION_KEY,
+            accountId, // to hide with removeAllMetadata
+        },
     });
 
     out.loadAppInsights();
 
-    if (!forceSend) {
-        // Add app name and version to every event
-        out.addTelemetryInitializer(envelope => {
+    // Add app name and version to every event
+    out.addTelemetryInitializer(envelope => {
+        if (envelope.data?.removeAllMetadata) {
+            envelope.data = {};
+            envelope.baseData = { name: envelope.baseData?.name };
+            envelope.ext = {};
+            envelope.tags = [];
+        } else {
             const trace = {
                 ...(envelope.ext?.trace ?? {}),
                 name: applicationName,
             };
             envelope.ext = { ...envelope.ext, trace };
-            envelope.data = {
-                ...envelope.data,
+            envelope.baseData = {
                 applicationName,
                 applicationVersion,
                 isDevelopment,
-                source: getAppSource(),
+                source:
+                    applicationName === 'nrfconnect'
+                        ? undefined
+                        : getAppSource(),
+                ...envelope.baseData,
             };
-        });
-    }
+        }
+    });
 
     return out;
 };
@@ -84,7 +87,7 @@ const sendUsageData = (
             {
                 name: action,
             },
-            metadata
+            forceSend ? { removeAllMetadata: true } : metadata
         );
         return true;
     }

@@ -10,7 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NrfutilDeviceLib } from '../../../nrfutil';
 import { DeviceTraits } from '../../../nrfutil/device/common';
 import logger from '../../logging';
-import usageData, { simplifyDeviceForLogging } from '../../utils/usageData';
+import usageData from '../../utils/usageData';
+import { simplifyDeviceForLogging } from '../../utils/usageDataCommon';
 import useHotKey from '../../utils/useHotKey';
 import {
     clearWaitForDevice,

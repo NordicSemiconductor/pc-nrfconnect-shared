@@ -8,32 +8,28 @@ import { TelemetryClient } from 'applicationinsights';
 
 import { isDevelopment } from './environment';
 import { packageJson } from './packageJson';
-import { getIsSendingUsageData } from './persistentStore';
-import { type Metadata } from './usageData';
+import usageDataCommon, {
+    INSTRUMENTATION_KEY,
+    Metadata,
+} from './usageDataCommon';
 
-const INSTRUMENTATION_KEY = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
-
-let insights: TelemetryClient | undefined;
+let cachedInsights: TelemetryClient | undefined;
 
 const getInsights = (forceSend?: boolean) => {
-    if (!forceSend && !getIsSendingUsageData()) return;
+    if (!usageDataCommon.getShouldSendTelemetry(forceSend)) return;
 
-    if (forceSend) {
-        return init(forceSend);
+    if (cachedInsights) {
+        return cachedInsights;
     }
 
-    if (insights) {
-        return insights;
+    if (!cachedInsights) {
+        cachedInsights = init();
     }
 
-    if (!insights) {
-        insights = init();
-    }
-
-    return insights;
+    return cachedInsights;
 };
 
-const init = (forceSend?: boolean) => {
+const init = () => {
     const appPackageJson = packageJson();
     const applicationName = appPackageJson.name;
     const applicationVersion = appPackageJson.version;
@@ -51,15 +47,16 @@ const init = (forceSend?: boolean) => {
 
     // Add app name and version to every event
     out.addTelemetryProcessor(envelope => {
-        if (forceSend) {
+        if (envelope.data.baseData?.removeAllMetadata) {
             envelope.tags = [];
+            envelope.data.baseData = { name: envelope.data?.baseData };
         } else {
             envelope.tags['ai.cloud.roleInstance'] = undefined; // remove PC name
             envelope.data.baseData = {
-                ...envelope.data.baseData,
                 applicationName,
                 applicationVersion,
                 isDevelopment,
+                ...envelope.data.baseData,
             };
         }
 
@@ -78,7 +75,7 @@ const sendUsageData = (
     if (result !== undefined) {
         result.trackEvent({
             name: action,
-            properties: metadata,
+            properties: forceSend ? { removeAllMetadata: true } : metadata,
         });
         return true;
     }
