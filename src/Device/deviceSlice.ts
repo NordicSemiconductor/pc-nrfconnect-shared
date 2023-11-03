@@ -26,6 +26,10 @@ export interface Device extends NrfutilDevice {
     persistedSerialPortOptions?: SerialPortOpenOptions<AutoDetectTypes>;
 }
 
+export interface DeviceWithSerialNumber extends Device {
+    serialNumber: string;
+}
+
 const findDeviceItem = (
     devices: Device[],
     id: number,
@@ -147,7 +151,7 @@ const slice = createSlice({
                 );
 
                 if (
-                    selectedDevice.serialNumber &&
+                    selectedDevice.serialNumber && // we need to check if serialNumber is null or undefined as device might not have serial number
                     vComIndex !== undefined &&
                     vComIndex !== -1
                 ) {

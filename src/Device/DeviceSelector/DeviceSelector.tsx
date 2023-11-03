@@ -96,7 +96,7 @@ export default ({
                 if (device.serialNumber) {
                     dispatch(
                         setupDevice(
-                            device,
+                            { ...device, serialNumber: device.serialNumber },
                             deviceSetupConfig,
                             onDeviceIsReady,
                             doDeselectDevice,

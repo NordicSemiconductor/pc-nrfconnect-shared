@@ -13,7 +13,7 @@ import {
     setDeviceSetupProgress,
     setDeviceSetupProgressMessage,
 } from './deviceSetupSlice';
-import { Device } from './deviceSlice';
+import { Device, DeviceWithSerialNumber } from './deviceSlice';
 import { InitPacket } from './initPacket';
 
 export interface DfuEntry {
@@ -239,7 +239,7 @@ export const prepareDevice =
 
 export const setupDevice =
     (
-        device: Device,
+        device: DeviceWithSerialNumber,
         deviceSetupConfig: DeviceSetupConfig,
         onDeviceIsReady: (device: Device) => void,
         doDeselectDevice: () => void,
