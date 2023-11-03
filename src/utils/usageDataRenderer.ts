@@ -14,23 +14,27 @@ import { type Metadata } from './usageData';
 
 const INSTRUMENTATION_KEY = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
 
-let insights: ApplicationInsights | undefined;
+let cachedInsights: ApplicationInsights | undefined;
 
 const getInsights = (forceSend?: boolean) => {
     if (!forceSend && !getIsSendingUsageData()) return;
 
-    if (insights) {
-        return insights;
+    if (forceSend) {
+        return init(forceSend);
     }
 
-    if (!insights) {
-        insights = init();
+    if (cachedInsights) {
+        return cachedInsights;
     }
 
-    return insights;
+    if (!cachedInsights) {
+        cachedInsights = init();
+    }
+
+    return cachedInsights;
 };
 
-const init = () => {
+const init = (forceSend?: boolean) => {
     const appPackageJson = packageJson();
     const applicationName = appPackageJson.name;
     const applicationVersion = appPackageJson.version;
@@ -38,29 +42,33 @@ const init = () => {
     const accountId = getUsageDataClientId();
 
     const out = new ApplicationInsights({
-        config: {
-            instrumentationKey: INSTRUMENTATION_KEY,
-            accountId,
-        },
+        config: !forceSend
+            ? {
+                  instrumentationKey: INSTRUMENTATION_KEY,
+                  accountId,
+              }
+            : { instrumentationKey: INSTRUMENTATION_KEY },
     });
 
     out.loadAppInsights();
 
-    // Add app name and version to every event
-    out.addTelemetryInitializer(envelope => {
-        const trace = {
-            ...(envelope.ext?.trace ?? {}),
-            name: applicationName,
-        };
-        envelope.ext = { ...envelope.ext, trace };
-        envelope.data = {
-            ...envelope.data,
-            applicationName,
-            applicationVersion,
-            isDevelopment,
-            source: getAppSource(),
-        };
-    });
+    if (!forceSend) {
+        // Add app name and version to every event
+        out.addTelemetryInitializer(envelope => {
+            const trace = {
+                ...(envelope.ext?.trace ?? {}),
+                name: applicationName,
+            };
+            envelope.ext = { ...envelope.ext, trace };
+            envelope.data = {
+                ...envelope.data,
+                applicationName,
+                applicationVersion,
+                isDevelopment,
+                source: getAppSource(),
+            };
+        });
+    }
 
     return out;
 };

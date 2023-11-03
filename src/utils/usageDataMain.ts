@@ -18,6 +18,10 @@ let insights: TelemetryClient | undefined;
 const getInsights = (forceSend?: boolean) => {
     if (!forceSend && !getIsSendingUsageData()) return;
 
+    if (forceSend) {
+        return init(forceSend);
+    }
+
     if (insights) {
         return insights;
     }
@@ -29,7 +33,7 @@ const getInsights = (forceSend?: boolean) => {
     return insights;
 };
 
-const init = () => {
+const init = (forceSend?: boolean) => {
     const appPackageJson = packageJson();
     const applicationName = appPackageJson.name;
     const applicationVersion = appPackageJson.version;
@@ -47,13 +51,17 @@ const init = () => {
 
     // Add app name and version to every event
     out.addTelemetryProcessor(envelope => {
-        envelope.tags['ai.cloud.roleInstance'] = undefined; // remove PC name
-        envelope.data.baseData = {
-            ...envelope.data.baseData,
-            applicationName,
-            applicationVersion,
-            isDevelopment,
-        };
+        if (forceSend) {
+            envelope.tags = [];
+        } else {
+            envelope.tags['ai.cloud.roleInstance'] = undefined; // remove PC name
+            envelope.data.baseData = {
+                ...envelope.data.baseData,
+                applicationName,
+                applicationVersion,
+                isDevelopment,
+            };
+        }
 
         return true;
     });

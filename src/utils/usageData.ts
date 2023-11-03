@@ -76,8 +76,8 @@ const isEnabled = () => {
 };
 
 const enable = () => {
-    getUsageData()?.sendUsageData('Data Usage Opt-In', { enabled: true }, true);
     persistIsSendingUsageData(true);
+    getUsageData()?.sendUsageData('Data Usage Opt-In', { enabled: true });
     logger?.debug('Usage data has been enabled');
 };
 
