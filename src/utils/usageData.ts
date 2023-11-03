@@ -21,6 +21,12 @@ const setLogger = (log: winston.Logger) => {
     logger = log;
 };
 
+let telemetryEnabled = true;
+
+export const disableTelemetry = () => {
+    telemetryEnabled = false;
+};
+
 export interface Metadata {
     [key: string]: unknown;
 }
@@ -64,29 +70,40 @@ const flattenObject = (obj?: any, parentKey?: string) => {
 const isRenderer = process && process.type === 'renderer';
 
 const isEnabled = () => {
-    const isSendingUsageData = getIsSendingUsageData();
+    const isSendingUsageData = getIsSendingUsageData() && telemetryEnabled;
     logger?.debug(`Usage data is ${isSendingUsageData}`);
     return isSendingUsageData;
 };
 
 const enable = () => {
-    sendUsageData('Data Usage Opt-In', { enabled: true }, true);
+    getUsageData()?.sendUsageData('Data Usage Opt-In', { enabled: true }, true);
     persistIsSendingUsageData(true);
     logger?.debug('Usage data has been enabled');
 };
 
 const disable = () => {
-    sendUsageData('Data Usage Opt-In', { enabled: false }, true);
+    getUsageData()?.sendUsageData(
+        'Data Usage Opt-In',
+        { enabled: false },
+        true
+    );
     persistIsSendingUsageData(false);
     logger?.debug('Usage data has been disabled');
 };
 
 const reset = () => {
+    getUsageData()?.sendUsageData(
+        'Data Usage Opt-In',
+        { enabled: undefined },
+        true
+    );
     deleteIsSendingUsageData();
     logger?.debug('Usage data setting has been reset');
 };
 
 const getUsageData = () => {
+    if (!telemetryEnabled) return;
+
     if (isRenderer) {
         return usageDataRenderer;
     }
@@ -100,7 +117,7 @@ const sendUsageData = <T extends string>(
     forceSend?: boolean
 ) => {
     if (
-        getUsageData().sendUsageData(
+        getUsageData()?.sendUsageData(
             `${getFriendlyAppName()}: ${action}`,
             flattenObject(metadata),
             forceSend
@@ -111,11 +128,11 @@ const sendUsageData = <T extends string>(
 };
 
 const sendPageView = (pageName: string) => {
-    getUsageData().sendPageView(`${getFriendlyAppName()} - ${pageName}`);
+    getUsageData()?.sendPageView(`${getFriendlyAppName()} - ${pageName}`);
 };
 
 const sendMetric = (name: string, average: number) => {
-    getUsageData().sendMetric(name, average);
+    getUsageData()?.sendMetric(name, average);
 };
 
 const sendTrace = (message: string) => {
@@ -124,7 +141,7 @@ const sendTrace = (message: string) => {
 
 const sendErrorReport = (error: string | Error) => {
     logger?.error(error);
-    getUsageData().sendErrorReport(
+    getUsageData()?.sendErrorReport(
         typeof error === 'string' ? new Error(error) : error
     );
 };
