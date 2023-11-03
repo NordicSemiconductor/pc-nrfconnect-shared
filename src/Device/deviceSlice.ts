@@ -30,6 +30,11 @@ export interface DeviceWithSerialNumber extends Device {
     serialNumber: string;
 }
 
+export const isDeviceWithSerialNumber = (
+    device: Device
+): device is DeviceWithSerialNumber =>
+    !!(device as DeviceWithSerialNumber).serialNumber;
+
 const findDeviceItem = (
     devices: Device[],
     id: number,
@@ -151,7 +156,7 @@ const slice = createSlice({
                 );
 
                 if (
-                    selectedDevice.serialNumber && // we need to check if serialNumber is null or undefined as device might not have serial number
+                    selectedDevice.serialNumber && // we want to disregard comparing devices with no sn
                     vComIndex !== undefined &&
                     vComIndex !== -1
                 ) {

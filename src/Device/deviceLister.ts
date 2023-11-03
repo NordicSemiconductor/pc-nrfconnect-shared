@@ -168,7 +168,8 @@ export const startWatchingDevices =
                     !getState().device.devices.find(
                         d =>
                             d.id === device.id ||
-                            d.serialNumber === device.serialNumber
+                            (device.serialNumber && // we want to disregard comparing devices with no sn
+                                d.serialNumber === device.serialNumber)
                     )
                 ) {
                     onDeviceConnected(device);
@@ -295,7 +296,7 @@ export const startWatchingDevices =
                     const waitForDevice =
                         getState().deviceAutoSelect.waitForDevice;
                     if (
-                        device.serialNumber && // we need to check if serialNumber is null or undefined as device might not have serial number
+                        device.serialNumber && // we want to disregard comparing devices with no sn
                         device.serialNumber ===
                             getState().deviceAutoSelect.device?.serialNumber
                     ) {

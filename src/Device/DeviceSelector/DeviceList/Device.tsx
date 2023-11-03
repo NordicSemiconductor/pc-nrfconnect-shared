@@ -55,7 +55,7 @@ export default ({ device, doSelectDevice, allowMoreInfoVisible }: Props) => {
             className={classNames(
                 'tw-flex tw-flex-col tw-gap-2 tw-py-3 tw-font-light group-hover:tw-bg-white',
                 moreVisible && 'tw-bg-white',
-                moreVisible && device.serialNumber && 'tw-pb-0' // we need to check if serialNumber is null or undefined as device might not have serial number
+                moreVisible && device.serialNumber && 'tw-pb-0'
             )}
             onClick={() => doSelectDevice(device, false)}
         >
