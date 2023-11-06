@@ -343,7 +343,10 @@ export const startWatchingDevices =
         stopWatchingDevices(async () => {
             const operation = await NrfutilDeviceLib.list(
                 deviceListing,
-                d => d.forEach(onDeviceArrived),
+                d => {
+                    d.forEach(onDeviceArrived);
+                    dispatch(autoSelectDeviceCLI(doSelectDevice));
+                },
                 error => {
                     logger.error(error);
                 },
@@ -355,21 +358,6 @@ export const startWatchingDevices =
                     callback?.();
                 });
             };
-
-            if (!autoSelectDeviceCLISerialUsed) {
-                const autoSelectSN = getAutoSelectDeviceCLISerial();
-
-                if (autoSelectSN !== undefined) {
-                    const autoSelectDevice = getDevice(
-                        getState(),
-                        autoSelectSN
-                    );
-
-                    if (autoSelectDevice)
-                        doSelectDevice(autoSelectDevice, true);
-                }
-                autoSelectDeviceCLISerialUsed = true;
-            }
         });
     };
 
@@ -378,6 +366,23 @@ const getAutoSelectDeviceCLISerial = () => {
     const serialIndex = argv.findIndex(arg => arg === '--deviceSerial');
     return serialIndex > -1 ? argv[serialIndex + 1] : undefined;
 };
+
+const autoSelectDeviceCLI =
+    (
+        doSelectDevice: (device: Device, autoReselected: boolean) => void
+    ): AppThunk<RootState> =>
+    (_, getState) => {
+        if (!autoSelectDeviceCLISerialUsed) {
+            const autoSelectSN = getAutoSelectDeviceCLISerial();
+
+            if (autoSelectSN !== undefined) {
+                const autoSelectDevice = getDevice(getState(), autoSelectSN);
+
+                if (autoSelectDevice) doSelectDevice(autoSelectDevice, true);
+            }
+            autoSelectDeviceCLISerialUsed = true;
+        }
+    };
 
 export const stopWatchingDevices = (callback?: () => void) => {
     if (stopNrfutilDevice) stopNrfutilDevice(callback);

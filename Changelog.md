@@ -16,6 +16,7 @@ every new version is a new major version.
 ### Fixed
 
 -   Serial port in the device list where not aligned correctly
+-   Auto select device when `--deviceSerial` is provided
 
 ## 122 - 2023-11-02
 
