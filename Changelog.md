@@ -18,6 +18,8 @@ every new version is a new major version.
 
 -   Analytic events names are now distinct with a prefix of the app name
     `<AppName>:` e.g `npm:` or `ppk:`.
+-   The function to send telemetry data in `usageData` became async. If you have
+    to be sure they completed, you now have to await them.
 
 ### Fixed
 

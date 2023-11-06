@@ -6,7 +6,7 @@
 
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 
-import { getAppSource } from './appDirs';
+import appDetails from './appDetails';
 import { isDevelopment } from './environment';
 import { isLauncher, packageJson } from './packageJson';
 import { getUsageDataClientId } from './persistentStore';
@@ -17,7 +17,7 @@ import usageDataCommon, {
 
 let cachedInsights: ApplicationInsights | undefined;
 
-const getInsights = (forceSend?: boolean) => {
+const getInsights = async (forceSend?: boolean) => {
     if (!usageDataCommon.getShouldSendTelemetry(forceSend)) return;
 
     if (cachedInsights) {
@@ -25,16 +25,16 @@ const getInsights = (forceSend?: boolean) => {
     }
 
     if (!cachedInsights) {
-        cachedInsights = init();
+        cachedInsights = await init();
     }
 
     return cachedInsights;
 };
 
-const init = () => {
+const init = async () => {
     const applicationName = packageJson().name;
     const applicationVersion = packageJson().version;
-    const source = isLauncher() ? undefined : getAppSource();
+    const source = isLauncher() ? undefined : (await appDetails()).source;
 
     const accountId = getUsageDataClientId();
 
@@ -73,12 +73,12 @@ const init = () => {
     return out;
 };
 
-const sendUsageData = (
+const sendUsageData = async (
     action: string,
     metadata?: Metadata,
     forceSend?: boolean
 ) => {
-    const result = getInsights(forceSend);
+    const result = await getInsights(forceSend);
     if (result !== undefined) {
         result.trackEvent(
             {
@@ -92,27 +92,27 @@ const sendUsageData = (
     return false;
 };
 
-const sendPageView = (pageName: string) => {
-    getInsights()?.trackPageView({
+const sendPageView = async (pageName: string) => {
+    (await getInsights())?.trackPageView({
         name: pageName,
     });
 };
 
-const sendMetric = (name: string, average: number) => {
-    getInsights()?.trackMetric({
+const sendMetric = async (name: string, average: number) => {
+    (await getInsights())?.trackMetric({
         name,
         average,
     });
 };
 
-const sendTrace = (message: string) => {
-    getInsights()?.trackTrace({
+const sendTrace = async (message: string) => {
+    (await getInsights())?.trackTrace({
         message,
     });
 };
 
-const sendErrorReport = (error: Error) => {
-    getInsights()?.trackException({
+const sendErrorReport = async (error: Error) => {
+    (await getInsights())?.trackException({
         exception: error,
     });
 };

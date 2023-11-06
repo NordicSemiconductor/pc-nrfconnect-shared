@@ -6,7 +6,6 @@
 
 import path from 'path';
 
-import { OFFICIAL } from '../../ipc/sources';
 import launcherConfig from './launcherConfig';
 import { packageJsonApp } from './packageJson';
 
@@ -46,19 +45,4 @@ const getAppDataDir = () =>
  */
 const getAppLogDir = () => path.join(getAppDataDir(), 'logs');
 
-const getAppSource = () => {
-    const source = path
-        .parse(path.resolve(getAppDir(), '../'))
-        .base.toLowerCase();
-
-    return source === 'node_modules' ? OFFICIAL : source;
-};
-
-export {
-    getAppDir,
-    getAppFile,
-    getAppDataDir,
-    getAppLogDir,
-    getUserDataDir,
-    getAppSource,
-};
+export { getAppDir, getAppFile, getAppDataDir, getAppLogDir, getUserDataDir };
