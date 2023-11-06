@@ -6,12 +6,10 @@
 
 import React, { useEffect, useState } from 'react';
 
-import {
-    AppDetailsFromLauncher,
-    inMain as appDetails,
-} from '../../ipc/appDetails';
+import { AppDetailsFromLauncher } from '../../ipc/appDetails';
 import Card from '../Card/Card';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
+import appDetails from '../utils/appDetails';
 import AboutButton from './AboutButton';
 import Section from './Section';
 import ShortcutButton from './ShortcutButton';
@@ -20,7 +18,7 @@ export default () => {
     const [appInfo, setAppInfo] = useState<AppDetailsFromLauncher>();
 
     useEffect(() => {
-        appDetails.getAppDetails().then(setAppInfo);
+        appDetails().then(setAppInfo);
     }, [setAppInfo]);
 
     if (appInfo == null) return null;
