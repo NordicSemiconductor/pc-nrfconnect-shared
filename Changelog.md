@@ -11,7 +11,8 @@ every new version is a new major version.
 
 ### Added
 
--   PID to `nrfutil device` logs when trace is enabled
+-   PID to `nrfutil device` logs when trace is enabled.
+-   `launcherConfig` to retrieve the launcher config in any renderer process.
 
 ### Changed
 
@@ -21,6 +22,10 @@ every new version is a new major version.
 ### Fixed
 
 -   Serial port in the device list where not aligned correctly
+
+### Steps to upgrade when using this package
+
+-   In `package.json` bump `engines.nrfconnect` to at least `>=4.2.2`.
 
 ## 122 - 2023-11-02
 

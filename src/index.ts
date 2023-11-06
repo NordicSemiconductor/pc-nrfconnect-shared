@@ -99,6 +99,8 @@ export {
     persistApiKey,
 } from './utils/persistentStore';
 
+export { default as launcherConfig } from './utils/launcherConfig';
+
 export { jprogDeviceSetup } from './Device/jprogOperations';
 
 export { sdfuDeviceSetup } from './Device/sdfuOperations';
