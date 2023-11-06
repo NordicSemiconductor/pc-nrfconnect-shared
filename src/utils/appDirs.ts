@@ -7,20 +7,10 @@
 import path from 'path';
 
 import { OFFICIAL } from '../../ipc/sources';
+import launcherConfig from './launcherConfig';
 import { packageJsonApp } from './packageJson';
 
-const getUserDataDir = () => {
-    const argv = process.argv;
-    const userDataDir = argv.findIndex(arg =>
-        arg.startsWith('--user-data-dir')
-    );
-
-    if (userDataDir === -1) {
-        throw new Error('Could not find --user-data-dir argument');
-    }
-
-    return argv[userDataDir].split('=')[1];
-};
+const getUserDataDir = () => launcherConfig().userDataDir;
 
 /**
  * Get the filesystem path of the currently loaded app.
