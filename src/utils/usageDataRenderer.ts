@@ -8,7 +8,7 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 
 import { getAppSource } from './appDirs';
 import { isDevelopment } from './environment';
-import { packageJson } from './packageJson';
+import { isLauncher, packageJson } from './packageJson';
 import { getUsageDataClientId } from './persistentStore';
 import usageDataCommon, {
     INSTRUMENTATION_KEY,
@@ -32,9 +32,9 @@ const getInsights = (forceSend?: boolean) => {
 };
 
 const init = () => {
-    const appPackageJson = packageJson();
-    const applicationName = appPackageJson.name;
-    const applicationVersion = appPackageJson.version;
+    const applicationName = packageJson().name;
+    const applicationVersion = packageJson().version;
+    const source = isLauncher() ? undefined : getAppSource();
 
     const accountId = getUsageDataClientId();
 
@@ -64,10 +64,7 @@ const init = () => {
                 applicationName,
                 applicationVersion,
                 isDevelopment,
-                source:
-                    applicationName === 'nrfconnect'
-                        ? undefined
-                        : getAppSource(),
+                source,
                 ...envelope.baseData,
             };
         }
