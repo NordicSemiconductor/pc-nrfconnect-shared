@@ -7,7 +7,7 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 123 - UNRELEASED
+## 123 - 2023-11-07
 
 ### Added
 
@@ -18,6 +18,8 @@ every new version is a new major version.
 
 -   Analytic events names are now distinct with a prefix of the app name
     `<AppName>:` e.g `npm:` or `ppk:`.
+-   `<App` component no longer provides property `reportUsageData` and for app
+    to enable telemetry they must now use `usageData.enableTelemetry()`
 -   The function to send telemetry data in `usageData` became async. If you have
     to be sure they completed, you now have to await them.
 
@@ -28,6 +30,19 @@ every new version is a new major version.
 ### Steps to upgrade when using this package
 
 -   In `package.json` bump `engines.nrfconnect` to at least `>=4.2.2`.
+-   Remove `reportUsageData` property if it is set in project. If this was set
+    to true add `usageData.enableTelemetry()` as shown below. For projects like
+    launcher add `usageData.enableTelemetry()` to main and renderer window.
+
+```tsx
+import React from 'react';
+import { App, render } from '@nordicsemiconductor/pc-nrfconnect-shared';
+import usageData from '@nordicsemiconductor/pc-nrfconnect-shared/src/utils/usageData';
+
+usageData.enableTelemetry();
+
+render(<App panes={[]} />);
+```
 
 ## 122 - 2023-11-02
 
