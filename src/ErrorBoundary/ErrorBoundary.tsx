@@ -21,11 +21,7 @@ import bugIcon from './bug.svg';
 
 import './error-boundary.scss';
 
-const sendGAEvent = (error: string) => {
-    if (!usageData.isEnabled()) {
-        return;
-    }
-
+const sendErrorReport = (error: string) => {
     usageData.sendErrorReport(error);
 };
 
@@ -67,9 +63,10 @@ class ErrorBoundary extends React.Component<
     componentDidCatch(error: Error) {
         const { devices, selectedDevice, selectedSerialNumber, sendUsageData } =
             this.props;
+
         sendUsageData != null
             ? sendUsageData(error.message)
-            : sendGAEvent(error.message);
+            : sendErrorReport(error.message);
 
         generateSystemReport(
             new Date().toISOString().replace(/:/g, '-'),
