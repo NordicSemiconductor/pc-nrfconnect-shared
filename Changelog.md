@@ -13,6 +13,10 @@ every new version is a new major version.
 
 -   PID to `nrfutil device` logs when trace is enabled.
 -   `launcherConfig` to retrieve the launcher config in any renderer process.
+-   Auto select device with `--comPort <path>`. Note this will only select the
+    device, it will not open a serial connection. App will need to do further
+    action if it wants to auto open a serial connection as well to that serial
+    port
 
 ### Changed
 

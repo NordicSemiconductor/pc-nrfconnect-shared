@@ -367,10 +367,16 @@ export const startWatchingDevices =
         });
     };
 
-const getAutoSelectDeviceCLISerial = () => {
+const getAutoSelectDeviceCLISerialNumber = () => {
     const { argv } = process;
-    const serialIndex = argv.findIndex(arg => arg === '--deviceSerial');
-    return serialIndex > -1 ? argv[serialIndex + 1] : undefined;
+    const index = argv.findIndex(arg => arg === '--deviceSerial');
+    return index > -1 ? argv[index + 1] : undefined;
+};
+
+const getAutoSelectDeviceCLISerialPortName = () => {
+    const { argv } = process;
+    const index = argv.findIndex(arg => arg === '--comPort');
+    return index > -1 ? argv[index + 1] : undefined;
 };
 
 const autoSelectDeviceCLI =
@@ -379,13 +385,31 @@ const autoSelectDeviceCLI =
     ): AppThunk<RootState> =>
     (_, getState) => {
         if (!autoSelectDeviceCLISerialUsed) {
-            const autoSelectSN = getAutoSelectDeviceCLISerial();
+            const serialPortName = getAutoSelectDeviceCLISerialPortName();
 
-            if (autoSelectSN !== undefined) {
-                const autoSelectDevice = getDevice(getState(), autoSelectSN);
+            if (serialPortName !== undefined) {
+                const autoSelectDevice = getState().device.devices.find(
+                    device =>
+                        device.serialPorts?.find(
+                            port => port.comName === serialPortName
+                        )
+                );
 
                 if (autoSelectDevice) doSelectDevice(autoSelectDevice, true);
+            } else {
+                const autoSelectSN = getAutoSelectDeviceCLISerialNumber();
+
+                if (autoSelectSN !== undefined) {
+                    const autoSelectDevice = getDevice(
+                        getState(),
+                        autoSelectSN
+                    );
+
+                    if (autoSelectDevice)
+                        doSelectDevice(autoSelectDevice, true);
+                }
             }
+
             autoSelectDeviceCLISerialUsed = true;
         }
     };
