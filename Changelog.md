@@ -13,6 +13,10 @@ every new version is a new major version.
 
 -   PID to `nrfutil device` logs when trace is enabled.
 -   `launcherConfig` to retrieve the launcher config in any renderer process.
+-   Auto select device with `--comPort <path>`. Note this will only select the
+    device, it will not open a serial connection. App will need to do further
+    action if it wants to auto open a serial connection as well to that serial
+    port
 
 ### Changed
 
@@ -26,6 +30,7 @@ every new version is a new major version.
     number and returns undefined for devices with no serial number
 -   `persistTerminalSettings` not takes in a device instead of a serial number
     and returns undefined for devices with no serial number
+-   `OpenAppOptions` must have serial number or com port path but not both
 
 ### Fixed
 

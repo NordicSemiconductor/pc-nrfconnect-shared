@@ -24,7 +24,6 @@ import { closeDeviceSetupDialog } from './deviceSetupSlice';
 import {
     addDevice,
     Device,
-    getDevice,
     removeDevice,
     selectDevice,
     setSelectedDeviceInfo,
@@ -367,10 +366,42 @@ export const startWatchingDevices =
         });
     };
 
-const getAutoSelectDeviceCLISerial = () => {
+const getAutoSelectDeviceCLIProperty = (
+    property: string,
+    findDevice: (value: string) => Device | undefined
+) => {
     const { argv } = process;
-    const serialIndex = argv.findIndex(arg => arg === '--deviceSerial');
-    return serialIndex > -1 ? argv[serialIndex + 1] : undefined;
+    const index = argv.findIndex(arg => arg === property);
+    return index > -1
+        ? { index, device: findDevice(argv[index + 1]) }
+        : undefined;
+};
+
+const getAutoSelectDevice = (devices: Device[]) => {
+    const serialNumber = getAutoSelectDeviceCLIProperty('--deviceSerial', sn =>
+        devices.find(device => device.serialNumber === sn)
+    );
+    const serialPort = getAutoSelectDeviceCLIProperty('--comPort', portPath =>
+        devices.find(device =>
+            device.serialPorts?.find(port => port.comName === portPath)
+        )
+    );
+
+    if (serialNumber && serialPort) {
+        if (serialNumber.index > serialPort.index) {
+            return serialPort.device;
+        }
+
+        return serialNumber.device;
+    }
+
+    if (serialNumber) {
+        return serialNumber.device;
+    }
+
+    if (serialPort) {
+        return serialPort.device;
+    }
 };
 
 const autoSelectDeviceCLI =
@@ -379,13 +410,12 @@ const autoSelectDeviceCLI =
     ): AppThunk<RootState> =>
     (_, getState) => {
         if (!autoSelectDeviceCLISerialUsed) {
-            const autoSelectSN = getAutoSelectDeviceCLISerial();
+            const autoSelectDevice = getAutoSelectDevice(
+                getState().device.devices
+            );
 
-            if (autoSelectSN !== undefined) {
-                const autoSelectDevice = getDevice(getState(), autoSelectSN);
+            if (autoSelectDevice) doSelectDevice(autoSelectDevice, true);
 
-                if (autoSelectDevice) doSelectDevice(autoSelectDevice, true);
-            }
             autoSelectDeviceCLISerialUsed = true;
         }
     };
