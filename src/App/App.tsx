@@ -30,9 +30,8 @@ import LogViewer from '../Log/LogViewer';
 import logger from '../logging';
 import NavBar from '../NavBar/NavBar';
 import classNames from '../utils/classNames';
-import packageJson from '../utils/packageJson';
 import { getPersistedCurrentPane } from '../utils/persistentStore';
-import { init as usageDataInit, setUsageLogger } from '../utils/usageData';
+import usageData from '../utils/usageData';
 import useHotKey from '../utils/useHotKey';
 import {
     currentPane as currentPaneSelector,
@@ -49,19 +48,6 @@ import './app.scss';
 import './shared.scss';
 import './tailwind.css';
 
-let usageDataAlreadyInitialised = false;
-const initialiseUsageData = () => {
-    if (!usageDataAlreadyInitialised) {
-        usageDataAlreadyInitialised = true;
-        try {
-            usageDataInit(packageJson());
-        } catch (error) {
-            // No need to display the error message for the user
-            console.log(error);
-        }
-    }
-};
-
 export interface PaneProps {
     active: boolean;
 }
@@ -77,7 +63,6 @@ interface ConnectedAppProps {
     panes: Pane[];
     sidePanel?: ReactNode;
     showLogByDefault?: boolean;
-    reportUsageData?: boolean;
     documentation?: ReactNode[];
     feedback?: boolean | FeedbackPaneProps;
     children?: ReactNode;
@@ -89,25 +74,25 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     panes,
     sidePanel,
     showLogByDefault = true,
-    reportUsageData = false,
     documentation,
     feedback,
     children,
     autoReselectByDefault = false,
 }) => {
-    const initialisedLogger = useRef(false);
+    const initApp = useRef(false);
 
-    if (!initialisedLogger.current) {
+    if (!initApp.current) {
         logger.initialise();
         setNrfutilLogger(logger);
-        setUsageLogger(logger);
-        initialisedLogger.current = true;
+        usageData.setLogger(logger);
+        initApp.current = true;
     }
 
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
     const allPanes = useAllPanes(panes, documentation, feedback);
+    const paneName = useRef(allPanes.map(({ name }) => name));
     const dispatch = useDispatch();
 
     useHotKey({
@@ -116,6 +101,14 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
         isGlobal: true,
         action: openWindow.openLauncher,
     });
+
+    useEffect(() => {
+        paneName.current = allPanes.map(({ name }) => name);
+    }, [allPanes]);
+
+    useEffect(() => {
+        usageData.sendPageView(paneName.current[currentPane]);
+    }, [currentPane]);
 
     useEffect(() => {
         dispatch(setAutoReselect(autoReselectByDefault));
@@ -133,12 +126,6 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
 
     const isSidePanelVisible =
         useSelector(isSidePanelVisibleSelector) && currentSidePanel;
-
-    useEffect(() => {
-        if (reportUsageData) {
-            initialiseUsageData();
-        }
-    }, [reportUsageData]);
 
     return (
         <div className="core19-app">

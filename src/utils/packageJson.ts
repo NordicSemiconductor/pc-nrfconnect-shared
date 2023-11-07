@@ -6,26 +6,68 @@
 
 import {
     type PackageJson,
+    type PackageJsonApp,
     parsePackageJson,
+    parsePackageJsonApp,
 } from '../../ipc/schema/packageJson';
 
-let cache: PackageJson | undefined;
+let cache:
+    | undefined
+    | { type: 'launcher'; data: PackageJson }
+    | { type: 'app'; data: PackageJsonApp };
 
-const parsedPackageJson = () => {
+export const isLauncher = (packageJson = parsedPackageJson()) =>
+    packageJson.name === 'nrfconnect';
+
+const parsedPackageJson = (): PackageJson | PackageJsonApp => {
     if (cache != null) {
-        return cache;
+        return cache.data;
     }
 
-    const parsed = parsePackageJson(process.env.PACKAGE_JSON_OF_APP ?? 'null');
-    if (parsed.success) {
-        cache = parsed.data;
-    } else {
+    const unparsed = process.env.PACKAGE_JSON ?? 'null';
+
+    const parsed = parsePackageJson(unparsed);
+
+    if (!parsed.success) {
         throw new Error(
-            `The env variable PACKAGE_JSON_OF_APP must be defined during bundling (through the bundler settings) with a valid package.json but wasn't. Fix this. Error: ${parsed.error.message}`
+            `The env variable PACKAGE_JSON must be defined during bundling (through the bundler settings) with a valid package.json but wasn't. Error: ${parsed.error.message}`
         );
     }
 
-    return cache;
+    if (isLauncher(parsed.data)) {
+        cache = {
+            type: 'launcher',
+            data: parsed.data,
+        };
+    } else {
+        const parsedAppPackageJson = parsePackageJsonApp(unparsed);
+        if (!parsedAppPackageJson.success) {
+            throw new Error(
+                `The package.json must contain all values required for an app. Error: ${parsedAppPackageJson.error.message}`
+            );
+        }
+
+        cache = {
+            type: 'app',
+            data: parsedAppPackageJson.data,
+        };
+    }
+
+    return cache.data;
 };
 
-export default () => parsedPackageJson();
+export const packageJson = parsedPackageJson;
+
+export const packageJsonApp = () => {
+    parsedPackageJson();
+
+    if (cache?.type !== 'app') {
+        throw new Error(
+            `Required the package.json of an app. Actual content: ${JSON.stringify(
+                cache
+            )}`
+        );
+    }
+
+    return cache.data;
+};

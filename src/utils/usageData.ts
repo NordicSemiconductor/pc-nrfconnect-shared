@@ -4,206 +4,114 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { ApplicationInsights } from '@microsoft/applicationinsights-web';
-import type Systeminformation from 'systeminformation';
-import winston from 'winston';
+import si from 'systeminformation';
 
-import { isDevelopment } from './environment';
+import { packageJson } from './packageJson';
 import {
     deleteIsSendingUsageData,
-    getIsSendingUsageData,
-    getUsageDataClientId,
     persistIsSendingUsageData,
 } from './persistentStore';
+import usageDataCommon, { Metadata } from './usageDataCommon';
+import usageDataMain from './usageDataMain';
+import usageDataRenderer from './usageDataRenderer';
 
-const instrumentationKey = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
+const getFriendlyAppName = () =>
+    packageJson().name.replace('pc-nrfconnect-', '');
 
-interface EventAction {
-    action: string;
-    label?: string;
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const flattenObject = (obj?: any, parentKey?: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let result: any = {};
 
-let eventQueue: EventAction[] = [];
-let insights: ApplicationInsights | undefined;
+    if (!obj) return result;
 
-/**
- * Initialize instance to send user data
- * @param {*} packageJson the app's package json
- *
- * @returns {Promise<void>} void
- */
-export const init = (packageJson: { name: string; version: string }) => {
-    const applicationName = isDevelopment
-        ? `${packageJson.name}-dev`
-        : packageJson.name;
-    const applicationVersion = packageJson.version;
-
-    if (!getIsSendingUsageData()) return;
-
-    const accountId = getUsageDataClientId();
-
-    insights = new ApplicationInsights({
-        config: {
-            instrumentationKey,
-            accountId,
-        },
+    Object.keys(obj).forEach(key => {
+        const value = obj[key];
+        const newKey = parentKey ? `${parentKey}.${key}` : key;
+        if (typeof value === 'object') {
+            result = { ...result, ...flattenObject(value, newKey) };
+        } else {
+            result[newKey] = value;
+        }
     });
 
-    insights.loadAppInsights();
-    insights.trackPageView({ name: applicationName });
-
-    // Add app name and version to every event
-    insights.addTelemetryInitializer(envelope => {
-        const trace = {
-            ...(envelope.ext?.trace ?? {}),
-            name: applicationName,
-        };
-        envelope.ext = { ...envelope.ext, trace };
-        envelope.data = {
-            ...envelope.data,
-            applicationName,
-            applicationVersion,
-        };
-    });
-
-    logger?.debug(
-        `Application Insights for category ${applicationName} has initialized`
-    );
-
-    // Add 5 second delay to prevent inital rendering from beeing frozen.
-    setTimeout(async () => {
-        // eslint-disable-next-line global-require
-        const si = require('systeminformation') as typeof Systeminformation;
-        sendUsageData('architecture', (await si.osInfo()).arch);
-    }, 5_000);
+    return result;
 };
 
-/**
- * Checks if usage report instance is initialized and ready to be sent
- *
- * @returns {Boolean} returns whether the setting is on, off or undefined
- */
-export const isInitialized = () => {
-    logger?.debug(
-        `Usage report instance is${
-            insights !== undefined ? '' : ' not'
-        } initialized`
-    );
-    return insights !== undefined;
-};
-
-/**
- * Check the status of usage data
- *
- * @returns {Boolean | undefined} returns whether the setting is on, off or undefined
- */
-export const isEnabled = () => {
-    const isSendingUsageData = getIsSendingUsageData();
-    logger?.debug(`Usage data is ${isSendingUsageData}`);
-    return isSendingUsageData;
-};
-
-/**
- * Enable sending usage data
- *
- * @returns {void}
- */
-export const enable = () => {
+const enable = () => {
     persistIsSendingUsageData(true);
-    logger?.debug('Usage data has been enabled');
+    si.osInfo().then(({ platform, arch }) =>
+        getUsageData().sendUsageData('Report OS info', { platform, arch })
+    );
+    getUsageData().sendUsageData('Data Usage Opt-In', undefined);
+    usageDataCommon.getLogger()?.debug('Usage data has been enabled');
 };
 
-/**
- * Disable sending usage data
- *
- * @returns {void}
- */
-export const disable = () => {
+const disable = () => {
+    getUsageData().sendUsageData('Data Usage Opt-Out', undefined, true);
     persistIsSendingUsageData(false);
-    logger?.debug('Usage data has been disabled');
+    usageDataCommon.getLogger()?.debug('Usage data has been disabled');
 };
 
-/**
- * Reset settings so that launcher is able to
- * ask the user to enable or disable sending usage data
- *
- * @returns {void}
- */
-export const reset = () => {
+const reset = () => {
+    getUsageData().sendUsageData('Data Usage Opt-Reset', undefined, true);
     deleteIsSendingUsageData();
-    logger?.debug('Usage data setting has been reset');
+    usageDataCommon.getLogger()?.debug('Usage data setting has been reset');
 };
 
-/**
- * Send event
- * @param {EventAction} event the event to send
- *
- * @returns {void}
- */
-const sendEvent = ({ action, label }: EventAction) => {
-    const isSendingUsageData = getIsSendingUsageData();
+const isRenderer = process && process.type === 'renderer';
 
-    if (isSendingUsageData && insights !== undefined) {
-        logger?.debug(`Sending usage data ${action} ${label}`);
-        insights.trackEvent({
-            name: action,
-            properties: label ? { label } : undefined,
-        });
+const getUsageData = () => {
+    if (isRenderer) {
+        return usageDataRenderer;
+    }
+
+    return usageDataMain;
+};
+
+const sendUsageData = async (
+    action: string,
+    metadata?: Metadata,
+    forceSend?: boolean
+) => {
+    if (
+        await getUsageData().sendUsageData(
+            `${getFriendlyAppName()}: ${action}`,
+            flattenObject(metadata),
+            forceSend
+        )
+    ) {
+        usageDataCommon
+            .getLogger()
+            ?.debug(`Sending usage data ${JSON.stringify(action)}`);
     }
 };
 
-/**
- * Send usage data event to Application Insights
- * @param {string} action The event action
- * @param {string} label The event label
- * @returns {void}
- */
-export const sendUsageData = <T extends string>(action: T, label?: string) => {
-    eventQueue.push({ action, label });
-    if (!isInitialized()) {
-        return;
-    }
-    eventQueue.forEach(sendEvent);
-    eventQueue = [];
-};
+const sendPageView = (pageName: string) =>
+    getUsageData().sendPageView(`${getFriendlyAppName()} - ${pageName}`);
 
-export const sendMetric = (name: string, average: number) => {
-    insights?.trackMetric({
-        name,
-        average,
-    });
-};
+const sendMetric = (name: string, average: number) =>
+    getUsageData().sendMetric(name, average);
 
-export const sendTrace = (message: string) => {
-    insights?.trackTrace({
-        message,
-    });
-};
+const sendTrace = (message: string) => getUsageData().sendTrace(message);
 
-/**
- * Send error usage data event to Application Insights and also show it in the logger view
- * @param {string} error The event action
- * @returns {void}
- */
-export const sendErrorReport = (error: string) => {
-    logger?.error(error);
-    insights?.trackException({
-        exception: new Error(error),
-    });
-};
-
-let logger: winston.Logger | undefined;
-export const setUsageLogger = (log: winston.Logger) => {
-    logger = log;
+const sendErrorReport = (error: string | Error) => {
+    usageDataCommon.getLogger()?.error(error);
+    return getUsageData().sendErrorReport(
+        typeof error === 'string' ? new Error(error) : error
+    );
 };
 
 export default {
+    setLogger: usageDataCommon.setLogger,
     disable,
     enable,
-    init,
-    isEnabled,
-    isInitialized,
+    isEnabled: usageDataCommon.isEnabled,
     reset,
     sendErrorReport,
     sendUsageData,
+    sendPageView,
+    sendMetric,
+    sendTrace,
+    enableTelemetry: usageDataCommon.enableTelemetry,
 };

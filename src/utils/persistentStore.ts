@@ -11,7 +11,7 @@ import { v4 as uuid } from 'uuid';
 
 import { inMain as safeStorage } from '../../ipc/safeStorage';
 import logger from '../logging';
-import packageJson from './packageJson';
+import { packageJson } from './packageJson';
 
 export interface SerialSettings {
     serialPortOptions: Omit<SerialPortOpenOptions<AutoDetectTypes>, 'path'>;

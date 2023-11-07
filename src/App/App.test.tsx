@@ -7,6 +7,7 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 
+import packageJsonFromShared from '../../package.json';
 import render from '../../test/testrenderer';
 import App, { Pane } from './App';
 
@@ -17,6 +18,12 @@ jest.mock('../Log/LogViewer', () => ({
 
 jest.mock('../logging/index.ts', () => ({
     initialise: () => {},
+    debug: () => {},
+}));
+
+jest.mock('../utils/packageJson', () => ({
+    isLauncher: () => false,
+    packageJson: () => packageJsonFromShared,
 }));
 
 const renderApp = (panes: Pane[]) => {

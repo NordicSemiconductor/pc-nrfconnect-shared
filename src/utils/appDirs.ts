@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { getGlobal } from '@electron/remote';
 import path from 'path';
 
-import packageJson from './packageJson';
+import launcherConfig from './launcherConfig';
+import { packageJsonApp } from './packageJson';
 
-const getUserDataDir = () => getGlobal('userDataDir');
+const getUserDataDir = () => launcherConfig().userDataDir;
 
 /**
  * Get the filesystem path of the currently loaded app.
@@ -17,7 +17,7 @@ const getUserDataDir = () => getGlobal('userDataDir');
  * @returns {string|undefined} Absolute path of current app.
  */
 const getAppDir = () => {
-    const html = packageJson().nrfConnectForDesktop.html;
+    const html = packageJsonApp().nrfConnectForDesktop.html;
     const dir = path.parse(html).dir;
     return path.parse(__filename).dir.replace(dir, '');
 };

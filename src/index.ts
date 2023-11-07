@@ -77,6 +77,7 @@ export { openUrl } from './utils/open';
 export { default as systemReport } from './utils/systemReport';
 
 export { default as usageData } from './utils/usageData';
+export { type Metadata as UsageDataMetadata } from './utils/usageDataCommon';
 export { default as classNames } from './utils/classNames';
 export { truncateMiddle } from './utils/truncateMiddle';
 
@@ -96,6 +97,8 @@ export {
     getPersistedApiKey,
     persistApiKey,
 } from './utils/persistentStore';
+
+export { default as launcherConfig } from './utils/launcherConfig';
 
 export { jprogDeviceSetup } from './Device/jprogOperations';
 

@@ -13,27 +13,20 @@ import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { CollapsibleGroup } from '../SidePanel/Group';
 import Spinner from '../Spinner/Spinner';
 import { openUrl } from '../utils/open';
-import packageJson from '../utils/packageJson';
+import { packageJson } from '../utils/packageJson';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
 import { generateSystemReport } from '../utils/systemReport';
-import {
-    init as initGA,
-    isEnabled,
-    isInitialized as isGAInitialized,
-    sendErrorReport,
-} from '../utils/usageData';
+import usageData from '../utils/usageData';
 import bugIcon from './bug.svg';
 
 import './error-boundary.scss';
 
 const sendGAEvent = (error: string) => {
-    if (!isEnabled()) {
+    if (!usageData.isEnabled()) {
         return;
     }
-    if (!isGAInitialized()) {
-        initGA(packageJson());
-    }
-    sendErrorReport(error);
+
+    usageData.sendErrorReport(error);
 };
 
 interface Props {
@@ -97,7 +90,8 @@ class ErrorBoundary extends React.Component<
             return children;
         }
 
-        const appDisplayName = appName || packageJson().displayName;
+        const appDisplayName =
+            appName || packageJson().displayName || packageJson().name;
 
         return (
             <div className="error-boundary__container">

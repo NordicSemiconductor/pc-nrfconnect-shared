@@ -14,7 +14,7 @@ import semver from 'semver';
 import calculateShasum from 'shasum';
 
 import { AppInfo, SourceJson } from '../ipc/MetaFiles';
-import { PackageJson } from '../ipc/schema/packageJson';
+import { PackageJsonApp } from '../ipc/schema/packageJson';
 import checkAppProperties from './check-app-properties';
 
 interface LegacyAppInfo {
@@ -41,7 +41,7 @@ interface App {
     releaseNotesFilename: string;
     iconFilename: string;
     isOfficial: boolean;
-    packageJson: PackageJson;
+    packageJson: PackageJsonApp;
 }
 
 const client = new FtpClient();
@@ -113,7 +113,7 @@ const parseOptions = (): Options => {
     };
 };
 
-const readPackageJson = (): PackageJson =>
+const readPackageJson = (): PackageJsonApp =>
     JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
 
 const packPackage = () => {

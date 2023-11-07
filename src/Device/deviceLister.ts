@@ -8,6 +8,8 @@ import { DeviceTraits, NrfutilDevice } from '../../nrfutil/device/common';
 import NrfutilDeviceLib from '../../nrfutil/device/device';
 import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
+import usageData from '../utils/usageData';
+import { simplifyDeviceForLogging } from '../utils/usageDataCommon';
 import {
     clearWaitForDevice,
     clearWaitForDeviceTimeout,
@@ -164,6 +166,10 @@ export const startWatchingDevices =
     (dispatch, getState) => {
         const onDeviceArrived = async (device: NrfutilDevice) => {
             if (hasValidDeviceTraits(device.traits, deviceListing)) {
+                usageData.sendUsageData(
+                    'device connected',
+                    simplifyDeviceForLogging(device)
+                );
                 if (
                     !getState().device.devices.find(
                         d =>
