@@ -18,15 +18,12 @@ import usageDataRenderer from './usageDataRenderer';
 const getFriendlyAppName = () =>
     packageJson().name.replace('pc-nrfconnect-', '');
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const flattenObject = (obj?: any, parentKey?: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let result: any = {};
+const flattenObject = (obj?: unknown, parentKey?: string) => {
+    let result: Metadata = {};
 
-    if (!obj) return result;
+    if (obj == null) return result;
 
-    Object.keys(obj).forEach(key => {
-        const value = obj[key];
+    Object.entries(obj).forEach(([key, value]) => {
         const newKey = parentKey ? `${parentKey}.${key}` : key;
         if (typeof value === 'object') {
             result = { ...result, ...flattenObject(value, newKey) };
