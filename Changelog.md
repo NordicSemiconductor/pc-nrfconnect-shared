@@ -24,6 +24,8 @@ every new version is a new major version.
     to be sure they completed, you now have to await them.
 -   `getPersistedTerminalSettings` not takes in a device instead of a serial
     number and returns undefined for devices with no serial number
+-   `persistTerminalSettings` not takes in a device instead of a serial number
+    and returns undefined for devices with no serial number
 
 ### Fixed
 
@@ -38,6 +40,8 @@ every new version is a new major version.
     launcher add `usageData.enableTelemetry()` to main and renderer window.
 -   When using `getPersistedTerminalSettings` replace the serialNumber with the
     device in question
+-   When using `persistTerminalSettings` replace the serialNumber with the
+    device in question s
 
 ```tsx
 import React from 'react';

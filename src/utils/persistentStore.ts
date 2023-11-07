@@ -90,14 +90,17 @@ export const getPersistedSerialPortSettings = (
     return sharedStore.get(`${serialNumber}.${appName}`);
 };
 export const persistTerminalSettings = (
-    serialNumber: string,
+    device: Device,
     vComIndex: number,
     terminalSettings: TerminalSettings
-) =>
-    sharedStore.set(
-        `${serialNumber}.vCom-${vComIndex}.TerminalSettings`,
-        terminalSettings
-    );
+) => {
+    if (device.serialNumber) {
+        sharedStore.set(
+            `${device.serialNumber}.vCom-${vComIndex}.TerminalSettings`,
+            terminalSettings
+        );
+    }
+};
 export const getPersistedTerminalSettings = (
     device: Device,
     vComIndex: number
