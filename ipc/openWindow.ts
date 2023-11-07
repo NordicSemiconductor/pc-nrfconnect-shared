@@ -22,13 +22,11 @@ export const isOpenAppOptionsDevicePort = (
 ): device is OpenAppOptionsDevicePort =>
     (device as OpenAppOptionsDevicePort).serialPortPath !== undefined;
 
-export type OpenAppOptionsDeviceSN = { serialNumber: string };
+type OpenAppOptionsDeviceSN = { serialNumber: string };
 
-export type OpenAppOptionsDevicePort = { serialPortPath: string };
+type OpenAppOptionsDevicePort = { serialPortPath: string };
 
-export type OpenAppOptionsDevice =
-    | OpenAppOptionsDeviceSN
-    | OpenAppOptionsDevicePort;
+type OpenAppOptionsDevice = OpenAppOptionsDeviceSN | OpenAppOptionsDevicePort;
 
 export interface OpenAppOptions {
     device?: OpenAppOptionsDevice;
