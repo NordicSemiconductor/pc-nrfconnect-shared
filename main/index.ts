@@ -46,4 +46,13 @@ export {
 } from '../ipc/schema/packageJson';
 
 export { type OverwriteOptions } from '../ipc/serialPort';
-export { type OpenAppOptions } from '../ipc/openWindow';
+export type {
+    OpenAppOptions,
+    OpenAppOptionsDevice,
+    OpenAppOptionsDeviceSN,
+    OpenAppOptionsDevicePort,
+} from '../ipc/openWindow';
+export {
+    isOpenAppOptionsDevicePort,
+    isOpenAppOptionsDeviceSN,
+} from '../ipc/openWindow';

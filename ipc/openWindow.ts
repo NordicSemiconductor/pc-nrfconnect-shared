@@ -12,8 +12,26 @@ const channel = {
     launcher: 'open-app-launcher', // It would be nice to call this `open:launcher` but we have to stick to the current name, because that is used by supported apps.
 };
 
+export const isOpenAppOptionsDeviceSN = (
+    device: OpenAppOptionsDevice
+): device is OpenAppOptionsDeviceSN =>
+    (device as OpenAppOptionsDeviceSN).serialNumber !== undefined;
+
+export const isOpenAppOptionsDevicePort = (
+    device: OpenAppOptionsDevice
+): device is OpenAppOptionsDevicePort =>
+    (device as OpenAppOptionsDevicePort).serialPortPath !== undefined;
+
+export type OpenAppOptionsDeviceSN = { serialNumber: string };
+
+export type OpenAppOptionsDevicePort = { serialPortPath: string };
+
+export type OpenAppOptionsDevice =
+    | OpenAppOptionsDeviceSN
+    | OpenAppOptionsDevicePort;
+
 export interface OpenAppOptions {
-    device?: { serialNumber: string } | { serialPortPath: string };
+    device?: OpenAppOptionsDevice;
 }
 
 type OpenApp = (app: AppSpec, openAppOptions?: OpenAppOptions) => void;
