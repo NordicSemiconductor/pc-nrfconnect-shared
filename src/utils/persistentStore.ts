@@ -10,6 +10,7 @@ import { SerialPortOpenOptions } from 'serialport';
 import { v4 as uuid } from 'uuid';
 
 import { inMain as safeStorage } from '../../ipc/safeStorage';
+import { type Device } from '../Device/deviceSlice';
 import logger from '../logging';
 import { packageJson } from './packageJson';
 
@@ -98,15 +99,18 @@ export const persistTerminalSettings = (
         terminalSettings
     );
 export const getPersistedTerminalSettings = (
-    serialNumber: string,
+    device: Device,
     vComIndex: number
 ): TerminalSettings | undefined => {
-    logger.info(
-        `Get terminal settings from persistent store ${serialNumber}.vCom-${vComIndex}.TerminalSettings`
-    );
-    return sharedStore.get(
-        `${serialNumber}.vCom-${vComIndex}.TerminalSettings`
-    );
+    if (device.serialNumber) {
+        logger.info(
+            `Get terminal settings from persistent store ${device.serialNumber}.vCom-${vComIndex}.TerminalSettings`
+        );
+        return sharedStore.get(
+            `${device.serialNumber}.vCom-${vComIndex}.TerminalSettings`
+        );
+    }
+    return undefined;
 };
 
 export const persistIsSendingUsageData = (value: boolean) =>

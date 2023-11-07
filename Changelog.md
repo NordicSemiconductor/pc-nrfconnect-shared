@@ -22,6 +22,8 @@ every new version is a new major version.
     to enable telemetry they must now use `usageData.enableTelemetry()`
 -   The function to send telemetry data in `usageData` became async. If you have
     to be sure they completed, you now have to await them.
+-   `getPersistedTerminalSettings` not takes in a device instead of a serial
+    number and returns undefined for devices with no serial number
 
 ### Fixed
 
@@ -34,6 +36,8 @@ every new version is a new major version.
 -   Remove `reportUsageData` property if it is set in project. If this was set
     to true add `usageData.enableTelemetry()` as shown below. For projects like
     launcher add `usageData.enableTelemetry()` to main and renderer window.
+-   When using `getPersistedTerminalSettings` replace the serialNumber with the
+    device in question
 
 ```tsx
 import React from 'react';
