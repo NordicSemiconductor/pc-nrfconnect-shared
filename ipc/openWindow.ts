@@ -13,7 +13,7 @@ const channel = {
 };
 
 export interface OpenAppOptions {
-    device?: { serialNumber: string; serialPortPath?: string };
+    device?: { serialNumber: string } | { serialPortPath: string };
 }
 
 type OpenApp = (app: AppSpec, openAppOptions?: OpenAppOptions) => void;

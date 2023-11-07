@@ -30,6 +30,7 @@ every new version is a new major version.
     number and returns undefined for devices with no serial number
 -   `persistTerminalSettings` not takes in a device instead of a serial number
     and returns undefined for devices with no serial number
+-   `OpenAppOptions` must have serial number or com port path but not both
 
 ### Fixed
 
