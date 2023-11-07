@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { inMain as appDetails } from '../../ipc/appDetails';
 import NrfutilDeviceLib from '../../nrfutil/device/device';
 import {
     getExpectedVersion,
     resolveModuleVersion,
 } from '../../nrfutil/moduleVersion';
+import appDetails from '../utils/appDetails';
 import { getAppDataDir } from '../utils/appDirs';
 import logLibVersions from '../utils/logLibVersions';
 import udevInstalled from '../utils/udevInstalled';
@@ -23,8 +23,6 @@ export default async () => {
     logLibVersions();
     logger.debug(`Application data folder: ${getAppDataDir()}`);
 
-    const details = await appDetails.getAppDetails();
-
     const {
         name,
         currentVersion,
@@ -35,7 +33,7 @@ export default async () => {
         homeDir,
         tmpDir,
         source,
-    } = details;
+    } = await appDetails();
 
     logger.debug(`App ${name} v${currentVersion} (${source})`);
     logger.debug(`App path: ${installed.path}`);

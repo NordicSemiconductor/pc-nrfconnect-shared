@@ -6,6 +6,7 @@
 
 import { forRenderer as forRendererAppDetails } from '../ipc/appDetails';
 import { forRenderer as forRendererApps } from '../ipc/apps';
+import { forRenderer as forRendererLauncherConfig } from '../ipc/launcherConfig';
 import { forRenderer as forRendererOpenWindow } from '../ipc/openWindow';
 import { forRenderer as forRendererPreventSleep } from '../ipc/preventSleep';
 import { forRenderer as forRendererSafeStorage } from '../ipc/safeStorage';
@@ -18,6 +19,7 @@ export { registerLauncherWindowFromMain } from '../ipc/infrastructure/mainToRend
 
 export const appDetails = { forRenderer: forRendererAppDetails };
 export const apps = { forRenderer: forRendererApps };
+export const launcherConfig = { forRenderer: forRendererLauncherConfig };
 export const openWindow = { forRenderer: forRendererOpenWindow };
 export const preventSleep = { forRenderer: forRendererPreventSleep };
 export const safeStorage = {

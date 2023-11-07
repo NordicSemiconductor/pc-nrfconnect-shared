@@ -69,13 +69,13 @@ const getUsageData = () => {
     return usageDataMain;
 };
 
-const sendUsageData = (
+const sendUsageData = async (
     action: string,
     metadata?: Metadata,
     forceSend?: boolean
 ) => {
     if (
-        getUsageData().sendUsageData(
+        await getUsageData().sendUsageData(
             `${getFriendlyAppName()}: ${action}`,
             flattenObject(metadata),
             forceSend
@@ -87,21 +87,17 @@ const sendUsageData = (
     }
 };
 
-const sendPageView = (pageName: string) => {
+const sendPageView = (pageName: string) =>
     getUsageData().sendPageView(`${getFriendlyAppName()} - ${pageName}`);
-};
 
-const sendMetric = (name: string, average: number) => {
+const sendMetric = (name: string, average: number) =>
     getUsageData().sendMetric(name, average);
-};
 
-const sendTrace = (message: string) => {
-    getUsageData().sendTrace(message);
-};
+const sendTrace = (message: string) => getUsageData().sendTrace(message);
 
 const sendErrorReport = (error: string | Error) => {
     usageDataCommon.getLogger()?.error(error);
-    getUsageData().sendErrorReport(
+    return getUsageData().sendErrorReport(
         typeof error === 'string' ? new Error(error) : error
     );
 };

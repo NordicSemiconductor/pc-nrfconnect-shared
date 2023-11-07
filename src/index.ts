@@ -70,7 +70,6 @@ export {
     getAppFile,
     getAppDataDir,
     getAppLogDir,
-    getAppSource,
     getUserDataDir,
 } from './utils/appDirs';
 
@@ -98,6 +97,8 @@ export {
     getPersistedApiKey,
     persistApiKey,
 } from './utils/persistentStore';
+
+export { default as launcherConfig } from './utils/launcherConfig';
 
 export { jprogDeviceSetup } from './Device/jprogOperations';
 

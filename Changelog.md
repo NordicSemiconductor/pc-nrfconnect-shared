@@ -11,16 +11,23 @@ every new version is a new major version.
 
 ### Added
 
--   PID to `nrfutil device` logs when trace is enabled
+-   PID to `nrfutil device` logs when trace is enabled.
+-   `launcherConfig` to retrieve the launcher config in any renderer process.
 
 ### Changed
 
 -   Analytic events names are now distinct with a prefix of the app name
     `<AppName>:` e.g `npm:` or `ppk:`.
+-   The function to send telemetry data in `usageData` became async. If you have
+    to be sure they completed, you now have to await them.
 
 ### Fixed
 
 -   Serial port in the device list where not aligned correctly
+
+### Steps to upgrade when using this package
+
+-   In `package.json` bump `engines.nrfconnect` to at least `>=4.2.2`.
 
 ## 122 - 2023-11-02
 

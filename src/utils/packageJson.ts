@@ -16,7 +16,10 @@ let cache:
     | { type: 'launcher'; data: PackageJson }
     | { type: 'app'; data: PackageJsonApp };
 
-const parsedPackageJson = () => {
+export const isLauncher = (packageJson = parsedPackageJson()) =>
+    packageJson.name === 'nrfconnect';
+
+const parsedPackageJson = (): PackageJson | PackageJsonApp => {
     if (cache != null) {
         return cache.data;
     }
@@ -31,9 +34,7 @@ const parsedPackageJson = () => {
         );
     }
 
-    const isLauncher = parsed.data.name === 'nrfconnect';
-
-    if (isLauncher) {
+    if (isLauncher(parsed.data)) {
         cache = {
             type: 'launcher',
             data: parsed.data,
