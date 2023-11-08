@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { DropdownItem } from '../Dropdown/Dropdown';
 import { RangeOrValues } from '../Slider/range';
 import classNames from '../utils/classNames';
+import { useSynchronisationIfChangedFromOutside } from './InlineInput';
 import NumberInlineInput from './NumberInlineInput';
 
 import styles from '../Dropdown/Dropdown.module.scss';
@@ -55,6 +56,8 @@ export default ({
         }
     };
 
+    useSynchronisationIfChangedFromOutside(value, setInlineValue);
+
     return (
         <div
             className={`tw-preflight tw-relative tw-w-full ${className}`}
@@ -78,6 +81,7 @@ export default ({
                     textAlignLeft
                     onValidityChanged={setIsValid}
                     preventDefaultInvalidStyle
+                    disabled={disabled}
                 />
                 <button
                     id={id}
