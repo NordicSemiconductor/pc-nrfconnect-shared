@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 127 - 2023-11-08
+
+### Fixed
+
+-   version 126 was released as a prerelease on NPM
+
 ## 126 - 2023-11-08
 
 ### Fixed
