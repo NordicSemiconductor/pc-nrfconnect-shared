@@ -12,15 +12,18 @@ import { openFile } from '../utils/open';
 export default ({
     label,
     fileLocation,
+    className,
 }: {
     label: string;
     fileLocation: string;
+    className: string;
 }) => (
     <button
         type="button"
         onClick={() => openFile(fileLocation)}
         className={classNames(
-            'tw-preflight tw-text-nordicBlue hover:tw-underline'
+            'tw-preflight tw-text-nordicBlue hover:tw-underline',
+            className
         )}
     >
         {label}

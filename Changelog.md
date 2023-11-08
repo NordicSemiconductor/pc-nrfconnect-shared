@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 124 - 2023-11-08
+
+### Added
+
+-   ClassName to `FileLink` component
+
 ## 123 - 2023-11-07
 
 ### Added
