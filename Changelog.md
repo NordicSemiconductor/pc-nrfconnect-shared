@@ -11,7 +11,8 @@ every new version is a new major version.
 
 ### Added
 
--   ClassName to `FileLink` component
+-   `className` property to `FileLink` component
+-   `FileLink` will add ellipsis when text overflows
 
 ## 123 - 2023-11-07
 
