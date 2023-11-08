@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 128 - 2023-11-08
+
+### Fixed
+
+-   `NumberInputSliderWithUnit` component did not disable all sub-components
+-   `NumberInputSliderWithUnit` did not update when external value changed
+
 ## 127 - 2023-11-08
 
 ### Fixed
