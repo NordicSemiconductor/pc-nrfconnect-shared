@@ -16,7 +16,7 @@ export default ({
 }: {
     label: string;
     fileLocation: string;
-    className: string;
+    className?: string;
 }) => (
     <button
         type="button"
