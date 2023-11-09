@@ -193,6 +193,8 @@ export class NrfutilSandbox {
         }
     };
 
+    public getNrfutilExePath = () => path.join(this.baseDir, 'nrfutil');
+
     private spawnNrfutil = async <Result>(
         command: string,
         args: string[],
@@ -394,7 +396,7 @@ export class NrfutilSandbox {
                 ...args,
             ];
             const nrfutil = exec(
-                `${path.join(this.baseDir, 'nrfutil')} ${args.join(' ')}`,
+                `${this.getNrfutilExePath()} ${args.join(' ')}`,
                 {
                     env: filterEnv(this.env),
                 }
