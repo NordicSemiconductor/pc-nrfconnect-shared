@@ -68,7 +68,7 @@ export default async (
     };
 
     const sandbox = await getDeviceSandbox();
-    return sandbox.execBackgroundSubcommand<HotplugEvent>('list', args, {
+    return sandbox.spawnBackgroundSubcommand<HotplugEvent>('list', args, {
         onData,
         onError,
     });

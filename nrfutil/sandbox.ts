@@ -136,7 +136,7 @@ export class NrfutilSandbox {
     };
 
     public getModuleVersion = async () => {
-        const results = await this.execNrfutil<ModuleVersion>(this.module, [
+        const results = await this.spawnNrfutil<ModuleVersion>(this.module, [
             '--version',
         ]);
 
@@ -175,7 +175,7 @@ export class NrfutilSandbox {
             getNrfutilLogger()?.info(
                 `Preparing nrfutil-${this.module} version: ${this.version}`
             );
-            await this.execNrfutil(
+            await this.spawnNrfutil(
                 'install',
                 [`${this.module}=${this.version}`, '--force'],
                 onProgress
@@ -193,7 +193,7 @@ export class NrfutilSandbox {
         }
     };
 
-    private execNrfutil = async <Result>(
+    private spawnNrfutil = async <Result>(
         command: string,
         args: string[],
         onProgress?: (progress: Progress, task?: Task) => void,
@@ -208,7 +208,7 @@ export class NrfutilSandbox {
         let pid: number | undefined;
 
         try {
-            await this.execCommand(
+            await this.spawnNrfutilCommand(
                 command,
                 args,
                 (data, processId) =>
@@ -287,7 +287,7 @@ export class NrfutilSandbox {
         controller?: AbortController,
         filterEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) =>
-        this.execNrfutil<Result>(
+        this.spawnNrfutil<Result>(
             this.module,
             [command, ...args],
             onProgress,
@@ -297,7 +297,7 @@ export class NrfutilSandbox {
             filterEnv
         );
 
-    private execCommand = (
+    public spawnCommand = (
         command: string,
         args: string[],
         parser: (data: Buffer, pid?: number) => Buffer | undefined,
@@ -374,7 +374,8 @@ export class NrfutilSandbox {
             });
         });
 
-    public execBackgroundSubcommand = <Result>(
+
+    public spawnBackgroundSubcommand = <Result>(
         command: string,
         args: string[],
         processors: BackgroundTask<Result>,
@@ -384,7 +385,7 @@ export class NrfutilSandbox {
         let running = true;
         const closedHandlers: ((error?: Error) => void)[] = [];
 
-        const operation = this.execCommand(
+        const operation = this.spawnNrfutilCommand(
             this.module,
             [command, ...args],
             (data, pid) => {
