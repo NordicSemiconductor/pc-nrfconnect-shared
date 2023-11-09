@@ -299,6 +299,30 @@ export class NrfutilSandbox {
             filterEnv
         );
 
+    private spawnNrfutilCommand = (
+        command: string,
+        args: string[],
+        parser: (data: Buffer, pid?: number) => Buffer | undefined,
+        onStdError: (data: Buffer, pid?: number) => void,
+        controller?: AbortController,
+        filterEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
+    ) =>
+        this.spawnCommand(
+            this.getNrfutilExePath(),
+            [
+                command,
+                '--json',
+                '--log-output=stdout',
+                '--log-level',
+                this.logLevel,
+                ...args,
+            ],
+            parser,
+            onStdError,
+            controller,
+            filterEnv
+        );
+
     public spawnCommand = (
         command: string,
         args: string[],
@@ -309,21 +333,13 @@ export class NrfutilSandbox {
     ) =>
         new Promise<void>((resolve, reject) => {
             let aborting = false;
-            usageData.sendUsageData(`running nrfutil ${command}`, { args });
-            const nrfutil = spawn(
-                path.join(this.baseDir, 'nrfutil'),
-                [
-                    command,
-                    '--json',
-                    '--log-output=stdout',
-                    '--log-level',
-                    this.logLevel,
-                    ...args,
-                ],
-                {
-                    env: filterEnv(this.env),
-                }
-            );
+            usageData.sendUsageData(`running nrfutil ${this.module}`, {
+                args,
+                exec: command,
+            });
+            const nrfutil = spawn(command, args, {
+                env: filterEnv(this.env),
+            });
 
             const listener = () => {
                 getNrfutilLogger()?.info(
