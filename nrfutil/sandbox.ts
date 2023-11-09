@@ -280,7 +280,7 @@ export class NrfutilSandbox {
         }
     };
 
-    public execSubcommand = <Result>(
+    public spawnNrfutilSubcommand = <Result>(
         command: string,
         args: string[],
         onProgress?: (progress: Progress, task?: Task) => void,
@@ -540,7 +540,7 @@ export class NrfutilSandbox {
         controller?: AbortController,
         args: string[] = []
     ) => {
-        const results = await this.execSubcommand<T>(
+        const results = await this.spawnNrfutilSubcommand<T>(
             command,
             args,
             onProgress,
@@ -560,7 +560,7 @@ export class NrfutilSandbox {
         controller?: AbortController,
         args: string[] = []
     ) => {
-        const results = await this.execSubcommand<T>(
+        const results = await this.spawnNrfutilSubcommand<T>(
             command,
             args,
             undefined,

@@ -263,7 +263,7 @@ export class Batch {
 
         const sandbox = await getDeviceSandbox();
         try {
-            await sandbox.execSubcommand<unknown>(
+            await sandbox.spawnNrfutilSubcommand<unknown>(
                 'x-execute-batch',
                 [
                     '--serial-number',
