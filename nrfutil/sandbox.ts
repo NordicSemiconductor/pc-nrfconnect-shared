@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { spawn } from 'child_process';
+import { exec, spawn } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -374,6 +374,82 @@ export class NrfutilSandbox {
             });
         });
 
+    public execCommand = (
+        command: string,
+        args: string[],
+        parser: (data: Buffer, pid?: number) => Buffer | undefined,
+        onStdError: (data: Buffer, pid?: number) => void,
+        controller?: AbortController,
+        filterEnv: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv = env => env
+    ) =>
+        new Promise<void>((resolve, reject) => {
+            let aborting = false;
+            usageData.sendUsageData(`running nrfutil ${command}`, { args });
+            args = [
+                command,
+                '--json',
+                '--log-output=stdout',
+                '--log-level',
+                this.logLevel,
+                ...args,
+            ];
+            const nrfutil = exec(
+                `${path.join(this.baseDir, 'nrfutil')} ${args.join(' ')}`,
+                {
+                    env: filterEnv(this.env),
+                }
+            );
+
+            const listener = () => {
+                getNrfutilLogger()?.info(
+                    `Aborting ongoing nrfutil ${
+                        this.module
+                    } ${command} ${JSON.stringify(args)}`
+                );
+                aborting = true;
+                nrfutil.kill('SIGINT');
+            };
+
+            controller?.signal.addEventListener('abort', listener);
+
+            let buffer = Buffer.from('');
+
+            nrfutil.stdout?.on('data', (data: Buffer) => {
+                if (controller?.signal.aborted) return;
+
+                buffer = Buffer.concat([buffer, data]);
+                const remainingBytes = parser(buffer, nrfutil.pid);
+                if (remainingBytes) {
+                    buffer = remainingBytes;
+                } else {
+                    buffer = Buffer.from('');
+                }
+            });
+
+            nrfutil.stderr?.on('data', (data: Buffer) => {
+                onStdError(data, nrfutil.pid);
+            });
+
+            nrfutil.on('close', code => {
+                controller?.signal.removeEventListener('abort', listener);
+                if (aborting) {
+                    reject(
+                        new Error(
+                            `Aborted ongoing nrfutil ${command} ${
+                                args[0] ?? ''
+                            }`
+                        )
+                    );
+                    return;
+                }
+
+                if (code === 0) {
+                    resolve();
+                } else {
+                    reject(new Error(`Failed with exit code ${code}.`));
+                }
+            });
+        });
 
     public spawnBackgroundSubcommand = <Result>(
         command: string,
