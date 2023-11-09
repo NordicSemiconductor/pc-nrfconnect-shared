@@ -312,11 +312,11 @@ export class NrfutilSandbox {
                 path.join(this.baseDir, 'nrfutil'),
                 [
                     command,
-                    ...args,
                     '--json',
                     '--log-output=stdout',
                     '--log-level',
                     this.logLevel,
+                    ...args,
                 ],
                 {
                     env: filterEnv(this.env),
