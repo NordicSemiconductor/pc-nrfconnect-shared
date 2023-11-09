@@ -199,7 +199,8 @@ export class NrfutilSandbox {
         onProgress?: (progress: Progress, task?: Task) => void,
         onTaskBegin?: (taskBegin: TaskBegin) => void,
         onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
-        controller?: AbortController
+        controller?: AbortController,
+        filterEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) => {
         const info: Result[] = [];
         const taskEnd: TaskEnd<Result>[] = [];
@@ -235,7 +236,8 @@ export class NrfutilSandbox {
                     pid = processId;
                     stdErr = (stdErr ?? '') + data.toString();
                 },
-                controller
+                controller,
+                filterEnv
             );
 
             if (
@@ -282,7 +284,8 @@ export class NrfutilSandbox {
         onProgress?: (progress: Progress, task?: Task) => void,
         onTaskBegin?: (taskBegin: TaskBegin) => void,
         onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
-        controller?: AbortController
+        controller?: AbortController,
+        filterEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) =>
         this.execNrfutil<Result>(
             this.module,
@@ -290,7 +293,8 @@ export class NrfutilSandbox {
             onProgress,
             onTaskBegin,
             onTaskEnd,
-            controller
+            controller,
+            filterEnv
         );
 
     private execCommand = (
@@ -298,7 +302,8 @@ export class NrfutilSandbox {
         args: string[],
         parser: (data: Buffer, pid?: number) => Buffer | undefined,
         onStdError: (data: Buffer, pid?: number) => void,
-        controller?: AbortController
+        controller?: AbortController,
+        filterEnv: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv = env => env
     ) =>
         new Promise<void>((resolve, reject) => {
             let aborting = false;
@@ -314,7 +319,7 @@ export class NrfutilSandbox {
                     this.logLevel,
                 ],
                 {
-                    env: this.env,
+                    env: filterEnv(this.env),
                 }
             );
 
@@ -372,7 +377,8 @@ export class NrfutilSandbox {
     public execBackgroundSubcommand = <Result>(
         command: string,
         args: string[],
-        processors: BackgroundTask<Result>
+        processors: BackgroundTask<Result>,
+        filterEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) => {
         const controller = new AbortController();
         let running = true;
@@ -400,7 +406,8 @@ export class NrfutilSandbox {
             (data, pid) => {
                 processors.onError(new Error(data.toString()), pid);
             },
-            controller
+            controller,
+            filterEnv
         );
 
         operation
