@@ -227,11 +227,11 @@ export class NrfutilSandbox {
             this.getNrfutilExePath(),
             [
                 command,
+                ...args,
                 '--json',
                 '--log-output=stdout',
                 '--log-level',
                 this.logLevel,
-                ...args,
             ],
             parser,
             onStdError,
