@@ -12,6 +12,7 @@ import {
 import { getNrfutilLogger } from '../nrfutilLogger';
 import sandbox, { type NrfutilSandbox } from '../sandbox';
 import { Progress } from '../sandboxTypes';
+import logLibVersions from './logLibVersions';
 
 export const deviceTraitsToArgs = (traits: DeviceTraits) => {
     const args: string[] = [];
@@ -171,6 +172,7 @@ export const getDeviceSandbox = async () => {
             undefined
         );
         deviceSandbox = await promiseDeviceSandbox;
+        deviceSandbox.getModuleVersion().then(logLibVersions);
 
         deviceSandbox.onLogging((evt, pid) => {
             const deviceLogger = getNrfutilLogger();
