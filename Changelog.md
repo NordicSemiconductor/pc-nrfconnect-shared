@@ -71,7 +71,7 @@ every new version is a new major version.
 
 ### Steps to upgrade when using this package
 
--   In `package.json` bump `engines.nrfconnect` to at least `>=4.2.2`.
+-   In `package.json` bump `engines.nrfconnect` to at least `>=4.3.0`.
 -   Remove `reportUsageData` property if it is set in project. If this was set
     to true add `usageData.enableTelemetry()` as shown below. For projects like
     launcher add `usageData.enableTelemetry()` to main and renderer window.
@@ -114,15 +114,15 @@ render(<App panes={[]} />);
 -   `deviceInfo` is populate automatically when a device is selected and can be
     retrieve using the redux selector `selectedDeviceInfo`.
 
-### Steps to upgrade when using this package
-
--   Change `nrfConnectForDesktop.nrfutil.device` to 2.0.0.
--   Update all device properties to match the changes above.
-
 ### Fixed
 
 -   Check installed JLink version against expected version given by nrfutil
     (previously this was the version bundled by the launcher).
+
+### Steps to upgrade when using this package
+
+-   Change `nrfConnectForDesktop.nrfutil.device` to 2.0.0.
+-   Update all device properties to match the changes above.
 
 ## 121 - 2023-10-24
 
