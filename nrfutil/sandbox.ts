@@ -655,7 +655,7 @@ export class NrfutilSandbox {
         );
 
         if (results.taskEnd.length === 1) {
-            return results.taskEnd[0].data;
+            return results.taskEnd[0].data ?? results.taskEnd[0].task.data;
         }
         throw new Error('Unexpected result');
     };
