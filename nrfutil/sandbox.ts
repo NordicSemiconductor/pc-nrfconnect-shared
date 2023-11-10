@@ -8,6 +8,7 @@ import { exec, spawn } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import treeKill from 'tree-kill';
 
 import describeError from '../src/logging/describeError';
 import usageData from '../src/utils/usageData';
@@ -348,7 +349,11 @@ export class NrfutilSandbox {
                     } ${command} ${JSON.stringify(args)}`
                 );
                 aborting = true;
-                nrfutil.kill('SIGINT');
+                if (nrfutil.pid) {
+                    treeKill(nrfutil.pid);
+                } else {
+                    nrfutil.kill('SIGINT');
+                }
             };
 
             controller?.signal.addEventListener('abort', listener);
@@ -522,7 +527,11 @@ export class NrfutilSandbox {
                     } ${command} ${JSON.stringify(args)}`
                 );
                 aborting = true;
-                nrfutil.kill('SIGINT');
+                if (nrfutil.pid) {
+                    treeKill(nrfutil.pid);
+                } else {
+                    nrfutil.kill('SIGINT');
+                }
             };
 
             controller?.signal.addEventListener('abort', listener);
