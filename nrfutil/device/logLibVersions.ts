@@ -7,13 +7,13 @@
 import { spawn } from 'child_process';
 import os from 'os';
 
-import NrfutilDeviceLib from '../../nrfutil/device/device';
+import logger from '../../src/logging';
 import {
     describeVersion,
+    getExpectedVersion,
     resolveModuleVersion,
-} from '../../nrfutil/moduleVersion';
-import { SubDependency } from '../../nrfutil/sandboxTypes';
-import logger from '../logging';
+} from '../moduleVersion';
+import { ModuleVersion, SubDependency } from '../sandboxTypes';
 
 const log = (description: string, moduleVersion?: SubDependency | string) => {
     if (moduleVersion == null) {
@@ -67,15 +67,29 @@ const checkJLinkArchitectureOnDarwin = async () => {
     return 'arm';
 };
 
-export default async () => {
+export default async (moduleVersion: ModuleVersion) => {
     try {
-        const moduleVersion = await NrfutilDeviceLib.getModuleVersion();
         const dependencies = moduleVersion.dependencies;
 
         log('nrfutil-device', moduleVersion.version);
         log('nrf-device-lib', resolveModuleVersion('nrfdl', dependencies));
         log('nrfjprog DLL', resolveModuleVersion('jprog', dependencies));
         log('JLink', resolveModuleVersion('JlinkARM', dependencies));
+
+        const jlinkVersion = resolveModuleVersion('JlinkARM', dependencies);
+
+        if (jlinkVersion) {
+            const result = getExpectedVersion(jlinkVersion);
+            if (!result.isExpectedVersion) {
+                logger.warn(
+                    `Installed JLink version does not match the expected version (${result.expectedVersion})`
+                );
+            }
+        } else {
+            logger.warn(
+                `JLink is not installed. Please install JLink from: https://www.segger.com/downloads/jlink`
+            );
+        }
         if (
             process.platform === 'darwin' &&
             os.cpus()[0].model.includes('Apple')

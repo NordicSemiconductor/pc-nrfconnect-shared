@@ -23,6 +23,7 @@ import { Device } from '../Device/deviceSlice';
 import logger from '../logging';
 import { getAppDataDir } from './appDirs';
 import { openFile } from './open';
+import { packageJsonApp } from './packageJson';
 
 const generalInfoReport = async () => {
     const [
@@ -50,10 +51,10 @@ const generalInfoReport = async () => {
         si.fsSize(),
     ]);
 
-    const moduleVersion = await NrfutilDeviceLib.getModuleVersion();
-    const dependencies = moduleVersion.dependencies;
+    const jsonApp = packageJsonApp();
+    const hasDeviceLib = !!jsonApp.nrfConnectForDesktop.nrfutil?.device;
 
-    return [
+    const result = [
         `- System:     ${manufacturer} ${model}`,
         `- BIOS:       ${vendor} ${version}`,
         `- CPU:        ${processors} x ${cpuManufacturer} ${brand} ${speed} GHz` +
@@ -71,15 +72,27 @@ const generalInfoReport = async () => {
         `    - node: ${node}`,
         `    - python: ${python}`,
         `    - python3: ${python3}`,
-        `    - nrfutil-device: ${moduleVersion.version}`,
-        `    - nrfjprog DLL: ${describeVersion(
-            resolveModuleVersion('jprog', dependencies)
-        )}`,
-        `    - JLink: ${describeVersion(
-            resolveModuleVersion('JlinkARM', dependencies)
-        )}`,
-        '',
     ];
+
+    if (hasDeviceLib) {
+        const moduleVersion = await NrfutilDeviceLib.getModuleVersion();
+        const dependencies = moduleVersion.dependencies;
+
+        result.push(
+            ...[
+                `    - nrfutil-device: ${moduleVersion.version}`,
+                `    - nrfjprog DLL: ${describeVersion(
+                    resolveModuleVersion('jprog', dependencies)
+                )}`,
+                `    - JLink: ${describeVersion(
+                    resolveModuleVersion('JlinkARM', dependencies)
+                )}`,
+                '',
+            ]
+        );
+    }
+
+    return result;
 };
 
 const allDevicesReport = (allDevices: Device[] = []) => [

@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { spawn } from 'child_process';
+import { exec, spawn } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import treeKill from 'tree-kill';
 
 import describeError from '../src/logging/describeError';
 import usageData from '../src/utils/usageData';
@@ -136,7 +137,7 @@ export class NrfutilSandbox {
     };
 
     public getModuleVersion = async () => {
-        const results = await this.execNrfutil<ModuleVersion>(this.module, [
+        const results = await this.spawnNrfutil<ModuleVersion>(this.module, [
             '--version',
         ]);
 
@@ -175,7 +176,7 @@ export class NrfutilSandbox {
             getNrfutilLogger()?.info(
                 `Preparing nrfutil-${this.module} version: ${this.version}`
             );
-            await this.execNrfutil(
+            await this.spawnNrfutil(
                 'install',
                 [`${this.module}=${this.version}`, '--force'],
                 onProgress
@@ -193,13 +194,59 @@ export class NrfutilSandbox {
         }
     };
 
-    private execNrfutil = async <Result>(
+    public getNrfutilExePath = () => path.join(this.baseDir, 'nrfutil');
+
+    public spawnNrfutilSubcommand = <Result>(
         command: string,
         args: string[],
         onProgress?: (progress: Progress, task?: Task) => void,
         onTaskBegin?: (taskBegin: TaskBegin) => void,
         onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
-        controller?: AbortController
+        controller?: AbortController,
+        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
+    ) =>
+        this.spawnNrfutil<Result>(
+            this.module,
+            [command, ...args],
+            onProgress,
+            onTaskBegin,
+            onTaskEnd,
+            controller,
+            editEnv
+        );
+
+    private spawnNrfutilCommand = (
+        command: string,
+        args: string[],
+        parser: (data: Buffer, pid?: number) => Buffer | undefined,
+        onStdError: (data: Buffer, pid?: number) => void,
+        controller?: AbortController,
+        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
+    ) =>
+        this.spawnCommand(
+            this.getNrfutilExePath(),
+            [
+                command,
+                ...args,
+                '--json',
+                '--log-output=stdout',
+                '--log-level',
+                this.logLevel,
+            ],
+            parser,
+            onStdError,
+            controller,
+            editEnv
+        );
+
+    private spawnNrfutil = async <Result>(
+        command: string,
+        args: string[],
+        onProgress?: (progress: Progress, task?: Task) => void,
+        onTaskBegin?: (taskBegin: TaskBegin) => void,
+        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
+        controller?: AbortController,
+        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) => {
         const info: Result[] = [];
         const taskEnd: TaskEnd<Result>[] = [];
@@ -207,7 +254,7 @@ export class NrfutilSandbox {
         let pid: number | undefined;
 
         try {
-            await this.execCommand(
+            await this.spawnNrfutilCommand(
                 command,
                 args,
                 (data, processId) =>
@@ -235,7 +282,8 @@ export class NrfutilSandbox {
                     pid = processId;
                     stdErr = (stdErr ?? '') + data.toString();
                 },
-                controller
+                controller,
+                editEnv
             );
 
             if (
@@ -276,47 +324,23 @@ export class NrfutilSandbox {
         }
     };
 
-    public execSubcommand = <Result>(
-        command: string,
-        args: string[],
-        onProgress?: (progress: Progress, task?: Task) => void,
-        onTaskBegin?: (taskBegin: TaskBegin) => void,
-        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
-        controller?: AbortController
-    ) =>
-        this.execNrfutil<Result>(
-            this.module,
-            [command, ...args],
-            onProgress,
-            onTaskBegin,
-            onTaskEnd,
-            controller
-        );
-
-    private execCommand = (
+    public spawnCommand = (
         command: string,
         args: string[],
         parser: (data: Buffer, pid?: number) => Buffer | undefined,
         onStdError: (data: Buffer, pid?: number) => void,
-        controller?: AbortController
+        controller?: AbortController,
+        editEnv: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv = env => env
     ) =>
         new Promise<void>((resolve, reject) => {
             let aborting = false;
-            usageData.sendUsageData(`running nrfutil ${command}`, { args });
-            const nrfutil = spawn(
-                path.join(this.baseDir, 'nrfutil'),
-                [
-                    command,
-                    ...args,
-                    '--json',
-                    '--log-output=stdout',
-                    '--log-level',
-                    this.logLevel,
-                ],
-                {
-                    env: this.env,
-                }
-            );
+            usageData.sendUsageData(`running nrfutil ${this.module}`, {
+                args,
+                exec: command,
+            });
+            const nrfutil = spawn(command, args, {
+                env: editEnv(this.env),
+            });
 
             const listener = () => {
                 getNrfutilLogger()?.info(
@@ -325,7 +349,11 @@ export class NrfutilSandbox {
                     } ${command} ${JSON.stringify(args)}`
                 );
                 aborting = true;
-                nrfutil.kill('SIGINT');
+                if (nrfutil.pid) {
+                    treeKill(nrfutil.pid);
+                } else {
+                    nrfutil.kill('SIGINT');
+                }
             };
 
             controller?.signal.addEventListener('abort', listener);
@@ -369,16 +397,187 @@ export class NrfutilSandbox {
             });
         });
 
-    public execBackgroundSubcommand = <Result>(
+    public execNrfutilSubcommand = <Result>(
         command: string,
         args: string[],
-        processors: BackgroundTask<Result>
+        onProgress?: (progress: Progress, task?: Task) => void,
+        onTaskBegin?: (taskBegin: TaskBegin) => void,
+        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
+        controller?: AbortController,
+        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
+    ) =>
+        this.execNrfutilCommand<Result>(
+            this.module,
+            [command, ...args],
+            onProgress,
+            onTaskBegin,
+            onTaskEnd,
+            controller,
+            editEnv
+        );
+
+    private execNrfutilCommand = async <Result>(
+        command: string,
+        args: string[],
+        onProgress?: (progress: Progress, task?: Task) => void,
+        onTaskBegin?: (taskBegin: TaskBegin) => void,
+        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
+        controller?: AbortController,
+        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
+    ) => {
+        const info: Result[] = [];
+        const taskEnd: TaskEnd<Result>[] = [];
+        let stdErr: string | undefined;
+        let pid: number | undefined;
+
+        try {
+            await this.execCommand(
+                command,
+                args,
+                (data, processId) =>
+                    commonParser<Result>(
+                        data,
+                        {
+                            onProgress,
+                            onTaskBegin,
+                            onTaskEnd: end => {
+                                taskEnd.push(end);
+                                onTaskEnd?.(end);
+                            },
+                            onInfo: i => {
+                                info.push(i);
+                            },
+                            onLogging: logging => {
+                                this.onLoggingHandlers.forEach(onLogging => {
+                                    onLogging(logging, processId);
+                                });
+                            },
+                        },
+                        processId
+                    ),
+                (data, processId) => {
+                    pid = processId;
+                    stdErr = (stdErr ?? '') + data.toString();
+                },
+                controller,
+                editEnv
+            );
+
+            if (
+                stdErr ||
+                taskEnd.filter(end => end.result === 'fail').length > 0
+            )
+                throw new Error('Task failed.');
+
+            return { taskEnd, info };
+        } catch (e) {
+            const error = e as Error;
+
+            const addPunctuation = (str: string) =>
+                str.endsWith('.') ? str.trim() : `${str.trim()}.`;
+
+            if (stdErr) {
+                error.message += `\n${addPunctuation(stdErr)}`;
+            }
+
+            const taskEndErrorMsg = taskEnd
+                .filter(end => end.result === 'fail' && !!end.message)
+                .map(end =>
+                    end.message ? `Message: ${addPunctuation(end.message)}` : ''
+                )
+                .join('\n');
+
+            if (taskEndErrorMsg) {
+                error.message += `\n${taskEndErrorMsg}`;
+            }
+
+            error.message = error.message.replaceAll('Error: ', '');
+            usageData.sendErrorReport(
+                `${
+                    pid && this.logLevel === 'trace' ? `[PID:${pid}] ` : ''
+                }${describeError(error)}`
+            );
+            throw error;
+        }
+    };
+
+    public execCommand = (
+        command: string,
+        args: string[],
+        onData: (data: Buffer, pid?: number) => void,
+        onStdError: (data: Buffer, pid?: number) => void,
+        controller?: AbortController,
+        editEnv: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv = env => env
+    ) =>
+        new Promise<void>((resolve, reject) => {
+            let aborting = false;
+            usageData.sendUsageData(`running nrfutil ${this.module}`, {
+                args,
+                exec: command,
+            });
+
+            const nrfutil = exec(`${command} ${args.join(' ')}`, {
+                env: editEnv(this.env),
+            });
+
+            const listener = () => {
+                getNrfutilLogger()?.info(
+                    `Aborting ongoing nrfutil ${
+                        this.module
+                    } ${command} ${JSON.stringify(args)}`
+                );
+                aborting = true;
+                if (nrfutil.pid) {
+                    treeKill(nrfutil.pid);
+                } else {
+                    nrfutil.kill('SIGINT');
+                }
+            };
+
+            controller?.signal.addEventListener('abort', listener);
+
+            nrfutil.stdout?.on('data', (data: Buffer) => {
+                if (controller?.signal.aborted) return;
+
+                onData(data, nrfutil.pid);
+            });
+
+            nrfutil.stderr?.on('data', (data: Buffer) => {
+                onStdError(data, nrfutil.pid);
+            });
+
+            nrfutil.on('close', code => {
+                controller?.signal.removeEventListener('abort', listener);
+                if (aborting) {
+                    reject(
+                        new Error(
+                            `Aborted ongoing nrfutil ${command} ${
+                                args[0] ?? ''
+                            }`
+                        )
+                    );
+                    return;
+                }
+
+                if (code === 0) {
+                    resolve();
+                } else {
+                    reject(new Error(`Failed with exit code ${code}.`));
+                }
+            });
+        });
+
+    public spawnBackgroundSubcommand = <Result>(
+        command: string,
+        args: string[],
+        processors: BackgroundTask<Result>,
+        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) => {
         const controller = new AbortController();
         let running = true;
         const closedHandlers: ((error?: Error) => void)[] = [];
 
-        const operation = this.execCommand(
+        const operation = this.spawnNrfutilCommand(
             this.module,
             [command, ...args],
             (data, pid) => {
@@ -400,7 +599,8 @@ export class NrfutilSandbox {
             (data, pid) => {
                 processors.onError(new Error(data.toString()), pid);
             },
-            controller
+            controller,
+            editEnv
         );
 
         operation
@@ -454,7 +654,7 @@ export class NrfutilSandbox {
         controller?: AbortController,
         args: string[] = []
     ) => {
-        const results = await this.execSubcommand<T>(
+        const results = await this.spawnNrfutilSubcommand<T>(
             command,
             args,
             onProgress,
@@ -464,7 +664,7 @@ export class NrfutilSandbox {
         );
 
         if (results.taskEnd.length === 1) {
-            return results.taskEnd[0].data;
+            return results.taskEnd[0].data ?? results.taskEnd[0].task.data;
         }
         throw new Error('Unexpected result');
     };
@@ -474,7 +674,7 @@ export class NrfutilSandbox {
         controller?: AbortController,
         args: string[] = []
     ) => {
-        const results = await this.execSubcommand<T>(
+        const results = await this.spawnNrfutilSubcommand<T>(
             command,
             args,
             undefined,

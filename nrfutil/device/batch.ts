@@ -93,12 +93,17 @@ export class Batch {
         this.enqueueBatchOperationObject('fw-read', core, {
             ...callbacks,
             onTaskEnd: (taskEnd: TaskEnd<DeviceBuffer>) => {
-                if (taskEnd.result === 'success' && taskEnd.data)
+                if (taskEnd.result === 'success' && taskEnd.data) {
+                    const data = Buffer.from(taskEnd.data.buffer, 'base64');
                     callbacks?.onTaskEnd?.({
                         ...taskEnd,
-                        data: Buffer.from(taskEnd.data.buffer, 'base64'),
+                        task: {
+                            ...taskEnd.task,
+                            data,
+                        },
+                        data,
                     });
-                else {
+                } else {
                     callbacks?.onException?.(new Error('Read failed'));
                 }
             },
@@ -263,7 +268,7 @@ export class Batch {
 
         const sandbox = await getDeviceSandbox();
         try {
-            await sandbox.execSubcommand<unknown>(
+            await sandbox.spawnNrfutilSubcommand<unknown>(
                 'x-execute-batch',
                 [
                     '--serial-number',

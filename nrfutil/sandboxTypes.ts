@@ -17,13 +17,11 @@ export type FeatureClassification =
     | 'nrf-external-confidential'
     | 'nrf-external';
 
-export type Task = {
+export type Task<T = undefined | null> = {
     id: string;
     description: string;
     name: string;
-    data: {
-        serialNumber: string;
-    };
+    data: T;
 };
 
 export type TaskError = {
@@ -35,12 +33,11 @@ export type TaskBegin = {
     task: Task;
 };
 
-export type TaskEnd<T = void> = {
-    task: Task;
+export type TaskEnd<T = undefined | null> = {
+    task: Task<T>;
     message?: string;
     result?: 'success' | 'fail';
     error?: TaskError;
-    name: string;
     data?: T;
 };
 

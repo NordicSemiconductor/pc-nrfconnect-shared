@@ -7,6 +7,22 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 129 - 2023-11-13
+
+### Added
+
+-   `nrfutil` sandbox now allows caller to pass optional lambda to manipulate
+    the env values
+-   `nrfutil` provides an alternative to spawn and just exec
+-   `nrfutil device` auto logs version information when it is initialed for the
+    first time.
+
+### Changed
+
+-   `ErrorBoundary` only collect device lib info if these app adds nrfutil
+    device as a dependency in `package.json`
+-   `App` no longer logs nrfutil device version.
+
 ## 128 - 2023-11-08
 
 ### Fixed
