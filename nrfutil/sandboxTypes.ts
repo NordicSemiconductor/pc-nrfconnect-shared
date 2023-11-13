@@ -17,7 +17,7 @@ export type FeatureClassification =
     | 'nrf-external-confidential'
     | 'nrf-external';
 
-export type Task<T = void> = {
+export type Task<T = undefined | null> = {
     id: string;
     description: string;
     name: string;
@@ -33,7 +33,7 @@ export type TaskBegin = {
     task: Task;
 };
 
-export type TaskEnd<T = void> = {
+export type TaskEnd<T = undefined | null> = {
     task: Task<T>;
     message?: string;
     result?: 'success' | 'fail';
