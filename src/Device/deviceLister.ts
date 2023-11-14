@@ -235,10 +235,6 @@ export const startWatchingDevices =
                         const waitForDevice =
                             getState().deviceAutoSelect.waitForDevice;
 
-                        const deviceInfo = await NrfutilDeviceLib.deviceInfo(
-                            device
-                        );
-
                         // Device lib might fail to advertise that a device has left before it rejoins (Mainly OSx)
                         // but we still need to trigger the onSuccess if a device 'reappeared' with a different 'id'
                         // and there is an outstanding waitForDevice Request. In this case the disconnectionTime was
@@ -266,7 +262,10 @@ export const startWatchingDevices =
                                         deviceWithPersistedData
                                     )) ||
                                 (waitForDevice.when === 'applicationMode' &&
-                                    deviceInfo?.dfuTriggerVersion) ||
+                                    deviceWithPersistedData.traits.nordicDfu &&
+                                    !isDeviceInDFUBootloader(
+                                        deviceWithPersistedData
+                                    )) ||
                                 (selectedDevice &&
                                     waitForDevice.when === 'sameTraits' &&
                                     hasSameDeviceTraits(
@@ -292,7 +291,14 @@ export const startWatchingDevices =
                                 );
 
                                 dispatch(selectDevice(deviceWithPersistedData));
-                                dispatch(setSelectedDeviceInfo(deviceInfo));
+
+                                if (!waitForDevice.skipRefetchDeviceInfo) {
+                                    const deviceInfo =
+                                        await NrfutilDeviceLib.deviceInfo(
+                                            device
+                                        );
+                                    dispatch(setSelectedDeviceInfo(deviceInfo));
+                                }
 
                                 if (waitForDevice.onSuccess)
                                     waitForDevice.onSuccess(

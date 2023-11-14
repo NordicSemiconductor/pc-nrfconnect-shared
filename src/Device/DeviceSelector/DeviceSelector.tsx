@@ -102,7 +102,7 @@ export default ({
                 abortController.current
             );
             abortController.current = undefined;
-            setSelectedDeviceInfo(deviceInfo);
+            dispatch(setSelectedDeviceInfo(deviceInfo));
             onDeviceSelected(device, autoReselected);
 
             usageData.sendUsageData('device selected', {

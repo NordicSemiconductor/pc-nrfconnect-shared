@@ -18,6 +18,7 @@ export interface WaitForDevice {
         | 'sameTraits'
         | ((device: Device) => boolean);
     once: boolean;
+    skipRefetchDeviceInfo?: boolean;
     onSuccess?: (device: Device) => void;
     onFail?: (reason?: string) => void;
 }
