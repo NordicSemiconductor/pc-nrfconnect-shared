@@ -7,6 +7,17 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 130 - 2023-11-14
+
+### Fixed
+
+-   Ensure that all enumerated devices are always processed in order to avoid:
+    -   calling nrfutil device-info multiple times for the same device
+    -   only calling onSuccess once when waiting for device when rebooting
+-   `nrfutil device` now calls `device-info` before notifying the app
+    with an onSelectedDevice. This is to ensure the operations to the device are
+    completed before the app possibly does any more action on it
+
 ## 129 - 2023-11-13
 
 ### Added
