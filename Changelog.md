@@ -7,6 +7,17 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 132 - 2023-11-14
+
+### Added
+
+-   Extended `waitForDevice` to allow apps to opt-out from refetching the device
+    info when device a reapers from a reboot
+
+### Fixed
+
+-   `deviceInfo` is update in redux on device select
+
 ## 131 - 2023-11-14
 
 ### Changed
