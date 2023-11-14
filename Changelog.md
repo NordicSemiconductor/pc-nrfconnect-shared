@@ -11,10 +11,13 @@ every new version is a new major version.
 
 ### Fixed
 
--   Ensure that all enumarated devices are always processed in order to avoid
+-   Ensure that all enumerated devices are always processed in order to avoid
     calling:
     -   nrfutil device-info multiple times for the same device
-    -   only call onSuccess once for waiting for device when rebotting
+    -   only call onSuccess once for waiting for device when rebooting
+-   `nrfutil device` call to `device-info` is called before notifying the app
+    with an onSelectedDevice. This is to ensure the operations to the device are
+    completed before the app possibly does any more action on it
 
 ## 129 - 2023-11-13
 

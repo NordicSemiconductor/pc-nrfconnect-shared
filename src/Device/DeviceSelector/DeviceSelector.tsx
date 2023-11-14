@@ -92,7 +92,6 @@ export default ({
             setDeviceListVisible(false);
             dispatch(selectDevice(device));
             dispatch(setAutoSelectDevice(device));
-            onDeviceSelected(device, autoReselected);
 
             abortController.current?.abort();
             abortController.current = new AbortController();
@@ -104,6 +103,7 @@ export default ({
             );
             abortController.current = undefined;
             setSelectedDeviceInfo(deviceInfo);
+            onDeviceSelected(device, autoReselected);
 
             usageData.sendUsageData('device selected', {
                 device: simplifyDeviceForLogging(device),
