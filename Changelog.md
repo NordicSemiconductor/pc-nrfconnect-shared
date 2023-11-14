@@ -7,6 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 130 - 2023-11-14
+
+### Fixed
+
+-   Ensure that all enumarated devices are always processed in order to avoid
+    calling:
+    -   nrfutil device-info multiple times for the same device
+    -   only call onSuccess once for waiting for device when rebotting
+
 ## 129 - 2023-11-13
 
 ### Added
