@@ -7,6 +7,19 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 131 - 2023-11-14
+
+### Changed
+
+-   Storage key `isSendingUsageData` → `isSendingTelemetry`. The consequence of
+    this is that telemetry is only sent after users again agree to it, which is
+    required because we changed the agreement from Google Analytics to Microsoft
+    Azure.
+
+### Fixed
+
+-   Removed warning from `applicationinsights` in the console on start.
+
 ## 130 - 2023-11-14
 
 ### Fixed

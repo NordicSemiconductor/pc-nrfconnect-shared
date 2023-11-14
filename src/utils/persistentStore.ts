@@ -29,7 +29,7 @@ export interface TerminalSettings {
 
 const sharedStore = new Store<{
     verboseLogging: boolean;
-    isSendingUsageData: boolean | undefined;
+    isSendingTelemetry: boolean | undefined;
     clientId?: string;
 }>({
     name: 'pc-nrfconnect-shared',
@@ -117,11 +117,11 @@ export const getPersistedTerminalSettings = (
 };
 
 export const persistIsSendingUsageData = (value: boolean) =>
-    sharedStore.set('isSendingUsageData', value);
+    sharedStore.set('isSendingTelemetry', value);
 export const getIsSendingUsageData = () =>
-    sharedStore.get('isSendingUsageData', undefined) as boolean | undefined;
+    sharedStore.get('isSendingTelemetry', undefined) as boolean | undefined;
 export const deleteIsSendingUsageData = () =>
-    sharedStore.delete('isSendingUsageData');
+    sharedStore.delete('isSendingTelemetry');
 
 const existingUsageDataClientId = () => sharedStore.get('clientId');
 const newUsageDataClientId = () => {
