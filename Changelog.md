@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## Unreleased
+
+### Fixed
+
+-   Removed warning from `applicationinsights` in the console on start.
+
 ## 130 - 2023-11-14
 
 ### Fixed
