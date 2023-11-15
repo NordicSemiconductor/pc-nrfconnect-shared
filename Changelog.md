@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 133 - 2023-11-15
+
+### Changed
+
+-   Nrfutil `sandbox` default logging level to 'off' in production and 'error'
+    in development environments
+
 ## 132 - 2023-11-14
 
 ### Added
