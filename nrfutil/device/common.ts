@@ -5,6 +5,7 @@
  */
 
 import { getUserDataDir } from '../../src/utils/appDirs';
+import { isDevelopment } from '../../src/utils/environment';
 import {
     getIsLoggingVerbose,
     persistIsLoggingVerbose,
@@ -209,8 +210,7 @@ export const getDeviceSandbox = async () => {
             }
         });
 
-        const fallbackLevel =
-            process.env.NODE_ENV === 'production' ? 'off' : 'error';
+        const fallbackLevel = isDevelopment ? 'error' : 'off';
         deviceSandbox.setLogLevel(
             getIsLoggingVerbose() ? 'trace' : fallbackLevel
         );

@@ -11,6 +11,7 @@ import path from 'path';
 import treeKill from 'tree-kill';
 
 import describeError from '../src/logging/describeError';
+import { isDevelopment } from '../src/utils/environment';
 import usageData from '../src/utils/usageData';
 import { versionToInstall } from './moduleVersion';
 import { getNrfutilLogger } from './nrfutilLogger';
@@ -114,7 +115,7 @@ export class NrfutilSandbox {
     module: string;
     version: string;
     onLoggingHandlers: ((logging: LogMessage, pid?: number) => void)[] = [];
-    logLevel: LogLevel = 'info';
+    logLevel: LogLevel = isDevelopment ? 'error' : 'off';
     env: ReturnType<typeof prepareEnv>;
 
     constructor(baseDir: string, module: string, version: string) {
