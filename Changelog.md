@@ -9,6 +9,12 @@ every new version is a new major version.
 
 ## 134 - Unreleased
 
+### Added
+
+-   `defaultButtonLabel` on `Dropdown` component, for cases where it is useful
+    to have a default item that should not be selected after a different item
+    has been selected.
+
 ### Changed
 
 -   The `Dropdown` component is now generic, and will infer the `DropdownItem`

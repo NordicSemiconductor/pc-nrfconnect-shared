@@ -19,6 +19,7 @@ export interface DropdownItem<T = string> {
 export type DropdownProps<T> = {
     id?: string;
     label?: React.ReactNode;
+    defaultButtonLabel?: string;
     items: DropdownItem<T>[];
     onSelect: (item: DropdownItem<T>) => void;
     disabled?: boolean;
@@ -30,6 +31,7 @@ export type DropdownProps<T> = {
 export default <T,>({
     id,
     label,
+    defaultButtonLabel = '',
     items,
     onSelect,
     disabled = false,
@@ -65,7 +67,7 @@ export default <T,>({
             >
                 <span>
                     {items.findIndex(e => e.value === selectedItem.value) === -1
-                        ? ''
+                        ? defaultButtonLabel
                         : selectedItem.label}
                 </span>
                 <span
