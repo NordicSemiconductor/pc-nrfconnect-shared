@@ -7,6 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 134 - Unreleased
+
+### Changed
+
+-   The `Dropdown` component is now generic, and will infer the `DropdownItem`
+    type, from the its properties. Meaning that if you pass in a list of
+    `DropdownItem<number>` to items, then the `onSelect` item will be of type
+    `DropdownItem<number>`.
+
 ## 133 - 2023-11-15
 
 ### Changed
