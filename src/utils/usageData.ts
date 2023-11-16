@@ -18,22 +18,16 @@ import usageDataRenderer from './usageDataRenderer';
 const getFriendlyAppName = () =>
     packageJson().name.replace('pc-nrfconnect-', '');
 
-const flattenObject = (obj?: unknown, parentKey?: string) => {
-    let result: Metadata = {};
-
-    if (obj == null) return result;
-
-    Object.entries(obj).forEach(([key, value]) => {
+export const flatObject = (obj?: unknown, parentKey?: string): Metadata =>
+    Object.entries(obj ?? {}).reduce((acc, [key, value]) => {
         const newKey = parentKey ? `${parentKey}.${key}` : key;
-        if (typeof value === 'object') {
-            result = { ...result, ...flattenObject(value, newKey) };
-        } else {
-            result[newKey] = value;
-        }
-    });
-
-    return result;
-};
+        return {
+            ...acc,
+            ...(typeof value === 'object'
+                ? flatObject(value, newKey)
+                : { [newKey]: value }),
+        };
+    }, {});
 
 const enable = () => {
     persistIsSendingUsageData(true);
@@ -66,16 +60,11 @@ const getUsageData = () => {
     return usageDataMain;
 };
 
-const sendUsageData = async (
-    action: string,
-    metadata?: Metadata,
-    forceSend?: boolean
-) => {
+const sendUsageData = async (action: string, metadata?: Metadata) => {
     if (
         await getUsageData().sendUsageData(
             `${getFriendlyAppName()}: ${action}`,
-            flattenObject(metadata),
-            forceSend
+            flatObject(metadata)
         )
     ) {
         usageDataCommon
