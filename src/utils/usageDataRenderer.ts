@@ -47,7 +47,7 @@ const init = async () => {
 
     const accountId = getUsageDataClientId();
 
-    const out = new ApplicationInsights({
+    const result = new ApplicationInsights({
         config: {
             instrumentationKey: INSTRUMENTATION_KEY,
             accountId, // to hide with removeAllMetadata
@@ -56,10 +56,10 @@ const init = async () => {
         },
     });
 
-    out.loadAppInsights();
+    result.loadAppInsights();
 
     // Add app name and version to every event
-    out.addTelemetryInitializer(envelope => {
+    result.addTelemetryInitializer(envelope => {
         if (envelope.data?.removeAllMetadata) {
             envelope.data = {};
             envelope.baseData = { name: envelope.baseData?.name };
@@ -81,7 +81,7 @@ const init = async () => {
         }
     });
 
-    return out;
+    return result;
 };
 
 const sendUsageData = async (

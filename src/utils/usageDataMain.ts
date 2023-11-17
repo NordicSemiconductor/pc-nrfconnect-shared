@@ -34,19 +34,19 @@ const init = () => {
     const applicationName = appPackageJson.name;
     const applicationVersion = appPackageJson.version;
 
-    const out = new TelemetryClient(INSTRUMENTATION_KEY);
-    out.config.enableAutoCollectConsole = false;
-    out.config.enableAutoCollectDependencies = false;
-    out.config.enableAutoCollectExceptions = false;
-    out.config.enableAutoCollectIncomingRequestAzureFunctions = false;
-    out.config.enableAutoCollectHeartbeat = false;
-    out.config.enableAutoCollectPerformance = false;
-    out.config.enableAutoCollectPreAggregatedMetrics = false;
-    out.config.enableAutoCollectRequests = false;
-    out.config.enableAutoDependencyCorrelation = false;
+    const result = new TelemetryClient(INSTRUMENTATION_KEY);
+    result.config.enableAutoCollectConsole = false;
+    result.config.enableAutoCollectDependencies = false;
+    result.config.enableAutoCollectExceptions = false;
+    result.config.enableAutoCollectIncomingRequestAzureFunctions = false;
+    result.config.enableAutoCollectHeartbeat = false;
+    result.config.enableAutoCollectPerformance = false;
+    result.config.enableAutoCollectPreAggregatedMetrics = false;
+    result.config.enableAutoCollectRequests = false;
+    result.config.enableAutoDependencyCorrelation = false;
 
     // Add app name and version to every event
-    out.addTelemetryProcessor(envelope => {
+    result.addTelemetryProcessor(envelope => {
         if (envelope.data.baseData?.properties.removeAllMetadata) {
             envelope.tags = [];
             envelope.data.baseData = { name: envelope.data?.baseData.name };
@@ -65,7 +65,7 @@ const init = () => {
         return true;
     });
 
-    return out;
+    return result;
 };
 
 const sendUsageData = (
