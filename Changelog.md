@@ -22,6 +22,12 @@ every new version is a new major version.
     `DropdownItem<number>` to items, then the `onSelect` item will be of type
     `DropdownItem<number>`.
 
+### Fixed
+
+-   Telemtry: Metadata was not removed on request, when being in the main
+    process. This is not critical because this code isn't yet executed in real
+    life.
+
 ## 133 - 2023-11-15
 
 ### Changed
