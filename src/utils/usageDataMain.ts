@@ -47,9 +47,9 @@ const init = () => {
 
     // Add app name and version to every event
     out.addTelemetryProcessor(envelope => {
-        if (envelope.data.baseData?.removeAllMetadata) {
+        if (envelope.data.baseData?.properties.removeAllMetadata) {
             envelope.tags = [];
-            envelope.data.baseData = { name: envelope.data?.baseData };
+            envelope.data.baseData = { name: envelope.data?.baseData.name };
         } else {
             envelope.tags['ai.cloud.roleInstance'] = undefined; // remove PC name
             envelope.data.baseData = {
