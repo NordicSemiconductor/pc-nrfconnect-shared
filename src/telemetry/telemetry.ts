@@ -6,14 +6,14 @@
 
 import si from 'systeminformation';
 
-import { packageJson } from './packageJson';
+import { packageJson } from '../utils/packageJson';
 import {
-    deleteIsSendingUsageData,
-    persistIsSendingUsageData,
-} from './persistentStore';
-import usageDataCommon, { Metadata } from './usageDataCommon';
-import usageDataMain from './usageDataMain';
-import usageDataRenderer from './usageDataRenderer';
+    deleteIsSendingTelemetry,
+    persistIsSendingTelemetry,
+} from '../utils/persistentStore';
+import telemetryCommon, { Metadata } from './telemetryCommon';
+import telemetryMain from './telemetryMain';
+import telemetryRenderer from './telemetryRenderer';
 
 const getFriendlyAppName = () =>
     packageJson().name.replace('pc-nrfconnect-', '');
@@ -30,74 +30,74 @@ export const flatObject = (obj?: unknown, parentKey?: string): Metadata =>
     }, {});
 
 const enable = () => {
-    persistIsSendingUsageData(true);
+    persistIsSendingTelemetry(true);
     si.osInfo().then(({ platform, arch }) =>
-        getUsageData().sendUsageData('Report OS info', { platform, arch })
+        getTelemetry().sendUsageData('Report OS info', { platform, arch })
     );
-    getUsageData().sendUsageData('Data Usage Opt-In', undefined);
-    usageDataCommon.getLogger()?.debug('Usage data has been enabled');
+    getTelemetry().sendUsageData('Telemetry Opt-In', undefined);
+    telemetryCommon.getLogger()?.debug('Usage data has been enabled');
 };
 
 const disable = () => {
-    getUsageData().sendUsageData('Data Usage Opt-Out', undefined, true);
-    persistIsSendingUsageData(false);
-    usageDataCommon.getLogger()?.debug('Usage data has been disabled');
+    getTelemetry().sendUsageData('Telemetry Opt-Out', undefined, true);
+    persistIsSendingTelemetry(false);
+    telemetryCommon.getLogger()?.debug('Usage data has been disabled');
 };
 
 const reset = () => {
-    getUsageData().sendUsageData('Data Usage Opt-Reset', undefined, true);
-    deleteIsSendingUsageData();
-    usageDataCommon.getLogger()?.debug('Usage data setting has been reset');
+    getTelemetry().sendUsageData('Telemetry Opt-Reset', undefined, true);
+    deleteIsSendingTelemetry();
+    telemetryCommon.getLogger()?.debug('Usage data setting has been reset');
 };
 
 const isRenderer = process && process.type === 'renderer';
 
-const getUsageData = () => {
+const getTelemetry = () => {
     if (isRenderer) {
-        return usageDataRenderer;
+        return telemetryRenderer;
     }
 
-    return usageDataMain;
+    return telemetryMain;
 };
 
 const sendUsageData = async (action: string, metadata?: Metadata) => {
     if (
-        await getUsageData().sendUsageData(
+        await getTelemetry().sendUsageData(
             `${getFriendlyAppName()}: ${action}`,
             flatObject(metadata)
         )
     ) {
-        usageDataCommon
+        telemetryCommon
             .getLogger()
             ?.debug(`Sending usage data ${JSON.stringify(action)}`);
     }
 };
 
 const sendPageView = (pageName: string) =>
-    getUsageData().sendPageView(`${getFriendlyAppName()} - ${pageName}`);
+    getTelemetry().sendPageView(`${getFriendlyAppName()} - ${pageName}`);
 
 const sendMetric = (name: string, average: number) =>
-    getUsageData().sendMetric(name, average);
+    getTelemetry().sendMetric(name, average);
 
-const sendTrace = (message: string) => getUsageData().sendTrace(message);
+const sendTrace = (message: string) => getTelemetry().sendTrace(message);
 
 const sendErrorReport = (error: string | Error) => {
-    usageDataCommon.getLogger()?.error(error);
-    return getUsageData().sendErrorReport(
+    telemetryCommon.getLogger()?.error(error);
+    return getTelemetry().sendErrorReport(
         typeof error === 'string' ? new Error(error) : error
     );
 };
 
 export default {
-    setLogger: usageDataCommon.setLogger,
+    setLogger: telemetryCommon.setLogger,
     disable,
     enable,
-    isEnabled: usageDataCommon.isEnabled,
+    isEnabled: telemetryCommon.isEnabled,
     reset,
     sendErrorReport,
     sendUsageData,
     sendPageView,
     sendMetric,
     sendTrace,
-    enableTelemetry: usageDataCommon.enableTelemetry,
+    enableTelemetry: telemetryCommon.enableTelemetry,
 };

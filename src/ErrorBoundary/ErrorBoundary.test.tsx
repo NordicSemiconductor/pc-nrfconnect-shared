@@ -13,8 +13,8 @@ import { generateSystemReport } from '../utils/systemReport';
 import ErrorBoundary from './ErrorBoundary';
 
 jest.mock('../utils/systemReport');
-jest.mock('../utils/usageData', () => ({
-    ...jest.requireActual('../utils/usageData'),
+jest.mock('../telemetry/telemetry', () => ({
+    ...jest.requireActual('../telemetry/telemetry'),
     sendErrorReport: jest.fn(),
     isEnabled: () => true,
 }));

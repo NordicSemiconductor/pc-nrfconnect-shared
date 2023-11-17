@@ -29,12 +29,12 @@ import FlashMessages from '../FlashMessage/FlashMessage';
 import LogViewer from '../Log/LogViewer';
 import logger from '../logging';
 import NavBar from '../NavBar/NavBar';
+import telemetry from '../telemetry/telemetry';
 import classNames from '../utils/classNames';
 import {
     getPersistedCurrentPane,
     getPersistedLogVisible,
 } from '../utils/persistentStore';
-import usageData from '../utils/usageData';
 import useHotKey from '../utils/useHotKey';
 import {
     currentPane as currentPaneSelector,
@@ -87,7 +87,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     if (!initApp.current) {
         logger.initialise();
         setNrfutilLogger(logger);
-        usageData.setLogger(logger);
+        telemetry.setLogger(logger);
         initApp.current = true;
     }
 
@@ -110,7 +110,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     }, [allPanes]);
 
     useEffect(() => {
-        usageData.sendPageView(paneName.current[currentPane]);
+        telemetry.sendPageView(paneName.current[currentPane]);
     }, [currentPane]);
 
     useEffect(() => {

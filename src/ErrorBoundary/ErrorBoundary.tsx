@@ -12,17 +12,17 @@ import { Device } from '../Device/deviceSlice';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { CollapsibleGroup } from '../SidePanel/Group';
 import Spinner from '../Spinner/Spinner';
+import telemetry from '../telemetry/telemetry';
 import { openUrl } from '../utils/open';
 import { packageJson } from '../utils/packageJson';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
 import { generateSystemReport } from '../utils/systemReport';
-import usageData from '../utils/usageData';
 import bugIcon from './bug.svg';
 
 import './error-boundary.scss';
 
 const sendErrorReport = (error: string) => {
-    usageData.sendErrorReport(error);
+    telemetry.sendErrorReport(error);
 };
 
 interface Props {

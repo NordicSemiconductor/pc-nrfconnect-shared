@@ -6,17 +6,17 @@
 
 import { TelemetryClient } from 'applicationinsights';
 
-import { isDevelopment } from './environment';
-import { packageJson } from './packageJson';
-import usageDataCommon, {
+import { isDevelopment } from '../utils/environment';
+import { packageJson } from '../utils/packageJson';
+import telemetryCommon, {
     INSTRUMENTATION_KEY,
     Metadata,
-} from './usageDataCommon';
+} from './telemetryCommon';
 
 let cachedInsights: TelemetryClient | undefined;
 
 const getInsights = (sendingOptOut?: boolean) => {
-    if (!usageDataCommon.getShouldSendTelemetry(sendingOptOut)) return;
+    if (!telemetryCommon.getShouldSendTelemetry(sendingOptOut)) return;
 
     if (cachedInsights) {
         return cachedInsights;

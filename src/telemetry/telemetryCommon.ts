@@ -7,7 +7,7 @@
 import winston from 'winston';
 
 import { type Device } from '../Device/deviceSlice';
-import { getIsSendingUsageData } from './persistentStore';
+import { getIsSendingTelemetry } from '../utils/persistentStore';
 
 export const INSTRUMENTATION_KEY = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
 
@@ -42,13 +42,13 @@ export const simplifyDeviceForLogging = (device: Device) => ({
 });
 
 const isEnabled = () => {
-    const isSendingUsageData = getShouldSendTelemetry();
-    logger?.debug(`Usage data is ${isSendingUsageData}`);
-    return isSendingUsageData;
+    const isSendingTelemetry = getShouldSendTelemetry();
+    logger?.debug(`Telemetry is ${isSendingTelemetry}`);
+    return isSendingTelemetry;
 };
 
 const getShouldSendTelemetry = (sendingOptOut?: boolean) =>
-    (sendingOptOut || getIsSendingUsageData()) && telemetryEnabled;
+    (sendingOptOut || getIsSendingTelemetry()) && telemetryEnabled;
 
 export default {
     setLogger,

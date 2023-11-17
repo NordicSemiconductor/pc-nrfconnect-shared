@@ -6,19 +6,19 @@
 
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 
-import appDetails from './appDetails';
-import { isDevelopment } from './environment';
-import { isLauncher, packageJson } from './packageJson';
-import { getUsageDataClientId } from './persistentStore';
-import usageDataCommon, {
+import appDetails from '../utils/appDetails';
+import { isDevelopment } from '../utils/environment';
+import { isLauncher, packageJson } from '../utils/packageJson';
+import { getTelemetryClientId } from '../utils/persistentStore';
+import telemetryCommon, {
     INSTRUMENTATION_KEY,
     Metadata,
-} from './usageDataCommon';
+} from './telemetryCommon';
 
 let cachedInsights: ApplicationInsights | undefined;
 
 const getInsights = async (sendingOptOut?: boolean) => {
-    if (!usageDataCommon.getShouldSendTelemetry(sendingOptOut)) return;
+    if (!telemetryCommon.getShouldSendTelemetry(sendingOptOut)) return;
 
     if (cachedInsights) {
         return cachedInsights;
@@ -45,7 +45,7 @@ const init = async () => {
     const applicationVersion = packageJson().version;
     const source = isLauncher() ? undefined : (await appDetails()).source;
 
-    const accountId = getUsageDataClientId();
+    const accountId = getTelemetryClientId();
 
     const result = new ApplicationInsights({
         config: {

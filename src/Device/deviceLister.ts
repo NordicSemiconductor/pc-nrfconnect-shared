@@ -9,8 +9,8 @@ import { DeviceTraits, NrfutilDevice } from '../../nrfutil/device/common';
 import NrfutilDeviceLib from '../../nrfutil/device/device';
 import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
-import usageData from '../utils/usageData';
-import { simplifyDeviceForLogging } from '../utils/usageDataCommon';
+import telemetry from '../telemetry/telemetry';
+import { simplifyDeviceForLogging } from '../telemetry/telemetryCommon';
 import {
     clearWaitForDevice,
     clearWaitForDeviceTimeout,
@@ -180,7 +180,7 @@ export const startWatchingDevices =
 
             const action = async (device: Device) => {
                 if (hasValidDeviceTraits(device.traits, deviceListing)) {
-                    usageData.sendUsageData(
+                    telemetry.sendUsageData(
                         'device connected',
                         simplifyDeviceForLogging(device)
                     );

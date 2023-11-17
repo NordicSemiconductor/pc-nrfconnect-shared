@@ -115,22 +115,22 @@ export const getPersistedTerminalSettings = (
     return undefined;
 };
 
-export const persistIsSendingUsageData = (value: boolean) =>
+export const persistIsSendingTelemetry = (value: boolean) =>
     sharedStore.set('isSendingTelemetry', value);
-export const getIsSendingUsageData = () =>
+export const getIsSendingTelemetry = () =>
     sharedStore.get('isSendingTelemetry', undefined) as boolean | undefined;
-export const deleteIsSendingUsageData = () =>
+export const deleteIsSendingTelemetry = () =>
     sharedStore.delete('isSendingTelemetry');
 
-const existingUsageDataClientId = () => sharedStore.get('clientId');
-const newUsageDataClientId = () => {
+const existingTelemetryClientId = () => sharedStore.get('clientId');
+const newTelemetryClientId = () => {
     const clientId = uuid();
     sharedStore.set('clientId', clientId);
 
     return clientId;
 };
-export const getUsageDataClientId = () =>
-    existingUsageDataClientId() ?? newUsageDataClientId();
+export const getTelemetryClientId = () =>
+    existingTelemetryClientId() ?? newTelemetryClientId();
 
 // This one must be initialised lazily, because the package.json is not read yet when this module is initialised.
 // This can probably be changed when we bundle shared with the apps.
