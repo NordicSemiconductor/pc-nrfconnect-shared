@@ -16,30 +16,32 @@ export interface DropdownItem<T = string> {
     value: T;
 }
 
-export interface DropdownProps {
+export type DropdownProps<T> = {
     id?: string;
     label?: React.ReactNode;
-    items: DropdownItem[];
-    onSelect: (item: DropdownItem) => void;
+    defaultButtonLabel?: string;
+    items: DropdownItem<T>[];
+    onSelect: (item: DropdownItem<T>) => void;
     disabled?: boolean;
-    selectedItem: DropdownItem;
+    selectedItem: DropdownItem<T>;
     numItemsBeforeScroll?: number;
     className?: string;
-}
+};
 
-export default ({
+export default <T,>({
     id,
     label,
+    defaultButtonLabel = '',
     items,
     onSelect,
     disabled = false,
     selectedItem,
     numItemsBeforeScroll = 0,
     className = '',
-}: DropdownProps) => {
+}: DropdownProps<T>) => {
     const [isActive, setIsActive] = useState(false);
 
-    const onClickItem = (item: DropdownItem) => {
+    const onClickItem = (item: DropdownItem<T>) => {
         onSelect(item);
         setIsActive(false);
     };
@@ -65,7 +67,7 @@ export default ({
             >
                 <span>
                     {items.findIndex(e => e.value === selectedItem.value) === -1
-                        ? ''
+                        ? defaultButtonLabel
                         : selectedItem.label}
                 </span>
                 <span
@@ -100,7 +102,7 @@ export default ({
                     <button
                         type="button"
                         className="tw-bg-transparent tw-clear-both tw-block tw-h-6 tw-w-full tw-whitespace-nowrap tw-border-0 tw-px-2 tw-py-1 tw-text-left tw-font-normal tw-text-white hover:tw-bg-gray-600 focus:tw-bg-gray-600"
-                        key={item.value}
+                        key={JSON.stringify(item.value)}
                         onClick={() => onClickItem(item)}
                     >
                         {item.label}
