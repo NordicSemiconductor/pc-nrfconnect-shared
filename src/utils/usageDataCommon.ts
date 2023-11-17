@@ -47,8 +47,8 @@ const isEnabled = () => {
     return isSendingUsageData;
 };
 
-const getShouldSendTelemetry = (forceSend?: boolean) =>
-    (forceSend || getIsSendingUsageData()) && telemetryEnabled;
+const getShouldSendTelemetry = (sendingOptOut?: boolean) =>
+    (sendingOptOut || getIsSendingUsageData()) && telemetryEnabled;
 
 export default {
     setLogger,

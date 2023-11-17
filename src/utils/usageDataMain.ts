@@ -15,8 +15,8 @@ import usageDataCommon, {
 
 let cachedInsights: TelemetryClient | undefined;
 
-const getInsights = (forceSend?: boolean) => {
-    if (!usageDataCommon.getShouldSendTelemetry(forceSend)) return;
+const getInsights = (sendingOptOut?: boolean) => {
+    if (!usageDataCommon.getShouldSendTelemetry(sendingOptOut)) return;
 
     if (cachedInsights) {
         return cachedInsights;
@@ -71,13 +71,13 @@ const init = () => {
 const sendUsageData = (
     action: string,
     metadata?: Metadata,
-    forceSend?: boolean
+    sendingOptOut?: boolean
 ) => {
-    const result = getInsights(forceSend);
+    const result = getInsights(sendingOptOut);
     if (result !== undefined) {
         result.trackEvent({
             name: action,
-            properties: forceSend ? { removeAllMetadata: true } : metadata,
+            properties: sendingOptOut ? { removeAllMetadata: true } : metadata,
         });
         return true;
     }
