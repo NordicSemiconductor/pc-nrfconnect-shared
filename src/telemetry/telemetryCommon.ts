@@ -13,16 +13,16 @@ export const INSTRUMENTATION_KEY = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
 
 let isTelemetryAllowedForCurrentApp = false;
 
-const allowTelemetryForCurrentApp = () => {
+export const allowTelemetryForCurrentApp = () => {
     isTelemetryAllowedForCurrentApp = true;
 };
 
 let logger: winston.Logger | undefined;
-const setLogger = (log: winston.Logger) => {
+export const setLogger = (log: winston.Logger) => {
     logger = log;
 };
 
-const getLogger = () => logger;
+export const getLogger = () => logger;
 
 export interface Metadata {
     [key: string]: unknown;
@@ -41,20 +41,12 @@ export const simplifyDeviceForLogging = (device: Device) => ({
     },
 });
 
-const isEnabled = () => {
-    const isSendingTelemetry = getShouldSendTelemetry();
+export const isEnabled = () => {
+    const isSendingTelemetry = getIsSendingTelemetry();
     logger?.debug(`Telemetry is ${isSendingTelemetry}`);
     return isSendingTelemetry;
 };
 
-const getShouldSendTelemetry = (sendingOptOut?: boolean) =>
+export const getIsSendingTelemetry = (sendingOptOut?: boolean) =>
     (sendingOptOut || getHasUserAgreedToTelemetry()) &&
     isTelemetryAllowedForCurrentApp;
-
-export default {
-    setLogger,
-    getLogger,
-    isEnabled,
-    getShouldSendTelemetry,
-    allowTelemetryForCurrentApp,
-};

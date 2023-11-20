@@ -11,7 +11,13 @@ import {
     deleteHasUserAgreedToTelemetry,
     persistHasUserAgreedToTelemetry,
 } from '../utils/persistentStore';
-import telemetryCommon, { Metadata } from './telemetryCommon';
+import {
+    allowTelemetryForCurrentApp,
+    getLogger,
+    isEnabled,
+    Metadata,
+    setLogger,
+} from './telemetryCommon';
 import telemetryMain from './telemetryMain';
 import telemetryRenderer from './telemetryRenderer';
 
@@ -35,19 +41,19 @@ const enable = () => {
         getTelemetry().sendUsageData('Report OS info', { platform, arch })
     );
     getTelemetry().sendUsageData('Telemetry Opt-In', undefined);
-    telemetryCommon.getLogger()?.debug('Usage data has been enabled');
+    getLogger()?.debug('Usage data has been enabled');
 };
 
 const disable = () => {
     getTelemetry().sendUsageData('Telemetry Opt-Out', undefined, true);
     persistHasUserAgreedToTelemetry(false);
-    telemetryCommon.getLogger()?.debug('Usage data has been disabled');
+    getLogger()?.debug('Usage data has been disabled');
 };
 
 const reset = () => {
     getTelemetry().sendUsageData('Telemetry Opt-Reset', undefined, true);
     deleteHasUserAgreedToTelemetry();
-    telemetryCommon.getLogger()?.debug('Usage data setting has been reset');
+    getLogger()?.debug('Usage data setting has been reset');
 };
 
 const isRenderer = process && process.type === 'renderer';
@@ -67,9 +73,7 @@ const sendUsageData = async (action: string, metadata?: Metadata) => {
             flatObject(metadata)
         )
     ) {
-        telemetryCommon
-            .getLogger()
-            ?.debug(`Sending usage data ${JSON.stringify(action)}`);
+        getLogger()?.debug(`Sending usage data ${JSON.stringify(action)}`);
     }
 };
 
@@ -82,22 +86,22 @@ const sendMetric = (name: string, average: number) =>
 const sendTrace = (message: string) => getTelemetry().sendTrace(message);
 
 const sendErrorReport = (error: string | Error) => {
-    telemetryCommon.getLogger()?.error(error);
+    getLogger()?.error(error);
     return getTelemetry().sendErrorReport(
         typeof error === 'string' ? new Error(error) : error
     );
 };
 
 export default {
-    setLogger: telemetryCommon.setLogger,
+    setLogger,
     disable,
     enable,
-    isEnabled: telemetryCommon.isEnabled,
+    isEnabled,
     reset,
     sendErrorReport,
     sendUsageData,
     sendPageView,
     sendMetric,
     sendTrace,
-    enableTelemetry: telemetryCommon.allowTelemetryForCurrentApp,
+    enableTelemetry: allowTelemetryForCurrentApp,
 };
