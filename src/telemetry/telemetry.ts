@@ -8,8 +8,8 @@ import si from 'systeminformation';
 
 import { packageJson } from '../utils/packageJson';
 import {
-    deleteIsSendingTelemetry,
-    persistIsSendingTelemetry,
+    deleteHasUserAgreedToTelemetry,
+    persistHasUserAgreedToTelemetry,
 } from '../utils/persistentStore';
 import telemetryCommon, { Metadata } from './telemetryCommon';
 import telemetryMain from './telemetryMain';
@@ -30,7 +30,7 @@ export const flatObject = (obj?: unknown, parentKey?: string): Metadata =>
     }, {});
 
 const enable = () => {
-    persistIsSendingTelemetry(true);
+    persistHasUserAgreedToTelemetry(true);
     si.osInfo().then(({ platform, arch }) =>
         getTelemetry().sendUsageData('Report OS info', { platform, arch })
     );
@@ -40,13 +40,13 @@ const enable = () => {
 
 const disable = () => {
     getTelemetry().sendUsageData('Telemetry Opt-Out', undefined, true);
-    persistIsSendingTelemetry(false);
+    persistHasUserAgreedToTelemetry(false);
     telemetryCommon.getLogger()?.debug('Usage data has been disabled');
 };
 
 const reset = () => {
     getTelemetry().sendUsageData('Telemetry Opt-Reset', undefined, true);
-    deleteIsSendingTelemetry();
+    deleteHasUserAgreedToTelemetry();
     telemetryCommon.getLogger()?.debug('Usage data setting has been reset');
 };
 

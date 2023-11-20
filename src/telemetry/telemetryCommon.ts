@@ -7,7 +7,7 @@
 import winston from 'winston';
 
 import { type Device } from '../Device/deviceSlice';
-import { getIsSendingTelemetry } from '../utils/persistentStore';
+import { getHasUserAgreedToTelemetry } from '../utils/persistentStore';
 
 export const INSTRUMENTATION_KEY = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
 
@@ -48,7 +48,7 @@ const isEnabled = () => {
 };
 
 const getShouldSendTelemetry = (sendingOptOut?: boolean) =>
-    (sendingOptOut || getIsSendingTelemetry()) && telemetryEnabled;
+    (sendingOptOut || getHasUserAgreedToTelemetry()) && telemetryEnabled;
 
 export default {
     setLogger,

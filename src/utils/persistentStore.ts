@@ -115,11 +115,11 @@ export const getPersistedTerminalSettings = (
     return undefined;
 };
 
-export const persistIsSendingTelemetry = (value: boolean) =>
+export const persistHasUserAgreedToTelemetry = (value: boolean) =>
     sharedStore.set('isSendingTelemetry', value);
-export const getIsSendingTelemetry = () =>
+export const getHasUserAgreedToTelemetry = () =>
     sharedStore.get('isSendingTelemetry', undefined) as boolean | undefined;
-export const deleteIsSendingTelemetry = () =>
+export const deleteHasUserAgreedToTelemetry = () =>
     sharedStore.delete('isSendingTelemetry');
 
 const existingTelemetryClientId = () => sharedStore.get('clientId');
