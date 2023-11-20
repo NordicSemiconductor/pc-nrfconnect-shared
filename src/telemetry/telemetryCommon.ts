@@ -11,10 +11,10 @@ import { getHasUserAgreedToTelemetry } from '../utils/persistentStore';
 
 export const INSTRUMENTATION_KEY = '4b8b1a39-37c7-479e-a684-d4763c7c647c';
 
-let telemetryEnabled = false;
+let isTelemetryAllowedForCurrentApp = false;
 
-const enableTelemetry = () => {
-    telemetryEnabled = true;
+const allowTelemetryForCurrentApp = () => {
+    isTelemetryAllowedForCurrentApp = true;
 };
 
 let logger: winston.Logger | undefined;
@@ -48,12 +48,13 @@ const isEnabled = () => {
 };
 
 const getShouldSendTelemetry = (sendingOptOut?: boolean) =>
-    (sendingOptOut || getHasUserAgreedToTelemetry()) && telemetryEnabled;
+    (sendingOptOut || getHasUserAgreedToTelemetry()) &&
+    isTelemetryAllowedForCurrentApp;
 
 export default {
     setLogger,
     getLogger,
     isEnabled,
     getShouldSendTelemetry,
-    enableTelemetry,
+    allowTelemetryForCurrentApp,
 };

@@ -99,5 +99,5 @@ export default {
     sendPageView,
     sendMetric,
     sendTrace,
-    enableTelemetry: telemetryCommon.enableTelemetry,
+    enableTelemetry: telemetryCommon.allowTelemetryForCurrentApp,
 };
