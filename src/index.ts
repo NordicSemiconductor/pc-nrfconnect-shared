@@ -78,7 +78,7 @@ export { openUrl, openFile } from './utils/open';
 export { default as systemReport } from './utils/systemReport';
 
 export { default as usageData } from './telemetry/telemetry';
-export { type Metadata as UsageDataMetadata } from './telemetry/telemetryCommon';
+export { type default as UsageDataMetadata } from './telemetry/TelemetryMetadata';
 export { default as classNames } from './utils/classNames';
 export { truncateMiddle } from './utils/truncateMiddle';
 

@@ -7,12 +7,25 @@
 import React from 'react';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 
+import { OFFICIAL } from '../../../ipc/sources';
+import packageJsonFromShared from '../../../package.json';
 import render from '../../../test/testrenderer';
 import { addDevice, Device, removeDevice } from '../deviceSlice';
 import { jprogDeviceSetup } from '../jprogOperations';
 import DeviceSelector from './DeviceSelector';
 
 jest.mock('../../../nrfutil/device/device');
+
+jest.mock('../../utils/packageJson', () => ({
+    isLauncher: () => false,
+    packageJson: () => packageJsonFromShared,
+}));
+
+const appDetails = Promise.resolve({ source: OFFICIAL });
+jest.mock('../../utils/appDetails', () => ({
+    __esModule: true,
+    default: () => appDetails,
+}));
 
 const DEVICE_SERIAL_NUMBER = '000000001';
 

@@ -9,8 +9,8 @@ import { DeviceTraits, NrfutilDevice } from '../../nrfutil/device/common';
 import NrfutilDeviceLib from '../../nrfutil/device/device';
 import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
+import simplifyDevice from '../telemetry/simplifyDevice';
 import telemetry from '../telemetry/telemetry';
-import { simplifyDeviceForLogging } from '../telemetry/telemetryCommon';
 import {
     clearWaitForDevice,
     clearWaitForDeviceTimeout,
@@ -182,7 +182,7 @@ export const startWatchingDevices =
                 if (hasValidDeviceTraits(device.traits, deviceListing)) {
                     telemetry.sendUsageData(
                         'device connected',
-                        simplifyDeviceForLogging(device)
+                        simplifyDevice(device)
                     );
                     if (
                         !getState().device.devices.find(

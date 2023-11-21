@@ -10,8 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NrfutilDeviceLib } from '../../../nrfutil/device';
 import { DeviceTraits } from '../../../nrfutil/device/common';
 import logger from '../../logging';
+import simplifyDevice from '../../telemetry/simplifyDevice';
 import telemetry from '../../telemetry/telemetry';
-import { simplifyDeviceForLogging } from '../../telemetry/telemetryCommon';
 import useHotKey from '../../utils/useHotKey';
 import {
     clearWaitForDevice,
@@ -73,7 +73,7 @@ export default ({
             if (device) {
                 telemetry.sendUsageData(
                     'device deselected ',
-                    simplifyDeviceForLogging(device)
+                    simplifyDevice(device)
                 );
             }
 
@@ -121,7 +121,7 @@ export default ({
             onDeviceSelected(device, autoReselected);
 
             telemetry.sendUsageData('device selected', {
-                device: simplifyDeviceForLogging(device),
+                device: simplifyDevice(device),
                 deviceInfo,
             });
 

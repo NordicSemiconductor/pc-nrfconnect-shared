@@ -5,8 +5,9 @@
  */
 
 import React from 'react';
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 
+import { OFFICIAL } from '../../ipc/sources';
 import packageJsonFromShared from '../../package.json';
 import render from '../../test/testrenderer';
 import App, { Pane } from './App';
@@ -24,6 +25,12 @@ jest.mock('../logging/index.ts', () => ({
 jest.mock('../utils/packageJson', () => ({
     isLauncher: () => false,
     packageJson: () => packageJsonFromShared,
+}));
+
+const appDetails = Promise.resolve({ source: OFFICIAL });
+jest.mock('../utils/appDetails', () => ({
+    __esModule: true,
+    default: () => appDetails,
 }));
 
 const renderApp = (panes: Pane[]) => {
@@ -50,9 +57,11 @@ const anotherPane = {
 };
 
 describe('App', () => {
-    it('automatically gets an About pane attached', () => {
+    it('automatically gets an About pane attached', async () => {
         renderApp([aPane, anotherPane]);
 
         expect(screen.getByText('About')).toBeInTheDocument();
+
+        await act(() => appDetails);
     });
 });

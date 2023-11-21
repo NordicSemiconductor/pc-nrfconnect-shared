@@ -1,86 +1,85 @@
 /*
- * Copyright (c) 2105 Nordic Semiconductor ASA
+ * Copyright (c) 2023 Nordic Semiconductor ASA
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import si from 'systeminformation';
+import { Logger } from 'winston';
 
 import { packageJson } from '../utils/packageJson';
-import {
-    deleteHasUserAgreedToTelemetry,
-    persistHasUserAgreedToTelemetry,
-} from '../utils/persistentStore';
 import flatObject from './flatObject';
-import {
-    allowTelemetryForCurrentApp,
-    getLogger,
-    isEnabled,
-    Metadata,
-    setLogger,
-} from './telemetryCommon';
-import telemetryMain from './telemetryMain';
-import telemetryRenderer from './telemetryRenderer';
+import TelemetryMetadata from './TelemetryMetadata';
+import TelemetrySender from './TelemetrySender';
+import TelemetrySenderInMain from './TelemetrySenderInMain';
+import TelemetrySenderInRenderer from './TelemetrySenderInRenderer';
+
+const isRenderer = process && process.type === 'renderer';
+
+let cachedSender: TelemetrySender | undefined;
+
+const newTelemetrySender = () => {
+    cachedSender = isRenderer
+        ? new TelemetrySenderInRenderer()
+        : new TelemetrySenderInMain();
+
+    return cachedSender;
+};
+
+// We experienced that apps sometimes freeze when closing the window
+// until the telemetry events are sent. But as far as we observed so
+// far this only happens in the renderer processes
+if (isRenderer) {
+    globalThis.addEventListener('beforeunload', () => cachedSender?.flush());
+}
+
+const getTelemetrySenderUnconditionally = () =>
+    cachedSender ?? newTelemetrySender();
+
+const getTelemetrySenderIfEnabled = () => {
+    const sender = getTelemetrySenderUnconditionally();
+
+    if (sender.getIsSendingTelemetry()) return sender;
+
+    return undefined;
+};
+
+// Functions which can always be called
+
+const setLogger = (logger: Logger) =>
+    getTelemetrySenderUnconditionally().setLogger(logger);
+const enable = () => getTelemetrySenderUnconditionally().enable();
+const isEnabled = () => getTelemetrySenderUnconditionally().isEnabled();
+const disable = () => getTelemetrySenderUnconditionally().disable();
+const reset = () => getTelemetrySenderUnconditionally().reset();
+const enableTelemetry = () =>
+    getTelemetrySenderUnconditionally().allowTelemetryForCurrentApp();
+
+// Functions which will be no-ops if telemetry is disabled for some reason
 
 const getFriendlyAppName = () =>
     packageJson().name.replace('pc-nrfconnect-', '');
 
-const enable = () => {
-    persistHasUserAgreedToTelemetry(true);
-    si.osInfo().then(({ platform, arch }) =>
-        getTelemetry().sendUsageData('Report OS info', { platform, arch })
+const sendUsageData = (action: string, metadata?: TelemetryMetadata) =>
+    getTelemetrySenderIfEnabled()?.sendUsageData(
+        `${getFriendlyAppName()}: ${action}`,
+        flatObject(metadata)
     );
-    getTelemetry().sendUsageData('Telemetry Opt-In', undefined);
-    getLogger()?.debug('Usage data has been enabled');
-};
-
-const disable = () => {
-    getTelemetry().sendUsageData('Telemetry Opt-Out', undefined, true);
-    persistHasUserAgreedToTelemetry(false);
-    getLogger()?.debug('Usage data has been disabled');
-};
-
-const reset = () => {
-    getTelemetry().sendUsageData('Telemetry Opt-Reset', undefined, true);
-    deleteHasUserAgreedToTelemetry();
-    getLogger()?.debug('Usage data setting has been reset');
-};
-
-const isRenderer = process && process.type === 'renderer';
-
-const getTelemetry = () => {
-    if (isRenderer) {
-        return telemetryRenderer;
-    }
-
-    return telemetryMain;
-};
-
-const sendUsageData = async (action: string, metadata?: Metadata) => {
-    if (
-        await getTelemetry().sendUsageData(
-            `${getFriendlyAppName()}: ${action}`,
-            flatObject(metadata)
-        )
-    ) {
-        getLogger()?.debug(`Sending usage data ${JSON.stringify(action)}`);
-    }
-};
 
 const sendPageView = (pageName: string) =>
-    getTelemetry().sendPageView(`${getFriendlyAppName()} - ${pageName}`);
+    getTelemetrySenderIfEnabled()?.sendPageView(
+        `${getFriendlyAppName()} - ${pageName}`
+    );
 
 const sendMetric = (name: string, average: number) =>
-    getTelemetry().sendMetric(name, average);
+    getTelemetrySenderIfEnabled()?.sendMetric(name, average);
 
-const sendTrace = (message: string) => getTelemetry().sendTrace(message);
+const sendTrace = (message: string) =>
+    getTelemetrySenderIfEnabled()?.sendTrace(message);
 
-const sendErrorReport = (error: string | Error) => {
-    getLogger()?.error(error);
-    return getTelemetry().sendErrorReport(
+const sendErrorReport = (error: string | Error) =>
+    getTelemetrySenderIfEnabled()?.sendErrorReport(
         typeof error === 'string' ? new Error(error) : error
     );
-};
 
 export default {
     setLogger,
@@ -93,5 +92,5 @@ export default {
     sendPageView,
     sendMetric,
     sendTrace,
-    enableTelemetry: allowTelemetryForCurrentApp,
+    enableTelemetry,
 };
