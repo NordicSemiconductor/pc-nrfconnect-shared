@@ -11,6 +11,7 @@ import {
     deleteHasUserAgreedToTelemetry,
     persistHasUserAgreedToTelemetry,
 } from '../utils/persistentStore';
+import flatObject from './flatObject';
 import {
     allowTelemetryForCurrentApp,
     getLogger,
@@ -23,17 +24,6 @@ import telemetryRenderer from './telemetryRenderer';
 
 const getFriendlyAppName = () =>
     packageJson().name.replace('pc-nrfconnect-', '');
-
-export const flatObject = (obj?: unknown, parentKey?: string): Metadata =>
-    Object.entries(obj ?? {}).reduce((acc, [key, value]) => {
-        const newKey = parentKey ? `${parentKey}.${key}` : key;
-        return {
-            ...acc,
-            ...(typeof value === 'object'
-                ? flatObject(value, newKey)
-                : { [newKey]: value }),
-        };
-    }, {});
 
 const enable = () => {
     persistHasUserAgreedToTelemetry(true);

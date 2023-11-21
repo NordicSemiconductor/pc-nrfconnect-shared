@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { flatObject } from './telemetry';
+import flatObject from './flatObject';
 
 describe('flatObject', () => {
     it('is an empty object for nullish input', () => {
