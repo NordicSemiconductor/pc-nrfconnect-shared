@@ -49,7 +49,8 @@ const setLogger = (logger: Logger) =>
     getTelemetrySenderUnconditionally().setLogger(logger);
 const setUsersAgreedToTelemetry = (hasAgreed: boolean) =>
     getTelemetrySenderUnconditionally().setUsersAgreedToTelemetry(hasAgreed);
-const isEnabled = () => getTelemetrySenderUnconditionally().isEnabled();
+const getIsSendingTelemetry = () =>
+    getTelemetrySenderUnconditionally().getIsSendingTelemetry();
 const setUsersWithdrewTelemetryAgreement = () =>
     getTelemetrySenderUnconditionally().setUsersWithdrewTelemetryAgreement();
 const enableTelemetry = () =>
@@ -86,7 +87,7 @@ export default {
     setLogger,
     setUsersAgreedToTelemetry,
     setUsersWithdrewTelemetryAgreement,
-    isEnabled,
+    getIsSendingTelemetry,
     sendErrorReport,
     sendUsageData,
     sendPageView,

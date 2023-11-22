@@ -16,6 +16,8 @@ every new version is a new major version.
 -   `telemetry.enable()` and `telemetry.disable()` are replaced by
     `telemetry.setUsersAgreedToTelemetry(boolean)`. `telemetry.reset()` is
     renamed to `telemetry.setUsersWithdrewTelemetryAgreement()`
+-   `telemetry.isEnabled()` got replaced by `telemetry.getIsSendingTelemetry()`,
+    which does not log anymore.
 
 ### Steps to upgrade when using this package
 
@@ -24,6 +26,9 @@ every new version is a new major version.
 -   Replace usages of `telemetry.enable()` and `telemetry.disable()` with
     `telemetry.setUsersAgreedToTelemetry(boolean)` and `telemetry.reset()` with
     `telemetry.setUsersWithdrewTelemetryAgreement()`
+-   Replace usage of `telemetry.isEnabled()` by
+    `telemetry.getIsSendingTelemetry()`. If you still want the previous log
+    message `Telemetry is {true,false}`, you have to log it yourself now.
 
 ## 150.0.0 - 2024-01-18
 

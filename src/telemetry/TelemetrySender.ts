@@ -33,17 +33,6 @@ export default abstract class TelemetrySender {
         this.isTelemetryAllowedForCurrentApp &&
         getHasUserAgreedToTelemetry() === true;
 
-    /**
-     * @deprecated Use `getIsSendingTelemetry` instead
-     * @returns {boolean} If telemetry is enabled
-     */
-    isEnabled() {
-        const isSendingTelemetry = this.getIsSendingTelemetry();
-        this.logger?.debug(`Telemetry is ${isSendingTelemetry}`);
-
-        return isSendingTelemetry;
-    }
-
     async sendAgreementEvent() {
         this.sendUsageData('Telemetry Opt-In');
 
