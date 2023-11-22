@@ -53,7 +53,7 @@ const updatePackageJson = (nextReleaseNumber: number) => {
 
 const withoutTime = (date: Date) => date.toISOString().split('T')[0];
 
-const updateChangelog = (nextReleaseNumber: number) => {
+const updateChangelog = (nextReleaseNumber: string) => {
     const changelog = readFileSync('Changelog.md', { encoding: 'utf-8' });
 
     const match = changelog.match(
@@ -104,8 +104,9 @@ const main = () => {
     const nextReleaseNumber = getNextReleaseNumber();
 
     const updatedPackageJson = updatePackageJson(nextReleaseNumber);
-    const { updated: updatedChangelog, error } =
-        updateChangelog(nextReleaseNumber);
+    const { updated: updatedChangelog, error } = updateChangelog(
+        `${nextReleaseNumber}.0.0`
+    );
 
     if (!updatedPackageJson && !updatedChangelog) {
         console.log('\nEverything already up-to-date.');
