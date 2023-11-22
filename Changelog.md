@@ -13,11 +13,17 @@ every new version is a new major version.
 
 -   Renamed exported object `usageData` to `telemetry` and type
     `UsageDataMetadata` to `TelemetryMetadata`.
+-   `telemetry.enable()` and `telemetry.disable()` are replaced by
+    `telemetry.setUsersAgreedToTelemetry(boolean)`. `telemetry.reset()` is
+    renamed to `telemetry.setUsersWithdrewTelemetryAgreement()`
 
 ### Steps to upgrade when using this package
 
 -   If they are imported from shared, rename `usageData` and
     `UsageDataMetadata`.
+-   Replace usages of `telemetry.enable()` and `telemetry.disable()` with
+    `telemetry.setUsersAgreedToTelemetry(boolean)` and `telemetry.reset()` with
+    `telemetry.setUsersWithdrewTelemetryAgreement()`
 
 ## 150.0.0 - 2024-01-18
 

@@ -47,10 +47,11 @@ const getTelemetrySenderIfEnabled = () => {
 
 const setLogger = (logger: Logger) =>
     getTelemetrySenderUnconditionally().setLogger(logger);
-const enable = () => getTelemetrySenderUnconditionally().enable();
+const setUsersAgreedToTelemetry = (hasAgreed: boolean) =>
+    getTelemetrySenderUnconditionally().setUsersAgreedToTelemetry(hasAgreed);
 const isEnabled = () => getTelemetrySenderUnconditionally().isEnabled();
-const disable = () => getTelemetrySenderUnconditionally().disable();
-const reset = () => getTelemetrySenderUnconditionally().reset();
+const setUsersWithdrewTelemetryAgreement = () =>
+    getTelemetrySenderUnconditionally().setUsersWithdrewTelemetryAgreement();
 const enableTelemetry = () =>
     getTelemetrySenderUnconditionally().allowTelemetryForCurrentApp();
 
@@ -83,10 +84,9 @@ const sendErrorReport = (error: string | Error) =>
 
 export default {
     setLogger,
-    disable,
-    enable,
+    setUsersAgreedToTelemetry,
+    setUsersWithdrewTelemetryAgreement,
     isEnabled,
-    reset,
     sendErrorReport,
     sendUsageData,
     sendPageView,

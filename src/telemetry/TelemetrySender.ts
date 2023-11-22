@@ -44,26 +44,35 @@ export default abstract class TelemetrySender {
         return isSendingTelemetry;
     }
 
-    async enable() {
-        persistHasUserAgreedToTelemetry(true);
+    async sendAgreementEvent() {
         this.sendUsageData('Telemetry Opt-In');
 
         const { platform, arch } = await si.osInfo();
         this.sendUsageData('Report OS info', { platform, arch });
-
-        this.logger?.debug('Usage data has been enabled');
     }
 
-    disable() {
-        persistHasUserAgreedToTelemetry(false);
+    sendDisagreementEvent() {
         this.sendMinimalUsageData('Telemetry Opt-Out');
-        this.logger?.debug('Usage data has been disabled');
     }
 
-    reset() {
+    async setUsersAgreedToTelemetry(hasAgreed: boolean) {
+        persistHasUserAgreedToTelemetry(hasAgreed);
+
+        if (hasAgreed) {
+            await this.sendAgreementEvent();
+        } else {
+            this.sendDisagreementEvent();
+        }
+
+        this.logger?.debug(
+            `Telemetry has been ${hasAgreed ? 'enabled' : 'disabled'}`
+        );
+    }
+
+    setUsersWithdrewTelemetryAgreement() {
         deleteHasUserAgreedToTelemetry();
         this.sendMinimalUsageData('Telemetry Opt-Reset');
-        this.logger?.debug('Usage data setting has been reset');
+        this.logger?.debug('Telemetry has been reset');
     }
 
     sendMinimalUsageData(action: string) {
