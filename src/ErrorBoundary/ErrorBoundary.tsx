@@ -32,7 +32,7 @@ interface Props {
     devices?: Device[];
     appName?: string;
     restoreDefaults?: () => void;
-    sendUsageData?: (message: string) => void;
+    sendTelemetryEvent?: (message: string) => void;
 }
 
 const genericRestoreDefaults = () => {
@@ -61,11 +61,15 @@ class ErrorBoundary extends React.Component<
     }
 
     componentDidCatch(error: Error) {
-        const { devices, selectedDevice, selectedSerialNumber, sendUsageData } =
-            this.props;
+        const {
+            devices,
+            selectedDevice,
+            selectedSerialNumber,
+            sendTelemetryEvent,
+        } = this.props;
 
-        sendUsageData != null
-            ? sendUsageData(error.message)
+        sendTelemetryEvent != null
+            ? sendTelemetryEvent(error.message)
             : sendErrorReport(error.message);
 
         generateSystemReport(

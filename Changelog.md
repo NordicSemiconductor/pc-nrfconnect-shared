@@ -20,11 +20,15 @@ every new version is a new major version.
     -   `isEnabled()` → `getIsSendingTelemetry()` (which now does not log
         anymore)
     -   `sendUsageData()` → `sendEvent()`
+-   In the component `ErrorBoundary` the property `sendUsageData` is renamed to
+    `sendTelemetryEvent`.
 
 ### Steps to upgrade when using this package
 
 -   If they are imported from shared, rename `usageData` and `UsageDataMetadata`
     as well as the renamed functions mentioned above.
+-   In usages of the component `ErrorBoundary`, rename the property
+    `sendUsageData` to `sendTelemetryEvent`.
 
 ## 150.0.0 - 2024-01-18
 
