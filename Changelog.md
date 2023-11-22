@@ -13,22 +13,18 @@ every new version is a new major version.
 
 -   Renamed exported object `usageData` to `telemetry` and type
     `UsageDataMetadata` to `TelemetryMetadata`.
--   `telemetry.enable()` and `telemetry.disable()` are replaced by
-    `telemetry.setUsersAgreedToTelemetry(boolean)`. `telemetry.reset()` is
-    renamed to `telemetry.setUsersWithdrewTelemetryAgreement()`
--   `telemetry.isEnabled()` got replaced by `telemetry.getIsSendingTelemetry()`,
-    which does not log anymore.
+-   Renamed several function in the `telemetry` object:
+    -   `enable()` → `setUsersAgreedToTelemetry(true)`
+    -   `disable()` → `setUsersAgreedToTelemetry(false)`
+    -   `reset()` → `setUsersWithdrewTelemetryAgreement()`
+    -   `isEnabled()` → `getIsSendingTelemetry()` (which now does not log
+        anymore)
+    -   `sendUsageData()` → `sendEvent()`
 
 ### Steps to upgrade when using this package
 
--   If they are imported from shared, rename `usageData` and
-    `UsageDataMetadata`.
--   Replace usages of `telemetry.enable()` and `telemetry.disable()` with
-    `telemetry.setUsersAgreedToTelemetry(boolean)` and `telemetry.reset()` with
-    `telemetry.setUsersWithdrewTelemetryAgreement()`
--   Replace usage of `telemetry.isEnabled()` by
-    `telemetry.getIsSendingTelemetry()`. If you still want the previous log
-    message `Telemetry is {true,false}`, you have to log it yourself now.
+-   If they are imported from shared, rename `usageData` and `UsageDataMetadata`
+    as well as the renamed functions mentioned above.
 
 ## 150.0.0 - 2024-01-18
 

@@ -332,7 +332,7 @@ export class NrfutilSandbox {
     ) =>
         new Promise<void>((resolve, reject) => {
             let aborting = false;
-            telemetry.sendUsageData(`running nrfutil ${this.module}`, {
+            telemetry.sendEvent(`running nrfutil ${this.module}`, {
                 args,
                 exec: command,
             });
@@ -513,7 +513,7 @@ export class NrfutilSandbox {
     ) =>
         new Promise<void>((resolve, reject) => {
             let aborting = false;
-            telemetry.sendUsageData(`running nrfutil ${this.module}`, {
+            telemetry.sendEvent(`running nrfutil ${this.module}`, {
                 args,
                 exec: command,
             });

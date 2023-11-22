@@ -34,14 +34,14 @@ export default abstract class TelemetrySender {
         getHasUserAgreedToTelemetry() === true;
 
     async sendAgreementEvent() {
-        this.sendUsageData('Telemetry Opt-In');
+        this.sendEvent('Telemetry Opt-In');
 
         const { platform, arch } = await si.osInfo();
-        this.sendUsageData('Report OS info', { platform, arch });
+        this.sendEvent('Report OS info', { platform, arch });
     }
 
     sendDisagreementEvent() {
-        this.sendMinimalUsageData('Telemetry Opt-Out');
+        this.sendMinimalEvent('Telemetry Opt-Out');
     }
 
     async setUsersAgreedToTelemetry(hasAgreed: boolean) {
@@ -60,15 +60,15 @@ export default abstract class TelemetrySender {
 
     setUsersWithdrewTelemetryAgreement() {
         deleteHasUserAgreedToTelemetry();
-        this.sendMinimalUsageData('Telemetry Opt-Reset');
+        this.sendMinimalEvent('Telemetry Opt-Reset');
         this.logger?.debug('Telemetry has been reset');
     }
 
-    sendMinimalUsageData(action: string) {
-        this.sendUsageData(action, { removeAllMetadata: true });
+    sendMinimalEvent(action: string) {
+        this.sendEvent(action, { removeAllMetadata: true });
     }
 
-    abstract sendUsageData(
+    abstract sendEvent(
         action: string,
         metadata?: TelemetryMetadata
     ): MaybePromise<void>;

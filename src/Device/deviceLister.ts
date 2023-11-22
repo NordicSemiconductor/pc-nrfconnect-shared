@@ -180,7 +180,7 @@ export const startWatchingDevices =
 
             const action = async (device: Device) => {
                 if (hasValidDeviceTraits(device.traits, deviceListing)) {
-                    telemetry.sendUsageData(
+                    telemetry.sendEvent(
                         'device connected',
                         simplifyDevice(device)
                     );

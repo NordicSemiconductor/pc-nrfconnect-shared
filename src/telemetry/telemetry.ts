@@ -61,8 +61,8 @@ const enableTelemetry = () =>
 const getFriendlyAppName = () =>
     packageJson().name.replace('pc-nrfconnect-', '');
 
-const sendUsageData = (action: string, metadata?: TelemetryMetadata) =>
-    getTelemetrySenderIfEnabled()?.sendUsageData(
+const sendEvent = (action: string, metadata?: TelemetryMetadata) =>
+    getTelemetrySenderIfEnabled()?.sendEvent(
         `${getFriendlyAppName()}: ${action}`,
         flatObject(metadata)
     );
@@ -89,7 +89,7 @@ export default {
     setUsersWithdrewTelemetryAgreement,
     getIsSendingTelemetry,
     sendErrorReport,
-    sendUsageData,
+    sendEvent,
     sendPageView,
     sendMetric,
     sendTrace,
