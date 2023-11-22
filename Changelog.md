@@ -7,6 +7,18 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## Unreleased
+
+### Changed
+
+-   Renamed exported object `usageData` to `telemetry` and type
+    `UsageDataMetadata` to `TelemetryMetadata`.
+
+### Steps to upgrade when using this package
+
+-   If they are imported from shared, rename `usageData` and
+    `UsageDataMetadata`.
+
 ## 150.0.0 - 2024-01-18
 
 ### Removed
