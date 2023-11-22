@@ -7,7 +7,7 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 134 - Unreleased
+## 134.0.0 - 2023-11-22
 
 ### Added
 
@@ -21,6 +21,8 @@ every new version is a new major version.
     type, from the its properties. Meaning that if you pass in a list of
     `DropdownItem<number>` to items, then the `onSelect` item will be of type
     `DropdownItem<number>`.
+-   Version numbers in this changelog are changed from the shorter variant like
+    `133` to the complete version number like `133.0.0`.
 
 ### Fixed
 
@@ -28,14 +30,14 @@ every new version is a new major version.
     process. This is not critical because this code isn't yet executed in real
     life.
 
-## 133 - 2023-11-15
+## 133.0.0 - 2023-11-15
 
 ### Changed
 
 -   Nrfutil `sandbox` default logging level to 'off' in production and 'error'
     in development environments
 
-## 132 - 2023-11-14
+## 132.0.0 - 2023-11-14
 
 ### Added
 
@@ -46,7 +48,7 @@ every new version is a new major version.
 
 -   `deviceInfo` is update in redux on device select
 
-## 131 - 2023-11-14
+## 131.0.0 - 2023-11-14
 
 ### Changed
 
@@ -59,7 +61,7 @@ every new version is a new major version.
 
 -   Removed warning from `applicationinsights` in the console on start.
 
-## 130 - 2023-11-14
+## 130.0.0 - 2023-11-14
 
 ### Fixed
 
@@ -70,7 +72,7 @@ every new version is a new major version.
     onSelectedDevice. This is to ensure the operations to the device are
     completed before the app possibly does any more action on it
 
-## 129 - 2023-11-13
+## 129.0.0 - 2023-11-13
 
 ### Added
 
@@ -86,39 +88,39 @@ every new version is a new major version.
     device as a dependency in `package.json`
 -   `App` no longer logs nrfutil device version.
 
-## 128 - 2023-11-08
+## 128.0.0 - 2023-11-08
 
 ### Fixed
 
 -   `NumberInputSliderWithUnit` component did not disable all sub-components
 -   `NumberInputSliderWithUnit` did not update when external value changed
 
-## 127 - 2023-11-08
+## 127.0.0 - 2023-11-08
 
 ### Fixed
 
 -   version 126 was released as a prerelease on NPM
 
-## 126 - 2023-11-08
+## 126.0.0 - 2023-11-08
 
 ### Fixed
 
 -   `className` property in `FileLink` component is now optional
 
-## 125 - 2023-11-08
+## 125.0.0 - 2023-11-08
 
 ### Changed
 
 -   `className` property in `FileLink` component is now optional
 
-## 124 - 2023-11-08
+## 124.0.0 - 2023-11-08
 
 ### Added
 
 -   `className` property to `FileLink` component
 -   `FileLink` will add ellipsis when text overflows
 
-## 123 - 2023-11-07
+## 123.0.0 - 2023-11-07
 
 ### Added
 
@@ -169,7 +171,7 @@ usageData.enableTelemetry();
 render(<App panes={[]} />);
 ```
 
-## 122 - 2023-11-02
+## 122.0.0 - 2023-11-02
 
 ### Changed
 
@@ -203,7 +205,7 @@ render(<App panes={[]} />);
 -   Change `nrfConnectForDesktop.nrfutil.device` to 2.0.0.
 -   Update all device properties to match the changes above.
 
-## 121 - 2023-10-24
+## 121.0.0 - 2023-10-24
 
 ### Added
 
@@ -217,7 +219,7 @@ render(<App panes={[]} />);
     waiting for device
 -   Device setup dialog is closed immediately pressing no to programming it
 
-## 120 - 2023-10-13
+## 120.0.0 - 2023-10-13
 
 ### Fixed
 
@@ -226,13 +228,13 @@ render(<App panes={[]} />);
     into the `package.json`, which didn't exist any longer in the launcher,
     because it is only supplied during build time by apps now.
 
-## 119 - 2023-10-13
+## 119.0.0 - 2023-10-13
 
 ### Changed
 
 -   Remove default 3000ms timeout from `nrfutil device list`
 
-## 118 - 2023-10-13
+## 118.0.0 - 2023-10-13
 
 ### Added
 
@@ -248,13 +250,13 @@ render(<App panes={[]} />);
 -   `nrfConnectForDesktop.html` is not optional anymore, it must always be
     specified in `package.json`.
 
-## 117 - 2023-10-04
+## 117.0.0 - 2023-10-04
 
 ### Fixed
 
 -   `nrfutil device program` did now throw error when files buffers where used
 
-## 116 - 2023-10-03
+## 116.0.0 - 2023-10-03
 
 ### Fixed
 
@@ -266,26 +268,26 @@ render(<App panes={[]} />);
 
 -   Read the `package.json` already during compile time, but only for apps.
 
-## 115 - 2023-09-28
+## 115.0.0 - 2023-09-28
 
 ### Fixed
 
 -   `MasonryLayout` content disappeared if space is less then min width
 -   `Feedback` cursor is missing when no text is typed in.
 
-## 114 - 2023-09-26
+## 114.0.0 - 2023-09-26
 
 ### Fixed
 
 -   `MasonryLayout` excess scrolling white space.
 
-## 113 - 2023-09-25
+## 113.0.0 - 2023-09-25
 
 ### Fixed
 
 -   The buttons in a dialog footer had too little space between them.
 
-## 112 - 2023-09-25
+## 112.0.0 - 2023-09-25
 
 ### Fixed
 
@@ -294,7 +296,7 @@ render(<App panes={[]} />);
     Sometimes TypeScript gets confused from which one to choose the types. Using
     explicitly the version from the browser fixes this.
 
-## 111 - 2023-09-22
+## 111.0.0 - 2023-09-22
 
 ### Added
 
@@ -320,13 +322,13 @@ declare module '!!@svgr!*.svg' {
 }
 ```
 
-## 110 - 2023-09-22
+## 110.0.0 - 2023-09-22
 
 ### Fixed
 
 -   `MasonryLayout` dropdown component forced cards on different row to shift.
 
-## 109 - 2023-09-21
+## 109.0.0 - 2023-09-21
 
 ### Changed
 
@@ -336,26 +338,26 @@ declare module '!!@svgr!*.svg' {
 
 -   `Overlay` component.
 
-## 108 - 2023-09-15
+## 108.0.0 - 2023-09-15
 
 ### Fixed
 
 -   `MasonryLayout` Reacts to dropdown component making its height bigger.
 
-## 107 - 2023-09-13
+## 107.0.0 - 2023-09-13
 
 ### Fixed
 
 -   Fixed get `getAppDir()` path.
 
-## 106 - 2023-09-13
+## 106.0.0 - 2023-09-13
 
 ### Added
 
 -   `shellParser` utility
 -   `StartStopButton` now also takes in optional `title` property
 
-## 105 - 2023-09-11
+## 105.0.0 - 2023-09-11
 
 ### Added
 
@@ -365,7 +367,7 @@ declare module '!!@svgr!*.svg' {
 
 -   Log device list errors.
 
-## 104 - 2023-09-08
+## 104.0.0 - 2023-09-08
 
 ### Changed
 
@@ -377,7 +379,7 @@ declare module '!!@svgr!*.svg' {
 -   Batch programming will now cleanup temporary files
 -   Device list will use the passed devices traits
 
-## 103 - 2023-09-06
+## 103.0.0 - 2023-09-06
 
 ### Added
 
@@ -393,13 +395,13 @@ declare module '!!@svgr!*.svg' {
 -   Update `nrfConnectForDesktop.nrfutil.device` to version 1.4.2 in
     `package.json`
 
-## 102 - 2023-09-05
+## 102.0.0 - 2023-09-05
 
 ### Fixed
 
 -   Trace logging did not work in production
 
-## 101 - 2023-09-05
+## 101.0.0 - 2023-09-05
 
 ### Fixed
 
@@ -409,14 +411,14 @@ declare module '!!@svgr!*.svg' {
 
 -   `link` variant type from of `Button` component.
 
-## 100 - 2023-09-05
+## 100.0.0 - 2023-09-05
 
 ### Fixed
 
 -   Unable to use nrfutil device in production due to issue with nrfutil device
     logging when set to off.
 
-## 99 - 2023-09-04
+## 99.0.0 - 2023-09-04
 
 ### Added
 
@@ -438,7 +440,7 @@ declare module '!!@svgr!*.svg' {
 
 -   Logging for nrf-probe-lib version
 
-## 98 - 2023-08-30
+## 98.0.0 - 2023-08-30
 
 ### Added
 
@@ -466,7 +468,7 @@ declare module '!!@svgr!*.svg' {
 -   Replace any occurrence of `link` variant `Button`s with `ExternalLink` or
     `FileLink`.
 
-## 97 - 2023-08-29
+## 97.0.0 - 2023-08-29
 
 ### Added
 
@@ -479,7 +481,7 @@ declare module '!!@svgr!*.svg' {
     -   `PCA10153`
     -   `PCA20049`
 
-## 96 - 2023-08-25
+## 96.0.0 - 2023-08-25
 
 ### Added
 
@@ -489,20 +491,20 @@ declare module '!!@svgr!*.svg' {
 
 -   Nrfutil device list `stop` callback is now an optional parameter
 
-## 95 - 2023-08-25
+## 95.0.0 - 2023-08-25
 
 ### Fixed
 
 -   Worked around an issue where the esbuild currently has issues with
     .css-files that are named the same as their components.
 
-## 94 - 2023-08-25
+## 94.0.0 - 2023-08-25
 
 ### Changed
 
 -   Updated react to v18
 
-## 93 - 2023-08-25
+## 93.0.0 - 2023-08-25
 
 ### Added
 
@@ -521,13 +523,13 @@ declare module '!!@svgr!*.svg' {
 -   Any usage of Nrfutil property `progressPercentage` need to be renamed to
     `stepProgressPercentage`
 
-## 92 - 2023-08-24
+## 92.0.0 - 2023-08-24
 
 ### Added
 
 -   Add functionality to send metrics and traces to telemetry.
 
-## 91 - 2023-08-23
+## 91.0.0 - 2023-08-23
 
 ### Changed
 
@@ -553,7 +555,7 @@ declare module '!!@svgr!*.svg' {
 -   Peer dependency and any remaining support for
     `@nordicsemiconductor/nrf-device-lib-js`.
 
-## 90 - 2023-08-21
+## 90.0.0 - 2023-08-21
 
 ### Changed
 
@@ -581,13 +583,13 @@ declare module '!!@svgr!*.svg' {
 
 -   Fixed get `getAppData()` path.
 
-## 89 - 2023-08-17
+## 89.0.0 - 2023-08-17
 
 ### Changed
 
 -   Updated nrf-device-lib-js to version 0.7.1.
 
-## 88 - 2023-08-17
+## 88.0.0 - 2023-08-17
 
 ### Changed
 
@@ -598,13 +600,13 @@ declare module '!!@svgr!*.svg' {
 
 -   Change `html` to `nrfConnectForDesktop.html` in the app package json.
 
-## 87 - 2023-08-14
+## 87.0.0 - 2023-08-14
 
 ### Fixed
 
 -   Spinner in `Dialog` components was not inlined.
 
-## 86 - 2023-08-14
+## 86.0.0 - 2023-08-14
 
 ### Changed
 
@@ -615,13 +617,13 @@ declare module '!!@svgr!*.svg' {
 
 -   `Spinner` now has old padding which was mistakenly removed.
 
-## 85 - 2023-08-14
+## 85.0.0 - 2023-08-14
 
 ### Fixed
 
 -   `getDisplayedDeviceName` could return an empty string.
 
-## 84 - 2023-08-14
+## 84.0.0 - 2023-08-14
 
 ### Changed
 
@@ -657,19 +659,19 @@ import { App, render } from '@nordicsemiconductor/pc-nrfconnect-shared';
 render(<App />);
 ```
 
-## 83 - 2023-08-11
+## 83.0.0 - 2023-08-11
 
 ### Added
 
 -   `Spinner` component.
 
-## 82 - 2023-08-09
+## 82.0.0 - 2023-08-09
 
 ### Fixed
 
 -   Jest tests were broken due to missing config changes.
 
-## 81 - 2023-08-09
+## 81.0.0 - 2023-08-09
 
 ### Changed
 
@@ -711,19 +713,19 @@ The package.json can be changed as follows:
 }
 ```
 
-## 80 - 2023-08-07
+## 80.0.0 - 2023-08-07
 
 ### Changed
 
 -   Linux: Check for and log `nrf-udev` install on startup.
 
-## 79 - 2023-08-04
+## 79.0.0 - 2023-08-04
 
 ### Added
 
 -   Export app utility functions (like `isInstalled`) and types.
 
-## 78 - 2023-08-03
+## 78.0.0 - 2023-08-03
 
 ### Changed
 
@@ -735,7 +737,7 @@ The package.json can be changed as follows:
 -   `deviceInfo` can now be used in applications that don't make use of the
     shared redux store.
 
-## 77 - 2023-08-01
+## 77.0.0 - 2023-08-01
 
 ### Added
 
@@ -765,13 +767,13 @@ The package.json can be changed as follows:
     appropriate functions.
 -   Replace invocations of `openAppWindow` with `openWindow.openApp`.
 
-## 76 - 2023-07-28
+## 76.0.0 - 2023-07-28
 
 ### Changed
 
 -   Turn on tree-shaking for tailwind classes during a development build.
 
-## 75 - 2023-07-26
+## 75.0.0 - 2023-07-26
 
 ### Added
 
@@ -798,14 +800,14 @@ The package.json can be changed as follows:
 
 -   `DisplayConflictingSettings` spacing and minor UI inconsistencies
 
-## 74 - 2023-07-18
+## 74.0.0 - 2023-07-18
 
 ### Fixed
 
 -   `ConflictingSettingsDialog` used stale/old `active` serial settings
     information.
 
-## 73 - 2023-07-14
+## 73.0.0 - 2023-07-14
 
 ### Removed
 
@@ -815,26 +817,26 @@ The package.json can be changed as follows:
 
 -   `custom` variant `Button`s have to be replaced with `button` elements.
 
-## 72 - 2023-07-13
+## 72.0.0 - 2023-07-13
 
 ### Added
 
 -   export `persistNickname` and `getPersistedNickname`.
 
-## 71 - 2023-07-11
+## 71.0.0 - 2023-07-11
 
 ### Fixed
 
 -   `SwitchToApplicationMode` does not call on success when device is already in
     application mode
 
-## 70 - 2023-07-07
+## 70.0.0 - 2023-07-07
 
 ### Fixed
 
 -   `Dropdown` UI broken due to lack of `tw-preflight` class
 
-## 69 - 2023-07-07
+## 69.0.0 - 2023-07-07
 
 ### Added
 
@@ -857,7 +859,7 @@ The package.json can be changed as follows:
 -   Device setup fails report sdfu different FW version
 -   Device setup does not show the choices radio boxes
 
-## 68 - 2023-07-05
+## 68.0.0 - 2023-07-05
 
 ### Added
 
@@ -869,7 +871,7 @@ The package.json can be changed as follows:
     resulted in `util.promisify` is not a function
 -   Button lost x-padding with the addition of tailwind
 
-## 67 - 2023-07-04
+## 67.0.0 - 2023-07-04
 
 ### Added
 
@@ -900,7 +902,7 @@ module.exports = {
 };
 ```
 
-## 66 - 2023-07-03
+## 66.0.0 - 2023-07-03
 
 ### Fixed
 
@@ -909,7 +911,7 @@ module.exports = {
 -   Margin on feedback pane
 -   Improve `NavBar` layout when there are a lot of tabs
 
-## 65 - 2023-07-03
+## 65.0.0 - 2023-07-03
 
 ### Changed
 
@@ -920,7 +922,7 @@ module.exports = {
 -   If 'AppThunk' is used with return type generic, add AppLayout (RootState)
     'AppThunk<AppLayout, ReturnType>'
 
-## 64 - 2023-07-03
+## 64.0.0 - 2023-07-03
 
 ### Added
 
@@ -931,7 +933,7 @@ module.exports = {
 
 -   Replace Google Analytics with Application Insights.
 
-## 63 - 2023-06-27
+## 63.0.0 - 2023-06-27
 
 ### Added
 
@@ -943,7 +945,7 @@ module.exports = {
 -   Flash Messages: slide-in effect duration reduced to 300ms.
 -   Flash Messages: loader effect ends before slide-out effect begins.
 
-## 62 - 2023-06-26
+## 62.0.0 - 2023-06-26
 
 ### Added
 
@@ -954,7 +956,7 @@ module.exports = {
 -   Reduced time for CopiedFlashMessage, from 12s to 3s.
 -   Faster slide-in effect for Flash messages.
 
-## 61 - 2023-06-23
+## 61.0.0 - 2023-06-23
 
 ### Added
 
@@ -975,7 +977,7 @@ module.exports = {
 -   If you want to include the `FeedbackPane` in your app, provide the
     `feedback` property to the `App` component.
 
-## 60 - 2023-06-21
+## 60.0.0 - 2023-06-21
 
 ### Added
 
@@ -1007,7 +1009,7 @@ module.exports = {
 -   Replace all instances of `LegacyPane` with `Pane` in the `panes` property of
     `App`.
 
-## 59 - 2023-06-16
+## 59.0.0 - 2023-06-16
 
 ### Added
 
@@ -1017,21 +1019,21 @@ module.exports = {
 
 -   `StartSop` button `large` false not working
 
-## 58 - 2023-06-14
+## 58.0.0 - 2023-06-14
 
 ### Changed
 
 -   Opening port with error `FAILED_DIFFERENT_SETTINGS` will now log a warning
     not error
 
-## 57 - 2023-06-09
+## 57.0.0 - 2023-06-09
 
 ### Added
 
 -   AutoReconnect Mode `WaitForDevice.when` now support an new mode a custom
     function for more flexibility
 
-## 56 - 2023-06-09
+## 56.0.0 - 2023-06-09
 
 ### Changed
 
@@ -1041,7 +1043,7 @@ module.exports = {
     that only go through the API. If it still breaks something, feel free to
     reach out to Marko. :-)
 
-## 55 - 2023-06-08
+## 55.0.0 - 2023-06-08
 
 ### Added
 
@@ -1057,14 +1059,14 @@ module.exports = {
 -   Replace all instances of `BootLoaderMode` to `dfuBootLoaderMode` in all
     `WaitForDevice.when`
 
-## 54 - 2023-06-05
+## 54.0.0 - 2023-06-05
 
 ### Removed
 
 -   `react-dom` is no longer listed as an external package due to launcher
     requiring it for bundling.
 
-## 53 - 2023-06-05
+## 53.0.0 - 2023-06-05
 
 ### Added
 
@@ -1072,7 +1074,7 @@ module.exports = {
 -   `StartStop` parameter `startText` now allows React.ReactNode.
 -   `StartStop` parameter `stopText` now allows React.ReactNode.
 
-## 52 - 2023-06-02
+## 52.0.0 - 2023-06-02
 
 ### Changed
 
@@ -1081,31 +1083,31 @@ module.exports = {
     pass a third parameter to the action creator
     `ErrorDialogActions.showDialog`.
 
-## 51 - 2023-05-31
+## 51.0.0 - 2023-05-31
 
 ### Added
 
 -   `Dropdown` parameter `label` now allows React.ReactNode.
 
-## 50 - 2023-05-30
+## 50.0.0 - 2023-05-30
 
 ### Fixed
 
 -   `dialog` text wrapping opts to keep words as whole of possible.
 
-## 49 - 2023-05-30
+## 49.0.0 - 2023-05-30
 
 ### Fixed
 
 -   `dialog` body text can now wrap and not overflow.
 
-## 48 - 2023-05-30
+## 48.0.0 - 2023-05-30
 
 ### Added
 
 -   `DropdownItem` parameter `label` now allows React.ReactNode.
 
-## 47 - 2023-05-22
+## 47.0.0 - 2023-05-22
 
 ### Added
 
@@ -1132,7 +1134,7 @@ module.exports = {
 -   Replace type `DeviceSetup` with `DeviceSetupConfig`
 -   Replace type `IDeviceSetup` with `DeviceSetup`
 
-## 46 - 2023-05-19
+## 46.0.0 - 2023-05-19
 
 ### Added
 
@@ -1170,7 +1172,7 @@ module.exports = {
     this function using the dispatch function i.e
     `dispatch(switchToApplicationMode(...`
 
-## 45 - 2023-05-09
+## 45.0.0 - 2023-05-09
 
 ### Fixed
 
@@ -1183,7 +1185,7 @@ module.exports = {
 -   StateSelector property `selectedItem` now allows {key: string , renderItem:
     React.ReactElement} as content in addition to string
 
-## 44 - 2023-05-05
+## 44.0.0 - 2023-05-05
 
 ### Fixed
 
@@ -1194,14 +1196,14 @@ module.exports = {
 
 -   Persistent store now allows to send more options to the internal store.
 
-## 43 - 2023-05-05
+## 43.0.0 - 2023-05-05
 
 ### Changed
 
 -   Use the new property from launcher ipc to determine the app path. This is
     used for logging when the application starts up.
 
-## 42 - 2023-05-04
+## 42.0.0 - 2023-05-04
 
 ### Changed
 
@@ -1210,7 +1212,7 @@ module.exports = {
     compiler option. You may be using an old version of swc which does not
     support the options used by ts-node.
 
-## 41 - 2023-05-03
+## 41.0.0 - 2023-05-03
 
 ### Changed
 
@@ -1223,7 +1225,7 @@ module.exports = {
 -   `ConflictingSettingsDialog` displayed wrong app name in the conflict
     overview. Now it will only display Active- and Selected settings.
 
-## 40 - 2023-04-28
+## 40.0.0 - 2023-04-28
 
 ### Added
 
@@ -1231,7 +1233,7 @@ module.exports = {
     pc-nrfconnect-shared is used, and the serial port may have been claimed by
     another app.
 
-## 39 - 2023-04-28
+## 39.0.0 - 2023-04-28
 
 ### Added
 
@@ -1239,20 +1241,20 @@ module.exports = {
     used to open the serial port.
 -   Extended SERIALPORT_CHANNEL with entry GET_OPTIONS.
 
-## 38 - 2023-04-28
+## 38.0.0 - 2023-04-28
 
 ### Fixed
 
 -   Dropdowns allow using their scrollbars by clicking and dragging.
 -   Dropdown scrollbars are styled correctly.
 
-## 37 - 2023-04-28
+## 37.0.0 - 2023-04-28
 
 ### Changed
 
 -   Updated `nrf-device-lib-js` to version 0.6.8.
 
-## 36 - 2023-04-26
+## 36.0.0 - 2023-04-26
 
 ### Added
 
@@ -1260,21 +1262,21 @@ module.exports = {
     versions of shared.
 -   Property `id` to `Dropdown` component.
 
-## 35 - 2023-04-20
+## 35.0.0 - 2023-04-20
 
 ### Fixed
 
 -   "Warning: validateDOMNesting(...): `<div>` cannot appear as a descendant of
     `<p>`."
 
-## 34 - 2023-04-19
+## 34.0.0 - 2023-04-19
 
 ### Fixed
 
 -   Made `InfoDialog` close when unfocusing again, which was removed during the
     previous version.
 
-## 33 - 2023-04-19
+## 33.0.0 - 2023-04-19
 
 ### Added
 
@@ -1297,7 +1299,7 @@ module.exports = {
 
 -   Move the `showSpinner` property from `Dialog.Footer` to `Dialog.Header`.
 
-## 32 - 2023-04-14
+## 32.0.0 - 2023-04-14
 
 ### Added
 
@@ -1321,7 +1323,7 @@ module.exports = {
 -   `InlineInput` only calls `onChange` and `onChangeComplete` if value has
     changed.
 
-## 31 - 2023-04-03
+## 31.0.0 - 2023-04-03
 
 ### Changed
 
@@ -1347,20 +1349,20 @@ module.exports = {
     shared, otherwise not all needed peer dependencies are installed and you
     need to provide them yourself.
 
-## 30 - 2023-03-30
+## 30.0.0 - 2023-03-30
 
 ### Changed
 
 -   Update `nrf-device-lib-js` to version 0.6.5.
 
-## 29 - 2023-03-29
+## 29.0.0 - 2023-03-29
 
 ### Added
 
 -   Dialog helpers (`InfoDialog`, `ErrorDialog`, `ConfirmationDialog`) all
     expose the `className` property now.
 
-## 28 - 2023-03-28
+## 28.0.0 - 2023-03-28
 
 ### Added
 
@@ -1372,19 +1374,19 @@ module.exports = {
 -   Linux: Apps would crash when identifying certain devices if nrf-udev
     installation was missing.
 
-## 27 - 2023-03-27
+## 27.0.0 - 2023-03-27
 
 ### Fixed
 
 -   Clear timeout state after timeout has elapsed.
 
-## 26 - 2023-03-24
+## 26.0.0 - 2023-03-24
 
 ### Fixed
 
 -   Retrieving persisted serialport options on windows would lead to crashes.
 
-## 25 - 2023-03-23
+## 25.0.0 - 2023-03-23
 
 ### Added
 
@@ -1406,7 +1408,7 @@ module.exports = {
     DOM element.
 -   `Dropdown` will keep the list open if rerendered
 
-## 24 - 2023-03-20
+## 24.0.0 - 2023-03-20
 
 ### Added
 
@@ -1439,7 +1441,7 @@ module.exports = {
     `persistedSerialPortOptions` property in the `Device` type (accessible from
     the DeviceSelector callbacks or through `dispatch(selectedDevice())`)
 
-## 23 - 2023-03-16
+## 23.0.0 - 2023-03-16
 
 ### Added
 
@@ -1454,13 +1456,13 @@ module.exports = {
 -   `setWaitForDevice` with `undefined` can no longer be used to cancel timeouts
     instead one should use `clearWaitForDevice`
 
-## 22 - 2023-03-15
+## 22.0.0 - 2023-03-15
 
 ### Changed
 
 -   Update `nrf-device-lib-js` to version 0.6.2.
 
-## 21 - 2023-03-15
+## 21.0.0 - 2023-03-15
 
 ### Added
 
@@ -1470,14 +1472,14 @@ module.exports = {
 
 -   `ErrorBoundary` `Button` are now large.
 
-## 20 - 2023-03-14
+## 20.0.0 - 2023-03-14
 
 ### Added
 
 -   Steppers component which allows to add states for success, failure and
     warning.
 
-## 19 - 2023-03-13
+## 19.0.0 - 2023-03-13
 
 ### Added
 
@@ -1487,7 +1489,7 @@ module.exports = {
 
 -   Update `nrf-device-lib-js` to version 0.6.0.
 
-## 18 - 2023-03-09
+## 18.0.0 - 2023-03-09
 
 ### Added
 
@@ -1512,20 +1514,20 @@ module.exports = {
 -   `NavMenuItem` use the shared `Button` component
 -   `FeedbackPane` use the shared `Button` component
 
-## 17 - 2023-03-08
+## 17.0.0 - 2023-03-08
 
 ### Added
 
 -   Allow apps to see if auto-reconnect is enabled.
 
-## 16 - 2023-03-03
+## 16.0.0 - 2023-03-03
 
 ### Fixed
 
 -   Selecting a device will no longer stop and start hotplug events
 -   Long Serial number and device names will now render correctly
 
-## 15 - 2023-03-03
+## 15.0.0 - 2023-03-03
 
 ### Added
 
@@ -1552,7 +1554,7 @@ module.exports = {
     do not need to be awaited.
 -   Update `nrf-device-lib-js` to version 0.5.0.
 
-## 14 - 2023-02-28
+## 14.0.0 - 2023-02-28
 
 ### Fixed
 
@@ -1560,13 +1562,13 @@ module.exports = {
 -   `MasonryLayout` Hidden items can become visible and not remain hidden for
     the full app life cycle.
 
-## 13 - 2023-02-24
+## 13.0.0 - 2023-02-24
 
 ### Fixed
 
 -   Wrongly import of `electron/renderer`, now changed to `electron`.
 
-## 12 - 2023-02-23
+## 12.0.0 - 2023-02-23
 
 ### Added
 
@@ -1581,26 +1583,26 @@ module.exports = {
 -   Improved `MasonryLayout` algorithm
 -   `MasonryLayout` Items with no height are hidden
 
-## 11 - 2023-02-22
+## 11.0.0 - 2023-02-22
 
 ### Changed
 
 -   `shasum` property on apps became optional.
 
-## 10 - 2023-02-16
+## 10.0.0 - 2023-02-16
 
 ### Fixed
 
 -   Masonry layout Max height generation algorithm
 -   Regression with dropdown items on hover effect
 
-## 9 - 2023-02-16
+## 9.0.0 - 2023-02-16
 
 ### Added
 
 -   Masonry Layout
 
-## 8 - 2023-02-15
+## 8.0.0 - 2023-02-15
 
 ### Changed
 
@@ -1608,7 +1610,7 @@ module.exports = {
     show some more objects, e.g. Maps and Sets.
 -   Updated `StartStopButton` to be a controlled component
 
-## 7 - 2023-02-13
+## 7.0.0 - 2023-02-13
 
 ### Changed
 
