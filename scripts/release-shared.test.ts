@@ -52,7 +52,7 @@ describe('checking Changelod.md', () => {
 
 All notable changes to this project will be documented in this file.
 
-## 34 - 2022-03-10
+## 34.0.0 - 2022-03-10
 
 ### Changed
 
@@ -72,7 +72,7 @@ All notable changes to this project will be documented in this file.
 
 All notable changes to this project will be documented in this file.
 
-## 33 - 2022-02-01
+## 33.0.0 - 2022-02-01
 
 ### Changed
 
@@ -92,9 +92,9 @@ All notable changes to this project will be documented in this file.
 
 All notable changes to this project will be documented in this file.
 
-## 34 - 2022-03-10
+## 34.0.0 - 2022-03-10
 
-## 33 - 2022-02-01`;
+## 33.0.0 - 2022-02-01`;
 
         expect(
             latestEntryIsNotEmpty({
@@ -110,13 +110,13 @@ describe('Parsing Changelog.md', () => {
 
 All notable changes to this project will be documented in this file.
 
-## 34 - 2023-04-20
+## 34.0.0 - 2023-04-20
 
 ### Changed
 
 -   Something
 
-## 33 - 2023-04-19
+## 33.0.0 - 2023-04-19
 
 ### Added
 
@@ -125,7 +125,7 @@ All notable changes to this project will be documented in this file.
 
     test('Extracting the latest entry', () => {
         expect(getLatestEntry(changelog)).toMatchObject({
-            header: '34 - 2023-04-20',
+            header: '34.0.0 - 2023-04-20',
             content: '### Changed\n\n-   Something',
         });
     });

@@ -135,7 +135,9 @@ export const latestHeaderIsCorrect = (
         changelog: getLatestChangelog(),
     }
 ) => {
-    const expectedHeaderline = `${expectedVersionNumber} - ${withoutTime(now)}`;
+    const expectedHeaderline = `${expectedVersionNumber}.0.0 - ${withoutTime(
+        now
+    )}`;
     const actualHeaderline = getLatestEntry(changelog).header;
 
     return equality(
