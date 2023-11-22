@@ -25,7 +25,7 @@
         "prepare": "ts-node scripts/installHusky.ts",
         "release-shared": "ts-node scripts/release-shared.ts",
         "prepare-shared-release": "ts-node scripts/prepare-shared-release.ts",
-        "clean": "rimraf dist typings/generated dist scripts/nordic-publish.js",
+        "clean": "rimraf dist typings/generated scripts/nordic-publish.js",
         "postinstall": "ts-node scripts/postinstall.ts"
     },
     "dependencies": {
