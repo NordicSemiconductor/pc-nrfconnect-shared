@@ -88,7 +88,7 @@ describe('Stop Watch', () => {
         expect(stopwatch.isRunning).toBeFalsy();
     });
 
-    test('Start a paused timer will continue timer', () => {
+    test('Start a paused timer will continue timer from provided time', () => {
         const stopwatch = setup({
             autoStart: true,
             resolution: 1000,
@@ -120,7 +120,7 @@ describe('Stop Watch', () => {
         mockNow.mockReturnValue(5000);
 
         act(() => {
-            stopwatch.start();
+            stopwatch.start(500);
             stopwatch;
         });
 
