@@ -89,7 +89,7 @@ export default ({
     );
 
     const start = useCallback(
-        (elapsedTime = time) => {
+        (elapsedTime = 0) => {
             if (pauseTimeout.current === null) {
                 previousTickTime.current = timer.now();
                 expectedTickTime.current =
@@ -98,7 +98,7 @@ export default ({
                 pauseTimeout.current = nextTick(elapsedTime);
             }
         },
-        [nextTick, resolution, time, timer]
+        [nextTick, resolution, timer]
     );
 
     const pause = useCallback(() => {
