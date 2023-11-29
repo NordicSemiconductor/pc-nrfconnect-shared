@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 135.0.0 - 2023-11-29
+
+### Changed
+
+-   Updated `nrf-intel-hex` to the latest version which slightly changed some
+    types (from `Buffer` to `Uint8Array`) because this was corrected there.
+
 ## 134.0.0 - 2023-11-22
 
 ### Added

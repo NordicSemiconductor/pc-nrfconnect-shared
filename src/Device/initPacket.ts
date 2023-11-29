@@ -68,7 +68,7 @@ export const defaultInitPacket: InitPacket = {
 export interface DfuImage {
     name: string;
     initPacket: InitPacket;
-    firmwareImage: Buffer;
+    firmwareImage: Uint8Array;
 }
 
 // Create hash by using hash type and bytes

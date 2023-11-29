@@ -317,7 +317,7 @@ function parseFirmwareImage(firmware: Buffer | string) {
     return memMap.slicePad(
         startAddress,
         Math.ceil((endAddress - startAddress) / 4) * 4
-    ) as Buffer;
+    );
 }
 
 function calculateSHA256Hash(image: Uint8Array) {
@@ -327,7 +327,7 @@ function calculateSHA256Hash(image: Uint8Array) {
 }
 
 interface DfuData {
-    application?: { bin: Buffer; dat: Buffer };
+    application?: { bin: Uint8Array; dat: Uint8Array };
     softdevice?: { bin: Uint8Array; dat: Uint8Array };
     params?: InitPacket;
 }
@@ -376,8 +376,8 @@ const createDfuZip = (dfuImages: DfuImage[]) =>
                 bin_file: 'application.bin',
                 dat_file: 'application.dat',
             };
-            zip.addFile('application.bin', data.application.bin);
-            zip.addFile('application.dat', data.application.dat);
+            zip.addFile('application.bin', data.application.bin as Buffer);
+            zip.addFile('application.dat', data.application.dat as Buffer);
         }
 
         if (data.softdevice) {
