@@ -37,7 +37,7 @@ const splitMS = (ms: number) => {
     ms -= minutes * 60 * 1000;
 
     const seconds = Math.floor(ms / 1000);
-    const millisecond = ms - seconds * 60 * 1000;
+    const millisecond = ms - seconds * 1000;
 
     return {
         time,
