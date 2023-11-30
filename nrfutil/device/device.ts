@@ -11,6 +11,7 @@ import { getDeviceSandbox } from './common';
 import deviceInfo from './deviceInfo';
 import erase from './erase';
 import firmwareRead from './firmwareRead';
+import getBoardControllerVersion from './getBoardControllerVersion';
 import getCoreInfo from './getCoreInfo';
 import getFwInfo from './getFwInfo';
 import getProtectionStatus from './getProtectionStatus';
@@ -61,5 +62,6 @@ export default {
     setVerboseLogging,
     getModuleVersion,
     boardController,
+    getBoardControllerVersion,
     batch: () => new Batch(),
 };

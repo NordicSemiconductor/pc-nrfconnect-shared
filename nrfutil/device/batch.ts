@@ -112,6 +112,28 @@ export class Batch {
         return this;
     }
 
+    public getBoardControllerVersion(callbacks?: Callbacks) {
+        // "operation: 0, command_id: 1" is the command to retrieve version information from the board controller.
+        this.operationBatchGeneration.push(
+            new Promise<BatchOperationWrapperUnknown>(resolve => {
+                resolve({
+                    operation: {
+                        operation: {
+                            type: 'smp',
+                            operation: 0,
+                            group_id: 64,
+                            command_id: 1,
+                            sequence_number: 0,
+                        },
+                    },
+                    ...callbacks,
+                } as BatchOperationWrapperUnknown);
+            })
+        );
+
+        return this;
+    }
+
     public firmwareRead(core: DeviceCore, callbacks?: Callbacks<Buffer>) {
         this.enqueueBatchOperationObject('fw-read', core, {
             ...callbacks,
