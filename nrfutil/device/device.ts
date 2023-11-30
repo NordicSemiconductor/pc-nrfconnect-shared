@@ -6,6 +6,7 @@
 
 import { LogLevel, LogMessage } from '../sandboxTypes';
 import { Batch } from './batch';
+import boardController from './boardController';
 import { getDeviceSandbox } from './common';
 import deviceInfo from './deviceInfo';
 import erase from './erase';
@@ -59,5 +60,6 @@ export default {
     setLogLevel,
     setVerboseLogging,
     getModuleVersion,
+    boardController,
     batch: () => new Batch(),
 };
