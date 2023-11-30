@@ -37,7 +37,7 @@ const splitMS = (ms: number) => {
     ms -= minutes * 60 * 1000;
 
     const seconds = Math.floor(ms / 1000);
-    const millisecond = ms - seconds * 60 * 1000;
+    const millisecond = ms - seconds * 1000;
 
     return {
         time,
@@ -89,7 +89,7 @@ export default ({
     );
 
     const start = useCallback(
-        (elapsedTime = time) => {
+        (elapsedTime = 0) => {
             if (pauseTimeout.current === null) {
                 previousTickTime.current = timer.now();
                 expectedTickTime.current =
@@ -98,7 +98,7 @@ export default ({
                 pauseTimeout.current = nextTick(elapsedTime);
             }
         },
-        [nextTick, resolution, time, timer]
+        [nextTick, resolution, timer]
     );
 
     const pause = useCallback(() => {

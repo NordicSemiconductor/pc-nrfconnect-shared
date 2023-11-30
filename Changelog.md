@@ -7,6 +7,24 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 136.0.0 - UNRELEASED
+
+### Fixed
+
+-   `useStopWatch` milliseconds was not correctly calculated
+
+### Changed
+
+-   `useStopWatch` reset and start no longer force a rerender if these are a
+    dependency of a useEffect
+-   `useStopWatch` start optional time param no longer default to the last time
+    when paused but 0.
+
+### Steps to upgrade when using this package
+
+-   `useStopWatch` If start() was used after a pause() with no call to reset()
+    start need to be called with time i.e. start(time)
+
 ## 135.0.0 - 2023-11-29
 
 ### Changed
