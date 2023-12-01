@@ -7,11 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 136.0.0 - UNRELEASED
+## 136.0.0 - 2023-12-01
 
 ### Fixed
 
 -   `useStopWatch` milliseconds was not correctly calculated
+-   External JLink devices would not connect to apps device list properly if
+    selected before they are connected to the debug-in heder of the device
 
 ### Changed
 
@@ -19,6 +21,7 @@ every new version is a new major version.
     dependency of a useEffect
 -   `useStopWatch` start optional time param no longer default to the last time
     when paused but 0.
+-   `nrfutil device` `device-info` return undefined if reading info throws
 
 ### Steps to upgrade when using this package
 

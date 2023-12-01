@@ -56,15 +56,20 @@ export default async (
     core?: DeviceCore,
     onProgress?: (progress: Progress) => void,
     controller?: AbortController
-) =>
-    device.traits.jlink || device.traits.nordicDfu
-        ? (
-              await deviceSingleTaskEndOperation<DeviceInfoRaw>(
-                  device,
-                  'device-info',
-                  onProgress,
-                  controller,
-                  core ? ['--core', core] : []
-              )
-          ).deviceInfo
-        : undefined;
+) => {
+    try {
+        return device.traits.jlink || device.traits.nordicDfu
+            ? (
+                  await deviceSingleTaskEndOperation<DeviceInfoRaw>(
+                      device,
+                      'device-info',
+                      onProgress,
+                      controller,
+                      core ? ['--core', core] : []
+                  )
+              ).deviceInfo
+            : undefined;
+    } catch (_) {
+        return undefined;
+    }
+};
