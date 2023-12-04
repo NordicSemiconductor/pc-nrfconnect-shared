@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 137.0.0 - 2023-12-04
+
+### Added
+
+-   `jprogDeviceSetup` take in aan optional boolean to skip the device setup if
+    device is protected. Default remain to show dialog. Apps will need to opt-in
+
 ## 136.0.0 - 2023-12-01
 
 ### Fixed
