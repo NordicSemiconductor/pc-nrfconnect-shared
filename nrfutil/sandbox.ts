@@ -517,7 +517,7 @@ export class NrfutilSandbox {
                 exec: command,
             });
 
-            const nrfutil = exec(`${command} ${args.join(' ')}`, {
+            const nrfutil = exec(`"${command}" ${args.join(' ')}`, {
                 env: editEnv(this.env),
             });
 
