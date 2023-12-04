@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 138.0.0 - 2023-12-04
+
+### Fixed
+
+-   `nrfutil sandbox` `execCommand` did not escape executable path leading to
+    failure when path has whitespace
+
 ## 137.0.0 - 2023-12-04
 
 ### Added
