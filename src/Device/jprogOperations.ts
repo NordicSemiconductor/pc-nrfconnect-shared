@@ -135,7 +135,8 @@ const firmwareOptions = (
 
 export const jprogDeviceSetup = (
     firmware: JprogEntry[],
-    needSerialport = false
+    needSerialport = false,
+    hideDeviceSetupWhenProtected = false
 ): DeviceSetup => ({
     supportsProgrammingMode: device =>
         (needSerialport === !!device.traits.serialPorts || !needSerialport) &&
@@ -173,6 +174,16 @@ export const jprogDeviceSetup = (
                     return Promise.resolve({
                         device,
                         validFirmware: fw !== undefined,
+                    });
+                }
+
+                if (
+                    hideDeviceSetupWhenProtected &&
+                    readbackProtection === 'protected'
+                ) {
+                    return Promise.resolve({
+                        device,
+                        validFirmware: true,
                     });
                 }
 
