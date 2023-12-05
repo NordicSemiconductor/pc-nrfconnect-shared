@@ -7,6 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 139.0.0 - UNRELEASED
+
+### Added
+
+-   Added command wrappers to interact with the Board Controller using
+    `nrfutil-device`. `boardController()` to write board controller config to
+    the DK. `getBoardControllerVersion()` to get the version information from
+    the Board Controller. (like firmware version and board hardware revision)
+
 ## 138.0.0 - 2023-12-04
 
 ### Fixed
