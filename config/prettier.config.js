@@ -5,6 +5,7 @@
  */
 
 module.exports = {
+    ignore: ['*/**.md'],
     singleQuote: true,
     tabWidth: 4,
     arrowParens: 'avoid',
