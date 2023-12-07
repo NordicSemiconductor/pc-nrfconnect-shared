@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 140.0.0 - 2023-12-07
+
+### Changed
+
+-   Do not run eslint or prettier on Markdown (.md) files.
+
 ## 139.0.0 - 2023-12-05
 
 ### Added
