@@ -18,7 +18,7 @@ import useHotKey from '../utils/useHotKey';
 import {
     isLogVisible as isLogVisibleSelector,
     isSidePanelVisible as isSidePanelVisibleSelector,
-    toggleLogVisible,
+    setLogVisible,
     toggleSidePanelVisible,
 } from './appLayout';
 
@@ -48,7 +48,7 @@ export default ({ isSidePanelEnabled }: { isSidePanelEnabled: boolean }) => {
         hotKey: 'ctrl+l',
         title: 'Show log',
         isGlobal: true,
-        action: () => dispatch(toggleLogVisible()),
+        action: () => dispatch(setLogVisible(!isLogVisible)),
     });
 
     return (
@@ -93,7 +93,7 @@ export default ({ isSidePanelEnabled }: { isSidePanelEnabled: boolean }) => {
                     id="visibility-bar-show-log"
                     label="Show log"
                     title="ctrl+l"
-                    onToggle={() => dispatch(toggleLogVisible())}
+                    onToggle={() => dispatch(setLogVisible(!isLogVisible))}
                     isToggled={isLogVisible}
                     variant="secondary"
                 />

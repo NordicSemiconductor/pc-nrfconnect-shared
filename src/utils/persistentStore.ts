@@ -144,6 +144,7 @@ let appSpecificStore: Store | undefined;
 
 interface SharedAppSpecificStoreSchema {
     currentPane?: number;
+    isLogVisible?: boolean;
 }
 
 export const getAppSpecificStore = <
@@ -175,3 +176,10 @@ export const persistCurrentPane = (currentPane: number) =>
     );
 export const getPersistedCurrentPane = () =>
     getAppSpecificStore<SharedAppSpecificStoreSchema>().get(`currentPane`);
+export const persistLogVisible = (visible: boolean) =>
+    getAppSpecificStore<SharedAppSpecificStoreSchema>().set(
+        `isLogVisible`,
+        visible
+    );
+export const getPersistedLogVisible = () =>
+    getAppSpecificStore<SharedAppSpecificStoreSchema>().get(`isLogVisible`);
