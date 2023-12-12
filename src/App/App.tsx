@@ -38,8 +38,8 @@ import {
     isLogVisible as isLogVisibleSelector,
     isSidePanelVisible as isSidePanelVisibleSelector,
     setCurrentPane,
+    setLogVisible,
     setPanes,
-    toggleLogVisible,
 } from './appLayout';
 import ConnectedToStore from './ConnectedToStore';
 import VisibilityBar from './VisibilityBar';
@@ -116,7 +116,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
 
     useEffect(() => {
         if (!showLogByDefault) {
-            dispatch(toggleLogVisible());
+                dispatch(setLogVisible(showLogByDefault));
         }
     }, [dispatch, showLogByDefault]);
 
