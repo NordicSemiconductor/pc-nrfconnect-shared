@@ -16,6 +16,8 @@ every new version is a new major version.
 ### Changed
 
 -   `showLogByDefault` will not be used if `isLogVisible` is set.
+-   Run eslint or prettier on all Markdown (.md) files except the ones in `docs`
+    folder.
 
 ## 140.0.0 - 2023-12-07
 

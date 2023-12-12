@@ -23,7 +23,7 @@ module.exports = {
         'prettier',
     ],
     ignorePatterns: [
-        '*/**.md',
+        'docs/',
         'package-lock.json',
         'scripts/nordic-publish.js',
         'typings/generated',
