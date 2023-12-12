@@ -7,7 +7,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import type { RootState } from '../store';
-import { persistCurrentPane } from '../utils/persistentStore';
+import {
+    persistCurrentPane,
+    persistLogVisible,
+} from '../utils/persistentStore';
 
 export interface AppLayout {
     isSidePanelVisible: boolean;
@@ -42,6 +45,7 @@ const slice = createSlice({
     reducers: {
         setLogVisible: (state, action: PayloadAction<boolean>) => {
             state.isLogVisible = action.payload;
+            persistLogVisible(action.payload);
         },
         toggleSidePanelVisible: state => {
             state.isSidePanelVisible = !state.isSidePanelVisible;
