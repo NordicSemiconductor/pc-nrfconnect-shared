@@ -8,6 +8,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import type { RootState } from '../store';
 import {
+    getPersistedLogVisible,
     persistCurrentPane,
     persistLogVisible,
 } from '../utils/persistentStore';
@@ -21,7 +22,7 @@ export interface AppLayout {
 
 const initialState: AppLayout = {
     isSidePanelVisible: true,
-    isLogVisible: true,
+    isLogVisible: !!getPersistedLogVisible(),
     currentPane: 0,
     paneNames: [],
 };

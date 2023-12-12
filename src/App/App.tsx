@@ -30,7 +30,10 @@ import LogViewer from '../Log/LogViewer';
 import logger from '../logging';
 import NavBar from '../NavBar/NavBar';
 import classNames from '../utils/classNames';
-import { getPersistedCurrentPane } from '../utils/persistentStore';
+import {
+    getPersistedCurrentPane,
+    getPersistedLogVisible,
+} from '../utils/persistentStore';
 import usageData from '../utils/usageData';
 import useHotKey from '../utils/useHotKey';
 import {
@@ -115,8 +118,15 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     }, [dispatch, autoReselectByDefault]);
 
     useEffect(() => {
-        if (!showLogByDefault) {
+        const persistedLogVisible = getPersistedLogVisible();
+        // If they are equal, the current setting is already correct
+        // getPersistedLogVisible is used to initialise the redux state
+        if (showLogByDefault !== getPersistedLogVisible()) {
+            if (persistedLogVisible !== undefined) {
+                dispatch(setLogVisible(persistedLogVisible));
+            } else {
                 dispatch(setLogVisible(showLogByDefault));
+            }
         }
     }, [dispatch, showLogByDefault]);
 
