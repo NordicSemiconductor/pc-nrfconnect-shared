@@ -52,12 +52,14 @@ const init = () => {
             envelope.data.baseData = { name: envelope.data?.baseData.name };
         } else {
             envelope.tags['ai.cloud.roleInstance'] = undefined; // remove PC name
-            envelope.data.baseData = {
-                applicationName,
-                applicationVersion,
-                isDevelopment,
-                ...envelope.data.baseData,
-            };
+            if (envelope.data.baseData) {
+                envelope.data.baseData.properties = {
+                    applicationName,
+                    applicationVersion,
+                    isDevelopment,
+                    ...envelope.data.baseData.properties,
+                };
+            }
         }
 
         return true;

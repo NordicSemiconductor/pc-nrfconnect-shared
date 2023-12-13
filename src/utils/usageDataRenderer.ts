@@ -66,12 +66,12 @@ const init = async () => {
                 name: applicationName,
             };
             envelope.ext = { ...envelope.ext, trace };
-            envelope.baseData = {
+            envelope.data = {
+                ...envelope.data,
                 applicationName,
                 applicationVersion,
                 isDevelopment,
                 source,
-                ...envelope.baseData,
             };
         }
     });
