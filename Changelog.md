@@ -9,6 +9,11 @@ every new version is a new major version.
 
 ## 143.0.0 - 2023-12-14
 
+### Changed
+
+-   Run eslint or prettier on all Markdown (.md) files except the ones in
+    `doc/docs` folder.
+
 ### Fixed
 
 -   `NRF9160` and `NRF9161` now show modem trait as true when using external
