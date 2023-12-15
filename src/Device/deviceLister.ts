@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import { DeviceInfo } from '../../nrfutil';
 import { DeviceTraits, NrfutilDevice } from '../../nrfutil/device/common';
 import NrfutilDeviceLib from '../../nrfutil/device/device';
 import logger from '../logging';
@@ -80,6 +81,13 @@ const shouldAutoReselect = (
 
     return globalAutoReselect;
 };
+
+export const hasModem = (device: Device, deviceInfo?: DeviceInfo) =>
+    !!(
+        device.traits.modem ||
+        deviceInfo?.jlink?.deviceVersion?.toUpperCase().includes('NRF9160') ||
+        deviceInfo?.jlink?.deviceVersion?.toUpperCase().includes('NRF9161')
+    );
 
 const initAutoReconnectTimeout =
     (onTimeout: () => void, waitForDevice: WaitForDevice): AppThunk =>
@@ -298,6 +306,23 @@ export const startWatchingDevices =
                                             device
                                         );
                                     dispatch(setSelectedDeviceInfo(deviceInfo));
+
+                                    // Modem might be set to false when using external jLink or custom PCBs
+                                    if (
+                                        !deviceWithPersistedData.traits.modem &&
+                                        hasModem(
+                                            deviceWithPersistedData,
+                                            deviceInfo
+                                        )
+                                    ) {
+                                        deviceWithPersistedData.traits.modem =
+                                            true;
+                                        dispatch(
+                                            selectDevice(
+                                                deviceWithPersistedData
+                                            )
+                                        );
+                                    }
                                 }
 
                                 if (waitForDevice.onSuccess)

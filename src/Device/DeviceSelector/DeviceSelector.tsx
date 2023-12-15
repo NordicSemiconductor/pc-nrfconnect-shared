@@ -18,7 +18,11 @@ import {
     getWaitingToAutoReselect,
     setAutoSelectDevice,
 } from '../deviceAutoSelectSlice';
-import { startWatchingDevices, stopWatchingDevices } from '../deviceLister';
+import {
+    hasModem,
+    startWatchingDevices,
+    stopWatchingDevices,
+} from '../deviceLister';
 import { DeviceSetupConfig, setupDevice } from '../deviceSetup';
 import DeviceSetupView from '../DeviceSetup/DeviceSetupView';
 import {
@@ -102,6 +106,17 @@ export default ({
                 abortController.current
             );
             abortController.current = undefined;
+
+            // Modem might be set to false when using external jLink or custom PCBs
+            if (!device.traits.modem && hasModem(device, deviceInfo)) {
+                const newDevice = {
+                    ...device,
+                    traits: { ...device.traits, modem: true },
+                };
+                dispatch(selectDevice(newDevice));
+                dispatch(setAutoSelectDevice(newDevice));
+            }
+
             dispatch(setSelectedDeviceInfo(deviceInfo));
             onDeviceSelected(device, autoReselected);
 

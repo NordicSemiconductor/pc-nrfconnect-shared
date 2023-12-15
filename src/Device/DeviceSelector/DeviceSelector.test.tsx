@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 
 import render from '../../../test/testrenderer';
 import { addDevice, Device, removeDevice } from '../deviceSlice';
@@ -168,7 +168,7 @@ describe('DeviceSelector', () => {
         expect(screen.getAllByText(/COM/)).toHaveLength(2);
     });
 
-    it('can select connected devices', () => {
+    it('can select connected devices', async () => {
         render(
             <DeviceSelector
                 deviceListing={{
@@ -182,7 +182,11 @@ describe('DeviceSelector', () => {
         );
 
         fireEvent.click(screen.getByText('Select device'));
-        fireEvent.click(screen.getByText(DEVICE_SERIAL_NUMBER));
+        // eslint-disable-next-line testing-library/no-unnecessary-act
+        await act(async () => {
+            await fireEvent.click(screen.getByText(DEVICE_SERIAL_NUMBER));
+        });
+
         expect(screen.getAllByText(DEVICE_SERIAL_NUMBER)).toHaveLength(2);
     });
 
@@ -206,7 +210,7 @@ describe('DeviceSelector', () => {
         expect(screen.getByText('Select device')).toBeInTheDocument();
     });
 
-    it('should allow device selection when custom devices are enabled and no valid firmware is defined', () => {
+    it('should allow device selection when custom devices are enabled and no valid firmware is defined', async () => {
         render(
             <DeviceSelector
                 deviceListing={{
@@ -232,7 +236,11 @@ describe('DeviceSelector', () => {
             [addDevice(testDevice)]
         );
         fireEvent.click(screen.getByText('Select device'));
-        fireEvent.click(screen.getByText(DEVICE_SERIAL_NUMBER));
+
+        // eslint-disable-next-line testing-library/no-unnecessary-act
+        await act(async () => {
+            await fireEvent.click(screen.getByText(DEVICE_SERIAL_NUMBER));
+        });
 
         expect(screen.queryByText('OK')).toBeNull();
         expect(screen.getAllByText(DEVICE_SERIAL_NUMBER)).toHaveLength(2);

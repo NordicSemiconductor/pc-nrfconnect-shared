@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 143.0.0 - 2023-12-14
+
+### Fixed
+
+-   `NRF9160` and `NRF9161` now show modem trait as true when using external
+    jLink
+
 ## 142.0.0 - 2023-12-13
 
 ### Fixed
