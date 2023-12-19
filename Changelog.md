@@ -11,8 +11,7 @@ every new version is a new major version.
 
 ### Added
 
-- `nRF9131EK` support in device lister.
-
+-   `nRF9131EK` support in device lister.
 
 ## 143.0.0 - 2023-12-14
 
