@@ -19,6 +19,7 @@ export const knownDevicePcas = [
     'PCA10143',
     'PCA10152',
     'PCA10153',
+    'PCA10165',
     'PCA20049',
 ] as const;
 
