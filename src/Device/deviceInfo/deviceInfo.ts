@@ -186,6 +186,15 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
             buyOnlineParams: 'search_token=NRF9161-dk',
         },
     },
+    PCA10165: {
+        name: 'nRF9131 EK',
+        cores: 1,
+        icon: nrf91logo,
+        website: {
+            productPagePath: 'Products/Development-hardware/nrf9131ek',
+            buyOnlineParams: 'search_token=NRF9131-ek',
+        },
+    },
     PCA20049: {
         name: 'Nordic Thingy:91x',
         cores: 1,
