@@ -11,6 +11,7 @@ import boardController from './boardController';
 import deviceInfo from './deviceInfo';
 import erase from './erase';
 import firmwareRead from './firmwareRead';
+import getBoardControllerConfig from './getBoardControllerConfig';
 import getBoardControllerVersion from './getBoardControllerVersion';
 import getCoreInfo from './getCoreInfo';
 import getFwInfo from './getFwInfo';
@@ -63,5 +64,6 @@ export default {
     getModuleVersion,
     boardController,
     getBoardControllerVersion,
+    getBoardControllerConfig,
     batch: () => new Batch(),
 };
