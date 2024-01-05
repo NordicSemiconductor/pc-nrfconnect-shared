@@ -183,6 +183,13 @@ export const InfoDialog = ({
     </GenericDialog>
 );
 
+export const ErrorDetails = ({ detail }: { detail: string }) => (
+    <details>
+        <summary>Show technical details</summary>
+        <pre className="tw-m-1 tw-whitespace-pre-wrap">{detail}</pre>
+    </details>
+);
+
 export const ErrorDialog = (props: Omit<InfoProps, 'headerIcon'>) =>
     InfoDialog({
         ...props,
