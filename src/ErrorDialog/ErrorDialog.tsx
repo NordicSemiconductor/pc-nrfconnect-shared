@@ -80,7 +80,12 @@ const ErrorDialog = () => {
                         <DialogButton
                             key={label}
                             onClick={handler}
-                            variant={index === 0 ? 'primary' : 'secondary'}
+                            variant={
+                                index !== 0 ||
+                                Object.keys(errorResolutions).length === 1
+                                    ? 'secondary'
+                                    : 'primary'
+                            }
                         >
                             {label}
                         </DialogButton>
