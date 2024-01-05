@@ -78,7 +78,7 @@ Dialog.Header = ({
 );
 
 Dialog.Body = ({ children }: { children: ReactNode }) => (
-    <Modal.Body>{children}</Modal.Body>
+    <Modal.Body className="tw-select-text">{children}</Modal.Body>
 );
 
 Dialog.Footer = ({ children }: { children: ReactNode }) => (
