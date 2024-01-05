@@ -33,9 +33,12 @@ const getInsights = async (forceSend?: boolean) => {
 
 // We experienced that apps sometimes freeze when closing the window
 // until the telemetry events are sent.
-window.addEventListener('beforeunload', async () => {
-    (await getInsights())?.flush();
-});
+const isRenderer = process && process.type === 'renderer';
+if (isRenderer) {
+    window.addEventListener('beforeunload', async () => {
+        (await getInsights())?.flush();
+    });
+}
 
 const init = async () => {
     const applicationName = packageJson().name;
@@ -48,6 +51,8 @@ const init = async () => {
         config: {
             instrumentationKey: INSTRUMENTATION_KEY,
             accountId, // to hide with removeAllMetadata
+            isStorageUseDisabled: true, // fix issue with duplicate events being sent https://github.com/microsoft/ApplicationInsights-JS/issues/796
+            namePrefix: applicationName, // fix issue with duplicate events being sent https://github.com/microsoft/ApplicationInsights-JS/issues/796
         },
     });
 
