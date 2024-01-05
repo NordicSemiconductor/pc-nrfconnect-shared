@@ -12,6 +12,7 @@ every new version is a new major version.
 ### Fix
 
 -   Azure insights sends the same event multiple times
+-   Shared compatibility with launcher
 
 ## 144.0.0 - 2023-12-19
 

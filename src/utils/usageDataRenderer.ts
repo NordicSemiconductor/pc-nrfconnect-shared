@@ -33,9 +33,12 @@ const getInsights = async (forceSend?: boolean) => {
 
 // We experienced that apps sometimes freeze when closing the window
 // until the telemetry events are sent.
-window.addEventListener('beforeunload', async () => {
-    (await getInsights())?.flush();
-});
+const isRenderer = process && process.type === 'renderer';
+if (isRenderer) {
+    window.addEventListener('beforeunload', async () => {
+        (await getInsights())?.flush();
+    });
+}
 
 const init = async () => {
     const applicationName = packageJson().name;
