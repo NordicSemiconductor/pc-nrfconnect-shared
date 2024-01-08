@@ -186,7 +186,9 @@ export const InfoDialog = ({
 export const ErrorDetails = ({ detail }: { detail: string }) => (
     <details>
         <summary>Show technical details</summary>
-        <pre className="tw-m-1 tw-whitespace-pre-wrap">{detail}</pre>
+        <pre className="error-details tw-m-1 tw-max-h-40 tw-whitespace-pre-wrap">
+            {detail}
+        </pre>
     </details>
 );
 
