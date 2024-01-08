@@ -7,6 +7,8 @@
 @import '../variables';
 
 .dialog {
+    color: $gray-700;
+
     .modal-content {
         border: 0 transparent;
         box-shadow: 0px 3px 6px #00000029;

@@ -12,6 +12,15 @@ every new version is a new major version.
 ### Added
 
 -   `details` prop to `ErrorDialog`.
+-   Make text selectable in dialogs.
+
+### Changed
+
+-   Use `gray-700` for text colour in dialogs.
+
+### Fixed
+
+-   Wrong button variant used when only 1 button visible in redux `ErrorDialog`.
 
 ## 145.0.0 - 2023-01-05
 

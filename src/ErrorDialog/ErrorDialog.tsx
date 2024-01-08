@@ -4,11 +4,15 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { Fragment } from 'react';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Dialog, DialogButton } from '../Dialog/Dialog';
+import {
+    DialogButton,
+    ErrorDetails,
+    ErrorDialog as BaseErrorDialog,
+} from '../Dialog/Dialog';
 import {
     ErrorMessage,
     errorResolutions as errorResolutionsSelector,
@@ -26,12 +30,7 @@ const ErrorMessage = ({
 }) => (
     <>
         <ReactMarkdown linkTarget="_blank">{message}</ReactMarkdown>
-        {detail != null && (
-            <details className="details">
-                <summary>Show technical details</summary>
-                <pre>{detail}</pre>
-            </details>
-        )}
+        {detail != null && <ErrorDetails detail={detail} />}
     </>
 );
 
@@ -53,41 +52,38 @@ const ErrorDialog = () => {
 
     const isVisible = useSelector(isVisibleSelector);
     const messages = useSelector(messagesSelector);
-
-    const defaultErrorResolutions = {
-        Close: () => dispatch(hideDialog()),
-    };
-    const errorResolutions =
-        useSelector(errorResolutionsSelector) || defaultErrorResolutions;
+    const errorResolutions = useSelector(errorResolutionsSelector);
 
     return (
-        <Dialog
+        <BaseErrorDialog
             isVisible={isVisible}
             onHide={() => dispatch(hideDialog())}
-            className="core19-error-body"
-        >
-            <Dialog.Header title="Error" headerIcon="alert" />
-            <Dialog.Body>
-                {messages.length === 1 ? (
-                    <ErrorMessage error={messages[0]} />
-                ) : (
-                    <MultipleErrorMessages messages={messages} />
-                )}
-            </Dialog.Body>
-            <Dialog.Footer>
-                {Object.entries(errorResolutions).map(
+            footer={
+                errorResolutions &&
+                Object.entries(errorResolutions).map(
                     ([label, handler], index) => (
                         <DialogButton
                             key={label}
                             onClick={handler}
-                            variant={index === 0 ? 'primary' : 'secondary'}
+                            variant={
+                                index !== 0 ||
+                                Object.keys(errorResolutions).length === 1
+                                    ? 'secondary'
+                                    : 'primary'
+                            }
                         >
                             {label}
                         </DialogButton>
                     )
-                )}
-            </Dialog.Footer>
-        </Dialog>
+                )
+            }
+        >
+            {messages.length === 1 ? (
+                <ErrorMessage error={messages[0]} />
+            ) : (
+                <MultipleErrorMessages messages={messages} />
+            )}
+        </BaseErrorDialog>
     );
 };
 
