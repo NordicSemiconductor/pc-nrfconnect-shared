@@ -20,6 +20,7 @@ export {
     ConfirmationDialog,
     InfoDialog,
     ErrorDialog,
+    ErrorDetails,
     DialogButton,
 } from './Dialog/Dialog';
 export type { DialogButtonProps } from './Dialog/Dialog';

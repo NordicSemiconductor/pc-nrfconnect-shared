@@ -17,7 +17,7 @@
         height: 40px;
         border: 0 transparent;
         background: $gray-50;
-        padding: 0 16px;
+        padding: 16px 16px;
 
         flex-direction: row;
         align-items: center;
@@ -33,12 +33,20 @@
     }
 
     .modal-body {
+        overflow-y: auto;
+        @include scrollbars($white);
         overflow-wrap: anywhere;
+        max-height: 80vh;
         padding: 32px 16px 16px 16px;
         margin: 0;
         p,
         li {
             font-size: 14px;
+        }
+
+        .error-details {
+            overflow-y: auto;
+            @include scrollbars($white);
         }
     }
 }

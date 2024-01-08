@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 146.0.0 - Unreleased
+
+### Added
+
+-   `details` prop to `ErrorDialog`.
+
 ## 145.0.0 - 2023-01-05
 
 ### Fix
