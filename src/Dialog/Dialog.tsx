@@ -157,6 +157,7 @@ interface InfoProps extends CoreProps {
     title?: string;
     headerIcon?: string;
     onHide: () => void;
+    footer?: ReactNode;
 }
 
 export const InfoDialog = ({
@@ -167,6 +168,7 @@ export const InfoDialog = ({
     onHide,
     size,
     className,
+    footer,
 }: InfoProps) => (
     <GenericDialog
         closeOnEsc
@@ -177,7 +179,7 @@ export const InfoDialog = ({
         title={title}
         className={className}
         size={size}
-        footer={<DialogButton onClick={onHide}>Close</DialogButton>}
+        footer={footer ?? <DialogButton onClick={onHide}>Close</DialogButton>}
     >
         {children}
     </GenericDialog>
