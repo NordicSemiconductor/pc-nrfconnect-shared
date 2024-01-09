@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 147.0.0 - 2024-01-09
+
+### Fixed
+
+-   Error details had a larger font size (16px) than the rest of the body of an
+    error dialog (14px).
+
 ## 146.0.0 - 2024-01-08
 
 ### Added
