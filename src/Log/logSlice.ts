@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { LogEntry } from 'winston';
 
-import { NrfutilDeviceLib } from '../../nrfutil';
+import { setVerboseLogging } from '../../nrfutil/modules';
+import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
 import {
     getIsLoggingVerbose,
@@ -76,7 +77,14 @@ export const {
 export const setIsLoggingVerbose =
     (enable: boolean): AppThunk =>
     dispatch => {
-        NrfutilDeviceLib.setVerboseLogging(enable);
+        try {
+            setVerboseLogging(enable);
+        } catch (e) {
+            logger.error(
+                'Failed to enable verbose logging to nrfutil modules',
+                e
+            );
+        }
         persistIsLoggingVerbose(enable);
         dispatch(slice.actions.setIsLoggingVerbose(enable));
     };
