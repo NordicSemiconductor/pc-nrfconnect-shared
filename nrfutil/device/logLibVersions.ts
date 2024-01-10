@@ -7,19 +7,20 @@
 import { spawn } from 'child_process';
 import os from 'os';
 
-import logger from '../../src/logging';
 import {
     describeVersion,
     getExpectedVersion,
     resolveModuleVersion,
 } from '../moduleVersion';
 import { ModuleVersion, SubDependency } from '../sandboxTypes';
+import { getNrfutilLogger } from '../nrfutilLogger';
 
 const log = (description: string, moduleVersion?: SubDependency | string) => {
+    const logger = getNrfutilLogger();
     if (moduleVersion == null) {
-        logger.warn(`Unable to detect version of ${description}.`);
+        logger?.warn(`Unable to detect version of ${description}.`);
     } else {
-        logger.info(
+        logger?.info(
             `Using ${description} version: ${describeVersion(moduleVersion)}`
         );
     }
@@ -68,6 +69,7 @@ const checkJLinkArchitectureOnDarwin = async () => {
 };
 
 export default async (moduleVersion: ModuleVersion) => {
+    const logger = getNrfutilLogger();
     try {
         const dependencies = moduleVersion.dependencies;
 
@@ -81,12 +83,12 @@ export default async (moduleVersion: ModuleVersion) => {
         if (jlinkVersion) {
             const result = getExpectedVersion(jlinkVersion);
             if (!result.isExpectedVersion) {
-                logger.warn(
+                logger?.warn(
                     `Installed JLink version does not match the expected version (${result.expectedVersion})`
                 );
             }
         } else {
-            logger.warn(
+            logger?.warn(
                 `JLink is not installed. Please install JLink from: https://www.segger.com/downloads/jlink`
             );
         }
@@ -101,15 +103,15 @@ export default async (moduleVersion: ModuleVersion) => {
                     JLinkArchOnDarwin === 'arm'
                         ? '64-bit Apple M1 Installer'
                         : '64-bit Intel Installer';
-                logger.warn(
+                logger?.warn(
                     `It looks like you have installed JLink using ${JLinkInstallerVersion}, but currently we only support their Universal Installer for your system.`
                 );
-                logger.warn(
+                logger?.warn(
                     `Please install JLink: https://www.segger.com/downloads/jlink/JLink_MacOSX_V788j_universal.pkg`
                 );
             }
         }
     } catch (error) {
-        logger.logError('Failed to get the library versions', error);
+        logger?.error('Failed to get the library versions', error);
     }
 };
