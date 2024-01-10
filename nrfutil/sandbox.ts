@@ -174,9 +174,6 @@ export class NrfutilSandbox {
         onProgress?: (progress: Progress, task?: Task) => void
     ) => {
         try {
-            getNrfutilLogger()?.info(
-                `Preparing nrfutil-${this.module} version: ${this.version}`
-            );
             await this.spawnNrfutil(
                 'install',
                 [`${this.module}=${this.version}`, '--force'],
