@@ -18,7 +18,10 @@ import {
 } from '../Device/deviceSlice';
 import { isLoggingVerbose, setIsLoggingVerbose } from '../Log/logSlice';
 import { Toggle } from '../Toggle/Toggle';
-import { persistIsLoggingVerbose } from '../utils/persistentStore';
+import {
+    persistIsLoggingVerbose,
+    removeIsLoggingVerboseResetHandler,
+} from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
 import Section from './Section';
@@ -73,6 +76,7 @@ export default () => {
                             label="VERBOSE LOGGING"
                             onToggle={isToggled => {
                                 NrfutilDeviceLib.setVerboseLogging(isToggled);
+                                persistIsLoggingVerbose(isToggled);
                                 dispatch(setIsLoggingVerbose(isToggled));
                             }}
                             isToggled={verboseLogging}
@@ -83,7 +87,7 @@ export default () => {
                         <Button
                             variant="secondary"
                             onClick={() => {
-                                persistIsLoggingVerbose(true);
+                                removeIsLoggingVerboseResetHandler();
                                 getCurrentWindow().emit('restart-window');
                             }}
                             title="Restart application with verbose logging turned on to get log messages from initial enumeration"
