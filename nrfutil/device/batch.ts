@@ -9,13 +9,13 @@ import os from 'os';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
 
+import { getModule } from '..';
 import { TaskEnd } from '../sandboxTypes';
 import { BatchOperationWrapper, Callbacks } from './batchTypes';
 import {
     DeviceCore,
     DeviceTraits,
     deviceTraitsToArgs,
-    getDeviceSandbox,
     NrfutilDevice,
     ResetKind,
 } from './common';
@@ -49,7 +49,7 @@ export class Batch {
         args: string[] = []
     ) {
         const getPromise = async () => {
-            const box = await getDeviceSandbox();
+            const box = await getModule('device');
 
             const batchOperation =
                 await box.singleInfoOperationOptionalData<object>(
@@ -311,7 +311,7 @@ export class Batch {
             })),
         };
 
-        const sandbox = await getDeviceSandbox();
+        const sandbox = await getModule('device');
         try {
             await sandbox.spawnNrfutilSubcommand<unknown>(
                 'x-execute-batch',

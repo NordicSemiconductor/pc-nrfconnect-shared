@@ -4,16 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { getUserDataDir } from '../../src/utils/appDirs';
-import { isDevelopment } from '../../src/utils/environment';
-import {
-    getIsLoggingVerbose,
-    persistIsLoggingVerbose,
-} from '../../src/utils/persistentStore';
-import { getNrfutilLogger } from '../nrfutilLogger';
-import sandbox, { type NrfutilSandbox } from '../sandbox';
+import { getModule } from '../modules';
 import { Progress } from '../sandboxTypes';
-import logLibVersions from './logLibVersions';
 
 export const deviceTraitsToArgs = (traits: DeviceTraits) => {
     const args: string[] = [];
@@ -157,69 +149,6 @@ export interface SerialPort {
     path: string | null;
 }
 
-let deviceSandbox: NrfutilSandbox | undefined;
-let promiseDeviceSandbox: Promise<NrfutilSandbox> | undefined;
-
-export const getDeviceSandbox = async () => {
-    if (deviceSandbox) {
-        return deviceSandbox;
-    }
-
-    if (!promiseDeviceSandbox) {
-        promiseDeviceSandbox = sandbox(
-            getUserDataDir(),
-            'device',
-            undefined,
-            undefined
-        );
-        deviceSandbox = await promiseDeviceSandbox;
-        deviceSandbox.getModuleVersion().then(logLibVersions);
-
-        deviceSandbox.onLogging((evt, pid) => {
-            const deviceLogger = getNrfutilLogger();
-            const formatMsg = (msg: string) =>
-                `${
-                    pid && deviceSandbox?.logLevel === 'trace'
-                        ? `[PID:${pid}] `
-                        : ''
-                }${msg}`;
-
-            switch (evt.level) {
-                case 'TRACE':
-                    deviceLogger?.verbose(formatMsg(evt.message));
-                    break;
-                case 'DEBUG':
-                    deviceLogger?.debug(formatMsg(evt.message));
-                    break;
-                case 'INFO':
-                    deviceLogger?.info(formatMsg(evt.message));
-                    break;
-                case 'WARN':
-                    deviceLogger?.warn(formatMsg(evt.message));
-                    break;
-                case 'ERROR':
-                    deviceLogger?.error(formatMsg(evt.message));
-                    break;
-                case 'CRITICAL':
-                    deviceLogger?.error(formatMsg(evt.message));
-                    break;
-                case 'OFF':
-                default:
-                    // Unreachable
-                    break;
-            }
-        });
-
-        const fallbackLevel = isDevelopment ? 'error' : 'off';
-        deviceSandbox.setLogLevel(
-            getIsLoggingVerbose() ? 'trace' : fallbackLevel
-        );
-    }
-
-    const box = await promiseDeviceSandbox;
-    return box;
-};
-
 export const deviceSingleTaskEndOperation = async <T = void>(
     device: NrfutilDevice,
     command: string,
@@ -232,7 +161,7 @@ export const deviceSingleTaskEndOperation = async <T = void>(
             `Device does not have a serial number, no device operation is possible`
         );
     }
-    const box = await getDeviceSandbox();
+    const box = await getModule('device');
     return box.singleTaskEndOperationWithData<T>(
         command,
         onProgress,
@@ -254,7 +183,7 @@ export const deviceSingleTaskEndOperationVoid = async (
         );
     }
 
-    const box = await getDeviceSandbox();
+    const box = await getModule('device');
     await box.singleTaskEndOperationOptionalData(
         command,
         onProgress,
