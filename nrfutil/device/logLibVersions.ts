@@ -12,8 +12,8 @@ import {
     getExpectedVersion,
     resolveModuleVersion,
 } from '../moduleVersion';
-import { ModuleVersion, SubDependency } from '../sandboxTypes';
 import { getNrfutilLogger } from '../nrfutilLogger';
+import type { ModuleVersion, SubDependency } from '../sandboxTypes';
 
 const log = (description: string, moduleVersion?: SubDependency | string) => {
     const logger = getNrfutilLogger();
