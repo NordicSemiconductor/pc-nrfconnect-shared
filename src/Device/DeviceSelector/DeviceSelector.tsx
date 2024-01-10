@@ -7,7 +7,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { NrfutilDeviceLib } from '../../../nrfutil';
+import { NrfutilDeviceLib } from '../../../nrfutil/device';
 import { DeviceTraits } from '../../../nrfutil/device/common';
 import logger from '../../logging';
 import usageData from '../../utils/usageData';

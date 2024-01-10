@@ -29,7 +29,7 @@
 */
 
 import { KnownDevicePCA } from '../../../ipc/device';
-import { NrfutilDevice } from '../../../nrfutil';
+import { NrfutilDevice } from '../../../nrfutil/device';
 import type { Device as WrappedDevice } from '../deviceSlice';
 
 import nPMFamilyLogo from '!!@svgr!./nPM-Family-Series-logo.svg';
