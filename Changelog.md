@@ -7,6 +7,16 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 148.0.0 - Unreleased
+
+### Changed
+
+-   `isLoggingVerbose` persisted state is now saved in the app specific store.
+-   `isLoggingVerbose` now reflects the current verbose logging state
+    (previously this was only used to determine whether an app should have
+    verbose logging enabled on startup). This allows code which does/should not
+    have access to the redux store to still retrieve the verbose logging state.
+
 ## 147.0.0 - 2024-01-09
 
 ### Fixed
