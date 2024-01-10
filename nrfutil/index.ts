@@ -7,6 +7,7 @@
 export { default as prepareSandbox } from './sandbox';
 export { NrfutilSandbox } from './sandbox';
 export type { Progress, SemanticVersion } from './sandboxTypes';
+export { getNrfutilLogger, setNrfutilLogger } from './nrfutilLogger';
 export {
     getModule,
     setLogLevel,
