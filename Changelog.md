@@ -9,6 +9,14 @@ every new version is a new major version.
 
 ## 148.0.0 - Unreleased
 
+### Added
+
+-   `getModule` export from `@nordicsemiconductor/pc-nrfconnect-shared/nrfutil`
+    to retrieve/initialise specific nrfutil module sandbox.
+-   `setVerboseLogging`, `setLogLevel` and `getAllModuleVersions` exports from
+    `@nordicsemiconductor/pc-nrfconnect-shared/nrfutil` to target all
+    initialised nrfutil modules.
+
 ### Changed
 
 -   `isLoggingVerbose` persisted state is now saved in the app specific store.
@@ -16,6 +24,16 @@ every new version is a new major version.
     (previously this was only used to determine whether an app should have
     verbose logging enabled on startup). This allows code which does/should not
     have access to the redux store to still retrieve the verbose logging state.
+-   `Create system report` now logs the version of all initialised nrfutil
+    modules.
+-   nrfutil device exports have now been moved to
+    `@nordicsemiconductor/pc-nrfconnect-shared/nrfutil/device`.
+
+### Steps to upgrade
+
+-   Replace all calls of nrfutil device imported from
+    `@nordicsemiconductor/pc-nrfconnect-shared/nrfutil` to
+    `@nordicsemiconductor/pc-nrfconnect-shared/nrfutil/device`.
 
 ## 147.0.0 - 2024-01-09
 
