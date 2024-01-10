@@ -10,7 +10,7 @@ import path from 'path';
 import pretty from 'prettysize';
 import si from 'systeminformation';
 
-import NrfutilDeviceLib from '../../nrfutil/device/device';
+import { getAllModuleVersions } from '../../nrfutil';
 import {
     describeVersion,
     resolveModuleVersion,
@@ -23,7 +23,6 @@ import { Device } from '../Device/deviceSlice';
 import logger from '../logging';
 import { getAppDataDir } from './appDirs';
 import { openFile } from './open';
-import { packageJsonApp } from './packageJson';
 
 const generalInfoReport = async () => {
     const [
@@ -51,9 +50,6 @@ const generalInfoReport = async () => {
         si.fsSize(),
     ]);
 
-    const jsonApp = packageJsonApp();
-    const hasDeviceLib = !!jsonApp.nrfConnectForDesktop.nrfutil?.device;
-
     const result = [
         `- System:     ${manufacturer} ${model}`,
         `- BIOS:       ${vendor} ${version}`,
@@ -74,23 +70,27 @@ const generalInfoReport = async () => {
         `    - python3: ${python3}`,
     ];
 
-    if (hasDeviceLib) {
-        const moduleVersion = await NrfutilDeviceLib.getModuleVersion();
-        const dependencies = moduleVersion.dependencies;
+    const moduleVersions = await getAllModuleVersions();
 
+    moduleVersions.forEach(moduleVersion => {
         result.push(
-            ...[
-                `    - nrfutil-device: ${moduleVersion.version}`,
-                `    - nrfjprog DLL: ${describeVersion(
-                    resolveModuleVersion('jprog', dependencies)
-                )}`,
-                `    - JLink: ${describeVersion(
-                    resolveModuleVersion('JlinkARM', dependencies)
-                )}`,
-                '',
-            ]
+            `    - nrfutil-${moduleVersion.name}: ${moduleVersion.version}`
         );
-    }
+        if (moduleVersion.name === 'device') {
+            const dependencies = moduleVersion.dependencies;
+            result.push(
+                ...[
+                    `    - nrfjprog DLL: ${describeVersion(
+                        resolveModuleVersion('jprog', dependencies)
+                    )}`,
+                    `    - JLink: ${describeVersion(
+                        resolveModuleVersion('JlinkARM', dependencies)
+                    )}`,
+                    '',
+                ]
+            );
+        }
+    });
 
     return result;
 };
