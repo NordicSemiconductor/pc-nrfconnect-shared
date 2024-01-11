@@ -19,8 +19,8 @@ import {
 import { isLoggingVerbose, setIsLoggingVerbose } from '../Log/logSlice';
 import { Toggle } from '../Toggle/Toggle';
 import {
+    doNotResetVerboseLogginOnRestart,
     persistIsLoggingVerbose,
-    removeIsLoggingVerboseResetHandler,
 } from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
@@ -87,7 +87,7 @@ export default () => {
                         <Button
                             variant="secondary"
                             onClick={() => {
-                                removeIsLoggingVerboseResetHandler();
+                                doNotResetVerboseLogginOnRestart();
                                 getCurrentWindow().emit('restart-window');
                             }}
                             title="Restart application with verbose logging turned on to get log messages from initial enumeration"

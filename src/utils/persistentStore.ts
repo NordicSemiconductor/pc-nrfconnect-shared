@@ -190,7 +190,7 @@ export const getIsLoggingVerbose = () =>
 
 const resetIsLoggingVerbose = () => persistIsLoggingVerbose(false);
 window.addEventListener('beforeunload', resetIsLoggingVerbose);
-export const removeIsLoggingVerboseResetHandler = () =>
+export const doNotResetVerboseLogginOnRestart = () =>
     window.removeEventListener('beforeunload', resetIsLoggingVerbose);
 
 export const getPersistedLogVisible = () =>
