@@ -188,11 +188,7 @@ export const getIsLoggingVerbose = () =>
         false
     );
 
-const resetIsLoggingVerbose = () =>
-    getAppSpecificStore<SharedAppSpecificStoreSchema>().set(
-        'isLoggingVerbose',
-        false
-    );
+const resetIsLoggingVerbose = () => persistIsLoggingVerbose(false);
 window.addEventListener('beforeunload', resetIsLoggingVerbose);
 export const removeIsLoggingVerboseResetHandler = () =>
     window.removeEventListener('beforeunload', resetIsLoggingVerbose);
