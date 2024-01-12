@@ -8,7 +8,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
 
-import NrfutilDeviceLib from '../../nrfutil/device/device';
 import Button from '../Button/Button';
 import Card from '../Card/Card';
 import {
@@ -18,10 +17,7 @@ import {
 } from '../Device/deviceSlice';
 import { isLoggingVerbose, setIsLoggingVerbose } from '../Log/logSlice';
 import { Toggle } from '../Toggle/Toggle';
-import {
-    doNotResetVerboseLogginOnRestart,
-    persistIsLoggingVerbose,
-} from '../utils/persistentStore';
+import { doNotResetVerboseLogginOnRestart } from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
 import Section from './Section';
@@ -74,11 +70,9 @@ export default () => {
                         <Toggle
                             id="enableVerboseLoggin"
                             label="VERBOSE LOGGING"
-                            onToggle={isToggled => {
-                                NrfutilDeviceLib.setVerboseLogging(isToggled);
-                                persistIsLoggingVerbose(isToggled);
-                                dispatch(setIsLoggingVerbose(isToggled));
-                            }}
+                            onToggle={isToggled =>
+                                dispatch(setIsLoggingVerbose(isToggled))
+                            }
                             isToggled={verboseLogging}
                             variant="primary"
                         />
