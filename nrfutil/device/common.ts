@@ -214,8 +214,6 @@ export const getDeviceSandbox = async () => {
         deviceSandbox.setLogLevel(
             getIsLoggingVerbose() ? 'trace' : fallbackLevel
         );
-        // Only the first reset after selecting "reset with verbose logging" is relevant
-        persistIsLoggingVerbose(false);
     }
 
     const box = await promiseDeviceSandbox;

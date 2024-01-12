@@ -28,7 +28,6 @@ export interface TerminalSettings {
 }
 
 const sharedStore = new Store<{
-    verboseLogging: boolean;
     isSendingTelemetry: boolean | undefined;
     clientId?: string;
 }>({
@@ -133,11 +132,6 @@ const newUsageDataClientId = () => {
 export const getUsageDataClientId = () =>
     existingUsageDataClientId() ?? newUsageDataClientId();
 
-export const persistIsLoggingVerbose = (value: boolean) =>
-    sharedStore.set('isLoggingVerbose', value);
-export const getIsLoggingVerbose = () =>
-    sharedStore.get('isLoggingVerbose', false);
-
 // This one must be initialised lazily, because the package.json is not read yet when this module is initialised.
 // This can probably be changed when we bundle shared with the apps.
 let appSpecificStore: Store | undefined;
@@ -145,6 +139,7 @@ let appSpecificStore: Store | undefined;
 interface SharedAppSpecificStoreSchema {
     currentPane?: number;
     isLogVisible?: boolean;
+    isLoggingVerbose?: boolean;
 }
 
 export const getAppSpecificStore = <
@@ -181,5 +176,22 @@ export const persistLogVisible = (visible: boolean) =>
         `isLogVisible`,
         visible
     );
+
+export const persistIsLoggingVerbose = (value: boolean) =>
+    getAppSpecificStore<SharedAppSpecificStoreSchema>().set(
+        'isLoggingVerbose',
+        value
+    );
+export const getIsLoggingVerbose = () =>
+    getAppSpecificStore<SharedAppSpecificStoreSchema>().get(
+        'isLoggingVerbose',
+        false
+    );
+
+const resetIsLoggingVerbose = () => persistIsLoggingVerbose(false);
+window.addEventListener('beforeunload', resetIsLoggingVerbose);
+export const doNotResetVerboseLogginOnRestart = () =>
+    window.removeEventListener('beforeunload', resetIsLoggingVerbose);
+
 export const getPersistedLogVisible = () =>
     getAppSpecificStore<SharedAppSpecificStoreSchema>().get(`isLogVisible`);

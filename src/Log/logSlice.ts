@@ -7,8 +7,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { LogEntry } from 'winston';
 
-import type { RootState } from '../store';
-import { getIsLoggingVerbose } from '../utils/persistentStore';
+import { NrfutilDeviceLib } from '../../nrfutil';
+import type { AppThunk, RootState } from '../store';
+import {
+    getIsLoggingVerbose,
+    persistIsLoggingVerbose,
+} from '../utils/persistentStore';
 
 const MAX_ENTRIES = 1000;
 
@@ -66,5 +70,13 @@ const slice = createSlice({
 
 export const {
     reducer,
-    actions: { addEntries, clear, toggleAutoScroll, setIsLoggingVerbose },
+    actions: { addEntries, clear, toggleAutoScroll },
 } = slice;
+
+export const setIsLoggingVerbose =
+    (enable: boolean): AppThunk =>
+    dispatch => {
+        NrfutilDeviceLib.setVerboseLogging(enable);
+        persistIsLoggingVerbose(enable);
+        dispatch(slice.actions.setIsLoggingVerbose(enable));
+    };

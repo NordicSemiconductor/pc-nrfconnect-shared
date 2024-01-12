@@ -8,7 +8,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
 
-import NrfutilDeviceLib from '../../nrfutil/device/device';
 import Button from '../Button/Button';
 import Card from '../Card/Card';
 import {
@@ -18,7 +17,7 @@ import {
 } from '../Device/deviceSlice';
 import { isLoggingVerbose, setIsLoggingVerbose } from '../Log/logSlice';
 import { Toggle } from '../Toggle/Toggle';
-import { persistIsLoggingVerbose } from '../utils/persistentStore';
+import { doNotResetVerboseLogginOnRestart } from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
 import Section from './Section';
@@ -71,10 +70,9 @@ export default () => {
                         <Toggle
                             id="enableVerboseLoggin"
                             label="VERBOSE LOGGING"
-                            onToggle={isToggled => {
-                                NrfutilDeviceLib.setVerboseLogging(isToggled);
-                                dispatch(setIsLoggingVerbose(isToggled));
-                            }}
+                            onToggle={isToggled =>
+                                dispatch(setIsLoggingVerbose(isToggled))
+                            }
                             isToggled={verboseLogging}
                             variant="primary"
                         />
@@ -83,7 +81,7 @@ export default () => {
                         <Button
                             variant="secondary"
                             onClick={() => {
-                                persistIsLoggingVerbose(true);
+                                doNotResetVerboseLogginOnRestart();
                                 getCurrentWindow().emit('restart-window');
                             }}
                             title="Restart application with verbose logging turned on to get log messages from initial enumeration"
