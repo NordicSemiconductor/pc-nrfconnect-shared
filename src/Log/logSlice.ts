@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { LogEntry } from 'winston';
 
 import { NrfutilDeviceLib } from '../../nrfutil';
