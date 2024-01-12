@@ -92,9 +92,7 @@ const getModuleSandbox = (module: string) => {
                 moduleSandbox.setLogLevel(initialLogLevel);
             }
 
-            const box = await promiseModuleSandbox;
-
-            return box;
+            return promiseModuleSandbox;
         },
     };
 };
