@@ -15,85 +15,83 @@ import { LogLevel, ModuleVersion } from './sandboxTypes';
 
 const fallbackLevel = process.env.NODE_ENV === 'production' ? 'off' : 'error';
 
+const logModuleVersions = (module: string, moduleSandbox: NrfutilSandbox) => {
+    if (module === 'device') {
+        moduleSandbox.getModuleVersion().then(logLibVersions);
+    } else {
+        moduleSandbox.getModuleVersion().then(moduleVersion => {
+            getNrfutilLogger()?.info(
+                `Using ${module} version: ${describeVersion(
+                    moduleVersion.version
+                )}`
+            );
+        });
+    }
+};
+
+const forwardLogging = (moduleSandbox: NrfutilSandbox) => {
+    moduleSandbox.onLogging((evt, pid) => {
+        const logger = getNrfutilLogger();
+        const formatMsg = (msg: string) =>
+            `${
+                pid && moduleSandbox?.logLevel === 'trace'
+                    ? `[PID:${pid}] `
+                    : ''
+            }${msg}`;
+
+        switch (evt.level) {
+            case 'TRACE':
+                logger?.verbose(formatMsg(evt.message));
+                break;
+            case 'DEBUG':
+                logger?.debug(formatMsg(evt.message));
+                break;
+            case 'INFO':
+                logger?.info(formatMsg(evt.message));
+                break;
+            case 'WARN':
+                logger?.warn(formatMsg(evt.message));
+                break;
+            case 'ERROR':
+                logger?.error(formatMsg(evt.message));
+                break;
+            case 'CRITICAL':
+                logger?.error(formatMsg(evt.message));
+                break;
+            case 'OFF':
+            default:
+                break;
+        }
+    });
+};
+
 const getModuleSandbox = (module: string) => {
     let moduleSandbox: NrfutilSandbox | undefined;
     let promiseModuleSandbox: Promise<NrfutilSandbox> | undefined;
 
+    const createModuleSandbox = async () => {
+        getNrfutilLogger()?.info(`Initialising nrfutil module: ${module}`);
+        promiseModuleSandbox = sandbox(
+            getUserDataDir(),
+            module,
+            undefined,
+            undefined
+        );
+        moduleSandbox = await promiseModuleSandbox;
+
+        logModuleVersions(module, moduleSandbox);
+        forwardLogging(moduleSandbox);
+
+        const initialLogLevel = getIsLoggingVerbose() ? 'trace' : fallbackLevel;
+        moduleSandbox.setLogLevel(initialLogLevel);
+
+        return moduleSandbox;
+    };
+
     return {
         isInitialised: () => !!moduleSandbox,
-        get: async () => {
-            if (moduleSandbox) {
-                return moduleSandbox;
-            }
-
-            if (!promiseModuleSandbox) {
-                const infoLog = getNrfutilLogger()?.info;
-                infoLog?.(`Initialising nrfutil module: ${module}`);
-                promiseModuleSandbox = sandbox(
-                    getUserDataDir(),
-                    module,
-                    undefined,
-                    undefined
-                );
-                moduleSandbox = await promiseModuleSandbox;
-
-                if (module === 'device') {
-                    moduleSandbox.getModuleVersion().then(logLibVersions);
-                } else {
-                    moduleSandbox
-                        .getModuleVersion()
-                        .then(moduleVersion =>
-                            infoLog?.(
-                                `Using ${module} version: ${describeVersion(
-                                    moduleVersion.version
-                                )}`
-                            )
-                        );
-                }
-
-                moduleSandbox.onLogging((evt, pid) => {
-                    const logger = getNrfutilLogger();
-                    const formatMsg = (msg: string) =>
-                        `${
-                            pid && moduleSandbox?.logLevel === 'trace'
-                                ? `[PID:${pid}] `
-                                : ''
-                        }${msg}`;
-
-                    switch (evt.level) {
-                        case 'TRACE':
-                            logger?.verbose(formatMsg(evt.message));
-                            break;
-                        case 'DEBUG':
-                            logger?.debug(formatMsg(evt.message));
-                            break;
-                        case 'INFO':
-                            logger?.info(formatMsg(evt.message));
-                            break;
-                        case 'WARN':
-                            logger?.warn(formatMsg(evt.message));
-                            break;
-                        case 'ERROR':
-                            logger?.error(formatMsg(evt.message));
-                            break;
-                        case 'CRITICAL':
-                            logger?.error(formatMsg(evt.message));
-                            break;
-                        case 'OFF':
-                        default:
-                            // Unreachable
-                            break;
-                    }
-                });
-
-                const initialLogLevel = getIsLoggingVerbose()
-                    ? 'trace'
-                    : fallbackLevel;
-                moduleSandbox.setLogLevel(initialLogLevel);
-            }
-
-            return promiseModuleSandbox;
-        },
+        get: () =>
+            moduleSandbox ?? promiseModuleSandbox ?? createModuleSandbox(),
     };
 };
 
@@ -101,7 +99,7 @@ const modules: Record<
     string,
     {
         isInitialised: () => boolean;
-        get: () => Promise<NrfutilSandbox>;
+        get: () => NrfutilSandbox | Promise<NrfutilSandbox>;
     }
 > = {};
 if (process.env.NODE_ENV !== 'test' && !isLauncher()) {
