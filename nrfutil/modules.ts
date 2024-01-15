@@ -11,7 +11,7 @@ import logLibVersions from './device/logLibVersions';
 import { describeVersion } from './moduleVersion';
 import { getNrfutilLogger } from './nrfutilLogger';
 import sandbox, { NrfutilSandbox } from './sandbox';
-import { LogLevel, ModuleVersion } from './sandboxTypes';
+import { LogLevel } from './sandboxTypes';
 
 const fallbackLevel = process.env.NODE_ENV === 'production' ? 'off' : 'error';
 
@@ -122,20 +122,12 @@ export const getModule = (module: string) => {
 export const isModuleInitialised = (module: string) =>
     !!modules[module]?.isInitialised();
 
-const getAllIninitialisedModules = async () => {
-    const moduleSandboxes: NrfutilSandbox[] = [];
-    await Object.values(modules).reduce(
-        (acc, val) =>
-            acc.then(async () => {
-                if (val.isInitialised()) {
-                    moduleSandboxes.push(await val.get());
-                }
-            }),
-        Promise.resolve()
+const getAllIninitialisedModules = () =>
+    Promise.all(
+        Object.values(modules)
+            .filter(module => module.isInitialised())
+            .map(module => module.get())
     );
-
-    return moduleSandboxes;
-};
 
 export const setLogLevel = async (level: LogLevel) => {
     (await getAllIninitialisedModules()).forEach(moduleSandbox =>
@@ -149,14 +141,9 @@ export const setVerboseLogging = async (verbose: boolean) => {
     );
 };
 
-export const getAllModuleVersions = async () => {
-    const moduleVersions: ModuleVersion[] = [];
-    (await getAllIninitialisedModules()).reduce(
-        (acc, moduleSandbox) =>
-            acc.then(async () => {
-                moduleVersions.push(await moduleSandbox.getModuleVersion());
-            }),
-        Promise.resolve()
+export const getAllModuleVersions = async () =>
+    Promise.all(
+        (await getAllIninitialisedModules()).map(module =>
+            module.getModuleVersion()
+        )
     );
-    return moduleVersions;
-};
