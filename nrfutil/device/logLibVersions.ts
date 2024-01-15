@@ -7,6 +7,7 @@
 import { spawn } from 'child_process';
 import os from 'os';
 
+import describeError from '../../src/logging/describeError';
 import {
     describeVersion,
     getExpectedVersion,
@@ -112,6 +113,10 @@ export default async (moduleVersion: ModuleVersion) => {
             }
         }
     } catch (error) {
-        logger?.error('Failed to get the library versions', error);
+        logger?.error(
+            `Failed to get the library versions${
+                error == null ? `: ${describeError(error)}` : ''
+            }`
+        );
     }
 };
