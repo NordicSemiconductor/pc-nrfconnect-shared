@@ -13,6 +13,15 @@ every new version is a new major version.
 
 -   `openFile` export.
 
+### Changed
+
+-   Updated `es6` -> `es2021` in eslint config `env`.
+
+### Fixed
+
+-   Make new `isVerboseLogging` persistent setting get/set compatible with Main
+    thread code (by using `globalThis` instead of `window`).
+
 ## 148.0.0 - 2024-01-16
 
 ### Added
