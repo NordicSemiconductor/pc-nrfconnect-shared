@@ -4,12 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import {
-    DeviceTraits,
-    deviceTraitsToArgs,
-    getDeviceSandbox,
-    NrfutilDevice,
-} from './common';
+import { getModule } from '..';
+import { DeviceTraits, deviceTraitsToArgs, NrfutilDevice } from './common';
 
 export interface HotplugEvent {
     id: number;
@@ -67,7 +63,7 @@ export default async (
         }
     };
 
-    const sandbox = await getDeviceSandbox();
+    const sandbox = await getModule('device');
     return sandbox.spawnBackgroundSubcommand<HotplugEvent>('list', args, {
         onData,
         onError,

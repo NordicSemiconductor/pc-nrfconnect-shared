@@ -8,7 +8,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 import { SerialPortOpenOptions } from 'serialport';
 
-import { DeviceInfo } from '../../nrfutil';
+import { DeviceInfo } from '../../nrfutil/device';
 import { NrfutilDevice } from '../../nrfutil/device/common';
 import type { RootState } from '../store';
 import {
