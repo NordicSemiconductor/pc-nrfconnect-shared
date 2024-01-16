@@ -74,7 +74,7 @@ export {
     getUserDataDir,
 } from './utils/appDirs';
 
-export { openUrl } from './utils/open';
+export { openUrl, openFile } from './utils/open';
 export { default as systemReport } from './utils/systemReport';
 
 export { default as usageData } from './utils/usageData';
