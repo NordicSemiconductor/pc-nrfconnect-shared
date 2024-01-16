@@ -189,9 +189,9 @@ export const getIsLoggingVerbose = () =>
     );
 
 const resetIsLoggingVerbose = () => persistIsLoggingVerbose(false);
-window.addEventListener('beforeunload', resetIsLoggingVerbose);
+globalThis.addEventListener?.('beforeunload', resetIsLoggingVerbose);
 export const doNotResetVerboseLogginOnRestart = () =>
-    window.removeEventListener('beforeunload', resetIsLoggingVerbose);
+    globalThis.removeEventListener?.('beforeunload', resetIsLoggingVerbose);
 
 export const getPersistedLogVisible = () =>
     getAppSpecificStore<SharedAppSpecificStoreSchema>().get(`isLogVisible`);
