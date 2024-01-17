@@ -8,14 +8,14 @@
 
 .shared-tooltip {
     div.arrow:first-child {
-        width: 20px;
-        height: 20px;
+        width: 12px;
+        height: 12px;
         pointer-events: none;
     }
 
     &.bs-tooltip-top {
         div.arrow:first-child {
-            bottom: -14px;
+            bottom: -6px;
 
             &::before {
                 border-top-color: $gray-900;
@@ -26,7 +26,7 @@
 
     &.bs-tooltip-right {
         div.arrow:first-child {
-            left: -14px;
+            left: -6px;
 
             &::before {
                 border-right-color: $gray-900;
@@ -37,7 +37,7 @@
 
     &.bs-tooltip-bottom {
         div.arrow:first-child {
-            top: -14px;
+            top: -6px;
 
             &::before {
                 border-bottom-color: $gray-900;
@@ -48,7 +48,7 @@
 
     &.bs-tooltip-left {
         div.arrow:first-child {
-            right: -14px;
+            right: -6px;
 
             &::before {
                 border-left-color: $gray-900;
@@ -59,7 +59,8 @@
 
     .tooltip-inner {
         background: $gray-900;
-        padding-top: 14px;
+        padding-top: 16px;
+        padding-bottom: 16px;
         min-width: 240px;
     }
 }
