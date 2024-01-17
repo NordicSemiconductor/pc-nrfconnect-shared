@@ -374,6 +374,10 @@ export class NrfutilSandbox {
                 onStdError(data, nrfutil.pid);
             });
 
+            nrfutil.on('error', err => {
+                reject(err);
+            });
+
             nrfutil.on('close', code => {
                 controller?.signal.removeEventListener('abort', listener);
                 if (aborting) {
