@@ -13,6 +13,12 @@ every new version is a new major version.
 
 -   `Overlay` tooltip inner padding should be set by the content within it.
 
+### Added
+
+-   Ability to remove the launcher window again. This is especially needed on
+    shutdown. Otherwise when at that time someone still tries to send IPC
+    messages to the launcher window, an exception is thrown.
+
 ### Fixed
 
 -   `Overlay` tooltips weren't centered due to incorrect sizing styles.

@@ -12,6 +12,10 @@ export const registerLauncherWindowFromMain = (window: BrowserWindow) => {
     launcherWindow = window;
 };
 
+export const removeLauncherWindowFromMain = () => {
+    launcherWindow = undefined;
+};
+
 export const send =
     <T extends (...args: never[]) => void>(channel: string) =>
     (...args: Parameters<T>) =>

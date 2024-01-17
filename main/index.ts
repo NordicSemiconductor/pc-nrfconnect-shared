@@ -15,7 +15,10 @@ import {
     inRenderer as inRendererSerialPort,
 } from '../ipc/serialPort';
 
-export { registerLauncherWindowFromMain } from '../ipc/infrastructure/mainToRenderer';
+export {
+    registerLauncherWindowFromMain,
+    removeLauncherWindowFromMain,
+} from '../ipc/infrastructure/mainToRenderer';
 
 export const appDetails = { forRenderer: forRendererAppDetails };
 export const apps = { forRenderer: forRendererApps };
