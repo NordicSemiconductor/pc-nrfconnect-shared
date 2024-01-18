@@ -13,9 +13,20 @@ every new version is a new major version.
 
 -   `Overlay` tooltip inner padding should be set by the content within it.
 
+### Added
+
+-   Ability to remove the launcher window again. This is especially needed on
+    shutdown. Otherwise when at that time someone still tries to send IPC
+    messages to the launcher window, an exception is thrown.
+
 ### Fixed
 
 -   `Overlay` tooltips weren't centered due to incorrect sizing styles.
+-   When spawning the nrfutil process fails in certain ways, an uncaught
+    exception in the main process got thrown. The “certain ways” make this a bit
+    hard to reproduce: On macOS this happened, when the nrfutil executable did
+    not have the executable file mode. Usually this should not happen, because
+    we set that mode ourselves correctly.
 
 ## 149.0.0 - 2024-01-16
 
