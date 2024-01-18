@@ -7,6 +7,16 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 150.0.0 - 2024-01-18
+
+### Added
+
+-   `Overlay` tooltips content bottom padding.
+
+### Fixed
+
+-   `Overlay` tooltips weren't centered due to incorrect sizing styles.
+
 ## 149.0.0 - 2024-01-16
 
 ### Added
