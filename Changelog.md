@@ -9,9 +9,9 @@ every new version is a new major version.
 
 ## 150.0.0 - 2024-01-18
 
-### Added
+### Removed
 
--   `Overlay` tooltips content bottom padding.
+-   `Overlay` tooltip inner padding should be set by the content within it.
 
 ### Fixed
 
