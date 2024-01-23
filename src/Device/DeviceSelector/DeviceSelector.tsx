@@ -71,7 +71,7 @@ export default ({
     const doDeselectDevice = useCallback(
         (device?: Device) => {
             if (device) {
-                telemetry.sendUsageData(
+                telemetry.sendEvent(
                     'device deselected ',
                     simplifyDevice(device)
                 );
@@ -120,7 +120,7 @@ export default ({
             dispatch(setSelectedDeviceInfo(deviceInfo));
             onDeviceSelected(device, autoReselected);
 
-            telemetry.sendUsageData('device selected', {
+            telemetry.sendEvent('device selected', {
                 device: simplifyDevice(device),
                 deviceInfo,
             });

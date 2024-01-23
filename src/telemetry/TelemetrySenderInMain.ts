@@ -58,9 +58,9 @@ export default class TelemetrySenderInMain extends TelemetrySender {
 
     getClient = () => this.client ?? this.initClient();
 
-    sendUsageData = (action: string, metadata?: TelemetryMetadata) => {
+    sendEvent = (action: string, metadata?: TelemetryMetadata) => {
         this.getClient().trackEvent({ name: action, properties: metadata });
-        this.logger?.debug(`Sending usage data ${JSON.stringify(action)}`);
+        this.logger?.debug(`Sending event ${JSON.stringify(action)}`);
     };
 
     sendPageView = (pageName: string) =>

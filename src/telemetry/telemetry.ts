@@ -47,10 +47,12 @@ const getTelemetrySenderIfEnabled = () => {
 
 const setLogger = (logger: Logger) =>
     getTelemetrySenderUnconditionally().setLogger(logger);
-const enable = () => getTelemetrySenderUnconditionally().enable();
-const isEnabled = () => getTelemetrySenderUnconditionally().isEnabled();
-const disable = () => getTelemetrySenderUnconditionally().disable();
-const reset = () => getTelemetrySenderUnconditionally().reset();
+const setUsersAgreedToTelemetry = (hasAgreed: boolean) =>
+    getTelemetrySenderUnconditionally().setUsersAgreedToTelemetry(hasAgreed);
+const getIsSendingTelemetry = () =>
+    getTelemetrySenderUnconditionally().getIsSendingTelemetry();
+const setUsersWithdrewTelemetryAgreement = () =>
+    getTelemetrySenderUnconditionally().setUsersWithdrewTelemetryAgreement();
 const enableTelemetry = () =>
     getTelemetrySenderUnconditionally().allowTelemetryForCurrentApp();
 
@@ -59,8 +61,8 @@ const enableTelemetry = () =>
 const getFriendlyAppName = () =>
     packageJson().name.replace('pc-nrfconnect-', '');
 
-const sendUsageData = (action: string, metadata?: TelemetryMetadata) =>
-    getTelemetrySenderIfEnabled()?.sendUsageData(
+const sendEvent = (action: string, metadata?: TelemetryMetadata) =>
+    getTelemetrySenderIfEnabled()?.sendEvent(
         `${getFriendlyAppName()}: ${action}`,
         flatObject(metadata)
     );
@@ -83,12 +85,11 @@ const sendErrorReport = (error: string | Error) =>
 
 export default {
     setLogger,
-    disable,
-    enable,
-    isEnabled,
-    reset,
+    setUsersAgreedToTelemetry,
+    setUsersWithdrewTelemetryAgreement,
+    getIsSendingTelemetry,
     sendErrorReport,
-    sendUsageData,
+    sendEvent,
     sendPageView,
     sendMetric,
     sendTrace,

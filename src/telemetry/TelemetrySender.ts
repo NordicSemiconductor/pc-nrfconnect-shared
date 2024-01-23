@@ -33,44 +33,42 @@ export default abstract class TelemetrySender {
         this.isTelemetryAllowedForCurrentApp &&
         getHasUserAgreedToTelemetry() === true;
 
-    /**
-     * @deprecated Use `getIsSendingTelemetry` instead
-     * @returns {boolean} If telemetry is enabled
-     */
-    isEnabled() {
-        const isSendingTelemetry = this.getIsSendingTelemetry();
-        this.logger?.debug(`Telemetry is ${isSendingTelemetry}`);
-
-        return isSendingTelemetry;
-    }
-
-    async enable() {
-        persistHasUserAgreedToTelemetry(true);
-        this.sendUsageData('Telemetry Opt-In');
+    async sendAgreementEvent() {
+        this.sendEvent('Telemetry Opt-In');
 
         const { platform, arch } = await si.osInfo();
-        this.sendUsageData('Report OS info', { platform, arch });
-
-        this.logger?.debug('Usage data has been enabled');
+        this.sendEvent('Report OS info', { platform, arch });
     }
 
-    disable() {
-        persistHasUserAgreedToTelemetry(false);
-        this.sendMinimalUsageData('Telemetry Opt-Out');
-        this.logger?.debug('Usage data has been disabled');
+    sendDisagreementEvent() {
+        this.sendMinimalEvent('Telemetry Opt-Out');
     }
 
-    reset() {
+    async setUsersAgreedToTelemetry(hasAgreed: boolean) {
+        persistHasUserAgreedToTelemetry(hasAgreed);
+
+        if (hasAgreed) {
+            await this.sendAgreementEvent();
+        } else {
+            this.sendDisagreementEvent();
+        }
+
+        this.logger?.debug(
+            `Telemetry has been ${hasAgreed ? 'enabled' : 'disabled'}`
+        );
+    }
+
+    setUsersWithdrewTelemetryAgreement() {
         deleteHasUserAgreedToTelemetry();
-        this.sendMinimalUsageData('Telemetry Opt-Reset');
-        this.logger?.debug('Usage data setting has been reset');
+        this.sendMinimalEvent('Telemetry Opt-Reset');
+        this.logger?.debug('Telemetry has been reset');
     }
 
-    sendMinimalUsageData(action: string) {
-        this.sendUsageData(action, { removeAllMetadata: true });
+    sendMinimalEvent(action: string) {
+        this.sendEvent(action, { removeAllMetadata: true });
     }
 
-    abstract sendUsageData(
+    abstract sendEvent(
         action: string,
         metadata?: TelemetryMetadata
     ): MaybePromise<void>;

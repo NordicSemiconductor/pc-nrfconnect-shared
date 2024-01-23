@@ -7,6 +7,29 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 151.0.0 - 2024-01-23
+
+### Changed
+
+-   Renamed exported object `usageData` to `telemetry` and type
+    `UsageDataMetadata` to `TelemetryMetadata`.
+-   Renamed several function in the `telemetry` object:
+    -   `enable()` → `setUsersAgreedToTelemetry(true)`
+    -   `disable()` → `setUsersAgreedToTelemetry(false)`
+    -   `reset()` → `setUsersWithdrewTelemetryAgreement()`
+    -   `isEnabled()` → `getIsSendingTelemetry()` (which now does not log
+        anymore)
+    -   `sendUsageData()` → `sendEvent()`
+-   In the component `ErrorBoundary` the property `sendUsageData` is renamed to
+    `sendTelemetryEvent`.
+
+### Steps to upgrade when using this package
+
+-   If they are imported from shared, rename `usageData` and `UsageDataMetadata`
+    as well as the renamed functions mentioned above.
+-   In usages of the component `ErrorBoundary`, rename the property
+    `sendUsageData` to `sendTelemetryEvent`.
+
 ## 150.0.0 - 2024-01-18
 
 ### Removed
@@ -216,7 +239,7 @@ every new version is a new major version.
 
 ### Fixed
 
--   Telemtry: Metadata was not removed on request, when being in the main
+-   Telemetry: Metadata was not removed on request, when being in the main
     process. This is not critical because this code isn't yet executed in real
     life.
 

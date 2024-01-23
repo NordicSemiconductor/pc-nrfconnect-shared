@@ -44,14 +44,14 @@ describe('ErrorBoundary', () => {
     });
 
     it('can take custom reporting functions', () => {
-        const sendUsageData = jest.fn();
+        const sendTelemetryEvent = jest.fn();
 
         render(
-            <ErrorBoundary sendUsageData={sendUsageData}>
+            <ErrorBoundary sendTelemetryEvent={sendTelemetryEvent}>
                 <Child />
             </ErrorBoundary>
         );
-        expect(sendUsageData).toHaveBeenCalled();
+        expect(sendTelemetryEvent).toHaveBeenCalled();
     });
 
     it('should render error boundary component when there is an error', () => {
