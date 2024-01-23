@@ -39,15 +39,15 @@ export type XTerminalShellParser = ReturnType<
 
 export const xTerminalShellParserWrapper = (terminal: Terminal) => ({
     getTerminalData: () => {
-        let out = '';
+        let result = '';
         for (let i = 0; i <= terminal.buffer.active.cursorY; i += 1) {
             const line = terminal.buffer.active.getLine(i);
             if (typeof line !== 'undefined') {
-                out += `\r\n${line.translateToString()}`;
+                result += `\r\n${line.translateToString()}`;
             }
         }
 
-        return out.trim();
+        return result.trim();
     },
     clear: () => terminal.clear(),
     getLastLine: () => {

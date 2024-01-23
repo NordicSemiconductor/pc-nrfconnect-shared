@@ -11,8 +11,8 @@ import path from 'path';
 import treeKill from 'tree-kill';
 
 import describeError from '../src/logging/describeError';
+import telemetry from '../src/telemetry/telemetry';
 import { isDevelopment } from '../src/utils/environment';
-import usageData from '../src/utils/usageData';
 import { versionToInstall } from './moduleVersion';
 import { getNrfutilLogger } from './nrfutilLogger';
 import {
@@ -313,7 +313,7 @@ export class NrfutilSandbox {
             }
 
             error.message = error.message.replaceAll('Error: ', '');
-            usageData.sendErrorReport(
+            telemetry.sendErrorReport(
                 `${
                     pid && this.logLevel === 'trace' ? `[PID:${pid}] ` : ''
                 }${describeError(error)}`
@@ -332,7 +332,7 @@ export class NrfutilSandbox {
     ) =>
         new Promise<void>((resolve, reject) => {
             let aborting = false;
-            usageData.sendUsageData(`running nrfutil ${this.module}`, {
+            telemetry.sendUsageData(`running nrfutil ${this.module}`, {
                 args,
                 exec: command,
             });
@@ -494,7 +494,7 @@ export class NrfutilSandbox {
             }
 
             error.message = error.message.replaceAll('Error: ', '');
-            usageData.sendErrorReport(
+            telemetry.sendErrorReport(
                 `${
                     pid && this.logLevel === 'trace' ? `[PID:${pid}] ` : ''
                 }${describeError(error)}`
@@ -513,7 +513,7 @@ export class NrfutilSandbox {
     ) =>
         new Promise<void>((resolve, reject) => {
             let aborting = false;
-            usageData.sendUsageData(`running nrfutil ${this.module}`, {
+            telemetry.sendUsageData(`running nrfutil ${this.module}`, {
                 args,
                 exec: command,
             });
@@ -611,7 +611,7 @@ export class NrfutilSandbox {
                 closedHandlers.forEach(callback => callback());
             })
             .catch(error => {
-                usageData.sendErrorReport(describeError(error));
+                telemetry.sendErrorReport(describeError(error));
                 running = false;
                 closedHandlers.forEach(callback => callback(error));
             });

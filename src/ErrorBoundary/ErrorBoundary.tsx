@@ -12,21 +12,17 @@ import { Device } from '../Device/deviceSlice';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { CollapsibleGroup } from '../SidePanel/Group';
 import Spinner from '../Spinner/Spinner';
+import telemetry from '../telemetry/telemetry';
 import { openUrl } from '../utils/open';
 import { packageJson } from '../utils/packageJson';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
 import { generateSystemReport } from '../utils/systemReport';
-import usageData from '../utils/usageData';
 import bugIcon from './bug.svg';
 
 import './error-boundary.scss';
 
-const sendGAEvent = (error: string) => {
-    if (!usageData.isEnabled()) {
-        return;
-    }
-
-    usageData.sendErrorReport(error);
+const sendErrorReport = (error: string) => {
+    telemetry.sendErrorReport(error);
 };
 
 interface Props {
@@ -67,9 +63,10 @@ class ErrorBoundary extends React.Component<
     componentDidCatch(error: Error) {
         const { devices, selectedDevice, selectedSerialNumber, sendUsageData } =
             this.props;
+
         sendUsageData != null
             ? sendUsageData(error.message)
-            : sendGAEvent(error.message);
+            : sendErrorReport(error.message);
 
         generateSystemReport(
             new Date().toISOString().replace(/:/g, '-'),

@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import Mousetrap from 'mousetrap';
 
 import { addShortcut, removeShortcut, Shortcut } from '../About/shortcutSlice';
-import usageData from './usageData';
+import telemetry from '../telemetry/telemetry';
 
 const useNewHotKey = (shortcut: Shortcut, deps: DependencyList = []) => {
     const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const useNewHotKey = (shortcut: Shortcut, deps: DependencyList = []) => {
 
         Mousetrap.bind(shortcut.hotKey, (_e, combo) => {
             shortcut.action();
-            usageData.sendUsageData('pressed hotkey', { combo });
+            telemetry.sendUsageData('pressed hotkey', { combo });
         });
 
         return () => {
