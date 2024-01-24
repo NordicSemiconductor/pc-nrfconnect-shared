@@ -204,6 +204,15 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
             buyOnlineParams: 'search_token=nRF9161-Thingy91x',
         },
     },
+    PCA10171: {
+        name: 'nRF9151 DK',
+        cores: 1,
+        icon: nrf91logo,
+        website: {
+            productPagePath: 'Products/Development-hardware/nrf5161dk',
+            buyOnlineParams: 'search_token=NRF9151-dk',
+        },
+    },
 };
 
 const deviceByPca = (device: Device) =>
