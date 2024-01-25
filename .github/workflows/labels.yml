@@ -21,7 +21,11 @@ jobs:
             run: |
               URL="${{ github.event.pull_request.html_url }}"
               COMMENT_TEXT="Required 'doc required' or 'doc not required' label"
-              if [[ ! $(gh pr view $URL --json comments --jq '.comments[].body | select(. | contains("'"$COMMENT_TEXT"'"))') ]]; then
+              if [[ ! \
+                $(gh pr view $URL \
+                     --json comments \
+                     --jq '.comments[].body | select(. | contains("'"$COMMENT_TEXT"'"))') \
+              ]]; then
                 gh pr comment $URL --body "$COMMENT_TEXT"
               fi
 
