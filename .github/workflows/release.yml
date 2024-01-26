@@ -38,7 +38,7 @@ jobs:
                 cd package &&
                 mv ../*.tgz .
             - name: Run Publish Script from @Shared
-              run: ls -lR && npm run nordic-publish -- -n -s ${{ inputs.source }}
+              run: ls -lR && cd package && npm run nordic-publish -- -n -s ${{ inputs.source }}
             - name: Create official release on GitHub
               if: ${{ inputs.source }} == 'official'
               run: >
@@ -47,6 +47,6 @@ jobs:
                 --title ${{ inputs.tag }}
                 --draft
                 --generate-notes
-                ./*.tgz
+                ./package/*.tgz
 
 
