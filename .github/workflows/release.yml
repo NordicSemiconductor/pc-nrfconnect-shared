@@ -32,7 +32,9 @@ jobs:
               run: ls -lR
             - name: Get access to publish script in Node Modules
               run: >
-                tar xzvf ./artifact/*.tgz &&
+                mv artifact/*.tgz . &&
+                rm -r artifact &&
+                tar xzvf *.tgz &&
                 cd package &&
                 mv ../*.tgz .
             - name: Run Publish Script from @Shared
