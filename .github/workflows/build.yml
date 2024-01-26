@@ -8,9 +8,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
       - name: Build
-        uses: ./.github/actions/build-action
+        uses: NordicSemiconductor/pc-nrfconnect-shared/.github/actions/build-action@feat/reusable-workflow-for-apps
       - name: Publish artifacts
-        uses: ./.github/actions/publish-action
+        uses: NordicSemiconductor/pc-nrfconnect-shared/.github/actions/publish-action@feat/reusable-workflow-for-apps
         if: github.event_name != 'pull_request'
