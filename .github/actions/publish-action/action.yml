@@ -10,7 +10,7 @@ runs:
     steps:
         - name: Pack
           shell: bash
-          run: npm run pack
+          run: npm pack
         - name: Publish built artifact
           uses: actions/upload-artifact@v4
           with:
