@@ -1,7 +1,7 @@
 name: Release
 
 on:
-    workflow_dispatch:
+    workflow_call:
         inputs:
             run_id:
                 description: 'The workflow id where the artifacts were uploaded'
