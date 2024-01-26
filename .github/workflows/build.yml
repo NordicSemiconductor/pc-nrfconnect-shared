@@ -8,17 +8,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: 'npm'
-
-      - name: Install Dependencies
-        run: npm ci
-      - name: Run all checks
-        run: npm run check
-      - name: Run Tests
-        run: npm test
-      - name: Build for Production
-        run: npm run build:prod
+      - name: Build
+        uses: NordicSemiconductor/pc-nrfconnect-shared/.github/actions/build-action@main
+      - name: Publish artifacts
+        uses: NordicSemiconductor/pc-nrfconnect-shared/.github/actions/publish-action@main
+        if: github.event_name != 'pull_request'

@@ -1,0 +1,50 @@
+name: Release
+
+on:
+    workflow_dispatch:
+        inputs:
+            run_id:
+                description: 'The workflow id where the artifacts were uploaded'
+                required: true
+                type: string
+            tag:
+                description: 'Tag to be used (e.g. v1.2.3)'
+                required: true
+                type: string
+            source:
+                description: 'What source to release to'
+                required: true
+                type: string
+
+
+env:
+    GH_TOKEN: ${{ github.token }}
+
+jobs:
+    release:
+        runs-on: 'ubuntu-latest'
+        steps:
+            - name: Download artifacts
+              run: >
+                gh run download ${{ inputs.run_id }}
+                --repo ${{ github.event.repository.full_name }}
+            - name: list files
+              run: ls -lR
+            - name: Get access to publish script in Node Modules
+              run: >
+                tar xzvf *.tgz &&
+                cd package &&
+                mv ../*.tgz .
+            - name: Run Publish Script from @Shared
+              run: ls -lR && npm run nordic-publish -- -n -s ${{ inputs.source }}
+            - name: Create official release on GitHub
+              if: ${{ inputs.source }} == 'official'
+              run: >
+                gh release create ${{ inputs.tag }}
+                --repo ${{ github.event.repository.full_name }}
+                --title ${{ inputs.tag }}
+                --draft
+                --generate-notes
+                ./*.tgz
+
+
