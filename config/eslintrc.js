@@ -24,6 +24,7 @@ module.exports = {
     ],
     ignorePatterns: [
         'doc/docs/',
+        'resources/',
         'package-lock.json',
         'scripts/nordic-publish.js',
         'typings/generated',
