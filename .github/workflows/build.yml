@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build
-        uses: NordicSemiconductor/pc-nrfconnect-shared/.github/actions/build-action@feat/reusable-workflow-for-apps
+        uses: NordicSemiconductor/pc-nrfconnect-shared/.github/actions/build-action@main
       - name: Publish artifacts
-        uses: NordicSemiconductor/pc-nrfconnect-shared/.github/actions/publish-action@feat/reusable-workflow-for-apps
+        uses: NordicSemiconductor/pc-nrfconnect-shared/.github/actions/publish-action@main
         if: github.event_name != 'pull_request'
