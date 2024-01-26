@@ -13,7 +13,8 @@ jobs:
           - name: 'Check for required labels'
             if: >
                 contains(github.event.pull_request.labels.*.name, 'doc required') == false &&
-                contains(github.event.pull_request.labels.*.name, 'doc not required') == false
+                contains(github.event.pull_request.labels.*.name, 'doc not required') == false &&
+                contains(github.event.pull_request.labels.*.name, 'documentation') == false
             run: echo "missing_label=true" >> "$GITHUB_ENV"
 
           - name: 'Notify user if label is missing'
