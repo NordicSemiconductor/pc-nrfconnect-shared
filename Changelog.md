@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 153.0.0 - 2024-01-30
+
+### Added
+
+-   Added `9151 DK` to known devices.
+
 ## 152.0.0 - 2024-01-26
 
 ### Updated
