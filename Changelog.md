@@ -7,11 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 153.0.0 - 2024-01-30
+## 153.0.0 - UNRELEASED
 
 ### Added
 
 -   Added `9151 DK` to known devices.
+-   `openFileLocation` utility function.
+-   `openLogFileLocation` function in `logger` object.
 
 ## 152.0.0 - 2024-01-26
 

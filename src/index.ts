@@ -74,7 +74,7 @@ export {
     getUserDataDir,
 } from './utils/appDirs';
 
-export { openUrl, openFile } from './utils/open';
+export { openUrl, openFile, openFileLocation } from './utils/open';
 export { default as systemReport } from './utils/systemReport';
 
 export { default as telemetry } from './telemetry/telemetry';
