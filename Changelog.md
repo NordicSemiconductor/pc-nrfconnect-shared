@@ -13,6 +13,7 @@ every new version is a new major version.
 
 -   Added `9151 DK` to known devices.
 -   `openFileLocation` utility function.
+-   `openLogFileLocation` function in `logger` object.
 
 ## 152.0.0 - 2024-01-26
 

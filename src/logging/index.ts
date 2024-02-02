@@ -11,7 +11,7 @@ import { createLogger, format, LogEntry, Logger, transports } from 'winston';
 import Transport from 'winston-transport';
 
 import { getAppLogDir } from '../utils/appDirs';
-import { openFile } from '../utils/open';
+import { openFile, openFileLocation } from '../utils/open';
 import AppTransport from './appTransport';
 import describeError from './describeError';
 import createLogBuffer from './logBuffer';
@@ -47,6 +47,7 @@ interface SharedLogger extends Logger {
     initialise: () => void;
     getAndClearEntries: () => LogEntry[];
     openLogFile: () => void;
+    openLogFileLocation: () => void;
     logError: (message: string, error: unknown) => void;
 }
 
@@ -90,6 +91,14 @@ logger.openLogFile = () => {
         openFile(logFilePath());
     } catch (error) {
         logger.logError('Unable to open log file', error);
+    }
+};
+
+logger.openLogFileLocation = () => {
+    try {
+        openFileLocation(logFilePath());
+    } catch (error) {
+        logger.logError('Unable to open log file location', error);
     }
 };
 
