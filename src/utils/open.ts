@@ -43,4 +43,8 @@ function openUrl(url: string) {
     shell.openExternal(url);
 }
 
-export { openFile, openUrl };
+function openFileLocation(filePath: string) {
+    shell.showItemInFolder(filePath);
+}
+
+export { openFile, openUrl, openFileLocation };
