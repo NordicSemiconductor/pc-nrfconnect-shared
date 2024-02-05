@@ -42,6 +42,8 @@ export default abstract class TelemetrySender {
 
     sendDisagreementEvent() {
         this.sendMinimalEvent('Telemetry Opt-Out');
+        this.flush();
+        this.stop();
     }
 
     async setUsersAgreedToTelemetry(hasAgreed: boolean) {
@@ -77,4 +79,5 @@ export default abstract class TelemetrySender {
     abstract sendTrace(message: string): MaybePromise<void>;
     abstract sendErrorReport(error: Error): MaybePromise<void>;
     abstract flush(): MaybePromise<void>;
+    abstract stop(): void;
 }

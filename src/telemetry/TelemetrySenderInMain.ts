@@ -77,4 +77,11 @@ export default class TelemetrySenderInMain extends TelemetrySender {
     };
 
     flush = () => this.getClient().flush();
+
+    stop(): void {
+        if (this.client) {
+            this.client.config.disableAppInsights = true;
+        }
+        this.client = undefined;
+    }
 }
