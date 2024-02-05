@@ -83,4 +83,12 @@ export default class TelemetrySenderInRenderer extends TelemetrySender {
     };
 
     flush = async () => (await this.getClient()).flush();
+
+    stop(): void {
+        if (this.client) {
+            this.client.config.disableTelemetry = true;
+            this.client?.unload();
+        }
+        this.client = undefined;
+    }
 }
