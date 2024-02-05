@@ -63,6 +63,7 @@ export const parsePackageJsonApp =
 // and the html in it can also be undefined, so there we need to use this legacy variant
 const packageJsonLegacyApp = packageJsonApp.extend({
     nrfConnectForDesktop: nrfConnectForDesktop
+        .extend({ supportedDevices: z.array(z.string()).nonempty().optional() })
         .partial({ html: true })
         .optional(),
 });
