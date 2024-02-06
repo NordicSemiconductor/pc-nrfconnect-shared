@@ -35,10 +35,7 @@
     }
 
     .modal-body {
-        overflow-y: auto;
-        @include scrollbars($white);
         overflow-wrap: anywhere;
-        max-height: 80vh;
         padding: 32px 16px 16px 16px;
         margin: 0;
         p,
