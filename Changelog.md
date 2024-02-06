@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 156.0 - 2024-02-06
+
+### Added
+
+-   Command wrappers to read Board Controller configuration
+    (getBoardControllerConfig)
+
 ## 155.0 - 2024-02-05
 
 ### Fix
