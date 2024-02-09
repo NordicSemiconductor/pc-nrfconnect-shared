@@ -7,31 +7,55 @@ env:
   GH_TOKEN: ${{ github.token }}
 
 jobs:
-    check_labels:
+    check_label:
         runs-on: ubuntu-latest
         steps:
-          - name: 'Check for required labels'
+          - name: 'Check for missing doc label'
             if: >
                  ! contains(github.event.pull_request.labels.*.name, 'doc required') &&
-                 ! contains(github.event.pull_request.labels.*.name, 'doc not required') &&
-                 ! contains(github.event.pull_request.labels.*.name, 'documentation')
-            run: echo "missing_label=true" >> "$GITHUB_ENV"
+                 ! contains(github.event.pull_request.labels.*.name, 'doc not required')
+            run: echo "missing_doc_label=true" >> "$GITHUB_ENV"
 
-          - name: 'Notify user if label is missing'
-            if: env.missing_label == 'true'
+          - name: 'Check for missing ui label'
+            if: >
+                 ! contains(github.event.pull_request.labels.*.name, 'ui required') &&
+                 ! contains(github.event.pull_request.labels.*.name, 'ui not required')
+            run: echo "missing_ui_label=true" >> "$GITHUB_ENV"
+          
+          - name: 'Notify user if label(s) is missing'
+            if: >
+              (env.missing_doc_label == 'true' || 
+              env.missing_ui_label == 'true') &&
+              ! contains(github.event.pull_request.labels.*.name, 'documentation')
             run: |
               URL="${{ github.event.pull_request.html_url }}"
-              COMMENT_TEXT="Required 'doc required' or 'doc not required' label"
+              TAG_IDENTIFIER="<!--labels-->"
+              COMMENT_TEXT="${TAG_IDENTIFIER}\nAdd labels:"
+              if [[ "${{ env.missing_doc_label }}" == 'true' ]]; then
+                COMMENT_TEXT="${COMMENT_TEXT}\n- 'doc required' or 'doc not required'"
+              fi
+              if [[ "${{ env.missing_ui_label }}" == 'true' ]]; then
+              COMMENT_TEXT="${COMMENT_TEXT}\n
+              - 'ui required' or 'ui not required'\n\n
+              For UI review:\n
+              - describe the changes\n
+              - add pictures\n
+              - add the relevant UI responsible(s) as a reviewer"
+              fi
+
               if [[ ! \
                 $(gh pr view $URL \
                      --json comments \
-                     --jq '.comments[].body | select(. | contains("'"$COMMENT_TEXT"'"))') \
+                     --jq '.comments[].body | select(. | startswith("'"$TAG_IDENTIFIER"'"))') \
               ]]; then
-                gh pr comment $URL --body "$COMMENT_TEXT"
+                gh pr comment $URL --body "$(echo -e $COMMENT_TEXT)"
               fi
 
           - name: 'Fail'
             uses: actions/github-script@v7
-            if: env.missing_label == 'true'
+            if: >
+              (env.missing_doc_label == 'true' || 
+              env.missing_ui_label == 'true') &&
+              ! contains(github.event.pull_request.labels.*.name, 'documentation')
             with:
-              script: core.setFailed('Required "doc required" or "doc not required" label')
+              script: core.setFailed('Required doc and/or ui labels missing.')
