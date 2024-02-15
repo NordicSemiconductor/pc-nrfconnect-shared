@@ -22,6 +22,7 @@ export type DropdownProps<T> = {
     defaultButtonLabel?: string;
     items: DropdownItem<T>[];
     onSelect: (item: DropdownItem<T>) => void;
+    transparentButtonBg?: boolean;
     minWidth?: boolean;
     disabled?: boolean;
     selectedItem: DropdownItem<T>;
@@ -35,6 +36,7 @@ export default <T,>({
     defaultButtonLabel = '',
     items,
     onSelect,
+    transparentButtonBg = false,
     minWidth = false,
     disabled = false,
     selectedItem,
@@ -68,8 +70,11 @@ export default <T,>({
                 id={id}
                 type="button"
                 className={classNames(
-                    'tw-flex tw-h-8 tw-items-center tw-justify-between tw-border-0 tw-bg-gray-700 tw-px-2 tw-text-white',
+                    'tw-flex tw-items-center tw-justify-between tw-border-0',
                     minWidth ? '' : 'tw-w-full',
+                    transparentButtonBg
+                        ? 'tw-bg-transparent'
+                        : 'tw-h-8 tw-bg-gray-700 tw-px-2 tw-text-white'
                 )}
                 onClick={() => setIsActive(!isActive)}
                 disabled={disabled}
@@ -80,7 +85,7 @@ export default <T,>({
                         : selectedItem.label}
                 </span>
                 <span
-                    className={`mdi mdi-chevron-down tw-text-lg ${classNames(
+                    className={`mdi mdi-chevron-down tw-text-lg/none ${classNames(
                         isActive && 'tw-rotate-180'
                     )}`}
                 />
