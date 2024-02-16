@@ -48,7 +48,7 @@ export { Group, CollapsibleGroup } from './SidePanel/Group';
 
 export { default as InlineInput } from './InlineInput/InlineInput';
 export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
-export { default as NumberInputSliderWithUnit } from './NumberInputWithSlider/NumberInputSliderWithUnit';
+export { default as NumberInput } from './NumberInput/NumberInput';
 export { default as NumberInputWithDropdown } from './InlineInput/NumberInputWithDropdown';
 export type { NumberDropdownItem } from './InlineInput/NumberInputWithDropdown';
 

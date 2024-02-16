@@ -13,6 +13,15 @@ every new version is a new major version.
 
 -   `minWidth` parameter to `Dropdown` component.
 -   `transparentButtonBg` parameter to `Dropdown` component.
+-   `NumberInput` component (provides text, input, optional unit, and slider).
+
+### Removed
+
+-   `NumberInputWithSlider` component.
+
+### Steps to upgrade
+
+-   Change all occurences of `NumberInputWithSlider` to `NumberInput`.
 
 ## 158.0.0 - 2024-02-22
 
