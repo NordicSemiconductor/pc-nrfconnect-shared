@@ -68,6 +68,7 @@ export default ({
     className,
     disabled,
     label,
+    title,
     unit,
     showSlider = false,
     minWidth = false,
@@ -79,6 +80,7 @@ export default ({
     className?: string;
     disabled?: boolean;
     label?: React.ReactNode;
+    title?: string;
     showSlider?: boolean;
     unit?: React.ReactNode | DropdownUnit;
     minWidth?: boolean;
@@ -94,6 +96,7 @@ export default ({
                     'tw-flex tw-flex-row',
                     minWidth ? '' : 'tw-justify-between'
                 )}
+                title={title}
             >
                 {label}
                 <div className="tw-flex tw-flex-row">

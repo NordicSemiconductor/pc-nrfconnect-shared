@@ -24,6 +24,7 @@ interface NumberInlineInput {
     value: number;
     range: RangeOrValues;
     className?: string;
+    title?: string;
     onChange: (value: number) => void;
     onChangeComplete?: (value: number) => void;
     textAlignLeft?: boolean;
@@ -86,6 +87,7 @@ export default ({
     value,
     range,
     className,
+    title,
     onChange,
     onChangeComplete = () => {},
     textAlignLeft,
@@ -110,6 +112,7 @@ export default ({
     return (
         <InlineInput
             className={`${className} number-inline-input`}
+            title={title}
             disabled={disabled}
             value={handleInfinityToString(value)}
             onChange={newValue => onChange(handleInfinityToNumber(newValue))}
