@@ -6,42 +6,14 @@
 
 import NrfutilDeviceLib from '../../nrfutil/device/device';
 import { DeviceInfo } from '../../nrfutil/device/deviceInfo';
-import { FWInfo } from '../../nrfutil/device/getFwInfo';
 import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
 import { DeviceSetup, JprogEntry } from './deviceSetup';
-import { Device, setReadbackProtected } from './deviceSlice';
-
-const getDeviceReadProtection = async (
-    device: Device
-): Promise<{
-    fwInfo: FWInfo | null;
-    readbackProtection: 'unknown' | 'protected' | 'unprotected';
-}> => {
-    try {
-        logger.info('Checking readback protection on device');
-        const info = await NrfutilDeviceLib.getFwInfo(device);
-        return {
-            fwInfo: info,
-            readbackProtection: 'unprotected',
-        };
-    } catch (e) {
-        const error = e as Error;
-        if (error.message.includes('NotAvailableBecauseProtection')) {
-            logger.warn(
-                'Readback protection on device enabled. Unable to verify that the firmware version is correct.'
-            );
-            return {
-                fwInfo: null,
-                readbackProtection: 'protected',
-            };
-        }
-        return {
-            fwInfo: null,
-            readbackProtection: 'unknown',
-        };
-    }
-};
+import {
+    Device,
+    getReadbackProtection,
+    setSelectedDeviceInfo,
+} from './deviceSlice';
 
 const programDeviceWithFw =
     (
@@ -52,7 +24,10 @@ const programDeviceWithFw =
     async (dispatch, getState) => {
         try {
             const batch = NrfutilDeviceLib.batch();
-            if (getState().device.readbackProtection !== 'unprotected') {
+            if (
+                getReadbackProtection(getState()) !==
+                'NRFDL_PROTECTION_STATUS_NONE'
+            ) {
                 batch.recover('Application', {
                     onTaskBegin: () =>
                         logger.info(`Device protected, recovering device`),
@@ -94,11 +69,10 @@ const programDeviceWithFw =
 
             await batch.run(device);
             await NrfutilDeviceLib.reset(device);
+
             onProgress(0, 'Updating readback protection');
-            const { readbackProtection } = await getDeviceReadProtection(
-                device
-            );
-            dispatch(setReadbackProtected(readbackProtection));
+            const deviceInfo = await NrfutilDeviceLib.deviceInfo(device);
+            dispatch(setSelectedDeviceInfo(deviceInfo));
             onProgress(0, 'Connecting to device');
         } catch (programError) {
             if (programError instanceof Error) {
@@ -150,7 +124,7 @@ export const jprogDeviceSetup = (
                     programDeviceWithFw(device, firmwareOption, onProgress)
                 ),
         })),
-    isExpectedFirmware: (device, deviceInfo) => dispatch => {
+    isExpectedFirmware: (device, deviceInfo) => (dispatch, getState) => {
         const fwVersions = firmwareOptions(device, firmware, deviceInfo);
         if (fwVersions.length === 0) {
             return Promise.resolve({
@@ -159,40 +133,40 @@ export const jprogDeviceSetup = (
             });
         }
 
-        return getDeviceReadProtection(device).then(
-            ({ fwInfo: info, readbackProtection }) => {
-                dispatch(setReadbackProtected(readbackProtection));
-                if (info && info.imageInfoList.length > 0) {
-                    const fw = fwVersions.find(version =>
-                        info.imageInfoList.find(
-                            imageInfo =>
-                                typeof imageInfo.version === 'string' &&
-                                imageInfo.version.includes(version.fwVersion)
-                        )
-                    );
+        if (
+            getReadbackProtection(getState()) !== 'NRFDL_PROTECTION_STATUS_NONE'
+        ) {
+            logger.warn(
+                'Readback protection on device enabled. Unable to verify that the firmware version is correct.'
+            );
 
-                    return Promise.resolve({
-                        device,
-                        validFirmware: fw !== undefined,
-                    });
-                }
+            return Promise.resolve({
+                device,
+                validFirmware: hideDeviceSetupWhenProtected,
+            });
+        }
 
-                if (
-                    hideDeviceSetupWhenProtected &&
-                    readbackProtection === 'protected'
-                ) {
-                    return Promise.resolve({
-                        device,
-                        validFirmware: true,
-                    });
-                }
+        return NrfutilDeviceLib.getFwInfo(device).then(info => {
+            if (info.imageInfoList.length > 0) {
+                const fw = fwVersions.find(version =>
+                    info.imageInfoList.find(
+                        imageInfo =>
+                            typeof imageInfo.version === 'string' &&
+                            imageInfo.version.includes(version.fwVersion)
+                    )
+                );
 
                 return Promise.resolve({
                     device,
-                    validFirmware: false,
+                    validFirmware: fw !== undefined,
                 });
             }
-        );
+
+            return Promise.resolve({
+                device,
+                validFirmware: false,
+            });
+        });
     },
     tryToSwitchToApplicationMode: () => () => Promise.resolve(null),
 });
