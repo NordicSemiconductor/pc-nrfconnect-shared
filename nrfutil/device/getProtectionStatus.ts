@@ -9,6 +9,7 @@ import {
     DeviceCore,
     deviceSingleTaskEndOperation,
     NrfutilDevice,
+    ProtectionStatus,
 } from './common';
 
 type DeviceFamily =
@@ -16,13 +17,6 @@ type DeviceFamily =
     | 'NRF52_FAMILY'
     | 'NRF53_FAMILY'
     | 'NRF91_FAMILY';
-
-type ProtectionStatus =
-    | 'NRFDL_PROTECTION_STATUS_NONE'
-    | 'NRFDL_PROTECTION_STATUS_REGION0'
-    | 'NRFDL_PROTECTION_STATUS_REGION0_REGION1'
-    | 'NRFDL_PROTECTION_STATUS_SECURE_REGIONS'
-    | 'NRFDL_PROTECTION_STATUS_ALL';
 
 export interface GetProtectionStatusResult {
     core: DeviceCore;
