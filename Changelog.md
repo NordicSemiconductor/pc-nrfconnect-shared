@@ -15,8 +15,13 @@ every new version is a new major version.
 
 ### Removed
 
--   DeviceSlice no longer has readbackProtection state
--   DeviceSlice no longer has setReadbackProtection has be removed
+-   `DeviceSlice` no longer has readbackProtection state
+-   `DeviceSlice` no longer has setReadbackProtection has be removed
+
+### Changed
+
+-   `getReadbackProtection` now returns protection type `ProtectionStatus` from
+    nrfutil device common.ts
 
 ### Steps to upgrade when using this package
 
