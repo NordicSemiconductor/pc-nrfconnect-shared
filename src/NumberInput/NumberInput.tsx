@@ -46,21 +46,21 @@ const Slider = ({
         />
     );
 
-interface DropdownUnit {
-    selectedItem: DropdownItem;
-    items: DropdownItem[];
-    onUnitChange: (unit: DropdownItem) => void;
+interface DropdownUnit<T> {
+    selectedItem: DropdownItem<T>;
+    items: DropdownItem<T>[];
+    onUnitChange: (unit: DropdownItem<T>) => void;
 }
 
-const isDropdownUnit = (
-    unit: React.ReactNode | DropdownUnit
-): unit is DropdownUnit =>
+const isDropdownUnit = <T,>(
+    unit: React.ReactNode | DropdownUnit<T>
+): unit is DropdownUnit<T> =>
     unit != null &&
     Object.keys(unit).includes('selectedItem') &&
     Object.keys(unit).includes('items') &&
     Object.keys(unit).includes('onUnitChange');
 
-export default ({
+export default <T,>({
     range,
     value,
     onChange,
@@ -82,7 +82,7 @@ export default ({
     label: React.ReactNode;
     title?: string;
     showSlider?: boolean;
-    unit?: React.ReactNode | DropdownUnit;
+    unit?: React.ReactNode | DropdownUnit<T>;
     minWidth?: boolean;
 }) => (
     <div
