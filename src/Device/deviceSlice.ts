@@ -61,14 +61,12 @@ const updateDevice = (
 
 export interface DeviceState {
     devices: Device[];
-    readbackProtection: 'unknown' | 'protected' | 'unprotected';
     selectedDevice?: Device;
     selectedDeviceInfo?: DeviceInfo;
 }
 
 const initialState: DeviceState = {
     devices: [],
-    readbackProtection: 'unknown',
 };
 
 const setPersistedData = (device: Device) => {
@@ -124,7 +122,6 @@ const slice = createSlice({
         deselectDevice: state => {
             state.selectedDevice = undefined;
             state.selectedDeviceInfo = undefined;
-            state.readbackProtection = 'unknown';
         },
 
         addDevice: (state, action: PayloadAction<Device>) => {
@@ -261,13 +258,6 @@ const slice = createSlice({
                 action.payload.serialNumber
             );
         },
-
-        setReadbackProtected: (
-            state,
-            action: PayloadAction<DeviceState['readbackProtection']>
-        ) => {
-            state.readbackProtection = action.payload;
-        },
     },
 });
 
@@ -282,7 +272,6 @@ export const {
         removeDevice,
         setDeviceNickname,
         toggleDeviceFavorited,
-        setReadbackProtected,
         persistSerialPortOptions,
     },
 } = slice;
@@ -304,4 +293,4 @@ export const selectedSerialNumber = (state: RootState) =>
     state.device.selectedDevice?.serialNumber;
 
 export const getReadbackProtection = (state: RootState) =>
-    state.device.readbackProtection;
+    state.device.selectedDeviceInfo?.jlink?.protectionStatus;

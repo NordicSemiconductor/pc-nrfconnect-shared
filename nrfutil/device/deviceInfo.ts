@@ -9,6 +9,7 @@ import {
     DeviceCore,
     deviceSingleTaskEndOperation,
     NrfutilDevice,
+    ProtectionStatus,
 } from './common';
 
 export interface HwInfo {
@@ -25,6 +26,7 @@ export interface JLinkDeviceInfo {
     jlinkObFirmwareVersion: string;
     deviceFamily: string | null;
     deviceVersion?: string | null;
+    protectionStatus: ProtectionStatus;
 }
 
 export interface DfuTriggerInfo {

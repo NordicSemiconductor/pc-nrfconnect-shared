@@ -7,6 +7,26 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 158.0.0 - 2024-02-22
+
+### Added
+
+-   `NrfutilDeviceLib.deviceInfo` now has `protectionStatus` property.
+
+### Removed
+
+-   `DeviceSlice` no longer has readbackProtection state
+-   `DeviceSlice` no longer has setReadbackProtection has be removed
+
+### Changed
+
+-   `getReadbackProtection` now returns protection type `ProtectionStatus` from
+    nrfutil device common.ts
+
+### Steps to upgrade when using this package
+
+-   Minimum support version of nrfutil device is now 2.1.1
+
 ## 157.0.0 - 2024-02-06
 
 ### Removed
