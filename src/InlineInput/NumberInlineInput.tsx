@@ -82,6 +82,19 @@ const changeValueStepwise = (
     return nextValue != null ? nextValue : current;
 };
 
+const handleInfinityToString = (val: number) =>
+    Math.abs(val) === Infinity ? `${val < 0 ? '-' : ''}∞` : String(val);
+
+const handleInfinityToNumber = (val: string) => {
+    if (val === '∞') {
+        return Infinity;
+    }
+    if (val === '-∞') {
+        return -Infinity;
+    }
+    return Number(val);
+};
+
 export default ({
     disabled,
     value,
@@ -95,19 +108,6 @@ export default ({
     preventDefaultInvalidStyle,
 }: NumberInlineInput) => {
     useValidatedRangeOrValues(range);
-
-    const handleInfinityToString = (val: number) =>
-        Math.abs(val) === Infinity ? `${val < 0 ? '-' : ''}∞` : String(val);
-
-    const handleInfinityToNumber = (val: string) => {
-        if (val === '∞') {
-            return Infinity;
-        }
-        if (val === '-∞') {
-            return -Infinity;
-        }
-        return Number(val);
-    };
 
     return (
         <InlineInput
