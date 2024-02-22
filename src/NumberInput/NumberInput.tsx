@@ -79,7 +79,7 @@ export default ({
     onChangeComplete?: (value: number) => void;
     className?: string;
     disabled?: boolean;
-    label?: React.ReactNode;
+    label: React.ReactNode;
     title?: string;
     showSlider?: boolean;
     unit?: React.ReactNode | DropdownUnit;
@@ -90,37 +90,36 @@ export default ({
             className
         )}`}
     >
-        {label && (
-            <div
-                className={classNames(
-                    'tw-flex tw-flex-row',
-                    minWidth ? '' : 'tw-justify-between'
-                )}
-                title={title}
-            >
-                {label}
-                <div className="tw-flex tw-flex-row">
-                    <NumberInlineInput
-                        value={value}
-                        range={range}
-                        onChange={onChange}
-                        onChangeComplete={onChangeComplete}
-                        disabled={disabled}
+        <div
+            className={classNames(
+                'tw-flex tw-flex-row',
+                minWidth ? '' : 'tw-justify-between'
+            )}
+            title={title}
+        >
+            {label}
+            <div className="tw-flex tw-flex-row">
+                <NumberInlineInput
+                    value={value}
+                    range={range}
+                    onChange={onChange}
+                    onChangeComplete={onChangeComplete}
+                    disabled={disabled}
+                />
+                {isDropdownUnit(unit) ? (
+                    <Dropdown
+                        items={unit.items}
+                        selectedItem={unit.selectedItem}
+                        transparentButtonBg
+                        minWidth
+                        onSelect={unit.onUnitChange}
                     />
-                    {isDropdownUnit(unit) ? (
-                        <Dropdown
-                            items={unit.items}
-                            selectedItem={unit.selectedItem}
-                            transparentButtonBg
-                            minWidth
-                            onSelect={unit.onUnitChange}
-                        />
-                    ) : (
-                        unit
-                    )}
-                </div>
+                ) : (
+                    unit
+                )}
             </div>
-        )}
+        </div>
+
         {showSlider && (
             <Slider
                 range={range}
