@@ -106,7 +106,7 @@ export default ({
         if (val === '-∞') {
             return -Infinity;
         }
-        return Number(value);
+        return Number(val);
     };
 
     return (
