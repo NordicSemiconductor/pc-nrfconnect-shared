@@ -9,6 +9,7 @@ import { Reducer } from 'redux';
 
 import { reducer as shortcuts } from './About/shortcutSlice';
 import { reducer as appLayout } from './App/appLayout';
+import { reducer as confirmBeforeCloseDialog } from './ConfirmBeforeClose/confirmBeforeCloseSlice';
 import { reducer as brokenDeviceDialog } from './Device/BrokenDeviceDialog/brokenDeviceDialogSlice';
 import { reducer as deviceAutoSelect } from './Device/deviceAutoSelectSlice';
 import { reducer as deviceSetup } from './Device/deviceSetupSlice';
@@ -33,6 +34,7 @@ export const rootReducerSpec = (appReducer: Reducer = noopReducer) => ({
     log,
     shortcuts,
     flashMessages,
+    confirmBeforeCloseDialog,
 });
 
 const store = (appReducer?: Reducer) =>

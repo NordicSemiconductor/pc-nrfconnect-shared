@@ -15,6 +15,7 @@ import { Reducer } from 'redux';
 import { inMain as openWindow } from '../../ipc/openWindow';
 import { setNrfutilLogger } from '../../nrfutil/nrfutilLogger';
 import About from '../About/About';
+import ConfirmCloseDialog from '../ConfirmBeforeClose/ConfirmCloseDialog';
 import BrokenDeviceDialog from '../Device/BrokenDeviceDialog/BrokenDeviceDialog';
 import { setAutoReselect } from '../Device/deviceAutoSelectSlice';
 import {
@@ -181,6 +182,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
 
             <ErrorDialog />
             <BrokenDeviceDialog />
+            <ConfirmCloseDialog />
             {children}
         </div>
     );

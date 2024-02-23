@@ -7,13 +7,20 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 159.0.0 - UNRELEASED
+## 159.0.0 - 2024-02-23
 
 ### Added
 
 -   `minWidth` parameter to `Dropdown` component.
 -   `transparentButtonBg` parameter to `Dropdown` component.
 -   `NumberInput` component (provides text, input, optional unit, and slider).
+-   Common way to queue pending task app has ongoing so if app is closed a
+    dialog is prompted to alert users before closing app. Redux states for this
+    are:
+    -   `addConfirmBeforeClose` - `setShowCloseDialog` -
+        `clearConfirmBeforeClose`
+    -   `preventAppCloseUntilComplete` can be used to wrap some promise and
+        secure app from closing until promise is resolved
 
 ### Removed
 
