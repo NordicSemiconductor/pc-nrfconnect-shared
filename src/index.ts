@@ -124,6 +124,7 @@ export {
 export {
     addConfirmBeforeClose,
     clearConfirmBeforeClose,
+    getShowConfirmCloseDialog as isConfirmCloseDialogOpen,
     preventAppCloseUntilComplete,
 } from './ConfirmBeforeClose/confirmBeforeCloseSlice';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';

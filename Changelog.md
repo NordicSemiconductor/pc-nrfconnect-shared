@@ -11,6 +11,12 @@ every new version is a new major version.
 
 ### Added
 
+-   Export `isConfirmCloseDialogOpen` to tell when confirm close dialog is open
+
+## 159.0.0 - 2024-02-23
+
+### Added
+
 -   `minWidth` parameter to `Dropdown` component.
 -   `transparentButtonBg` parameter to `Dropdown` component.
 -   `NumberInput` component (provides text, input, optional unit, and slider).
