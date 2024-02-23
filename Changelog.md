@@ -14,12 +14,13 @@ every new version is a new major version.
 -   `minWidth` parameter to `Dropdown` component.
 -   `transparentButtonBg` parameter to `Dropdown` component.
 -   `NumberInput` component (provides text, input, optional unit, and slider).
--   Common way to queue pending task app has ongoing so if app is closed a
+-   Common way to queue ongoing pending tasks. If an app is closed, a
     dialog is prompted to alert users before closing app. Redux states for this
     are:
-    -   `addConfirmBeforeClose` - `setShowCloseDialog` -
-        `clearConfirmBeforeClose`
-    -   `preventAppCloseUntilComplete` can be used to wrap some promise and
+    - `addConfirmBeforeClose`
+    - `setShowCloseDialog`
+    - `clearConfirmBeforeClose`
+    -  `preventAppCloseUntilComplete` can be used to wrap some promise and
         secure app from closing until promise is resolved
 
 ### Removed

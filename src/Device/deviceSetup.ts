@@ -169,9 +169,9 @@ export const prepareDevice =
                 dispatch(
                     preventAppCloseUntilComplete(
                         {
-                            message: `Device is being programmed. 
+                            message: `The device is being programmed. 
                             Closing application right now might result in some unknown behavior and might also brick the device. 
-                            Are you sure you want to continue`,
+                            Are you sure you want to continue?`,
                         },
                         task
                     )
