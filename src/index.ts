@@ -120,6 +120,12 @@ export {
     getWaitForDevice,
     clearWaitForDevice,
 } from './Device/deviceAutoSelectSlice';
+
+export {
+    addConfirmBeforeClose,
+    clearConfirmBeforeClose,
+    preventAppCloseUntilComplete,
+} from './ConfirmBeforeClose/confirmBeforeCloseSlice';
 export { deviceInfo } from './Device/deviceInfo/deviceInfo';
 export { isDeviceInDFUBootloader } from './Device/sdfuOperations';
 export {

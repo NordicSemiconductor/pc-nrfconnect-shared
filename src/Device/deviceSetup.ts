@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 import { DeviceInfo } from '../../nrfutil/device/deviceInfo';
+import { preventAppCloseUntilComplete } from '../ConfirmBeforeClose/confirmBeforeCloseSlice';
 import logger from '../logging';
 import describeError from '../logging/describeError';
 import { AppThunk, RootState } from '../store';
@@ -151,7 +152,7 @@ export const prepareDevice =
             if (!selectedDeviceSetup) {
                 onFail('No firmware was selected'); // Should never happen
             } else {
-                dispatch(
+                const task = dispatch(
                     selectedDeviceSetup.programDevice(
                         (progress: number, message?: string) => {
                             dispatch(setDeviceSetupProgress(progress));
@@ -164,6 +165,17 @@ export const prepareDevice =
                 )
                     .then(onSuccessWrapper)
                     .catch(onFail);
+
+                dispatch(
+                    preventAppCloseUntilComplete(
+                        {
+                            message: `The device is being programmed. 
+                            Closing application right now might result in some unknown behavior and might also brick the device. 
+                            Are you sure you want to continue?`,
+                        },
+                        task
+                    )
+                );
             }
         };
 
