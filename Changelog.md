@@ -19,9 +19,16 @@ every new version is a new major version.
 
 -   `NumberInputWithSlider` component.
 
+### Changed
+
+-   `StateSelector` no longer has 16px margin on the bottom. Apps are now
+    responsible to add the appropriate gap per container
+
 ### Steps to upgrade
 
--   Change all occurences of `NumberInputWithSlider` to `NumberInput`.
+-   Change all occurrences of `NumberInputWithSlider` to `NumberInput`.
+-   Check all use cases of `StateSelector` and that the gap between components
+    is correct if not adjust spacing from the app side
 
 ## 158.0.0 - 2024-02-22
 
