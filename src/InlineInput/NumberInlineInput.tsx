@@ -24,6 +24,7 @@ interface NumberInlineInput {
     value: number;
     range: RangeOrValues;
     className?: string;
+    title?: string;
     onChange: (value: number) => void;
     onChangeComplete?: (value: number) => void;
     textAlignLeft?: boolean;
@@ -81,11 +82,25 @@ const changeValueStepwise = (
     return nextValue != null ? nextValue : current;
 };
 
+const handleInfinityToString = (val: number) =>
+    Math.abs(val) === Infinity ? `${val < 0 ? '-' : ''}∞` : String(val);
+
+const handleInfinityToNumber = (val: string) => {
+    if (val === '∞') {
+        return Infinity;
+    }
+    if (val === '-∞') {
+        return -Infinity;
+    }
+    return Number(val);
+};
+
 export default ({
     disabled,
     value,
     range,
     className,
+    title,
     onChange,
     onChangeComplete = () => {},
     textAlignLeft,
@@ -97,19 +112,29 @@ export default ({
     return (
         <InlineInput
             className={`${className} number-inline-input`}
+            title={title}
             disabled={disabled}
-            value={String(value)}
-            onChange={newValue => onChange(Number(newValue))}
-            onChangeComplete={newValue => onChangeComplete(Number(newValue))}
+            value={handleInfinityToString(value)}
+            onChange={newValue => onChange(handleInfinityToNumber(newValue))}
+            onChangeComplete={newValue =>
+                onChangeComplete(handleInfinityToNumber(newValue))
+            }
             onKeyboardIncrementAction={() =>
-                changeValueStepwise(value, range, 1).toString()
+                handleInfinityToString(
+                    changeValueStepwise(value, range, 1)
+                ).toString()
             }
             onKeyboardDecrementAction={() =>
-                changeValueStepwise(value, range, -1).toString()
+                handleInfinityToString(
+                    changeValueStepwise(value, range, -1)
+                ).toString()
             }
             textAlignLeft={textAlignLeft}
             isValid={newValue => {
-                const validity = isValid(Number(newValue), range);
+                const validity = isValid(
+                    handleInfinityToNumber(newValue),
+                    range
+                );
                 if (onValidityChanged != null) {
                     // Then propagate the validity back to parent
                     onValidityChanged(validity);
