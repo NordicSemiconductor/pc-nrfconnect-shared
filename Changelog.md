@@ -18,7 +18,6 @@ every new version is a new major version.
     dialog is prompted to alert users before closing app. Redux states for this
     are:
     - `addConfirmBeforeClose`
-    - `setShowCloseDialog`
     - `clearConfirmBeforeClose`
     -  `preventAppCloseUntilComplete` can be used to wrap some promise and
         secure app from closing until promise is resolved
