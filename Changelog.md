@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 159.0.0 - UNRELEASED
+
+### Added
+
+-   `minWidth` parameter to `Dropdown` component.
+-   `transparentButtonBg` parameter to `Dropdown` component.
+
 ## 158.0.0 - 2024-02-22
 
 ### Added
