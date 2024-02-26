@@ -7,7 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 159.0.0 - 2024-02-23
+## 161.0.0 - 2024-02-26
+
+### Fixed
+
+-   `ConfirmCloseDialog` title now uses app display name
+
+## 160.0.0 - 2024-02-23
 
 ### Added
 

@@ -8,12 +8,21 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuid } from 'uuid';
 
 import type { AppThunk, RootState } from '../store';
+import { packageJsonApp } from '../utils/packageJson';
+
+export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 export interface ConfirmBeforeCloseApp {
     id: string;
+    title: string;
     message: React.ReactNode;
     onClose?: () => void;
 }
+
+export type ConfirmBeforeCloseOptionalTitle = Optional<
+    ConfirmBeforeCloseApp,
+    'title'
+>;
 
 export interface ConfirmBeforeCloseState {
     confirmCloseApp: ConfirmBeforeCloseApp[];
@@ -31,19 +40,21 @@ const slice = createSlice({
     reducers: {
         addConfirmBeforeClose(
             state,
-            action: PayloadAction<ConfirmBeforeCloseApp>
+            action: PayloadAction<ConfirmBeforeCloseOptionalTitle>
         ) {
             const index = state.confirmCloseApp.findIndex(
                 confirmCloseApp => confirmCloseApp.id === action.payload.id
             );
 
+            const dialog = {
+                title: `Closing ${packageJsonApp().displayName}`,
+                ...action.payload,
+            };
+
             if (index !== -1) {
-                state.confirmCloseApp[index] = action.payload;
+                state.confirmCloseApp[index] = dialog;
             } else {
-                state.confirmCloseApp = [
-                    action.payload,
-                    ...state.confirmCloseApp,
-                ];
+                state.confirmCloseApp = [dialog, ...state.confirmCloseApp];
             }
         },
         clearConfirmBeforeClose(state, action: PayloadAction<string>) {
@@ -76,7 +87,7 @@ export const getShowConfirmCloseDialog = (state: RootState) =>
 
 export const preventAppCloseUntilComplete =
     (
-        dialogInfo: Omit<ConfirmBeforeCloseApp, 'id'>,
+        dialogInfo: Omit<ConfirmBeforeCloseOptionalTitle, 'id'>,
         promise: Promise<unknown>,
         abortController?: AbortController
     ): AppThunk =>
