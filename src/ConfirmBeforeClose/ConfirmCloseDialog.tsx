@@ -60,7 +60,7 @@ export default () => {
     return (
         <ConfirmationDialog
             headerIcon="alert-outline"
-            title="Closing nPM PowerUP"
+            title={nextConfirmDialog?.title ?? ''}
             isVisible={showCloseDialog && !!nextConfirmDialog}
             onConfirm={() => {
                 if (nextConfirmDialog) {
