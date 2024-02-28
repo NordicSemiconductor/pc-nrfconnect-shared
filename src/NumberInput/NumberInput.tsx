@@ -113,6 +113,7 @@ export default <T,>({
                         transparentButtonBg
                         minWidth
                         onSelect={unit.onUnitChange}
+                        disabled={disabled}
                     />
                 ) : (
                     unit
