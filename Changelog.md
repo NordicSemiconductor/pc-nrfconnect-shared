@@ -9,6 +9,10 @@ every new version is a new major version.
 
 ## 162.0.0 - UNRELEASED
 
+### Changed
+
+-   Device programming dialog changes to `programming` when programming starts.
+
 ### Fixed
 
 -   Pass `disable` prop to `Dropdown` in `NumberInput`.

@@ -36,7 +36,7 @@ export default () => {
         <Dialog isVisible={isVisible}>
             <Dialog.Header
                 showSpinner={isInProgress}
-                title="Confirm"
+                title={isInProgress ? 'Programming' : 'Confirm'}
                 headerIcon=""
             />
             <Dialog.Body>
