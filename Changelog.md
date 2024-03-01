@@ -16,6 +16,7 @@ every new version is a new major version.
 ### Fixed
 
 -   Pass `disable` prop to `Dropdown` in `NumberInput`.
+-   Weird visual fragments when hovering over non-active `StateSelector` part.
 
 ## 161.0.0 - 2024-02-26
 

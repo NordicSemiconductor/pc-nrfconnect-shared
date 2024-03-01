@@ -13,6 +13,9 @@
         padding: 4px;
         border-radius: 4px !important;
     }
+    .btn-unset {
+        z-index: 0 !important;
+    }
     .btn:disabled {
         opacity: initial;
     }
