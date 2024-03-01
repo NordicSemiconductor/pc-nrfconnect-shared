@@ -10,7 +10,7 @@ import { getCurrentWindow } from '@electron/remote';
 import Button from '../Button/Button';
 import { Device } from '../Device/deviceSlice';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
-import { CollapsibleGroup } from '../SidePanel/Group';
+import { Group } from '../Groups/Group';
 import Spinner from '../Spinner/Spinner';
 import telemetry from '../telemetry/telemetry';
 import { openUrl } from '../utils/open';
@@ -132,22 +132,25 @@ class ErrorBoundary extends React.Component<
                 <div className="error-boundary__footer">
                     {error !== null && (
                         <div className="error-boundary__message">
-                            <CollapsibleGroup heading="Show detailed error message">
+                            <Group
+                                heading="Show detailed error message"
+                                collapsible
+                            >
                                 <div className="report">
                                     <h4>{error.message}</h4>
                                     <pre>{error.stack}</pre>
                                 </div>
-                            </CollapsibleGroup>
+                            </Group>
                         </div>
                     )}
                     <hr />
                     {systemReport !== null ? (
                         <div className="error-boundary__message">
-                            <CollapsibleGroup heading="Show system report">
+                            <Group heading="Show system report" collapsible>
                                 <div className="report">
                                     <pre>{systemReport}</pre>
                                 </div>
-                            </CollapsibleGroup>
+                            </Group>
                         </div>
                     ) : (
                         <div className="error-boundary__message--loading">

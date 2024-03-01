@@ -12,11 +12,21 @@ every new version is a new major version.
 ### Changed
 
 -   Device programming dialog changes to `programming` when programming starts.
+-   `Group` now combines `CollapsibleGroup` functionality with `collapsible`
+    property. New properties have also been added: `gap`, `headingFullWidth`,
 
 ### Fixed
 
 -   Pass `disable` prop to `Dropdown` in `NumberInput`.
 -   Weird visual fragments when hovering over non-active `StateSelector` part.
+
+### Removed
+
+-   `CollapsibleGroup`. Use `Group` component as a replacement.
+
+### Steps to upgrade
+
+-   Replace all `CollapsibleGroup` with `Group` component.
 
 ## 161.0.0 - 2024-02-26
 
