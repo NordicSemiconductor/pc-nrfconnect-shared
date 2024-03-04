@@ -17,6 +17,7 @@ every new version is a new major version.
 
 -   Pass `disable` prop to `Dropdown` in `NumberInput`.
 -   Weird visual fragments when hovering over non-active `StateSelector` part.
+-   `Dropdown elements font size is 12px everywhere in apps and not just the side panel`
 
 ## 161.0.0 - 2024-02-26
 
