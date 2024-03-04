@@ -154,12 +154,12 @@ export const Group = ({
             >
                 <div
                     className={classNames(
-                        'tw-flex tw-flex-col',
-                        gap === 0.5 && 'tw-gap-0.5 tw-pt-0.5',
-                        gap === 1 && 'tw-gap-1 tw-pt-1',
-                        gap === 2 && 'tw-gap-2 tw-pt-2',
-                        gap === 4 && 'tw-gap-4 tw-pt-4',
-                        gap === 8 && 'tw-gap-8 tw-pt-8'
+                        'tw-flex tw-flex-col tw-pt-4',
+                        gap === 0.5 && 'tw-gap-0.5',
+                        gap === 1 && 'tw-gap-1',
+                        gap === 2 && 'tw-gap-2',
+                        gap === 4 && 'tw-gap-4',
+                        gap === 8 && 'tw-gap-8'
                     )}
                 >
                     {children}
