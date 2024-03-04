@@ -10,6 +10,7 @@ import classNames from '../utils/classNames';
 
 const collapseSection = (element: HTMLDivElement) => {
     const sectionHeight = element.scrollHeight;
+    element.style.overflow = 'hidden';
 
     element.addEventListener(
         'transitionstart',
@@ -62,6 +63,7 @@ const expandSection = (element: HTMLDivElement) => {
         () => {
             element.style.height = '';
             element.style.pointerEvents = '';
+            element.style.overflow = '';
             element.setAttribute('data-animating', 'false');
         },
         { once: true }
@@ -150,7 +152,7 @@ export const Group = ({
                     collapsibleDivRef.current = ref;
                 }}
                 className={classNames(
-                    'tw-overflow-hidden tw-transition-all',
+                    'tw-transition-all',
                     !initStateSet.current && collapsed && 'tw-h-0',
                     !initStateSet.current && !collapsed && 'tw-h-full'
                 )}
