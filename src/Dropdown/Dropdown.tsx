@@ -53,7 +53,7 @@ export default <T,>({
     return (
         <div
             className={classNames(
-                'tw-preflight tw-relative',
+                'tw-preflight tw-relative tw-text-xs',
                 minWidth ? '' : 'tw-w-full',
                 className
             )}
