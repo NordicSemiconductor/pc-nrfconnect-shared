@@ -149,7 +149,7 @@ export const Group = ({
                 className={classNames(
                     'tw-overflow-hidden tw-transition-all',
                     !initStateSet.current && collapsed && 'tw-h-0',
-                    -!initStateSet.current && !collapsed && 'tw-h-full'
+                    !initStateSet.current && !collapsed && 'tw-h-full'
                 )}
             >
                 <div
