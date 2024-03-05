@@ -10,7 +10,7 @@ import { getCurrentWindow } from '@electron/remote';
 import Button from '../Button/Button';
 import { Device } from '../Device/deviceSlice';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
-import { Group } from '../Groups/Group';
+import { Group } from '../Group/Group';
 import Spinner from '../Spinner/Spinner';
 import telemetry from '../telemetry/telemetry';
 import { openUrl } from '../utils/open';
