@@ -149,6 +149,16 @@ export class NrfutilSandbox {
         throw new Error('Unexpected result');
     };
 
+    public getCoreVersion = async () => {
+        const results = await this.spawnNrfutil<ModuleVersion>('--version', []);
+
+        if (results.info.length === 1) {
+            return results.info[0];
+        }
+
+        throw new Error('Unexpected result');
+    };
+
     public isSandboxInstalled = async () => {
         if (
             fs.existsSync(
@@ -189,6 +199,17 @@ export class NrfutilSandbox {
                 }. describeError: ${describeError(error)}`
             );
             throw error;
+        }
+    };
+
+    public updateNrfUtilCore = async (
+        onProgress?: (progress: Progress, task?: Task) => void
+    ) => {
+        try {
+            await this.spawnNrfutil('self-upgrade', [], onProgress);
+        } catch (error) {
+            // User might not have internet hance fail silently
+            getNrfutilLogger()?.error(`Error while updated nrfutil core`);
         }
     };
 
@@ -725,6 +746,9 @@ export default async (
 
     if (!result) {
         await sandbox.prepareSandbox(onProgress);
+    } else {
+        // update nrfutil core
+        await sandbox.updateNrfUtilCore(onProgress);
     }
 
     onProgress?.(convertNrfutilProgress({ progressPercentage: 100 }));

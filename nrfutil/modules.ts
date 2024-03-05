@@ -27,6 +27,14 @@ const logModuleVersions = (module: string, moduleSandbox: NrfutilSandbox) => {
             );
         });
     }
+
+    moduleSandbox.getCoreVersion().then(moduleVersion => {
+        getNrfutilLogger()?.info(
+            `Using nrfutil-${module} core version: ${describeVersion(
+                moduleVersion.version
+            )}`
+        );
+    });
 };
 
 const forwardLogging = (moduleSandbox: NrfutilSandbox) => {
