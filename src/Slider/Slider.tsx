@@ -11,7 +11,7 @@ import classNames from '../utils/classNames';
 import Bar from './Bar';
 import Handle from './Handle';
 import { toPercentage } from './percentage';
-import { isValues, RangeOrValues, useValidatedRangeOrValues } from './range';
+import { isValues, RangeOrValues, useValidatedRange } from './range';
 import Ticks from './Ticks';
 
 import './slider.scss';
@@ -52,7 +52,7 @@ const Slider: FC<Props> = ({
     onChangeComplete,
 }) => {
     useValidatedArraySizes(values, onChange);
-    useValidatedRangeOrValues(rangeOrValues);
+    useValidatedRange(rangeOrValues);
 
     const { width, ref } = useResizeDetector();
 

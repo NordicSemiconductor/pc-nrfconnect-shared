@@ -12,7 +12,7 @@ import {
     isValues,
     Range,
     RangeOrValues,
-    useValidatedRangeOrValues,
+    useValidatedRange,
     Values,
 } from '../Slider/range';
 import InlineInput from './InlineInput';
@@ -30,6 +30,8 @@ interface NumberInlineInput {
     textAlignLeft?: boolean;
     onValidityChanged?: (validity: boolean) => void;
     preventDefaultInvalidStyle?: boolean;
+    minSize?: number;
+    preAllocateSize?: boolean;
 }
 
 const isInValues = (value: number, values: Values) => values.includes(value);
@@ -106,8 +108,10 @@ export default ({
     textAlignLeft,
     onValidityChanged,
     preventDefaultInvalidStyle,
+    minSize,
+    preAllocateSize = true,
 }: NumberInlineInput) => {
-    useValidatedRangeOrValues(range);
+    useValidatedRange(range);
 
     return (
         <InlineInput
@@ -143,6 +147,25 @@ export default ({
             }}
             onValidityChanged={onValidityChanged}
             preventDefaultInvalidStyle={preventDefaultInvalidStyle}
+            minSize={
+                preAllocateSize
+                    ? minSize ??
+                      Math.max(
+                          ...(isValues(range)
+                              ? range.map(v =>
+                                    Number.isFinite(v)
+                                        ? handleInfinityToString(v)
+                                        : v.toString()
+                                )
+                              : [range.min, range.max].map(v =>
+                                    Number.isFinite(v)
+                                        ? v.toFixed(range.decimals)
+                                        : handleInfinityToString(v)
+                                )
+                          ).map(v => v.length)
+                      )
+                    : undefined
+            }
         />
     );
 };

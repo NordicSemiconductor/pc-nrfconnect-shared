@@ -70,7 +70,7 @@ const validateRange = (range: Range) => {
     }
 };
 
-export const useValidatedRangeOrValues = (rangeOrValues: RangeOrValues) => {
+export const useValidatedRange = (rangeOrValues: RangeOrValues) => {
     useEffect(() => {
         if (!isValues(rangeOrValues)) {
             validateRange(rangeOrValues);
