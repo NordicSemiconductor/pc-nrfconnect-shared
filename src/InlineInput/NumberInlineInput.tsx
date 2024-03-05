@@ -12,7 +12,7 @@ import {
     isValues,
     Range,
     RangeOrValues,
-    useValidatedRangeOrValues,
+    useValidatedRange,
     Values,
 } from '../Slider/range';
 import InlineInput from './InlineInput';
@@ -107,7 +107,7 @@ export default ({
     onValidityChanged,
     preventDefaultInvalidStyle,
 }: NumberInlineInput) => {
-    useValidatedRangeOrValues(range);
+    useValidatedRange(range);
 
     return (
         <InlineInput
