@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 163.0.0 - 2024-03-05
+
+### Fixed
+
+-   Fixed issue with `Group` remaining expanded in some cases
+
 ## 162.0.0 - 2024-03-05
 
 ### Changed
