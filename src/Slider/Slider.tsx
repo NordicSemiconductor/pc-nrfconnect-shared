@@ -11,7 +11,7 @@ import classNames from '../utils/classNames';
 import Bar from './Bar';
 import Handle from './Handle';
 import { toPercentage } from './percentage';
-import { getMin, RangeOrValues, useValidatedRangeOrValues } from './range';
+import { isValues, RangeOrValues, useValidatedRangeOrValues } from './range';
 import Ticks from './Ticks';
 
 import './slider.scss';
@@ -56,10 +56,22 @@ const Slider: FC<Props> = ({
 
     const { width, ref } = useResizeDetector();
 
-    const valueRange = {
-        min: values.length === 1 ? getMin(rangeOrValues) : Math.min(...values),
-        max: Math.max(...values),
-    };
+    const explicitValues = isValues(rangeOrValues);
+    if (explicitValues) {
+        // we can just work with te indexes
+        values = values.map(v => rangeOrValues.indexOf(v));
+    }
+
+    const valueRange = explicitValues
+        ? {
+              min: values.length === 1 ? 0 : Math.min(...values),
+              max: Math.max(...values),
+          }
+        : {
+              min:
+                  values.length === 1 ? rangeOrValues.min : Math.min(...values),
+              max: Math.max(...values),
+          };
 
     return (
         <div
@@ -79,7 +91,9 @@ const Slider: FC<Props> = ({
                     value={value}
                     range={rangeOrValues}
                     disabled={disabled}
-                    onChange={onChange[index]}
+                    onChange={v => {
+                        onChange[index](explicitValues ? rangeOrValues[v] : v);
+                    }}
                     onChangeComplete={onChangeComplete}
                     sliderWidth={width}
                 />

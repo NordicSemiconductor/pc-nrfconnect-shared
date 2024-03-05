@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 166.0.0 - 2024-03-05
+
+### Added
+
+-   `Slider` now supports unsorted range values
+-   `NumberInlineInput` now supports unsorted range values
+
 ## 165.0.0 - 2024-03-05
 
 ### Added

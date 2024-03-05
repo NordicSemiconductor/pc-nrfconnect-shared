@@ -39,17 +39,6 @@ const assert = (expectedToBeTrue: boolean, warning: string) => {
     }
 };
 
-const validateValues = (values: Values) => {
-    for (let i = 0; i < values.length - 1; i += 1) {
-        assert(
-            values[i] < values[i + 1],
-            `The values of the range must be sorted correctly, but ${
-                values[i]
-            } is larger then ${values[i + 1]} in ${values}`
-        );
-    }
-};
-
 const validateRange = (range: Range) => {
     assert(
         !(`explicitRange` in range),
@@ -83,9 +72,7 @@ const validateRange = (range: Range) => {
 
 export const useValidatedRangeOrValues = (rangeOrValues: RangeOrValues) => {
     useEffect(() => {
-        if (isValues(rangeOrValues)) {
-            validateValues(rangeOrValues);
-        } else {
+        if (!isValues(rangeOrValues)) {
             validateRange(rangeOrValues);
         }
     }, [rangeOrValues]);
