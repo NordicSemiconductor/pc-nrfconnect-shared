@@ -44,7 +44,7 @@ export { default as FileLink } from './Link/FileLink';
 export { default as Overlay } from './Overlay/Overlay';
 
 export { default as SidePanel } from './SidePanel/SidePanel';
-export { Group, CollapsibleGroup } from './SidePanel/Group';
+export { Group } from './Group/Group';
 
 export { default as InlineInput } from './InlineInput/InlineInput';
 export { default as NumberInlineInput } from './InlineInput/NumberInlineInput';
