@@ -13,6 +13,19 @@ every new version is a new major version.
 
 -   `Slider` now supports unsorted range values
 -   `NumberInlineInput` now supports unsorted range values
+-   `InlineInput` supports optional `minSize` property
+-   `NumberInlineInput` supports optional `minSize` and `preAllocateSize`
+    properties
+-   `NumberInput` supports optional `inputMinSize` and `preAllocateInputSize`
+    properties
+
+### Changed
+
+-   `NumberInlineInput` will pre-allocate input min width depending on the range
+    unless `minSize` property is provided or `preAllocateSize` is set to false
+-   `NumberInput` will pre-allocate input min input field width depending on the
+    range unless `inputMinSize` property is provided or `preAllocateInputSize`
+    is set to false
 
 ## 165.0.0 - 2024-03-05
 

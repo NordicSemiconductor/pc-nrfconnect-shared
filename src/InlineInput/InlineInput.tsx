@@ -61,6 +61,7 @@ interface Props {
     textAlignLeft?: boolean;
     onValidityChanged?: (validity: boolean) => void;
     preventDefaultInvalidStyle?: boolean;
+    minSize?: number;
 }
 
 const InlineInput = React.forwardRef<HTMLInputElement, Props>(
@@ -78,6 +79,7 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
             textAlignLeft = false,
             onValidityChanged,
             preventDefaultInvalidStyle,
+            minSize,
         },
         ref
     ) => {
@@ -174,7 +176,7 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
                     className
                 )}
                 size={
-                    Math.max(1, internalValue.length) +
+                    Math.max(minSize ?? 1, internalValue.length) +
                     (process.platform === 'darwin' ? 2 : 0)
                 }
                 disabled={disabled}

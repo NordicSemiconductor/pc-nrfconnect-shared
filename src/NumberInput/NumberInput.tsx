@@ -72,6 +72,8 @@ export default <T,>({
     unit,
     showSlider = false,
     minWidth = false,
+    inputMinSize,
+    preAllocateInputSize,
 }: {
     range: RangeOrValues;
     value: number;
@@ -84,6 +86,8 @@ export default <T,>({
     showSlider?: boolean;
     unit?: React.ReactNode | DropdownUnit<T>;
     minWidth?: boolean;
+    inputMinSize?: number;
+    preAllocateInputSize?: boolean;
 }) => (
     <div
         className={`tw-flex tw-flex-col tw-gap-1 tw-text-xs ${classNames(
@@ -105,6 +109,8 @@ export default <T,>({
                     onChange={onChange}
                     onChangeComplete={onChangeComplete}
                     disabled={disabled}
+                    minSize={inputMinSize}
+                    preAllocateSize={preAllocateInputSize}
                 />
                 {isDropdownUnit(unit) ? (
                     <Dropdown

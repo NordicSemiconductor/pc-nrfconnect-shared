@@ -4,12 +4,14 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-@import "../variables";
+@import '../variables';
 
 .number-inline-input {
     text-align: center;
     border-bottom-color: $gray-200;
     font-size: 14px;
 
-    &:focus { background-color: $white; }
+    &:focus {
+        background-color: $white;
+    }
 }
