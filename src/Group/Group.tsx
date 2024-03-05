@@ -45,8 +45,9 @@ const collapseSection = (element: HTMLDivElement) => {
 
 const expandSection = (element: HTMLDivElement) => {
     const sectionHeight = element.scrollHeight;
+    const clientHeight = element.clientHeight;
 
-    if (sectionHeight === 0) return;
+    if (sectionHeight === clientHeight) return;
 
     element.style.height = `${sectionHeight}px`;
 
