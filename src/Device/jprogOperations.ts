@@ -124,7 +124,7 @@ export const jprogDeviceSetup = (
                     programDeviceWithFw(device, firmwareOption, onProgress)
                 ),
         })),
-    isExpectedFirmware: (device, deviceInfo) => (dispatch, getState) => {
+    isExpectedFirmware: (device, deviceInfo) => async (_, getState) => {
         const fwVersions = firmwareOptions(device, firmware, deviceInfo);
         if (fwVersions.length === 0) {
             return Promise.resolve({
@@ -146,7 +146,8 @@ export const jprogDeviceSetup = (
             });
         }
 
-        return NrfutilDeviceLib.getFwInfo(device).then(info => {
+        try {
+            const info = await NrfutilDeviceLib.getFwInfo(device);
             if (info.imageInfoList.length > 0) {
                 const fw = fwVersions.find(version =>
                     info.imageInfoList.find(
@@ -161,11 +162,13 @@ export const jprogDeviceSetup = (
                     validFirmware: fw !== undefined,
                 });
             }
+        } catch {
+            // do nothing
+        }
 
-            return Promise.resolve({
-                device,
-                validFirmware: false,
-            });
+        return Promise.resolve({
+            device,
+            validFirmware: false,
         });
     },
     tryToSwitchToApplicationMode: () => () => Promise.resolve(null),
