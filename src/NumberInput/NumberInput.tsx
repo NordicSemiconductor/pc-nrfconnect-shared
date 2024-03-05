@@ -102,7 +102,7 @@ export default <T,>({
             title={title}
         >
             {label}
-            <div className="tw-flex tw-flex-row">
+            <div className="tw-flex tw-flex-row tw-items-center">
                 <NumberInlineInput
                     value={value}
                     range={range}

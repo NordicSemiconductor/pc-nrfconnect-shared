@@ -27,6 +27,10 @@ every new version is a new major version.
     range unless `inputMinSize` property is provided or `preAllocateInputSize`
     is set to false
 
+### Fixed
+
+-   `NumberInput` unit is not aligned when label consumes multi line
+
 ## 165.0.0 - 2024-03-05
 
 ### Added
