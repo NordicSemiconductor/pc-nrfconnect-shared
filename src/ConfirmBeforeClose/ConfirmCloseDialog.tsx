@@ -72,6 +72,7 @@ export default () => {
                 }
             }}
             onCancel={() => {
+                getCurrentWindow().emit('restart-cancelled');
                 dispatch(setShowCloseDialog(false));
                 confirmedDialogs.forEach(confirmedDialog =>
                     dispatch(addConfirmBeforeClose(confirmedDialog))
