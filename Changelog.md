@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 167.0.0 - 2024-03-08
+
+### Fixed
+
+-   `Group` will not collapse on click unless collapsible property is set
+
 ## 166.0.0 - 2024-03-05
 
 ### Added
