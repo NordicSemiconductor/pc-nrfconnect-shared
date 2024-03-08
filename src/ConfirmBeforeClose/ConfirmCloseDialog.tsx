@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
 
@@ -24,6 +24,7 @@ export default () => {
     const [confirmedDialogs, setConfirmedDialogs] = useState<
         ConfirmBeforeCloseApp[]
     >([]);
+    const isReloading = useRef(false);
 
     const showCloseDialog = useSelector(getShowConfirmCloseDialog);
     const nextConfirmDialog = useSelector(getNextConfirmDialog);
@@ -34,6 +35,10 @@ export default () => {
                 if (confirmedDialog.onClose) confirmedDialog.onClose();
             });
             setConfirmedDialogs([]);
+            if (isReloading.current) {
+                getCurrentWindow().reload();
+                return;
+            }
             getCurrentWindow().close();
         }
     }, [nextConfirmDialog, dispatch, showCloseDialog, confirmedDialogs]);
@@ -51,6 +56,10 @@ export default () => {
             });
 
         window.addEventListener('beforeunload', action, true);
+        // @ts-expect-error Custom event
+        getCurrentWindow().on('restart-window', () => {
+            isReloading.current = true;
+        });
 
         return () => {
             window.removeEventListener('beforeunload', action);
@@ -78,6 +87,7 @@ export default () => {
                     dispatch(addConfirmBeforeClose(confirmedDialog))
                 );
                 setConfirmedDialogs([]);
+                isReloading.current = false;
             }}
         >
             {nextConfirmDialog?.message}
