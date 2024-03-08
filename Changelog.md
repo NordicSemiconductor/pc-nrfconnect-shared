@@ -12,6 +12,8 @@ every new version is a new major version.
 ### Fixed
 
 -   `Group` will not collapse on click unless collapsible property is set
+-   `ConfirmCloseDialog` now cancels launcher's request to reload. Requires
+    engine version 4.4.1
 
 ## 166.0.0 - 2024-03-05
 
