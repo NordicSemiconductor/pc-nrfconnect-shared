@@ -11,6 +11,8 @@ export const getCurrentWindow = () => ({
     reload: jest.fn(),
 
     getTitle: () => 'Not launcher',
+
+    on: jest.fn(),
 });
 export const app = {
     getAppPath: () => process.cwd(),
