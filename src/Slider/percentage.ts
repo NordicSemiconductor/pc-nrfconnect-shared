@@ -12,17 +12,20 @@ export const constrainedToPercentage = (percentage: number) => {
     return percentage;
 };
 
-export const toPercentage = (value: number, rangeOrValues: RangeOrValues) => {
+export const toPercentage = (
+    valueOrIndex: number,
+    rangeOrValues: RangeOrValues
+) => {
     if (isValues(rangeOrValues)) {
-        const max = rangeOrValues.length;
+        const max = Math.max(0, rangeOrValues.length - 1);
 
         // value is an index in the case of explicit values
-        return (value * 100) / max;
+        return (valueOrIndex * 100) / max;
     }
     const min = getMin(rangeOrValues);
     const max = getMax(rangeOrValues);
 
-    return ((value - min) * 100) / (max - min);
+    return ((valueOrIndex - min) * 100) / (max - min);
 };
 
 export const fromPercentage = (
@@ -57,7 +60,6 @@ export const fromPercentage = (
                     : closestPrevIndex;
         }
 
-        console.log(computedValue, closestIndex);
         return closestIndex;
     }
 
