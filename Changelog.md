@@ -7,6 +7,23 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 169.0.0 - 2024-03-25
+
+### Added
+
+-   `Feedback` dialog accessible from the `About` pane.
+-   `feedbackCallback` property in `App` component.
+
+### Removed
+
+-   `Feedback` pane.
+-   `feedback` property in `App` component.
+
+### Steps to upgrade when using this package
+
+-   If categories where passed to the `feedback` property in the `App`
+    component, pass them directly to `feedbackCategories`.
+
 ## 168.0.0 - 2024-03-22
 
 ### Fixed

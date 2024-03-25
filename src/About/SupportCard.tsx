@@ -20,9 +20,10 @@ import { Toggle } from '../Toggle/Toggle';
 import { doNotResetVerboseLogginOnRestart } from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
 import AboutButton from './AboutButton';
+import Feedback from './Feedback';
 import Section from './Section';
 
-export default () => {
+export default ({ feedbackCategories }: { feedbackCategories?: string[] }) => {
     const dispatch = useDispatch();
     const devices = useSelector(getDevices);
     const currentSerialNumber = useSelector(selectedSerialNumber);
@@ -60,7 +61,14 @@ export default () => {
                         label="Create system report"
                     />
                 </Section>
-                <Section title="Verbose Logging">
+                <Section title="Other feedback">
+                    <p>
+                        Provide feedback about how to improve this and other nRF
+                        Connect for Desktop applications.
+                    </p>
+                    <Feedback categories={feedbackCategories} />
+                </Section>
+                <Section title="Verbose logging">
                     <p>
                         Aid our support team with additional log information.
                         Enable this only when necessary as the log will grow
