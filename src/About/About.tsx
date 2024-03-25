@@ -15,9 +15,10 @@ import './about.scss';
 
 interface AboutPaneProps {
     documentation?: ReactNode[];
+    feedbackCategories?: string[];
 }
 
-export default ({ documentation }: AboutPaneProps) => (
+export default ({ documentation, feedbackCategories }: AboutPaneProps) => (
     <div className="about">
         <div className="about-inner">
             <ApplicationCard />
@@ -25,7 +26,7 @@ export default ({ documentation }: AboutPaneProps) => (
             {documentation && documentation.length && (
                 <DocumentationCard documentationSections={documentation} />
             )}
-            <SupportCard />
+            <SupportCard feedbackCategories={feedbackCategories} />
         </div>
     </div>
 );

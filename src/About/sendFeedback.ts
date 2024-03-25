@@ -15,6 +15,7 @@ const formURL =
 export default async (feedback: string, category?: string) => {
     const data: Record<string, unknown> = {
         name: packageJson().name,
+        version: packageJson().version,
         feedback,
         platform: process.platform,
     };

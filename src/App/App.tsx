@@ -25,7 +25,6 @@ import {
 } from '../Device/deviceSlice';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ErrorDialog from '../ErrorDialog/ErrorDialog';
-import FeedbackPane, { FeedbackPaneProps } from '../Feedback/FeedbackPane';
 import FlashMessages from '../FlashMessage/FlashMessage';
 import LogViewer from '../Log/LogViewer';
 import logger from '../logging';
@@ -68,7 +67,7 @@ interface ConnectedAppProps {
     sidePanel?: ReactNode;
     showLogByDefault?: boolean;
     documentation?: ReactNode[];
-    feedback?: boolean | FeedbackPaneProps;
+    feedbackCategories?: string[];
     children?: ReactNode;
     autoReselectByDefault?: boolean;
 }
@@ -79,7 +78,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     sidePanel,
     showLogByDefault = true,
     documentation,
-    feedback,
+    feedbackCategories,
     children,
     autoReselectByDefault = false,
 }) => {
@@ -95,7 +94,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
-    const allPanes = useAllPanes(panes, documentation, feedback);
+    const allPanes = useAllPanes(panes, documentation, feedbackCategories);
     const paneName = useRef(allPanes.map(({ name }) => name));
     const dispatch = useDispatch();
 
@@ -226,34 +225,26 @@ const usePersistedPane = () => {
 const useAllPanes = (
     panes: Pane[],
     documentation: ReactNode[] | undefined,
-    feedback: boolean | FeedbackPaneProps | undefined
+    feedbackCategories?: string[]
 ) => {
     const dispatch = useDispatch();
 
     const allPanes = useMemo(() => {
         const newPanes = [...panes];
 
-        if (feedback) {
-            newPanes.push({
-                name: 'Feedback',
-                Main: props => (
-                    <FeedbackPane
-                        {...(typeof feedback === 'object'
-                            ? feedback
-                            : undefined)}
-                        {...props}
-                    />
-                ),
-            });
-        }
-
         newPanes.push({
             name: 'About',
-            Main: props => <About documentation={documentation} {...props} />,
+            Main: props => (
+                <About
+                    documentation={documentation}
+                    feedbackCategories={feedbackCategories}
+                    {...props}
+                />
+            ),
         });
 
         return newPanes;
-    }, [panes, documentation, feedback]);
+    }, [panes, documentation, feedbackCategories]);
 
     useEffect(() => {
         dispatch(setPanes(allPanes));
