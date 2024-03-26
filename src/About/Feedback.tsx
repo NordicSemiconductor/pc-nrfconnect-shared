@@ -42,26 +42,24 @@ const FeedbackDialog = ({
         DropdownItem | undefined
     >(categoryItems ? categoryItems[0] : undefined);
 
+    const onClose = () => {
+        setFeedback('');
+        setSendingFeedback(false);
+        setSayThankYou(false);
+        setSelectedCategory(categoryItems ? categoryItems[0] : undefined);
+        onHide();
+    };
+
     return (
         <GenericDialog
             isVisible={isVisible}
-            onHide={onHide}
+            onHide={onClose}
             closeOnUnfocus
             title="Feedback"
             showSpinner={sendingFeedback}
             footer={
                 <>
-                    {sayThankYou ? (
-                        <DialogButton
-                            variant="secondary"
-                            onClick={() => {
-                                setSayThankYou(false);
-                                setFeedback('');
-                            }}
-                        >
-                            Give more feedback
-                        </DialogButton>
-                    ) : (
+                    {!sayThankYou && (
                         <DialogButton
                             variant="primary"
                             onClick={() => {
@@ -77,7 +75,7 @@ const FeedbackDialog = ({
                             Send feedback
                         </DialogButton>
                     )}
-                    <DialogButton onClick={onHide}>Close</DialogButton>
+                    <DialogButton onClick={onClose}>Close</DialogButton>
                 </>
             }
         >
