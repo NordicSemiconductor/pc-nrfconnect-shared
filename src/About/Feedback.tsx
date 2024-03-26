@@ -51,17 +51,7 @@ const FeedbackDialog = ({
             showSpinner={sendingFeedback}
             footer={
                 <>
-                    {sayThankYou ? (
-                        <DialogButton
-                            variant="secondary"
-                            onClick={() => {
-                                setSayThankYou(false);
-                                setFeedback('');
-                            }}
-                        >
-                            Give more feedback
-                        </DialogButton>
-                    ) : (
+                    {!sayThankYou && (
                         <DialogButton
                             variant="primary"
                             onClick={() => {
