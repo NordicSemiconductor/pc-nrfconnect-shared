@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 171.0.0 - 2024-04-04
+
+### Added
+
+-   Export `setSelectedDeviceInfo` for apps to set when information changes
+    about a device such as protection
+
 ## 170.0.0 - 2024-03-25
 
 ### Fixed
