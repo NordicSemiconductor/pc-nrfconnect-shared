@@ -17,16 +17,19 @@ import { AppInfo, SourceJson } from '../ipc/MetaFiles';
 import { PackageJsonApp } from '../ipc/schema/packageJson';
 import checkAppProperties from './check-app-properties';
 
+interface LegacyAppDist {
+    publishTimestamp?: string;
+    tarball: string;
+    shasum: string;
+}
+
 interface LegacyAppInfo {
     ['dist-tags']?: {
         latest?: string;
     };
     versions?: {
         [version: string]: {
-            dist: {
-                tarball: string;
-                shasum: string;
-            };
+            dist: LegacyAppDist;
         };
     };
 }
@@ -259,6 +262,15 @@ const updateLegacyAppInfo = (appInfo: LegacyAppInfo, app: App) => {
         }
     }
 
+    const dist: LegacyAppDist = {
+        tarball: `${app.sourceUrl}/${app.filename}`,
+        shasum: app.shasum,
+    };
+
+    if (!app.isOfficial) {
+        dist.publishTimestamp = new Date().toISOString();
+    }
+
     return {
         ...appInfo,
         'dist-tags': {
@@ -268,10 +280,7 @@ const updateLegacyAppInfo = (appInfo: LegacyAppInfo, app: App) => {
         versions: {
             ...appInfo.versions,
             [app.version]: {
-                dist: {
-                    tarball: `${app.sourceUrl}/${app.filename}`,
-                    shasum: app.shasum,
-                },
+                dist,
             },
         },
     };

@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 172.0.0 - UNRELEASED
+
+### Added
+
+-   Publish timestamp for nordic-publish for non-official sources
+
 ## 171.0.0 - 2024-04-04
 
 ### Added
