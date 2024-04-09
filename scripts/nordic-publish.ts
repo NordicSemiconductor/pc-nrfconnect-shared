@@ -233,20 +233,6 @@ const downloadFileContent = (filename: string) =>
         });
     });
 
-const downloadLegacyAppInfo = async (name: string): Promise<LegacyAppInfo> => {
-    try {
-        const content = await downloadFileContent(name);
-        return JSON.parse(content);
-    } catch (error) {
-        console.log(
-            `App info file will be created from scratch due to: ${errorAsString(
-                error
-            )}`
-        );
-        return {};
-    }
-};
-
 const assertAppVersionIsValid = (
     latestAppVersion: string | undefined,
     app: App
@@ -262,24 +248,6 @@ const assertAppVersionIsValid = (
     }
 };
 
-    return {
-        ...appInfo,
-        'dist-tags': {
-            ...appInfo['dist-tags'],
-            latest: app.version,
-        },
-        versions: {
-            ...appInfo.versions,
-            [app.version]: {
-                dist: {
-                    tarball: `${app.sourceUrl}/${app.filename}`,
-                    shasum: app.shasum,
-                },
-            },
-        },
-    };
-};
-
 type UploadLocalFile = (localFileName: string, remote: string) => Promise<void>;
 type UploadBufferContent = (content: Buffer, remote: string) => Promise<void>;
 
@@ -291,11 +259,6 @@ const uploadFile: UploadLocalFile & UploadBufferContent = (
         console.log(`Uploading file ${remote}`);
         client.put(local, remote, err => (err ? reject(err) : resolve()));
     });
-
-const getUpdatedLegacyAppInfo = async (app: App) => {
-    const appInfo = await downloadLegacyAppInfo(app.name);
-    return updateLegacyAppInfo(appInfo, app);
-};
 
 const createBlankSourceJson = async (name: string) => {
     try {
@@ -416,9 +379,6 @@ const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
     };
 };
 
-const uploadLegacyAppInfo = (app: App, appInfo: LegacyAppInfo) =>
-    uploadFile(Buffer.from(JSON.stringify(appInfo, undefined, 2)), app.name);
-
 const uploadSourceJson = (sourceJson: SourceJson) =>
     uploadFile(
         Buffer.from(JSON.stringify(sourceJson, undefined, 2)),
@@ -479,14 +439,12 @@ const main = async () => {
         }
         await changeWorkingDirectory(options.sourceDir);
 
-        const legacyAppInfo = await getUpdatedLegacyAppInfo(app);
         const sourceJson = await getUpdatedSourceJson(app, options);
         const appInfo = await getUpdatedAppInfo(app);
 
         await uploadChangelog(app);
         await uploadIcon(app);
         await uploadPackage(app);
-        await uploadLegacyAppInfo(app, legacyAppInfo);
         await uploadAppInfo(app, appInfo);
         await uploadSourceJson(sourceJson);
 
