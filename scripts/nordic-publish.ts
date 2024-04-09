@@ -17,19 +17,17 @@ import { AppInfo, SourceJson } from '../ipc/MetaFiles';
 import { PackageJsonApp } from '../ipc/schema/packageJson';
 import checkAppProperties from './check-app-properties';
 
-interface LegacyAppDist {
-    publishTimestamp?: string;
-    tarball: string;
-    shasum: string;
-}
-
 interface LegacyAppInfo {
     ['dist-tags']?: {
         latest?: string;
     };
     versions?: {
         [version: string]: {
-            dist: LegacyAppDist;
+            dist: {
+                publishTimestamp?: string;
+                tarball: string;
+                shasum: string;
+            };
         };
     };
 }
@@ -262,15 +260,6 @@ const updateLegacyAppInfo = (appInfo: LegacyAppInfo, app: App) => {
         }
     }
 
-    const dist: LegacyAppDist = {
-        tarball: `${app.sourceUrl}/${app.filename}`,
-        shasum: app.shasum,
-    };
-
-    if (!app.isOfficial) {
-        dist.publishTimestamp = new Date().toISOString();
-    }
-
     return {
         ...appInfo,
         'dist-tags': {
@@ -280,7 +269,11 @@ const updateLegacyAppInfo = (appInfo: LegacyAppInfo, app: App) => {
         versions: {
             ...appInfo.versions,
             [app.version]: {
-                dist,
+                dist: {
+                    publishTimestamp: new Date().toISOString(),
+                    tarball: `${app.sourceUrl}/${app.filename}`,
+                    shasum: app.shasum,
+                },
             },
         },
     };
@@ -411,6 +404,7 @@ const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
             ...versions,
             [version]: {
                 tarballUrl: `${app.sourceUrl}/${app.filename}`,
+                publishTimestamp: new Date().toISOString(),
                 shasum: app.shasum,
                 nrfutilModules,
             },
