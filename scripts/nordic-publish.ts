@@ -247,17 +247,20 @@ const downloadLegacyAppInfo = async (name: string): Promise<LegacyAppInfo> => {
     }
 };
 
-const updateLegacyAppInfo = (appInfo: LegacyAppInfo, app: App) => {
-    const latest = appInfo['dist-tags']?.latest;
-    if (latest != null) {
-        console.log(`Latest published version ${latest}`);
+const assertAppVersionIsValid = (
+    latestAppVersion: string | undefined,
+    app: App
+) => {
+    if (latestAppVersion != null) {
+        console.log(`Latest published version ${latestAppVersion}`);
 
-        if (semver.lte(app.version, latest) && app.isOfficial) {
+        if (semver.lte(app.version, latestAppVersion) && app.isOfficial) {
             throw new Error(
                 'Current package version cannot be published, bump it higher'
             );
         }
     }
+};
 
     return {
         ...appInfo,
@@ -357,10 +360,12 @@ const getUpdatedSourceJson = async (
     };
 };
 
-const downloadExistingVersions = async (app: App) => {
+const downloadExistingAppInfo = async (
+    app: App
+): Promise<Partial<Pick<AppInfo, 'latestVersion' | 'versions'>>> => {
     try {
         const appInfoContent = await downloadFileContent(app.appInfoName);
-        return (JSON.parse(appInfoContent) as AppInfo).versions;
+        return JSON.parse(appInfoContent) as AppInfo;
     } catch (error) {
         console.log(
             `No previous app versions found due to: ${errorAsString(error)}`
@@ -377,7 +382,9 @@ const failBecauseOfMissingProperty = () => {
 };
 
 const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
-    const versions = await downloadExistingVersions(app);
+    const oldAppInfo = await downloadExistingAppInfo(app);
+
+    assertAppVersionIsValid(oldAppInfo.latestVersion, app);
 
     const {
         name,
@@ -399,7 +406,7 @@ const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
         releaseNotesUrl: `${app.sourceUrl}/${app.releaseNotesFilename}`,
         latestVersion: version,
         versions: {
-            ...versions,
+            ...oldAppInfo.versions,
             [version]: {
                 tarballUrl: `${app.sourceUrl}/${app.filename}`,
                 shasum: app.shasum,
