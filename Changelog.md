@@ -7,6 +7,16 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 172.0.0 - 2024-04-15
+
+### Fixed
+
+-   nrf9151 and nrf9131 not have the modem trait set to true
+
+### Changed
+
+-   All `NRF91` devices are now considered to have modem trait
+
 ## 171.0.0 - 2024-04-04
 
 ### Added

@@ -85,8 +85,7 @@ const shouldAutoReselect = (
 export const hasModem = (device: Device, deviceInfo?: DeviceInfo) =>
     !!(
         device.traits.modem ||
-        deviceInfo?.jlink?.deviceVersion?.toUpperCase().includes('NRF9160') ||
-        deviceInfo?.jlink?.deviceVersion?.toUpperCase().includes('NRF9161')
+        deviceInfo?.jlink?.deviceFamily?.toUpperCase() === 'NRF91_FAMILY'
     );
 
 const initAutoReconnectTimeout =
