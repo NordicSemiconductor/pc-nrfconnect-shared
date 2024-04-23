@@ -42,7 +42,16 @@ const parseJsonBuffers = <T>(data: Buffer): T[] | undefined => {
 
 const prepareEnv = (baseDir: string, module: string, version: string) => {
     const env = { ...process.env };
-    env.NRFUTIL_HOME = path.join(baseDir, 'nrfutil-sandboxes', module, version);
+    const nrfutilSandboxFolder =
+        process.platform === 'darwin' && process.arch !== 'x64'
+            ? path.join('nrfutil-sandboxes', process.arch)
+            : 'nrfutil-sandboxes';
+    env.NRFUTIL_HOME = path.join(
+        baseDir,
+        nrfutilSandboxFolder,
+        module,
+        version
+    );
     fs.mkdirSync(env.NRFUTIL_HOME, { recursive: true });
 
     env.NRFUTIL_EXEC_PATH = path.join(env.NRFUTIL_HOME, 'bin');
