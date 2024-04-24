@@ -26,7 +26,7 @@ export const parsePackageJson =
 
 const nrfConnectForDesktop = z.object({
     supportedDevices: z.enum(knownDevicePcas).array().nonempty().optional(),
-    nrfutil: nrfModules.optional(),
+    nrfutil: nrfModules,
     html: z.string(),
 });
 
