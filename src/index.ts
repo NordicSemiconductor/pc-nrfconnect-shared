@@ -85,7 +85,12 @@ export { truncateMiddle } from './utils/truncateMiddle';
 export { default as useHotKey } from './utils/useHotKey';
 export { isDevelopment } from './utils/environment';
 
-export { currentPane, setCurrentPane } from './App/appLayout';
+export {
+    currentPane,
+    setCurrentPane,
+    setPaneHidden,
+    setPaneDisabled,
+} from './App/appLayout';
 
 export { isLoggingVerbose } from './Log/logSlice';
 
