@@ -7,6 +7,23 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 174.0.0 - 2024-04-25
+
+### Added
+
+-   `setPaneDisabled` to disable a pane from the `NavMenu`.
+-   `setPaneHidden` to hide a pane from the `NavMenu`.
+-   `preHidden` and `preDisabled` properties in `Pane` type passed to `App`.
+
+#### Changed
+
+-   `currentPane` now returns the current pane name instead of index.
+-   Persisted `currentPane` value is now the pane name instead of index.
+
+### Steps to upgrade when using this package
+
+-   Update all `currentPane` calls to work with strings instead of indexes.
+
 ## 173.0.0 - 2024-04-23
 
 ### Added

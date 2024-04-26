@@ -13,12 +13,12 @@ import classNames from '../utils/classNames';
 import './nav-menu-item.scss';
 
 interface Props {
-    index: number;
     isSelected: boolean;
     label: string;
+    disabled: boolean;
 }
 
-const NavMenuItem: FC<Props> = ({ index, isSelected, label }) => {
+const NavMenuItem: FC<Props> = ({ isSelected, label, disabled }) => {
     const dispatch = useDispatch();
 
     return (
@@ -29,7 +29,8 @@ const NavMenuItem: FC<Props> = ({ index, isSelected, label }) => {
                 isSelected && 'selected',
                 'mr-4'
             )}
-            onClick={() => dispatch(setCurrentPane(index))}
+            onClick={() => dispatch(setCurrentPane(label))}
+            disabled={disabled}
         >
             {label}
         </button>

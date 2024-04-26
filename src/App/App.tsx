@@ -57,6 +57,8 @@ export interface PaneProps {
 
 export interface Pane {
     name: string;
+    preHidden?: boolean;
+    preDisabled?: boolean;
     Main: FC<PaneProps>;
     SidePanel?: FC;
 }
@@ -94,8 +96,8 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
+    const currentPaneIndex = panes.findIndex(p => p.name === currentPane);
     const allPanes = useAllPanes(panes, documentation, feedbackCategories);
-    const paneName = useRef(allPanes.map(({ name }) => name));
     const dispatch = useDispatch();
 
     useHotKey({
@@ -106,11 +108,9 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     });
 
     useEffect(() => {
-        paneName.current = allPanes.map(({ name }) => name);
-    }, [allPanes]);
-
-    useEffect(() => {
-        telemetry.sendPageView(paneName.current[currentPane]);
+        if (currentPane) {
+            telemetry.sendPageView(currentPane);
+        }
     }, [currentPane]);
 
     useEffect(() => {
@@ -130,7 +130,8 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
         }
     }, [dispatch, showLogByDefault]);
 
-    const SidePanelComponent = allPanes[currentPane].SidePanel;
+    const SidePanelComponent =
+        currentPaneIndex >= 0 ? allPanes[currentPaneIndex].SidePanel : null;
     const currentSidePanel =
         SidePanelComponent != null ? <SidePanelComponent /> : sidePanel;
 
@@ -152,7 +153,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
                 <div className="core19-main-and-log">
                     <Carousel
                         className="core19-main-container"
-                        activeIndex={currentPane}
+                        activeIndex={currentPaneIndex}
                         controls={false}
                         indicators={false}
                         keyboard={false}
@@ -160,9 +161,9 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
                         slide
                         fade
                     >
-                        {allPanes.map(({ name, Main }, paneIndex) => (
+                        {allPanes.map(({ name, Main }) => (
                             <Carousel.Item key={name}>
-                                <Main active={paneIndex === currentPane} />
+                                <Main active={name === currentPane} />
                             </Carousel.Item>
                         ))}
                     </Carousel>
@@ -217,8 +218,10 @@ export default ({
 const usePersistedPane = () => {
     const dispatch = useDispatch();
     useEffect(() => {
-        const pane = getPersistedCurrentPane() ?? 0;
-        dispatch(setCurrentPane(pane));
+        const pane = getPersistedCurrentPane();
+        if (pane) {
+            dispatch(setCurrentPane(pane));
+        }
     }, [dispatch]);
 };
 
