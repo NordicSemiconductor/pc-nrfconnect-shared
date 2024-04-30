@@ -140,6 +140,7 @@ interface SharedAppSpecificStoreSchema {
     currentPane?: string;
     isLogVisible?: boolean;
     isLoggingVerbose?: boolean;
+    currentPaneName?: string;
 }
 
 export const getAppSpecificStore = <
@@ -166,23 +167,12 @@ export const getAppSpecificStore = <
 
 export const persistCurrentPane = (currentPane: string) =>
     getAppSpecificStore<SharedAppSpecificStoreSchema>().set(
-        `currentPane`,
+        `currentPaneName`,
         currentPane
     );
-export const getPersistedCurrentPane = () => {
-    const currentPane =
-        getAppSpecificStore<SharedAppSpecificStoreSchema>().get(`currentPane`);
+export const getPersistedCurrentPane = () =>
+    getAppSpecificStore<SharedAppSpecificStoreSchema>().get(`currentPaneName`);
 
-    // Previously this was the currentPane index
-    if (typeof currentPane === 'number') {
-        getAppSpecificStore<SharedAppSpecificStoreSchema>().delete(
-            `currentPane`
-        );
-        return undefined;
-    }
-
-    return currentPane;
-};
 export const persistLogVisible = (visible: boolean) =>
     getAppSpecificStore<SharedAppSpecificStoreSchema>().set(
         `isLogVisible`,
