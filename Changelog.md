@@ -7,12 +7,6 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 175.0.0 - UNRELEASED
-
-### Added
-
--   Publish timestamp for nordic-publish for non-official sources.
-
 ## 174.0.0 - UNRELEASED
 
 ### Added
@@ -20,6 +14,7 @@ every new version is a new major version.
 -   `setPaneDisabled` to disable a pane from the `NavMenu`.
 -   `setPaneHidden` to hide a pane from the `NavMenu`.
 -   `preHidden` and `preDisabled` properties in `Pane` type passed to `App`.
+-   Publish timestamp for nordic-publish for non-official sources.
 
 #### Changed
 
