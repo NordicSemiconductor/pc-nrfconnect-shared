@@ -26,6 +26,10 @@ every new version is a new major version.
 -   `currentPane` now returns the current pane name instead of index.
 -   Persisted `currentPane` value is now the pane name instead of index.
 
+### Removed
+
+-   Removed upload of legacy app info files when publishing apps.
+
 ### Steps to upgrade when using this package
 
 -   Update all `currentPane` calls to work with strings instead of indexes.
