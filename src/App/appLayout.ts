@@ -35,6 +35,7 @@ const initialState: AppLayout = {
 
 const isAboutPane = (pane: string, panes: Pane[]) =>
     pane === panes[panes.length - 1].name;
+export const AboutPaneName = 'About';
 
 const setCurrentPaneInState = (newPane: string, state: AppLayout) => {
     if (!isAboutPane(newPane, state.panes)) {

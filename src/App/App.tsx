@@ -37,6 +37,7 @@ import {
 } from '../utils/persistentStore';
 import useHotKey from '../utils/useHotKey';
 import {
+    AboutPaneName,
     currentPane as currentPaneSelector,
     isLogVisible as isLogVisibleSelector,
     isSidePanelVisible as isSidePanelVisibleSelector,
@@ -236,7 +237,7 @@ const useAllPanes = (
         const newPanes = [...panes];
 
         newPanes.push({
-            name: 'About',
+            name: AboutPaneName,
             Main: props => (
                 <About
                     documentation={documentation}
