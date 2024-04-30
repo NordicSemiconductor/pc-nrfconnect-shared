@@ -97,8 +97,8 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
-    const currentPaneIndex = panes.findIndex(p => p.name === currentPane);
     const allPanes = useAllPanes(panes, documentation, feedbackCategories);
+    const currentPaneIndex = allPanes.findIndex(p => p.name === currentPane);
     const dispatch = useDispatch();
 
     useHotKey({
