@@ -34,6 +34,7 @@ interface Installed {
     repositoryUrl?: UrlString;
     html?: string;
     installed: {
+        publishTimestamp?: string;
         path: string;
         shasum?: string;
     };

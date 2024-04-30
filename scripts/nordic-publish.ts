@@ -24,6 +24,7 @@ interface LegacyAppInfo {
     versions?: {
         [version: string]: {
             dist: {
+                publishTimestamp?: string;
                 tarball: string;
                 shasum: string;
             };
@@ -372,6 +373,7 @@ const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
             ...oldAppInfo.versions,
             [version]: {
                 tarballUrl: `${app.sourceUrl}/${app.filename}`,
+                publishTimestamp: new Date().toISOString(),
                 shasum: app.shasum,
                 nrfutilModules,
             },

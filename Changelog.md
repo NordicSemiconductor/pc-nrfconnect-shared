@@ -7,13 +7,14 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 174.0.0 - UNRELEASED
+## 174.0.0 - 2024-04-30
 
 ### Added
 
 -   `setPaneDisabled` to disable a pane from the `NavMenu`.
 -   `setPaneHidden` to hide a pane from the `NavMenu`.
 -   `preHidden` and `preDisabled` properties in `Pane` type passed to `App`.
+-   Publish timestamp for nordic-publish for non-official sources.
 
 #### Changed
 
@@ -32,17 +33,17 @@ every new version is a new major version.
 
 ### Added
 
--   Support for splitting M1 and x64 nrfutil sandboxes
+-   Support for splitting M1 and x64 nrfutil sandboxes.
 
 ## 172.0.0 - 2024-04-15
 
 ### Fixed
 
--   nrf9151 and nrf9131 not have the modem trait set to true
+-   nrf9151 and nrf9131 not have the modem trait set to true.
 
 ### Changed
 
--   All `NRF91` devices are now considered to have modem trait
+-   All `NRF91` devices are now considered to have modem trait.
 
 ## 171.0.0 - 2024-04-04
 
