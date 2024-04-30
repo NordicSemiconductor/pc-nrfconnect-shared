@@ -13,31 +13,43 @@ import {
     persistLogVisible,
 } from '../utils/persistentStore';
 
+interface Pane {
+    name: string;
+    hidden: boolean;
+    disabled: boolean;
+}
+
 export interface AppLayout {
     isSidePanelVisible: boolean;
     isLogVisible: boolean;
-    currentPane: number;
-    paneNames: string[];
+    currentPane?: string;
+    panes: Pane[];
 }
 
 const initialState: AppLayout = {
     isSidePanelVisible: true,
     isLogVisible: !!getPersistedLogVisible(),
-    currentPane: 0,
-    paneNames: [],
+    currentPane: undefined,
+    panes: [],
 };
 
-const isAboutPane = (pane: number, paneCount: number) => pane === paneCount - 1;
+export const AboutPaneName = 'About';
+const isAboutPane = (pane: string) => pane === AboutPaneName;
 
-const setCurrentPaneInState = (newPane: number, state: AppLayout) => {
-    if (!isAboutPane(newPane, state.paneNames.length)) {
+const setCurrentPaneInState = (newPane: string, state: AppLayout) => {
+    if (!isAboutPane(newPane)) {
         persistCurrentPane(newPane);
     }
     state.currentPane = newPane;
 };
 
+const getValidPanes = (panes: Pane[]) =>
+    panes.filter(p => !p.disabled && !p.hidden);
+
 interface PaneSpec {
     name: string;
+    preHidden?: boolean;
+    preDisabled?: boolean;
 }
 
 const slice = createSlice({
@@ -51,27 +63,87 @@ const slice = createSlice({
         toggleSidePanelVisible: state => {
             state.isSidePanelVisible = !state.isSidePanelVisible;
         },
-        setCurrentPane: (
-            state,
-            { payload: newPane }: PayloadAction<number>
-        ) => {
-            setCurrentPaneInState(newPane, state);
+        setCurrentPane: (state, action: PayloadAction<string>) => {
+            setCurrentPaneInState(action.payload, state);
         },
         setPanes: (state, action: PayloadAction<PaneSpec[]>) => {
-            state.paneNames = action.payload.map(pane => pane.name);
+            state.panes = action.payload.map(pane => ({
+                name: pane.name,
+                hidden: !!pane.preHidden,
+                disabled: !!pane.preDisabled,
+            }));
+
+            if (
+                !state.currentPane ||
+                !getValidPanes(state.panes).find(
+                    p => p.name === state.currentPane
+                )
+            ) {
+                setCurrentPaneInState(
+                    getValidPanes(state.panes)[0].name,
+                    state
+                );
+            }
         },
         switchToNextPane: state => {
+            const validPanes = getValidPanes(state.panes);
+            const currentPaneIndex = state.panes.findIndex(
+                pane => pane.name === state.currentPane
+            );
             setCurrentPaneInState(
-                (state.currentPane + 1) % state.paneNames.length,
+                validPanes[(currentPaneIndex + 1) % validPanes.length].name,
                 state
             );
         },
         switchToPreviousPane: state => {
-            let nextPane = state.currentPane - 1;
-            if (nextPane < 0) {
-                nextPane = state.paneNames.length - 1;
+            const currentPaneIndex = state.panes.findIndex(
+                pane => pane.name === state.currentPane
+            );
+            setCurrentPaneInState(
+                getValidPanes(state.panes)[Math.max(0, currentPaneIndex - 1)]
+                    .name,
+                state
+            );
+        },
+        setPaneHidden: (
+            state,
+            action: PayloadAction<{ name: string; hidden: boolean }>
+        ) => {
+            state.panes = state.panes.map(pane =>
+                pane.name === action.payload.name
+                    ? { ...pane, hidden: action.payload.hidden }
+                    : pane
+            );
+
+            if (
+                state.currentPane === action.payload.name &&
+                action.payload.hidden
+            ) {
+                setCurrentPaneInState(
+                    getValidPanes(state.panes)[0].name,
+                    state
+                );
             }
-            setCurrentPaneInState(nextPane, state);
+        },
+        setPaneDisabled: (
+            state,
+            action: PayloadAction<{ name: string; disabled: boolean }>
+        ) => {
+            state.panes = state.panes.map(pane =>
+                pane.name === action.payload.name
+                    ? { ...pane, disabled: action.payload.disabled }
+                    : pane
+            );
+
+            if (
+                state.currentPane === action.payload.name &&
+                action.payload.disabled
+            ) {
+                setCurrentPaneInState(
+                    getValidPanes(state.panes)[0].name,
+                    state
+                );
+            }
         },
     },
 });
@@ -85,15 +157,15 @@ export const {
         toggleSidePanelVisible,
         switchToNextPane,
         switchToPreviousPane,
+        setPaneHidden,
+        setPaneDisabled,
     },
 } = slice;
 
 export const isSidePanelVisible = (state: RootState) =>
     state.appLayout.isSidePanelVisible;
 export const isLogVisible = (state: RootState) => state.appLayout.isLogVisible;
-export const paneNames = (state: RootState) => state.appLayout.paneNames;
+export const panes = (state: RootState) =>
+    state.appLayout.panes.filter(p => !p.hidden);
 
-export const currentPane = ({ appLayout }: RootState) =>
-    appLayout.currentPane >= appLayout.paneNames.length
-        ? 0
-        : appLayout.currentPane;
+export const currentPane = ({ appLayout }: RootState) => appLayout.currentPane;

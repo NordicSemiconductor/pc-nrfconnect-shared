@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import {
     currentPane as currentPaneSelector,
-    paneNames as paneNamesSelector,
+    panes as panesSelector,
     switchToNextPane,
     switchToPreviousPane,
 } from '../App/appLayout';
@@ -18,7 +18,7 @@ import NavMenuItem from './NavMenuItem';
 
 const NavMenu = () => {
     const currentPane = useSelector(currentPaneSelector);
-    const paneNames = useSelector(paneNamesSelector);
+    const panes = useSelector(panesSelector);
     const dispatch = useDispatch();
 
     useHotKey({
@@ -37,12 +37,12 @@ const NavMenu = () => {
 
     return (
         <div data-testid="nav-menu" className="d-flex ml-3 flex-wrap">
-            {paneNames.map((name, index: number) => (
+            {panes.map(pane => (
                 <NavMenuItem
-                    key={name}
-                    index={index}
-                    isSelected={currentPane === index}
-                    label={name}
+                    key={pane.name}
+                    isSelected={currentPane === pane.name}
+                    label={pane.name}
+                    disabled={pane.disabled}
                 />
             ))}
         </div>

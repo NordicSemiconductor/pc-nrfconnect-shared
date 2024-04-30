@@ -137,9 +137,10 @@ export const getTelemetryClientId = () =>
 let appSpecificStore: Store | undefined;
 
 interface SharedAppSpecificStoreSchema {
-    currentPane?: number;
+    currentPane?: string;
     isLogVisible?: boolean;
     isLoggingVerbose?: boolean;
+    currentPaneName?: string;
 }
 
 export const getAppSpecificStore = <
@@ -164,13 +165,14 @@ export const getAppSpecificStore = <
     >;
 };
 
-export const persistCurrentPane = (currentPane: number) =>
+export const persistCurrentPane = (currentPane: string) =>
     getAppSpecificStore<SharedAppSpecificStoreSchema>().set(
-        `currentPane`,
+        `currentPaneName`,
         currentPane
     );
 export const getPersistedCurrentPane = () =>
-    getAppSpecificStore<SharedAppSpecificStoreSchema>().get(`currentPane`);
+    getAppSpecificStore<SharedAppSpecificStoreSchema>().get(`currentPaneName`);
+
 export const persistLogVisible = (visible: boolean) =>
     getAppSpecificStore<SharedAppSpecificStoreSchema>().set(
         `isLogVisible`,
