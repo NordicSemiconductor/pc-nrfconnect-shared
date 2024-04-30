@@ -75,7 +75,9 @@ const slice = createSlice({
 
             if (
                 !state.currentPane ||
-                !state.panes.find(p => p.name === state.currentPane)
+                !getValidPanes(state.panes).find(
+                    p => p.name === state.currentPane
+                )
             ) {
                 setCurrentPaneInState(
                     getValidPanes(state.panes)[0].name,
