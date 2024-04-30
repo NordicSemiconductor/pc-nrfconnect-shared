@@ -33,11 +33,11 @@ const initialState: AppLayout = {
     panes: [],
 };
 
-const isAboutPane = (pane: string, panes: Pane[]) =>
-    pane === panes[panes.length - 1].name;
+export const AboutPaneName = 'About';
+const isAboutPane = (pane: string) => pane === AboutPaneName;
 
 const setCurrentPaneInState = (newPane: string, state: AppLayout) => {
-    if (!isAboutPane(newPane, state.panes)) {
+    if (!isAboutPane(newPane)) {
         persistCurrentPane(newPane);
     }
     state.currentPane = newPane;
@@ -75,7 +75,9 @@ const slice = createSlice({
 
             if (
                 !state.currentPane ||
-                !state.panes.find(p => p.name === state.currentPane)
+                !getValidPanes(state.panes).find(
+                    p => p.name === state.currentPane
+                )
             ) {
                 setCurrentPaneInState(
                     getValidPanes(state.panes)[0].name,

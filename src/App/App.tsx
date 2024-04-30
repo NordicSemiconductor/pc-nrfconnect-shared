@@ -37,6 +37,7 @@ import {
 } from '../utils/persistentStore';
 import useHotKey from '../utils/useHotKey';
 import {
+    AboutPaneName,
     currentPane as currentPaneSelector,
     isLogVisible as isLogVisibleSelector,
     isSidePanelVisible as isSidePanelVisibleSelector,
@@ -96,8 +97,8 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     usePersistedPane();
     const isLogVisible = useSelector(isLogVisibleSelector);
     const currentPane = useSelector(currentPaneSelector);
-    const currentPaneIndex = panes.findIndex(p => p.name === currentPane);
     const allPanes = useAllPanes(panes, documentation, feedbackCategories);
+    const currentPaneIndex = allPanes.findIndex(p => p.name === currentPane);
     const dispatch = useDispatch();
 
     useHotKey({
@@ -236,7 +237,7 @@ const useAllPanes = (
         const newPanes = [...panes];
 
         newPanes.push({
-            name: 'About',
+            name: AboutPaneName,
             Main: props => (
                 <About
                     documentation={documentation}
