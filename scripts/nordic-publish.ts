@@ -233,48 +233,19 @@ const downloadFileContent = (filename: string) =>
         });
     });
 
-const downloadLegacyAppInfo = async (name: string): Promise<LegacyAppInfo> => {
-    try {
-        const content = await downloadFileContent(name);
-        return JSON.parse(content);
-    } catch (error) {
-        console.log(
-            `App info file will be created from scratch due to: ${errorAsString(
-                error
-            )}`
-        );
-        return {};
-    }
-};
+const assertAppVersionIsValid = (
+    latestAppVersion: string | undefined,
+    app: App
+) => {
+    if (latestAppVersion != null) {
+        console.log(`Latest published version ${latestAppVersion}`);
 
-const updateLegacyAppInfo = (appInfo: LegacyAppInfo, app: App) => {
-    const latest = appInfo['dist-tags']?.latest;
-    if (latest != null) {
-        console.log(`Latest published version ${latest}`);
-
-        if (semver.lte(app.version, latest) && app.isOfficial) {
+        if (semver.lte(app.version, latestAppVersion) && app.isOfficial) {
             throw new Error(
                 'Current package version cannot be published, bump it higher'
             );
         }
     }
-
-    return {
-        ...appInfo,
-        'dist-tags': {
-            ...appInfo['dist-tags'],
-            latest: app.version,
-        },
-        versions: {
-            ...appInfo.versions,
-            [app.version]: {
-                dist: {
-                    tarball: `${app.sourceUrl}/${app.filename}`,
-                    shasum: app.shasum,
-                },
-            },
-        },
-    };
 };
 
 type UploadLocalFile = (localFileName: string, remote: string) => Promise<void>;
@@ -288,11 +259,6 @@ const uploadFile: UploadLocalFile & UploadBufferContent = (
         console.log(`Uploading file ${remote}`);
         client.put(local, remote, err => (err ? reject(err) : resolve()));
     });
-
-const getUpdatedLegacyAppInfo = async (app: App) => {
-    const appInfo = await downloadLegacyAppInfo(app.name);
-    return updateLegacyAppInfo(appInfo, app);
-};
 
 const createBlankSourceJson = async (name: string) => {
     try {
@@ -357,10 +323,12 @@ const getUpdatedSourceJson = async (
     };
 };
 
-const downloadExistingVersions = async (app: App) => {
+const downloadExistingAppInfo = async (
+    app: App
+): Promise<Partial<Pick<AppInfo, 'latestVersion' | 'versions'>>> => {
     try {
         const appInfoContent = await downloadFileContent(app.appInfoName);
-        return (JSON.parse(appInfoContent) as AppInfo).versions;
+        return JSON.parse(appInfoContent) as AppInfo;
     } catch (error) {
         console.log(
             `No previous app versions found due to: ${errorAsString(error)}`
@@ -377,7 +345,9 @@ const failBecauseOfMissingProperty = () => {
 };
 
 const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
-    const versions = await downloadExistingVersions(app);
+    const oldAppInfo = await downloadExistingAppInfo(app);
+
+    assertAppVersionIsValid(oldAppInfo.latestVersion, app);
 
     const {
         name,
@@ -399,7 +369,7 @@ const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
         releaseNotesUrl: `${app.sourceUrl}/${app.releaseNotesFilename}`,
         latestVersion: version,
         versions: {
-            ...versions,
+            ...oldAppInfo.versions,
             [version]: {
                 tarballUrl: `${app.sourceUrl}/${app.filename}`,
                 shasum: app.shasum,
@@ -408,9 +378,6 @@ const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
         },
     };
 };
-
-const uploadLegacyAppInfo = (app: App, appInfo: LegacyAppInfo) =>
-    uploadFile(Buffer.from(JSON.stringify(appInfo, undefined, 2)), app.name);
 
 const uploadSourceJson = (sourceJson: SourceJson) =>
     uploadFile(
@@ -472,14 +439,12 @@ const main = async () => {
         }
         await changeWorkingDirectory(options.sourceDir);
 
-        const legacyAppInfo = await getUpdatedLegacyAppInfo(app);
         const sourceJson = await getUpdatedSourceJson(app, options);
         const appInfo = await getUpdatedAppInfo(app);
 
         await uploadChangelog(app);
         await uploadIcon(app);
         await uploadPackage(app);
-        await uploadLegacyAppInfo(app, legacyAppInfo);
         await uploadAppInfo(app, appInfo);
         await uploadSourceJson(sourceJson);
 
