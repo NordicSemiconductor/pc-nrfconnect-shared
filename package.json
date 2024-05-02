@@ -1,6 +1,6 @@
 {
     "name": "@nordicsemiconductor/pc-nrfconnect-shared",
-    "version": "174.0.0",
+    "version": "175.0.0",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -29,7 +29,7 @@
         "postinstall": "ts-node scripts/postinstall.ts"
     },
     "dependencies": {
-        "@electron/remote": "^2.1.1",
+        "@electron/remote": "^2.1.2",
         "@mdi/font": "7.2.96",
         "@mdi/js": "^7.2.96",
         "@mdi/react": "^1.6.1",
@@ -62,7 +62,7 @@
         "bootstrap": "4.6.2",
         "commander": "10.0.0",
         "date-fns": "2.29.3",
-        "electron": "^28.1.4",
+        "electron": "^30.0.2",
         "electron-store": "8.1.0",
         "esbuild": "0.19.2",
         "esbuild-sass-plugin": "2.13.0",
