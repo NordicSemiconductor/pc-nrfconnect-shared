@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 175.0.0 - 2024-05-02
+
+### Updated
+
+-   Electron version to `30.0.2`
+-   @electron/remote to `2.1.2`
+
 ## 174.0.0 - 2024-04-30
 
 ### Added
