@@ -40,12 +40,13 @@ const parseJsonBuffers = <T>(data: Buffer): T[] | undefined => {
     }
 };
 
+const nrfutilSandboxFolder =
+    process.platform === 'darwin' && process.arch !== 'x64'
+        ? path.join('nrfutil-sandboxes', process.arch)
+        : 'nrfutil-sandboxes';
+
 const prepareEnv = (baseDir: string, module: string, version: string) => {
     const env = { ...process.env };
-    const nrfutilSandboxFolder =
-        process.platform === 'darwin' && process.arch !== 'x64'
-            ? path.join('nrfutil-sandboxes', process.arch)
-            : 'nrfutil-sandboxes';
     env.NRFUTIL_HOME = path.join(
         baseDir,
         nrfutilSandboxFolder,
@@ -173,7 +174,7 @@ export class NrfutilSandbox {
             fs.existsSync(
                 path.join(
                     this.baseDir,
-                    'nrfutil-sandboxes',
+                    nrfutilSandboxFolder,
                     this.module,
                     this.version,
                     'bin',

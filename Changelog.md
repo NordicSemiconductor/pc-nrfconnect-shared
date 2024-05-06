@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 176.0.0 - 2024-05-06
+
+### Fixed
+
+-   NRFUtil Sandbox s installed on Apple Silicon now uses the arm64 folder and
+    not the intel one.
+
 ## 175.0.0 - 2024-05-02
 
 ### Updated
