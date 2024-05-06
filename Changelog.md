@@ -9,6 +9,10 @@ every new version is a new major version.
 
 ## 176.0.0 - 2024-05-06
 
+### Added
+
+-   Add publishTimestamp to `AppInfo.installed`
+
 ### Fixed
 
 -   NRFUtil Sandbox s installed on Apple Silicon now uses the arm64 folder and

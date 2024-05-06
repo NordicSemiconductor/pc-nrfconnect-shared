@@ -38,6 +38,7 @@ export interface AppInfo {
     installed?: {
         path: string;
         shasum?: string;
+        publishTimestamp?: string;
     };
 }
 
