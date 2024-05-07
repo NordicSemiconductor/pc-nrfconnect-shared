@@ -19,6 +19,7 @@ import {
 import { AnimatedItem, AnimatedList } from './AnimatedList';
 import BrokenDevice from './BrokenDevice';
 import Device from './Device';
+import VirtualDevice from './VirtualDevice';
 
 import './device-list.scss';
 
@@ -52,14 +53,18 @@ const sorted = (devices: DeviceProps[]) =>
     });
 interface Props {
     doSelectDevice: (device: DeviceProps, autoReselected: boolean) => void;
+    doSelectVirtualDevice: (device: string) => void;
     isVisible: boolean;
     deviceFilter?: (device: DeviceProps) => boolean;
+    virtualDevices?: string[];
 }
 
 const DeviceList: FC<Props> = ({
     isVisible,
     doSelectDevice,
+    doSelectVirtualDevice,
     deviceFilter = showAllDevices,
+    virtualDevices = [],
 }) => {
     const dispatch = useDispatch();
     const autoReconnect = useSelector(getAutoReselect);
@@ -120,6 +125,19 @@ const DeviceList: FC<Props> = ({
                                     allowMoreInfoVisible={isVisible}
                                 />
                             )}
+                        </AnimatedItem>
+                    ))}
+                    {virtualDevices.map(virtualDevice => (
+                        <AnimatedItem
+                            key={`virtual-${virtualDevice}`}
+                            itemKey={`virtual-${virtualDevice}`}
+                        >
+                            <VirtualDevice
+                                virtualDevice={virtualDevice}
+                                onSelect={() =>
+                                    doSelectVirtualDevice(virtualDevice)
+                                }
+                            />
                         </AnimatedItem>
                     ))}
                 </AnimatedList>
