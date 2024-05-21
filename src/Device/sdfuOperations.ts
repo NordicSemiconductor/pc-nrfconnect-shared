@@ -14,7 +14,11 @@ import { McuState } from '../../nrfutil/device/setMcuState';
 import logger from '../logging';
 import { AppThunk, RootState } from '../store';
 import { getAppFile } from '../utils/appDirs';
-import { clearWaitForDevice, setWaitForDevice } from './deviceAutoSelectSlice';
+import {
+    clearWaitForDevice,
+    setWaitForDevice,
+    WaitForDeviceWhen,
+} from './deviceAutoSelectSlice';
 import { DeviceSetup, DfuEntry } from './deviceSetup';
 import { openDeviceSetupDialog } from './deviceSetupSlice';
 import { Device } from './deviceSlice';
@@ -147,14 +151,15 @@ const switchToDeviceMode =
         device: Device,
         mcuState: McuState,
         onSuccess: (device: Device) => void,
-        onFail: (reason?: unknown) => void
+        onFail: (reason?: unknown) => void,
+        autoReconnectWhen?: WaitForDeviceWhen
     ): AppThunk =>
     dispatch => {
         dispatch(
             setWaitForDevice({
                 timeout: 10000,
                 when:
-                    mcuState === 'Application'
+                    autoReconnectWhen ?? mcuState === 'Application'
                         ? 'applicationMode'
                         : 'dfuBootLoaderMode',
                 once: true,
@@ -199,7 +204,8 @@ export const switchToApplicationMode =
     (
         device: Device,
         onSuccess: (device: Device) => void,
-        onFail: (reason?: unknown) => void
+        onFail: (reason?: unknown) => void,
+        autoReconnectWhen?: WaitForDeviceWhen
     ): AppThunk =>
     dispatch => {
         if (isDeviceInDFUBootloader(device)) {
@@ -216,7 +222,8 @@ export const switchToApplicationMode =
                             );
                         else onSuccess(d);
                     },
-                    onFail
+                    onFail,
+                    autoReconnectWhen
                 )
             );
         } else {
@@ -542,7 +549,8 @@ const programDeviceWithFw =
 
 export const sdfuDeviceSetup = (
     dfuFirmware: DfuEntry[],
-    needSerialport = false
+    needSerialport = false,
+    autoReconnectAfterProgrammingWhen: WaitForDeviceWhen = 'applicationMode'
 ): DeviceSetup => ({
     supportsProgrammingMode: (device, deviceInfo) =>
         ((!!deviceInfo?.dfuTriggerVersion &&
@@ -580,7 +588,14 @@ export const sdfuDeviceSetup = (
     },
     tryToSwitchToApplicationMode: device => dispatch =>
         new Promise<Device>((resolve, reject) => {
-            dispatch(switchToApplicationMode(device, resolve, reject));
+            dispatch(
+                switchToApplicationMode(
+                    device,
+                    resolve,
+                    reject,
+                    autoReconnectAfterProgrammingWhen
+                )
+            );
         }),
 });
 
