@@ -17,21 +17,6 @@ import { AppInfo, SourceJson } from '../ipc/MetaFiles';
 import { PackageJsonApp } from '../ipc/schema/packageJson';
 import checkAppProperties from './check-app-properties';
 
-interface LegacyAppInfo {
-    ['dist-tags']?: {
-        latest?: string;
-    };
-    versions?: {
-        [version: string]: {
-            dist: {
-                publishTimestamp?: string;
-                tarball: string;
-                shasum: string;
-            };
-        };
-    };
-}
-
 interface App {
     filename: string;
     name: string;
