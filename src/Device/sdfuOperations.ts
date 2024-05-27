@@ -155,13 +155,16 @@ const switchToDeviceMode =
         autoReconnectWhen?: WaitForDeviceWhen
     ): AppThunk =>
     dispatch => {
+        if (autoReconnectWhen === undefined) {
+            autoReconnectWhen =
+                mcuState === 'Application'
+                    ? 'applicationMode'
+                    : 'dfuBootLoaderMode';
+        }
         dispatch(
             setWaitForDevice({
                 timeout: 10000,
-                when:
-                    autoReconnectWhen ?? mcuState === 'Application'
-                        ? 'applicationMode'
-                        : 'dfuBootLoaderMode',
+                when: autoReconnectWhen,
                 once: true,
                 onSuccess,
                 onFail,
