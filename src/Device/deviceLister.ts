@@ -282,6 +282,7 @@ export const startWatchingDevices =
                                 (typeof waitForDevice.when === 'function' &&
                                     waitForDevice.when(device))
                             ) {
+                                dispatch(setArrivedButWrongWhen(undefined));
                                 dispatch(
                                     setLastArrivedDeviceId(
                                         deviceWithPersistedData.id

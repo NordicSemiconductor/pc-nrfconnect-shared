@@ -415,7 +415,8 @@ const programInDFUBootloader =
         dfu: DfuEntry,
         onProgress: (progress: number, message?: string) => void,
         onSuccess: (device: Device) => void,
-        onFail: (reason?: unknown) => void
+        onFail: (reason?: unknown) => void,
+        autoReconnectAfterProgrammingWhen: WaitForDeviceWhen = 'applicationMode'
     ): AppThunk<RootState, Promise<void>> =>
     async dispatch => {
         logger.debug(`${device.serialNumber} on is now in DFU-Bootloader...`);
@@ -501,7 +502,7 @@ const programInDFUBootloader =
                 dispatch(
                     setWaitForDevice({
                         timeout: DEFAULT_DEVICE_WAIT_TIME,
-                        when: 'applicationMode',
+                        when: autoReconnectAfterProgrammingWhen,
                         once: true,
                         onSuccess,
                         onFail,
@@ -525,7 +526,8 @@ const programDeviceWithFw =
     (
         device: Device,
         selectedFw: DfuEntry,
-        onProgress: (progress: number, message?: string) => void
+        onProgress: (progress: number, message?: string) => void,
+        autoReconnectAfterProgrammingWhen: WaitForDeviceWhen = 'applicationMode'
     ): AppThunk<RootState, Promise<Device>> =>
     dispatch =>
         new Promise<Device>((resolve, reject) => {
@@ -536,7 +538,8 @@ const programDeviceWithFw =
                         selectedFw,
                         onProgress,
                         resolve,
-                        reject
+                        reject,
+                        autoReconnectAfterProgrammingWhen
                     )
                 );
                 logger.debug('DFU finished: ', d);
@@ -563,7 +566,12 @@ export const sdfuDeviceSetup = (
             description: firmwareOption.description,
             programDevice: onProgress => dispatch =>
                 dispatch(
-                    programDeviceWithFw(device, firmwareOption, onProgress)
+                    programDeviceWithFw(
+                        device,
+                        firmwareOption,
+                        onProgress,
+                        autoReconnectAfterProgrammingWhen
+                    )
                 ),
         })),
     isExpectedFirmware: (device, deviceInfo) => () => {
