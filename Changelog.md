@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 177.0.0 - 2024-05-28
+
+### Added
+
+-   Apps can no control better when to auto reconnect after programming with
+    `sdfuDeviceSetup`. This is optional. Defaults have nit changed
+
 ## 176.0.0 - 2024-05-06
 
 ### Added

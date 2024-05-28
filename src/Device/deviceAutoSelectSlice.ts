@@ -9,14 +9,16 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { AppThunk, RootState } from '../store';
 import type { Device } from './deviceSlice';
 
+export type WaitForDeviceWhen =
+    | 'always'
+    | 'applicationMode'
+    | 'dfuBootLoaderMode'
+    | 'sameTraits'
+    | ((device: Device) => boolean);
+
 export interface WaitForDevice {
     timeout: number;
-    when:
-        | 'always'
-        | 'applicationMode'
-        | 'dfuBootLoaderMode'
-        | 'sameTraits'
-        | ((device: Device) => boolean);
+    when: WaitForDeviceWhen;
     once: boolean;
     skipRefetchDeviceInfo?: boolean;
     onSuccess?: (device: Device) => void;
