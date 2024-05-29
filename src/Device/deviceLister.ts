@@ -304,7 +304,7 @@ export const startWatchingDevices =
                                 const skipRefetchDeviceInfo =
                                     typeof tmp === 'function' ? tmp() : !!tmp;
 
-                                if (!skipRefetchDeviceInfo) {
+                                const updateDeviceInfo = async () => {
                                     const deviceInfo =
                                         await NrfutilDeviceLib.deviceInfo(
                                             device
@@ -327,11 +327,18 @@ export const startWatchingDevices =
                                             )
                                         );
                                     }
+                                };
+
+                                if (!skipRefetchDeviceInfo) {
+                                    updateDeviceInfo();
                                 }
 
                                 if (waitForDevice.onSuccess)
                                     waitForDevice.onSuccess(
-                                        deviceWithPersistedData
+                                        deviceWithPersistedData,
+                                        skipRefetchDeviceInfo
+                                            ? updateDeviceInfo
+                                            : undefined
                                     );
                             } else {
                                 dispatch(setArrivedButWrongWhen(true));
