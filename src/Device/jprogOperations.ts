@@ -27,7 +27,7 @@ const programDeviceWithFw =
             const batch = NrfutilDeviceLib.batch();
 
             if (updateOBFw) {
-                batch.updateDebugProbeFirmware();
+                await NrfutilDeviceLib.updateDebugProbeFirmware(device);
             }
 
             if (
