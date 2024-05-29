@@ -234,14 +234,17 @@ describe('DeviceSelector', () => {
                 }}
                 deviceSetupConfig={{
                     deviceSetups: [
-                        jprogDeviceSetup([
-                            {
-                                key: 'firmware_1',
-                                fw: 'firmware/invalidDevice.hex',
-                                fwVersion: 'fw-1.0.0',
-                                fwIdAddress: 0x6000,
-                            },
-                        ]),
+                        jprogDeviceSetup(
+                            [
+                                {
+                                    key: 'firmware_1',
+                                    fw: 'firmware/invalidDevice.hex',
+                                    fwVersion: 'fw-1.0.0',
+                                    fwIdAddress: 0x6000,
+                                },
+                            ],
+                            false
+                        ),
                     ],
                     allowCustomDevice: true,
                 }}
@@ -270,14 +273,17 @@ describe('DeviceSelector', () => {
                 }}
                 deviceSetupConfig={{
                     deviceSetups: [
-                        jprogDeviceSetup([
-                            {
-                                key: 'invalidDevice',
-                                fw: 'firmware/invalidDevice.hex',
-                                fwVersion: 'fw-1.0.0',
-                                fwIdAddress: 0x6000,
-                            },
-                        ]),
+                        jprogDeviceSetup(
+                            [
+                                {
+                                    key: 'invalidDevice',
+                                    fw: 'firmware/invalidDevice.hex',
+                                    fwVersion: 'fw-1.0.0',
+                                    fwIdAddress: 0x6000,
+                                },
+                            ],
+                            false
+                        ),
                     ],
                     allowCustomDevice: false,
                 }}

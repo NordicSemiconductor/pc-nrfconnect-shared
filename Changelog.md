@@ -14,6 +14,16 @@ every new version is a new major version.
 -   Nrfutil support update J-Link OB Firmware using `updateDebugProbeFirmware`
     nrfutil command
 
+### Changed
+
+-   jprogOperation device setup no takes in a mandatory option to determine if
+    OB Fw need should be updated or not.
+
+### Steps to upgrade when using this package
+
+-   If `jprogOperation` is used, then add a 2 parameter to indicate intention
+    for OB Firmware Update
+
 ## 177.0.0 - 2024-05-28
 
 ### Added

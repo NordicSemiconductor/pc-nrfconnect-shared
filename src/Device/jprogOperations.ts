@@ -19,11 +19,17 @@ const programDeviceWithFw =
     (
         device: Device,
         selectedFw: JprogEntry,
+        updateOBFw: boolean,
         onProgress: (progress: number, message?: string) => void
     ): AppThunk<RootState, Promise<Device>> =>
     async (dispatch, getState) => {
         try {
             const batch = NrfutilDeviceLib.batch();
+
+            if (updateOBFw) {
+                batch.updateDebugProbeFirmware();
+            }
+
             if (
                 getReadbackProtection(getState()) !==
                 'NRFDL_PROTECTION_STATUS_NONE'
@@ -109,6 +115,7 @@ const firmwareOptions = (
 
 export const jprogDeviceSetup = (
     firmware: JprogEntry[],
+    updateOBFw: boolean,
     needSerialport = false,
     hideDeviceSetupWhenProtected = false
 ): DeviceSetup => ({
@@ -121,7 +128,12 @@ export const jprogDeviceSetup = (
             description: firmwareOption.description,
             programDevice: onProgress => dispatch =>
                 dispatch(
-                    programDeviceWithFw(device, firmwareOption, onProgress)
+                    programDeviceWithFw(
+                        device,
+                        firmwareOption,
+                        updateOBFw,
+                        onProgress
+                    )
                 ),
         })),
     isExpectedFirmware: (device, deviceInfo) => async (_, getState) => {
