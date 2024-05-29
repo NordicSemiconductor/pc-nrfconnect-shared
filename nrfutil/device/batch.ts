@@ -28,6 +28,7 @@ import {
     ProgrammingOptions,
     programmingOptionsToArgs,
 } from './program';
+import { DebugProgUpdateInfo } from './updateDebugProbeFirmware';
 
 type BatchOperationWrapperUnknown = BatchOperationWrapper<unknown>;
 type CallbacksUnknown = Callbacks<unknown>;
@@ -101,7 +102,9 @@ export class Batch {
         return this;
     }
 
-    public updateDebugProbeFirmware(callbacks?: Callbacks) {
+    public updateDebugProbeFirmware(
+        callbacks?: Callbacks<DebugProgUpdateInfo>
+    ) {
         this.enqueueBatchOperationObject(
             'x-update-debug-probe-firmware',
             callbacks as CallbacksUnknown

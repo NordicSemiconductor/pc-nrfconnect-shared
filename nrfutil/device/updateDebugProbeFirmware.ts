@@ -5,14 +5,20 @@
  */
 
 import { Progress } from '../sandboxTypes';
-import { deviceSingleTaskEndOperationVoid, NrfutilDevice } from './common';
+import { deviceSingleTaskEndOperation, NrfutilDevice } from './common';
+
+export interface DebugProgUpdateInfo {
+    name: 'update-debug-probe-firmware';
+    versionAfterUpdate: string;
+    versionBeforeUpdate: string;
+}
 
 export default (
     device: NrfutilDevice,
     onProgress?: (progress: Progress) => void,
     controller?: AbortController
 ) =>
-    deviceSingleTaskEndOperationVoid(
+    deviceSingleTaskEndOperation<DebugProgUpdateInfo>(
         device,
         'x-update-debug-probe-firmware',
         onProgress,
