@@ -6,6 +6,7 @@
 
 import NrfutilDeviceLib from '../../nrfutil/device/device';
 import { DeviceInfo } from '../../nrfutil/device/deviceInfo';
+import { updateOBFirmwareWithWaitForDevice } from '../../nrfutil/device/updateDebugProbeFirmware';
 import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
 import { DeviceSetup, JprogEntry } from './deviceSetup';
@@ -27,7 +28,7 @@ const programDeviceWithFw =
             const batch = NrfutilDeviceLib.batch();
 
             if (updateOBFw) {
-                await NrfutilDeviceLib.updateDebugProbeFirmware(device);
+                await dispatch(updateOBFirmwareWithWaitForDevice(device));
             }
 
             if (

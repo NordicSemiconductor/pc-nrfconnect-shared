@@ -22,7 +22,9 @@ import recover from './recover';
 import reset from './reset';
 import setMcuState from './setMcuState';
 import setProtectionStatus from './setProtectionStatus';
-import updateDebugProbeFirmware from './updateDebugProbeFirmware';
+import updateDebugProbeFirmware, {
+    updateOBFirmwareWithWaitForDevice,
+} from './updateDebugProbeFirmware';
 
 const onLogging = async (handler: (logging: LogMessage) => void) => {
     const sandbox = await getModule('device');
@@ -67,5 +69,6 @@ export default {
     boardController,
     getBoardControllerVersion,
     getBoardControllerConfig,
+    updateOBFirmwareWithWaitForDevice,
     batch: () => new Batch(),
 };
