@@ -22,6 +22,7 @@ import recover from './recover';
 import reset from './reset';
 import setMcuState from './setMcuState';
 import setProtectionStatus from './setProtectionStatus';
+import updateDebugProbeFirmware from './updateDebugProbeFirmware';
 
 const onLogging = async (handler: (logging: LogMessage) => void) => {
     const sandbox = await getModule('device');
@@ -53,6 +54,7 @@ export default {
     reset,
     getProtectionStatus,
     setProtectionStatus,
+    updateDebugProbeFirmware,
     getFwInfo,
     setMcuState,
     getCoreInfo,
