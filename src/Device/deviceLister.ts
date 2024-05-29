@@ -330,7 +330,7 @@ export const startWatchingDevices =
                                 };
 
                                 if (!skipRefetchDeviceInfo) {
-                                    updateDeviceInfo();
+                                    await updateDeviceInfo();
                                 }
 
                                 if (waitForDevice.onSuccess)
