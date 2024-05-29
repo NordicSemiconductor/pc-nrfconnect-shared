@@ -44,7 +44,9 @@ export interface NordicDfuProgrammingOptions {
 export const isJLinkProgrammingOptions = (
     options: ProgrammingOptions
 ): options is JLinkProgrammingOptions =>
-    (options as JLinkProgrammingOptions).chipEraseMode !== undefined;
+    (options as JLinkProgrammingOptions).chipEraseMode !== undefined ||
+    (options as JLinkProgrammingOptions).reset !== undefined ||
+    (options as JLinkProgrammingOptions).verify !== undefined;
 
 export const isMcuBootProgrammingOptions = (
     options: ProgrammingOptions
@@ -91,10 +93,8 @@ export const programmingOptionsToArgs = (options?: ProgrammingOptions) => {
                     options.netCoreUploadDelay
                 )}`
             );
-    } else if (isNordicDfuProgrammingOptions(options)) {
-        if (options.mcuEndState)
-            args.push(`mcu_end_state=${options.mcuEndState}`);
-    }
+    } else if (options.mcuEndState)
+        args.push(`mcu_end_state=${options.mcuEndState}`);
 
     return args.length > 0 ? ['--options', `${args.join(',')}`] : [];
 };
