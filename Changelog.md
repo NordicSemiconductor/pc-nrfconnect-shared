@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 178.0.0 - UNRELEASED
+
+### Added
+
+-   Nrfutil support update J-Link OB Firmware using `updateDebugProbeFirmware`
+    nrfutil command
+
 ## 177.0.0 - 2024-05-28
 
 ### Added

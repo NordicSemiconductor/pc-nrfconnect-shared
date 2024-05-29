@@ -44,7 +44,6 @@ export class Batch {
 
     private enqueueBatchOperationObject(
         command: string,
-        core: DeviceCore,
         callbacks?: Callbacks<unknown>,
         args: string[] = []
     ) {
@@ -55,7 +54,7 @@ export class Batch {
                 await box.singleInfoOperationOptionalData<object>(
                     command,
                     undefined,
-                    ['--generate', '--core', core].concat(args)
+                    ['--generate'].concat(args)
                 );
 
             return {
@@ -69,8 +68,21 @@ export class Batch {
         this.operationBatchGeneration.push(getPromise());
     }
 
+    private enqueueCoreBasedBatchOperationObject(
+        command: string,
+        core: DeviceCore,
+        callbacks?: Callbacks<unknown>,
+        args: string[] = []
+    ) {
+        return this.enqueueBatchOperationObject(command, callbacks, [
+            ...args,
+            '--core',
+            core,
+        ]);
+    }
+
     public getDeviceInfo(core: DeviceCore, callbacks?: Callbacks<FWInfo>) {
-        this.enqueueBatchOperationObject(
+        this.enqueueCoreBasedBatchOperationObject(
             'device-info',
             core,
             callbacks as CallbacksUnknown
@@ -80,9 +92,18 @@ export class Batch {
     }
 
     public erase(core: DeviceCore, callbacks?: Callbacks) {
-        this.enqueueBatchOperationObject(
+        this.enqueueCoreBasedBatchOperationObject(
             'erase',
             core,
+            callbacks as CallbacksUnknown
+        );
+
+        return this;
+    }
+
+    public updateDebugProbeFirmware(callbacks?: Callbacks) {
+        this.enqueueBatchOperationObject(
+            'x-update-debug-probe-firmware',
             callbacks as CallbacksUnknown
         );
 
@@ -157,7 +178,7 @@ export class Batch {
     }
 
     public firmwareRead(core: DeviceCore, callbacks?: Callbacks<Buffer>) {
-        this.enqueueBatchOperationObject('fw-read', core, {
+        this.enqueueCoreBasedBatchOperationObject('fw-read', core, {
             ...callbacks,
             onTaskEnd: (taskEnd: TaskEnd<DeviceBuffer>) => {
                 if (taskEnd.result === 'success' && taskEnd.data) {
@@ -183,7 +204,7 @@ export class Batch {
         core: DeviceCore,
         callbacks?: Callbacks<DeviceCoreInfo>
     ) {
-        this.enqueueBatchOperationObject(
+        this.enqueueCoreBasedBatchOperationObject(
             'core-info',
             core,
             callbacks as CallbacksUnknown
@@ -193,7 +214,7 @@ export class Batch {
     }
 
     public getFwInfo(core: DeviceCore, callbacks?: Callbacks<FWInfo>) {
-        this.enqueueBatchOperationObject(
+        this.enqueueCoreBasedBatchOperationObject(
             'fw-info',
             core,
             callbacks as CallbacksUnknown
@@ -206,7 +227,7 @@ export class Batch {
         core: DeviceCore,
         callbacks?: Callbacks<GetProtectionStatusResult>
     ) {
-        this.enqueueBatchOperationObject(
+        this.enqueueCoreBasedBatchOperationObject(
             'protection-get',
             core,
             callbacks as CallbacksUnknown
@@ -256,7 +277,7 @@ export class Batch {
             } as CallbacksUnknown;
         }
 
-        this.enqueueBatchOperationObject(
+        this.enqueueCoreBasedBatchOperationObject(
             'program',
             core,
             newCallbacks as CallbacksUnknown,
@@ -267,7 +288,7 @@ export class Batch {
     }
 
     public recover(core: DeviceCore, callbacks?: Callbacks) {
-        this.enqueueBatchOperationObject(
+        this.enqueueCoreBasedBatchOperationObject(
             'recover',
             core,
             callbacks as CallbacksUnknown
@@ -277,7 +298,7 @@ export class Batch {
     }
 
     public reset(core: DeviceCore, reset?: ResetKind, callbacks?: Callbacks) {
-        this.enqueueBatchOperationObject(
+        this.enqueueCoreBasedBatchOperationObject(
             'reset',
             core,
             callbacks as CallbacksUnknown,
