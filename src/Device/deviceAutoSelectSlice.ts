@@ -20,7 +20,7 @@ export interface WaitForDevice {
     timeout: number;
     when: WaitForDeviceWhen;
     once: boolean;
-    skipRefetchDeviceInfo?: boolean;
+    skipRefetchDeviceInfo?: (() => boolean) | boolean;
     onSuccess?: (device: Device) => void;
     onFail?: (reason?: string) => void;
 }

@@ -300,7 +300,11 @@ export const startWatchingDevices =
 
                                 dispatch(selectDevice(deviceWithPersistedData));
 
-                                if (!waitForDevice.skipRefetchDeviceInfo) {
+                                const tmp = waitForDevice.skipRefetchDeviceInfo;
+                                const skipRefetchDeviceInfo =
+                                    typeof tmp === 'function' ? tmp() : !!tmp;
+
+                                if (!skipRefetchDeviceInfo) {
                                     const deviceInfo =
                                         await NrfutilDeviceLib.deviceInfo(
                                             device
