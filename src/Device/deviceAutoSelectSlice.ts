@@ -23,7 +23,7 @@ export interface WaitForDevice {
     skipRefetchDeviceInfo?: (() => boolean) | boolean;
     onSuccess?: (
         device: Device,
-        updateDeviceInfo?: () => Promise<void>
+        updateDeviceInfo?: () => AppThunk<RootState, Promise<void>>
     ) => void;
     onFail?: (reason?: string) => void;
 }

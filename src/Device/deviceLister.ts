@@ -304,33 +304,36 @@ export const startWatchingDevices =
                                 const skipRefetchDeviceInfo =
                                     typeof tmp === 'function' ? tmp() : !!tmp;
 
-                                const updateDeviceInfo = async () => {
-                                    const deviceInfo =
-                                        await NrfutilDeviceLib.deviceInfo(
-                                            device
-                                        );
-                                    dispatch(setSelectedDeviceInfo(deviceInfo));
+                                const updateDeviceInfo =
+                                    (): AppThunk<RootState, Promise<void>> =>
+                                    async dis => {
+                                        const deviceInfo =
+                                            await NrfutilDeviceLib.deviceInfo(
+                                                device
+                                            );
+                                        dis(setSelectedDeviceInfo(deviceInfo));
 
-                                    // Modem might be set to false when using external jLink or custom PCBs
-                                    if (
-                                        !deviceWithPersistedData.traits.modem &&
-                                        hasModem(
-                                            deviceWithPersistedData,
-                                            deviceInfo
-                                        )
-                                    ) {
-                                        deviceWithPersistedData.traits.modem =
-                                            true;
-                                        dispatch(
-                                            selectDevice(
-                                                deviceWithPersistedData
+                                        // Modem might be set to false when using external jLink or custom PCBs
+                                        if (
+                                            !deviceWithPersistedData.traits
+                                                .modem &&
+                                            hasModem(
+                                                deviceWithPersistedData,
+                                                deviceInfo
                                             )
-                                        );
-                                    }
-                                };
+                                        ) {
+                                            deviceWithPersistedData.traits.modem =
+                                                true;
+                                            dis(
+                                                selectDevice(
+                                                    deviceWithPersistedData
+                                                )
+                                            );
+                                        }
+                                    };
 
                                 if (!skipRefetchDeviceInfo) {
-                                    await updateDeviceInfo();
+                                    await dispatch(updateDeviceInfo());
                                 }
 
                                 if (waitForDevice.onSuccess)
