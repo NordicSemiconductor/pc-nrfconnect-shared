@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 178.0.0 - 2024-06-07
+
+### Changed
+
+-   Before each install nrfutil will update the core and then try to install
+
 ## 177.0.0 - 2024-05-28
 
 ### Added
