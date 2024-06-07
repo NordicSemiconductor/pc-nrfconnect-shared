@@ -755,6 +755,7 @@ export default async (
     const result = await sandbox.isSandboxInstalled();
 
     if (!result) {
+        await sandbox.updateNrfUtilCore();
         await sandbox.prepareSandbox(onProgress);
     } else {
         // update nrfutil core
