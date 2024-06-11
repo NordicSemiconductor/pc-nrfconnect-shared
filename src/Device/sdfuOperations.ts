@@ -47,7 +47,8 @@ export const isDeviceInDFUBootloader = (device: Device) => {
         const { descriptor: d } = device.usb.device;
         return (
             d.idVendor === NORDIC_VENDOR_ID &&
-            d.idProduct === NORDIC_DFU_PRODUCT_ID
+            d.idProduct === NORDIC_DFU_PRODUCT_ID &&
+            !!device.traits.nordicDfu
         );
     }
 
