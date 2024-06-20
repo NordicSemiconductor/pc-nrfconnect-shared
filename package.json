@@ -1,6 +1,6 @@
 {
     "name": "@nordicsemiconductor/pc-nrfconnect-shared",
-    "version": "178.0.0",
+    "version": "179.0.0",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -62,7 +62,7 @@
         "bootstrap": "4.6.2",
         "commander": "10.0.0",
         "date-fns": "2.29.3",
-        "electron": "^30.0.2",
+        "electron": "^30.1.2",
         "electron-store": "8.1.0",
         "esbuild": "0.19.2",
         "esbuild-sass-plugin": "2.13.0",
