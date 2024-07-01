@@ -203,6 +203,13 @@ export class NrfutilSandbox {
                 `Successfully installed nrfutil-${this.module} version ${this.version}`
             );
         } catch (error) {
+            if (this.env.NRFUTIL_HOME && fs.existsSync(this.env.NRFUTIL_HOME)) {
+                fs.rmSync(this.env.NRFUTIL_HOME, {
+                    recursive: true,
+                    force: true,
+                });
+            }
+
             getNrfutilLogger()?.error(
                 `Error while installing nrfutil-${this.module} version: ${
                     this.version
