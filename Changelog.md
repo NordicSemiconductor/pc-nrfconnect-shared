@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 181.0.0 - 2024-07-11
+
+### Changed
+
+-   nrfutil sandbox deletes any residual sandbox folder before install.
+
 ## 180.0.0 - 2024-07-01
 
 ### Changed
