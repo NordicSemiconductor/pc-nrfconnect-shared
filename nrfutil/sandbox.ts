@@ -194,6 +194,13 @@ export class NrfutilSandbox {
         onProgress?: (progress: Progress, task?: Task) => void
     ) => {
         try {
+            // Clean up any residual sandbox from before if any
+            if (this.env.NRFUTIL_HOME && fs.existsSync(this.env.NRFUTIL_HOME)) {
+                fs.rmSync(this.env.NRFUTIL_HOME, {
+                    recursive: true,
+                    force: true,
+                });
+            }
             await this.spawnNrfutil(
                 'install',
                 [`${this.module}=${this.version}`, '--force'],
