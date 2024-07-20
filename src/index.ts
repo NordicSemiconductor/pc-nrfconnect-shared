@@ -111,6 +111,7 @@ export { jprogDeviceSetup } from './Device/jprogOperations';
 export { sdfuDeviceSetup } from './Device/sdfuOperations';
 
 export {
+    getDevices,
     selectedDevice,
     selectedDeviceInfo,
     setSelectedDeviceInfo,
