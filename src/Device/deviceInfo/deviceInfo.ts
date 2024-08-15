@@ -36,6 +36,7 @@ import nPMFamilyLogo from '!!@svgr!./nPM-Family-Series-logo.svg';
 import nrf51logo from '!!@svgr!./nRF51-Series-logo.svg';
 import nrf52logo from '!!@svgr!./nRF52-Series-logo.svg';
 import nrf53logo from '!!@svgr!./nRF53-Series-logo.svg';
+import nrf54logo from '!!@svgr!./nRF54-Series-logo.svg';
 import nrf7002logo from '!!@svgr!./nRF70-Series_no-background_RGB.svg';
 import nrf91logo from '!!@svgr!./nRF91-Series-logo.svg';
 import ppkLogo from '!!@svgr!./ppk-logo.svg';
@@ -211,6 +212,24 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         website: {
             productPagePath: 'Products/Development-hardware/nrf5161dk',
             buyOnlineParams: 'search_token=NRF9151-dk',
+        },
+    },
+    PCA10156: {
+        name: 'nRF54L15 DK',
+        cores: 1,
+        icon: nrf54logo,
+        website: {
+            productPagePath: 'Products/Development-hardware/nrf54l15dk',
+            buyOnlineParams: 'search_token=NRF54L15-dk',
+        },
+    },
+    PCA10175: {
+        name: 'nRF54H20 DK',
+        cores: 1,
+        icon: nrf54logo,
+        website: {
+            productPagePath: 'Products/Development-hardware/nrf54h20dk',
+            buyOnlineParams: 'search_token=NRF54H20-dk',
         },
     },
 };
