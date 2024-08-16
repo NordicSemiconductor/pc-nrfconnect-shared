@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 182.0.0 - 2024-08-16
+
+### Added
+
+-   export `getDevices` to apps to be able to get full list of connected
+    devices.
+
 ## 181.0.0 - 2024-07-11
 
 ### Changed
