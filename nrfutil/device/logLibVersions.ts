@@ -114,13 +114,10 @@ export default async (moduleVersion: ModuleVersion) => {
         }
     } catch (error) {
         let message = '';
-        if (error == null) {
-            message = describeError(error);
-        }
-        if (error === undefined) {
-            message = '';
-        }
-
-        logger?.error(`Failed to get the library versions${message}`);
+       logger?.error(
+             `Failed to get the library versions${
+                 error != null ? `: ${describeError(error)}` : ''
+             }`
+         );
     }
 };
