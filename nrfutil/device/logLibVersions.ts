@@ -113,11 +113,10 @@ export default async (moduleVersion: ModuleVersion) => {
             }
         }
     } catch (error) {
-        let message = '';
-       logger?.error(
-             `Failed to get the library versions${
-                 error != null ? `: ${describeError(error)}` : ''
-             }`
-         );
+        logger?.error(
+            `Failed to get the library versions${
+                error != null ? `: ${describeError(error)}` : ''
+            }`
+        );
     }
 };
