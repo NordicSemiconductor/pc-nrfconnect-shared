@@ -7,6 +7,17 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 183.0.0 - unreleased
+
+### Changed
+
+-   Update JLink macOS install link pointing from `V788j` to `V794e`.
+
+### Fixed
+
+-   Do not display `undefined` or `null` in the "Failed to get the library
+    versions" error message.
+
 ## 182.0.0 - 2024-08-16
 
 ### Added
