@@ -108,14 +108,14 @@ export default async (moduleVersion: ModuleVersion) => {
                     `It looks like you have installed JLink using ${JLinkInstallerVersion}, but currently we only support their Universal Installer for your system.`
                 );
                 logger?.warn(
-                    `Please install JLink: https://www.segger.com/downloads/jlink/JLink_MacOSX_V788j_universal.pkg`
+                    `Please install JLink: https://www.segger.com/downloads/jlink/JLink_MacOSX_V794e_universal.pkg`
                 );
             }
         }
     } catch (error) {
         logger?.error(
             `Failed to get the library versions${
-                error == null ? `: ${describeError(error)}` : ''
+                error != null ? `: ${describeError(error)}` : ''
             }`
         );
     }
