@@ -7,7 +7,11 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 183.0.0 - unreleased
+## 183.0.0 - 2024-08-30
+
+### Added
+
+-   Added `54L15 DK` and `54H20 DK` to known devices.
 
 ### Changed
 
