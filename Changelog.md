@@ -7,6 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 185.0.0 - Unreleased
+
+-   Extended `waitForDevice` to allow apps to hook into when the wait was
+    canceled.
+
+### Added
+
+-   Added `54L15 DK` and `54H20 DK` to known devices.
+
 ## 184.0.0 - 2024-09-11
 
 ### Fixed

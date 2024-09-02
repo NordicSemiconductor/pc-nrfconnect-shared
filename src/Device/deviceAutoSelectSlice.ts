@@ -23,6 +23,7 @@ export interface WaitForDevice {
     skipRefetchDeviceInfo?: boolean;
     onSuccess?: (device: Device) => void;
     onFail?: (reason?: string) => void;
+    onCanceled?: () => void;
 }
 
 export interface DeviceAutoSelectState {
@@ -152,6 +153,7 @@ export const getArrivedButWrongWhen = (state: RootState) =>
 export const clearWaitForDevice = (): AppThunk => (dispatch, getState) => {
     if (getState().deviceAutoSelect.autoReconnectTimeout) {
         getState().deviceAutoSelect.onCancelTimeout?.();
+        getState().deviceAutoSelect.waitForDevice?.onCanceled?.();
     }
     dispatch(clearWaitForDeviceTimeout(true));
 };
