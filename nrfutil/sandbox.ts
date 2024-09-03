@@ -379,9 +379,9 @@ export class NrfutilSandbox {
             if (controller?.signal.aborted) {
                 reject(
                     new Error(
-                        `Aborted before start executing nrfutil ${command} ${JSON.stringify(
-                            args
-                        )}`
+                        `Aborted before start executing ${path.basename(
+                            command
+                        )} ${JSON.stringify(args)}`
                     )
                 );
                 return;
@@ -397,9 +397,9 @@ export class NrfutilSandbox {
 
             const listener = () => {
                 getNrfutilLogger()?.info(
-                    `Aborting ongoing nrfutil ${
-                        this.module
-                    } ${command} ${JSON.stringify(args)}`
+                    `Aborting ongoing nrfutil ${this.module} ${path.basename(
+                        command
+                    )} ${JSON.stringify(args)}`
                 );
                 aborting = true;
                 if (nrfutil.pid) {
