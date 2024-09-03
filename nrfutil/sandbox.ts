@@ -438,9 +438,9 @@ export class NrfutilSandbox {
                 if (aborting) {
                     reject(
                         new Error(
-                            `Aborted ongoing nrfutil ${command} ${JSON.stringify(
-                                args
-                            )}`
+                            `Aborted ongoing ${path.basename(
+                                command
+                            )} ${JSON.stringify(args)}`
                         )
                     );
                     return;
@@ -608,7 +608,7 @@ export class NrfutilSandbox {
                 if (aborting) {
                     reject(
                         new Error(
-                            `Aborted ongoing nrfutil ${command} ${
+                            `Aborted ongoing ${path.basename(command)} ${
                                 args[0] ?? ''
                             }`
                         )

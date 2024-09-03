@@ -13,10 +13,12 @@ every new version is a new major version.
 
 -   Extended `waitForDevice` to allow apps to hook into when the wait was
     canceled.
+-   Logging on device Selecting, Selected and Deselected
 
 ### Fixed
 
 -   Stop nrfutil sandbox from running an aborted command.
+-   Device Setupt event when autoreconnecting at the same time as selecting
 
 ## 184.0.0 - 2024-09-11
 

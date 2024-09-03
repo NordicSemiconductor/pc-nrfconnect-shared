@@ -83,6 +83,7 @@ export default ({
 
             dispatch(clearWaitForDevice());
             dispatch(setAutoSelectDevice(undefined));
+            logger.info(`Device deselected`);
             onDeviceDeselected();
             dispatch(deselectDevice());
         },
@@ -125,6 +126,7 @@ export default ({
 
             if (!controller.signal.aborted) {
                 dispatch(setSelectedDeviceInfo(deviceInfo));
+                logger.info(`Selected device SN: ${device.serialNumber}`);
                 onDeviceSelected(device, autoReselected, controller);
 
                 telemetry.sendEvent('device selected', {
