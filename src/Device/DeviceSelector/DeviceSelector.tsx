@@ -41,7 +41,11 @@ import SelectedDevice from './SelectedDevice';
 export interface Props {
     deviceListing: DeviceTraits;
     deviceSetupConfig?: DeviceSetupConfig;
-    onDeviceSelected?: (device: Device, autoReselected: boolean) => void;
+    onDeviceSelected?: (
+        device: Device,
+        autoReselected: boolean,
+        abortController: AbortController
+    ) => void;
     onDeviceDeselected?: () => void;
     onDeviceConnected?: (device: Device) => void;
     onDeviceDisconnected?: (device: Device) => void;
@@ -98,7 +102,8 @@ export default ({
             dispatch(setAutoSelectDevice(device));
 
             abortController.current?.abort();
-            abortController.current = new AbortController();
+            const controller = new AbortController();
+            abortController.current = controller;
             const deviceInfo = await NrfutilDeviceLib.deviceInfo(
                 device,
                 undefined,
@@ -118,7 +123,7 @@ export default ({
             }
 
             dispatch(setSelectedDeviceInfo(deviceInfo));
-            onDeviceSelected(device, autoReselected);
+            onDeviceSelected(device, autoReselected, controller);
 
             telemetry.sendEvent('device selected', {
                 device: simplifyDevice(device),
