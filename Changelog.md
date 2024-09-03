@@ -20,6 +20,11 @@ every new version is a new major version.
 -   Stop nrfutil sandbox from running an aborted command.
 -   Device Setupt event when autoreconnecting at the same time as selecting
 
+### Steps to upgrade when using this package
+
+-   Clean up any logging in `onDeviceSelected` and `onDeviceDeselected` to avoid
+    logging multiple times
+
 ## 184.0.0 - 2024-09-11
 
 ### Fixed
