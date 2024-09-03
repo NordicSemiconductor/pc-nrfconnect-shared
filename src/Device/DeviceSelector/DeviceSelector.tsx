@@ -110,9 +110,8 @@ export default ({
                 device,
                 undefined,
                 undefined,
-                abortController.current
+                controller
             );
-            abortController.current = undefined;
 
             // Modem might be set to false when using external jLink or custom PCBs
             if (!device.traits.modem && hasModem(device, deviceInfo)) {
@@ -124,30 +123,32 @@ export default ({
                 dispatch(setAutoSelectDevice(newDevice));
             }
 
-            dispatch(setSelectedDeviceInfo(deviceInfo));
-            onDeviceSelected(device, autoReselected, controller);
+            if (!controller.signal.aborted) {
+                dispatch(setSelectedDeviceInfo(deviceInfo));
+                onDeviceSelected(device, autoReselected, controller);
 
-            telemetry.sendEvent('device selected', {
-                device: simplifyDevice(device),
-                deviceInfo,
-            });
+                telemetry.sendEvent('device selected', {
+                    device: simplifyDevice(device),
+                    deviceInfo,
+                });
 
-            if (deviceSetupConfig) {
-                if (isDeviceWithSerialNumber(device)) {
-                    dispatch(
-                        setupDevice(
-                            device,
-                            deviceSetupConfig,
-                            onDeviceIsReady,
-                            doDeselectDevice,
-                            deviceInfo
-                        )
-                    );
-                } else {
-                    logger.warn(
-                        `Selected device has no serial number. Device setup is not supported`
-                    );
-                    onDeviceIsReady(device);
+                if (deviceSetupConfig) {
+                    if (isDeviceWithSerialNumber(device)) {
+                        dispatch(
+                            setupDevice(
+                                device,
+                                deviceSetupConfig,
+                                onDeviceIsReady,
+                                doDeselectDevice,
+                                deviceInfo
+                            )
+                        );
+                    } else {
+                        logger.warn(
+                            `Selected device has no serial number. Device setup is not supported`
+                        );
+                        onDeviceIsReady(device);
+                    }
                 }
             }
         },
