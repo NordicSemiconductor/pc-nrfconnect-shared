@@ -376,6 +376,16 @@ export class NrfutilSandbox {
         editEnv: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv = env => env
     ) =>
         new Promise<void>((resolve, reject) => {
+            if (controller?.signal.aborted) {
+                reject(
+                    new Error(
+                        `Aborted before start executing nrfutil ${command} ${JSON.stringify(
+                            args
+                        )}`
+                    )
+                );
+                return;
+            }
             let aborting = false;
             telemetry.sendEvent(`running nrfutil ${this.module}`, {
                 args,
@@ -428,9 +438,9 @@ export class NrfutilSandbox {
                 if (aborting) {
                     reject(
                         new Error(
-                            `Aborted ongoing nrfutil ${command} ${
-                                args[0] ?? ''
-                            }`
+                            `Aborted ongoing nrfutil ${command} ${JSON.stringify(
+                                args
+                            )}`
                         )
                     );
                     return;

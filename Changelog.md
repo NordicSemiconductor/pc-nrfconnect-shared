@@ -9,12 +9,14 @@ every new version is a new major version.
 
 ## 185.0.0 - Unreleased
 
+### Added
+
 -   Extended `waitForDevice` to allow apps to hook into when the wait was
     canceled.
 
-### Added
+### Fixed
 
--   Added `54L15 DK` and `54H20 DK` to known devices.
+-   Stop nrfutil sandbox from running an aborted command.
 
 ## 184.0.0 - 2024-09-11
 
