@@ -96,14 +96,16 @@ export default ({
     // will have a side effect to stop and start the hotplug events
     const doSelectDevice = useCallback(
         async (device: Device, autoReselected: boolean) => {
+            logger.info(`Selecting device SN: ${device.serialNumber}`);
+            abortController.current?.abort();
+            const controller = new AbortController();
+            abortController.current = controller;
+
             dispatch(clearWaitForDevice());
             setDeviceListVisible(false);
             dispatch(selectDevice(device));
             dispatch(setAutoSelectDevice(device));
 
-            abortController.current?.abort();
-            const controller = new AbortController();
-            abortController.current = controller;
             const deviceInfo = await NrfutilDeviceLib.deviceInfo(
                 device,
                 undefined,
