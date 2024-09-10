@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 184.0.0 - 2024-09-10
+
+### Fixed
+
+-   The `54 Series` logo did not display correctly in the device list.
+
 ## 183.0.0 - 2024-08-30
 
 ### Added
