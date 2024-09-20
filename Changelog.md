@@ -7,6 +7,25 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 185.0.0 - 2024-09-20
+
+### Added
+
+-   Extended `waitForDevice` to allow apps to hook into when the wait was
+    canceled.
+-   Logging on device events Selecting, Selected and Deselected
+
+### Fixed
+
+-   Stop nrfutil sandbox from starting to run an aborted command.
+-   Device setup event call order when autoreconnecting at the same time as
+    selecting.
+
+### Steps to upgrade when using this package
+
+-   Clean up any logging in `onDeviceSelected` and `onDeviceDeselected` to avoid
+    logging multiple times.
+
 ## 184.0.0 - 2024-09-11
 
 ### Fixed

@@ -41,7 +41,11 @@ import SelectedDevice from './SelectedDevice';
 export interface Props {
     deviceListing: DeviceTraits;
     deviceSetupConfig?: DeviceSetupConfig;
-    onDeviceSelected?: (device: Device, autoReselected: boolean) => void;
+    onDeviceSelected?: (
+        device: Device,
+        autoReselected: boolean,
+        abortController: AbortController
+    ) => void;
     onDeviceDeselected?: () => void;
     onDeviceConnected?: (device: Device) => void;
     onDeviceDisconnected?: (device: Device) => void;
@@ -79,6 +83,7 @@ export default ({
 
             dispatch(clearWaitForDevice());
             dispatch(setAutoSelectDevice(undefined));
+            logger.info(`Device deselected`);
             onDeviceDeselected();
             dispatch(deselectDevice());
         },
@@ -92,20 +97,22 @@ export default ({
     // will have a side effect to stop and start the hotplug events
     const doSelectDevice = useCallback(
         async (device: Device, autoReselected: boolean) => {
+            logger.info(`Selecting device SN: ${device.serialNumber}`);
+            abortController.current?.abort();
+            const controller = new AbortController();
+            abortController.current = controller;
+
             dispatch(clearWaitForDevice());
             setDeviceListVisible(false);
             dispatch(selectDevice(device));
             dispatch(setAutoSelectDevice(device));
 
-            abortController.current?.abort();
-            abortController.current = new AbortController();
             const deviceInfo = await NrfutilDeviceLib.deviceInfo(
                 device,
                 undefined,
                 undefined,
-                abortController.current
+                controller
             );
-            abortController.current = undefined;
 
             // Modem might be set to false when using external jLink or custom PCBs
             if (!device.traits.modem && hasModem(device, deviceInfo)) {
@@ -117,30 +124,33 @@ export default ({
                 dispatch(setAutoSelectDevice(newDevice));
             }
 
-            dispatch(setSelectedDeviceInfo(deviceInfo));
-            onDeviceSelected(device, autoReselected);
+            if (!controller.signal.aborted) {
+                dispatch(setSelectedDeviceInfo(deviceInfo));
+                logger.info(`Selected device SN: ${device.serialNumber}`);
+                onDeviceSelected(device, autoReselected, controller);
 
-            telemetry.sendEvent('device selected', {
-                device: simplifyDevice(device),
-                deviceInfo,
-            });
+                telemetry.sendEvent('device selected', {
+                    device: simplifyDevice(device),
+                    deviceInfo,
+                });
 
-            if (deviceSetupConfig) {
-                if (isDeviceWithSerialNumber(device)) {
-                    dispatch(
-                        setupDevice(
-                            device,
-                            deviceSetupConfig,
-                            onDeviceIsReady,
-                            doDeselectDevice,
-                            deviceInfo
-                        )
-                    );
-                } else {
-                    logger.warn(
-                        `Selected device has no serial number. Device setup is not supported`
-                    );
-                    onDeviceIsReady(device);
+                if (deviceSetupConfig) {
+                    if (isDeviceWithSerialNumber(device)) {
+                        dispatch(
+                            setupDevice(
+                                device,
+                                deviceSetupConfig,
+                                onDeviceIsReady,
+                                doDeselectDevice,
+                                deviceInfo
+                            )
+                        );
+                    } else {
+                        logger.warn(
+                            `Selected device has no serial number. Device setup is not supported`
+                        );
+                        onDeviceIsReady(device);
+                    }
                 }
             }
         },
