@@ -396,11 +396,6 @@ export class NrfutilSandbox {
             });
 
             const listener = () => {
-                getNrfutilLogger()?.info(
-                    `Aborting ongoing nrfutil ${this.module} ${path.basename(
-                        command
-                    )} ${JSON.stringify(args)}`
-                );
                 aborting = true;
                 if (nrfutil.pid) {
                     treeKill(nrfutil.pid);
