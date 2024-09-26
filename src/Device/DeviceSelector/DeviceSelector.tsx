@@ -97,7 +97,7 @@ export default ({
     // will have a side effect to stop and start the hotplug events
     const doSelectDevice = useCallback(
         async (device: Device, autoReselected: boolean) => {
-            logger.info(`Selecting device with s/n: ${device.serialNumber}`);
+            logger.info(`Selecting device with the serial number ${device.serialNumber}`);
             abortController.current?.abort();
             const controller = new AbortController();
             abortController.current = controller;
@@ -126,7 +126,7 @@ export default ({
 
             if (!controller.signal.aborted) {
                 dispatch(setSelectedDeviceInfo(deviceInfo));
-                logger.info(`Selected device with s/n: ${device.serialNumber}`);
+                logger.info(`Selected device with the serial number ${device.serialNumber}`);
                 onDeviceSelected(device, autoReselected, controller);
 
                 telemetry.sendEvent('device selected', {
