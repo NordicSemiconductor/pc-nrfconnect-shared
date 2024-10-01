@@ -9,36 +9,41 @@
  @import "../../../variables";
  
  .core19-device-selector {
-     .device-list {
-         @include scrollbars($gray-50);
-         background: $gray-50;
-         color: $gray-700;
-         display: flex;
-     flex-direction: column;
- 
+     .device-list-container {
          position: fixed;
          width: $side-panel-width;
          height: calc(100vh - #{$nav-bar-height});
          z-index: -1;
- 
-         overflow-y: overlay;
- 
-         transition: transform $normal-transition;
- 
+         display: flex;
+         flex-direction: column;
+         justify-content: space-between;
+
          &.hidden {
              transform: translateY(-100%);
          }
- 
-         .no-devices-connected {
-             padding: 20px;
-         }
- 
-         > ul {
-             padding: 0;
-             margin-bottom: 0;
- 
-             > li {
-                 border-bottom: 1px solid $gray-200;
+
+         transition: transform $normal-transition;
+
+         background: $gray-50;
+         color: $gray-700;
+
+         .device-list {
+             @include scrollbars($gray-50);
+             display: flex;
+             flex-direction: column;
+             overflow-y: overlay;
+
+             .no-devices-connected {
+                 padding: 20px;
+             }
+
+             > ul {
+                 padding: 0;
+                 margin-bottom: 0;
+
+                 > li {
+                     border-bottom: 1px solid $gray-200;
+                 }
              }
          }
      }
