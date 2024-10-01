@@ -19,6 +19,7 @@ import {
 import { AnimatedItem, AnimatedList } from './AnimatedList';
 import BrokenDevice from './BrokenDevice';
 import Device from './Device';
+import VirtualDevice from './VirtualDevice';
 
 import './device-list.scss';
 
@@ -52,14 +53,18 @@ const sorted = (devices: DeviceProps[]) =>
     });
 interface Props {
     doSelectDevice: (device: DeviceProps, autoReselected: boolean) => void;
+    doSelectVirtualDevice: (device: string) => void;
     isVisible: boolean;
     deviceFilter?: (device: DeviceProps) => boolean;
+    virtualDevices?: string[];
 }
 
 const DeviceList: FC<Props> = ({
     isVisible,
     doSelectDevice,
+    doSelectVirtualDevice,
     deviceFilter = showAllDevices,
+    virtualDevices = [],
 }) => {
     const dispatch = useDispatch();
     const autoReconnect = useSelector(getAutoReselect);
@@ -80,50 +85,73 @@ const DeviceList: FC<Props> = ({
         (!!currentDevice && !!currentDevice?.serialNumber) || !currentDevice;
 
     return (
-        <div className={classNames('device-list', isVisible || 'hidden')}>
-            <div className="global-auto-reconnect">
-                <Toggle
-                    id="toggle-global-auto-reconnect"
-                    label="Auto Reconnect"
-                    title={
-                        !canUseAutoReconnect
-                            ? 'Cannot auto reconnect to a device with no serial number'
-                            : ''
-                    }
-                    disabled={!canUseAutoReconnect}
-                    isToggled={
-                        autoReconnect &&
-                        ((!!currentDevice && !!currentDevice?.serialNumber) ||
-                            !currentDevice)
-                    }
-                    onToggle={value => {
-                        dispatch(setAutoReselect(value));
-                    }}
-                />
-            </div>
-            {sortedDevices.length === 0 && <NoDevicesConnected />}
-            {sortedDevices.length > 0 && filteredDevices.length === 0 ? (
-                <NoSupportedDevicesConnected />
-            ) : (
-                <AnimatedList devices={sortedDevices}>
-                    {filteredDevices.map(device => (
-                        <AnimatedItem
-                            key={device.id.toString()}
-                            itemKey={device.id.toString()}
-                        >
-                            {device.traits.broken ? (
-                                <BrokenDevice device={device} />
-                            ) : (
-                                <Device
-                                    device={device}
-                                    doSelectDevice={doSelectDevice}
-                                    allowMoreInfoVisible={isVisible}
-                                />
-                            )}
-                        </AnimatedItem>
-                    ))}
-                </AnimatedList>
+        <div
+            className={classNames(
+                'device-list-container',
+                isVisible || 'hidden'
             )}
+        >
+            <div className="device-list-overlay-relay tw-flex tw-flex-col">
+                <div className="global-auto-reconnect">
+                    <Toggle
+                        id="toggle-global-auto-reconnect"
+                        label="Auto Reconnect"
+                        title={
+                            !canUseAutoReconnect
+                                ? 'Cannot auto reconnect to a device with no serial number'
+                                : ''
+                        }
+                        disabled={!canUseAutoReconnect}
+                        isToggled={
+                            autoReconnect &&
+                            ((!!currentDevice &&
+                                !!currentDevice?.serialNumber) ||
+                                !currentDevice)
+                        }
+                        onToggle={value => {
+                            dispatch(setAutoReselect(value));
+                        }}
+                    />
+                </div>
+                <div className="device-list">
+                    {sortedDevices.length === 0 && <NoDevicesConnected />}
+                    {sortedDevices.length > 0 &&
+                    filteredDevices.length === 0 ? (
+                        <NoSupportedDevicesConnected />
+                    ) : (
+                        <AnimatedList devices={sortedDevices}>
+                            {filteredDevices.map(device => (
+                                <AnimatedItem
+                                    key={device.id.toString()}
+                                    itemKey={device.id.toString()}
+                                >
+                                    {device.traits.broken ? (
+                                        <BrokenDevice device={device} />
+                                    ) : (
+                                        <Device
+                                            device={device}
+                                            doSelectDevice={doSelectDevice}
+                                            allowMoreInfoVisible={isVisible}
+                                        />
+                                    )}
+                                </AnimatedItem>
+                            ))}
+                        </AnimatedList>
+                    )}
+                </div>
+            </div>
+            <div>
+                <p className="tw-m-0 tw-bg-gray-200 tw-px-6 tw-py-2 tw-text-xs/3 tw-uppercase">
+                    Virtual Devices
+                </p>
+                {virtualDevices.map(virtualDevice => (
+                    <VirtualDevice
+                        virtualDevice={virtualDevice}
+                        onSelect={() => doSelectVirtualDevice(virtualDevice)}
+                        key={virtualDevice}
+                    />
+                ))}
+            </div>
         </div>
     );
 };

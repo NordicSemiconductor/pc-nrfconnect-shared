@@ -15,21 +15,9 @@ import {
 } from '../deviceAutoSelectSlice';
 import { selectedDevice } from '../deviceSlice';
 import BasicDeviceInfo from './BasicDeviceInfo';
+import DisconnectDevice from './DisconnectDevice';
 
 import './selected-device.scss';
-
-const DisconnectDevice = ({
-    doDeselectDevice,
-}: {
-    doDeselectDevice: () => void;
-}) => (
-    <PseudoButton
-        className="mdi mdi-24px mdi-eject disconnect"
-        onClick={doDeselectDevice}
-        title="Disconnect device"
-        testId="disconnect-device"
-    />
-);
 
 export default ({
     doDeselectDevice,
