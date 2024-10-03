@@ -7,11 +7,16 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 186.0.0 - Unreleased
+## 186.0.0 - 2024-10-03
 
 ### Changed
 
--   DeviceSelector Abort controler is now aborted on the onDisconnected event
+-   DeviceSelector Abort controler now aborts on the onDisconnected event
+
+### Fixed
+
+-   Auto connecting from CLI when multple devices are connected now works as
+    expected.
 
 ## 185.0.0 - 2024-09-20
 
