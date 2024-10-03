@@ -72,8 +72,11 @@ export default ({
     const waitingToAutoReconnect = useSelector(getWaitingToAutoReselect);
     const showSelectedDevice = deviceIsSelected || waitingToAutoReconnect;
 
+    const abortController = useRef<AbortController>();
+
     const doDeselectDevice = useCallback(
         (device?: Device) => {
+            abortController.current?.abort();
             if (device) {
                 telemetry.sendEvent(
                     'device deselected ',
@@ -89,8 +92,6 @@ export default ({
         },
         [dispatch, onDeviceDeselected]
     );
-
-    const abortController = useRef<AbortController>();
 
     // Ensure that useCallback is
     // not updated frequently as this
