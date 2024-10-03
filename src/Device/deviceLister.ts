@@ -405,7 +405,7 @@ export const startWatchingDevices =
                 deviceListing,
                 d => {
                     d.forEach(onDeviceArrived);
-                    dispatch(autoSelectDeviceCLI(doSelectDevice));
+                    autoSelectDeviceCLI(d, doSelectDevice);
                 },
                 error => {
                     logger.error(error);
@@ -459,21 +459,18 @@ const getAutoSelectDevice = (devices: Device[]) => {
     }
 };
 
-const autoSelectDeviceCLI =
-    (
-        doSelectDevice: (device: Device, autoReselected: boolean) => void
-    ): AppThunk<RootState> =>
-    (_, getState) => {
-        if (!autoSelectDeviceCLISerialUsed) {
-            const autoSelectDevice = getAutoSelectDevice(
-                getState().device.devices
-            );
+const autoSelectDeviceCLI = (
+    devices: Device[],
+    doSelectDevice: (device: Device, autoReselected: boolean) => void
+) => {
+    if (!autoSelectDeviceCLISerialUsed) {
+        const autoSelectDevice = getAutoSelectDevice(devices);
 
-            if (autoSelectDevice) doSelectDevice(autoSelectDevice, true);
+        if (autoSelectDevice) doSelectDevice(autoSelectDevice, true);
 
-            autoSelectDeviceCLISerialUsed = true;
-        }
-    };
+        autoSelectDeviceCLISerialUsed = true;
+    }
+};
 
 export const stopWatchingDevices = (callback?: () => void) => {
     if (stopNrfutilDevice) stopNrfutilDevice(callback);
