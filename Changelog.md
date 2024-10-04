@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 187.0.0 - 2024-10-04
+
+### Fixed
+
+-   Auto connecting from CLI for device that has persisted data.
+
 ## 186.0.0 - 2024-10-03
 
 ### Changed
