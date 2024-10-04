@@ -12,6 +12,11 @@ import type { AppThunk, RootState } from '../store';
 import simplifyDevice from '../telemetry/simplifyDevice';
 import telemetry from '../telemetry/telemetry';
 import {
+    getPersistedIsFavorite,
+    getPersistedNickname,
+    getPersistedSerialPortSettings,
+} from '../utils/persistentStore';
+import {
     clearWaitForDevice,
     clearWaitForDeviceTimeout,
     setArrivedButWrongWhen,
@@ -161,6 +166,36 @@ const removeDeviceFromList =
  * library for available traits. Whenever devices are attached/detached, this
  * will dispatch AddDevice or removeDevice and trigger events.
  */
+
+const setPersistedData = (device: Device) => {
+    if (device.serialNumber) {
+        const newDevice = { ...device };
+        newDevice.favorite = getPersistedIsFavorite(device.serialNumber);
+        newDevice.nickname = getPersistedNickname(device.serialNumber);
+
+        const persistedSerialPortSettings = getPersistedSerialPortSettings(
+            device.serialNumber
+        );
+
+        if (persistedSerialPortSettings) {
+            const path =
+                newDevice.serialPorts?.[persistedSerialPortSettings.vComIndex]
+                    ?.comName;
+
+            if (path) {
+                newDevice.persistedSerialPortOptions = {
+                    ...persistedSerialPortSettings.serialPortOptions,
+                    path,
+                };
+            }
+        }
+
+        return newDevice;
+    }
+
+    return device;
+};
+
 export const startWatchingDevices =
     (
         deviceListing: DeviceTraits,
@@ -404,13 +439,20 @@ export const startWatchingDevices =
             const operation = await NrfutilDeviceLib.list(
                 deviceListing,
                 d => {
+                    d = d.map(setPersistedData);
                     d.forEach(onDeviceArrived);
                     autoSelectDeviceCLI(d, doSelectDevice);
                 },
                 error => {
                     logger.error(error);
                 },
-                { onDeviceArrived, onDeviceLeft }
+                {
+                    onDeviceArrived: d => {
+                        d = setPersistedData(d);
+                        onDeviceArrived(d);
+                    },
+                    onDeviceLeft,
+                }
             );
 
             stopNrfutilDevice = (callback?: () => void) => {

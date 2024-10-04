@@ -12,9 +12,6 @@ import { DeviceInfo } from '../../nrfutil/device';
 import { NrfutilDevice } from '../../nrfutil/device/common';
 import type { RootState } from '../store';
 import {
-    getPersistedIsFavorite,
-    getPersistedNickname,
-    getPersistedSerialPortSettings,
     persistIsFavorite,
     persistNickname,
     persistSerialPortSettings as persistSerialPortSettingsToStore,
@@ -69,35 +66,6 @@ const initialState: DeviceState = {
     devices: [],
 };
 
-const setPersistedData = (device: Device) => {
-    if (device.serialNumber) {
-        const newDevice = { ...device };
-        newDevice.favorite = getPersistedIsFavorite(device.serialNumber);
-        newDevice.nickname = getPersistedNickname(device.serialNumber);
-
-        const persistedSerialPortSettings = getPersistedSerialPortSettings(
-            device.serialNumber
-        );
-
-        if (persistedSerialPortSettings) {
-            const path =
-                newDevice.serialPorts?.[persistedSerialPortSettings.vComIndex]
-                    ?.comName;
-
-            if (path) {
-                newDevice.persistedSerialPortOptions = {
-                    ...persistedSerialPortSettings.serialPortOptions,
-                    path,
-                };
-            }
-        }
-
-        return newDevice;
-    }
-
-    return device;
-};
-
 const slice = createSlice({
     name: 'device',
     initialState,
@@ -130,12 +98,10 @@ const slice = createSlice({
                     item.serialNumber === action.payload.serialNumber ||
                     item.id === action.payload.id
             );
-
-            const device = setPersistedData(action.payload);
             if (index !== -1) {
-                state.devices[index] = device;
+                state.devices[index] = action.payload;
             } else {
-                state.devices.push(device);
+                state.devices.push(action.payload);
             }
         },
 
