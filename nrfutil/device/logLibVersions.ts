@@ -108,7 +108,7 @@ export default async (moduleVersion: ModuleVersion) => {
                     `It looks like you have installed JLink using ${JLinkInstallerVersion}, but currently we only support their Universal Installer for your system.`
                 );
                 logger?.warn(
-                    `Please install JLink: https://www.segger.com/downloads/jlink/JLink_MacOSX_V794e_universal.pkg`
+                    `Please install JLink: https://www.segger.com/downloads/jlink/JLink_MacOSX_V794i_universal.pkg`
                 );
             }
         }
