@@ -118,6 +118,7 @@ export {
     getReadbackProtection,
     persistSerialPortOptions,
     type Device,
+    selectVirtualDevice,
 } from './Device/deviceSlice';
 export {
     setWaitForDevice,
