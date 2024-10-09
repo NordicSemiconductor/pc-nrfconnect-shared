@@ -233,7 +233,9 @@ export class NrfutilSandbox {
             await this.spawnNrfutil('self-upgrade', [], onProgress);
         } catch (error) {
             // User might not have internet hance fail silently
-            getNrfutilLogger()?.error(`Error while updating the bundled core for nrfutil ${this.module}.`);
+            getNrfutilLogger()?.error(
+                `Error while updating the bundled core for nrfutil ${this.module}.`
+            );
         }
     };
 

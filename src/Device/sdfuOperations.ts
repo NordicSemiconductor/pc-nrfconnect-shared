@@ -192,7 +192,9 @@ export const switchToBootloaderMode =
                     d => {
                         if (!isDeviceInDFUBootloader(d))
                             onFail(
-                                new Error('Failed to switch to the bootloader mode')
+                                new Error(
+                                    'Failed to switch to the bootloader mode'
+                                )
                             );
                         else onSuccess(d);
                     },
