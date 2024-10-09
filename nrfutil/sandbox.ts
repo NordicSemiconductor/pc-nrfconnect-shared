@@ -207,7 +207,7 @@ export class NrfutilSandbox {
                 onProgress
             );
             getNrfutilLogger()?.info(
-                `Successfully installed nrfutil-${this.module} version ${this.version}`
+                `Successfully installed nRF Util's ${this.module} version ${this.version}`
             );
         } catch (error) {
             if (this.env.NRFUTIL_HOME && fs.existsSync(this.env.NRFUTIL_HOME)) {
@@ -218,7 +218,7 @@ export class NrfutilSandbox {
             }
 
             getNrfutilLogger()?.error(
-                `Error while installing nrfutil-${this.module} version: ${
+                `Error while installing nRF Util's ${this.module} version: ${
                     this.version
                 }. describeError: ${describeError(error)}`
             );
@@ -233,7 +233,7 @@ export class NrfutilSandbox {
             await this.spawnNrfutil('self-upgrade', [], onProgress);
         } catch (error) {
             // User might not have internet hance fail silently
-            getNrfutilLogger()?.error(`Error while updated nrfutil core`);
+            getNrfutilLogger()?.error(`Error while updating nRF Util's core module`);
         }
     };
 
@@ -387,7 +387,7 @@ export class NrfutilSandbox {
                 return;
             }
             let aborting = false;
-            telemetry.sendEvent(`running nrfutil ${this.module}`, {
+            telemetry.sendEvent(`running nRF Util's ${this.module}`, {
                 args,
                 exec: command,
             });
@@ -563,7 +563,7 @@ export class NrfutilSandbox {
     ) =>
         new Promise<void>((resolve, reject) => {
             let aborting = false;
-            telemetry.sendEvent(`running nrfutil ${this.module}`, {
+            telemetry.sendEvent(`running nRF Util's ${this.module}`, {
                 args,
                 exec: command,
             });
@@ -574,7 +574,7 @@ export class NrfutilSandbox {
 
             const listener = () => {
                 getNrfutilLogger()?.info(
-                    `Aborting ongoing nrfutil ${
+                    `Aborting ongoing command ${
                         this.module
                     } ${command} ${JSON.stringify(args)}`
                 );

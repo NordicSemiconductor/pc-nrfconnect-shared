@@ -30,7 +30,7 @@ const programDeviceWithFw =
             ) {
                 batch.recover('Application', {
                     onTaskBegin: () =>
-                        logger.info(`Device protected, recovering device`),
+                        logger.info(`Device protected; recovering device`),
                     onTaskEnd: () => logger.info(`Finished recovering device.`),
                     onException: () =>
                         logger.error(`Failed to recover device.`),
@@ -56,8 +56,8 @@ const programDeviceWithFw =
             });
 
             batch.reset('Application', undefined, {
-                onTaskBegin: () => logger.info(`Resting device`),
-                onTaskEnd: () => logger.info(`Finished resting device.`),
+                onTaskBegin: () => logger.info(`Resetting device`),
+                onTaskEnd: () => logger.info(`Finished resetting device.`),
                 onException: () => logger.error(`Failed to reset device.`),
                 onProgress: progress => {
                     onProgress(

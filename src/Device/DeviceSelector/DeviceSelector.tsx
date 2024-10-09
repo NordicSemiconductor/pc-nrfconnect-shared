@@ -152,7 +152,7 @@ export default ({
                         );
                     } else {
                         logger.warn(
-                            `Selected device has no serial number. Device setup is not supported`
+                            `Selected device has no serial number. Device setup is not supported.`
                         );
                         onDeviceIsReady(device);
                     }
