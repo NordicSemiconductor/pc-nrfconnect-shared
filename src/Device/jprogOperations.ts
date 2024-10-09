@@ -30,7 +30,7 @@ const programDeviceWithFw =
             ) {
                 batch.recover('Application', {
                     onTaskBegin: () =>
-                        logger.info(`Device protected; recovering device`),
+                        logger.info(`Device protected - recovering device`),
                     onTaskEnd: () => logger.info(`Finished recovering device.`),
                     onException: () =>
                         logger.error(`Failed to recover device.`),

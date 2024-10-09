@@ -21,7 +21,7 @@ const logModuleVersions = (module: string, moduleSandbox: NrfutilSandbox) => {
     } else {
         moduleSandbox.getModuleVersion().then(moduleVersion => {
             getNrfutilLogger()?.info(
-                `Using nRF Util's ${module} version: ${describeVersion(
+                `Using the bundled nrfutil ${module} version: ${describeVersion(
                     moduleVersion.version
                 )}`
             );
@@ -30,7 +30,7 @@ const logModuleVersions = (module: string, moduleSandbox: NrfutilSandbox) => {
 
     moduleSandbox.getCoreVersion().then(moduleVersion => {
         getNrfutilLogger()?.info(
-            `Using core nRF Util version for ${module}: ${describeVersion(
+            `Using the bundled core version for nrfutil ${module}: ${describeVersion(
                 moduleVersion.version
             )}`
         );
@@ -78,7 +78,7 @@ const getModuleSandbox = (module: string) => {
     let promiseModuleSandbox: Promise<NrfutilSandbox> | undefined;
 
     const createModuleSandbox = async () => {
-        getNrfutilLogger()?.info(`Initialising nRF Util's module: ${module}`);
+        getNrfutilLogger()?.info(`Initialising the bundled nrfutil ${module}`);
         promiseModuleSandbox = sandbox(
             getUserDataDir(),
             module,
