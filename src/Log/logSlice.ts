@@ -81,7 +81,7 @@ export const setIsLoggingVerbose =
             setVerboseLogging(enable);
         } catch (e) {
             logger.error(
-                'Failed to enable verbose logging to nrfutil modules',
+                'Failed to enable verbose logging to nRF Util modules.',
                 e
             );
         }

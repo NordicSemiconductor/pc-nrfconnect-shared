@@ -83,7 +83,7 @@ const generalInfoReport = async () => {
                     `    - nrfjprog DLL: ${describeVersion(
                         resolveModuleVersion('jprog', dependencies)
                     )}`,
-                    `    - JLink: ${describeVersion(
+                    `    - SEGGER J-Link: ${describeVersion(
                         resolveModuleVersion('JlinkARM', dependencies)
                     )}`,
                     '',

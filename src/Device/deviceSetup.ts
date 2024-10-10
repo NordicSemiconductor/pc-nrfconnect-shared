@@ -100,7 +100,7 @@ export const prepareDevice =
 
         if (possibleFirmware.length === 0) {
             logger.info(
-                `Connected to device with serial number: ${device.serialNumber} ` +
+                `Connected to device with the serial number ${device.serialNumber} ` +
                     `and family: ${device.devkit?.deviceFamily || 'Unknown'} `
             );
             if (deviceSetupConfig.allowCustomDevice) {
@@ -169,8 +169,8 @@ export const prepareDevice =
                 dispatch(
                     preventAppCloseUntilComplete(
                         {
-                            message: `The device is being programmed. 
-                            Closing application right now might result in some unknown behavior and might also brick the device. 
+                            message: `The device is being programmed.
+                            Closing application right now might result in unknown behavior and might also brick the device.
                             Are you sure you want to continue?`,
                         },
                         task
@@ -217,7 +217,7 @@ export const prepareDevice =
                         },
                         message:
                             deviceSetupConfig.confirmMessage ??
-                            'Device must be programmed, do you want to proceed?',
+                            'Device must be programmed. Do you want to proceed?',
                     })
                 );
             } else {
@@ -225,7 +225,7 @@ export const prepareDevice =
                     openDeviceSetupDialog({
                         message:
                             deviceSetupConfig.confirmMessage ??
-                            'Device must be programmed, do you want to proceed?',
+                            'Device must be programmed. Do you want to proceed?',
                     })
                 );
                 proceedAction(0);
@@ -279,7 +279,7 @@ export const setupDevice =
                 error => {
                     dispatch(closeDeviceSetupDialog());
                     logger.error(
-                        `Error while setting up device ${device.serialNumber}`
+                        `Error while setting up device with the serial number ${device.serialNumber}`
                     );
                     logger.error(describeError(error));
                     doDeselectDevice(getState().device.selectedDevice);

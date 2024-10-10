@@ -207,7 +207,7 @@ export class NrfutilSandbox {
                 onProgress
             );
             getNrfutilLogger()?.info(
-                `Successfully installed nrfutil-${this.module} version ${this.version}`
+                `Successfully installed nrfutil ${this.module} version: ${this.version}`
             );
         } catch (error) {
             if (this.env.NRFUTIL_HOME && fs.existsSync(this.env.NRFUTIL_HOME)) {
@@ -218,7 +218,7 @@ export class NrfutilSandbox {
             }
 
             getNrfutilLogger()?.error(
-                `Error while installing nrfutil-${this.module} version: ${
+                `Error while installing nrfutil ${this.module} version: ${
                     this.version
                 }. describeError: ${describeError(error)}`
             );
@@ -233,7 +233,9 @@ export class NrfutilSandbox {
             await this.spawnNrfutil('self-upgrade', [], onProgress);
         } catch (error) {
             // User might not have internet hance fail silently
-            getNrfutilLogger()?.error(`Error while updated nrfutil core`);
+            getNrfutilLogger()?.error(
+                `Error while updating the bundled core for nrfutil ${this.module}.`
+            );
         }
     };
 
@@ -574,7 +576,7 @@ export class NrfutilSandbox {
 
             const listener = () => {
                 getNrfutilLogger()?.info(
-                    `Aborting ongoing nrfutil ${
+                    `Aborting the ongoing command nrfutil ${
                         this.module
                     } ${command} ${JSON.stringify(args)}`
                 );
