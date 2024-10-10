@@ -313,7 +313,7 @@ describe('DeviceSelector', () => {
         fireEvent.click(screen.getByText(DEVICE_SERIAL_NUMBER));
 
         await screen.findByText(
-            'Device must be programmed, do you want to proceed?'
+            'Device must be programmed. Do you want to proceed?'
         );
     });
 
@@ -335,14 +335,14 @@ describe('DeviceSelector', () => {
         fireEvent.click(screen.getByText(DEVICE_SERIAL_NUMBER));
 
         await screen.findByText(
-            'Device must be programmed, do you want to proceed?'
+            'Device must be programmed. Do you want to proceed?'
         );
 
         fireEvent.click(screen.getByText('No'));
 
         expect(
             screen.queryByText(
-                'Device must be programmed, do you want to proceed?'
+                'Device must be programmed. Do you want to proceed?'
             )
         ).toBeNull();
 
