@@ -35,6 +35,8 @@ export interface JLinkProgrammingOptions {
 export interface McuBootProgrammingOptions {
     mcuEndState?: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
     netCoreUploadDelay?: number;
+    // TODO: Add target - done
+    target?: string;
 }
 
 export interface NordicDfuProgrammingOptions {
@@ -91,6 +93,7 @@ export const programmingOptionsToArgs = (options?: ProgrammingOptions) => {
                     options.netCoreUploadDelay
                 )}`
             );
+        if (options.target) args.push(`target=${options.target}`);
     } else if (isNordicDfuProgrammingOptions(options)) {
         if (options.mcuEndState)
             args.push(`mcu_end_state=${options.mcuEndState}`);
