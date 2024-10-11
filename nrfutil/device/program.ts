@@ -35,7 +35,6 @@ export interface JLinkProgrammingOptions {
 export interface McuBootProgrammingOptions {
     mcuEndState?: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
     netCoreUploadDelay?: number;
-    // TODO: Add target - done
     target?: string;
 }
 
