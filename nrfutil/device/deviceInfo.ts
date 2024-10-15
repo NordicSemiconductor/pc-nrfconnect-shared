@@ -72,7 +72,9 @@ export default async (
     controller?: AbortController
 ) => {
     try {
-        return device.traits.jlink || device.traits.nordicDfu
+        return device.traits.jlink ||
+            device.traits.nordicDfu ||
+            device.traits.mcuBoot
             ? (
                   await deviceSingleTaskEndOperation<DeviceInfoRaw>(
                       device,
