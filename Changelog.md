@@ -7,7 +7,7 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 188.0.0 - 2024-10-14
+## 188.0.0 - 2024-10-15
 
 ### Changed
 
