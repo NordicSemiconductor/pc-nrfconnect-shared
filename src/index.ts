@@ -182,6 +182,12 @@ export {
 } from './FlashMessage/FlashMessageSlice';
 
 export {
+    getSelectedDropdownItem,
+    convertToDropDownItems,
+    convertToNumberDropDownItems,
+} from './Dropdown/DropdownHelpers';
+
+export {
     inMain as apps,
     type App as AppType,
     type AppSpec,
