@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import { Terminal } from '@xterm/headless';
 import EventEmitter from 'events';
-import { Terminal } from 'xterm-headless';
 
 import logger from '../logging';
 import { SerialPort } from '../SerialPort/SerialPort';

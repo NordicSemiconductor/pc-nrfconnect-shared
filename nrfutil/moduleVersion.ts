@@ -92,7 +92,7 @@ const versionFromPackageJson = (module: string) =>
     packageJsonApp().nrfConnectForDesktop.nrfutil?.[module][0];
 
 const failToDetermineVersion = (module: string) => {
-    throw new Error(`No version specified for nrfutil-${module}`);
+    throw new Error(`No version specified for the bundled nrfutil ${module}`);
 };
 
 export const versionToInstall = (module: string, version?: string) =>

@@ -84,10 +84,10 @@ const DeviceList: FC<Props> = ({
             <div className="global-auto-reconnect">
                 <Toggle
                     id="toggle-global-auto-reconnect"
-                    label="Auto Reconnect"
+                    label="Auto-reconnect"
                     title={
                         !canUseAutoReconnect
-                            ? 'Cannot auto reconnect to a device with no serial number'
+                            ? 'Cannot auto-reconnect to a device with no serial number.'
                             : ''
                     }
                     disabled={!canUseAutoReconnect}

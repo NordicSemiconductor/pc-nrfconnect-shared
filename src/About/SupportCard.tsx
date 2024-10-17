@@ -77,7 +77,7 @@ export default ({ feedbackCategories }: { feedbackCategories?: string[] }) => {
                     <div className="tw-w-full">
                         <Toggle
                             id="enableVerboseLoggin"
-                            label="VERBOSE LOGGING"
+                            label="Verbose Logging"
                             onToggle={isToggled =>
                                 dispatch(setIsLoggingVerbose(isToggled))
                             }
@@ -92,7 +92,7 @@ export default ({ feedbackCategories }: { feedbackCategories?: string[] }) => {
                                 doNotResetVerboseLogginOnRestart();
                                 getCurrentWindow().emit('restart-window');
                             }}
-                            title="Restart application with verbose logging turned on to get log messages from initial enumeration"
+                            title="Restart application with verbose logging toggled on to get log messages from the initial enumeration."
                             disabled={!verboseLogging}
                         >
                             Restart with verbose logging

@@ -61,10 +61,10 @@ export const isDeviceInDFUBootloader = (device: Device) => {
 
 export const ensureBootloaderMode = (device: Device) => {
     if (isDeviceInDFUBootloader(device)) {
-        logger.debug('Device is in bootloader mode');
+        logger.debug('Device is in the bootloader mode');
         return true;
     }
-    logger.debug('Device is NOT in bootloader mode');
+    logger.debug('Device is NOT in the bootloader mode');
     return false;
 };
 
@@ -92,13 +92,13 @@ const updateBootloader =
         onProgress: (progress: number, message?: string) => void
     ): AppThunk =>
     async dispatch => {
-        logger.info(`Update Bootloader ${device}`);
+        logger.info(`Update bootloader ${device}`);
         const zip = new AdmZip(getAppFile(LATEST_BOOTLOADER));
         const zipBuffer = zip.toBuffer();
 
-        logger.debug('Starting Bootloader Update');
+        logger.debug('Starting bootloader update');
 
-        onProgress(0, 'Updating Bootloader');
+        onProgress(0, 'Updating bootloader');
 
         dispatch(
             setWaitForDevice({
@@ -192,7 +192,9 @@ export const switchToBootloaderMode =
                     d => {
                         if (!isDeviceInDFUBootloader(d))
                             onFail(
-                                new Error('Failed to switch To Bootloader Mode')
+                                new Error(
+                                    'Failed to switch to the bootloader mode'
+                                )
                             );
                         else onSuccess(d);
                     },
@@ -221,7 +223,7 @@ export const switchToApplicationMode =
                         if (isDeviceInDFUBootloader(d))
                             onFail(
                                 new Error(
-                                    'Failed to switch to Application Mode'
+                                    'Failed to switch to the application mode'
                                 )
                             );
                         else onSuccess(d);
@@ -296,7 +298,7 @@ const askAndUpdateBootloader =
                                     }
                                 },
                                 message:
-                                    'Device will be programmed. A Newer version of the bootloader is available, do you want to update it as well?',
+                                    'Device will be programmed. A newer version of the bootloader is available. Do you want to update it as well?',
                             })
                         );
                     } else {
@@ -500,7 +502,7 @@ const programInDFUBootloader =
         )
             .then(() => {
                 logger.info(
-                    'All dfu images have been written to the target device'
+                    'All DFU images have been written to the target device.'
                 );
                 logger.debug('DFU completed successfully!');
                 dispatch(
@@ -512,7 +514,7 @@ const programInDFUBootloader =
                         onFail,
                     })
                 );
-                onProgress(100, 'Waiting for device to reboot');
+                onProgress(100, 'Waiting for device to reboot.');
             })
             .catch(err => {
                 if (err) {
@@ -581,7 +583,7 @@ export const sdfuDeviceSetup = (
     isExpectedFirmware: (device, deviceInfo) => () => {
         if (deviceInfo?.dfuTriggerVersion) {
             logger.debug(
-                'Device has DFU trigger interface, the device is in Application mode'
+                'Device has DFU trigger interface; the device is in the application mode'
             );
 
             const { semVer } = deviceInfo.dfuTriggerVersion;

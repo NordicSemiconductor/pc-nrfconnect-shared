@@ -90,7 +90,7 @@ logger.openLogFile = () => {
     try {
         openFile(logFilePath());
     } catch (error) {
-        logger.logError('Unable to open log file', error);
+        logger.logError('Unable to open the log file', error);
     }
 };
 
@@ -98,7 +98,7 @@ logger.openLogFileLocation = () => {
     try {
         openFileLocation(logFilePath());
     } catch (error) {
-        logger.logError('Unable to open log file location', error);
+        logger.logError('Unable to open the log file location', error);
     }
 };
 

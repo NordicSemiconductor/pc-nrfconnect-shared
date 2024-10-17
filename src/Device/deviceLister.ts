@@ -266,7 +266,7 @@ export const startWatchingDevices =
                         );
 
                         logger.info(
-                            `Auto Reconnecting Device SN: ${deviceWithPersistedData.serialNumber}`
+                            `Auto-reconnecting to device with the serial number: ${deviceWithPersistedData.serialNumber}`
                         );
                         doSelectDevice(deviceWithPersistedData, true);
                         dispatch(setSelectedDeviceInfo(deviceInfo));
@@ -325,7 +325,7 @@ export const startWatchingDevices =
                                 );
                                 dispatch(setDisconnectedTime(undefined));
 
-                                logger.info('Wait For Device was successfully');
+                                logger.info('Wait For Device was successful');
 
                                 dispatch(
                                     clearWaitForDeviceTimeout(

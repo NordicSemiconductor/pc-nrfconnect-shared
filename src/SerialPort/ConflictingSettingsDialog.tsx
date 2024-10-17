@@ -71,7 +71,7 @@ const ConflictingSettingsDialog = ({
                 onCancel();
             } else {
                 console.error(
-                    'Port could not be opened. Verify it is not used by some other applications'
+                    'Port could not be opened. Verify it is not used by other applications.'
                 );
             }
         }
@@ -180,7 +180,7 @@ const DisplayConflictingSettings = ({
                         ))}
                     </ul>
                 ) : (
-                    <p>Could not retrieve the current settings</p>
+                    <p>Could not retrieve the current settings.</p>
                 )}
             </div>
             <div className="tw-pr-7">
