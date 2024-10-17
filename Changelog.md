@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 189.0.0 - 2024-10-17
+
+### Added
+
+-   Dropdown helper functions which are used in `pc-nrfconnect-serial-terminal`
+    and `pc-nrfconnect-programmer`
+
 ## 188.0.0 - 2024-10-15
 
 ### Changed
