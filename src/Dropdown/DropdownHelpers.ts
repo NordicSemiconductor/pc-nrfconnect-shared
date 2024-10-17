@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { DropdownItem } from '../Dropdown/Dropdown';
 import { NumberDropdownItem } from '../InlineInput/NumberInputWithDropdown';
+import { DropdownItem } from './Dropdown';
 
 export const getSelectedDropdownItem = (
     itemList: DropdownItem[],

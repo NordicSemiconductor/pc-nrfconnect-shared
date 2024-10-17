@@ -8,7 +8,7 @@ import {
     convertToDropDownItems,
     convertToNumberDropDownItems,
     getSelectedDropdownItem,
-} from './dataConstructors';
+} from './DropdownHelpers';
 
 describe('getSelectedDropdownItem', () => {
     it('returns the first item if value is undefined', () => {
