@@ -7,12 +7,17 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 189.0.0 - 2024-10-17
+## 189.0.0 - 2024-10-18
 
 ### Added
 
 -   Dropdown helper functions which are used in `pc-nrfconnect-serial-terminal`
-    and `pc-nrfconnect-programmer`
+    and `pc-nrfconnect-programmer`.
+-   Add nrfutil mcu-state-options for multi target support.
+
+### Steps to upgrade when using this package
+
+-   Minimum support version of nrfutil device is now 2.5.0
 
 ## 188.0.0 - 2024-10-15
 

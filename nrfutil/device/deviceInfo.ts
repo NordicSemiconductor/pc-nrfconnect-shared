@@ -41,11 +41,23 @@ export interface DfuTriggerVersion {
     semVer: string;
 }
 
+export interface McuStateOption {
+    arguments?: {
+        target: string;
+    };
+    description: string;
+    name: string;
+    type: 'Programming' | 'Application';
+    value: 'NRFDL_MCU_STATE_PROGRAMMING';
+}
+
 export interface DeviceInfo {
     hwInfo?: HwInfo;
     jlink?: JLinkDeviceInfo;
     dfuTriggerVersion?: DfuTriggerVersion;
     dfuTriggerInfo?: DfuTriggerInfo;
+    mcuStateOptions?: McuStateOption[];
+    supportedOptions?: string[];
 }
 
 export interface DeviceInfoRaw {
@@ -60,7 +72,9 @@ export default async (
     controller?: AbortController
 ) => {
     try {
-        return device.traits.jlink || device.traits.nordicDfu
+        return device.traits.jlink ||
+            device.traits.nordicDfu ||
+            device.traits.mcuBoot
             ? (
                   await deviceSingleTaskEndOperation<DeviceInfoRaw>(
                       device,

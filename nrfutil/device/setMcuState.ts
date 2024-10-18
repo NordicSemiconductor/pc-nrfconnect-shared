@@ -13,12 +13,13 @@ export default (
     device: NrfutilDevice,
     state: McuState,
     onProgress?: (progress: Progress) => void,
-    controller?: AbortController
+    controller?: AbortController,
+    target?: string
 ) =>
     deviceSingleTaskEndOperationVoid(
         device,
         'mcu-state-set',
         onProgress,
         controller,
-        [state]
+        [state, target ? `--target=${target}` : '']
     );
