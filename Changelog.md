@@ -17,7 +17,7 @@ every new version is a new major version.
 
 ### Steps to upgrade when using this package
 
--   Minimum support version of nrfutil device is now 2.6.1
+-   Minimum support version of nrfutil device is now 2.5.0
 
 ## 188.0.0 - 2024-10-15
 
