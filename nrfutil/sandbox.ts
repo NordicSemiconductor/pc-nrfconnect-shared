@@ -201,6 +201,7 @@ export class NrfutilSandbox {
                     force: true,
                 });
             }
+            await this.updateNrfUtilCore();
             await this.spawnNrfutil(
                 'install',
                 [`${this.module}=${this.version}`, '--force'],
