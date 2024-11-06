@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 190.0.0 - 2024-11-06
+
+### Added
+
+-   Added `Thingy91:X` to known devices.
+
 ## 189.0.0 - 2024-10-18
 
 ### Added

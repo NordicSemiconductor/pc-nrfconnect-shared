@@ -258,6 +258,9 @@ const deviceByUsb = (device: Device) => {
         if (device.usb?.product?.startsWith('PPK')) {
             return ppkDeviceInfo(device);
         }
+        if (device.serialNumber?.startsWith('THINGY91X')) {
+            return devicesByPca.PCA20049;
+        }
         if (device.serialNumber?.startsWith('THINGY91')) {
             return devicesByPca.PCA20035;
         }
