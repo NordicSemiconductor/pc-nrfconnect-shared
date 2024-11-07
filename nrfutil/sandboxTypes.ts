@@ -155,23 +155,23 @@ export type DiscriminatedVersion =
     | StringVersion;
 
 type Plugin = DiscriminatedVersion & {
-    dependencies: Dependency[];
+    dependencies: TopLevelDependency[];
     name: string;
 };
 
 export type Dependency = DiscriminatedVersion & {
-    classification?: FeatureClassification;
     name: string;
-    plugins?: Plugin[];
     dependencies?: SubDependency[];
     expectedVersion?: DiscriminatedVersion;
 };
 
-export type SubDependency = DiscriminatedVersion & {
-    name: string;
+export type TopLevelDependency = Dependency & {
+    classification?: FeatureClassification;
+    plugins?: Plugin[];
+};
+
+type SubDependency = Dependency & {
     description?: string;
-    dependencies?: SubDependency[];
-    expectedVersion?: DiscriminatedVersion;
 };
 
 export type ModuleVersion = {
@@ -179,7 +179,7 @@ export type ModuleVersion = {
     classification: FeatureClassification;
     commit_date: string;
     commit_hash: string;
-    dependencies: Dependency[];
+    dependencies: TopLevelDependency[];
     host: string;
     name: string;
     version: string;

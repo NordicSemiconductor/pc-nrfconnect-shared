@@ -6,9 +6,9 @@
 
 import { packageJsonApp } from '../src/utils/packageJson';
 import {
-    Dependency,
+    type Dependency,
     type DiscriminatedVersion,
-    SubDependency,
+    type TopLevelDependency,
     versionToString,
 } from './sandboxTypes';
 
@@ -26,7 +26,7 @@ const findTopLevel = (module: KnownModule, dependencies: Dependency[]) =>
 
 const findInDependencies = (
     module: KnownModule,
-    dependencies: Dependency[]
+    dependencies: TopLevelDependency[]
 ) => {
     if (dependencies.length > 0) {
         return resolveModuleVersion(
@@ -56,8 +56,8 @@ export const getExpectedVersion = (dependency: Dependency) => {
 
 export const resolveModuleVersion = (
     module: KnownModule,
-    versions: Dependency[] = []
-): Dependency | SubDependency | undefined =>
+    versions: TopLevelDependency[] = []
+): Dependency | undefined =>
     findTopLevel(module, versions) ?? findInDependencies(module, versions);
 
 const overriddenVersion = (module: string) => {

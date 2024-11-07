@@ -14,9 +14,12 @@ import {
     resolveModuleVersion,
 } from '../moduleVersion';
 import { getNrfutilLogger } from '../nrfutilLogger';
-import type { ModuleVersion, SubDependency } from '../sandboxTypes';
+import type { DiscriminatedVersion, ModuleVersion } from '../sandboxTypes';
 
-const log = (description: string, moduleVersion?: SubDependency | string) => {
+const log = (
+    description: string,
+    moduleVersion?: DiscriminatedVersion | string
+) => {
     const logger = getNrfutilLogger();
     if (moduleVersion == null) {
         logger?.warn(`Unable to detect version of ${description}.`);
