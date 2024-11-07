@@ -197,14 +197,11 @@ export const isStringVersion = (
     version?: DiscriminatedVersion
 ): version is StringVersion => version?.versionFormat === 'string';
 
-export const versionToString = (
-    type: DiscriminatedVersion['versionFormat'],
-    version: DiscriminatedVersion['version']
-) => {
-    if (type === 'incremental' || type === 'string') {
-        return `${version}`;
+export const versionToString = (version: DiscriminatedVersion) => {
+    if (isSemanticVersion(version)) {
+        const semantic = version.version;
+        return `${semantic.major}.${semantic.minor}.${semantic.patch}`;
     }
 
-    const v = version as SemanticVersion['version'];
-    return `${v.major}.${v.minor}.${v.patch}`;
+    return String(version.version);
 };
