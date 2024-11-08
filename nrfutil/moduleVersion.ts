@@ -9,8 +9,8 @@ import {
     type Dependency,
     hasVersion,
     type TopLevelDependency,
-    versionToString,
 } from './sandboxTypes';
+import { versionToString } from './version';
 
 export const describeVersion = (dependencyOrVersion?: Dependency | string) => {
     if (typeof dependencyOrVersion === 'string') return dependencyOrVersion;

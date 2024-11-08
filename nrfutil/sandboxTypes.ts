@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import type { DiscriminatedVersion } from './version';
+
 export interface BackgroundTask<T> {
     onError: (error: Error, pid?: number) => void;
     onData: (data: T) => void;
@@ -126,34 +128,6 @@ export type LogMessage = {
     message: string;
 };
 
-type IncrementalVersion = {
-    versionFormat: 'incremental';
-    version: number;
-};
-
-type SemanticVersion = {
-    versionFormat: 'semantic';
-    version: {
-        major: number;
-        minor: number;
-        patch: number;
-        semverPreNumeric?: number;
-        semverPreAlphaNumeric?: number;
-        semverMetadataNumeric?: number;
-        semverMetadataAlphaNumeric?: number;
-    };
-};
-
-type StringVersion = {
-    versionFormat: 'string';
-    version: string;
-};
-
-type DiscriminatedVersion =
-    | IncrementalVersion
-    | SemanticVersion
-    | StringVersion;
-
 type Plugin = DiscriminatedVersion & {
     dependencies: TopLevelDependency[];
     name: string;
@@ -188,28 +162,7 @@ export type ModuleVersion = {
     version: string;
 };
 
-export const isSemanticVersion = (
-    version?: DiscriminatedVersion
-): version is SemanticVersion => version?.versionFormat === 'semantic';
-
-export const isIncrementalVersion = (
-    version?: DiscriminatedVersion
-): version is IncrementalVersion => version?.versionFormat === 'incremental';
-
-export const isStringVersion = (
-    version?: DiscriminatedVersion
-): version is StringVersion => version?.versionFormat === 'string';
-
 export const hasVersion = (
     dependency?: Dependency | DiscriminatedVersion
 ): dependency is DependencyWithVersion | DiscriminatedVersion =>
     dependency != null && 'version' in dependency && dependency.version != null;
-
-export const versionToString = (version: DiscriminatedVersion) => {
-    if (isSemanticVersion(version)) {
-        const semantic = version.version;
-        return `${semantic.major}.${semantic.minor}.${semantic.patch}`;
-    }
-
-    return String(version.version);
-};
