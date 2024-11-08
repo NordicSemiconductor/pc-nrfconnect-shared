@@ -14,18 +14,20 @@ import {
     resolveModuleVersion,
 } from '../moduleVersion';
 import { getNrfutilLogger } from '../nrfutilLogger';
-import type { DiscriminatedVersion, ModuleVersion } from '../sandboxTypes';
+import type { Dependency, ModuleVersion } from '../sandboxTypes';
 
 const log = (
     description: string,
-    moduleVersion?: DiscriminatedVersion | string
+    dependencyOrVersion?: Dependency | string
 ) => {
     const logger = getNrfutilLogger();
-    if (moduleVersion == null) {
+    if (dependencyOrVersion == null) {
         logger?.warn(`Unable to detect version of ${description}.`);
     } else {
         logger?.info(
-            `Using ${description} version: ${describeVersion(moduleVersion)}`
+            `Using ${description} version: ${describeVersion(
+                dependencyOrVersion
+            )}`
         );
     }
 };
@@ -86,7 +88,7 @@ export default async (moduleVersion: ModuleVersion) => {
 
         if (jlinkVersion) {
             const result = getExpectedVersion(jlinkVersion);
-            if (!result.isExpectedVersion) {
+            if (result != null && !result.isExpectedVersion) {
                 logger?.warn(
                     `Installed JLink version does not match the expected version (${result.expectedVersion})`
                 );

@@ -149,7 +149,7 @@ type StringVersion = {
     version: string;
 };
 
-export type DiscriminatedVersion =
+type DiscriminatedVersion =
     | IncrementalVersion
     | SemanticVersion
     | StringVersion;
@@ -159,18 +159,21 @@ type Plugin = DiscriminatedVersion & {
     name: string;
 };
 
-export type Dependency = DiscriminatedVersion & {
+type DependencyWithoutVersion = {
     name: string;
     dependencies?: SubDependency[];
     expectedVersion?: DiscriminatedVersion;
 };
+type DependencyWithVersion = DiscriminatedVersion & DependencyWithoutVersion;
+
+export type Dependency = DependencyWithoutVersion | DependencyWithVersion;
 
 export type TopLevelDependency = Dependency & {
     classification?: FeatureClassification;
     plugins?: Plugin[];
 };
 
-type SubDependency = Dependency & {
+export type SubDependency = Dependency & {
     description?: string;
 };
 
@@ -196,6 +199,11 @@ export const isIncrementalVersion = (
 export const isStringVersion = (
     version?: DiscriminatedVersion
 ): version is StringVersion => version?.versionFormat === 'string';
+
+export const hasVersion = (
+    dependency?: Dependency | DiscriminatedVersion
+): dependency is DependencyWithVersion | DiscriminatedVersion =>
+    dependency != null && 'version' in dependency && dependency.version != null;
 
 export const versionToString = (version: DiscriminatedVersion) => {
     if (isSemanticVersion(version)) {

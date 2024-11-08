@@ -7,16 +7,17 @@
 import { packageJsonApp } from '../src/utils/packageJson';
 import {
     type Dependency,
-    type DiscriminatedVersion,
+    hasVersion,
     type TopLevelDependency,
     versionToString,
 } from './sandboxTypes';
 
-export const describeVersion = (version?: DiscriminatedVersion | string) => {
-    if (typeof version === 'string') return version;
-    if (version == null) return 'Unknown';
+export const describeVersion = (dependencyOrVersion?: Dependency | string) => {
+    if (typeof dependencyOrVersion === 'string') return dependencyOrVersion;
+    if (hasVersion(dependencyOrVersion))
+        return versionToString(dependencyOrVersion);
 
-    return versionToString(version);
+    return 'Unknown';
 };
 
 type KnownModule = 'nrfdl' | 'jprog' | 'JlinkARM';
@@ -42,6 +43,8 @@ const findInDependencies = (
 };
 
 export const getExpectedVersion = (dependency: Dependency) => {
+    if (!hasVersion(dependency)) return null;
+
     const currentVersion = versionToString(dependency);
 
     const expectedVersion = dependency.expectedVersion

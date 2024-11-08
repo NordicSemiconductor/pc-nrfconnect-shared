@@ -12,6 +12,8 @@ every new version is a new major version.
 ### Changed
 
 -   nrfutil: The core gets upgraded before installing a command.
+-   nrfutil: The `version` properties of dependencies are now optional,
+    reflecting the behaviour since nrfutil-device 2.7.
 
 ### Removed
 
