@@ -9,6 +9,10 @@ every new version is a new major version.
 
 ## 191.0.0 - Unreleased
 
+### Added
+
+-   Function `getJlinkCompatibility`.
+
 ### Changed
 
 -   nrfutil: The core gets upgraded before installing a command.

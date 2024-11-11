@@ -14,3 +14,4 @@ export {
     setVerboseLogging,
     getAllModuleVersions,
 } from './modules';
+export { getJlinkCompatibility } from './jlinkVersion';
