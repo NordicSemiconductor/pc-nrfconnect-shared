@@ -11,7 +11,7 @@ import {
     hasExpectedVersionFormat,
     strippedVersionName,
 } from './jlinkVersion';
-import type { ModuleVersion, SubDependency } from './sandboxTypes';
+import type { Dependency, ModuleVersion } from './sandboxTypes';
 
 // Note: In this test the space at the end of 'JLink_V7.96 ' or '7.96 ' is
 // intentional because it is also reported like that by nrfutil.
@@ -203,7 +203,7 @@ describe('existingIsOlderThanExpected', () => {
 
 describe('getJlinkCompatibility', () => {
     const createModuleVersion = (
-        ...dependencies: SubDependency[]
+        ...dependencies: Dependency[]
     ): ModuleVersion => ({
         classification: 'nrf-external',
         name: 'nrfutil-device',

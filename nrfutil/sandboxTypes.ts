@@ -135,7 +135,8 @@ type Plugin = DiscriminatedVersion & {
 
 type DependencyWithoutVersion = {
     name: string;
-    dependencies?: SubDependency[];
+    description?: string;
+    dependencies?: Dependency[];
     expectedVersion?: DiscriminatedVersion;
 };
 type DependencyWithVersion = DiscriminatedVersion & DependencyWithoutVersion;
@@ -145,10 +146,6 @@ export type Dependency = DependencyWithoutVersion | DependencyWithVersion;
 export type TopLevelDependency = Dependency & {
     classification?: FeatureClassification;
     plugins?: Plugin[];
-};
-
-export type SubDependency = Dependency & {
-    description?: string;
 };
 
 export type ModuleVersion = {
