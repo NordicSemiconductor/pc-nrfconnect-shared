@@ -8,11 +8,8 @@ import { spawn } from 'child_process';
 import os from 'os';
 
 import describeError from '../../src/logging/describeError';
-import {
-    describeVersion,
-    findDependency,
-    getExpectedVersion,
-} from '../moduleVersion';
+import { getJlinkCompatibility } from '../jlinkVersion';
+import { describeVersion, findDependency } from '../moduleVersion';
 import { getNrfutilLogger } from '../nrfutilLogger';
 import type { Dependency, ModuleVersion } from '../sandboxTypes';
 
@@ -84,20 +81,33 @@ export default async (moduleVersion: ModuleVersion) => {
         log('nrfjprog DLL', findDependency('jprog', dependencies));
         log('JLink', findDependency('JlinkARM', dependencies));
 
-        const jlinkVersion = findDependency('JlinkARM', dependencies);
+        const jlinkCompatibility = getJlinkCompatibility(moduleVersion);
 
-        if (jlinkVersion) {
-            const result = getExpectedVersion(jlinkVersion);
-            if (result != null && !result.isExpectedVersion) {
+        switch (jlinkCompatibility.kind) {
+            case 'No J-Link installed':
                 logger?.warn(
-                    `Installed JLink version does not match the expected version (${result.expectedVersion})`
+                    `Segger J-Link is not installed. ` +
+                        `Install at least version ${jlinkCompatibility.requiredJlink} ` +
+                        `from https://www.segger.com/downloads/jlink`
                 );
-            }
-        } else {
-            logger?.warn(
-                `JLink is not installed. Please install JLink from: https://www.segger.com/downloads/jlink`
-            );
+                break;
+            case 'Outdated J-Link':
+                logger?.warn(
+                    `Outdated Segger J-Link. Your version of Segger J-Link (${jlinkCompatibility.actualJlink}) ` +
+                        `is older than the one this app was tested with (${jlinkCompatibility.requiredJlink}). ` +
+                        `Install a newer version from https://www.segger.com/downloads/jlink`
+                );
+                break;
+            case 'Newer J-Link is used':
+                logger?.info(
+                    `Your version of Segger J-Link (${jlinkCompatibility.actualJlink}) ` +
+                        `is newer than the one this app was tested with (${jlinkCompatibility.requiredJlink}). ` +
+                        `The tested version is not required, and your J-Link version will most likely work fine.` +
+                        ` If you get issues related to J-Link with your devices, use the tested version.`
+                );
+                break;
         }
+
         if (
             process.platform === 'darwin' &&
             os.cpus()[0].model.includes('Apple')

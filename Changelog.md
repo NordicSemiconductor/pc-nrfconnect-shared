@@ -18,6 +18,8 @@ every new version is a new major version.
 -   nrfutil: The core gets upgraded before installing a command.
 -   nrfutil: The `version` properties of dependencies are now optional,
     reflecting the behaviour since nrfutil-device 2.7.
+-   Warning for J-Link versions: Only inform (not warn) if the installed version
+    is newer than the tested version. Updated the text for all cases.
 
 ### Removed
 
