@@ -6,7 +6,7 @@
 
 import semver from 'semver';
 
-import { resolveModuleVersion } from './moduleVersion';
+import { findDependency } from './moduleVersion';
 import {
     type Dependency,
     hasVersion,
@@ -88,7 +88,7 @@ const nrfutilDeviceToJLink = (nrfutilDeviceVersion: string) => {
 };
 
 export const getJlinkCompatibility = (moduleVersion: ModuleVersion) => {
-    const jlinkVersionDependency = resolveModuleVersion(
+    const jlinkVersionDependency = findDependency(
         'JlinkARM',
         moduleVersion.dependencies
     );

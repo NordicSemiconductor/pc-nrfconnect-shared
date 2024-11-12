@@ -10,8 +10,8 @@ import os from 'os';
 import describeError from '../../src/logging/describeError';
 import {
     describeVersion,
+    findDependency,
     getExpectedVersion,
-    resolveModuleVersion,
 } from '../moduleVersion';
 import { getNrfutilLogger } from '../nrfutilLogger';
 import type { Dependency, ModuleVersion } from '../sandboxTypes';
@@ -80,11 +80,11 @@ export default async (moduleVersion: ModuleVersion) => {
         const dependencies = moduleVersion.dependencies;
 
         log('nrfutil-device', moduleVersion.version);
-        log('nrf-device-lib', resolveModuleVersion('nrfdl', dependencies));
-        log('nrfjprog DLL', resolveModuleVersion('jprog', dependencies));
-        log('JLink', resolveModuleVersion('JlinkARM', dependencies));
+        log('nrf-device-lib', findDependency('nrfdl', dependencies));
+        log('nrfjprog DLL', findDependency('jprog', dependencies));
+        log('JLink', findDependency('JlinkARM', dependencies));
 
-        const jlinkVersion = resolveModuleVersion('JlinkARM', dependencies);
+        const jlinkVersion = findDependency('JlinkARM', dependencies);
 
         if (jlinkVersion) {
             const result = getExpectedVersion(jlinkVersion);

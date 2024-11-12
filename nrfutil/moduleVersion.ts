@@ -30,7 +30,7 @@ const findInDependencies = (
     dependencies: TopLevelDependency[]
 ) => {
     if (dependencies.length > 0) {
-        return resolveModuleVersion(
+        return findDependency(
             module,
             dependencies.flatMap(dependency => [
                 ...(dependency.dependencies ?? []),
@@ -57,7 +57,7 @@ export const getExpectedVersion = (dependency: Dependency) => {
     };
 };
 
-export const resolveModuleVersion = (
+export const findDependency = (
     module: KnownModule,
     versions: TopLevelDependency[] = []
 ): Dependency | undefined =>
