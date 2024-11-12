@@ -13,6 +13,10 @@ every new version is a new major version.
 
 -   nrfutil: The core gets upgraded before installing a command.
 
+### Removed
+
+-   Export of internal type `SemanticVersion`.
+
 ## 190.0.0 - 2024-11-06
 
 ### Added

@@ -126,48 +126,53 @@ export type LogMessage = {
     message: string;
 };
 
-export interface SemanticVersion {
-    major: number;
-    minor: number;
-    patch: number;
-    semverPreNumeric?: number;
-    semverPreAlphaNumeric?: number;
-    semverMetadataNumeric?: number;
-    semverMetadataAlphaNumeric?: number;
-}
-
-type VersionFormat = 'incremental' | 'semantic' | 'string';
-
-export type Plugin = {
-    dependencies: Dependency[];
-    name: string;
-    versionFormat: VersionFormat;
-    version: VersionType;
+type IncrementalVersion = {
+    versionFormat: 'incremental';
+    version: number;
 };
 
-export type Dependency = {
+type SemanticVersion = {
+    versionFormat: 'semantic';
+    version: {
+        major: number;
+        minor: number;
+        patch: number;
+        semverPreNumeric?: number;
+        semverPreAlphaNumeric?: number;
+        semverMetadataNumeric?: number;
+        semverMetadataAlphaNumeric?: number;
+    };
+};
+
+type StringVersion = {
+    versionFormat: 'string';
+    version: string;
+};
+
+export type DiscriminatedVersion =
+    | IncrementalVersion
+    | SemanticVersion
+    | StringVersion;
+
+type Plugin = DiscriminatedVersion & {
+    dependencies: Dependency[];
+    name: string;
+};
+
+export type Dependency = DiscriminatedVersion & {
     classification?: FeatureClassification;
     name: string;
     plugins?: Plugin[];
     dependencies?: SubDependency[];
-    versionFormat: VersionFormat;
-    version: VersionType;
-    expectedVersion?: {
-        versionFormat: VersionFormat;
-        version: VersionType;
-    };
+    expectedVersion?: DiscriminatedVersion;
 };
 
-export type VersionType = SemanticVersion | string | number;
-
-export interface SubDependency {
+export type SubDependency = DiscriminatedVersion & {
     name: string;
     description?: string;
     dependencies?: SubDependency[];
-    versionFormat: VersionFormat;
-    version: VersionType;
-    expectedVersion?: { versionFormat: VersionFormat; version: VersionType };
-}
+    expectedVersion?: DiscriminatedVersion;
+};
 
 export type ModuleVersion = {
     build_timestamp: string;
@@ -181,25 +186,25 @@ export type ModuleVersion = {
 };
 
 export const isSemanticVersion = (
-    version?: SubDependency
-): version is SubDependency & { version: SemanticVersion } =>
-    version?.versionFormat === 'semantic';
+    version?: DiscriminatedVersion
+): version is SemanticVersion => version?.versionFormat === 'semantic';
 
 export const isIncrementalVersion = (
-    version?: SubDependency
-): version is SubDependency & { version: number } =>
-    version?.versionFormat === 'incremental';
+    version?: DiscriminatedVersion
+): version is IncrementalVersion => version?.versionFormat === 'incremental';
 
 export const isStringVersion = (
-    version?: SubDependency
-): version is SubDependency & { version: string } =>
-    version?.versionFormat === 'string';
+    version?: DiscriminatedVersion
+): version is StringVersion => version?.versionFormat === 'string';
 
-export const versionToString = (type: VersionFormat, version: VersionType) => {
+export const versionToString = (
+    type: DiscriminatedVersion['versionFormat'],
+    version: DiscriminatedVersion['version']
+) => {
     if (type === 'incremental' || type === 'string') {
         return `${version}`;
     }
 
-    const v = version as SemanticVersion;
+    const v = version as SemanticVersion['version'];
     return `${v.major}.${v.minor}.${v.patch}`;
 };
