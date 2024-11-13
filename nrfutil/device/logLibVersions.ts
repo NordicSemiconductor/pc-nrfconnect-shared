@@ -86,21 +86,21 @@ export default async (moduleVersion: ModuleVersion) => {
         switch (jlinkCompatibility.kind) {
             case 'No J-Link installed':
                 logger?.warn(
-                    `Segger J-Link is not installed. ` +
+                    `SEGGER J-Link is not installed. ` +
                         `Install at least version ${jlinkCompatibility.requiredJlink} ` +
                         `from https://www.segger.com/downloads/jlink`
                 );
                 break;
             case 'Outdated J-Link':
                 logger?.warn(
-                    `Outdated Segger J-Link. Your version of Segger J-Link (${jlinkCompatibility.actualJlink}) ` +
+                    `Outdated SEGGER J-Link. Your version of SEGGER J-Link (${jlinkCompatibility.actualJlink}) ` +
                         `is older than the one this app was tested with (${jlinkCompatibility.requiredJlink}). ` +
-                        `Install a newer version from https://www.segger.com/downloads/jlink`
+                        `Install the newer version from https://www.segger.com/downloads/jlink`
                 );
                 break;
             case 'Newer J-Link is used':
                 logger?.info(
-                    `Your version of Segger J-Link (${jlinkCompatibility.actualJlink}) ` +
+                    `Your version of SEGGER J-Link (${jlinkCompatibility.actualJlink}) ` +
                         `is newer than the one this app was tested with (${jlinkCompatibility.requiredJlink}). ` +
                         `The tested version is not required, and your J-Link version will most likely work fine.` +
                         ` If you get issues related to J-Link with your devices, use the tested version.`

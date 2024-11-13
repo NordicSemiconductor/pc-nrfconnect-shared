@@ -227,7 +227,7 @@ describe('getJlinkCompatibility', () => {
         host: '',
     });
 
-    it(`Reports no installed J-Link for for module versions reported by nrfutil-device before 2.7`, () => {
+    it(`Reports no installed J-Link for for module versions reported by nrfutil-device before v2.7`, () => {
         expect(getJlinkCompatibility(createModuleVersion())).toEqual({
             kind: 'No J-Link installed',
             requiredJlink: '7.94e',
@@ -235,7 +235,7 @@ describe('getJlinkCompatibility', () => {
         });
     });
 
-    it(`Reports no installed J-Link for for module versions reported by nrfutil-device since 2.7`, () => {
+    it(`Reports no installed J-Link for for module versions reported by nrfutil-device since v2.7`, () => {
         expect(
             getJlinkCompatibility(
                 createModuleVersion({
@@ -253,7 +253,7 @@ describe('getJlinkCompatibility', () => {
         });
     });
 
-    it(`Reports an outdated JLink version`, () => {
+    it(`Reports an outdated J-Link version`, () => {
         expect(
             getJlinkCompatibility(
                 createModuleVersion({
@@ -273,7 +273,7 @@ describe('getJlinkCompatibility', () => {
         });
     });
 
-    it(`Reports a newer JLink version is used`, () => {
+    it(`Reports a newer J-Link version is used`, () => {
         expect(
             getJlinkCompatibility(
                 createModuleVersion({
@@ -293,7 +293,7 @@ describe('getJlinkCompatibility', () => {
         });
     });
 
-    it(`Reports the tested JLink version is used`, () => {
+    it(`Reports the tested J-Link version is used`, () => {
         expect(
             getJlinkCompatibility(
                 createModuleVersion({
@@ -309,7 +309,7 @@ describe('getJlinkCompatibility', () => {
         ).toEqual({ kind: 'Tested J-Link is used' });
     });
 
-    it(`Reports the tested JLink version is used by specifying no expected version`, () => {
+    it(`Reports the tested J-Link version is used by specifying no expected version`, () => {
         expect(
             getJlinkCompatibility(
                 createModuleVersion({
