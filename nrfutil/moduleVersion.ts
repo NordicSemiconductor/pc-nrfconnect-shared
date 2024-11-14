@@ -6,26 +6,16 @@
 
 import { packageJsonApp } from '../src/utils/packageJson';
 import {
-    Dependency,
-    isIncrementalVersion,
-    isSemanticVersion,
-    isStringVersion,
-    SubDependency,
-    versionToString,
+    type Dependency,
+    hasVersion,
+    type TopLevelDependency,
 } from './sandboxTypes';
+import { versionToString } from './version';
 
-export const describeVersion = (version?: SubDependency | string) => {
-    if (typeof version === 'string') {
-        return version;
-    }
-
-    if (isSemanticVersion(version)) {
-        return `${version.version.major}.${version.version.minor}.${version.version.patch}`;
-    }
-
-    if (isIncrementalVersion(version) || isStringVersion(version)) {
-        return String(version.version);
-    }
+export const describeVersion = (dependencyOrVersion?: Dependency | string) => {
+    if (typeof dependencyOrVersion === 'string') return dependencyOrVersion;
+    if (hasVersion(dependencyOrVersion))
+        return versionToString(dependencyOrVersion);
 
     return 'Unknown';
 };
@@ -37,10 +27,10 @@ const findTopLevel = (module: KnownModule, dependencies: Dependency[]) =>
 
 const findInDependencies = (
     module: KnownModule,
-    dependencies: Dependency[]
+    dependencies: TopLevelDependency[]
 ) => {
     if (dependencies.length > 0) {
-        return resolveModuleVersion(
+        return findDependency(
             module,
             dependencies.flatMap(dependency => [
                 ...(dependency.dependencies ?? []),
@@ -53,16 +43,12 @@ const findInDependencies = (
 };
 
 export const getExpectedVersion = (dependency: Dependency) => {
-    const currentVersion = versionToString(
-        dependency.versionFormat,
-        dependency.version
-    );
+    if (!hasVersion(dependency)) return null;
+
+    const currentVersion = versionToString(dependency);
 
     const expectedVersion = dependency.expectedVersion
-        ? versionToString(
-              dependency.expectedVersion.versionFormat,
-              dependency.expectedVersion.version
-          )
+        ? versionToString(dependency.expectedVersion)
         : currentVersion;
 
     return {
@@ -71,10 +57,10 @@ export const getExpectedVersion = (dependency: Dependency) => {
     };
 };
 
-export const resolveModuleVersion = (
+export const findDependency = (
     module: KnownModule,
-    versions: Dependency[] = []
-): Dependency | SubDependency | undefined =>
+    versions: TopLevelDependency[] = []
+): Dependency | undefined =>
     findTopLevel(module, versions) ?? findInDependencies(module, versions);
 
 const overriddenVersion = (module: string) => {

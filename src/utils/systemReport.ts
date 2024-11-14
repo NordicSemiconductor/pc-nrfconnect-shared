@@ -11,10 +11,7 @@ import pretty from 'prettysize';
 import si from 'systeminformation';
 
 import { getAllModuleVersions } from '../../nrfutil';
-import {
-    describeVersion,
-    resolveModuleVersion,
-} from '../../nrfutil/moduleVersion';
+import { describeVersion, findDependency } from '../../nrfutil/moduleVersion';
 import {
     deviceInfo as getDeviceInfo,
     productPageUrl,
@@ -81,10 +78,10 @@ const generalInfoReport = async () => {
             result.push(
                 ...[
                     `    - nrfjprog DLL: ${describeVersion(
-                        resolveModuleVersion('jprog', dependencies)
+                        findDependency('jprog', dependencies)
                     )}`,
                     `    - SEGGER J-Link: ${describeVersion(
-                        resolveModuleVersion('JlinkARM', dependencies)
+                        findDependency('JlinkARM', dependencies)
                     )}`,
                     '',
                 ]

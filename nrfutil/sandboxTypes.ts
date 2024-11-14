@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import type { DiscriminatedVersion } from './version';
+
 export interface BackgroundTask<T> {
     onError: (error: Error, pid?: number) => void;
     onData: (data: T) => void;
@@ -126,80 +128,38 @@ export type LogMessage = {
     message: string;
 };
 
-export interface SemanticVersion {
-    major: number;
-    minor: number;
-    patch: number;
-    semverPreNumeric?: number;
-    semverPreAlphaNumeric?: number;
-    semverMetadataNumeric?: number;
-    semverMetadataAlphaNumeric?: number;
-}
-
-type VersionFormat = 'incremental' | 'semantic' | 'string';
-
-export type Plugin = {
-    dependencies: Dependency[];
+type Plugin = DiscriminatedVersion & {
+    dependencies: TopLevelDependency[];
     name: string;
-    versionFormat: VersionFormat;
-    version: VersionType;
 };
 
-export type Dependency = {
-    classification?: FeatureClassification;
-    name: string;
-    plugins?: Plugin[];
-    dependencies?: SubDependency[];
-    versionFormat: VersionFormat;
-    version: VersionType;
-    expectedVersion?: {
-        versionFormat: VersionFormat;
-        version: VersionType;
-    };
-};
-
-export type VersionType = SemanticVersion | string | number;
-
-export interface SubDependency {
+type DependencyWithoutVersion = {
     name: string;
     description?: string;
-    dependencies?: SubDependency[];
-    versionFormat: VersionFormat;
-    version: VersionType;
-    expectedVersion?: { versionFormat: VersionFormat; version: VersionType };
-}
+    dependencies?: Dependency[];
+    expectedVersion?: DiscriminatedVersion;
+};
+type DependencyWithVersion = DiscriminatedVersion & DependencyWithoutVersion;
+
+export type Dependency = DependencyWithoutVersion | DependencyWithVersion;
+
+export type TopLevelDependency = Dependency & {
+    classification?: FeatureClassification;
+    plugins?: Plugin[];
+};
 
 export type ModuleVersion = {
     build_timestamp: string;
     classification: FeatureClassification;
     commit_date: string;
     commit_hash: string;
-    dependencies: Dependency[];
+    dependencies: TopLevelDependency[];
     host: string;
     name: string;
     version: string;
 };
 
-export const isSemanticVersion = (
-    version?: SubDependency
-): version is SubDependency & { version: SemanticVersion } =>
-    version?.versionFormat === 'semantic';
-
-export const isIncrementalVersion = (
-    version?: SubDependency
-): version is SubDependency & { version: number } =>
-    version?.versionFormat === 'incremental';
-
-export const isStringVersion = (
-    version?: SubDependency
-): version is SubDependency & { version: string } =>
-    version?.versionFormat === 'string';
-
-export const versionToString = (type: VersionFormat, version: VersionType) => {
-    if (type === 'incremental' || type === 'string') {
-        return `${version}`;
-    }
-
-    const v = version as SemanticVersion;
-    return `${v.major}.${v.minor}.${v.patch}`;
-};
+export const hasVersion = (
+    dependency?: Dependency | DiscriminatedVersion
+): dependency is DependencyWithVersion | DiscriminatedVersion =>
+    dependency != null && 'version' in dependency && dependency.version != null;

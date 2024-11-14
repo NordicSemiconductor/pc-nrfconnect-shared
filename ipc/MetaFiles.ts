@@ -54,9 +54,6 @@ const nrfutilModuleVersion = semver;
 export type NrfutilModuleName = z.infer<typeof nrfutilModuleName>;
 export type NrfutilModuleVersion = z.infer<typeof nrfutilModuleVersion>;
 
-export const nrfModules = z.record(
-    nrfutilModuleName,
-    nrfutilModuleVersion.array().nonempty()
-);
+export const nrfModules = z.record(nrfutilModuleName, z.tuple([semver]));
 
 export type NrfutilModules = z.infer<typeof nrfModules>;

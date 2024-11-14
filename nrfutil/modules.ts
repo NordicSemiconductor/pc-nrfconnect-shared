@@ -79,12 +79,7 @@ const getModuleSandbox = (module: string) => {
 
     const createModuleSandbox = async () => {
         getNrfutilLogger()?.info(`Initialising the bundled nrfutil ${module}`);
-        promiseModuleSandbox = sandbox(
-            getUserDataDir(),
-            module,
-            undefined,
-            undefined
-        );
+        promiseModuleSandbox = sandbox(getUserDataDir(), module);
         moduleSandbox = await promiseModuleSandbox;
 
         logModuleVersions(module, moduleSandbox);

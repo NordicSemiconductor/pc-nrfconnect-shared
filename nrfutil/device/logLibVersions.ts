@@ -8,21 +8,23 @@ import { spawn } from 'child_process';
 import os from 'os';
 
 import describeError from '../../src/logging/describeError';
-import {
-    describeVersion,
-    getExpectedVersion,
-    resolveModuleVersion,
-} from '../moduleVersion';
+import { getJlinkCompatibility } from '../jlinkVersion';
+import { describeVersion, findDependency } from '../moduleVersion';
 import { getNrfutilLogger } from '../nrfutilLogger';
-import type { ModuleVersion, SubDependency } from '../sandboxTypes';
+import type { Dependency, ModuleVersion } from '../sandboxTypes';
 
-const log = (description: string, moduleVersion?: SubDependency | string) => {
+const log = (
+    description: string,
+    dependencyOrVersion?: Dependency | string
+) => {
     const logger = getNrfutilLogger();
-    if (moduleVersion == null) {
+    if (dependencyOrVersion == null) {
         logger?.warn(`Unable to detect version of ${description}.`);
     } else {
         logger?.info(
-            `Using ${description} version: ${describeVersion(moduleVersion)}`
+            `Using ${description} version: ${describeVersion(
+                dependencyOrVersion
+            )}`
         );
     }
 };
@@ -75,24 +77,37 @@ export default async (moduleVersion: ModuleVersion) => {
         const dependencies = moduleVersion.dependencies;
 
         log('nrfutil-device', moduleVersion.version);
-        log('nrf-device-lib', resolveModuleVersion('nrfdl', dependencies));
-        log('nrfjprog DLL', resolveModuleVersion('jprog', dependencies));
-        log('JLink', resolveModuleVersion('JlinkARM', dependencies));
+        log('nrf-device-lib', findDependency('nrfdl', dependencies));
+        log('nrfjprog DLL', findDependency('jprog', dependencies));
+        log('JLink', findDependency('JlinkARM', dependencies));
 
-        const jlinkVersion = resolveModuleVersion('JlinkARM', dependencies);
+        const jlinkCompatibility = getJlinkCompatibility(moduleVersion);
 
-        if (jlinkVersion) {
-            const result = getExpectedVersion(jlinkVersion);
-            if (!result.isExpectedVersion) {
+        switch (jlinkCompatibility.kind) {
+            case 'No J-Link installed':
                 logger?.warn(
-                    `Installed JLink version does not match the expected version (${result.expectedVersion})`
+                    `SEGGER J-Link is not installed. ` +
+                        `Install at least version ${jlinkCompatibility.requiredJlink} ` +
+                        `from https://www.segger.com/downloads/jlink`
                 );
-            }
-        } else {
-            logger?.warn(
-                `JLink is not installed. Please install JLink from: https://www.segger.com/downloads/jlink`
-            );
+                break;
+            case 'Outdated J-Link':
+                logger?.warn(
+                    `Outdated SEGGER J-Link. Your version of SEGGER J-Link (${jlinkCompatibility.actualJlink}) ` +
+                        `is older than the one this app was tested with (${jlinkCompatibility.requiredJlink}). ` +
+                        `Install the newer version from https://www.segger.com/downloads/jlink`
+                );
+                break;
+            case 'Newer J-Link is used':
+                logger?.info(
+                    `Your version of SEGGER J-Link (${jlinkCompatibility.actualJlink}) ` +
+                        `is newer than the one this app was tested with (${jlinkCompatibility.requiredJlink}). ` +
+                        `The tested version is not required, and your J-Link version will most likely work fine.` +
+                        ` If you get issues related to J-Link with your devices, use the tested version.`
+                );
+                break;
         }
+
         if (
             process.platform === 'darwin' &&
             os.cpus()[0].model.includes('Apple')

@@ -7,6 +7,24 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 191.0.0 - 2024-11-14
+
+### Added
+
+-   Function `getJlinkCompatibility`.
+
+### Changed
+
+-   nrfutil: The core gets upgraded before installing a command.
+-   nrfutil: The `version` properties of dependencies are now optional,
+    reflecting the behaviour since `nrfutil-device` v2.7.0.
+-   Warning for J-Link versions: Only inform (not warn) if the installed version
+    is newer than the tested version. Updated the text for all cases.
+
+### Removed
+
+-   Export of internal type `SemanticVersion`.
+
 ## 190.0.0 - 2024-11-06
 
 ### Added
