@@ -6,10 +6,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+/* eslint-disable max-classes-per-file, class-methods-use-this */
+
 import { execSync } from 'child_process';
 import { program } from 'commander';
 import fs from 'fs';
-import FtpClient from 'ftp';
+import LowlevelFtpClient from 'ftp';
 import semver from 'semver';
 import calculateShasum from 'shasum';
 
@@ -30,7 +32,150 @@ interface App {
     packageJson: PackageJsonApp;
 }
 
-const client = new FtpClient();
+let client: Client;
+
+abstract class Client {
+    abstract sourceUrl: string;
+
+    initialise(options: Options): Promise<void> | void {} // eslint-disable-line @typescript-eslint/no-unused-vars
+    end(): void {}
+
+    abstract download(filename: string): Promise<string>;
+    abstract uploadContent(
+        content: Buffer,
+        remoteFilename: string
+    ): Promise<void>;
+    abstract uploadLocalFile(
+        localFilename: string,
+        remoteFilename: string
+    ): Promise<void>;
+}
+
+class FtpClient extends Client {
+    /*
+     * To use this script with an FTP server REPO_HOST, REPO_USER and REPO_PASS need to be set
+     */
+
+    ftpClient = new LowlevelFtpClient();
+
+    host = process.env.REPO_HOST || 'localhost';
+    port = Number(process.env.REPO_PORT) || 21;
+    user = process.env.REPO_USER || 'anonymous';
+    password = process.env.REPO_PASS || 'anonymous@';
+
+    sourceDir: string;
+    sourceUrl: string;
+
+    constructor(private readonly options: Options) {
+        super();
+        this.sourceDir = this.getSourceDir();
+        this.sourceUrl = this.getSourceUrl();
+    }
+
+    getSourceDir = () => {
+        const repoDirOfficial = '/.pc-tools/nrfconnect-apps';
+
+        if (process.env.REPO_DIR) return process.env.REPO_DIR;
+        if (this.options.deployOfficial) return repoDirOfficial;
+
+        return `${repoDirOfficial}/${this.options.source}`;
+    };
+
+    getSourceUrl = () => {
+        if (process.env.REPO_URL) return process.env.REPO_URL;
+        return `https://developer.nordicsemi.com${this.sourceDir}`;
+    };
+
+    connect = () =>
+        new Promise<void>((resolve, reject) => {
+            console.log(
+                `Connecting to ftp://${this.user}@${this.host}:${this.port}`
+            );
+            this.ftpClient.once('error', err => {
+                this.ftpClient.removeAllListeners('ready');
+                reject(err);
+            });
+            this.ftpClient.once('ready', () => {
+                this.ftpClient.removeAllListeners('error');
+                resolve();
+            });
+            this.ftpClient.connect({
+                host: this.host,
+                port: this.port,
+                user: this.user,
+                password: this.password,
+            });
+        });
+
+    createSourceDirectory = () =>
+        new Promise<void>((resolve, reject) => {
+            console.log(`Creating source directory ${this.sourceDir}`);
+            this.ftpClient.mkdir(this.sourceDir, true, err => {
+                if (err) {
+                    reject(new Error(`Failed to create source directory.`));
+                } else {
+                    resolve();
+                }
+            });
+        });
+
+    changeWorkingDirectory = () =>
+        new Promise<void>((resolve, reject) => {
+            console.log(`Changing to directory ${this.sourceDir}`);
+            this.ftpClient.cwd(this.sourceDir, err => {
+                if (err) {
+                    reject(
+                        new Error(
+                            '\nError: Failed to change to directory. ' +
+                                'Check whether it exists on the FTP server.\n' +
+                                'If you want to create a new source, use the ' +
+                                '--create-source option.'
+                        )
+                    );
+                } else {
+                    resolve();
+                }
+            });
+        });
+
+    initialise = async () => {
+        await this.connect();
+        if (this.options.doCreateSource) {
+            await this.createSourceDirectory();
+        }
+        await this.changeWorkingDirectory();
+    };
+
+    download = (filename: string) =>
+        new Promise<string>((resolve, reject) => {
+            console.log(`Downloading file ${filename}`);
+            let data = '';
+            this.ftpClient.get(filename, (err, stream) => {
+                if (err) return reject(err);
+                stream.once('close', () => resolve(data));
+                stream.on('data', chunk => {
+                    data += chunk;
+                });
+                return undefined;
+            });
+        });
+
+    upload = (
+        contentOrLocalFilename: string | Buffer,
+        remoteFilename: string
+    ) =>
+        new Promise<void>((resolve, reject) => {
+            console.log(`Uploading file ${remoteFilename}`);
+            this.ftpClient.put(contentOrLocalFilename, remoteFilename, err =>
+                err ? reject(err) : resolve()
+            );
+        });
+
+    uploadContent = this.upload;
+    uploadLocalFile = this.upload;
+
+    end = () => this.ftpClient.end();
+}
 
 const hasMessage = (error: unknown): error is { message: unknown } =>
     error != null && typeof error === 'object' && 'message' in error;
@@ -38,31 +183,10 @@ const hasMessage = (error: unknown): error is { message: unknown } =>
 const errorAsString = (error: unknown) =>
     hasMessage(error) ? error.message : String(error);
 
-const getSourceDir = (deployOfficial: boolean, sourceName: string) => {
-    const repoDirOfficial = '/.pc-tools/nrfconnect-apps';
-
-    if (process.env.REPO_DIR) return process.env.REPO_DIR;
-    if (deployOfficial) return repoDirOfficial;
-
-    return `${repoDirOfficial}/${sourceName}`;
-};
-
-const getSourceUrl = (deployOfficial: boolean, sourceName: string) => {
-    const repoUrlOfficial =
-        'https://developer.nordicsemi.com/.pc-tools/nrfconnect-apps';
-
-    if (process.env.REPO_URL) return process.env.REPO_URL;
-    if (deployOfficial) return repoUrlOfficial;
-
-    return `${repoUrlOfficial}/${sourceName}`;
-};
-
 interface Options {
     doPack: boolean;
     doCreateSource: boolean;
     deployOfficial: boolean;
-    sourceDir: string;
-    sourceUrl: string;
     sourceName?: string;
 }
 
@@ -94,8 +218,6 @@ const parseOptions = (): Options => {
         doCreateSource: options.createSource != null,
         sourceName: options.createSource,
         deployOfficial,
-        sourceDir: getSourceDir(deployOfficial, options.source),
-        sourceUrl: getSourceUrl(deployOfficial, options.source),
     };
 };
 
@@ -144,7 +266,7 @@ const packOrReadPackage = (options: Options): App => {
         version,
         filename,
         shasum,
-        sourceUrl: options.sourceUrl,
+        sourceUrl: client.sourceUrl,
         isOfficial: options.deployOfficial,
         appInfoName: `${name}.json`,
         releaseNotesFilename: `${name}-Changelog.md`,
@@ -152,72 +274,6 @@ const packOrReadPackage = (options: Options): App => {
         packageJson,
     };
 };
-
-const connect = (config: {
-    host: string;
-    port: number;
-    user: string;
-    password: string;
-}) =>
-    new Promise<void>((resolve, reject) => {
-        console.log(
-            `Connecting to ftp://${config.user}@${config.host}:${config.port}`
-        );
-        client.once('error', err => {
-            client.removeAllListeners('ready');
-            reject(err);
-        });
-        client.once('ready', () => {
-            client.removeAllListeners('error');
-            resolve();
-        });
-        client.connect(config);
-    });
-
-const createSourceDirectory = (dir: string) =>
-    new Promise<void>((resolve, reject) => {
-        console.log(`Creating source directory ${dir}`);
-        client.mkdir(dir, true, err => {
-            if (err) {
-                reject(new Error(`Failed to create source directory.`));
-            } else {
-                resolve();
-            }
-        });
-    });
-
-const changeWorkingDirectory = (dir: string) =>
-    new Promise<void>((resolve, reject) => {
-        console.log(`Changing to directory ${dir}`);
-        client.cwd(dir, err => {
-            if (err) {
-                reject(
-                    new Error(
-                        '\nError: Failed to change to directory. ' +
-                            'Check whether it exists on the FTP server.\n' +
-                            'If you want to create a new source, use the ' +
-                            '--create-source option.'
-                    )
-                );
-            } else {
-                resolve();
-            }
-        });
-    });
-
-const downloadFileContent = (filename: string) =>
-    new Promise<string>((resolve, reject) => {
-        console.log(`Downloading file ${filename}`);
-        let data = '';
-        client.get(filename, (err, stream) => {
-            if (err) return reject(err);
-            stream.once('close', () => resolve(data));
-            stream.on('data', chunk => {
-                data += chunk;
-            });
-            return undefined;
-        });
-    });
 
 const assertAppVersionIsValid = (
     latestAppVersion: string | undefined,
@@ -234,21 +290,9 @@ const assertAppVersionIsValid = (
     }
 };
 
-type UploadLocalFile = (localFileName: string, remote: string) => Promise<void>;
-type UploadBufferContent = (content: Buffer, remote: string) => Promise<void>;
-
-const uploadFile: UploadLocalFile & UploadBufferContent = (
-    local: string | Buffer,
-    remote: string
-) =>
-    new Promise<void>((resolve, reject) => {
-        console.log(`Uploading file ${remote}`);
-        client.put(local, remote, err => (err ? reject(err) : resolve()));
-    });
-
 const createBlankSourceJson = async (name: string) => {
     try {
-        await downloadFileContent('source.json');
+        await client.download('source.json');
     } catch {
         // Expected that the download throws an exception,
         // because the file is supposed to not exist yet
@@ -266,7 +310,7 @@ const createBlankSourceJson = async (name: string) => {
 const downloadSourceJson = async () => {
     let sourceJsonContent;
     try {
-        sourceJsonContent = await downloadFileContent('source.json');
+        sourceJsonContent = await client.download('source.json');
         const sourceJson = <SourceJson>JSON.parse(sourceJsonContent);
         if (
             sourceJson == null ||
@@ -313,7 +357,7 @@ const downloadExistingAppInfo = async (
     app: App
 ): Promise<Partial<Pick<AppInfo, 'latestVersion' | 'versions'>>> => {
     try {
-        const appInfoContent = await downloadFileContent(app.appInfoName);
+        const appInfoContent = await client.download(app.appInfoName);
         return JSON.parse(appInfoContent) as AppInfo;
     } catch (error) {
         console.log(
@@ -367,18 +411,19 @@ const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
 };
 
 const uploadSourceJson = (sourceJson: SourceJson) =>
-    uploadFile(
+    client.uploadContent(
         Buffer.from(JSON.stringify(sourceJson, undefined, 2)),
         'source.json'
     );
 
 const uploadAppInfo = (app: App, appInfo: AppInfo) =>
-    uploadFile(
+    client.uploadContent(
         Buffer.from(JSON.stringify(appInfo, undefined, 2)),
         app.appInfoName
     );
 
-const uploadPackage = (app: App) => uploadFile(app.filename, app.filename);
+const uploadPackage = (app: App) =>
+    client.uploadLocalFile(app.filename, app.filename);
 
 const uploadChangelog = (app: App) => {
     const changelogFilename = 'Changelog.md';
@@ -387,7 +432,7 @@ const uploadChangelog = (app: App) => {
         return Promise.reject(new Error(errorMsg));
     }
 
-    return uploadFile(changelogFilename, app.releaseNotesFilename);
+    return client.uploadLocalFile(changelogFilename, app.releaseNotesFilename);
 };
 
 const uploadIcon = (app: App) => {
@@ -397,22 +442,14 @@ const uploadIcon = (app: App) => {
         return Promise.reject(new Error(errorMsg));
     }
 
-    return uploadFile(localIconFilename, app.iconFilename);
+    return client.uploadLocalFile(localIconFilename, app.iconFilename);
 };
 
 const main = async () => {
     try {
-        /*
-         * To use this script REPO_HOST, REPO_USER and REPO_PASS will need to be set
-         */
-        const config = {
-            host: process.env.REPO_HOST || 'localhost',
-            port: Number(process.env.REPO_PORT) || 21,
-            user: process.env.REPO_USER || 'anonymous',
-            password: process.env.REPO_PASS || 'anonymous@',
-        };
-
         const options = parseOptions();
+
+        client = new FtpClient(options);
 
         checkAppProperties({
             checkChangelogHasCurrentEntry: options.deployOfficial,
@@ -420,11 +457,7 @@ const main = async () => {
 
         const app = packOrReadPackage(options);
 
-        await connect(config);
-        if (options.doCreateSource) {
-            await createSourceDirectory(options.sourceDir);
-        }
-        await changeWorkingDirectory(options.sourceDir);
+        await client.initialise(options);
 
         const sourceJson = await getUpdatedSourceJson(app, options);
         const appInfo = await getUpdatedAppInfo(app);
@@ -441,7 +474,7 @@ const main = async () => {
         process.exitCode = 1;
     }
 
-    client.end();
+    client?.end();
 };
 
 main();
