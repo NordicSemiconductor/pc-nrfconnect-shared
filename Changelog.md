@@ -7,6 +7,17 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## Unreleased
+
+### Added
+
+-   Support for publishing apps to Artifactory
+
+### Steps to upgrade when using this package
+
+-   Where the nordic-publish script is called (usually in the azure release
+    pipeline), add the parameter `--destination ftp`.
+
 ## 191.0.0 - 2024-11-14
 
 ### Added
