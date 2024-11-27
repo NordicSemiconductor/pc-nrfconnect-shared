@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 192.0.0 - 2024-11-27
+
+### Changed
+
+-   Renamed `Thingy91:X` to `Nordic Thingy:91 X`.
+
 ## 191.0.0 - 2024-11-14
 
 ### Added
