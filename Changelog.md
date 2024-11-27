@@ -9,10 +9,19 @@ every new version is a new major version.
 
 ## 198.0.0 - UNRELEASED
 
+### Added
+
+-   Support for publishing apps to Artifactory
+
 ### Fixed
 
 -   Product links for nRF54L15 DK, nRF54H20 DK, nRF9131 EK, nRF9151 DK, nRF9161
     DK, and Nordic Thingy:91 X
+
+### Steps to upgrade when using this package
+
+-   Where the nordic-publish script is called (usually in the azure release
+    pipeline), add the parameter `--destination ftp`.
 
 ## 197.0.0 - 2025-02-05
 
