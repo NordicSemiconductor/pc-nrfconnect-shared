@@ -9,7 +9,7 @@
 /* eslint-disable max-classes-per-file, class-methods-use-this */
 
 import { execSync } from 'child_process';
-import { program } from 'commander';
+import { Option, program } from 'commander';
 import fs from 'fs';
 import LowlevelFtpClient from 'ftp';
 import semver from 'semver';
@@ -177,25 +177,121 @@ class FtpClient extends Client {
     end = () => this.ftpClient.end();
 }
 
+class ArtifactoryClient extends Client {
+    token = process.env.ARTIFACTORY_TOKEN;
+
+    sourceUrl: string;
+
+    constructor(private readonly options: Options) {
+        super();
+
+        if (this.token == null) {
+            throw new Error(
+                'The environment variable ARTIFACTORY_TOKEN must be set.'
+            );
+        }
+
+        this.sourceUrl = `https://files.nordicsemi.com/artifactory/swtools/${this.getAccessLevel()}/ncd/apps/${
+            options.source
+        }`;
+    }
+
+    getAccessLevel = () => {
+        if (this.options.accessLevel != null) return this.options.accessLevel;
+
+        return this.options.deployOfficial ? 'external' : 'internal';
+    };
+
+    download = async (filename: string) => {
+        console.log(`Downloading ${filename}`);
+
+        const url = `${this.sourceUrl}/${filename}`;
+        const res = await fetch(url, {
+            headers: { Authorization: `Bearer ${this.token}` },
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to download ${url}: ${res.statusText}`);
+        }
+
+        return res.text();
+    };
+
+    upload = async (content: Buffer, remoteFilename: string) => {
+        const url = `${this.sourceUrl}/${remoteFilename}`;
+        const res = await fetch(url, {
+            method: 'PUT',
+            body: content,
+            headers: { Authorization: `Bearer ${this.token}` },
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to upload ${url}: ${res.statusText}`);
+        }
+    };
+
+    uploadContent = (content: Buffer, remoteFilename: string) => {
+        console.log(`Uploading content for ${remoteFilename}`);
+
+        return this.upload(content, remoteFilename);
+    };
+
+    uploadLocalFile = (localFilename: string, remoteFilename: string) => {
+        console.log(
+            `Uploading local file ${localFilename} as ${remoteFilename}`
+        );
+
+        return this.upload(fs.readFileSync(localFilename), remoteFilename);
+    };
+}
+
 const hasMessage = (error: unknown): error is { message: unknown } =>
     error != null && typeof error === 'object' && 'message' in error;
 
 const errorAsString = (error: unknown) =>
     hasMessage(error) ? error.message : String(error);
 
+type AccessLevel =
+    | 'external'
+    | 'external-confidential'
+    | 'internal'
+    | 'internal-confidential';
+
 interface Options {
     doPack: boolean;
     doCreateSource: boolean;
     deployOfficial: boolean;
+    source: string;
     sourceName?: string;
+    destination: 'ftp' | 'artifactory';
+    accessLevel?: AccessLevel;
 }
 
 const parseOptions = (): Options => {
     program
-        .description('Publish to nordic repository')
+        .description('Publish an nRF Connect for Desktop app')
         .requiredOption(
             '-s, --source <source>',
-            'Specify the source to publish (e.g. official).'
+            'Specify the source to publish (e.g. "official" or "releast-test").'
+        )
+        .addOption(
+            new Option(
+                '-d, --destination <ftp|artifactory>',
+                'Specify where to publish.'
+            )
+                .choices(['ftp', 'artifactory'])
+                .makeOptionMandatory()
+        )
+        .addOption(
+            new Option(
+                '--access-level <access level>',
+                'Specify the access level, only used when publishing to Artifactory.'
+            ).choices([
+                'external',
+                'external-confidential',
+                'internal',
+                'internal-confidential',
+            ])
         )
         .option(
             '-n, --no-pack',
@@ -216,8 +312,11 @@ const parseOptions = (): Options => {
     return {
         doPack: options.pack,
         doCreateSource: options.createSource != null,
+        source: options.source,
         sourceName: options.createSource,
         deployOfficial,
+        destination: options.destination,
+        accessLevel: options.accessLevel,
     };
 };
 
@@ -325,7 +424,8 @@ const downloadSourceJson = async () => {
 
         return sourceJson;
     } catch (error) {
-        const message = 'Unable to read `source.json` on the server.\nError: ';
+        const message =
+            'Unable to read `source.json` on the server. If you want to create a new source, use the option --create-source.\nError: ';
         const caughtError = errorAsString(error);
         const maybeSourceJsonContent =
             sourceJsonContent == null
@@ -454,7 +554,10 @@ const main = async () => {
     try {
         const options = parseOptions();
 
-        client = new FtpClient(options);
+        client =
+            options.destination === 'ftp'
+                ? new FtpClient(options)
+                : new ArtifactoryClient(options);
 
         checkAppProperties({
             checkChangelogHasCurrentEntry: options.deployOfficial,
