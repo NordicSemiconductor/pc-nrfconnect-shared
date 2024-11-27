@@ -374,8 +374,13 @@ const failBecauseOfMissingProperty = () => {
     );
 };
 
-const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
-    const oldAppInfo = await downloadExistingAppInfo(app);
+const getUpdatedAppInfo = async (
+    app: App,
+    options: Options
+): Promise<AppInfo> => {
+    const oldAppInfo = options.doCreateSource
+        ? {}
+        : await downloadExistingAppInfo(app);
 
     assertAppVersionIsValid(oldAppInfo.latestVersion, app);
 
@@ -460,7 +465,7 @@ const main = async () => {
         await client.initialise(options);
 
         const sourceJson = await getUpdatedSourceJson(app, options);
-        const appInfo = await getUpdatedAppInfo(app);
+        const appInfo = await getUpdatedAppInfo(app, options);
 
         await uploadChangelog(app);
         await uploadIcon(app);
