@@ -197,7 +197,7 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         },
     },
     PCA20049: {
-        name: 'Nordic Thingy:91x',
+        name: 'Nordic Thingy:91 X',
         cores: 1,
         icon: nrf91logo,
         website: {
