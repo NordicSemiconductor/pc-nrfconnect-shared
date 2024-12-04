@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 193.0.0 - 2024-12-04
+
+### Changed
+
+-   Update @swc/core and @swc/jest to fix issues when class functions are called
+    via multiple ?. e.g. obj.set?.function?.()
+
 ## 192.0.0 - 2024-11-27
 
 ### Changed
