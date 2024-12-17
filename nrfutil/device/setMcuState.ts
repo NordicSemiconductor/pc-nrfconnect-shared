@@ -21,5 +21,5 @@ export default (
         'mcu-state-set',
         onProgress,
         controller,
-        [state, target ? `--target=${target}` : '']
+        [state, ...(target ? ['--target', target] : [])]
     );
