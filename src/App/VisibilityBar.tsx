@@ -48,7 +48,7 @@ export default ({ isSidePanelEnabled }: { isSidePanelEnabled: boolean }) => {
         hotKey: 'ctrl+l',
         title: 'Show log',
         isGlobal: true,
-        action: () => dispatch(setLogVisible(!isLogVisible)),
+        action: () => dispatch(setLogVisible()),
     });
 
     return (
@@ -93,7 +93,7 @@ export default ({ isSidePanelEnabled }: { isSidePanelEnabled: boolean }) => {
                     id="visibility-bar-show-log"
                     label="Show log"
                     title="ctrl+l"
-                    onToggle={() => dispatch(setLogVisible(!isLogVisible))}
+                    onToggle={() => dispatch(setLogVisible())}
                     isToggled={isLogVisible}
                     variant="secondary"
                 />
