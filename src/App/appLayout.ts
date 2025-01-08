@@ -56,15 +56,9 @@ const slice = createSlice({
     name: 'appLayout',
     initialState,
     reducers: {
-        setLogVisible: (state, action: PayloadAction<boolean | undefined>) => {
-            const nextIsLogVisible =
-                typeof action.payload === 'undefined'
-                    ? !state.isLogVisible
-                    : action.payload;
-
-            state.isLogVisible = nextIsLogVisible;
-
-            persistLogVisible(nextIsLogVisible);
+        setLogVisible: (state, action: PayloadAction<boolean>) => {
+            state.isLogVisible = action.payload;
+            persistLogVisible(action.payload);
         },
         toggleSidePanelVisible: state => {
             state.isSidePanelVisible = !state.isSidePanelVisible;

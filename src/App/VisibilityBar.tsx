@@ -44,12 +44,15 @@ export default ({ isSidePanelEnabled }: { isSidePanelEnabled: boolean }) => {
         action: () => dispatch(clear()),
     });
 
-    useHotKey({
-        hotKey: 'ctrl+l',
-        title: 'Show log',
-        isGlobal: true,
-        action: () => dispatch(setLogVisible()),
-    });
+    useHotKey(
+        {
+            hotKey: 'ctrl+l',
+            title: 'Show log',
+            isGlobal: true,
+            action: () => dispatch(setLogVisible(!isLogVisible)),
+        },
+        [isLogVisible]
+    );
 
     return (
         <div className="core19-visibility-bar">
@@ -93,7 +96,7 @@ export default ({ isSidePanelEnabled }: { isSidePanelEnabled: boolean }) => {
                     id="visibility-bar-show-log"
                     label="Show log"
                     title="ctrl+l"
-                    onToggle={() => dispatch(setLogVisible())}
+                    onToggle={() => dispatch(setLogVisible(!isLogVisible))}
                     isToggled={isLogVisible}
                     variant="secondary"
                 />
