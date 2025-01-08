@@ -70,7 +70,10 @@ const FeedbackDialog = ({
                                     feedback,
                                     setSayThankYou,
                                     selectedCategory?.value,
-                                    () => setErrorMessage('An error occurred. Please try again'),
+                                    () =>
+                                        setErrorMessage(
+                                            'An error occurred. Please try again'
+                                        )
                                 ).then(() => setSendingFeedback(false));
                             }}
                             disabled={feedback === '' || sendingFeedback}
@@ -128,7 +131,9 @@ const FeedbackDialog = ({
                                     onChange={e => setFeedback(e.target.value)}
                                 />
                                 {errorMessage ? (
-                                    <p className="tw-mt-1 tw-mb-0 tw-text-right tw-text-xs tw-text-red">{errorMessage}</p>
+                                    <p className="tw-mb-0 tw-mt-1 tw-text-right tw-text-xs tw-text-red">
+                                        {errorMessage}
+                                    </p>
                                 ) : null}
                             </div>
                         </form>
@@ -143,14 +148,16 @@ const handleFormData = async (
     feedback: string,
     setResponse: (response: boolean) => void,
     category?: string,
-    onError?: () => void,
+    onError?: () => void
 ) => {
     try {
         await sendFeedback(feedback, category);
 
         setResponse(true);
     } catch (error: unknown) {
-        if (onError) { onError(); }
+        if (onError) {
+            onError();
+        }
 
         logger.error(
             `FeedbackForm: Could not send feedback. ${describeError(error)}`
