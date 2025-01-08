@@ -5,13 +5,11 @@
  */
 
 import React, { FC } from 'react';
-import Modal from 'react-bootstrap/Modal';
 import { useSelector } from 'react-redux';
 
 import { globalShortcuts, localShortcuts } from '../About/shortcutSlice';
+import { DialogButton, GenericDialog as Dialog } from '../Dialog/Dialog';
 import ShortcutItem from './ShortcutItem';
-
-import './Shortcut-modal.scss';
 
 export interface Props {
     isVisible: boolean;
@@ -23,34 +21,19 @@ const ShortcutModal: FC<Props> = ({ isVisible, onCancel }) => {
     const global = useSelector(globalShortcuts);
 
     return (
-        <Modal
-            show={isVisible}
+        <Dialog
+            title="Shortcuts"
+            closeOnEsc
+            isVisible={isVisible}
             onHide={onCancel}
-            size="lg"
-            className="shortcut-modal"
+            size="m"
+            footer={<DialogButton onClick={onCancel}>Close</DialogButton>}
         >
-            <Modal.Header closeButton>
-                <Modal.Title>
-                    <h3>Shortcuts</h3>
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body className="shortcut-lists">
-                <>
-                    {local.length > 0 && (
-                        <div>
-                            <h4 className="list-header">In this app</h4>
-                            {local.map(shortcut => (
-                                <ShortcutItem
-                                    key={shortcut.title}
-                                    title={shortcut.title}
-                                    hotKey={shortcut.hotKey}
-                                />
-                            ))}
-                        </div>
-                    )}
+            <>
+                {local.length > 0 && (
                     <div>
-                        <h4 className="list-header">In all apps</h4>
-                        {global.map(shortcut => (
+                        <h4 className="list-header">In this app</h4>
+                        {local.map(shortcut => (
                             <ShortcutItem
                                 key={shortcut.title}
                                 title={shortcut.title}
@@ -58,9 +41,19 @@ const ShortcutModal: FC<Props> = ({ isVisible, onCancel }) => {
                             />
                         ))}
                     </div>
-                </>
-            </Modal.Body>
-        </Modal>
+                )}
+                <div>
+                    <h4 className="list-header">In all apps</h4>
+                    {global.map(shortcut => (
+                        <ShortcutItem
+                            key={shortcut.title}
+                            title={shortcut.title}
+                            hotKey={shortcut.hotKey}
+                        />
+                    ))}
+                </div>
+            </>
+        </Dialog>
     );
 };
 

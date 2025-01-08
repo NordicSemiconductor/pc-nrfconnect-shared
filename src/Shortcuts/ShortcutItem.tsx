@@ -20,7 +20,7 @@ const ShortcutItem: FC<Props> = ({ title, hotKey }) => {
 
     return (
         <div className="shortcut-item">
-            <h5 className="shortcut-title">{title}</h5>
+            <h5 className="shortcut-title">{title}:</h5>
             <div className="shortcuts">
                 {shortcutComboKeys.map(shortcutKeys => (
                     <div
@@ -32,10 +32,6 @@ const ShortcutItem: FC<Props> = ({ title, hotKey }) => {
                                 <span className="shortcut-span">
                                     {shortcutKey}
                                 </span>
-                                {shortcutKey !==
-                                    shortcutKeys[shortcutKeys.length - 1] && (
-                                    <span className="separator-span">+</span>
-                                )}
                             </span>
                         ))}
                     </div>
