@@ -27,6 +27,7 @@ const FeedbackDialog = ({
     const [feedback, setFeedback] = useState('');
     const [sayThankYou, setSayThankYou] = useState(false);
     const [sendingFeedback, setSendingFeedback] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const categoryItems = useMemo(() => {
         if (!categories?.length) return undefined;
@@ -44,6 +45,7 @@ const FeedbackDialog = ({
 
     const onClose = () => {
         setFeedback('');
+        setErrorMessage('');
         setSendingFeedback(false);
         setSayThankYou(false);
         setSelectedCategory(categoryItems ? categoryItems[0] : undefined);
@@ -63,16 +65,21 @@ const FeedbackDialog = ({
                         <DialogButton
                             variant="primary"
                             onClick={() => {
+                                setErrorMessage('');
                                 setSendingFeedback(true);
                                 handleFormData(
                                     feedback,
                                     setSayThankYou,
-                                    selectedCategory?.value
+                                    selectedCategory?.value,
+                                    () =>
+                                        setErrorMessage(
+                                            'An error occurred. Please try again'
+                                        )
                                 ).then(() => setSendingFeedback(false));
                             }}
                             disabled={feedback === '' || sendingFeedback}
                         >
-                            Send feedback
+                            Send
                         </DialogButton>
                     )}
                     <DialogButton onClick={onClose}>Close</DialogButton>
@@ -93,7 +100,8 @@ const FeedbackDialog = ({
                         <p>
                             We value your feedback and any ideas you may have
                             for improving nRF Connect for Desktop applications.
-                            Use the form below.
+                            Please write below how we can make this application
+                            better.
                         </p>
                         <p>
                             We only collect the following information when you
@@ -124,6 +132,11 @@ const FeedbackDialog = ({
                                     value={feedback}
                                     onChange={e => setFeedback(e.target.value)}
                                 />
+                                {errorMessage ? (
+                                    <p className="tw-mb-0 tw-mt-1 tw-text-right tw-text-xs tw-text-red">
+                                        {errorMessage}
+                                    </p>
+                                ) : null}
                             </div>
                         </form>
                     </>
@@ -136,13 +149,18 @@ const FeedbackDialog = ({
 const handleFormData = async (
     feedback: string,
     setResponse: (response: boolean) => void,
-    category?: string
+    category?: string,
+    onError?: () => void
 ) => {
     try {
         await sendFeedback(feedback, category);
 
         setResponse(true);
     } catch (error: unknown) {
+        if (onError) {
+            onError();
+        }
+
         logger.error(
             `FeedbackForm: Could not send feedback. ${describeError(error)}`
         );
