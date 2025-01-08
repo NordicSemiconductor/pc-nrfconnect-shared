@@ -79,7 +79,7 @@ const FeedbackDialog = ({
                             }}
                             disabled={feedback === '' || sendingFeedback}
                         >
-                            Send feedback
+                            Send
                         </DialogButton>
                     )}
                     <DialogButton onClick={onClose}>Close</DialogButton>
@@ -100,7 +100,8 @@ const FeedbackDialog = ({
                         <p>
                             We value your feedback and any ideas you may have
                             for improving nRF Connect for Desktop applications.
-                            Use the form below.
+                            Please write below how we can make this application
+                            better.
                         </p>
                         <p>
                             We only collect the following information when you
