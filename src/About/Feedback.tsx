@@ -45,6 +45,7 @@ const FeedbackDialog = ({
 
     const onClose = () => {
         setFeedback('');
+        setErrorMessage('');
         setSendingFeedback(false);
         setSayThankYou(false);
         setSelectedCategory(categoryItems ? categoryItems[0] : undefined);
