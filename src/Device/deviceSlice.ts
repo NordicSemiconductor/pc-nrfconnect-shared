@@ -60,6 +60,7 @@ export interface DeviceState {
     devices: Device[];
     selectedDevice?: Device;
     selectedDeviceInfo?: DeviceInfo;
+    selectedVirtualDevice?: string;
 }
 
 const initialState: DeviceState = {
@@ -224,6 +225,14 @@ const slice = createSlice({
                 action.payload.serialNumber
             );
         },
+
+        selectVirtualDevice: (state, action: PayloadAction<string>) => {
+            state.selectedVirtualDevice = action.payload;
+        },
+
+        deselectVirtualDevice: state => {
+            state.selectedVirtualDevice = undefined;
+        },
     },
 });
 
@@ -239,6 +248,8 @@ export const {
         setDeviceNickname,
         toggleDeviceFavorited,
         persistSerialPortOptions,
+        selectVirtualDevice,
+        deselectVirtualDevice,
     },
 } = slice;
 
@@ -260,3 +271,6 @@ export const selectedSerialNumber = (state: RootState) =>
 
 export const getReadbackProtection = (state: RootState) =>
     state.device.selectedDeviceInfo?.jlink?.protectionStatus;
+
+export const selectedVirtualDevice = (state: RootState) =>
+    state.device.selectedVirtualDevice;

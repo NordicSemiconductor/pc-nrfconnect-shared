@@ -8,12 +8,12 @@ import { z } from 'zod';
 import { fromZodError } from 'zod-validation-error';
 
 export const parseWithPrettifiedErrorMessage =
-    <Out, T extends z.ZodType<Out> = z.ZodTypeAny>(schema: T) =>
+    <T extends z.ZodTypeAny>(schema: T) =>
     (content: string) => {
         const result = schema.safeParse(JSON.parse(content));
 
         if (result.success) {
-            return result;
+            return result as z.SafeParseSuccess<z.infer<T>>;
         }
 
         return {

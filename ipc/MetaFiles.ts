@@ -8,12 +8,14 @@ import { z } from 'zod';
 
 export type UrlString = string;
 
-export interface SourceJson {
-    name: string;
-    apps: UrlString[];
-}
+export const sourceJsonSchema = z.object({
+    name: z.string(),
+    apps: z.array(z.string().url()),
+});
+export type SourceJson = z.infer<typeof sourceJsonSchema>;
 
-export type WithdrawnJson = UrlString[];
+export const withdrawnJsonSchema = z.array(z.string().url());
+export type WithdrawnJson = z.infer<typeof withdrawnJsonSchema>;
 
 export type AppVersions = {
     [version: string]: AppVersion;

@@ -19,8 +19,7 @@ const packageJson = z.object({
 
 export type PackageJson = z.infer<typeof packageJson>;
 
-export const parsePackageJson =
-    parseWithPrettifiedErrorMessage<PackageJson>(packageJson);
+export const parsePackageJson = parseWithPrettifiedErrorMessage(packageJson);
 
 // Apps have more required fields in their package.json
 
@@ -57,7 +56,7 @@ const packageJsonApp = packageJson.extend({
 export type PackageJsonApp = z.infer<typeof packageJsonApp>;
 
 export const parsePackageJsonApp =
-    parseWithPrettifiedErrorMessage<PackageJsonApp>(packageJsonApp);
+    parseWithPrettifiedErrorMessage(packageJsonApp);
 
 // In the launcher we want to handle that the whole nrfConnectForDesktop may be missing
 // and the html in it can also be undefined, so there we need to use this legacy variant
@@ -71,4 +70,4 @@ const packageJsonLegacyApp = packageJsonApp.extend({
 export type PackageJsonLegacyApp = z.infer<typeof packageJsonLegacyApp>;
 
 export const parsePackageJsonLegacyApp =
-    parseWithPrettifiedErrorMessage<PackageJsonLegacyApp>(packageJsonLegacyApp);
+    parseWithPrettifiedErrorMessage(packageJsonLegacyApp);
