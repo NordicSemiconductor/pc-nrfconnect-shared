@@ -34,6 +34,8 @@ export const serialPort = {
 };
 
 export {
+    sourceJsonSchema,
+    withdrawnJsonSchema,
     type AppInfo,
     type NrfutilModuleName,
     type NrfutilModules,
