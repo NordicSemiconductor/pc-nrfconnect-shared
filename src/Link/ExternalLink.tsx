@@ -8,7 +8,7 @@ import React from 'react';
 
 import classNames from '../utils/classNames';
 
-export default ({ label, href }: { label: string; href: string }) => (
+export default ({ href, label = href }: { href: string; label?: string }) => (
     <a
         target="_blank"
         rel="noreferrer noopener"

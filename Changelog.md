@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 196.0.0 - 2025-01-13
+
+### Changed
+
+-   `ExternalLink`: The `label` prop now defaults to the value of `href`.
+
 ## 195.0.0 - 2025-01-09
 
 ### Added
