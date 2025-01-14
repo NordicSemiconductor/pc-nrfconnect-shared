@@ -27,16 +27,20 @@ import { DeviceSetupConfig, setupDevice } from '../deviceSetup';
 import DeviceSetupView from '../DeviceSetup/DeviceSetupView';
 import {
     deselectDevice,
+    deselectVirtualDevice,
     Device,
     deviceIsSelected as deviceIsSelectedSelector,
     isDeviceWithSerialNumber,
     selectDevice,
     selectedDevice,
+    selectedVirtualDevice,
+    selectVirtualDevice,
     setSelectedDeviceInfo,
 } from '../deviceSlice';
 import DeviceList from './DeviceList/DeviceList';
 import SelectDevice from './SelectDevice';
 import SelectedDevice from './SelectedDevice';
+import SelectedVirtualDevice from './SelectedVirtualDevice';
 
 export interface Props {
     deviceListing: DeviceTraits;
@@ -51,6 +55,9 @@ export interface Props {
     onDeviceDisconnected?: (device: Device) => void;
     onDeviceIsReady?: (device: Device) => void;
     deviceFilter?: (device: Device) => boolean;
+    virtualDevices?: string[];
+    onVirtualDeviceSelected?: (device: string) => void;
+    onVirtualDeviceDeselected?: () => void;
 }
 
 const noop = () => {};
@@ -63,6 +70,9 @@ export default ({
     onDeviceDisconnected = noop,
     onDeviceIsReady = noop,
     deviceFilter,
+    virtualDevices = [],
+    onVirtualDeviceSelected = noop,
+    onVirtualDeviceDeselected = noop,
 }: Props) => {
     const dispatch = useDispatch();
     const [deviceListVisible, setDeviceListVisible] = useState(false);
@@ -71,6 +81,7 @@ export default ({
     const currentDevice = useSelector(selectedDevice);
     const waitingToAutoReconnect = useSelector(getWaitingToAutoReselect);
     const showSelectedDevice = deviceIsSelected || waitingToAutoReconnect;
+    const virtualDeviceSelected = useSelector(selectedVirtualDevice);
 
     const abortController = useRef<AbortController>();
 
@@ -204,14 +215,25 @@ export default ({
 
     return (
         <div className="core19-device-selector">
-            {showSelectedDevice ? (
+            {!showSelectedDevice && !virtualDeviceSelected && (
+                <SelectDevice
+                    deviceListVisible={deviceListVisible}
+                    toggleDeviceListVisible={toggleDeviceListVisible}
+                />
+            )}
+            {showSelectedDevice && (
                 <SelectedDevice
                     doDeselectDevice={() => doDeselectDevice(currentDevice)}
                     toggleDeviceListVisible={toggleDeviceListVisible}
                 />
-            ) : (
-                <SelectDevice
-                    deviceListVisible={deviceListVisible}
+            )}
+            {virtualDeviceSelected && (
+                <SelectedVirtualDevice
+                    virtualDevice={virtualDeviceSelected}
+                    deselectVirtualDevice={() => {
+                        onVirtualDeviceDeselected();
+                        dispatch(deselectVirtualDevice());
+                    }}
                     toggleDeviceListVisible={toggleDeviceListVisible}
                 />
             )}
@@ -227,7 +249,35 @@ export default ({
                         doDeselectDevice(currentDevice);
                     }
 
+                    if (virtualDeviceSelected) {
+                        dispatch(deselectVirtualDevice());
+                        onVirtualDeviceDeselected();
+                    }
+
                     doSelectDevice(device, autoReselected);
+                }}
+                virtualDevices={virtualDevices}
+                doSelectVirtualDevice={device => {
+                    if (virtualDeviceSelected === device) {
+                        setDeviceListVisible(false);
+                        return;
+                    }
+
+                    if (deviceIsSelected) {
+                        doDeselectDevice(currentDevice);
+                    }
+
+                    if (virtualDeviceSelected) {
+                        dispatch(deselectVirtualDevice());
+                        onVirtualDeviceSelected(device);
+                    }
+
+                    dispatch(clearWaitForDevice());
+                    setDeviceListVisible(false);
+                    abortController.current?.abort();
+
+                    dispatch(selectVirtualDevice(device));
+                    onVirtualDeviceSelected(device);
                 }}
                 deviceFilter={deviceFilter}
             />

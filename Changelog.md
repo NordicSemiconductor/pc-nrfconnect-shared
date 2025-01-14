@@ -7,11 +7,30 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 195.0.0 - unreleased
+## 197.0.0 - unreleased
 
 ### Changed
 
 -   Improved shortcuts modal layout and look.
+
+### Fixed
+
+-   Show log shortcut now works every time it is called.
+
+## 196.0.0 - 2025-01-13
+
+### Changed
+
+-   `ExternalLink`: The `label` prop now defaults to the value of `href`.
+
+## 195.0.0 - 2025-01-09
+
+### Added
+
+-   `virtualDevices` parameter to `DeviceSelector`.
+-   `onVirtualDeviceSelected` and `onVirtualDeviceDeselected` parameters to
+    `DeviceSelector`.
+-   Exported zod schemas for `source.json` and `withdrawn.json` files.
 
 ## 194.0.0 - 2024-12-17
 
