@@ -10,20 +10,28 @@
     display: flex;
     gap: 8px;
 
-    padding-top: 4px;
+    padding-top: 20px;
+    margin-bottom: 6px;
     overflow: auto;
+
+    display: flex;
+    justify-content: space-between;
+
+    &:not(:first-of-type) {
+        border-top: 1px solid $gray-100;
+    }
 
     &:first-of-type {
         margin-top: 24px;
     }
 
     .shortcut-title {
+        // display: inline;
         padding-top: 4px;
+        // width: 140px;
     }
-
     .shortcuts {
         float: right;
-
         .shortcut-element {
             display: flex;
             gap: 6px;
@@ -36,7 +44,6 @@
                 border-radius: 4px;
                 box-shadow: 0 2px $gray-100;
             }
-
             .separator-span {
                 background-color: $white;
                 padding: 4px 10px;
