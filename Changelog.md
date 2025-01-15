@@ -9,6 +9,10 @@ every new version is a new major version.
 
 ## 197.0.0 - unreleased
 
+### Changed
+
+-   Improved shortcuts modal layout and look.
+
 ### Fixed
 
 -   Show log shortcut now works every time it is called.

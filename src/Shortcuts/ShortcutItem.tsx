@@ -32,10 +32,6 @@ const ShortcutItem: FC<Props> = ({ title, hotKey }) => {
                                 <span className="shortcut-span">
                                     {shortcutKey}
                                 </span>
-                                {shortcutKey !==
-                                    shortcutKeys[shortcutKeys.length - 1] && (
-                                    <span className="separator-span">+</span>
-                                )}
                             </span>
                         ))}
                     </div>

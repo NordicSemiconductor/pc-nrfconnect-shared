@@ -7,26 +7,46 @@
 @import '../variables.scss';
 
 .shortcut-item {
-    border-top: 1px solid $gray-100;
+    display: flex;
+    gap: 8px;
+
     padding-top: 20px;
+    margin-bottom: 6px;
     overflow: auto;
+
+    display: flex;
+    justify-content: space-between;
+
+    &:not(:first-of-type) {
+        border-top: 1px solid $gray-100;
+    }
+
+    &:first-of-type {
+        margin-top: 24px;
+    }
+
     .shortcut-title {
-        display: inline;
+        // display: inline;
+        padding-top: 4px;
+        // width: 140px;
     }
     .shortcuts {
         float: right;
         .shortcut-element {
-            display: 'block';
-            margin-bottom: 20px;
+            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+
             .shortcut-span {
-                background-color: $gray-100;
-                padding: 8px;
-                border-radius: 5px;
-                box-shadow: 0 2px $gray-200;
+                text-transform: capitalize;
+                background-color: $gray-50;
+                padding: 4px 10px;
+                border-radius: 4px;
+                box-shadow: 0 2px $gray-100;
             }
             .separator-span {
                 background-color: $white;
-                padding: 8px;
+                padding: 4px 10px;
             }
         }
     }
