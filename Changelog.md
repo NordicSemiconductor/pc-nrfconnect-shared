@@ -9,6 +9,10 @@ every new version is a new major version.
 
 ## 197.0.0 - unreleased
 
+### Added
+
+-   `selectedVirtualDevice` export.
+
 ### Fixed
 
 -   Show log shortcut now works every time it is called.

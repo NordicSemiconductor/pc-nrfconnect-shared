@@ -117,6 +117,7 @@ export {
     setSelectedDeviceInfo,
     getReadbackProtection,
     persistSerialPortOptions,
+    selectedVirtualDevice,
     type Device,
 } from './Device/deviceSlice';
 export {
