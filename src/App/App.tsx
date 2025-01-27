@@ -12,7 +12,7 @@ import { createRoot } from 'react-dom/client';
 import { useDispatch, useSelector } from 'react-redux';
 import { Reducer } from 'redux';
 
-import { inMain as openWindow } from '../../ipc/openWindow';
+import { inMain as openWindow } from '../../ipc/open';
 import { setNrfutilLogger } from '../../nrfutil/nrfutilLogger';
 import About from '../About/About';
 import ConfirmCloseDialog from '../ConfirmBeforeClose/ConfirmCloseDialog';

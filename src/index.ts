@@ -200,6 +200,6 @@ export {
     type UninstalledDownloadableApp,
     type WithdrawnApp,
 } from '../ipc/apps';
-export { inMain as openWindow } from '../ipc/openWindow';
+export { inMain as open } from '../ipc/open';
 export { inMain as preventSleep } from '../ipc/preventSleep';
 export { inMain as safeStorage } from '../ipc/safeStorage';

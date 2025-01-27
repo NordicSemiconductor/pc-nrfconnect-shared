@@ -10,6 +10,7 @@ import { on, send } from './infrastructure/rendererToMain';
 const channel = {
     app: 'open:app',
     launcher: 'open-app-launcher', // It would be nice to call this `open:launcher` but we have to stick to the current name, because that is used by supported apps.
+    openDirectory: 'open-directory',
 };
 
 export const isOpenAppOptionsDeviceSN = (
@@ -40,12 +41,18 @@ type OpenLauncher = () => void;
 const openLauncher = send<OpenLauncher>(channel.launcher);
 const registerOpenLauncher = on<OpenLauncher>(channel.launcher);
 
+type OpenDirectory = (filePath: string) => void;
+const openDirectory = send<OpenDirectory>(channel.openDirectory);
+const registerOpenDirectory = send<OpenDirectory>(channel.openDirectory);
+
 export const forRenderer = {
     registerOpenApp,
     registerOpenLauncher,
+    registerOpenDirectory,
 };
 
 export const inMain = {
     openApp,
     openLauncher,
+    openDirectory,
 };
