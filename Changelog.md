@@ -13,6 +13,10 @@ every new version is a new major version.
 
 -   `selectedVirtualDevice` export.
 
+### Changed
+
+-   `applicationinsights` is now mocked for test runs.
+
 ### Fixed
 
 -   Show log shortcut now works every time it is called.
