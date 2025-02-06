@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 198.0.0 - UNRELEASED
+
+### Fixed
+
+-   Product link for `nRF 9151DK`
+
 ## 197.0.0 - 2025-02-05
 
 ### Added
