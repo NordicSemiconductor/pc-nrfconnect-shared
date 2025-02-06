@@ -210,7 +210,7 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf91logo,
         website: {
-            productPagePath: 'Products/Development-hardware/nrf5161dk',
+            productPagePath: 'Products/Development-hardware/nrf9151dk',
             buyOnlineParams: 'search_token=NRF9151-dk',
         },
     },
