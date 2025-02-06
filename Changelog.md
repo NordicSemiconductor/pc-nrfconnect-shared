@@ -11,7 +11,8 @@ every new version is a new major version.
 
 ### Fixed
 
--   Product link for `nRF 9151DK`
+-   Product links for nRF54L15 DK, nRF54H20 DK, nRF9131 EK, nRF9151 DK, nRF9161
+    DK, and Nordic Thingy:91 X
 
 ## 197.0.0 - 2025-02-05
 
