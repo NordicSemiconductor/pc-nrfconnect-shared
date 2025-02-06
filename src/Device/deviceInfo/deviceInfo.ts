@@ -50,8 +50,8 @@ interface DeviceInfo {
     cores?: number;
     icon: React.ElementType;
     website: {
-        productPagePath?: string;
-        buyOnlineParams?: string;
+        productPage?: string;
+        buyOnline?: string;
     };
 }
 
@@ -61,8 +61,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf51logo,
         website: {
-            productPagePath: 'Software-and-tools/Development-Kits/nRF51-DK',
-            buyOnlineParams: 'search_token=nrf51-DK&series_token=nRF51822',
+            productPage:
+                'https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF51-DK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nrf51-DK&series_token=nRF51822',
         },
     },
     PCA10031: {
@@ -70,8 +72,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf51logo,
         website: {
-            productPagePath: 'Software-and-tools/Development-Kits/nRF51-Dongle',
-            buyOnlineParams: 'search_token=nRF51-Dongle&series_token=nRF51822',
+            productPage:
+                'https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF51-Dongle',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF51-Dongle&series_token=nRF51822',
         },
     },
     PCA10040: {
@@ -79,8 +83,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf52logo,
         website: {
-            productPagePath: 'Software-and-tools/Development-Kits/nRF52-DK',
-            buyOnlineParams: 'search_token=nRF52-DK&series_token=nRF52832',
+            productPage:
+                'https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF52-DK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF52-DK&series_token=nRF52832',
         },
     },
     PCA10056: {
@@ -88,8 +94,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf52logo,
         website: {
-            productPagePath: 'Software-and-tools/Development-Kits/nRF52840-DK',
-            buyOnlineParams: 'search_token=nrf52840-DK&series_token=nRF52840',
+            productPage:
+                'https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF52840-DK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nrf52840-DK&series_token=nRF52840',
         },
     },
     PCA10059: {
@@ -97,10 +105,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf52logo,
         website: {
-            productPagePath:
-                'Software-and-tools/Development-Kits/nRF52840-Dongle',
-            buyOnlineParams:
-                'search_token=nRF52840DONGLE&series_token=nRF52840',
+            productPage:
+                'https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF52840-Dongle',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF52840DONGLE&series_token=nRF52840',
         },
     },
     PCA10090: {
@@ -108,8 +116,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf91logo,
         website: {
-            productPagePath: 'Software-and-tools/Development-Kits/nRF9160-DK',
-            buyOnlineParams: 'search_token=nrf9160-DK&series_token=nRF9160',
+            productPage:
+                'https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF9160-DK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nrf9160-DK&series_token=nRF9160',
         },
     },
     PCA10095: {
@@ -117,8 +127,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 2,
         icon: nrf53logo,
         website: {
-            productPagePath: 'Software-and-tools/Development-Kits/nRF5340-DK',
-            buyOnlineParams: 'search_token=nRF5340-DK&series_token=nRF5340',
+            productPage:
+                'https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF5340-DK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF5340-DK&series_token=nRF5340',
         },
     },
     PCA10100: {
@@ -126,8 +138,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf52logo,
         website: {
-            productPagePath: 'Software-and-tools/Development-Kits/nRF52833-DK',
-            buyOnlineParams: 'search_token=nRF52833-DK&series_token=nRF52833',
+            productPage:
+                'https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF52833-DK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF52833-DK&series_token=nRF52833',
         },
     },
     PCA10121: {
@@ -135,9 +149,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 2,
         icon: nrf53logo,
         website: {
-            productPagePath: 'Products/Development-hardware/nRF5340-Audio-DK',
-            buyOnlineParams:
-                'search_token=nRF5340-Audio-DK&series_token=nRF5340',
+            productPage:
+                'https://www.nordicsemi.com/Products/Development-hardware/nRF5340-Audio-DK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF5340-Audio-DK&series_token=nRF5340',
         },
     },
     PCA20020: {
@@ -145,9 +160,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf52logo,
         website: {
-            productPagePath:
-                'Software-and-tools/Prototyping-platforms/Nordic-Thingy-52',
-            buyOnlineParams: 'search_token=nRF6936&series_token=nRF52832',
+            productPage:
+                'https://www.nordicsemi.com/Software-and-tools/Prototyping-platforms/Nordic-Thingy-52',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF6936&series_token=nRF52832',
         },
     },
     PCA20035: {
@@ -155,9 +171,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf91logo,
         website: {
-            productPagePath:
-                'Software-and-tools/Prototyping-platforms/Nordic-Thingy-91',
-            buyOnlineParams: 'search_token=nRF6943&series_token=nRF9160',
+            productPage:
+                'https://www.nordicsemi.com/Software-and-tools/Prototyping-platforms/Nordic-Thingy-91',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF6943&series_token=nRF9160',
         },
     },
     PCA10143: {
@@ -165,8 +182,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 2,
         icon: nrf7002logo,
         website: {
-            productPagePath: 'Products/Development-hardware/nRF7002-DK',
-            buyOnlineParams: 'search_token=nRF7002-DK&series_token=nRF7002',
+            productPage:
+                'https://www.nordicsemi.com/Products/Development-hardware/nRF7002-DK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF7002-DK&series_token=nRF7002',
         },
     },
     PCA10152: {
@@ -174,8 +193,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 2,
         icon: nPMFamilyLogo,
         website: {
-            productPagePath: 'Products/Development-hardware/nPM1300-EK',
-            buyOnlineParams: 'search_token=NPM1300EK',
+            productPage:
+                'https://www.nordicsemi.com/Products/Development-hardware/nPM1300-EK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=NPM1300EK',
         },
     },
     PCA10153: {
@@ -183,26 +204,27 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf91logo,
         website: {
-            productPagePath: 'Products/Development-hardware/nrf9161dk',
-            buyOnlineParams: 'search_token=NRF9161-dk',
+            productPage:
+                'https://www.nordicsemi.com/Products/Development-hardware/nRF9161-DK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=NRF9161-DK',
         },
     },
     PCA10165: {
         name: 'nRF9131 EK',
         cores: 1,
         icon: nrf91logo,
-        website: {
-            productPagePath: 'Products/Development-hardware/nrf9131ek',
-            buyOnlineParams: 'search_token=NRF9131-ek',
-        },
+        website: {},
     },
     PCA20049: {
         name: 'Nordic Thingy:91 X',
         cores: 1,
         icon: nrf91logo,
         website: {
-            productPagePath: 'Products/Development-hardware/thingy91x',
-            buyOnlineParams: 'search_token=nRF9161-Thingy91x',
+            productPage:
+                'https://www.nordicsemi.com/Products/Development-hardware/Nordic-Thingy-91-X',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=THINGY91X',
         },
     },
     PCA10171: {
@@ -210,8 +232,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf91logo,
         website: {
-            productPagePath: 'Products/Development-hardware/nrf5161dk',
-            buyOnlineParams: 'search_token=NRF9151-dk',
+            productPage:
+                'https://www.nordicsemi.com/Products/Development-hardware/nRF9151-DK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=NRF9151-DK',
         },
     },
     PCA10156: {
@@ -219,8 +243,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf54logo,
         website: {
-            productPagePath: 'Products/Development-hardware/nrf54l15dk',
-            buyOnlineParams: 'search_token=NRF54L15-dk',
+            productPage:
+                'https://www.nordicsemi.com/Products/Development-hardware/nRF54L15-DK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF54L15%20DK',
         },
     },
     PCA10175: {
@@ -228,8 +254,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf54logo,
         website: {
-            productPagePath: 'Products/Development-hardware/nrf54h20dk',
-            buyOnlineParams: 'search_token=NRF54H20-dk',
+            productPage:
+                'https://www.nordicsemi.com/Products/Development-hardware/nRF54H20-DK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF54H20%20DK',
         },
     },
 };
@@ -247,9 +275,10 @@ const ppkDeviceInfo = (device: Device): DeviceInfo => ({
     name: device.usb?.product,
     icon: ppkLogo,
     website: {
-        productPagePath:
-            'Software-and-tools/Development-Tools/Power-Profiler-Kit-2',
-        buyOnlineParams: 'search_token=nRF-PPK2',
+        productPage:
+            'https://www.nordicsemi.com/Software-and-tools/Development-Tools/Power-Profiler-Kit-2',
+        buyOnline:
+            'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF-PPK2',
     },
 });
 
@@ -294,13 +323,3 @@ export const displayedDeviceName = (
 
     return deviceInfo(device).name || device.devkit?.boardVersion || 'Unknown';
 };
-
-export const productPageUrl = (device: Device) =>
-    deviceInfo(device).website.productPagePath &&
-    `https://www.nordicsemi.com/${deviceInfo(device).website.productPagePath}`;
-
-export const buyOnlineUrl = (device: Device) =>
-    deviceInfo(device).website.buyOnlineParams &&
-    `https://www.nordicsemi.com/About-us/BuyOnline?${
-        deviceInfo(device).website.buyOnlineParams
-    }`;
