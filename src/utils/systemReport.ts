@@ -12,10 +12,7 @@ import si from 'systeminformation';
 
 import { getAllModuleVersions } from '../../nrfutil';
 import { describeVersion, findDependency } from '../../nrfutil/moduleVersion';
-import {
-    deviceInfo as getDeviceInfo,
-    productPageUrl,
-} from '../Device/deviceInfo/deviceInfo';
+import { deviceInfo as getDeviceInfo } from '../Device/deviceInfo/deviceInfo';
 import { Device } from '../Device/deviceSlice';
 import logger from '../logging';
 import { getAppDataDir } from './appDirs';
@@ -115,7 +112,7 @@ const currentDeviceReport = (device?: Device, currentSerialNumber?: string) => {
         `    - name:          ${deviceInfo.name}`,
         `    - serialNumber:  ${currentSerialNumber}`,
         `    - cores:         ${deviceInfo.cores ?? 'Unknown'}`,
-        `    - website:       ${productPageUrl(device) ?? 'Unknown'}`,
+        `    - website:       ${deviceInfo.website.productPage ?? 'Unknown'}`,
         '',
     ];
 };

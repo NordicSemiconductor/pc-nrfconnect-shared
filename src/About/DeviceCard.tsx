@@ -8,11 +8,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import Card from '../Card/Card';
-import {
-    buyOnlineUrl,
-    deviceInfo,
-    productPageUrl,
-} from '../Device/deviceInfo/deviceInfo';
+import { deviceInfo } from '../Device/deviceInfo/deviceInfo';
 import { selectedDevice, selectedDeviceInfo } from '../Device/deviceSlice';
 import AboutButton from './AboutButton';
 import Section from './Section';
@@ -38,7 +34,7 @@ export default () => {
     }
 
     const pca = device.devkit?.boardVersion;
-    const { name, cores } = deviceInfo(device);
+    const { name, cores, website } = deviceInfo(device);
 
     return (
         <Card title="Device">
@@ -61,13 +57,13 @@ export default () => {
 
                 <Section>
                     <AboutButton
-                        url={buyOnlineUrl(device)}
+                        url={website.buyOnline}
                         label="Find distributor"
                     />
                 </Section>
                 <Section>
                     <AboutButton
-                        url={productPageUrl(device)}
+                        url={website.productPage}
                         label="Go to product page"
                     />
                 </Section>
