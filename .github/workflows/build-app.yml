@@ -1,0 +1,35 @@
+name: Build App
+
+on:
+    workflow_call:
+        inputs:
+            ref:
+                type: string
+            force_pack:
+                type: boolean
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  ref: ${{ inputs.ref }}
+            - uses: actions/setup-node@v4.0.0
+              with:
+                  node-version: 22
+                  cache: 'npm'
+            - run: npm ci
+            - run: npm run check
+            - run: npm test
+            - run: npm run build:prod
+            - run: npm pack
+              if:
+                  github.event.push.ref == 'refs/heads/main' ||
+                  inputs.force_pack
+            - uses: actions/upload-artifact@v4
+              with:
+                  path: ./*.tgz
+              if:
+                  github.event.push.ref == 'refs/heads/main' ||
+                  inputs.force_pack
