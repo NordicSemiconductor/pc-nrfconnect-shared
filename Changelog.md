@@ -11,17 +11,20 @@ every new version is a new major version.
 
 ### Added
 
--   Support for publishing apps to Artifactory
+-   Support for publishing apps to Artifactory.
 
 ### Fixed
 
 -   Product links for nRF54L15 DK, nRF54H20 DK, nRF9131 EK, nRF9151 DK, nRF9161
-    DK, and Nordic Thingy:91 X
+    DK, and Nordic Thingy:91 X.
 
 ### Steps to upgrade when using this package
 
--   Where the nordic-publish script is called (usually in the azure release
-    pipeline), add the parameter `--destination ftp`.
+-   When publishing the app via FTP (usually in the azure release pipeline), add
+    the parameter `--destination ftp` when calling the nordic-publish script.
+-   Copy the files `build.yml`, `release.yml`, and `release-latest.yml` from
+    https://github.com/NordicSemiconductor/pc-nrfconnect-boilerplate/tree/main/.github/workflows
+    to `.github/workflows`.
 
 ## 197.0.0 - 2025-02-05
 
