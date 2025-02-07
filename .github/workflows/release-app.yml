@@ -1,0 +1,40 @@
+name: Release
+
+on:
+    workflow_call:
+        inputs:
+            ref:
+                type: string
+            source:
+                required: true
+                type: string
+            access_level:
+                required: true
+                type: string
+
+jobs:
+    build:
+        uses: ./.github/workflows/build-app.yml
+        with:
+            ref: ${{ inputs.ref }}
+            force_pack: true
+
+    release:
+        runs-on: ubuntu-latest
+        needs: build
+        environment:
+            name: ${{ inputs.source }}
+
+        steps:
+            - uses: actions/download-artifact@v4
+            - env:
+                  ARTIFACTORY_TOKEN:
+                      ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD }}
+              run: |
+                  cd artifact
+                  tar xaf *.tgz --strip-components 1
+                  node dist/nordic-publish.js \
+                    --no-pack \
+                    --destination artifactory \
+                    --access-level ${{ inputs.access_level }} \
+                    --source ${{ inputs.source }}
