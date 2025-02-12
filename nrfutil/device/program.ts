@@ -50,7 +50,8 @@ export const isJLinkProgrammingOptions = (
 export const isMcuBootProgrammingOptions = (
     options: ProgrammingOptions
 ): options is McuBootProgrammingOptions =>
-    (options as McuBootProgrammingOptions).netCoreUploadDelay !== undefined;
+    (options as McuBootProgrammingOptions).netCoreUploadDelay !== undefined ||
+    (options as McuBootProgrammingOptions).target !== undefined;
 
 export const isNordicDfuProgrammingOptions = (
     options: ProgrammingOptions
