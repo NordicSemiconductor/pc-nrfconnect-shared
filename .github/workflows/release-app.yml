@@ -8,9 +8,6 @@ on:
             source:
                 required: true
                 type: string
-            access_level:
-                required: true
-                type: string
 
 jobs:
     build:
@@ -27,7 +24,8 @@ jobs:
 
         steps:
             - uses: actions/download-artifact@v4
-            - env:
+            - name: Release app to ${{ inputs.source }}
+              env:
                   ARTIFACTORY_TOKEN:
                       ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD }}
               run: |
@@ -36,5 +34,4 @@ jobs:
                   node dist/nordic-publish.js \
                     --no-pack \
                     --destination artifactory \
-                    --access-level ${{ inputs.access_level }} \
-                    --source ${{ inputs.source }}
+                    --source '${{ inputs.source }}'

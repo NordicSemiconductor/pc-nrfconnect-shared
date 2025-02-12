@@ -24,7 +24,8 @@ every new version is a new major version.
     the parameter `--destination ftp` when calling the nordic-publish script.
 -   Copy the files `build.yml`, `release.yml`, and `release-latest.yml` from
     https://github.com/NordicSemiconductor/pc-nrfconnect-boilerplate/tree/main/.github/workflows
-    to `.github/workflows`.
+    to `.github/workflows`. If appropriate for an app, customise the list of
+    sources to deploy to in `release.yml`.
 
 ## 197.0.0 - 2025-02-05
 

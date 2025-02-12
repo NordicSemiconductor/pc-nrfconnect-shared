@@ -251,11 +251,39 @@ const hasMessage = (error: unknown): error is { message: unknown } =>
 const errorAsString = (error: unknown) =>
     hasMessage(error) ? error.message : String(error);
 
-type AccessLevel =
-    | 'external'
-    | 'external-confidential'
-    | 'internal'
-    | 'internal-confidential';
+const validAccessLevels = [
+    'external',
+    'external-confidential',
+    'internal',
+    'internal-confidential',
+] as const;
+
+type AccessLevel = (typeof validAccessLevels)[number];
+
+const isAccessLevel = (value: string): value is AccessLevel =>
+    (validAccessLevels as readonly string[]).includes(value);
+
+const splitSourceAndAccessLevel = (sourceAndMaybeAccessLevel: string) => {
+    const match = sourceAndMaybeAccessLevel.match(
+        /(?<source>.*?)\s*\((?<accessLevel>.*)\)/
+    );
+
+    if (match == null) {
+        return { source: sourceAndMaybeAccessLevel };
+    }
+
+    const { source, accessLevel } = match.groups!; // eslint-disable-line @typescript-eslint/no-non-null-assertion -- Can never be null because of the regex
+
+    if (!isAccessLevel(accessLevel)) {
+        throw new Error(
+            `The specified access level "${accessLevel}" must be one of ${validAccessLevels.join(
+                ', '
+            )}.`
+        );
+    }
+
+    return { source, accessLevel };
+};
 
 interface Options {
     doPack: boolean;
@@ -272,7 +300,9 @@ const parseOptions = (): Options => {
         .description('Publish an nRF Connect for Desktop app')
         .requiredOption(
             '-s, --source <source>',
-            'Specify the source to publish (e.g. "official" or "releast-test").'
+            'Specify the source to publish (e.g. "official" or "releast-test"). ' +
+                'When publishing to Artifactory, an access level can be ' +
+                'specified at the end in parantheses (e.g. "official (external)").'
         )
         .addOption(
             new Option(
@@ -281,17 +311,6 @@ const parseOptions = (): Options => {
             )
                 .choices(['ftp', 'artifactory'])
                 .makeOptionMandatory()
-        )
-        .addOption(
-            new Option(
-                '--access-level <access level>',
-                'Specify the access level, only used when publishing to Artifactory.'
-            ).choices([
-                'external',
-                'external-confidential',
-                'internal',
-                'internal-confidential',
-            ])
         )
         .option(
             '-n, --no-pack',
@@ -307,16 +326,18 @@ const parseOptions = (): Options => {
 
     const options = program.opts();
 
-    const deployOfficial = options.source === 'official';
+    const { source, accessLevel } = splitSourceAndAccessLevel(options.source);
+
+    const deployOfficial = source === 'official';
 
     return {
         doPack: options.pack,
         doCreateSource: options.createSource != null,
-        source: options.source,
+        source,
         sourceName: options.createSource,
         deployOfficial,
         destination: options.destination,
-        accessLevel: options.accessLevel,
+        accessLevel,
     };
 };
 
