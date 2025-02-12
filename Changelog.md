@@ -7,21 +7,25 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 198.0.0 - UNRELEASED
+## 198.0.0 - 2025-02-12
 
 ### Added
 
--   Support for publishing apps to Artifactory
+-   Support for publishing apps to Artifactory.
 
 ### Fixed
 
 -   Product links for nRF54L15 DK, nRF54H20 DK, nRF9131 EK, nRF9151 DK, nRF9161
-    DK, and Nordic Thingy:91 X
+    DK, and Nordic Thingy:91 X.
 
 ### Steps to upgrade when using this package
 
--   Where the nordic-publish script is called (usually in the azure release
-    pipeline), add the parameter `--destination ftp`.
+-   When publishing the app via FTP (usually in the azure release pipeline), add
+    the parameter `--destination ftp` when calling the nordic-publish script.
+-   Copy the files `build.yml`, `release.yml`, and `release-latest.yml` from
+    https://github.com/NordicSemiconductor/pc-nrfconnect-boilerplate/tree/main/.github/workflows
+    to `.github/workflows`. If appropriate for an app, customise the list of
+    sources to deploy to in `release.yml`.
 
 ## 197.0.0 - 2025-02-05
 
