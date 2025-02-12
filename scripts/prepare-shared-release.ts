@@ -78,8 +78,8 @@ const updateChangelog = (nextReleaseNumber: string) => {
     }
 
     if (
-        header === 'Unreleased' ||
-        header === `${nextReleaseNumber} - Unreleased`
+        header.toLowerCase() === 'unreleased' ||
+        header.toLowerCase() === `${nextReleaseNumber} - unreleased`
     ) {
         writeFileSync(
             'Changelog.md',
