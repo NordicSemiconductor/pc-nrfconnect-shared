@@ -9,7 +9,6 @@ on:
                 type: boolean
             node_version:
                 type: number
-                default: 22
 
 jobs:
     build:
@@ -20,7 +19,7 @@ jobs:
                   ref: ${{ inputs.ref }}
             - uses: actions/setup-node@v4
               with:
-                  node-version: ${{ inputs.node_version }}
+                  node-version: ${{ inputs.node_version || 22 }}
                   cache: 'npm'
             - run: npm ci
             - run: npm run check
