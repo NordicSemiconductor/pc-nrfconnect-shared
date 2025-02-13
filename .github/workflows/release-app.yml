@@ -8,6 +8,8 @@ on:
             source:
                 required: true
                 type: string
+            node_version:
+                type: number
 
 jobs:
     build:
@@ -15,6 +17,7 @@ jobs:
         with:
             ref: ${{ inputs.ref }}
             force_pack: true
+            node_version: ${{ inputs.node_version }}
 
     release:
         runs-on: ubuntu-latest
