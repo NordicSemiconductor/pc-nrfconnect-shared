@@ -107,18 +107,6 @@ class FtpClient extends Client {
             });
         });
 
-    createSourceDirectory = () =>
-        new Promise<void>((resolve, reject) => {
-            console.log(`Creating source directory ${this.sourceDir}`);
-            this.ftpClient.mkdir(this.sourceDir, true, err => {
-                if (err) {
-                    reject(new Error(`Failed to create source directory.`));
-                } else {
-                    resolve();
-                }
-            });
-        });
-
     changeWorkingDirectory = () =>
         new Promise<void>((resolve, reject) => {
             console.log(`Changing to directory ${this.sourceDir}`);
@@ -127,9 +115,7 @@ class FtpClient extends Client {
                     reject(
                         new Error(
                             '\nError: Failed to change to directory. ' +
-                                'Check whether it exists on the FTP server.\n' +
-                                'If you want to create a new source, use the ' +
-                                '--create-source option.'
+                                'Check whether it exists on the FTP server.'
                         )
                     );
                 } else {
@@ -140,9 +126,6 @@ class FtpClient extends Client {
 
     initialise = async () => {
         await this.connect();
-        if (this.options.doCreateSource) {
-            await this.createSourceDirectory();
-        }
         await this.changeWorkingDirectory();
     };
 
@@ -287,7 +270,6 @@ const splitSourceAndAccessLevel = (sourceAndMaybeAccessLevel: string) => {
 
 interface Options {
     doPack: boolean;
-    doCreateSource: boolean;
     deployOfficial: boolean;
     source: string;
     sourceName?: string;
@@ -316,12 +298,6 @@ const parseOptions = (): Options => {
             '-n, --no-pack',
             'Publish existing .tgz file at the root directory without npm pack.'
         )
-        .option(
-            '--create-source <source name>',
-            'Do not fail if the source specifiec with --source does not yet ' +
-                'exist but instead create a new source with this name ' +
-                '(e.g. "Release Test").'
-        )
         .parse();
 
     const options = program.opts();
@@ -332,9 +308,7 @@ const parseOptions = (): Options => {
 
     return {
         doPack: options.pack,
-        doCreateSource: options.createSource != null,
         source,
-        sourceName: options.createSource,
         deployOfficial,
         destination: options.destination,
         accessLevel,
@@ -410,23 +384,6 @@ const assertAppVersionIsValid = (
     }
 };
 
-const createBlankSourceJson = async (name: string) => {
-    try {
-        await client.download('source.json');
-    } catch {
-        // Expected that the download throws an exception,
-        // because the file is supposed to not exist yet
-        return {
-            name,
-            apps: [],
-        };
-    }
-
-    throw new Error(
-        '`--create-source` given, but a `source.json` already exists on the server.'
-    );
-};
-
 const downloadSourceJson = async () => {
     let sourceJsonContent;
     try {
@@ -445,8 +402,7 @@ const downloadSourceJson = async () => {
 
         return sourceJson;
     } catch (error) {
-        const message =
-            'Unable to read `source.json` on the server. If you want to create a new source, use the option --create-source.\nError: ';
+        const message = 'Unable to read `source.json` on the server.\nError: ';
         const caughtError = errorAsString(error);
         const maybeSourceJsonContent =
             sourceJsonContent == null
@@ -457,13 +413,8 @@ const downloadSourceJson = async () => {
     }
 };
 
-const getUpdatedSourceJson = async (
-    app: App,
-    options: Options
-): Promise<SourceJson> => {
-    const sourceJson = await (options.doCreateSource
-        ? createBlankSourceJson(options.sourceName!) // eslint-disable-line @typescript-eslint/no-non-null-assertion -- Can never be null because of the control flow
-        : downloadSourceJson());
+const getUpdatedSourceJson = async (app: App): Promise<SourceJson> => {
+    const sourceJson = await downloadSourceJson();
     return {
         name: sourceJson.name,
         apps: [
@@ -495,13 +446,8 @@ const failBecauseOfMissingProperty = () => {
     );
 };
 
-const getUpdatedAppInfo = async (
-    app: App,
-    options: Options
-): Promise<AppInfo> => {
-    const oldAppInfo = options.doCreateSource
-        ? {}
-        : await downloadExistingAppInfo(app);
+const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
+    const oldAppInfo = await downloadExistingAppInfo(app);
 
     assertAppVersionIsValid(oldAppInfo.latestVersion, app);
 
@@ -588,8 +534,8 @@ const main = async () => {
 
         await client.initialise(options);
 
-        const sourceJson = await getUpdatedSourceJson(app, options);
-        const appInfo = await getUpdatedAppInfo(app, options);
+        const sourceJson = await getUpdatedSourceJson(app);
+        const appInfo = await getUpdatedAppInfo(app);
 
         await uploadChangelog(app);
         await uploadIcon(app);
