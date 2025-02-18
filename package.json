@@ -61,7 +61,7 @@
         "applicationinsights": "^2.9.6",
         "autoprefixer": "10.4.14",
         "bootstrap": "4.6.2",
-        "commander": "10.0.0",
+        "commander": "13.1.0",
         "date-fns": "2.29.3",
         "electron": "^32.1.2",
         "electron-store": "8.1.0",
