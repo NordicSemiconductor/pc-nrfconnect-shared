@@ -10,6 +10,7 @@ export type UrlString = string;
 
 export const sourceJsonSchema = z.object({
     name: z.string(),
+    description: z.string().optional(),
     apps: z.array(z.string().url()),
 });
 export type SourceJson = z.infer<typeof sourceJsonSchema>;
