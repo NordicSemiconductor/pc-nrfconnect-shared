@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 199.0.0 - 2025-02-20
+
+### Fixed
+
+-   `nordic-publish.ts` deleted the description of a source.
+
 ## 198.0.0 - 2025-02-12
 
 ### Added
