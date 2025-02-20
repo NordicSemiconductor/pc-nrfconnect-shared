@@ -416,7 +416,7 @@ const downloadSourceJson = async () => {
 const getUpdatedSourceJson = async (app: App): Promise<SourceJson> => {
     const sourceJson = await downloadSourceJson();
     return {
-        name: sourceJson.name,
+        ...sourceJson,
         apps: [
             ...new Set(sourceJson.apps).add(
                 `${app.sourceUrl}/${app.appInfoName}`
