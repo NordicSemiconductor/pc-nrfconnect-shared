@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## Unreleased
+
+### Changed
+
+-   Upgraded systeminformation, which will get rid of some warnings concerning
+    `util._extend` in test runs.
+
 ## 201.0.0 - 2025-02-21
 
 ### Changed
