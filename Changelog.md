@@ -7,12 +7,11 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## Unreleased
+## 202.0.0 - 2025-03-05
 
-### Changed
+### Added
 
--   Upgraded systeminformation, which will get rid of some warnings concerning
-    `util._extend` in test runs.
+-   `NoticeBox` component from the Quick Start app.
 
 ## 201.0.0 - 2025-02-21
 
