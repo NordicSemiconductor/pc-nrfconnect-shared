@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 204.0.0 - unreleased
+
+### Added
+
+-   Add title to the `ExternalLink` component.
+
 ## 203.0.0 - 2025-03-05
 
 Overrides v202 as it was released a prerelease.
