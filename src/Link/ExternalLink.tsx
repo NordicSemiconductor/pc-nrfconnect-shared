@@ -6,6 +6,7 @@
 
 import React from 'react';
 
+import telemetry from '../telemetry/telemetry';
 import classNames from '../utils/classNames';
 
 export default ({ href, label = href }: { href: string; label?: string }) => (
@@ -16,6 +17,10 @@ export default ({ href, label = href }: { href: string; label?: string }) => (
         className={classNames(
             'tw-preflight tw-text-nordicBlue hover:tw-underline'
         )}
+        onClick={event => {
+            telemetry.sendEvent('Visiting link', { href });
+            event.stopPropagation();
+        }}
     >
         {label}
     </a>
