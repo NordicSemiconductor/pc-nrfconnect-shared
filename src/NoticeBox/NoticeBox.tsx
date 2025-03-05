@@ -9,7 +9,27 @@ import React from 'react';
 import ExternalLink from '../Link/ExternalLink';
 import logger from '../logging/index';
 
-export const Box = ({
+const ErrorContent = () => (
+    <p>
+        Contact support on{' '}
+        <ExternalLink
+            href="https://devzone.nordicsemi.com/support/add"
+            label="DevZone"
+        />{' '}
+        and provide the{' '}
+        <button
+            type="button"
+            className="tw-inline tw-h-min tw-p-0 tw-text-primary"
+            onClick={() => logger.openLogFileLocation()}
+        >
+            <span className="mdi mdi-text-box tw-mr-0.5 tw-text-base tw-leading-none" />
+            Log
+        </button>{' '}
+        if the problem persists.
+    </p>
+);
+
+const NoticeBox = ({
     mdiIcon,
     color,
     title,
@@ -31,26 +51,6 @@ export const Box = ({
     </div>
 );
 
-export const ErrorContent = () => (
-    <p>
-        Contact support on{' '}
-        <ExternalLink
-            href="https://devzone.nordicsemi.com/support/add"
-            label="DevZone"
-        />{' '}
-        and provide the{' '}
-        <button
-            type="button"
-            className="tw-inline tw-h-min tw-p-0 tw-text-primary"
-            onClick={() => logger.openLogFileLocation()}
-        >
-            <span className="mdi mdi-text-box tw-mr-0.5 tw-text-base tw-leading-none" />
-            Log
-        </button>{' '}
-        if the problem persists.
-    </p>
-);
-
 export const IssueBox = ({
     mdiIcon,
     color,
@@ -60,7 +60,7 @@ export const IssueBox = ({
     color: string;
     title: string;
 }) => (
-    <Box
+    <NoticeBox
         mdiIcon={mdiIcon}
         color={color}
         title={title}
@@ -79,10 +79,12 @@ export const InfoBox = ({
     title: string;
     content: string;
 }) => (
-    <Box
+    <NoticeBox
         mdiIcon={mdiIcon}
         color={color}
         title={title}
         content={<p>{content}</p>}
     />
 );
+
+export default NoticeBox;
