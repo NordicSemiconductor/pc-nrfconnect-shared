@@ -14,6 +14,7 @@ export default ({ href, label = href }: { href: string; label?: string }) => (
         target="_blank"
         rel="noreferrer noopener"
         href={href}
+        title={href}
         className={classNames(
             'tw-preflight tw-text-nordicBlue hover:tw-underline'
         )}
