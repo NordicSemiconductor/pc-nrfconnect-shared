@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 204.0.0 - UNRELEASED
+
+### Changed
+
+-   Text in the Application card of the About tab can now be highlightede and
+    copied.
+
 ## 203.0.0 - 2025-03-05
 
 Overrides v202 as it was released a prerelease.
