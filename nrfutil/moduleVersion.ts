@@ -20,7 +20,7 @@ export const describeVersion = (dependencyOrVersion?: Dependency | string) => {
     return 'Unknown';
 };
 
-type KnownModule = 'nrfdl' | 'jprog' | 'JlinkARM';
+type KnownModule = 'nrfdl' | 'nrf-probe' | 'JlinkARM';
 
 const findTopLevel = (module: KnownModule, dependencies: Dependency[]) =>
     dependencies.find(dependency => dependency.name === module);
