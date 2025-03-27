@@ -78,7 +78,7 @@ export default async (moduleVersion: ModuleVersion) => {
 
         log('nrfutil-device', moduleVersion.version);
         log('nrf-device-lib', findDependency('nrfdl', dependencies));
-        log('nrfjprog DLL', findDependency('jprog', dependencies));
+        log('nrf-probe', findDependency('nrf-probe', dependencies));
         log('JLink', findDependency('JlinkARM', dependencies));
 
         const jlinkCompatibility = getJlinkCompatibility(moduleVersion);
@@ -123,7 +123,7 @@ export default async (moduleVersion: ModuleVersion) => {
                     `It looks like you have installed JLink using ${JLinkInstallerVersion}, but currently we only support their Universal Installer for your system.`
                 );
                 logger?.warn(
-                    `Please install JLink: https://www.segger.com/downloads/jlink/JLink_MacOSX_V794i_universal.pkg`
+                    `Please install JLink: https://www.segger.com/downloads/jlink/JLink_MacOSX_V818_universal.pkg`
                 );
             }
         }
