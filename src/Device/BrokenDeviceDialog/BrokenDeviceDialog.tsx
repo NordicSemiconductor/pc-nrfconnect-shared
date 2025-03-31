@@ -5,10 +5,9 @@
  */
 
 import React from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { ErrorDialog } from '../../Dialog/Dialog';
 import {
     hideDialog,
     info as infoSelector,
@@ -24,34 +23,16 @@ const BrokenDeviceDialog = () => {
     const { description, url } = useSelector(infoSelector);
 
     return (
-        <Modal
-            show={isVisible}
+        <ErrorDialog
+            isVisible={isVisible}
             onHide={() => dispatch(hideDialog())}
-            centered
-            className="broken-device-dialog"
+            title="Unusable device"
         >
-            <Modal.Header closeButton={false}>
-                <p>
-                    <b>Unusable device</b>
-                </p>
-
-                <span className="mdi mdi-alert" />
-            </Modal.Header>
-            <Modal.Body>
-                <p>{description}</p>
-                <a target="_blank" rel="noreferrer" href={url}>
-                    {url}
-                </a>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button
-                    onClick={() => dispatch(hideDialog())}
-                    variant="secondary"
-                >
-                    Close
-                </Button>
-            </Modal.Footer>
-        </Modal>
+            <p>{description}</p>
+            <a target="_blank" rel="noreferrer" href={url}>
+                {url}
+            </a>
+        </ErrorDialog>
     );
 };
 
