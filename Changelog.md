@@ -7,11 +7,28 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 204.0.0 - unreleased
+## 205.0.0 - unreleased
 
 ### Added
 
 -   Add title to the `ExternalLink` component.
+
+## 204.0.0 - 2025-03-27
+
+### Added
+
+-   `nrf-probe` verison check for nrfutil device.
+
+### Removed
+
+-   `nrfjprog` verison check for nrfutil device.
+
+### Changed
+
+-   Text in the Application card of the About tab can now be highlightede and
+    copied.
+-   J-Link download URL for `JLink_MacOSX_V794i_universal.pkg` to
+    `JLink_MacOSX_V818_universal.pkg`
 
 ## 203.0.0 - 2025-03-05
 
