@@ -30,7 +30,7 @@ jobs:
             - name: Release app to ${{ inputs.source }}
               env:
                   ARTIFACTORY_TOKEN:
-                      ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD }}
+                      ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND }}
               run: |
                   cd artifact
                   tar xaf *.tgz --strip-components 1
