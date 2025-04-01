@@ -9,11 +9,12 @@ import React from 'react';
 import telemetry from '../telemetry/telemetry';
 import classNames from '../utils/classNames';
 
-export default ({ href, label = href }: { href: string; label?: string }) => (
+export default ({ href, label }: { href: string; label?: string }) => (
     <a
         target="_blank"
         rel="noreferrer noopener"
         href={href}
+        title={label ? href : undefined}
         className={classNames(
             'tw-preflight tw-text-nordicBlue hover:tw-underline'
         )}
@@ -22,6 +23,6 @@ export default ({ href, label = href }: { href: string; label?: string }) => (
             event.stopPropagation();
         }}
     >
-        {label}
+        {label || href}
     </a>
 );
