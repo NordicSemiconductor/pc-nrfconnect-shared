@@ -9,7 +9,11 @@ every new version is a new major version.
 
 ## 215.0.0 - UNRELEASED
 
-## Changed
+### Added
+
+-   `generateSystemReport` now includes relevant app information.
+
+### Changed
 
 -   StateSelector:Refactored with tailwind. Added `size` prop to control the
     height of the selector.
