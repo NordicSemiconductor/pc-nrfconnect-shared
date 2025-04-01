@@ -9,6 +9,10 @@ every new version is a new major version.
 
 ## 205.0.0 - unreleased
 
+### Added
+
+-   Add title to the `ExternalLink` component.
+
 ### Removed
 
 -   Unused mocks for `pc-nrfjprog-js`, `nrf-device-setup`, `usb` packages.
