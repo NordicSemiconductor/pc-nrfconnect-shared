@@ -74,8 +74,8 @@ const generalInfoReport = async () => {
             const dependencies = moduleVersion.dependencies;
             result.push(
                 ...[
-                    `    - nrfjprog DLL: ${describeVersion(
-                        findDependency('jprog', dependencies)
+                    `    - nrf-probe: ${describeVersion(
+                        findDependency('nrf-probe', dependencies)
                     )}`,
                     `    - SEGGER J-Link: ${describeVersion(
                         findDependency('JlinkARM', dependencies)

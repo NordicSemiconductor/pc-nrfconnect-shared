@@ -83,7 +83,7 @@ export const Group = ({
     onToggled,
 }: {
     className?: string;
-    heading: string;
+    heading: React.ReactNode;
     headingFullWidth?: boolean;
     title?: string;
     children?: React.ReactNode;

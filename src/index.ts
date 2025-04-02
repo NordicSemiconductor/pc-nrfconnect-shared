@@ -54,6 +54,8 @@ export type { NumberDropdownItem } from './InlineInput/NumberInputWithDropdown';
 
 export { default as Spinner } from './Spinner/Spinner';
 
+export { default as NoticeBox, InfoBox, IssueBox } from './NoticeBox/NoticeBox';
+
 export { default as MasonryLayout } from './MasonryLayout/MasonryLayout';
 
 export { default as sendFeedback } from './About/sendFeedback';

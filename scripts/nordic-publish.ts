@@ -107,18 +107,6 @@ class FtpClient extends Client {
             });
         });
 
-    createSourceDirectory = () =>
-        new Promise<void>((resolve, reject) => {
-            console.log(`Creating source directory ${this.sourceDir}`);
-            this.ftpClient.mkdir(this.sourceDir, true, err => {
-                if (err) {
-                    reject(new Error(`Failed to create source directory.`));
-                } else {
-                    resolve();
-                }
-            });
-        });
-
     changeWorkingDirectory = () =>
         new Promise<void>((resolve, reject) => {
             console.log(`Changing to directory ${this.sourceDir}`);
@@ -127,9 +115,7 @@ class FtpClient extends Client {
                     reject(
                         new Error(
                             '\nError: Failed to change to directory. ' +
-                                'Check whether it exists on the FTP server.\n' +
-                                'If you want to create a new source, use the ' +
-                                '--create-source option.'
+                                'Check whether it exists on the FTP server.'
                         )
                     );
                 } else {
@@ -140,9 +126,6 @@ class FtpClient extends Client {
 
     initialise = async () => {
         await this.connect();
-        if (this.options.doCreateSource) {
-            await this.createSourceDirectory();
-        }
         await this.changeWorkingDirectory();
     };
 
@@ -181,6 +164,7 @@ class ArtifactoryClient extends Client {
     token = process.env.ARTIFACTORY_TOKEN;
 
     sourceUrl: string;
+    uploadUrl: string;
 
     constructor(private readonly options: Options) {
         super();
@@ -191,7 +175,11 @@ class ArtifactoryClient extends Client {
             );
         }
 
-        this.sourceUrl = `https://files.nordicsemi.com/artifactory/swtools/${this.getAccessLevel()}/ncd/apps/${
+        this.uploadUrl = `https://files.nordicsemi.com/artifactory/swtools/${this.getAccessLevel()}/ncd/apps/${
+            options.source
+        }`;
+
+        this.sourceUrl = `https://files.nordicsemi.com/ui/api/v1/download?isNativeBrowsing=false&repoKey=swtools&path=${this.getAccessLevel()}/ncd/apps/${
             options.source
         }`;
     }
@@ -218,7 +206,7 @@ class ArtifactoryClient extends Client {
     };
 
     upload = async (content: Buffer, remoteFilename: string) => {
-        const url = `${this.sourceUrl}/${remoteFilename}`;
+        const url = `${this.uploadUrl}/${remoteFilename}`;
         const res = await fetch(url, {
             method: 'PUT',
             body: content,
@@ -251,15 +239,42 @@ const hasMessage = (error: unknown): error is { message: unknown } =>
 const errorAsString = (error: unknown) =>
     hasMessage(error) ? error.message : String(error);
 
-type AccessLevel =
-    | 'external'
-    | 'external-confidential'
-    | 'internal'
-    | 'internal-confidential';
+const validAccessLevels = [
+    'external',
+    'external-confidential',
+    'internal',
+    'internal-confidential',
+] as const;
+
+type AccessLevel = (typeof validAccessLevels)[number];
+
+const isAccessLevel = (value: string): value is AccessLevel =>
+    (validAccessLevels as readonly string[]).includes(value);
+
+const splitSourceAndAccessLevel = (sourceAndMaybeAccessLevel: string) => {
+    const match = sourceAndMaybeAccessLevel.match(
+        /(?<source>.*?)\s*\((?<accessLevel>.*)\)/
+    );
+
+    if (match == null) {
+        return { source: sourceAndMaybeAccessLevel };
+    }
+
+    const { source, accessLevel } = match.groups!; // eslint-disable-line @typescript-eslint/no-non-null-assertion -- Can never be null because of the regex
+
+    if (!isAccessLevel(accessLevel)) {
+        throw new Error(
+            `The specified access level "${accessLevel}" must be one of ${validAccessLevels.join(
+                ', '
+            )}.`
+        );
+    }
+
+    return { source, accessLevel };
+};
 
 interface Options {
     doPack: boolean;
-    doCreateSource: boolean;
     deployOfficial: boolean;
     source: string;
     sourceName?: string;
@@ -272,7 +287,9 @@ const parseOptions = (): Options => {
         .description('Publish an nRF Connect for Desktop app')
         .requiredOption(
             '-s, --source <source>',
-            'Specify the source to publish (e.g. "official" or "releast-test").'
+            'Specify the source to publish (e.g. "official" or "releast-test"). ' +
+                'When publishing to Artifactory, an access level can be ' +
+                'specified at the end in parantheses (e.g. "official (external)").'
         )
         .addOption(
             new Option(
@@ -282,41 +299,24 @@ const parseOptions = (): Options => {
                 .choices(['ftp', 'artifactory'])
                 .makeOptionMandatory()
         )
-        .addOption(
-            new Option(
-                '--access-level <access level>',
-                'Specify the access level, only used when publishing to Artifactory.'
-            ).choices([
-                'external',
-                'external-confidential',
-                'internal',
-                'internal-confidential',
-            ])
-        )
         .option(
             '-n, --no-pack',
             'Publish existing .tgz file at the root directory without npm pack.'
-        )
-        .option(
-            '--create-source <source name>',
-            'Do not fail if the source specifiec with --source does not yet ' +
-                'exist but instead create a new source with this name ' +
-                '(e.g. "Release Test").'
         )
         .parse();
 
     const options = program.opts();
 
-    const deployOfficial = options.source === 'official';
+    const { source, accessLevel } = splitSourceAndAccessLevel(options.source);
+
+    const deployOfficial = source === 'official';
 
     return {
         doPack: options.pack,
-        doCreateSource: options.createSource != null,
-        source: options.source,
-        sourceName: options.createSource,
+        source,
         deployOfficial,
         destination: options.destination,
-        accessLevel: options.accessLevel,
+        accessLevel,
     };
 };
 
@@ -389,23 +389,6 @@ const assertAppVersionIsValid = (
     }
 };
 
-const createBlankSourceJson = async (name: string) => {
-    try {
-        await client.download('source.json');
-    } catch {
-        // Expected that the download throws an exception,
-        // because the file is supposed to not exist yet
-        return {
-            name,
-            apps: [],
-        };
-    }
-
-    throw new Error(
-        '`--create-source` given, but a `source.json` already exists on the server.'
-    );
-};
-
 const downloadSourceJson = async () => {
     let sourceJsonContent;
     try {
@@ -424,8 +407,7 @@ const downloadSourceJson = async () => {
 
         return sourceJson;
     } catch (error) {
-        const message =
-            'Unable to read `source.json` on the server. If you want to create a new source, use the option --create-source.\nError: ';
+        const message = 'Unable to read `source.json` on the server.\nError: ';
         const caughtError = errorAsString(error);
         const maybeSourceJsonContent =
             sourceJsonContent == null
@@ -436,15 +418,10 @@ const downloadSourceJson = async () => {
     }
 };
 
-const getUpdatedSourceJson = async (
-    app: App,
-    options: Options
-): Promise<SourceJson> => {
-    const sourceJson = await (options.doCreateSource
-        ? createBlankSourceJson(options.sourceName!) // eslint-disable-line @typescript-eslint/no-non-null-assertion -- Can never be null because of the control flow
-        : downloadSourceJson());
+const getUpdatedSourceJson = async (app: App): Promise<SourceJson> => {
+    const sourceJson = await downloadSourceJson();
     return {
-        name: sourceJson.name,
+        ...sourceJson,
         apps: [
             ...new Set(sourceJson.apps).add(
                 `${app.sourceUrl}/${app.appInfoName}`
@@ -474,13 +451,8 @@ const failBecauseOfMissingProperty = () => {
     );
 };
 
-const getUpdatedAppInfo = async (
-    app: App,
-    options: Options
-): Promise<AppInfo> => {
-    const oldAppInfo = options.doCreateSource
-        ? {}
-        : await downloadExistingAppInfo(app);
+const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
+    const oldAppInfo = await downloadExistingAppInfo(app);
 
     assertAppVersionIsValid(oldAppInfo.latestVersion, app);
 
@@ -567,8 +539,8 @@ const main = async () => {
 
         await client.initialise(options);
 
-        const sourceJson = await getUpdatedSourceJson(app, options);
-        const appInfo = await getUpdatedAppInfo(app, options);
+        const sourceJson = await getUpdatedSourceJson(app);
+        const appInfo = await getUpdatedAppInfo(app);
 
         await uploadChangelog(app);
         await uploadIcon(app);

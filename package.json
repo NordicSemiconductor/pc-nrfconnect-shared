@@ -1,6 +1,6 @@
 {
     "name": "@nordicsemiconductor/pc-nrfconnect-shared",
-    "version": "198.0.0",
+    "version": "205.0.0",
     "description": "Shared commodities for developing pc-nrfconnect-* packages",
     "repository": {
         "type": "git",
@@ -114,7 +114,7 @@
         "semver": "7.3.8",
         "serialport": "^12.0.0",
         "shasum": "1.0.2",
-        "systeminformation": "5.17.12",
+        "systeminformation": "^5.25.11",
         "tailwindcss": "3.3.2",
         "tree-kill-promise": "^3.0.14",
         "ts-node": "10.9.1",
@@ -124,6 +124,9 @@
         "winston": "3.8.2",
         "zod": "^3.22.2",
         "zod-validation-error": "^1.5.0"
+    },
+    "devDependencies": {
+        "@commander-js/extra-typings": "^10.0.3"
     },
     "typings": "./typings/generated/src/index.d.ts",
     "eslintConfig": {

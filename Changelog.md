@@ -7,21 +7,83 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 198.0.0 - UNRELEASED
+## 205.0.0 - Unreleased
 
 ### Added
 
--   Support for publishing apps to Artifactory
+-   Add title to the `ExternalLink` component.
+
+### Removed
+
+-   Unused mocks for `pc-nrfjprog-js`, `nrf-device-setup`, `usb` packages.
+
+## 204.0.0 - 2025-03-27
+
+### Added
+
+-   `nrf-probe` verison check for nrfutil device.
+
+### Removed
+
+-   `nrfjprog` verison check for nrfutil device.
+
+### Changed
+
+-   Text in the Application card of the About tab can now be highlightede and
+    copied.
+-   J-Link download URL for `JLink_MacOSX_V794i_universal.pkg` to
+    `JLink_MacOSX_V818_universal.pkg`
+
+## 203.0.0 - 2025-03-05
+
+Overrides v202 as it was released a prerelease.
+
+### Added
+
+-   `NoticeBox` component from the Quick Start app.
+
+### Changed
+
+-   Upgraded systeminformation, which will get rid of some warnings concerning
+    `util._extend` in test runs.
+
+## 201.0.0 - 2025-02-21
+
+### Changed
+
+-   `Group` heading is changed to `React.ReactNode` instead of `string`.
+
+## 200.0.0 - 2025-02-20
+
+### Fixed
+
+-   Wrong URL when publishing to Artifactory.
+
+## 199.0.0 - 2025-02-20
+
+### Fixed
+
+-   `nordic-publish.ts` deleted the description of a source.
+
+## 198.0.0 - 2025-02-12
+
+### Added
+
+-   Support for publishing apps to Artifactory.
 
 ### Fixed
 
 -   Product links for nRF54L15 DK, nRF54H20 DK, nRF9131 EK, nRF9151 DK, nRF9161
-    DK, and Nordic Thingy:91 X
+    DK, and Nordic Thingy:91 X.
 
 ### Steps to upgrade when using this package
 
--   Where the nordic-publish script is called (usually in the azure release
-    pipeline), add the parameter `--destination ftp`.
+-   When publishing the app via FTP (usually in the azure release pipeline), add
+    the parameter `--destination ftp` when calling the nordic-publish script.
+-   Copy the files `build.yml`, `release.yml`, and `release-latest.yml` from
+    https://github.com/NordicSemiconductor/pc-nrfconnect-boilerplate/tree/main/.github/workflows
+    to `.github/workflows`. If appropriate for an app, customise the list of
+    sources to deploy to in `release.yml`.
 
 ## 197.0.0 - 2025-02-05
 

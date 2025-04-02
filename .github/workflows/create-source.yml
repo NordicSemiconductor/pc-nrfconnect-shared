@@ -1,0 +1,47 @@
+name: Create source
+
+on:
+    workflow_dispatch:
+        inputs:
+            id:
+                description: ID (e.g. release-test)
+                required: true
+                type: string
+            name:
+                description: Name (e.g. Release Test)
+                required: true
+                type: string
+            access-level:
+                description: Access level (e.g. internal)
+                required: true
+                type: choice
+                options:
+                    - internal
+                    - internal-confidential
+                    - external
+                    - external-confidential
+            description:
+                description:
+                    Longer description (e.g. Versions we intend to release next)
+                required: true
+                type: string
+
+jobs:
+    create-source:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: npm
+            - run: npm ci
+            - env:
+                  ARTIFACTORY_TOKEN:
+                      ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND }}
+              run: |
+                  ./node_modules/.bin/ts-node scripts/create-source.ts \
+                    --id '${{ inputs.id }}' \
+                    --access-level '${{ inputs.access-level  }}' \
+                    --name '${{ inputs.name }}' \
+                    --description '${{ inputs.description }}'
