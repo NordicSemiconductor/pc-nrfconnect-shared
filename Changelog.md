@@ -17,6 +17,10 @@ every new version is a new major version.
 
 -   Unused mocks for `pc-nrfjprog-js`, `nrf-device-setup`, `usb` packages.
 
+### Fixed
+
+-   Missing check for target in `isMcuBootProgrammingOptions`
+
 ## 204.0.0 - 2025-03-27
 
 ### Added
