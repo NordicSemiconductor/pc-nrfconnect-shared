@@ -13,6 +13,10 @@ every new version is a new major version.
 
 -   Add title to the `ExternalLink` component.
 
+### Removed
+
+-   Unused mocks for `pc-nrfjprog-js`, `nrf-device-setup`, `usb` packages.
+
 ## 204.0.0 - 2025-03-27
 
 ### Added
