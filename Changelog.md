@@ -12,6 +12,7 @@ every new version is a new major version.
 ### Added
 
 -   Add title to the `ExternalLink` component.
+-   `generateSystemReport` now includes relevant app information.
 
 ### Removed
 

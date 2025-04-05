@@ -15,6 +15,7 @@ import { describeVersion, findDependency } from '../../nrfutil/moduleVersion';
 import { deviceInfo as getDeviceInfo } from '../Device/deviceInfo/deviceInfo';
 import { Device } from '../Device/deviceSlice';
 import logger from '../logging';
+import appDetails from './appDetails';
 import { getAppDataDir } from './appDirs';
 import { openFile } from './open';
 
@@ -117,6 +118,17 @@ const currentDeviceReport = (device?: Device, currentSerialNumber?: string) => {
     ];
 };
 
+const appInfoReport = () =>
+    appDetails()
+        .then(app => [
+            `- App: ${app.displayName}`,
+            `- Version: ${app.currentVersion}`,
+            `- Source: ${app.source}`,
+            `- Core version: ${app.coreVersion}`,
+            `- Engine version: ${app.engineVersion}`,
+        ])
+        .catch(() => []);
+
 export const generateSystemReport = async (
     timestamp: string,
     allDevices?: Device[],
@@ -126,6 +138,7 @@ export const generateSystemReport = async (
     [
         `# nRFConnect System Report - ${timestamp}`,
         '',
+        ...(await appInfoReport()),
         ...(await generalInfoReport()),
         ...allDevicesReport(allDevices),
         ...currentDeviceReport(currentDevice, currentSerialNumber),
