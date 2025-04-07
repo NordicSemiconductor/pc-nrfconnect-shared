@@ -7,7 +7,7 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 205.0.0 - Unreleased
+## 205.0.0 - 2025-04-07
 
 ### Added
 
@@ -16,6 +16,10 @@ every new version is a new major version.
 ### Removed
 
 -   Unused mocks for `pc-nrfjprog-js`, `nrf-device-setup`, `usb` packages.
+
+### Changed
+
+-   Use simpler Artifactory URLs for app metadata.
 
 ### Fixed
 

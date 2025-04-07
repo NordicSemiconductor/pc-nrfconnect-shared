@@ -164,7 +164,6 @@ class ArtifactoryClient extends Client {
     token = process.env.ARTIFACTORY_TOKEN;
 
     sourceUrl: string;
-    uploadUrl: string;
 
     constructor(private readonly options: Options) {
         super();
@@ -175,11 +174,7 @@ class ArtifactoryClient extends Client {
             );
         }
 
-        this.uploadUrl = `https://files.nordicsemi.com/artifactory/swtools/${this.getAccessLevel()}/ncd/apps/${
-            options.source
-        }`;
-
-        this.sourceUrl = `https://files.nordicsemi.com/ui/api/v1/download?isNativeBrowsing=false&repoKey=swtools&path=${this.getAccessLevel()}/ncd/apps/${
+        this.sourceUrl = `https://files.nordicsemi.com/artifactory/swtools/${this.getAccessLevel()}/ncd/apps/${
             options.source
         }`;
     }
@@ -206,7 +201,7 @@ class ArtifactoryClient extends Client {
     };
 
     upload = async (content: Buffer, remoteFilename: string) => {
-        const url = `${this.uploadUrl}/${remoteFilename}`;
+        const url = `${this.sourceUrl}/${remoteFilename}`;
         const res = await fetch(url, {
             method: 'PUT',
             body: content,
