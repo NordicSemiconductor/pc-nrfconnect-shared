@@ -83,6 +83,10 @@ export const prepareDevice =
     ): AppThunk<RootState, Promise<void>> =>
     async dispatch => {
         const onSuccessWrapper = (d: Device) => {
+            logger.info(
+                `Connected to device with the serial number ${device.serialNumber} ` +
+                    `and family: ${device.devkit?.deviceFamily || 'Unknown'} `
+            );
             onSuccess(d);
             dispatch(closeDeviceSetupDialog());
         };
@@ -99,10 +103,6 @@ export const prepareDevice =
             .flat();
 
         if (possibleFirmware.length === 0) {
-            logger.info(
-                `Connected to device with the serial number ${device.serialNumber} ` +
-                    `and family: ${device.devkit?.deviceFamily || 'Unknown'} `
-            );
             if (deviceSetupConfig.allowCustomDevice) {
                 logger.info(
                     'Note: no pre-compiled firmware is available for the selected device. ' +
@@ -273,9 +273,6 @@ export const setupDevice =
                         getState().device.selectedDevice?.serialNumber ===
                         d.serialNumber
                     ) {
-                        logger.info(
-                            `Device set up with the serial number ${d.serialNumber}`
-                        );
                         onDeviceIsReady(d);
                     }
                 },
