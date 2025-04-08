@@ -84,7 +84,7 @@ export const prepareDevice =
     async dispatch => {
         const onSuccessWrapper = (d: Device) => {
             logger.info(
-                `Connected to device with the serial number ${device.serialNumber} ` +
+                `Connected to the device with the serial number ${device.serialNumber} ` +
                     `and family: ${device.devkit?.deviceFamily || 'Unknown'} `
             );
             onSuccess(d);
