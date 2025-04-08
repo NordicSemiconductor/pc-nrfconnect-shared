@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 206.0.0 - 2025-04-08
+
+### Fixed
+
+-   Rolled back the use of simpler Artifactory URLs from v205, because older
+    versions of the launcher need the URLs using the download API.
+
 ## 205.0.0 - 2025-04-07
 
 ### Added
