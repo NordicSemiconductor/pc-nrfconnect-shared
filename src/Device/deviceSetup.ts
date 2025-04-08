@@ -273,6 +273,9 @@ export const setupDevice =
                         getState().device.selectedDevice?.serialNumber ===
                         d.serialNumber
                     ) {
+                        logger.info(
+                            `Device set up with the serial number ${d.serialNumber}`
+                        );
                         onDeviceIsReady(d);
                     }
                 },

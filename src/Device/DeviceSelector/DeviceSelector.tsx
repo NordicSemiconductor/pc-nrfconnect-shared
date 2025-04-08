@@ -184,7 +184,12 @@ export default ({
             startWatchingDevices(
                 deviceListing,
                 onDeviceConnected,
-                onDeviceDisconnected,
+                device => {
+                    logger.info(
+                        `Device connected with the serial number ${device.serialNumber}`
+                    );
+                    onDeviceDisconnected(device);
+                },
                 onDeviceDeselected,
                 doSelectDevice
             )

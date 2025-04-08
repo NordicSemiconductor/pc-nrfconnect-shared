@@ -226,6 +226,9 @@ export const startWatchingDevices =
                                     d.serialNumber === device.serialNumber)
                         )
                     ) {
+                        logger.info(
+                            `Device connected with the serial number ${device.serialNumber}`
+                        );
                         onDeviceConnected(device);
                     }
 

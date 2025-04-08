@@ -7,6 +7,18 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 207.0.0 - 2025-04-08
+
+### Added
+
+-   Logging `onDeviceDisconnected`, `onDeviceConnected` and `onDeviceIsReady`
+    events.
+
+### Steps to upgrade when using this package
+
+-   Remove logging of `onDeviceDisconnected`, `onDeviceConnected` and
+    `onDeviceIsReady` events.
+
 ## 206.0.0 - 2025-04-08
 
 ### Fixed
