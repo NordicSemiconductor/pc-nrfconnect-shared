@@ -5,9 +5,8 @@
  */
 
 import React from 'react';
-import { Button, ButtonGroup } from 'react-bootstrap';
 
-import './state-selector.scss';
+import classNames from '../utils/classNames';
 
 interface ComplexItem {
     key: string;
@@ -26,6 +25,32 @@ const convertToComplex = (item: SelectItem): ComplexItem => {
 
     return item as ComplexItem;
 };
+
+const SwitchButton: React.FC<{
+    variant: string;
+    onClick: () => void;
+    disabled: boolean;
+    children: React.ReactNode;
+    size?: 'sm' | 'md';
+}> = ({ variant, onClick, disabled, children, size = 'md' }) => (
+    <button
+        type="button"
+        className={`${classNames(
+            'tw-preflight tw-relative tw-flex-auto tw-rounded-sm tw-text-sm',
+            size === 'sm' && 'tw-p-0',
+            size === 'md' && 'tw-p-1',
+            variant === 'set' &&
+                'tw-border-gray-700 tw-bg-white tw-text-gray-700',
+            variant === 'unset' &&
+                'tw-border-white tw-bg-gray-700 tw-text-white'
+        )}`}
+        onClick={onClick}
+        disabled={disabled}
+    >
+        {children}
+    </button>
+);
+
 export interface Props {
     items: SelectItem[];
     onSelect: (index: number) => void;
@@ -38,7 +63,7 @@ export default ({ items, onSelect, disabled = false, selectedItem }: Props) => {
         const complexItem = convertToComplex(item);
         const complexSelectedItem = convertToComplex(selectedItem);
         return (
-            <Button
+            <SwitchButton
                 key={complexItem.key}
                 variant={
                     complexSelectedItem.key === complexItem.key
@@ -48,17 +73,16 @@ export default ({ items, onSelect, disabled = false, selectedItem }: Props) => {
                 onClick={() => {
                     onSelect(index);
                 }}
-                active={complexSelectedItem.key === complexItem.key}
                 disabled={disabled}
             >
                 {complexItem.renderItem}
-            </Button>
+            </SwitchButton>
         );
     };
 
     return (
-        <ButtonGroup className="w-100 d-flex channel-selection flex-row">
+        <div className="w-100 d-flex flex-row justify-content-center tw-bg-gray-700 tw-p-1">
             {items.map((item, index) => selectionButton(item, index))}
-        </ButtonGroup>
+        </div>
     );
 };
