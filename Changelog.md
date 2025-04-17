@@ -7,6 +7,16 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 208.0.0 - Unreleased
+
+### Changed
+
+-   The functions `openFile`, `openFileLocation`, and `openUrl` are now async.
+
+### Steps to upgrade when using this package
+
+-   In `package.json` bump `engines.nrfconnect` to at least `>=5.2.0`.
+
 ## 207.0.0 - 2025-04-08
 
 ### Added

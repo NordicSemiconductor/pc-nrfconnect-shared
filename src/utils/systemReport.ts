@@ -151,7 +151,7 @@ export default async (
     try {
         fs.writeFileSync(filePath, report);
         logger.info(`System report: ${filePath}`);
-        openFile(filePath);
+        await openFile(filePath);
     } catch (error) {
         logger.logError('Failed to generate system report', error);
     }
