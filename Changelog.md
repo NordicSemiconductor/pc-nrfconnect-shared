@@ -7,7 +7,7 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 208.0.0 - Unreleased
+## 208.0.0 - 2025-04-17
 
 ### Changed
 
