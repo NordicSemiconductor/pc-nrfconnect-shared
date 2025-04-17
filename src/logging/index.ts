@@ -47,7 +47,7 @@ interface SharedLogger extends Logger {
     initialise: () => void;
     getAndClearEntries: () => LogEntry[];
     openLogFile: () => void;
-    openLogFileLocation: () => void;
+    openLogFileLocation: () => Promise<void>;
     logError: (message: string, error: unknown) => void;
 }
 
@@ -86,17 +86,17 @@ logger.initialise = () => {
 
 logger.getAndClearEntries = () => logBuffer.clear();
 
-logger.openLogFile = () => {
+logger.openLogFile = async () => {
     try {
-        openFile(logFilePath());
+        await openFile(logFilePath());
     } catch (error) {
         logger.logError('Unable to open the log file', error);
     }
 };
 
-logger.openLogFileLocation = () => {
+logger.openLogFileLocation = async () => {
     try {
-        openFileLocation(logFilePath());
+        await openFileLocation(logFilePath());
     } catch (error) {
         logger.logError('Unable to open the log file location', error);
     }
