@@ -7,7 +7,7 @@
 import { forRenderer as forRendererAppDetails } from '../ipc/appDetails';
 import { forRenderer as forRendererApps } from '../ipc/apps';
 import { forRenderer as forRendererLauncherConfig } from '../ipc/launcherConfig';
-import { forRenderer as forRendererOpenWindow } from '../ipc/openWindow';
+import { forRenderer as forRendererOpen } from '../ipc/open';
 import { forRenderer as forRendererPreventSleep } from '../ipc/preventSleep';
 import { forRenderer as forRendererSafeStorage } from '../ipc/safeStorage';
 import {
@@ -23,7 +23,7 @@ export {
 export const appDetails = { forRenderer: forRendererAppDetails };
 export const apps = { forRenderer: forRendererApps };
 export const launcherConfig = { forRenderer: forRendererLauncherConfig };
-export const openWindow = { forRenderer: forRendererOpenWindow };
+export const open = { forRenderer: forRendererOpen };
 export const preventSleep = { forRenderer: forRendererPreventSleep };
 export const safeStorage = {
     forRenderer: forRendererSafeStorage,
@@ -51,8 +51,8 @@ export {
 } from '../ipc/schema/packageJson';
 
 export { type OverwriteOptions } from '../ipc/serialPort';
-export type { OpenAppOptions } from '../ipc/openWindow';
+export type { OpenAppOptions } from '../ipc/open';
 export {
     isOpenAppOptionsDevicePort,
     isOpenAppOptionsDeviceSN,
-} from '../ipc/openWindow';
+} from '../ipc/open';
