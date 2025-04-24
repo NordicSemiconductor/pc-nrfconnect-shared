@@ -19,7 +19,6 @@ import {
     NrfutilDevice,
     ResetKind,
 } from './common';
-import { DeviceBuffer } from './firmwareRead';
 import { DeviceCoreInfo } from './getCoreInfo';
 import { FWInfo } from './getFwInfo';
 import { GetProtectionStatusResult } from './getProtectionStatus';
@@ -155,29 +154,6 @@ export class Batch {
                 } as BatchOperationWrapperUnknown);
             })
         );
-
-        return this;
-    }
-
-    public firmwareRead(core: DeviceCore, callbacks?: Callbacks<Buffer>) {
-        this.enqueueBatchOperationObject('fw-read', core, {
-            ...callbacks,
-            onTaskEnd: (taskEnd: TaskEnd<DeviceBuffer>) => {
-                if (taskEnd.result === 'success' && taskEnd.data) {
-                    const data = Buffer.from(taskEnd.data.buffer, 'base64');
-                    callbacks?.onTaskEnd?.({
-                        ...taskEnd,
-                        task: {
-                            ...taskEnd.task,
-                            data,
-                        },
-                        data,
-                    });
-                } else {
-                    callbacks?.onException?.(new Error('Read failed'));
-                }
-            },
-        } as CallbacksUnknown);
 
         return this;
     }
