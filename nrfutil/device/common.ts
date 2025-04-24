@@ -73,7 +73,12 @@ export type VersionType =
     | 'NRFDL_VERSION_TYPE_INCREMENTAL'
     | 'NRFDL_VERSION_TYPE_STRING';
 
-export type DeviceCore = 'Application' | 'Modem' | 'Network';
+export type DeviceCore =
+    | 'Application'
+    | 'Modem'
+    | 'Network'
+    | 'Secure'
+    | 'FLPR';
 
 export interface DeviceTraits {
     usb?: boolean;
