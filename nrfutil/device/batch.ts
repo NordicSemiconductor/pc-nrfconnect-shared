@@ -44,7 +44,7 @@ export class Batch {
 
     private enqueueBatchOperationObject(
         command: string,
-        core?: DeviceCore,
+        core: DeviceCore,
         callbacks?: Callbacks<unknown>,
         args: string[] = []
     ) {
@@ -159,6 +159,7 @@ export class Batch {
     }
 
     public xRead(
+        core: DeviceCore,
         address: number,
         bytes: number,
         width?: 8 | 15 | 32,
@@ -183,7 +184,7 @@ export class Batch {
 
         this.enqueueBatchOperationObject(
             'x-read',
-            undefined,
+            core,
             {
                 ...callbacks,
                 onTaskEnd: (taskEnd: TaskEnd<MemoryReadRaw>) => {

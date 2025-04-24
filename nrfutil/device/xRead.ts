@@ -6,7 +6,11 @@
 
 /* eslint-disable no-bitwise */
 import { Progress } from '../sandboxTypes';
-import { deviceSingleTaskEndOperation, NrfutilDevice } from './common';
+import {
+    DeviceCore,
+    deviceSingleTaskEndOperation,
+    NrfutilDevice,
+} from './common';
 
 export interface MemoryData {
     startAddress: string;
@@ -88,6 +92,7 @@ const xRead = async (
     device: NrfutilDevice,
     address: number,
     bytes: number,
+    core?: DeviceCore,
     width?: 8 | 15 | 32, // defaults to 32
     direct?: boolean,
     onProgress?: (progress: Progress) => void,
@@ -107,6 +112,11 @@ const xRead = async (
     if (width) {
         args.push('--width');
         args.push(width.toString());
+    }
+
+    if (core) {
+        args.push('--core');
+        args.push(core);
     }
 
     const result = await deviceSingleTaskEndOperation<MemoryReadRaw>(
