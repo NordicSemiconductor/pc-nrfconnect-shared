@@ -28,6 +28,7 @@ import {
     ProgrammingOptions,
     programmingOptionsToArgs,
 } from './program';
+import { MemoryReadRaw, ReadResult, toIntelHex } from './xRead';
 
 type BatchOperationWrapperUnknown = BatchOperationWrapper<unknown>;
 type CallbacksUnknown = Callbacks<unknown>;
@@ -44,7 +45,7 @@ export class Batch {
 
     private enqueueBatchOperationObject(
         command: string,
-        core: DeviceCore,
+        core?: DeviceCore,
         callbacks?: Callbacks<unknown>,
         args: string[] = []
     ) {
@@ -55,7 +56,9 @@ export class Batch {
                 await box.singleInfoOperationOptionalData<object>(
                     command,
                     undefined,
-                    ['--generate', '--core', core].concat(args)
+                    ['--generate', ...(core ? ['--core', core] : [])].concat(
+                        args
+                    )
                 );
 
             return {
@@ -175,6 +178,57 @@ export class Batch {
                 }
             },
         } as CallbacksUnknown);
+
+        return this;
+    }
+
+    public xRead(
+        address: number,
+        bytes: number,
+        width?: 8 | 15 | 32,
+        direct?: boolean,
+        callbacks?: Callbacks<ReadResult>
+    ) {
+        const args: string[] = [
+            '--address',
+            address.toString(),
+            '--bytes',
+            bytes.toString(),
+        ];
+
+        if (direct) {
+            args.push('--direct');
+        }
+
+        if (width) {
+            args.push('--width');
+            args.push(width.toString());
+        }
+
+        this.enqueueBatchOperationObject(
+            'x-read',
+            undefined,
+            {
+                ...callbacks,
+                onTaskEnd: (taskEnd: TaskEnd<MemoryReadRaw>) => {
+                    if (taskEnd.result === 'success' && taskEnd.data) {
+                        const data = toIntelHex(taskEnd.data.memoryData);
+
+                        callbacks?.onTaskEnd?.({
+                            ...taskEnd,
+                            task: {
+                                ...taskEnd.task,
+                                data,
+                            },
+                            data,
+                        });
+                    } else {
+                        callbacks?.onException?.(new Error('Read failed'));
+                    }
+                },
+            } as CallbacksUnknown,
+            args
+        );
 
         return this;
     }

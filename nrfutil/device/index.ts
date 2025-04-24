@@ -14,6 +14,7 @@ export type {
     NrfutilDevice,
 } from './common';
 
+export type { ReadResult } from './xRead';
 export type { DeviceInfo } from './deviceInfo';
 export type { DeviceCoreInfo } from './getCoreInfo';
 export type { ImageType } from './getFwInfo';
