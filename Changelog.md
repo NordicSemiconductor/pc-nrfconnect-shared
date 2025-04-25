@@ -7,6 +7,14 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 209.0.0 - Unreleased
+
+### Fixed
+
+-   `prepareDevice` is not fully responsable to close the device setup onFail.
+    This solves issue on apps such as RSSI and DTM that called prepareDevice
+    directrly and did not handle to close on fail.
+
 ## 208.0.0 - 2025-04-17
 
 ### Changed

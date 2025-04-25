@@ -91,6 +91,11 @@ export const prepareDevice =
             dispatch(closeDeviceSetupDialog());
         };
 
+        const onFailWrapper = (reason?: unknown) => {
+            onFail(reason);
+            dispatch(closeDeviceSetupDialog());
+        };
+
         const validDeviceSetups = deviceSetupConfig.deviceSetups.filter(
             deviceSetup =>
                 deviceSetup.supportsProgrammingMode(device, deviceInfo)
@@ -114,7 +119,7 @@ export const prepareDevice =
                 logger.info(
                     'Note: no pre-compiled firmware is available for the selected device. '
                 );
-                onFail('No device setup found');
+                onFailWrapper('No device setup found');
             }
 
             return;
@@ -134,7 +139,7 @@ export const prepareDevice =
                         return;
                     }
                 } catch (error) {
-                    onFail(error);
+                    onFailWrapper(error);
                     return;
                 }
             }
@@ -150,7 +155,7 @@ export const prepareDevice =
             const selectedDeviceSetup = possibleFirmware[choice];
 
             if (!selectedDeviceSetup) {
-                onFail('No firmware was selected'); // Should never happen
+                onFailWrapper('No firmware was selected'); // Should never happen
             } else {
                 const task = dispatch(
                     selectedDeviceSetup.programDevice(
@@ -164,7 +169,7 @@ export const prepareDevice =
                     )
                 )
                     .then(onSuccessWrapper)
-                    .catch(onFail);
+                    .catch(onFailWrapper);
 
                 dispatch(
                     preventAppCloseUntilComplete(
@@ -194,7 +199,7 @@ export const prepareDevice =
                         return;
                     }
                 } catch (error) {
-                    onFail(error);
+                    onFailWrapper(error);
                     return;
                 }
 
@@ -277,7 +282,6 @@ export const setupDevice =
                     }
                 },
                 error => {
-                    dispatch(closeDeviceSetupDialog());
                     logger.error(
                         `Error while setting up device with the serial number ${device.serialNumber}`
                     );
