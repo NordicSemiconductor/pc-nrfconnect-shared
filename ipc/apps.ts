@@ -5,7 +5,12 @@
  */
 
 import { handle, invoke } from './infrastructure/rendererToMain';
-import type { AppVersions, NrfutilModules, UrlString } from './MetaFiles';
+import type {
+    AppVersions,
+    NrfutilModules,
+    NrfutilModuleVersion,
+    UrlString,
+} from './MetaFiles';
 import { LOCAL, Source, SourceName } from './sources';
 
 export interface AppSpec {
@@ -34,6 +39,7 @@ interface Installed {
     repositoryUrl?: UrlString;
     html?: string;
     nrfutil?: NrfutilModules;
+    nrfutilCore?: NrfutilModuleVersion;
     installed: {
         publishTimestamp?: string;
         path: string;
