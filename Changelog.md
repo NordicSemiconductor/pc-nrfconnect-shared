@@ -7,13 +7,24 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 212.0.0 - 2025-06-05
+
+### Added
+
+-   Specify what core version of nrfutil an app depends on.
+
+### Steps to upgrade when using this package
+
+-   In apps in `package.json` set the field `nrfConnectForDesktop.nrfutilCore`
+    to the core version of nrfutil that the nrfutil commands will use.
+
 ## 211.0.0 - 2025-05-29
 
 ### Fixed
 
--   It was observed that on mac we get multiple arrive event and the only chnage
-    is the number if serial ports. Now the selected device in redux will also
-    update to reflect these chnages
+-   It was observed on macOS that we get multiple arrive events and the only
+    change is the number of serial ports. Now the selected device in redux is
+    also updated to reflect these changes.
 
 ## 210.0.0 - 2025-05-15
 
