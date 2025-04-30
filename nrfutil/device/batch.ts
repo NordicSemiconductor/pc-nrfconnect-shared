@@ -19,7 +19,6 @@ import {
     NrfutilDevice,
     ResetKind,
 } from './common';
-import { DeviceBuffer } from './firmwareRead';
 import { DeviceCoreInfo } from './getCoreInfo';
 import { FWInfo } from './getFwInfo';
 import { GetProtectionStatusResult } from './getProtectionStatus';
@@ -28,6 +27,7 @@ import {
     ProgrammingOptions,
     programmingOptionsToArgs,
 } from './program';
+import { MemoryReadRaw, ReadResult, toIntelHex } from './xRead';
 
 type BatchOperationWrapperUnknown = BatchOperationWrapper<unknown>;
 type CallbacksUnknown = Callbacks<unknown>;
@@ -55,7 +55,9 @@ export class Batch {
                 await box.singleInfoOperationOptionalData<object>(
                     command,
                     undefined,
-                    ['--generate', '--core', core].concat(args)
+                    ['--generate', ...(core ? ['--core', core] : [])].concat(
+                        args
+                    )
                 );
 
             return {
@@ -156,25 +158,54 @@ export class Batch {
         return this;
     }
 
-    public firmwareRead(core: DeviceCore, callbacks?: Callbacks<Buffer>) {
-        this.enqueueBatchOperationObject('fw-read', core, {
-            ...callbacks,
-            onTaskEnd: (taskEnd: TaskEnd<DeviceBuffer>) => {
-                if (taskEnd.result === 'success' && taskEnd.data) {
-                    const data = Buffer.from(taskEnd.data.buffer, 'base64');
-                    callbacks?.onTaskEnd?.({
-                        ...taskEnd,
-                        task: {
-                            ...taskEnd.task,
+    public xRead(
+        core: DeviceCore,
+        address: number,
+        bytes: number,
+        width?: 8 | 15 | 32,
+        direct?: boolean,
+        callbacks?: Callbacks<ReadResult>
+    ) {
+        const args: string[] = [
+            '--address',
+            address.toString(),
+            '--bytes',
+            bytes.toString(),
+        ];
+
+        if (direct) {
+            args.push('--direct');
+        }
+
+        if (width) {
+            args.push('--width');
+            args.push(width.toString());
+        }
+
+        this.enqueueBatchOperationObject(
+            'x-read',
+            core,
+            {
+                ...callbacks,
+                onTaskEnd: (taskEnd: TaskEnd<MemoryReadRaw>) => {
+                    if (taskEnd.result === 'success' && taskEnd.data) {
+                        const data = toIntelHex(taskEnd.data.memoryData);
+
+                        callbacks?.onTaskEnd?.({
+                            ...taskEnd,
+                            task: {
+                                ...taskEnd.task,
+                                data,
+                            },
                             data,
-                        },
-                        data,
-                    });
-                } else {
-                    callbacks?.onException?.(new Error('Read failed'));
-                }
-            },
-        } as CallbacksUnknown);
+                        });
+                    } else {
+                        callbacks?.onException?.(new Error('Read failed'));
+                    }
+                },
+            } as CallbacksUnknown,
+            args
+        );
 
         return this;
     }

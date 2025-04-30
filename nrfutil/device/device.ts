@@ -10,7 +10,6 @@ import { Batch } from './batch';
 import boardController from './boardController';
 import deviceInfo from './deviceInfo';
 import erase from './erase';
-import firmwareRead from './firmwareRead';
 import getBoardControllerConfig from './getBoardControllerConfig';
 import getBoardControllerVersion from './getBoardControllerVersion';
 import getCoreInfo from './getCoreInfo';
@@ -57,7 +56,6 @@ export default {
     setMcuState,
     getCoreInfo,
     list,
-    firmwareRead,
     onLogging,
     setLogLevel,
     setVerboseLogging,

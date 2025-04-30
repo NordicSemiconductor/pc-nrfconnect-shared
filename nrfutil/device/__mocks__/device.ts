@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import xRead from '../xRead';
+
 const program = jest.fn();
 const programBuffer = jest.fn();
 const deviceInfo = jest.fn(() => Promise.resolve({}));
@@ -38,6 +40,7 @@ export default {
     getCoreInfo,
     list,
     firmwareRead,
+    xRead,
     onLogging,
     setLogLevel,
     setVerboseLogging,
