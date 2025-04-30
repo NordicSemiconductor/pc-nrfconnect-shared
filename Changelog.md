@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 209.0.0 - 2025-04-30
+
+### Changed
+
+-   Nrfutil device use of `fw-read` is replaced with `x-read`.
+
 ## 208.0.0 - 2025-04-17
 
 ### Changed
