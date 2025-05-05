@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## Unreleased
+
+### Steps to upgrade when using this package
+
+-   Minimum version of nrfutil-device is 2.7.16.
+
 ## 209.0.0 - 2025-04-30
 
 ### Changed
