@@ -466,6 +466,7 @@ const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
     } = app.packageJson;
 
     const nrfutilModules = nrfConnectForDesktop?.nrfutil;
+    const nrfutilCore = nrfConnectForDesktop?.nrfutilCore;
 
     return {
         name,
@@ -482,6 +483,7 @@ const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
                 publishTimestamp: new Date().toISOString(),
                 shasum: app.shasum,
                 nrfutilModules,
+                nrfutilCore,
             },
         },
     };

@@ -22,11 +22,12 @@ export type AppVersions = {
     [version: string]: AppVersion;
 };
 
-export type AppVersion = {
+type AppVersion = {
     shasum?: string;
     publishTimestamp?: string;
     tarballUrl: UrlString;
     nrfutilModules?: NrfutilModules;
+    nrfutilCore?: NrfutilModuleVersion;
 };
 
 export interface AppInfo {
@@ -57,6 +58,9 @@ const nrfutilModuleVersion = semver;
 export type NrfutilModuleName = z.infer<typeof nrfutilModuleName>;
 export type NrfutilModuleVersion = z.infer<typeof nrfutilModuleVersion>;
 
-export const nrfModules = z.record(nrfutilModuleName, z.tuple([semver]));
+export const nrfModules = z.record(
+    nrfutilModuleName,
+    z.tuple([nrfutilModuleVersion])
+);
 
 export type NrfutilModules = z.infer<typeof nrfModules>;
