@@ -175,23 +175,25 @@ export class NrfutilSandbox {
         throw new Error('Unexpected result');
     };
 
-    public isSandboxInstalled = async () => {
-        if (
-            fs.existsSync(
-                path.join(
-                    this.sandboxPath,
-                    'bin',
-                    `nrfutil-${this.module}${
-                        os.platform() === 'win32' ? '.exe' : ''
-                    }`
-                )
+    public isSandboxInstalled = () =>
+        this.executableExists() && this.commandReportsCorrectVersion();
+
+    private executableExists() {
+        return fs.existsSync(
+            path.join(
+                this.sandboxPath,
+                'bin',
+                `nrfutil-${this.module}${
+                    os.platform() === 'win32' ? '.exe' : ''
+                }`
             )
-        ) {
-            const moduleVersion = await this.getModuleVersion();
-            return moduleVersion.version === this.version;
-        }
-        return false;
-    };
+        );
+    }
+
+    private async commandReportsCorrectVersion() {
+        const moduleVersion = await this.getModuleVersion();
+        return moduleVersion.version === this.version;
+    }
 
     public prepareSandbox = async (
         onProgress?: (progress: Progress, task?: Task) => void
