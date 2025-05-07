@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { Progress } from '../sandboxTypes';
+import { type OnProgress } from '../sandboxTypes';
 import {
     DeviceCore,
     deviceSingleTaskEndOperationVoid,
@@ -16,7 +16,7 @@ export default async (
     device: NrfutilDevice,
     core?: DeviceCore,
     resetKind?: ResetKind,
-    onProgress?: (progress: Progress) => void,
+    onProgress?: OnProgress,
     controller?: AbortController
 ) => {
     const args: string[] = [];

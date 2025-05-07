@@ -14,15 +14,16 @@ import describeError from '../src/logging/describeError';
 import telemetry from '../src/telemetry/telemetry';
 import { isDevelopment } from '../src/utils/environment';
 import { getNrfutilLogger } from './nrfutilLogger';
-import {
+import type {
     BackgroundTask,
     LogLevel,
     LogMessage,
     NrfutilJson,
     NrfutilProgress,
+    OnProgress,
+    OnTaskBegin,
+    OnTaskEnd,
     Progress,
-    Task,
-    TaskBegin,
     TaskEnd,
 } from './sandboxTypes';
 import {
@@ -46,10 +47,10 @@ const parseJsonBuffers = <T>(data: Buffer): T[] | undefined => {
 const commonParser = <Result>(
     data: Buffer,
     callbacks: {
-        onProgress?: (progress: Progress, task?: Task) => void;
+        onProgress?: OnProgress;
         onInfo?: (info: Result) => void;
-        onTaskBegin?: (taskEnd: TaskBegin) => void;
-        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void;
+        onTaskBegin?: OnTaskBegin;
+        onTaskEnd?: OnTaskEnd<Result>;
         onLogging?: (logging: LogMessage, pid?: number) => void;
     },
     pid?: number
@@ -198,9 +199,7 @@ export class NrfutilSandbox {
         return moduleVersion.version === this.version;
     }
 
-    public prepareSandbox = async (
-        onProgress?: (progress: Progress, task?: Task) => void
-    ) => {
+    public prepareSandbox = async (onProgress?: OnProgress) => {
         try {
             // Clean up any residual sandbox from before if any
             if (this.env.NRFUTIL_HOME && fs.existsSync(this.env.NRFUTIL_HOME)) {
@@ -223,9 +222,7 @@ export class NrfutilSandbox {
         }
     };
 
-    private installNrfUtilCore = async (
-        onProgress?: (progress: Progress, task?: Task) => void
-    ) => {
+    private installNrfUtilCore = async (onProgress?: OnProgress) => {
         const currentCoreVersion = await this.getCoreVersion();
         const requestedCoreVersion =
             this.coreVersion ?? CORE_VERSION_FOR_LEGACY_APPS;
@@ -246,9 +243,7 @@ export class NrfutilSandbox {
         );
     };
 
-    public installNrfUtilCommand = (
-        onProgress?: (progress: Progress, task?: Task) => void
-    ) =>
+    public installNrfUtilCommand = (onProgress?: OnProgress) =>
         this.install(
             this.module,
             this.version,
@@ -282,9 +277,9 @@ export class NrfutilSandbox {
     public spawnNrfutilSubcommand = <Result>(
         command: string,
         args: string[],
-        onProgress?: (progress: Progress, task?: Task) => void,
-        onTaskBegin?: (taskBegin: TaskBegin) => void,
-        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
+        onProgress?: OnProgress,
+        onTaskBegin?: OnTaskBegin,
+        onTaskEnd?: OnTaskEnd<Result>,
         controller?: AbortController,
         editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) =>
@@ -325,9 +320,9 @@ export class NrfutilSandbox {
     private spawnNrfutil = async <Result>(
         command: string,
         args: string[],
-        onProgress?: (progress: Progress, task?: Task) => void,
-        onTaskBegin?: (taskBegin: TaskBegin) => void,
-        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
+        onProgress?: OnProgress,
+        onTaskBegin?: OnTaskBegin,
+        onTaskEnd?: OnTaskEnd<Result>,
         controller?: AbortController,
         editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) => {
@@ -490,9 +485,9 @@ export class NrfutilSandbox {
     public execNrfutilSubcommand = <Result>(
         command: string,
         args: string[],
-        onProgress?: (progress: Progress, task?: Task) => void,
-        onTaskBegin?: (taskBegin: TaskBegin) => void,
-        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
+        onProgress?: OnProgress,
+        onTaskBegin?: OnTaskBegin,
+        onTaskEnd?: OnTaskEnd<Result>,
         controller?: AbortController,
         editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) =>
@@ -509,9 +504,9 @@ export class NrfutilSandbox {
     private execNrfutilCommand = async <Result>(
         command: string,
         args: string[],
-        onProgress?: (progress: Progress, task?: Task) => void,
-        onTaskBegin?: (taskBegin: TaskBegin) => void,
-        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
+        onProgress?: OnProgress,
+        onTaskBegin?: OnTaskBegin,
+        onTaskEnd?: OnTaskEnd<Result>,
         controller?: AbortController,
         editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) => {
@@ -719,7 +714,7 @@ export class NrfutilSandbox {
 
     public singleTaskEndOperationWithData = async <T>(
         command: string,
-        onProgress?: (progress: Progress, task?: Task) => void,
+        onProgress?: OnProgress,
         controller?: AbortController,
         args: string[] = []
     ) => {
@@ -738,7 +733,7 @@ export class NrfutilSandbox {
 
     public singleTaskEndOperationOptionalData = async <T = void>(
         command: string,
-        onProgress?: (progress: Progress, task?: Task) => void,
+        onProgress?: OnProgress,
         controller?: AbortController,
         args: string[] = []
     ) => {
@@ -802,7 +797,7 @@ export default async (
     module: string,
     version?: string,
     coreVersion?: string,
-    onProgress?: (progress: Progress, task?: Task) => void
+    onProgress?: OnProgress
 ) => {
     const sandbox = new NrfutilSandbox(
         baseDir,

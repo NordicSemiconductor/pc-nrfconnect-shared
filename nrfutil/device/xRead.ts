@@ -5,7 +5,7 @@
  */
 
 /* eslint-disable no-bitwise */
-import { Progress } from '../sandboxTypes';
+import { type OnProgress } from '../sandboxTypes';
 import {
     DeviceCore,
     deviceSingleTaskEndOperation,
@@ -95,7 +95,7 @@ const xRead = async (
     core?: DeviceCore,
     width?: 8 | 15 | 32, // defaults to 32
     direct?: boolean,
-    onProgress?: (progress: Progress) => void,
+    onProgress?: OnProgress,
     controller?: AbortController
 ) => {
     const args: string[] = [

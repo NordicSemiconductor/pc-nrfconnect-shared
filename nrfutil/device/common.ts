@@ -5,7 +5,7 @@
  */
 
 import { getModule } from '../modules';
-import { Progress } from '../sandboxTypes';
+import { type OnProgress } from '../sandboxTypes';
 
 export const deviceTraitsToArgs = (traits: DeviceTraits) => {
     const args: string[] = [];
@@ -157,7 +157,7 @@ export interface SerialPort {
 export const deviceSingleTaskEndOperation = async <T = void>(
     device: NrfutilDevice,
     command: string,
-    onProgress?: (progress: Progress) => void,
+    onProgress?: OnProgress,
     controller?: AbortController,
     args: string[] = []
 ) => {
@@ -178,7 +178,7 @@ export const deviceSingleTaskEndOperation = async <T = void>(
 export const deviceSingleTaskEndOperationVoid = async (
     device: NrfutilDevice,
     command: string,
-    onProgress?: (progress: Progress) => void,
+    onProgress?: OnProgress,
     controller?: AbortController,
     args: string[] = []
 ) => {
