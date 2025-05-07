@@ -8,14 +8,14 @@ import { spawn } from 'child_process';
 import os from 'os';
 
 import describeError from '../../src/logging/describeError';
-import { getJlinkCompatibility } from '../jlinkVersion';
+import { getNrfutilLogger } from '../nrfutilLogger';
+import { getJlinkCompatibility } from '../version/jlinkVersion';
 import {
     type Dependency,
     describeVersion,
     findDependency,
     type ModuleVersion,
-} from '../moduleVersion';
-import { getNrfutilLogger } from '../nrfutilLogger';
+} from '../version/moduleVersion';
 
 const log = (
     description: string,

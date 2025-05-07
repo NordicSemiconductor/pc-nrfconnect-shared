@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { isLauncher, packageJsonApp } from '../src/utils/packageJson';
+import { isLauncher, packageJsonApp } from '../../src/utils/packageJson';
 import { type DiscriminatedVersion, versionToString } from './version';
 
 type FeatureClassification =
