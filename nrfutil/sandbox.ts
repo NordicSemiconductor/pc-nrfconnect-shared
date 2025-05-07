@@ -13,13 +13,16 @@ import treeKill from 'tree-kill';
 import describeError from '../src/logging/describeError';
 import telemetry from '../src/telemetry/telemetry';
 import { isDevelopment } from '../src/utils/environment';
-import { coreVersionsToInstall, versionToInstall } from './moduleVersion';
+import {
+    coreVersionsToInstall,
+    type ModuleVersion,
+    versionToInstall,
+} from './moduleVersion';
 import { getNrfutilLogger } from './nrfutilLogger';
 import {
     BackgroundTask,
     LogLevel,
     LogMessage,
-    ModuleVersion,
     NrfutilJson,
     NrfutilProgress,
     Progress,

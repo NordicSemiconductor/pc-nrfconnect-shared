@@ -9,9 +9,13 @@ import os from 'os';
 
 import describeError from '../../src/logging/describeError';
 import { getJlinkCompatibility } from '../jlinkVersion';
-import { describeVersion, findDependency } from '../moduleVersion';
+import {
+    type Dependency,
+    describeVersion,
+    findDependency,
+    type ModuleVersion,
+} from '../moduleVersion';
 import { getNrfutilLogger } from '../nrfutilLogger';
-import type { Dependency, ModuleVersion } from '../sandboxTypes';
 
 const log = (
     description: string,
