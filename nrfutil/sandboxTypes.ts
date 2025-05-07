@@ -4,20 +4,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import type { DiscriminatedVersion } from './version';
-
 export interface BackgroundTask<T> {
     onError: (error: Error, pid?: number) => void;
     onData: (data: T) => void;
 }
 
 export type LogLevel = 'off' | 'error' | 'warn' | 'info' | 'debug' | 'trace';
-
-export type FeatureClassification =
-    | 'nrf-internal-confidential'
-    | 'nrf-internal'
-    | 'nrf-external-confidential'
-    | 'nrf-external';
 
 export type Task<T = undefined | null> = {
     id: string;
@@ -127,39 +119,3 @@ export type LogMessage = {
     level: 'OFF' | 'ERROR' | 'WARN' | 'INFO' | 'DEBUG' | 'TRACE' | 'CRITICAL';
     message: string;
 };
-
-type Plugin = DiscriminatedVersion & {
-    dependencies: TopLevelDependency[];
-    name: string;
-};
-
-type DependencyWithoutVersion = {
-    name: string;
-    description?: string;
-    dependencies?: Dependency[];
-    expectedVersion?: DiscriminatedVersion;
-};
-type DependencyWithVersion = DiscriminatedVersion & DependencyWithoutVersion;
-
-export type Dependency = DependencyWithoutVersion | DependencyWithVersion;
-
-export type TopLevelDependency = Dependency & {
-    classification?: FeatureClassification;
-    plugins?: Plugin[];
-};
-
-export type ModuleVersion = {
-    build_timestamp: string;
-    classification: FeatureClassification;
-    commit_date: string;
-    commit_hash: string;
-    dependencies: TopLevelDependency[];
-    host: string;
-    name: string;
-    version: string;
-};
-
-export const hasVersion = (
-    dependency?: Dependency | DiscriminatedVersion
-): dependency is DependencyWithVersion | DiscriminatedVersion =>
-    dependency != null && 'version' in dependency && dependency.version != null;

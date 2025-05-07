@@ -11,7 +11,7 @@ import {
     hasExpectedVersionFormat,
     strippedVersionName,
 } from './jlinkVersion';
-import type { Dependency, ModuleVersion } from './sandboxTypes';
+import type { Dependency, ModuleVersion } from './moduleVersion';
 
 // Note: In this test the space at the end of 'JLink_V7.96 ' or '7.96 ' is
 // intentional because it is also reported like that by nrfutil.

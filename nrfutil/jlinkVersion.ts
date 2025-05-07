@@ -6,12 +6,12 @@
 
 import semver from 'semver';
 
-import { findDependency } from './moduleVersion';
 import {
     type Dependency,
+    findDependency,
     hasVersion,
     type ModuleVersion,
-} from './sandboxTypes';
+} from './moduleVersion';
 import {
     type DiscriminatedVersion,
     isStringVersion,
