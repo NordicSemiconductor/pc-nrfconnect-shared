@@ -9,6 +9,10 @@ every new version is a new major version.
 
 ## Unreleased
 
+### Fixed
+
+-   `Dropdown` active label now handles overflow.
+
 ### Steps to upgrade when using this package
 
 -   Minimum version of nrfutil-device is 2.7.16.
