@@ -40,31 +40,26 @@ const logModuleVersions = (module: string, moduleSandbox: NrfutilSandbox) => {
 const forwardLogging = (moduleSandbox: NrfutilSandbox) => {
     moduleSandbox.onLogging((evt, pid) => {
         const logger = getNrfutilLogger();
-        const formatMsg = (msg: string) =>
-            `${
-                pid && moduleSandbox?.logLevel === 'trace'
-                    ? `[PID:${pid}] `
-                    : ''
-            }${msg}`;
+        const msg = `${moduleSandbox.pidIfTraceLogging(pid)}${evt.message}`;
 
         switch (evt.level) {
             case 'TRACE':
-                logger?.verbose(formatMsg(evt.message));
+                logger?.verbose(msg);
                 break;
             case 'DEBUG':
-                logger?.debug(formatMsg(evt.message));
+                logger?.debug(msg);
                 break;
             case 'INFO':
-                logger?.info(formatMsg(evt.message));
+                logger?.info(msg);
                 break;
             case 'WARN':
-                logger?.warn(formatMsg(evt.message));
+                logger?.warn(msg);
                 break;
             case 'ERROR':
-                logger?.error(formatMsg(evt.message));
+                logger?.error(msg);
                 break;
             case 'CRITICAL':
-                logger?.error(formatMsg(evt.message));
+                logger?.error(msg);
                 break;
             case 'OFF':
             default:
