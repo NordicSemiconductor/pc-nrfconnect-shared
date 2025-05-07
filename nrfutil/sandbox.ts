@@ -87,14 +87,17 @@ const commonParser = <Result>(
     parsedData.forEach(processItem);
 };
 
+const CORE_VERSION_FOR_LEGACY_APPS = '8.0.0';
+
 export class NrfutilSandbox {
-    onLoggingHandlers: ((logging: LogMessage, pid?: number) => void)[] = [];
-    logLevel: LogLevel = isDevelopment ? 'error' : 'off';
+    private readonly onLoggingHandlers: ((
+        logging: LogMessage,
+        pid?: number
+    ) => void)[] = [];
+    private logLevel: LogLevel = isDevelopment ? 'error' : 'off';
 
-    sandboxPath;
-    env;
-
-    readonly CORE_VERSION_FOR_LEGACY_APPS = '8.0.0';
+    private readonly sandboxPath;
+    private readonly env;
 
     constructor(
         private readonly baseDir: string,
@@ -220,7 +223,7 @@ export class NrfutilSandbox {
     ) => {
         const currentCoreVersion = await this.getCoreVersion();
         const requestedCoreVersion =
-            this.coreVersion ?? this.CORE_VERSION_FOR_LEGACY_APPS;
+            this.coreVersion ?? CORE_VERSION_FOR_LEGACY_APPS;
         if (currentCoreVersion.version === requestedCoreVersion) {
             getNrfutilLogger()?.debug(
                 `Requested nrfutil core version ${requestedCoreVersion} is already installed.`
@@ -391,9 +394,7 @@ export class NrfutilSandbox {
 
             error.message = error.message.replaceAll('Error: ', '');
             telemetry.sendErrorReport(
-                `${
-                    pid && this.logLevel === 'trace' ? `[PID:${pid}] ` : ''
-                }${describeError(error)}`
+                `${this.pidIfTraceLogging(pid)}${describeError(error)}`
             );
             throw error;
         }
@@ -577,9 +578,7 @@ export class NrfutilSandbox {
 
             error.message = error.message.replaceAll('Error: ', '');
             telemetry.sendErrorReport(
-                `${
-                    pid && this.logLevel === 'trace' ? `[PID:${pid}] ` : ''
-                }${describeError(error)}`
+                `${this.pidIfTraceLogging(pid)}${describeError(error)}`
             );
             throw error;
         }
@@ -784,6 +783,9 @@ export class NrfutilSandbox {
                 1
             );
     };
+
+    public pidIfTraceLogging = (pid?: number) =>
+        pid != null && this.logLevel === 'trace' ? `[PID:${pid}] ` : '';
 
     public setLogLevel = (level: LogLevel) => {
         this.logLevel = level;
