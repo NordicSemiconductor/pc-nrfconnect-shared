@@ -88,31 +88,22 @@ const commonParser = <Result>(
 };
 
 export class NrfutilSandbox {
-    baseDir: string;
-    module: string;
-    version: string;
-    coreVersion: string | undefined; // Must only be undefined when the launcher creates a sandbox for a legacy app, which does not specify the required core version
     onLoggingHandlers: ((logging: LogMessage, pid?: number) => void)[] = [];
     logLevel: LogLevel = isDevelopment ? 'error' : 'off';
-    env: ReturnType<typeof this.prepareEnv>;
+    env;
 
     readonly CORE_VERSION_FOR_LEGACY_APPS = '8.0.0';
 
     constructor(
-        baseDir: string,
-        module: string,
-        version: string,
-        coreVersion?: string
+        private readonly baseDir: string,
+        private readonly module: string,
+        private readonly version: string,
+        private readonly coreVersion?: string // Must only be undefined when the launcher creates a sandbox for a legacy app, which does not specify the required core version
     ) {
-        this.baseDir = baseDir;
-        this.module = module;
-        this.version = version;
-        this.coreVersion = coreVersion;
-
         this.env = this.prepareEnv();
     }
 
-    private prepareEnv = () => {
+    private prepareEnv() {
         const env = { ...process.env };
         env.NRFUTIL_HOME = path.join(...this.nrfutilSandboxPathSegments());
         fs.mkdirSync(env.NRFUTIL_HOME, { recursive: true });
@@ -133,7 +124,7 @@ export class NrfutilSandbox {
         }
 
         return env;
-    };
+    }
 
     private nrfutilSandboxPathSegments = () => [
         this.baseDir,
