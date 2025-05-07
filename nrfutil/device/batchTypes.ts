@@ -4,27 +4,27 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { Progress, Task, TaskBegin, TaskEnd } from '../sandboxTypes';
-import { DeviceCore, ResetKind } from './common';
+import type { OnProgress, OnTaskBegin, OnTaskEnd } from '../sandboxTypes';
+import { type DeviceCore, type ResetKind } from './common';
 import {
     isJLinkProgrammingOptions,
     isMcuBootProgrammingOptions,
     isNordicDfuProgrammingOptions,
-    ProgrammingOptions,
+    type ProgrammingOptions,
 } from './program';
 
 export interface BatchOperationWrapper<T = void> {
     operation: object;
-    onProgress?: (progress: Progress, task?: Task) => void;
-    onTaskBegin?: TaskBeginCallback;
-    onTaskEnd?: TaskEndCallback<T>;
+    onProgress?: OnProgress;
+    onTaskBegin?: OnTaskBegin;
+    onTaskEnd?: OnTaskEnd<T>;
     onException?: (error: Error) => void;
 }
 
 export type Callbacks<T = void> = {
-    onTaskBegin?: TaskBeginCallback;
-    onTaskEnd?: TaskEndCallback<T>;
-    onProgress?: (progress: Progress, task?: Task) => void;
+    onTaskBegin?: OnTaskBegin;
+    onTaskEnd?: OnTaskEnd<T>;
+    onProgress?: OnProgress;
     onException?: (error: Error) => void;
 };
 
@@ -128,6 +128,3 @@ export type BatchOperation =
     | EraseOperation
     | GetCoreInfoOperation
     | GetFwInfoOperation;
-
-export type TaskEndCallback<T = void> = (end: TaskEnd<T>) => void;
-export type TaskBeginCallback = (begin: TaskBegin) => void;

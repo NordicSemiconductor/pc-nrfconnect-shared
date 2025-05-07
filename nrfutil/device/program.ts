@@ -9,7 +9,7 @@ import os from 'os';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
 
-import { Progress } from '../sandboxTypes';
+import { type OnProgress } from '../sandboxTypes';
 import {
     DeviceCore,
     deviceSingleTaskEndOperationVoid,
@@ -104,7 +104,7 @@ export const programmingOptionsToArgs = (options?: ProgrammingOptions) => {
 const program = (
     device: NrfutilDevice,
     firmwarePath: string,
-    onProgress?: (progress: Progress) => void,
+    onProgress?: OnProgress,
     core?: DeviceCore,
     programmingOptions?: ProgrammingOptions,
     controller?: AbortController
@@ -127,7 +127,7 @@ const programBuffer = async (
     device: NrfutilDevice,
     firmware: Buffer,
     type: FileExtensions,
-    onProgress?: (progress: Progress) => void,
+    onProgress?: OnProgress,
     core?: DeviceCore,
     programmingOptions?: ProgrammingOptions,
     controller?: AbortController
@@ -162,7 +162,7 @@ const programBuffer = async (
 export default async (
     device: NrfutilDevice,
     firmware: FirmwareType,
-    onProgress?: (progress: Progress) => void,
+    onProgress?: OnProgress,
     core?: DeviceCore,
     programmingOptions?: ProgrammingOptions,
     controller?: AbortController

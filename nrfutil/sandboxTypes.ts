@@ -119,3 +119,7 @@ export type LogMessage = {
     level: 'OFF' | 'ERROR' | 'WARN' | 'INFO' | 'DEBUG' | 'TRACE' | 'CRITICAL';
     message: string;
 };
+
+export type OnProgress = (progress: Progress, task?: Task) => void;
+export type OnTaskBegin = (taskBegin: TaskBegin) => void;
+export type OnTaskEnd<T> = (taskEnd: TaskEnd<T>) => void;

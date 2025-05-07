@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { Progress } from '../sandboxTypes';
+import { type OnProgress } from '../sandboxTypes';
 import { deviceSingleTaskEndOperation, NrfutilDevice } from './common';
 
 export interface BoardControllerVersionResponse {
@@ -22,7 +22,7 @@ export interface BoardControllerVersion {
 
 export default (
     device: NrfutilDevice,
-    onProgress?: (progress: Progress) => void,
+    onProgress?: OnProgress,
     controller?: AbortController
 ) => {
     // "operation: 0, command_id: 1" is the command to retrieve version information from the board controller.
