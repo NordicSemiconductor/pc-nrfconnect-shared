@@ -13,11 +13,6 @@ import treeKill from 'tree-kill';
 import describeError from '../src/logging/describeError';
 import telemetry from '../src/telemetry/telemetry';
 import { isDevelopment } from '../src/utils/environment';
-import {
-    coreVersionsToInstall,
-    type ModuleVersion,
-    versionToInstall,
-} from './moduleVersion';
 import { getNrfutilLogger } from './nrfutilLogger';
 import {
     BackgroundTask,
@@ -30,6 +25,11 @@ import {
     TaskBegin,
     TaskEnd,
 } from './sandboxTypes';
+import {
+    coreVersionsToInstall,
+    type ModuleVersion,
+    versionToInstall,
+} from './version/moduleVersion';
 
 const parseJsonBuffers = <T>(data: Buffer): T[] | undefined => {
     const dataString = data.toString().trim();

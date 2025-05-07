@@ -8,10 +8,10 @@ import { getUserDataDir } from '../src/utils/appDirs';
 import { isLauncher, packageJsonApp } from '../src/utils/packageJson';
 import { getIsLoggingVerbose } from '../src/utils/persistentStore';
 import logLibVersions from './device/logLibVersions';
-import { describeVersion } from './moduleVersion';
 import { getNrfutilLogger } from './nrfutilLogger';
 import sandbox, { NrfutilSandbox } from './sandbox';
 import { LogLevel } from './sandboxTypes';
+import { describeVersion } from './version/moduleVersion';
 
 const fallbackLevel = process.env.NODE_ENV === 'production' ? 'off' : 'error';
 
