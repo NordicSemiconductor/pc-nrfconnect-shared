@@ -90,6 +90,8 @@ const commonParser = <Result>(
 export class NrfutilSandbox {
     onLoggingHandlers: ((logging: LogMessage, pid?: number) => void)[] = [];
     logLevel: LogLevel = isDevelopment ? 'error' : 'off';
+
+    sandboxPath;
     env;
 
     readonly CORE_VERSION_FOR_LEGACY_APPS = '8.0.0';
@@ -100,12 +102,23 @@ export class NrfutilSandbox {
         private readonly version: string,
         private readonly coreVersion?: string // Must only be undefined when the launcher creates a sandbox for a legacy app, which does not specify the required core version
     ) {
+        this.sandboxPath = path.join(
+            this.baseDir,
+            'nrfutil-sandboxes',
+            ...(process.platform === 'darwin' && process.arch !== 'x64'
+                ? [process.arch]
+                : []),
+            ...(this.coreVersion != null ? [this.coreVersion] : []),
+            this.module,
+            this.version
+        );
+
         this.env = this.prepareEnv();
     }
 
     private prepareEnv() {
         const env = { ...process.env };
-        env.NRFUTIL_HOME = path.join(...this.nrfutilSandboxPathSegments());
+        env.NRFUTIL_HOME = this.sandboxPath;
         fs.mkdirSync(env.NRFUTIL_HOME, { recursive: true });
 
         env.NRFUTIL_EXEC_PATH = path.join(env.NRFUTIL_HOME, 'bin');
@@ -125,17 +138,6 @@ export class NrfutilSandbox {
 
         return env;
     }
-
-    private nrfutilSandboxPathSegments = () => [
-        this.baseDir,
-        'nrfutil-sandboxes',
-        ...(process.platform === 'darwin' && process.arch !== 'x64'
-            ? [process.arch]
-            : []),
-        ...(this.coreVersion != null ? [this.coreVersion] : []),
-        this.module,
-        this.version,
-    ];
 
     private processLoggingData = (data: NrfutilJson, pid?: number) => {
         if (data.type === 'log') {
@@ -174,7 +176,7 @@ export class NrfutilSandbox {
         if (
             fs.existsSync(
                 path.join(
-                    ...this.nrfutilSandboxPathSegments(),
+                    this.sandboxPath,
                     'bin',
                     `nrfutil-${this.module}${
                         os.platform() === 'win32' ? '.exe' : ''
