@@ -40,52 +40,6 @@ const parseJsonBuffers = <T>(data: Buffer): T[] | undefined => {
     }
 };
 
-const nrfutilSandboxPathSegments = (
-    baseDir: string,
-    module: string,
-    version: string,
-    coreVersion?: string
-) => [
-    baseDir,
-    'nrfutil-sandboxes',
-    ...(process.platform === 'darwin' && process.arch !== 'x64'
-        ? [process.arch]
-        : []),
-    ...(coreVersion != null ? [coreVersion] : []),
-    module,
-    version,
-];
-
-const prepareEnv = (
-    baseDir: string,
-    module: string,
-    version: string,
-    coreVersion?: string
-) => {
-    const env = { ...process.env };
-    env.NRFUTIL_HOME = path.join(
-        ...nrfutilSandboxPathSegments(baseDir, module, version, coreVersion)
-    );
-    fs.mkdirSync(env.NRFUTIL_HOME, { recursive: true });
-
-    env.NRFUTIL_EXEC_PATH = path.join(env.NRFUTIL_HOME, 'bin');
-
-    if (
-        process.env.NODE_ENV === 'production' &&
-        !process.env.NRF_OVERRIDE_NRFUTIL_SETTINGS
-    ) {
-        delete env.NRFUTIL_BOOTSTRAP_CONFIG_URL;
-        delete env.NRFUTIL_BOOTSTRAP_TARBALL_PATH;
-        delete env.NRFUTIL_DEVICE_PLUGINS_DIR_FORCE_NRFDL_LOCATION;
-        delete env.NRFUTIL_DEVICE_PLUGINS_DIR_FORCE_NRFUTIL_LIBDIR;
-        delete env.NRFUTIL_IGNORE_MISSING_SUBCOMMAND;
-        delete env.NRFUTIL_LOG;
-        delete env.NRFUTIL_PACKAGE_INDEX_URL;
-    }
-
-    return env;
-};
-
 const commonParser = <Result>(
     data: Buffer,
     callbacks: {
@@ -140,7 +94,7 @@ export class NrfutilSandbox {
     coreVersion: string | undefined; // Must only be undefined when the launcher creates a sandbox for a legacy app, which does not specify the required core version
     onLoggingHandlers: ((logging: LogMessage, pid?: number) => void)[] = [];
     logLevel: LogLevel = isDevelopment ? 'error' : 'off';
-    env: ReturnType<typeof prepareEnv>;
+    env: ReturnType<typeof this.prepareEnv>;
 
     readonly CORE_VERSION_FOR_LEGACY_APPS = '8.0.0';
 
@@ -155,8 +109,42 @@ export class NrfutilSandbox {
         this.version = version;
         this.coreVersion = coreVersion;
 
-        this.env = prepareEnv(baseDir, module, version, coreVersion);
+        this.env = this.prepareEnv();
     }
+
+    private prepareEnv = () => {
+        const env = { ...process.env };
+        env.NRFUTIL_HOME = path.join(...this.nrfutilSandboxPathSegments());
+        fs.mkdirSync(env.NRFUTIL_HOME, { recursive: true });
+
+        env.NRFUTIL_EXEC_PATH = path.join(env.NRFUTIL_HOME, 'bin');
+
+        if (
+            process.env.NODE_ENV === 'production' &&
+            !process.env.NRF_OVERRIDE_NRFUTIL_SETTINGS
+        ) {
+            delete env.NRFUTIL_BOOTSTRAP_CONFIG_URL;
+            delete env.NRFUTIL_BOOTSTRAP_TARBALL_PATH;
+            delete env.NRFUTIL_DEVICE_PLUGINS_DIR_FORCE_NRFDL_LOCATION;
+            delete env.NRFUTIL_DEVICE_PLUGINS_DIR_FORCE_NRFUTIL_LIBDIR;
+            delete env.NRFUTIL_IGNORE_MISSING_SUBCOMMAND;
+            delete env.NRFUTIL_LOG;
+            delete env.NRFUTIL_PACKAGE_INDEX_URL;
+        }
+
+        return env;
+    };
+
+    private nrfutilSandboxPathSegments = () => [
+        this.baseDir,
+        'nrfutil-sandboxes',
+        ...(process.platform === 'darwin' && process.arch !== 'x64'
+            ? [process.arch]
+            : []),
+        ...(this.coreVersion != null ? [this.coreVersion] : []),
+        this.module,
+        this.version,
+    ];
 
     private processLoggingData = (data: NrfutilJson, pid?: number) => {
         if (data.type === 'log') {
@@ -195,12 +183,7 @@ export class NrfutilSandbox {
         if (
             fs.existsSync(
                 path.join(
-                    ...nrfutilSandboxPathSegments(
-                        this.baseDir,
-                        this.module,
-                        this.version,
-                        this.coreVersion
-                    ),
+                    ...this.nrfutilSandboxPathSegments(),
                     'bin',
                     `nrfutil-${this.module}${
                         os.platform() === 'win32' ? '.exe' : ''
