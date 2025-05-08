@@ -165,22 +165,6 @@ export class Batch {
         direct?: boolean,
         callbacks?: Callbacks<ReadResult>
     ) {
-        const args: string[] = [
-            '--address',
-            address.toString(),
-            '--bytes',
-            bytes.toString(),
-        ];
-
-        if (direct) {
-            args.push('--direct');
-        }
-
-        if (width) {
-            args.push('--width');
-            args.push(width.toString());
-        }
-
         this.enqueueBatchOperationObject(
             'x-read',
             core,
@@ -203,7 +187,14 @@ export class Batch {
                     }
                 },
             } as CallbacksUnknown,
-            args
+            [
+                '--address',
+                address.toString(),
+                '--bytes',
+                bytes.toString(),
+                ...(direct ? ['--direct'] : []),
+                ...(width ? ['--width', width.toString()] : []),
+            ]
         );
 
         return this;
@@ -259,7 +250,7 @@ export class Batch {
         let newCallbacks = { ...callbacks };
 
         if (typeof firmware === 'string') {
-            args = ['--firmware', firmware].concat(args);
+            args.unshift('--firmware', firmware);
         } else {
             const saveTemp = (): string => {
                 let tempFilePath;
@@ -275,7 +266,7 @@ export class Batch {
                 return tempFilePath;
             };
             const tempFilePath = saveTemp();
-            args = ['--firmware', tempFilePath].concat(args);
+            args = ['--firmware', tempFilePath, ...args];
 
             newCallbacks = {
                 ...callbacks,

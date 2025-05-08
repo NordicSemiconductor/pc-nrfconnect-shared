@@ -99,32 +99,20 @@ const xRead = async (
     onProgress?: OnProgress,
     controller?: AbortController
 ) => {
-    const args: string[] = [
-        '--address',
-        address.toString(),
-        '--bytes',
-        bytes.toString(),
-    ];
-
-    if (direct) {
-        args.push('--direct');
-    }
-
-    if (width) {
-        args.push('--width');
-        args.push(width.toString());
-    }
-
-    if (core) {
-        args.push(...coreArg(core));
-    }
-
     const result = await deviceSingleTaskEndOperation<MemoryReadRaw>(
         device,
         'x-read',
         onProgress,
         controller,
-        args
+        [
+            '--address',
+            address.toString(),
+            '--bytes',
+            bytes.toString(),
+            ...(direct ? ['--direct'] : []),
+            ...(width ? ['--width', width.toString()] : []),
+            ...coreArg(core),
+        ]
     );
 
     return toIntelHex(result.memoryData);

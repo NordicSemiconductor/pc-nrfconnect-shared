@@ -8,18 +8,12 @@ import { getModule } from '../modules';
 import { type OnProgress } from '../sandboxTypes';
 
 export const deviceTraitsToArgs = (traits: DeviceTraits) => {
-    const args: string[] = [];
     const traitsString = Object.keys(traits)
         .map(trait => (traits[trait as keyof DeviceTraits] ? trait : null))
         .filter(t => t !== null)
         .join(',');
 
-    if (traitsString.length > 0) {
-        args.push('--traits');
-        args.push(traitsString);
-    }
-
-    return args;
+    return traitsString.length > 0 ? ['--traits', traitsString] : [];
 };
 
 export type ResetKind =

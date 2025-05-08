@@ -20,16 +20,10 @@ export default async (
     onProgress?: OnProgress,
     controller?: AbortController
 ) => {
-    const args: string[] = [];
-
-    if (resetKind) {
-        args.push('--reset-kind');
-        args.push(resetKind);
-    }
-
-    if (core) {
-        args.push(...coreArg(core));
-    }
+    const args = [
+        ...(resetKind ? ['--reset-kind', resetKind] : []),
+        ...coreArg(core),
+    ];
 
     await deviceSingleTaskEndOperationVoid(
         device,
