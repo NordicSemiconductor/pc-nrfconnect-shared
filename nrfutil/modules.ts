@@ -9,7 +9,7 @@ import { isLauncher, packageJsonApp } from '../src/utils/packageJson';
 import { getIsLoggingVerbose } from '../src/utils/persistentStore';
 import logLibVersions from './device/logLibVersions';
 import { getNrfutilLogger } from './nrfutilLogger';
-import sandbox, { NrfutilSandbox } from './sandbox';
+import { NrfutilSandbox } from './sandbox';
 import { LogLevel } from './sandboxTypes';
 import { describeVersion } from './version/moduleVersion';
 
@@ -74,7 +74,7 @@ const getModuleSandbox = (module: string) => {
 
     const createModuleSandbox = async () => {
         getNrfutilLogger()?.info(`Initialising the bundled nrfutil ${module}`);
-        promiseModuleSandbox = sandbox(getUserDataDir(), module);
+        promiseModuleSandbox = NrfutilSandbox.create(getUserDataDir(), module);
         moduleSandbox = await promiseModuleSandbox;
 
         logModuleVersions(module, moduleSandbox);

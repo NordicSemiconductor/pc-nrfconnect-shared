@@ -103,7 +103,32 @@ export class NrfutilSandbox {
     private readonly sandboxPath;
     private readonly env;
 
-    constructor(
+    public static async create(
+        baseDir: string,
+        module: string,
+        version?: string,
+        coreVersion?: string,
+        onProgress?: OnProgress
+    ) {
+        const sandbox = new NrfutilSandbox(
+            baseDir,
+            module,
+            versionToInstall(module, version),
+            coreVersionsToInstall(coreVersion)
+        );
+
+        onProgress?.(convertNrfutilProgress({ progressPercentage: 0 }));
+
+        if (!(await sandbox.isSandboxInstalled())) {
+            await sandbox.prepareSandbox(onProgress);
+        }
+
+        onProgress?.(convertNrfutilProgress({ progressPercentage: 100 }));
+
+        return sandbox;
+    }
+
+    private constructor(
         private readonly baseDir: string,
         private readonly module: string,
         private readonly version: string,
@@ -791,30 +816,6 @@ export class NrfutilSandbox {
         this.logLevel = level;
     };
 }
-
-export default async (
-    baseDir: string,
-    module: string,
-    version?: string,
-    coreVersion?: string,
-    onProgress?: OnProgress
-) => {
-    const sandbox = new NrfutilSandbox(
-        baseDir,
-        module,
-        versionToInstall(module, version),
-        coreVersionsToInstall(coreVersion)
-    );
-
-    onProgress?.(convertNrfutilProgress({ progressPercentage: 0 }));
-
-    if (!(await sandbox.isSandboxInstalled())) {
-        await sandbox.prepareSandbox(onProgress);
-    }
-
-    onProgress?.(convertNrfutilProgress({ progressPercentage: 100 }));
-    return sandbox;
-};
 
 const convertNrfutilProgress = (progress: NrfutilProgress): Progress => {
     const amountOfSteps = progress.amountOfSteps ?? 1;
