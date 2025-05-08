@@ -14,7 +14,7 @@ import {
     coreArg,
     DeviceCore,
     deviceSingleTaskEndOperationVoid,
-    DeviceTraits,
+    deviceTraitsToArgs,
     NrfutilDevice,
     ResetKind,
 } from './common';
@@ -59,21 +59,6 @@ export const isNordicDfuProgrammingOptions = (
 ): options is NordicDfuProgrammingOptions =>
     !isMcuBootProgrammingOptions(options) &&
     (options as NordicDfuProgrammingOptions).mcuEndState !== undefined;
-
-const deviceTraitsToArgs = (traits: DeviceTraits) => {
-    const args: string[] = [];
-    const traitsString = Object.keys(traits)
-        .map(trait => (traits[trait as keyof DeviceTraits] ? trait : null))
-        .filter(t => t !== null)
-        .join(',');
-
-    if (traitsString.length > 0) {
-        args.push('--traits');
-        args.push(traitsString);
-    }
-
-    return args;
-};
 
 export const programmingOptionsToArgs = (options?: ProgrammingOptions) => {
     if (!options) return [];
