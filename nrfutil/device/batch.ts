@@ -13,6 +13,7 @@ import { getModule } from '..';
 import { TaskEnd } from '../sandboxTypes';
 import { BatchOperationWrapper, Callbacks } from './batchTypes';
 import {
+    coreArg,
     DeviceCore,
     DeviceTraits,
     deviceTraitsToArgs,
@@ -55,9 +56,7 @@ export class Batch {
                 await box.singleInfoOperationOptionalData<object>(
                     command,
                     undefined,
-                    ['--generate', ...(core ? ['--core', core] : [])].concat(
-                        args
-                    )
+                    ['--generate', ...coreArg(core), ...args]
                 );
 
             return {

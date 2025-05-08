@@ -196,3 +196,5 @@ export const deviceSingleTaskEndOperationVoid = async (
         [...args, '--serial-number', device.serialNumber]
     );
 };
+
+export const coreArg = (core?: DeviceCore) => (core ? ['--core', core] : []);

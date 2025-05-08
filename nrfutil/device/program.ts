@@ -11,6 +11,7 @@ import { v4 as uuid } from 'uuid';
 
 import { type OnProgress } from '../sandboxTypes';
 import {
+    coreArg,
     DeviceCore,
     deviceSingleTaskEndOperationVoid,
     DeviceTraits,
@@ -118,7 +119,7 @@ const program = (
             '--firmware',
             firmwarePath,
             ...deviceTraitsToArgs(device.traits),
-            ...(core ? ['--core', core] : []),
+            ...coreArg(core),
             ...programmingOptionsToArgs(programmingOptions),
         ]
     );

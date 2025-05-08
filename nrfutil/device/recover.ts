@@ -6,6 +6,7 @@
 
 import { type OnProgress } from '../sandboxTypes';
 import {
+    coreArg,
     DeviceCore,
     deviceSingleTaskEndOperationVoid,
     NrfutilDevice,
@@ -22,5 +23,5 @@ export default (
         'recover',
         onProgress,
         controller,
-        core ? ['--core', core] : []
+        coreArg(core)
     );
