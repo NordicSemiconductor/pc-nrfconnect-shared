@@ -5,9 +5,6 @@
  */
 
 import fs from 'fs';
-import os from 'os';
-import path from 'path';
-import { v4 as uuid } from 'uuid';
 
 import { getModule } from '..';
 import { TaskEnd } from '../sandboxTypes';
@@ -24,7 +21,8 @@ import { DeviceCoreInfo } from './getCoreInfo';
 import { FWInfo } from './getFwInfo';
 import { GetProtectionStatusResult } from './getProtectionStatus';
 import {
-    FirmwareType,
+    createTempFile,
+    Firmware,
     ProgrammingOptions,
     programmingOptionsToArgs,
 } from './program';
@@ -237,7 +235,7 @@ export class Batch {
     }
 
     public program(
-        firmware: FirmwareType,
+        firmware: Firmware,
         core: DeviceCore,
         programmingOptions?: ProgrammingOptions,
         deviceTraits?: DeviceTraits,
@@ -252,20 +250,7 @@ export class Batch {
         if (typeof firmware === 'string') {
             args.unshift('--firmware', firmware);
         } else {
-            const saveTemp = (): string => {
-                let tempFilePath;
-                do {
-                    tempFilePath = path.join(
-                        os.tmpdir(),
-                        `${uuid()}.${firmware.type}`
-                    );
-                } while (fs.existsSync(tempFilePath));
-
-                fs.writeFileSync(tempFilePath, firmware.buffer);
-
-                return tempFilePath;
-            };
-            const tempFilePath = saveTemp();
+            const tempFilePath = createTempFile(firmware);
             args = ['--firmware', tempFilePath, ...args];
 
             newCallbacks = {

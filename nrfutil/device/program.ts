@@ -19,8 +19,10 @@ import {
     ResetKind,
 } from './common';
 
-export type FileExtensions = 'zip' | 'hex';
-export type FirmwareType = { buffer: Buffer; type: FileExtensions } | string;
+export type FileExtension = 'zip' | 'hex';
+
+type FirmwareBuffer = { buffer: Buffer; type: FileExtension };
+export type Firmware = FirmwareBuffer | string;
 
 export type ProgrammingOptions =
     | JLinkProgrammingOptions
@@ -109,27 +111,26 @@ const program = (
         ]
     );
 
+export const createTempFile = (firmware: FirmwareBuffer): string => {
+    let tempFilePath;
+    do {
+        tempFilePath = path.join(os.tmpdir(), `${uuid()}.${firmware.type}`);
+    } while (fs.existsSync(tempFilePath));
+
+    fs.writeFileSync(tempFilePath, firmware.buffer);
+
+    return tempFilePath;
+};
+
 const programBuffer = async (
     device: NrfutilDevice,
-    firmware: Buffer,
-    type: FileExtensions,
+    firmware: FirmwareBuffer,
     onProgress?: OnProgress,
     core?: DeviceCore,
     programmingOptions?: ProgrammingOptions,
     controller?: AbortController
 ) => {
-    const saveTemp = (): string => {
-        let tempFilePath;
-        do {
-            tempFilePath = path.join(os.tmpdir(), `${uuid()}.${type}`);
-        } while (fs.existsSync(tempFilePath));
-
-        fs.writeFileSync(tempFilePath, firmware);
-
-        return tempFilePath;
-    };
-
-    const tempFilePath = saveTemp();
+    const tempFilePath = createTempFile(firmware);
     try {
         await program(
             device,
@@ -147,7 +148,7 @@ const programBuffer = async (
 
 export default async (
     device: NrfutilDevice,
-    firmware: FirmwareType,
+    firmware: Firmware,
     onProgress?: OnProgress,
     core?: DeviceCore,
     programmingOptions?: ProgrammingOptions,
@@ -165,8 +166,7 @@ export default async (
     } else {
         await programBuffer(
             device,
-            firmware.buffer,
-            firmware.type,
+            firmware,
             onProgress,
             core,
             programmingOptions,
