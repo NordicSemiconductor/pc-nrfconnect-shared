@@ -6,6 +6,7 @@
 
 import { type OnProgress } from '../sandboxTypes';
 import {
+    coreArg,
     DeviceCore,
     deviceSingleTaskEndOperation,
     NrfutilDevice,
@@ -40,5 +41,5 @@ export default (
         'core-info',
         onProgress,
         controller,
-        core ? ['--core', core] : []
+        coreArg(core)
     );

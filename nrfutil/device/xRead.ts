@@ -7,6 +7,7 @@
 /* eslint-disable no-bitwise */
 import { type OnProgress } from '../sandboxTypes';
 import {
+    coreArg,
     DeviceCore,
     deviceSingleTaskEndOperation,
     NrfutilDevice,
@@ -115,8 +116,7 @@ const xRead = async (
     }
 
     if (core) {
-        args.push('--core');
-        args.push(core);
+        args.push(...coreArg(core));
     }
 
     const result = await deviceSingleTaskEndOperation<MemoryReadRaw>(

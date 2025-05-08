@@ -6,6 +6,7 @@
 
 import { type OnProgress } from '../sandboxTypes';
 import {
+    coreArg,
     DeviceCore,
     deviceSingleTaskEndOperationVoid,
     NrfutilDevice,
@@ -27,8 +28,7 @@ export default async (
     }
 
     if (core) {
-        args.push('--core');
-        args.push(core);
+        args.push(...coreArg(core));
     }
 
     await deviceSingleTaskEndOperationVoid(
