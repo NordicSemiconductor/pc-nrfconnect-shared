@@ -6,12 +6,6 @@
 
 import type { OnProgress, OnTaskBegin, OnTaskEnd } from '../sandboxTypes';
 import { type DeviceCore, type ResetKind } from './common';
-import {
-    isJLinkProgrammingOptions,
-    isMcuBootProgrammingOptions,
-    isNordicDfuProgrammingOptions,
-    type ProgrammingOptions,
-} from './program';
 
 export interface BatchOperationWrapper<T = void> {
     operation: object;
@@ -41,35 +35,6 @@ export const convertDeviceCoreType = (core?: DeviceCore) => {
             return 'NRFDL_DEVICE_CORE_NETWORK';
         case 'Modem':
             return 'NRFDL_DEVICE_CORE_MODEM';
-    }
-};
-
-export const convertProgrammingOptionsType = (
-    programmingOptions?: ProgrammingOptions
-) => {
-    if (!programmingOptions) {
-        return undefined;
-    }
-
-    if (isJLinkProgrammingOptions(programmingOptions)) {
-        return {
-            qspi_erase_mode: programmingOptions.chipEraseMode,
-            reset: programmingOptions.reset,
-            verify: programmingOptions.verify,
-        };
-    }
-
-    if (isMcuBootProgrammingOptions(programmingOptions)) {
-        return {
-            mcu_end_state: programmingOptions.mcuEndState,
-            net_core_upload_delay: programmingOptions.netCoreUploadDelay,
-        };
-    }
-
-    if (isNordicDfuProgrammingOptions(programmingOptions)) {
-        return {
-            mcu_end_state: programmingOptions.mcuEndState,
-        };
     }
 };
 
