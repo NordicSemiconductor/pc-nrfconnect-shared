@@ -4,27 +4,21 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { Progress, Task, TaskBegin, TaskEnd } from '../sandboxTypes';
-import { DeviceCore, ResetKind } from './common';
-import {
-    isJLinkProgrammingOptions,
-    isMcuBootProgrammingOptions,
-    isNordicDfuProgrammingOptions,
-    ProgrammingOptions,
-} from './program';
+import type { OnProgress, OnTaskBegin, OnTaskEnd } from '../sandboxTypes';
+import { type DeviceCore, type ResetKind } from './common';
 
 export interface BatchOperationWrapper<T = void> {
     operation: object;
-    onProgress?: (progress: Progress, task?: Task) => void;
-    onTaskBegin?: TaskBeginCallback;
-    onTaskEnd?: TaskEndCallback<T>;
+    onProgress?: OnProgress;
+    onTaskBegin?: OnTaskBegin;
+    onTaskEnd?: OnTaskEnd<T>;
     onException?: (error: Error) => void;
 }
 
 export type Callbacks<T = void> = {
-    onTaskBegin?: TaskBeginCallback;
-    onTaskEnd?: TaskEndCallback<T>;
-    onProgress?: (progress: Progress, task?: Task) => void;
+    onTaskBegin?: OnTaskBegin;
+    onTaskEnd?: OnTaskEnd<T>;
+    onProgress?: OnProgress;
     onException?: (error: Error) => void;
 };
 
@@ -41,35 +35,6 @@ export const convertDeviceCoreType = (core?: DeviceCore) => {
             return 'NRFDL_DEVICE_CORE_NETWORK';
         case 'Modem':
             return 'NRFDL_DEVICE_CORE_MODEM';
-    }
-};
-
-export const convertProgrammingOptionsType = (
-    programmingOptions?: ProgrammingOptions
-) => {
-    if (!programmingOptions) {
-        return undefined;
-    }
-
-    if (isJLinkProgrammingOptions(programmingOptions)) {
-        return {
-            qspi_erase_mode: programmingOptions.chipEraseMode,
-            reset: programmingOptions.reset,
-            verify: programmingOptions.verify,
-        };
-    }
-
-    if (isMcuBootProgrammingOptions(programmingOptions)) {
-        return {
-            mcu_end_state: programmingOptions.mcuEndState,
-            net_core_upload_delay: programmingOptions.netCoreUploadDelay,
-        };
-    }
-
-    if (isNordicDfuProgrammingOptions(programmingOptions)) {
-        return {
-            mcu_end_state: programmingOptions.mcuEndState,
-        };
     }
 };
 
@@ -128,6 +93,3 @@ export type BatchOperation =
     | EraseOperation
     | GetCoreInfoOperation
     | GetFwInfoOperation;
-
-export type TaskEndCallback<T = void> = (end: TaskEnd<T>) => void;
-export type TaskBeginCallback = (begin: TaskBegin) => void;

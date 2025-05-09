@@ -5,8 +5,9 @@
  */
 
 /* eslint-disable no-bitwise */
-import { Progress } from '../sandboxTypes';
+import { type OnProgress } from '../sandboxTypes';
 import {
+    coreArg,
     DeviceCore,
     deviceSingleTaskEndOperation,
     NrfutilDevice,
@@ -88,43 +89,40 @@ export function toIntelHex(memoryData: MemoryData[]) {
     return { intelHex: records.join('\n') };
 }
 
+export type XReadOptions = {
+    address: number;
+    bytes: number;
+    width?: 8 | 15 | 32; // defaults to 32
+    direct?: boolean;
+};
+
+export const xReadOptionsToArgs = ({
+    address,
+    bytes,
+    width,
+    direct,
+}: XReadOptions) => [
+    '--address',
+    address.toString(),
+    '--bytes',
+    bytes.toString(),
+    ...(direct ? ['--direct'] : []),
+    ...(width ? ['--width', width.toString()] : []),
+];
+
 const xRead = async (
     device: NrfutilDevice,
-    address: number,
-    bytes: number,
+    options: XReadOptions,
     core?: DeviceCore,
-    width?: 8 | 15 | 32, // defaults to 32
-    direct?: boolean,
-    onProgress?: (progress: Progress) => void,
+    onProgress?: OnProgress,
     controller?: AbortController
 ) => {
-    const args: string[] = [
-        '--address',
-        address.toString(),
-        '--bytes',
-        bytes.toString(),
-    ];
-
-    if (direct) {
-        args.push('--direct');
-    }
-
-    if (width) {
-        args.push('--width');
-        args.push(width.toString());
-    }
-
-    if (core) {
-        args.push('--core');
-        args.push(core);
-    }
-
     const result = await deviceSingleTaskEndOperation<MemoryReadRaw>(
         device,
         'x-read',
         onProgress,
         controller,
-        args
+        [...xReadOptionsToArgs(options), ...coreArg(core)]
     );
 
     return toIntelHex(result.memoryData);

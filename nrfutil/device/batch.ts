@@ -5,14 +5,12 @@
  */
 
 import fs from 'fs';
-import os from 'os';
-import path from 'path';
-import { v4 as uuid } from 'uuid';
 
 import { getModule } from '..';
 import { TaskEnd } from '../sandboxTypes';
 import { BatchOperationWrapper, Callbacks } from './batchTypes';
 import {
+    coreArg,
     DeviceCore,
     DeviceTraits,
     deviceTraitsToArgs,
@@ -23,11 +21,18 @@ import { DeviceCoreInfo } from './getCoreInfo';
 import { FWInfo } from './getFwInfo';
 import { GetProtectionStatusResult } from './getProtectionStatus';
 import {
-    FirmwareType,
+    createTempFile,
+    Firmware,
     ProgrammingOptions,
     programmingOptionsToArgs,
 } from './program';
-import { MemoryReadRaw, ReadResult, toIntelHex } from './xRead';
+import {
+    MemoryReadRaw,
+    ReadResult,
+    toIntelHex,
+    type XReadOptions,
+    xReadOptionsToArgs,
+} from './xRead';
 
 type BatchOperationWrapperUnknown = BatchOperationWrapper<unknown>;
 type CallbacksUnknown = Callbacks<unknown>;
@@ -55,9 +60,7 @@ export class Batch {
                 await box.singleInfoOperationOptionalData<object>(
                     command,
                     undefined,
-                    ['--generate', ...(core ? ['--core', core] : [])].concat(
-                        args
-                    )
+                    ['--generate', ...coreArg(core), ...args]
                 );
 
             return {
@@ -160,28 +163,9 @@ export class Batch {
 
     public xRead(
         core: DeviceCore,
-        address: number,
-        bytes: number,
-        width?: 8 | 15 | 32,
-        direct?: boolean,
+        options: XReadOptions,
         callbacks?: Callbacks<ReadResult>
     ) {
-        const args: string[] = [
-            '--address',
-            address.toString(),
-            '--bytes',
-            bytes.toString(),
-        ];
-
-        if (direct) {
-            args.push('--direct');
-        }
-
-        if (width) {
-            args.push('--width');
-            args.push(width.toString());
-        }
-
         this.enqueueBatchOperationObject(
             'x-read',
             core,
@@ -204,7 +188,7 @@ export class Batch {
                     }
                 },
             } as CallbacksUnknown,
-            args
+            xReadOptionsToArgs(options)
         );
 
         return this;
@@ -247,7 +231,7 @@ export class Batch {
     }
 
     public program(
-        firmware: FirmwareType,
+        firmware: Firmware,
         core: DeviceCore,
         programmingOptions?: ProgrammingOptions,
         deviceTraits?: DeviceTraits,
@@ -260,23 +244,10 @@ export class Batch {
         let newCallbacks = { ...callbacks };
 
         if (typeof firmware === 'string') {
-            args = ['--firmware', firmware].concat(args);
+            args.unshift('--firmware', firmware);
         } else {
-            const saveTemp = (): string => {
-                let tempFilePath;
-                do {
-                    tempFilePath = path.join(
-                        os.tmpdir(),
-                        `${uuid()}.${firmware.type}`
-                    );
-                } while (fs.existsSync(tempFilePath));
-
-                fs.writeFileSync(tempFilePath, firmware.buffer);
-
-                return tempFilePath;
-            };
-            const tempFilePath = saveTemp();
-            args = ['--firmware', tempFilePath].concat(args);
+            const tempFilePath = createTempFile(firmware);
+            args = ['--firmware', tempFilePath, ...args];
 
             newCallbacks = {
                 ...callbacks,

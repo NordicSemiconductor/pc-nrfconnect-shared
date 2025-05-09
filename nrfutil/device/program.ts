@@ -9,45 +9,48 @@ import os from 'os';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
 
-import { Progress } from '../sandboxTypes';
+import { type OnProgress } from '../sandboxTypes';
 import {
+    coreArg,
     DeviceCore,
     deviceSingleTaskEndOperationVoid,
-    DeviceTraits,
+    deviceTraitsToArgs,
     NrfutilDevice,
     ResetKind,
 } from './common';
 
-export type FileExtensions = 'zip' | 'hex';
-export type FirmwareType = { buffer: Buffer; type: FileExtensions } | string;
+export type FileExtension = 'zip' | 'hex';
+
+type FirmwareBuffer = { buffer: Buffer; type: FileExtension };
+export type Firmware = FirmwareBuffer | string;
 
 export type ProgrammingOptions =
     | JLinkProgrammingOptions
     | McuBootProgrammingOptions
     | NordicDfuProgrammingOptions;
 
-export interface JLinkProgrammingOptions {
-    chipEraseMode?: 'ERASE_ALL' | 'ERASE_NONE';
+interface JLinkProgrammingOptions {
+    chipEraseMode: 'ERASE_ALL' | 'ERASE_NONE';
     reset?: ResetKind;
     verify?: 'VERIFY_HASH' | 'VERIFY_NONE' | 'VERIFY_READ';
 }
 
-export interface McuBootProgrammingOptions {
+interface McuBootProgrammingOptions {
     mcuEndState?: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
     netCoreUploadDelay?: number;
     target?: string;
 }
 
-export interface NordicDfuProgrammingOptions {
-    mcuEndState?: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
+interface NordicDfuProgrammingOptions {
+    mcuEndState: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
 }
 
-export const isJLinkProgrammingOptions = (
+const isJLinkProgrammingOptions = (
     options: ProgrammingOptions
 ): options is JLinkProgrammingOptions =>
     (options as JLinkProgrammingOptions).chipEraseMode !== undefined;
 
-export const isMcuBootProgrammingOptions = (
+const isMcuBootProgrammingOptions = (
     options: ProgrammingOptions
 ): options is McuBootProgrammingOptions =>
     (options as McuBootProgrammingOptions).netCoreUploadDelay !== undefined ||
@@ -59,52 +62,45 @@ export const isNordicDfuProgrammingOptions = (
     !isMcuBootProgrammingOptions(options) &&
     (options as NordicDfuProgrammingOptions).mcuEndState !== undefined;
 
-const deviceTraitsToArgs = (traits: DeviceTraits) => {
-    const args: string[] = [];
-    const traitsString = Object.keys(traits)
-        .map(trait => (traits[trait as keyof DeviceTraits] ? trait : null))
-        .filter(t => t !== null)
-        .join(',');
+const programmingOptionsToStrings = (options?: ProgrammingOptions) => {
+    if (!options) return [];
 
-    if (traitsString.length > 0) {
-        args.push('--traits');
-        args.push(traitsString);
+    if (isJLinkProgrammingOptions(options)) {
+        return [
+            `chip_erase_mode=${options.chipEraseMode}`,
+            options.reset && `reset=${options.reset}`,
+            options.verify && `verify=${options.verify}`,
+        ].filter(Boolean);
     }
 
-    return args;
+    if (isMcuBootProgrammingOptions(options)) {
+        return [
+            options.mcuEndState && `mcu_end_state=${options.mcuEndState}`,
+            options.target && `target=${options.target}`,
+            options.netCoreUploadDelay &&
+                `net_core_upload_delay=${Math.round(
+                    options.netCoreUploadDelay
+                )}`,
+        ].filter(Boolean);
+    }
+
+    if (isNordicDfuProgrammingOptions(options)) {
+        return [`mcu_end_state=${options.mcuEndState}`];
+    }
+
+    throw new Error(`Unhandled ProgrammingOptions: ${options}`);
 };
 
 export const programmingOptionsToArgs = (options?: ProgrammingOptions) => {
-    if (!options) return [];
+    const optionsString = programmingOptionsToStrings(options).join(',');
 
-    const args: string[] = [];
-
-    if (isJLinkProgrammingOptions(options)) {
-        if (options.chipEraseMode)
-            args.push(`chip_erase_mode=${options.chipEraseMode}`);
-        if (options.reset) args.push(`reset=${options.reset}`);
-        if (options.verify) args.push(`verify=${options.verify}`);
-    } else if (isMcuBootProgrammingOptions(options)) {
-        if (options.mcuEndState)
-            args.push(`mcu_end_state=${options.mcuEndState}`);
-        if (options.netCoreUploadDelay)
-            args.push(
-                `net_core_upload_delay=${Math.round(
-                    options.netCoreUploadDelay
-                )}`
-            );
-        if (options.target) args.push(`target=${options.target}`);
-    } else if (isNordicDfuProgrammingOptions(options)) {
-        if (options.mcuEndState)
-            args.push(`mcu_end_state=${options.mcuEndState}`);
-    }
-
-    return args.length > 0 ? ['--options', `${args.join(',')}`] : [];
+    return optionsString.length > 0 ? ['--options', optionsString] : [];
 };
+
 const program = (
     device: NrfutilDevice,
     firmwarePath: string,
-    onProgress?: (progress: Progress) => void,
+    onProgress?: OnProgress,
     core?: DeviceCore,
     programmingOptions?: ProgrammingOptions,
     controller?: AbortController
@@ -118,32 +114,31 @@ const program = (
             '--firmware',
             firmwarePath,
             ...deviceTraitsToArgs(device.traits),
-            ...(core ? ['--core', core] : []),
+            ...coreArg(core),
             ...programmingOptionsToArgs(programmingOptions),
         ]
     );
 
+export const createTempFile = (firmware: FirmwareBuffer): string => {
+    let tempFilePath;
+    do {
+        tempFilePath = path.join(os.tmpdir(), `${uuid()}.${firmware.type}`);
+    } while (fs.existsSync(tempFilePath));
+
+    fs.writeFileSync(tempFilePath, firmware.buffer);
+
+    return tempFilePath;
+};
+
 const programBuffer = async (
     device: NrfutilDevice,
-    firmware: Buffer,
-    type: FileExtensions,
-    onProgress?: (progress: Progress) => void,
+    firmware: FirmwareBuffer,
+    onProgress?: OnProgress,
     core?: DeviceCore,
     programmingOptions?: ProgrammingOptions,
     controller?: AbortController
 ) => {
-    const saveTemp = (): string => {
-        let tempFilePath;
-        do {
-            tempFilePath = path.join(os.tmpdir(), `${uuid()}.${type}`);
-        } while (fs.existsSync(tempFilePath));
-
-        fs.writeFileSync(tempFilePath, firmware);
-
-        return tempFilePath;
-    };
-
-    const tempFilePath = saveTemp();
+    const tempFilePath = createTempFile(firmware);
     try {
         await program(
             device,
@@ -161,8 +156,8 @@ const programBuffer = async (
 
 export default async (
     device: NrfutilDevice,
-    firmware: FirmwareType,
-    onProgress?: (progress: Progress) => void,
+    firmware: Firmware,
+    onProgress?: OnProgress,
     core?: DeviceCore,
     programmingOptions?: ProgrammingOptions,
     controller?: AbortController
@@ -179,8 +174,7 @@ export default async (
     } else {
         await programBuffer(
             device,
-            firmware.buffer,
-            firmware.type,
+            firmware,
             onProgress,
             core,
             programmingOptions,
