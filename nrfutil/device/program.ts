@@ -29,28 +29,28 @@ export type ProgrammingOptions =
     | McuBootProgrammingOptions
     | NordicDfuProgrammingOptions;
 
-export interface JLinkProgrammingOptions {
-    chipEraseMode?: 'ERASE_ALL' | 'ERASE_NONE';
+interface JLinkProgrammingOptions {
+    chipEraseMode: 'ERASE_ALL' | 'ERASE_NONE';
     reset?: ResetKind;
     verify?: 'VERIFY_HASH' | 'VERIFY_NONE' | 'VERIFY_READ';
 }
 
-export interface McuBootProgrammingOptions {
+interface McuBootProgrammingOptions {
     mcuEndState?: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
     netCoreUploadDelay?: number;
     target?: string;
 }
 
-export interface NordicDfuProgrammingOptions {
-    mcuEndState?: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
+interface NordicDfuProgrammingOptions {
+    mcuEndState: 'NRFDL_MCU_STATE_APPLICATION' | 'NRFDL_MCU_STATE_PROGRAMMING';
 }
 
-export const isJLinkProgrammingOptions = (
+const isJLinkProgrammingOptions = (
     options: ProgrammingOptions
 ): options is JLinkProgrammingOptions =>
     (options as JLinkProgrammingOptions).chipEraseMode !== undefined;
 
-export const isMcuBootProgrammingOptions = (
+const isMcuBootProgrammingOptions = (
     options: ProgrammingOptions
 ): options is McuBootProgrammingOptions =>
     (options as McuBootProgrammingOptions).netCoreUploadDelay !== undefined ||
@@ -62,33 +62,41 @@ export const isNordicDfuProgrammingOptions = (
     !isMcuBootProgrammingOptions(options) &&
     (options as NordicDfuProgrammingOptions).mcuEndState !== undefined;
 
-export const programmingOptionsToArgs = (options?: ProgrammingOptions) => {
+const programmingOptionsToStrings = (options?: ProgrammingOptions) => {
     if (!options) return [];
 
-    const args: string[] = [];
-
     if (isJLinkProgrammingOptions(options)) {
-        if (options.chipEraseMode)
-            args.push(`chip_erase_mode=${options.chipEraseMode}`);
-        if (options.reset) args.push(`reset=${options.reset}`);
-        if (options.verify) args.push(`verify=${options.verify}`);
-    } else if (isMcuBootProgrammingOptions(options)) {
-        if (options.mcuEndState)
-            args.push(`mcu_end_state=${options.mcuEndState}`);
-        if (options.netCoreUploadDelay)
-            args.push(
-                `net_core_upload_delay=${Math.round(
-                    options.netCoreUploadDelay
-                )}`
-            );
-        if (options.target) args.push(`target=${options.target}`);
-    } else if (isNordicDfuProgrammingOptions(options)) {
-        if (options.mcuEndState)
-            args.push(`mcu_end_state=${options.mcuEndState}`);
+        return [
+            `chip_erase_mode=${options.chipEraseMode}`,
+            options.reset && `reset=${options.reset}`,
+            options.verify && `verify=${options.verify}`,
+        ].filter(Boolean);
     }
 
-    return args.length > 0 ? ['--options', `${args.join(',')}`] : [];
+    if (isMcuBootProgrammingOptions(options)) {
+        return [
+            options.mcuEndState && `mcu_end_state=${options.mcuEndState}`,
+            options.target && `target=${options.target}`,
+            options.netCoreUploadDelay &&
+                `net_core_upload_delay=${Math.round(
+                    options.netCoreUploadDelay
+                )}`,
+        ].filter(Boolean);
+    }
+
+    if (isNordicDfuProgrammingOptions(options)) {
+        return [`mcu_end_state=${options.mcuEndState}`];
+    }
+
+    throw new Error(`Unhandled ProgrammingOptions: ${options}`);
 };
+
+export const programmingOptionsToArgs = (options?: ProgrammingOptions) => {
+    const optionsString = programmingOptionsToStrings(options).join(',');
+
+    return optionsString.length > 0 ? ['--options', optionsString] : [];
+};
+
 const program = (
     device: NrfutilDevice,
     firmwarePath: string,
