@@ -89,13 +89,31 @@ export function toIntelHex(memoryData: MemoryData[]) {
     return { intelHex: records.join('\n') };
 }
 
+export type XReadOptions = {
+    address: number;
+    bytes: number;
+    width?: 8 | 15 | 32; // defaults to 32
+    direct?: boolean;
+};
+
+export const xReadOptionsToArgs = ({
+    address,
+    bytes,
+    width,
+    direct,
+}: XReadOptions) => [
+    '--address',
+    address.toString(),
+    '--bytes',
+    bytes.toString(),
+    ...(direct ? ['--direct'] : []),
+    ...(width ? ['--width', width.toString()] : []),
+];
+
 const xRead = async (
     device: NrfutilDevice,
-    address: number,
-    bytes: number,
+    options: XReadOptions,
     core?: DeviceCore,
-    width?: 8 | 15 | 32, // defaults to 32
-    direct?: boolean,
     onProgress?: OnProgress,
     controller?: AbortController
 ) => {
@@ -104,15 +122,7 @@ const xRead = async (
         'x-read',
         onProgress,
         controller,
-        [
-            '--address',
-            address.toString(),
-            '--bytes',
-            bytes.toString(),
-            ...(direct ? ['--direct'] : []),
-            ...(width ? ['--width', width.toString()] : []),
-            ...coreArg(core),
-        ]
+        [...xReadOptionsToArgs(options), ...coreArg(core)]
     );
 
     return toIntelHex(result.memoryData);

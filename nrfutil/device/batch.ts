@@ -26,7 +26,13 @@ import {
     ProgrammingOptions,
     programmingOptionsToArgs,
 } from './program';
-import { MemoryReadRaw, ReadResult, toIntelHex } from './xRead';
+import {
+    MemoryReadRaw,
+    ReadResult,
+    toIntelHex,
+    type XReadOptions,
+    xReadOptionsToArgs,
+} from './xRead';
 
 type BatchOperationWrapperUnknown = BatchOperationWrapper<unknown>;
 type CallbacksUnknown = Callbacks<unknown>;
@@ -157,10 +163,7 @@ export class Batch {
 
     public xRead(
         core: DeviceCore,
-        address: number,
-        bytes: number,
-        width?: 8 | 15 | 32,
-        direct?: boolean,
+        options: XReadOptions,
         callbacks?: Callbacks<ReadResult>
     ) {
         this.enqueueBatchOperationObject(
@@ -185,14 +188,7 @@ export class Batch {
                     }
                 },
             } as CallbacksUnknown,
-            [
-                '--address',
-                address.toString(),
-                '--bytes',
-                bytes.toString(),
-                ...(direct ? ['--direct'] : []),
-                ...(width ? ['--width', width.toString()] : []),
-            ]
+            xReadOptionsToArgs(options)
         );
 
         return this;
