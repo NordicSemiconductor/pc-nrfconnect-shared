@@ -13,83 +13,29 @@ import treeKill from 'tree-kill';
 import describeError from '../src/logging/describeError';
 import telemetry from '../src/telemetry/telemetry';
 import { isDevelopment } from '../src/utils/environment';
+import CollectingResultParser, {
+    parseJsonBuffers,
+} from './collectingResultParser';
+import {
+    addPunctuation,
+    collectErrorMessages,
+    convertNrfutilProgress,
+} from './common';
 import { getNrfutilLogger } from './nrfutilLogger';
 import type {
     BackgroundTask,
     LogLevel,
     LogMessage,
     NrfutilJson,
-    NrfutilProgress,
     OnProgress,
     OnTaskBegin,
     OnTaskEnd,
-    Progress,
-    TaskEnd,
 } from './sandboxTypes';
 import {
     coreVersionsToInstall,
     type ModuleVersion,
     versionToInstall,
 } from './version/moduleVersion';
-
-const parseJsonBuffers = <T>(data: Buffer): T[] | undefined => {
-    const dataString = data.toString().trim();
-    if (!dataString.endsWith('}')) {
-        return undefined;
-    }
-    try {
-        return JSON.parse(`[${dataString.replaceAll('}\n{', '}\n,{')}]`) ?? [];
-    } catch {
-        return undefined;
-    }
-};
-
-const commonParser = <Result>(
-    data: Buffer,
-    callbacks: {
-        onProgress?: OnProgress;
-        onInfo?: (info: Result) => void;
-        onTaskBegin?: OnTaskBegin;
-        onTaskEnd?: OnTaskEnd<Result>;
-        onLogging?: (logging: LogMessage, pid?: number) => void;
-    },
-    pid?: number
-): Buffer | undefined => {
-    const parsedData: NrfutilJson<Result>[] | undefined =
-        parseJsonBuffers(data);
-
-    if (!parsedData) {
-        return data;
-    }
-
-    const processItem = (item: NrfutilJson<Result>) => {
-        switch (item.type) {
-            case 'task_progress':
-                callbacks.onProgress?.(
-                    convertNrfutilProgress(item.data.progress),
-                    item.data.task
-                );
-                break;
-            case 'task_begin':
-                callbacks.onTaskBegin?.(item.data);
-                break;
-            case 'task_end':
-                callbacks.onTaskEnd?.(item.data);
-                break;
-            case 'info':
-                callbacks.onInfo?.(item.data);
-                break;
-            case 'log':
-                callbacks.onLogging?.(item.data, pid);
-                break;
-            case 'batch_update':
-                processItem(item.data.data);
-                break;
-        }
-    };
-
-    parsedData.forEach(processItem);
-};
 
 const CORE_VERSION_FOR_LEGACY_APPS = '8.0.0';
 
@@ -344,34 +290,21 @@ export class NrfutilSandbox {
         controller?: AbortController,
         editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) => {
-        const info: Result[] = [];
-        const taskEnd: TaskEnd<Result>[] = [];
         let stdErr: string | undefined;
         let pid: number | undefined;
+
+        const parser = new CollectingResultParser(
+            this.log,
+            onProgress,
+            onTaskBegin,
+            onTaskEnd
+        );
 
         try {
             await this.spawnNrfutilCommand(
                 command,
                 args,
-                (data, processId) =>
-                    commonParser<Result>(
-                        data,
-                        {
-                            onProgress,
-                            onTaskBegin,
-                            onTaskEnd: end => {
-                                taskEnd.push(end);
-                                onTaskEnd?.(end);
-                            },
-                            onInfo: i => {
-                                info.push(i);
-                            },
-                            onLogging: logging => {
-                                this.log(logging, processId);
-                            },
-                        },
-                        processId
-                    ),
+                parser.handleData,
                 (data, processId) => {
                     pid = processId;
                     stdErr = (stdErr ?? '') + data.toString();
@@ -380,35 +313,18 @@ export class NrfutilSandbox {
                 editEnv
             );
 
-            if (
-                stdErr ||
-                taskEnd.filter(end => end.result === 'fail').length > 0
-            )
-                throw new Error('Task failed.');
+            if (stdErr || parser.hasFailures()) throw new Error('Task failed.');
 
-            return { taskEnd, info };
+            return parser.result();
         } catch (e) {
             const error = e as Error;
 
-            const addPunctuation = (str: string) =>
-                str.endsWith('.') ? str.trim() : `${str.trim()}.`;
+            error.message = collectErrorMessages(
+                error.message,
+                stdErr,
+                parser.errorMessage()
+            );
 
-            if (stdErr) {
-                error.message += `\n${addPunctuation(stdErr)}`;
-            }
-
-            const taskEndErrorMsg = taskEnd
-                .filter(end => end.result === 'fail' && !!end.message)
-                .map(end =>
-                    end.message ? `Message: ${addPunctuation(end.message)}` : ''
-                )
-                .join('\n');
-
-            if (taskEndErrorMsg) {
-                error.message += `\n${taskEndErrorMsg}`;
-            }
-
-            error.message = error.message.replaceAll('Error: ', '');
             telemetry.sendErrorReport(
                 `${this.pidIfTraceLogging(pid)}${describeError(error)}`
             );
@@ -526,34 +442,21 @@ export class NrfutilSandbox {
         controller?: AbortController,
         editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) => {
-        const info: Result[] = [];
-        const taskEnd: TaskEnd<Result>[] = [];
         let stdErr: string | undefined;
         let pid: number | undefined;
+
+        const parser = new CollectingResultParser(
+            this.log,
+            onProgress,
+            onTaskBegin,
+            onTaskEnd
+        );
 
         try {
             await this.execCommand(
                 command,
                 args,
-                (data, processId) =>
-                    commonParser<Result>(
-                        data,
-                        {
-                            onProgress,
-                            onTaskBegin,
-                            onTaskEnd: end => {
-                                taskEnd.push(end);
-                                onTaskEnd?.(end);
-                            },
-                            onInfo: i => {
-                                info.push(i);
-                            },
-                            onLogging: logging => {
-                                this.log(logging, processId);
-                            },
-                        },
-                        processId
-                    ),
+                parser.handleData,
                 (data, processId) => {
                     pid = processId;
                     stdErr = (stdErr ?? '') + data.toString();
@@ -562,35 +465,18 @@ export class NrfutilSandbox {
                 editEnv
             );
 
-            if (
-                stdErr ||
-                taskEnd.filter(end => end.result === 'fail').length > 0
-            )
-                throw new Error('Task failed.');
+            if (stdErr || parser.hasFailures()) throw new Error('Task failed.');
 
-            return { taskEnd, info };
+            return parser.result();
         } catch (e) {
             const error = e as Error;
 
-            const addPunctuation = (str: string) =>
-                str.endsWith('.') ? str.trim() : `${str.trim()}.`;
+            error.message = collectErrorMessages(
+                error.message,
+                stdErr,
+                parser.errorMessage()
+            );
 
-            if (stdErr) {
-                error.message += `\n${addPunctuation(stdErr)}`;
-            }
-
-            const taskEndErrorMsg = taskEnd
-                .filter(end => end.result === 'fail' && !!end.message)
-                .map(end =>
-                    end.message ? `Message: ${addPunctuation(end.message)}` : ''
-                )
-                .join('\n');
-
-            if (taskEndErrorMsg) {
-                error.message += `\n${taskEndErrorMsg}`;
-            }
-
-            error.message = error.message.replaceAll('Error: ', '');
             telemetry.sendErrorReport(
                 `${this.pidIfTraceLogging(pid)}${describeError(error)}`
             );
@@ -807,22 +693,3 @@ export class NrfutilSandbox {
         this.logLevel = level;
     };
 }
-
-const convertNrfutilProgress = (progress: NrfutilProgress): Progress => {
-    const amountOfSteps = progress.amountOfSteps ?? 1;
-    const step = progress.step ?? 1;
-
-    const singleStepWeight = (1 / amountOfSteps) * 100;
-
-    const totalProgressPercentage =
-        singleStepWeight * (step - 1) +
-        progress.progressPercentage / amountOfSteps;
-
-    return {
-        ...progress,
-        stepProgressPercentage: progress.progressPercentage,
-        totalProgressPercentage,
-        amountOfSteps,
-        step,
-    };
-};

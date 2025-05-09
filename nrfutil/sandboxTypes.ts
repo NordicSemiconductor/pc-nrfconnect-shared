@@ -123,3 +123,4 @@ export type LogMessage = {
 export type OnProgress = (progress: Progress, task?: Task) => void;
 export type OnTaskBegin = (taskBegin: TaskBegin) => void;
 export type OnTaskEnd<T> = (taskEnd: TaskEnd<T>) => void;
+export type OnLog = (message: LogMessage, pid: number | undefined) => void;
