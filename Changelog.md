@@ -9,6 +9,11 @@ every new version is a new major version.
 
 ## Unreleased
 
+### Fixed
+
+-   Scrollbars no longer appear in the device list for a second when
+    disconnecting a device.
+
 ### Steps to upgrade when using this package
 
 -   Minimum version of nrfutil-device is 2.7.16.

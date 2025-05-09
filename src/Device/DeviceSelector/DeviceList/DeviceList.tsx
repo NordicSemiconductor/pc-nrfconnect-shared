@@ -91,7 +91,7 @@ const DeviceList: FC<Props> = ({
                 isVisible || 'hidden'
             )}
         >
-            <div className="tw-flex tw-flex-col tw-overflow-y-hidden">
+            <div className="tw-flex tw-h-full tw-flex-col tw-overflow-y-hidden">
                 <div className="global-auto-reconnect">
                     <Toggle
                         id="toggle-global-auto-reconnect"
@@ -113,7 +113,7 @@ const DeviceList: FC<Props> = ({
                         }}
                     />
                 </div>
-                <div className="device-list">
+                <div className="device-list tw-h-full">
                     {sortedDevices.length === 0 && <NoDevicesConnected />}
                     {sortedDevices.length > 0 &&
                     filteredDevices.length === 0 ? (
@@ -124,6 +124,7 @@ const DeviceList: FC<Props> = ({
                                 <AnimatedItem
                                     key={device.id.toString()}
                                     itemKey={device.id.toString()}
+                                    isOnlyChild={filteredDevices.length === 1}
                                 >
                                     {device.traits.broken ? (
                                         <BrokenDevice device={device} />

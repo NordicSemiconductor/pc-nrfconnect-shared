@@ -55,8 +55,13 @@ const fadeOut: onExit = (element, _, removeElement) =>
 export const AnimatedItem: FC<{
     itemKey: string;
     children: ReactNode;
-}> = ({ children, itemKey }) => (
-    <Flipped flipId={itemKey} onAppear={fadeIn} onExit={fadeOut}>
+    isOnlyChild: boolean;
+}> = ({ children, itemKey, isOnlyChild }) => (
+    <Flipped
+        flipId={itemKey}
+        onAppear={fadeIn}
+        onExit={isOnlyChild ? undefined : fadeOut}
+    >
         <li className="tw-group">{children}</li>
     </Flipped>
 );
