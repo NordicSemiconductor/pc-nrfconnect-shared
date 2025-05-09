@@ -171,17 +171,6 @@ export class NrfutilSandbox {
         return env;
     }
 
-    private processLoggingData = (data: NrfutilJson, pid?: number) => {
-        if (data.type === 'log') {
-            this.onLoggingHandlers.forEach(onLogging =>
-                onLogging(data.data, pid)
-            );
-            return true;
-        }
-
-        return false;
-    };
-
     public getModuleVersion = async () => {
         const results = await this.spawnNrfutil<ModuleVersion>(this.module, [
             '--version',
@@ -206,6 +195,10 @@ export class NrfutilSandbox {
 
     public isSandboxInstalled = () =>
         this.executableExists() && this.commandReportsCorrectVersion();
+
+    private log(message: LogMessage, pid: number | undefined) {
+        this.onLoggingHandlers.forEach(onLogging => onLogging(message, pid));
+    }
 
     private executableExists() {
         return fs.existsSync(
@@ -374,9 +367,7 @@ export class NrfutilSandbox {
                                 info.push(i);
                             },
                             onLogging: logging => {
-                                this.onLoggingHandlers.forEach(onLogging => {
-                                    onLogging(logging, processId);
-                                });
+                                this.log(logging, processId);
                             },
                         },
                         processId
@@ -558,9 +549,7 @@ export class NrfutilSandbox {
                                 info.push(i);
                             },
                             onLogging: logging => {
-                                this.onLoggingHandlers.forEach(onLogging => {
-                                    onLogging(logging, processId);
-                                });
+                                this.log(logging, processId);
                             },
                         },
                         processId
@@ -697,10 +686,12 @@ export class NrfutilSandbox {
                 }
 
                 parsedData.forEach(item => {
-                    if (!this.processLoggingData(item, pid)) {
-                        if (item.type === 'info') {
-                            processors.onData(item.data);
-                        }
+                    if (item.type === 'log') {
+                        this.log(item.data, pid);
+                    }
+
+                    if (item.type === 'info') {
+                        processors.onData(item.data);
                     }
                 });
             },
