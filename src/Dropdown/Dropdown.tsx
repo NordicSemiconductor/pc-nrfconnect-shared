@@ -79,7 +79,7 @@ export default <T,>({
                 onClick={() => setIsActive(!isActive)}
                 disabled={disabled}
             >
-                <span>
+                <span className="tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap">
                     {items.findIndex(e => e.value === selectedItem.value) === -1
                         ? defaultButtonLabel
                         : selectedItem.label}
