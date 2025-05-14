@@ -4,13 +4,50 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { isLauncher, packageJsonApp } from '../src/utils/packageJson';
-import {
-    type Dependency,
-    hasVersion,
-    type TopLevelDependency,
-} from './sandboxTypes';
-import { versionToString } from './version';
+import { isLauncher, packageJsonApp } from '../../src/utils/packageJson';
+import { type DiscriminatedVersion, versionToString } from './version';
+
+type FeatureClassification =
+    | 'nrf-internal-confidential'
+    | 'nrf-internal'
+    | 'nrf-external-confidential'
+    | 'nrf-external';
+
+type Plugin = DiscriminatedVersion & {
+    dependencies: TopLevelDependency[];
+    name: string;
+};
+
+type DependencyWithoutVersion = {
+    name: string;
+    description?: string;
+    dependencies?: Dependency[];
+    expectedVersion?: DiscriminatedVersion;
+};
+type DependencyWithVersion = DiscriminatedVersion & DependencyWithoutVersion;
+
+export type Dependency = DependencyWithoutVersion | DependencyWithVersion;
+
+type TopLevelDependency = Dependency & {
+    classification?: FeatureClassification;
+    plugins?: Plugin[];
+};
+
+export type ModuleVersion = {
+    build_timestamp: string;
+    classification: FeatureClassification;
+    commit_date: string;
+    commit_hash: string;
+    dependencies: TopLevelDependency[];
+    host: string;
+    name: string;
+    version: string;
+};
+
+export const hasVersion = (
+    dependency?: Dependency | DiscriminatedVersion
+): dependency is DependencyWithVersion | DiscriminatedVersion =>
+    dependency != null && 'version' in dependency && dependency.version != null;
 
 export const describeVersion = (dependencyOrVersion?: Dependency | string) => {
     if (typeof dependencyOrVersion === 'string') return dependencyOrVersion;
