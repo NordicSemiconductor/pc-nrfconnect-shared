@@ -50,7 +50,7 @@ export class Batch {
     private enqueueBatchOperationObject(
         command: string,
         core: DeviceCore,
-        callbacks?: Callbacks<unknown>,
+        callbacks?: CallbacksUnknown,
         args: string[] = []
     ) {
         const getPromise = async () => {
@@ -235,35 +235,27 @@ export class Batch {
         core: DeviceCore,
         programmingOptions?: ProgrammingOptions,
         deviceTraits?: DeviceTraits,
-        callbacks?: Callbacks
+        callbacks?: CallbacksUnknown
     ) {
-        let args = [
+        const args = [
             ...(deviceTraits ? deviceTraitsToArgs(deviceTraits) : []),
             ...programmingOptionsToArgs(programmingOptions),
         ];
-        let newCallbacks = { ...callbacks };
+        const newCallbacks = { ...callbacks };
 
         if (typeof firmware === 'string') {
             args.unshift('--firmware', firmware);
         } else {
             const tempFilePath = createTempFile(firmware);
-            args = ['--firmware', tempFilePath, ...args];
+            args.unshift('--firmware', tempFilePath);
 
-            newCallbacks = {
-                ...callbacks,
-                onTaskEnd: (taskEnd: TaskEnd<void>) => {
-                    fs.unlinkSync(tempFilePath);
-                    callbacks?.onTaskEnd?.(taskEnd);
-                },
-            } as CallbacksUnknown;
+            newCallbacks.onTaskEnd = (taskEnd: TaskEnd<unknown>) => {
+                fs.unlinkSync(tempFilePath);
+                callbacks?.onTaskEnd?.(taskEnd);
+            };
         }
 
-        this.enqueueBatchOperationObject(
-            'program',
-            core,
-            newCallbacks as CallbacksUnknown,
-            args
-        );
+        this.enqueueBatchOperationObject('program', core, newCallbacks, args);
 
         return this;
     }
