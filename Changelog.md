@@ -7,13 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## Unreleased
+## 210.0.0 - 2025-05-15
 
 ### Fixed
 
 -   Scrollbars no longer appear in the device list for a second when
     disconnecting a device.
 -   `Dropdown` active label now handles overflow.
+-   nRFUtil device batch will not run if no subcommand has been added to the
+    batch.
 
 ### Steps to upgrade when using this package
 
