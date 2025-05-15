@@ -14,6 +14,8 @@ every new version is a new major version.
 -   Scrollbars no longer appear in the device list for a second when
     disconnecting a device.
 -   `Dropdown` active label now handles overflow.
+-   nRFUtil device batch will not run if no subcommand has been added to the
+    batch.
 
 ### Steps to upgrade when using this package
 

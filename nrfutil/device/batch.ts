@@ -341,6 +341,10 @@ export class Batch {
             );
         }
 
+        if (this.operationBatchGeneration.length === 0) {
+            return []; // this is an empty batch nothing to run
+        }
+
         let currentOperationIndex = -1;
         let lastCompletedOperationIndex = -1;
         const results: TaskEnd<unknown>[] = [];
