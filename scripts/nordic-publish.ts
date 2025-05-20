@@ -165,6 +165,7 @@ class ArtifactoryClient extends Client {
 
     sourceUrl: string;
     uploadUrl: string;
+    cacheUrl: string;
 
     constructor(private readonly options: Options) {
         super();
@@ -180,6 +181,10 @@ class ArtifactoryClient extends Client {
         }`;
 
         this.sourceUrl = `https://files.nordicsemi.com/ui/api/v1/download?isNativeBrowsing=false&repoKey=swtools&path=${this.getAccessLevel()}/ncd/apps/${
+            options.source
+        }`;
+
+        this.cacheUrl = `https://files.nordicsemi.cn/artifactory/swtools-cache/${this.getAccessLevel()}/ncd/apps/${
             options.source
         }`;
     }
@@ -205,6 +210,20 @@ class ArtifactoryClient extends Client {
         return res.text();
     };
 
+    deleteCache = async (filename: string) => {
+        const url = `${this.cacheUrl}/${filename}`;
+        const res = await fetch(url, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${this.token}` },
+        });
+
+        /* 404 is ok, which happens if the file does not exist on the cache
+           server. Can happen when it is new or was not cached yet */
+        if (res.ok || res.status === 404) return;
+
+        throw new Error(`Failed to delete ${url}: ${res.statusText}`);
+    };
+
     upload = async (content: Buffer, remoteFilename: string) => {
         const url = `${this.uploadUrl}/${remoteFilename}`;
         const res = await fetch(url, {
@@ -216,6 +235,8 @@ class ArtifactoryClient extends Client {
         if (!res.ok) {
             throw new Error(`Failed to upload ${url}: ${res.statusText}`);
         }
+
+        await this.deleteCache(remoteFilename);
     };
 
     uploadContent = (content: Buffer, remoteFilename: string) => {
