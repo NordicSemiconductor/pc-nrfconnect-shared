@@ -17,9 +17,15 @@ every new version is a new major version.
 -   nRFUtil device batch will not run if no subcommand has been added to the
     batch.
 
+### Added
+
+-   Specify what core version of nrfutil an app depends on.
+
 ### Steps to upgrade when using this package
 
 -   Minimum version of nrfutil-device is 2.7.16.
+-   In apps in `package.json` set the field `nrfConnectForDesktop.nrfutilCore`
+    to the core version of nrfutil that the nrfutil commands will use.
 
 ## 209.0.0 - 2025-04-30
 
