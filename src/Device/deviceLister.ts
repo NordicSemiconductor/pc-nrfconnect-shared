@@ -253,7 +253,7 @@ export const startWatchingDevices =
 
                     if (!deviceWithPersistedData) return;
 
-                    // Selected device information such as serial port mah vae been updated ... lets update our state with new informaiton
+                    // Selected device information such as serial port may have been updated ... let's update the state with new information
                     if (
                         selectedDevice?.id === deviceWithPersistedData.id &&
                         selectedDevice?.serialNumber ===
