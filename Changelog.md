@@ -7,6 +7,14 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 211.0.0 - 2025-05-29
+
+### Fixed
+
+-   It was observed that on mac we get multiple arrive event and the only chnage
+    is the number if serial ports. Now the selected device in redux will also
+    update to reflect these chnages
+
 ## 210.0.0 - 2025-05-15
 
 ### Fixed
