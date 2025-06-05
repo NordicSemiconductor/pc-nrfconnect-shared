@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { packageJsonApp } from '../src/utils/packageJson';
+import { isLauncher, packageJsonApp } from '../src/utils/packageJson';
 import {
     type Dependency,
     hasVersion,
@@ -78,7 +78,7 @@ const versionFromPackageJson = (module: string) =>
     packageJsonApp().nrfConnectForDesktop.nrfutil?.[module][0];
 
 const failToDetermineVersion = (module: string) => {
-    throw new Error(`No version specified for the bundled nrfutil ${module}`);
+    throw new Error(`No version specified for nrfutil ${module}`);
 };
 
 export const versionToInstall = (module: string, version?: string) =>
@@ -86,3 +86,12 @@ export const versionToInstall = (module: string, version?: string) =>
     overriddenVersion(module) ??
     versionFromPackageJson(module) ??
     failToDetermineVersion(module);
+
+const coreVersionFromPackageJson = () =>
+    isLauncher()
+        ? undefined // Will lead to using CORE_VERSION_FOR_LEGACY_APPS
+        : packageJsonApp().nrfConnectForDesktop.nrfutilCore ??
+          failToDetermineVersion('core');
+
+export const coreVersionsToInstall = (coreVersion?: string) =>
+    coreVersion ?? overriddenVersion('core') ?? coreVersionFromPackageJson();

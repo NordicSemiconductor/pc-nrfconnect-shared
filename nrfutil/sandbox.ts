@@ -13,7 +13,7 @@ import treeKill from 'tree-kill';
 import describeError from '../src/logging/describeError';
 import telemetry from '../src/telemetry/telemetry';
 import { isDevelopment } from '../src/utils/environment';
-import { versionToInstall } from './moduleVersion';
+import { coreVersionsToInstall, versionToInstall } from './moduleVersion';
 import { getNrfutilLogger } from './nrfutilLogger';
 import {
     BackgroundTask,
@@ -40,18 +40,31 @@ const parseJsonBuffers = <T>(data: Buffer): T[] | undefined => {
     }
 };
 
-const nrfutilSandboxFolder =
-    process.platform === 'darwin' && process.arch !== 'x64'
-        ? path.join('nrfutil-sandboxes', process.arch)
-        : 'nrfutil-sandboxes';
+const nrfutilSandboxPathSegments = (
+    baseDir: string,
+    module: string,
+    version: string,
+    coreVersion?: string
+) => [
+    baseDir,
+    'nrfutil-sandboxes',
+    ...(process.platform === 'darwin' && process.arch !== 'x64'
+        ? [process.arch]
+        : []),
+    ...(coreVersion != null ? [coreVersion] : []),
+    module,
+    version,
+];
 
-const prepareEnv = (baseDir: string, module: string, version: string) => {
+const prepareEnv = (
+    baseDir: string,
+    module: string,
+    version: string,
+    coreVersion?: string
+) => {
     const env = { ...process.env };
     env.NRFUTIL_HOME = path.join(
-        baseDir,
-        nrfutilSandboxFolder,
-        module,
-        version
+        ...nrfutilSandboxPathSegments(baseDir, module, version, coreVersion)
     );
     fs.mkdirSync(env.NRFUTIL_HOME, { recursive: true });
 
@@ -124,16 +137,25 @@ export class NrfutilSandbox {
     baseDir: string;
     module: string;
     version: string;
+    coreVersion: string | undefined; // Must only be undefined when the launcher creates a sandbox for a legacy app, which does not specify the required core version
     onLoggingHandlers: ((logging: LogMessage, pid?: number) => void)[] = [];
     logLevel: LogLevel = isDevelopment ? 'error' : 'off';
     env: ReturnType<typeof prepareEnv>;
 
-    constructor(baseDir: string, module: string, version: string) {
+    readonly CORE_VERSION_FOR_LEGACY_APPS = '8.0.0';
+
+    constructor(
+        baseDir: string,
+        module: string,
+        version: string,
+        coreVersion?: string
+    ) {
         this.baseDir = baseDir;
         this.module = module;
         this.version = version;
+        this.coreVersion = coreVersion;
 
-        this.env = prepareEnv(baseDir, module, version);
+        this.env = prepareEnv(baseDir, module, version, coreVersion);
     }
 
     private processLoggingData = (data: NrfutilJson, pid?: number) => {
@@ -173,10 +195,12 @@ export class NrfutilSandbox {
         if (
             fs.existsSync(
                 path.join(
-                    this.baseDir,
-                    nrfutilSandboxFolder,
-                    this.module,
-                    this.version,
+                    ...nrfutilSandboxPathSegments(
+                        this.baseDir,
+                        this.module,
+                        this.version,
+                        this.coreVersion
+                    ),
                     'bin',
                     `nrfutil-${this.module}${
                         os.platform() === 'win32' ? '.exe' : ''
@@ -201,15 +225,8 @@ export class NrfutilSandbox {
                     force: true,
                 });
             }
-            await this.updateNrfUtilCore();
-            await this.spawnNrfutil(
-                'install',
-                [`${this.module}=${this.version}`, '--force'],
-                onProgress
-            );
-            getNrfutilLogger()?.info(
-                `Successfully installed nrfutil ${this.module} version: ${this.version}`
-            );
+            await this.installNrfUtilCore(onProgress);
+            await this.installNrfUtilCommand(onProgress);
         } catch (error) {
             if (this.env.NRFUTIL_HOME && fs.existsSync(this.env.NRFUTIL_HOME)) {
                 fs.rmSync(this.env.NRFUTIL_HOME, {
@@ -218,25 +235,61 @@ export class NrfutilSandbox {
                 });
             }
 
-            getNrfutilLogger()?.error(
-                `Error while installing nrfutil ${this.module} version: ${
-                    this.version
-                }. describeError: ${describeError(error)}`
-            );
             throw error;
         }
     };
 
-    public updateNrfUtilCore = async (
+    private installNrfUtilCore = async (
         onProgress?: (progress: Progress, task?: Task) => void
     ) => {
-        try {
-            await this.spawnNrfutil('self-upgrade', [], onProgress);
-        } catch (error) {
-            // User might not have internet hance fail silently
-            getNrfutilLogger()?.error(
-                `Error while updating the bundled core for nrfutil ${this.module}.`
+        const currentCoreVersion = await this.getCoreVersion();
+        const requestedCoreVersion =
+            this.coreVersion ?? this.CORE_VERSION_FOR_LEGACY_APPS;
+        if (currentCoreVersion.version === requestedCoreVersion) {
+            getNrfutilLogger()?.debug(
+                `Requested nrfutil core version ${requestedCoreVersion} is already installed.`
             );
+
+            return;
+        }
+
+        await this.install(
+            'core',
+            requestedCoreVersion,
+            'self-upgrade',
+            ['--to-version', requestedCoreVersion],
+            onProgress
+        );
+    };
+
+    public installNrfUtilCommand = (
+        onProgress?: (progress: Progress, task?: Task) => void
+    ) =>
+        this.install(
+            this.module,
+            this.version,
+            'install',
+            [`${this.module}=${this.version}`, '--force'],
+            onProgress
+        );
+
+    public install = async (
+        module: string,
+        version: string,
+        ...args: Parameters<typeof this.spawnNrfutil>
+    ) => {
+        try {
+            await this.spawnNrfutil(...args);
+            getNrfutilLogger()?.info(
+                `Successfully installed nrfutil ${module} version: ${version}`
+            );
+        } catch (error) {
+            const errorMessage = `Error while installing nrfutil ${module} version ${version}: ${describeError(
+                error
+            )}`;
+
+            getNrfutilLogger()?.error(errorMessage);
+            throw new Error(errorMessage);
         }
     };
 
@@ -765,22 +818,20 @@ export default async (
     baseDir: string,
     module: string,
     version?: string,
+    coreVersion?: string,
     onProgress?: (progress: Progress, task?: Task) => void
 ) => {
     const sandbox = new NrfutilSandbox(
         baseDir,
         module,
-        versionToInstall(module, version)
+        versionToInstall(module, version),
+        coreVersionsToInstall(coreVersion)
     );
 
     onProgress?.(convertNrfutilProgress({ progressPercentage: 0 }));
-    const result = await sandbox.isSandboxInstalled();
 
-    if (!result) {
+    if (!(await sandbox.isSandboxInstalled())) {
         await sandbox.prepareSandbox(onProgress);
-    } else {
-        // update nrfutil core
-        await sandbox.updateNrfUtilCore(onProgress);
     }
 
     onProgress?.(convertNrfutilProgress({ progressPercentage: 100 }));
