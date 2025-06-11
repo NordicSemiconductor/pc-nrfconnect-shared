@@ -55,7 +55,7 @@ const logger = createLogger({
     format: format.combine(
         format(info => ({
             ...info,
-            message: info[SPLAT]
+            message: Array.isArray(info[SPLAT])
                 ? `${info.message} ${info[SPLAT].join(' ')}`
                 : info.message,
         }))(),
