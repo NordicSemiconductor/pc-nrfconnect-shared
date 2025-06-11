@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 213.0.0 - 2025-06-11
+
+### Fixed
+
+-   Typecheck error when using a recent version of the dependency logform.
+
 ## 212.0.0 - 2025-06-05
 
 ### Added
