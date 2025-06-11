@@ -51,19 +51,12 @@ interface SharedLogger extends Logger {
     logError: (message: string, error: unknown) => void;
 }
 
-/* This function is only needed, because our version of TypeScript still seems
-   unable to accept (unique) symbols as index types. As soon as we have
-   upgraded to a version that is capable of that, the invocations of this
-   function can be replaced by a simple `info[splat]` and this function can
-   be removed. */
-const splat = (info: TransformableInfo) => info[SPLAT as unknown as string];
-
 const logger = createLogger({
     format: format.combine(
         format(info => ({
             ...info,
-            message: splat(info)
-                ? `${info.message} ${splat(info).join(' ')}`
+            message: info[SPLAT]
+                ? `${info.message} ${info[SPLAT].join(' ')}`
                 : info.message,
         }))(),
         format.timestamp(),
