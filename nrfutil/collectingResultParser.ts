@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { addPunctuation, convertNrfutilProgress } from './common';
+import { convertNrfutilProgress } from './common';
 import type {
     NrfutilJson,
     OnLog,
@@ -13,6 +13,9 @@ import type {
     OnTaskEnd,
     TaskEnd,
 } from './sandboxTypes';
+
+const addPunctuation = (str: string) =>
+    str.endsWith('.') ? str.trim() : `${str.trim()}.`;
 
 export const parseJsonBuffers = <T>(data: Buffer): T[] | undefined => {
     const dataString = data.toString().trim();

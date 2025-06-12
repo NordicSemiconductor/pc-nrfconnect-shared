@@ -16,11 +16,7 @@ import { isDevelopment } from '../src/utils/environment';
 import CollectingResultParser, {
     parseJsonBuffers,
 } from './collectingResultParser';
-import {
-    addPunctuation,
-    collectErrorMessages,
-    convertNrfutilProgress,
-} from './common';
+import { collectErrorMessages, convertNrfutilProgress } from './common';
 import { getNrfutilLogger } from './nrfutilLogger';
 import type {
     BackgroundTask,

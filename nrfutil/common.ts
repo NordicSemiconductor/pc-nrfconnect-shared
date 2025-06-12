@@ -6,9 +6,6 @@
 
 import type { NrfutilProgress, Progress } from './sandboxTypes';
 
-export const addPunctuation = (str: string) =>
-    str.endsWith('.') ? str.trim() : `${str.trim()}.`;
-
 export const convertNrfutilProgress = (progress: NrfutilProgress): Progress => {
     const amountOfSteps = progress.amountOfSteps ?? 1;
     const step = progress.step ?? 1;
