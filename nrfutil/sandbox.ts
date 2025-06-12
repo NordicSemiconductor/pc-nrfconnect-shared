@@ -13,10 +13,12 @@ import treeKill from 'tree-kill';
 import describeError from '../src/logging/describeError';
 import telemetry from '../src/telemetry/telemetry';
 import { isDevelopment } from '../src/utils/environment';
-import CollectingResultParser, {
+import CollectingResultParser from './collectingResultParser';
+import {
+    collectErrorMessages,
+    convertNrfutilProgress,
     parseJsonBuffers,
-} from './collectingResultParser';
-import { collectErrorMessages, convertNrfutilProgress } from './common';
+} from './common';
 import { getNrfutilLogger } from './nrfutilLogger';
 import type {
     BackgroundTask,
