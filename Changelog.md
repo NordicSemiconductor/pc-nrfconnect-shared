@@ -19,10 +19,20 @@ every new version is a new major version.
 
 -   Specify what core version of nrfutil an app depends on.
 
+### Removed
+
+-   Function `prepareSandbox`.
+
+### Changed
+
+-   Signature of `xRead`.
+
 ### Steps to upgrade when using this package
 
 -   In apps in `package.json` set the field `nrfConnectForDesktop.nrfutilCore`
     to the core version of nrfutil that the nrfutil commands will use.
+-   Replace usage of `prepareSandbox` with `NrfutilSandbox.create`
+-   Update calls of `xRead`.
 
 ## 211.0.0 - 2025-05-29
 

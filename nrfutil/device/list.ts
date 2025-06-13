@@ -34,16 +34,11 @@ export default async (
     },
     timeout?: number
 ) => {
-    const args: string[] = deviceTraitsToArgs(traits);
-
-    if (onHotplugEvent) {
-        args.push('--hotplug');
-    }
-
-    if (timeout !== undefined) {
-        args.push('--timeout-ms');
-        args.push(timeout.toString());
-    }
+    const args = [
+        ...deviceTraitsToArgs(traits),
+        ...(onHotplugEvent ? ['--hotplug'] : []),
+        ...(timeout !== undefined ? ['--timeout-ms', timeout.toString()] : []),
+    ];
 
     const onData = (data: HotplugEvent | ListEvent) => {
         if (isListEvent(data)) {

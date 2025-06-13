@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { Progress } from '../sandboxTypes';
+import { type OnProgress } from '../sandboxTypes';
 import {
+    coreArg,
     DeviceCore,
     deviceSingleTaskEndOperation,
     NrfutilDevice,
@@ -57,7 +58,7 @@ export interface FWInfo {
 export default (
     device: NrfutilDevice,
     core?: DeviceCore,
-    onProgress?: (progress: Progress) => void,
+    onProgress?: OnProgress,
     controller?: AbortController
 ) =>
     deviceSingleTaskEndOperation<FWInfo>(
@@ -65,5 +66,5 @@ export default (
         'fw-info',
         onProgress,
         controller,
-        core ? ['--core', core] : []
+        coreArg(core)
     );

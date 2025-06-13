@@ -13,161 +13,107 @@ import treeKill from 'tree-kill';
 import describeError from '../src/logging/describeError';
 import telemetry from '../src/telemetry/telemetry';
 import { isDevelopment } from '../src/utils/environment';
-import { coreVersionsToInstall, versionToInstall } from './moduleVersion';
-import { getNrfutilLogger } from './nrfutilLogger';
+import CollectingResultParser from './collectingResultParser';
 import {
+    collectErrorMessages,
+    convertNrfutilProgress,
+    parseJsonBuffers,
+} from './common';
+import { getNrfutilLogger } from './nrfutilLogger';
+import type {
     BackgroundTask,
     LogLevel,
     LogMessage,
-    ModuleVersion,
     NrfutilJson,
-    NrfutilProgress,
-    Progress,
-    Task,
-    TaskBegin,
-    TaskEnd,
+    OnProgress,
+    OnTaskBegin,
+    OnTaskEnd,
 } from './sandboxTypes';
+import {
+    coreVersionsToInstall,
+    type ModuleVersion,
+    versionToInstall,
+} from './version/moduleVersion';
 
-const parseJsonBuffers = <T>(data: Buffer): T[] | undefined => {
-    const dataString = data.toString().trim();
-    if (!dataString.endsWith('}')) {
-        return undefined;
-    }
-    try {
-        return JSON.parse(`[${dataString.replaceAll('}\n{', '}\n,{')}]`) ?? [];
-    } catch {
-        return undefined;
-    }
-};
-
-const nrfutilSandboxPathSegments = (
-    baseDir: string,
-    module: string,
-    version: string,
-    coreVersion?: string
-) => [
-    baseDir,
-    'nrfutil-sandboxes',
-    ...(process.platform === 'darwin' && process.arch !== 'x64'
-        ? [process.arch]
-        : []),
-    ...(coreVersion != null ? [coreVersion] : []),
-    module,
-    version,
-];
-
-const prepareEnv = (
-    baseDir: string,
-    module: string,
-    version: string,
-    coreVersion?: string
-) => {
-    const env = { ...process.env };
-    env.NRFUTIL_HOME = path.join(
-        ...nrfutilSandboxPathSegments(baseDir, module, version, coreVersion)
-    );
-    fs.mkdirSync(env.NRFUTIL_HOME, { recursive: true });
-
-    env.NRFUTIL_EXEC_PATH = path.join(env.NRFUTIL_HOME, 'bin');
-
-    if (
-        process.env.NODE_ENV === 'production' &&
-        !process.env.NRF_OVERRIDE_NRFUTIL_SETTINGS
-    ) {
-        delete env.NRFUTIL_BOOTSTRAP_CONFIG_URL;
-        delete env.NRFUTIL_BOOTSTRAP_TARBALL_PATH;
-        delete env.NRFUTIL_DEVICE_PLUGINS_DIR_FORCE_NRFDL_LOCATION;
-        delete env.NRFUTIL_DEVICE_PLUGINS_DIR_FORCE_NRFUTIL_LIBDIR;
-        delete env.NRFUTIL_IGNORE_MISSING_SUBCOMMAND;
-        delete env.NRFUTIL_LOG;
-        delete env.NRFUTIL_PACKAGE_INDEX_URL;
-    }
-
-    return env;
-};
-
-const commonParser = <Result>(
-    data: Buffer,
-    callbacks: {
-        onProgress?: (progress: Progress, task?: Task) => void;
-        onInfo?: (info: Result) => void;
-        onTaskBegin?: (taskEnd: TaskBegin) => void;
-        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void;
-        onLogging?: (logging: LogMessage, pid?: number) => void;
-    },
-    pid?: number
-): Buffer | undefined => {
-    const parsedData: NrfutilJson<Result>[] | undefined =
-        parseJsonBuffers(data);
-
-    if (!parsedData) {
-        return data;
-    }
-
-    const processItem = (item: NrfutilJson<Result>) => {
-        switch (item.type) {
-            case 'task_progress':
-                callbacks.onProgress?.(
-                    convertNrfutilProgress(item.data.progress),
-                    item.data.task
-                );
-                break;
-            case 'task_begin':
-                callbacks.onTaskBegin?.(item.data);
-                break;
-            case 'task_end':
-                callbacks.onTaskEnd?.(item.data);
-                break;
-            case 'info':
-                callbacks.onInfo?.(item.data);
-                break;
-            case 'log':
-                callbacks.onLogging?.(item.data, pid);
-                break;
-            case 'batch_update':
-                processItem(item.data.data);
-                break;
-        }
-    };
-
-    parsedData.forEach(processItem);
-};
+const CORE_VERSION_FOR_LEGACY_APPS = '8.0.0';
 
 export class NrfutilSandbox {
-    baseDir: string;
-    module: string;
-    version: string;
-    coreVersion: string | undefined; // Must only be undefined when the launcher creates a sandbox for a legacy app, which does not specify the required core version
-    onLoggingHandlers: ((logging: LogMessage, pid?: number) => void)[] = [];
-    logLevel: LogLevel = isDevelopment ? 'error' : 'off';
-    env: ReturnType<typeof prepareEnv>;
+    private readonly onLoggingHandlers: ((
+        logging: LogMessage,
+        pid?: number
+    ) => void)[] = [];
+    private logLevel: LogLevel = isDevelopment ? 'error' : 'off';
 
-    readonly CORE_VERSION_FOR_LEGACY_APPS = '8.0.0';
+    private readonly sandboxPath;
+    private readonly env;
 
-    constructor(
+    public static async create(
         baseDir: string,
         module: string,
-        version: string,
-        coreVersion?: string
+        version?: string,
+        coreVersion?: string,
+        onProgress?: OnProgress
     ) {
-        this.baseDir = baseDir;
-        this.module = module;
-        this.version = version;
-        this.coreVersion = coreVersion;
+        const sandbox = new NrfutilSandbox(
+            baseDir,
+            module,
+            versionToInstall(module, version),
+            coreVersionsToInstall(coreVersion)
+        );
 
-        this.env = prepareEnv(baseDir, module, version, coreVersion);
-    }
+        onProgress?.(convertNrfutilProgress({ progressPercentage: 0 }));
 
-    private processLoggingData = (data: NrfutilJson, pid?: number) => {
-        if (data.type === 'log') {
-            this.onLoggingHandlers.forEach(onLogging =>
-                onLogging(data.data, pid)
-            );
-            return true;
+        if (!(await sandbox.isSandboxInstalled())) {
+            await sandbox.prepareSandbox(onProgress);
         }
 
-        return false;
-    };
+        onProgress?.(convertNrfutilProgress({ progressPercentage: 100 }));
+
+        return sandbox;
+    }
+
+    private constructor(
+        private readonly baseDir: string,
+        private readonly module: string,
+        private readonly version: string,
+        private readonly coreVersion?: string // Must only be undefined when the launcher creates a sandbox for a legacy app, which does not specify the required core version
+    ) {
+        this.sandboxPath = path.join(
+            this.baseDir,
+            'nrfutil-sandboxes',
+            ...(process.platform === 'darwin' && process.arch !== 'x64'
+                ? [process.arch]
+                : []),
+            ...(this.coreVersion != null ? [this.coreVersion] : []),
+            this.module,
+            this.version
+        );
+
+        this.env = this.prepareEnv();
+    }
+
+    private prepareEnv() {
+        const env = { ...process.env };
+        env.NRFUTIL_HOME = this.sandboxPath;
+        fs.mkdirSync(env.NRFUTIL_HOME, { recursive: true });
+
+        env.NRFUTIL_EXEC_PATH = path.join(env.NRFUTIL_HOME, 'bin');
+
+        if (
+            process.env.NODE_ENV === 'production' &&
+            !process.env.NRF_OVERRIDE_NRFUTIL_SETTINGS
+        ) {
+            delete env.NRFUTIL_BOOTSTRAP_CONFIG_URL;
+            delete env.NRFUTIL_BOOTSTRAP_TARBALL_PATH;
+            delete env.NRFUTIL_DEVICE_PLUGINS_DIR_FORCE_NRFDL_LOCATION;
+            delete env.NRFUTIL_DEVICE_PLUGINS_DIR_FORCE_NRFUTIL_LIBDIR;
+            delete env.NRFUTIL_IGNORE_MISSING_SUBCOMMAND;
+            delete env.NRFUTIL_LOG;
+            delete env.NRFUTIL_PACKAGE_INDEX_URL;
+        }
+
+        return env;
+    }
 
     public getModuleVersion = async () => {
         const results = await this.spawnNrfutil<ModuleVersion>(this.module, [
@@ -191,32 +137,31 @@ export class NrfutilSandbox {
         throw new Error('Unexpected result');
     };
 
-    public isSandboxInstalled = async () => {
-        if (
-            fs.existsSync(
-                path.join(
-                    ...nrfutilSandboxPathSegments(
-                        this.baseDir,
-                        this.module,
-                        this.version,
-                        this.coreVersion
-                    ),
-                    'bin',
-                    `nrfutil-${this.module}${
-                        os.platform() === 'win32' ? '.exe' : ''
-                    }`
-                )
-            )
-        ) {
-            const moduleVersion = await this.getModuleVersion();
-            return moduleVersion.version === this.version;
-        }
-        return false;
-    };
+    public isSandboxInstalled = () =>
+        this.executableExists() && this.commandReportsCorrectVersion();
 
-    public prepareSandbox = async (
-        onProgress?: (progress: Progress, task?: Task) => void
-    ) => {
+    private log(message: LogMessage, pid: number | undefined) {
+        this.onLoggingHandlers.forEach(onLogging => onLogging(message, pid));
+    }
+
+    private executableExists() {
+        return fs.existsSync(
+            path.join(
+                this.sandboxPath,
+                'bin',
+                `nrfutil-${this.module}${
+                    os.platform() === 'win32' ? '.exe' : ''
+                }`
+            )
+        );
+    }
+
+    private async commandReportsCorrectVersion() {
+        const moduleVersion = await this.getModuleVersion();
+        return moduleVersion.version === this.version;
+    }
+
+    public prepareSandbox = async (onProgress?: OnProgress) => {
         try {
             // Clean up any residual sandbox from before if any
             if (this.env.NRFUTIL_HOME && fs.existsSync(this.env.NRFUTIL_HOME)) {
@@ -239,12 +184,10 @@ export class NrfutilSandbox {
         }
     };
 
-    private installNrfUtilCore = async (
-        onProgress?: (progress: Progress, task?: Task) => void
-    ) => {
+    private installNrfUtilCore = async (onProgress?: OnProgress) => {
         const currentCoreVersion = await this.getCoreVersion();
         const requestedCoreVersion =
-            this.coreVersion ?? this.CORE_VERSION_FOR_LEGACY_APPS;
+            this.coreVersion ?? CORE_VERSION_FOR_LEGACY_APPS;
         if (currentCoreVersion.version === requestedCoreVersion) {
             getNrfutilLogger()?.debug(
                 `Requested nrfutil core version ${requestedCoreVersion} is already installed.`
@@ -262,9 +205,7 @@ export class NrfutilSandbox {
         );
     };
 
-    public installNrfUtilCommand = (
-        onProgress?: (progress: Progress, task?: Task) => void
-    ) =>
+    public installNrfUtilCommand = (onProgress?: OnProgress) =>
         this.install(
             this.module,
             this.version,
@@ -298,9 +239,9 @@ export class NrfutilSandbox {
     public spawnNrfutilSubcommand = <Result>(
         command: string,
         args: string[],
-        onProgress?: (progress: Progress, task?: Task) => void,
-        onTaskBegin?: (taskBegin: TaskBegin) => void,
-        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
+        onProgress?: OnProgress,
+        onTaskBegin?: OnTaskBegin,
+        onTaskEnd?: OnTaskEnd<Result>,
         controller?: AbortController,
         editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) =>
@@ -341,42 +282,27 @@ export class NrfutilSandbox {
     private spawnNrfutil = async <Result>(
         command: string,
         args: string[],
-        onProgress?: (progress: Progress, task?: Task) => void,
-        onTaskBegin?: (taskBegin: TaskBegin) => void,
-        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
+        onProgress?: OnProgress,
+        onTaskBegin?: OnTaskBegin,
+        onTaskEnd?: OnTaskEnd<Result>,
         controller?: AbortController,
         editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) => {
-        const info: Result[] = [];
-        const taskEnd: TaskEnd<Result>[] = [];
         let stdErr: string | undefined;
         let pid: number | undefined;
+
+        const parser = new CollectingResultParser(
+            this.log,
+            onProgress,
+            onTaskBegin,
+            onTaskEnd
+        );
 
         try {
             await this.spawnNrfutilCommand(
                 command,
                 args,
-                (data, processId) =>
-                    commonParser<Result>(
-                        data,
-                        {
-                            onProgress,
-                            onTaskBegin,
-                            onTaskEnd: end => {
-                                taskEnd.push(end);
-                                onTaskEnd?.(end);
-                            },
-                            onInfo: i => {
-                                info.push(i);
-                            },
-                            onLogging: logging => {
-                                this.onLoggingHandlers.forEach(onLogging => {
-                                    onLogging(logging, processId);
-                                });
-                            },
-                        },
-                        processId
-                    ),
+                parser.handleData,
                 (data, processId) => {
                     pid = processId;
                     stdErr = (stdErr ?? '') + data.toString();
@@ -385,39 +311,20 @@ export class NrfutilSandbox {
                 editEnv
             );
 
-            if (
-                stdErr ||
-                taskEnd.filter(end => end.result === 'fail').length > 0
-            )
-                throw new Error('Task failed.');
+            if (stdErr || parser.hasFailures()) throw new Error('Task failed.');
 
-            return { taskEnd, info };
+            return parser.result();
         } catch (e) {
             const error = e as Error;
 
-            const addPunctuation = (str: string) =>
-                str.endsWith('.') ? str.trim() : `${str.trim()}.`;
+            error.message = collectErrorMessages(
+                error.message,
+                stdErr,
+                parser.errorMessage()
+            );
 
-            if (stdErr) {
-                error.message += `\n${addPunctuation(stdErr)}`;
-            }
-
-            const taskEndErrorMsg = taskEnd
-                .filter(end => end.result === 'fail' && !!end.message)
-                .map(end =>
-                    end.message ? `Message: ${addPunctuation(end.message)}` : ''
-                )
-                .join('\n');
-
-            if (taskEndErrorMsg) {
-                error.message += `\n${taskEndErrorMsg}`;
-            }
-
-            error.message = error.message.replaceAll('Error: ', '');
             telemetry.sendErrorReport(
-                `${
-                    pid && this.logLevel === 'trace' ? `[PID:${pid}] ` : ''
-                }${describeError(error)}`
+                `${this.pidIfTraceLogging(pid)}${describeError(error)}`
             );
             throw error;
         }
@@ -508,9 +415,9 @@ export class NrfutilSandbox {
     public execNrfutilSubcommand = <Result>(
         command: string,
         args: string[],
-        onProgress?: (progress: Progress, task?: Task) => void,
-        onTaskBegin?: (taskBegin: TaskBegin) => void,
-        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
+        onProgress?: OnProgress,
+        onTaskBegin?: OnTaskBegin,
+        onTaskEnd?: OnTaskEnd<Result>,
         controller?: AbortController,
         editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) =>
@@ -527,42 +434,27 @@ export class NrfutilSandbox {
     private execNrfutilCommand = async <Result>(
         command: string,
         args: string[],
-        onProgress?: (progress: Progress, task?: Task) => void,
-        onTaskBegin?: (taskBegin: TaskBegin) => void,
-        onTaskEnd?: (taskEnd: TaskEnd<Result>) => void,
+        onProgress?: OnProgress,
+        onTaskBegin?: OnTaskBegin,
+        onTaskEnd?: OnTaskEnd<Result>,
         controller?: AbortController,
         editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
     ) => {
-        const info: Result[] = [];
-        const taskEnd: TaskEnd<Result>[] = [];
         let stdErr: string | undefined;
         let pid: number | undefined;
+
+        const parser = new CollectingResultParser(
+            this.log,
+            onProgress,
+            onTaskBegin,
+            onTaskEnd
+        );
 
         try {
             await this.execCommand(
                 command,
                 args,
-                (data, processId) =>
-                    commonParser<Result>(
-                        data,
-                        {
-                            onProgress,
-                            onTaskBegin,
-                            onTaskEnd: end => {
-                                taskEnd.push(end);
-                                onTaskEnd?.(end);
-                            },
-                            onInfo: i => {
-                                info.push(i);
-                            },
-                            onLogging: logging => {
-                                this.onLoggingHandlers.forEach(onLogging => {
-                                    onLogging(logging, processId);
-                                });
-                            },
-                        },
-                        processId
-                    ),
+                parser.handleData,
                 (data, processId) => {
                     pid = processId;
                     stdErr = (stdErr ?? '') + data.toString();
@@ -571,39 +463,20 @@ export class NrfutilSandbox {
                 editEnv
             );
 
-            if (
-                stdErr ||
-                taskEnd.filter(end => end.result === 'fail').length > 0
-            )
-                throw new Error('Task failed.');
+            if (stdErr || parser.hasFailures()) throw new Error('Task failed.');
 
-            return { taskEnd, info };
+            return parser.result();
         } catch (e) {
             const error = e as Error;
 
-            const addPunctuation = (str: string) =>
-                str.endsWith('.') ? str.trim() : `${str.trim()}.`;
+            error.message = collectErrorMessages(
+                error.message,
+                stdErr,
+                parser.errorMessage()
+            );
 
-            if (stdErr) {
-                error.message += `\n${addPunctuation(stdErr)}`;
-            }
-
-            const taskEndErrorMsg = taskEnd
-                .filter(end => end.result === 'fail' && !!end.message)
-                .map(end =>
-                    end.message ? `Message: ${addPunctuation(end.message)}` : ''
-                )
-                .join('\n');
-
-            if (taskEndErrorMsg) {
-                error.message += `\n${taskEndErrorMsg}`;
-            }
-
-            error.message = error.message.replaceAll('Error: ', '');
             telemetry.sendErrorReport(
-                `${
-                    pid && this.logLevel === 'trace' ? `[PID:${pid}] ` : ''
-                }${describeError(error)}`
+                `${this.pidIfTraceLogging(pid)}${describeError(error)}`
             );
             throw error;
         }
@@ -697,10 +570,12 @@ export class NrfutilSandbox {
                 }
 
                 parsedData.forEach(item => {
-                    if (!this.processLoggingData(item, pid)) {
-                        if (item.type === 'info') {
-                            processors.onData(item.data);
-                        }
+                    if (item.type === 'log') {
+                        this.log(item.data, pid);
+                    }
+
+                    if (item.type === 'info') {
+                        processors.onData(item.data);
                     }
                 });
             },
@@ -739,7 +614,7 @@ export class NrfutilSandbox {
 
     public singleTaskEndOperationWithData = async <T>(
         command: string,
-        onProgress?: (progress: Progress, task?: Task) => void,
+        onProgress?: OnProgress,
         controller?: AbortController,
         args: string[] = []
     ) => {
@@ -758,7 +633,7 @@ export class NrfutilSandbox {
 
     public singleTaskEndOperationOptionalData = async <T = void>(
         command: string,
-        onProgress?: (progress: Progress, task?: Task) => void,
+        onProgress?: OnProgress,
         controller?: AbortController,
         args: string[] = []
     ) => {
@@ -809,50 +684,10 @@ export class NrfutilSandbox {
             );
     };
 
+    public pidIfTraceLogging = (pid?: number) =>
+        pid != null && this.logLevel === 'trace' ? `[PID:${pid}] ` : '';
+
     public setLogLevel = (level: LogLevel) => {
         this.logLevel = level;
     };
 }
-
-export default async (
-    baseDir: string,
-    module: string,
-    version?: string,
-    coreVersion?: string,
-    onProgress?: (progress: Progress, task?: Task) => void
-) => {
-    const sandbox = new NrfutilSandbox(
-        baseDir,
-        module,
-        versionToInstall(module, version),
-        coreVersionsToInstall(coreVersion)
-    );
-
-    onProgress?.(convertNrfutilProgress({ progressPercentage: 0 }));
-
-    if (!(await sandbox.isSandboxInstalled())) {
-        await sandbox.prepareSandbox(onProgress);
-    }
-
-    onProgress?.(convertNrfutilProgress({ progressPercentage: 100 }));
-    return sandbox;
-};
-
-const convertNrfutilProgress = (progress: NrfutilProgress): Progress => {
-    const amountOfSteps = progress.amountOfSteps ?? 1;
-    const step = progress.step ?? 1;
-
-    const singleStepWeight = (1 / amountOfSteps) * 100;
-
-    const totalProgressPercentage =
-        singleStepWeight * (step - 1) +
-        progress.progressPercentage / amountOfSteps;
-
-    return {
-        ...progress,
-        stepProgressPercentage: progress.progressPercentage,
-        totalProgressPercentage,
-        amountOfSteps,
-        step,
-    };
-};

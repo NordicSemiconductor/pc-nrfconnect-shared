@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { TransformableInfo } from 'logform';
 import path from 'path';
 import { SPLAT } from 'triple-beam';
 import { createLogger, format, LogEntry, Logger, transports } from 'winston';
