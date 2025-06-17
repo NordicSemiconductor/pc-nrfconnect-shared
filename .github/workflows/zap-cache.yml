@@ -1,0 +1,72 @@
+name: Zap Artifactory Cache
+
+on:
+    workflow_dispatch:
+        inputs:
+            paths:
+                description:
+                    Comma-separated list of paths to zap (e.g.
+                    external/ncd/apps/official/,external/ncd/apps/public-test/source.json)
+                required: true
+                type: string
+
+jobs:
+    zap-cache:
+        runs-on: ubuntu-latest
+        name: Zap Artifactory Cache
+        steps:
+            - uses: actions/github-script@v7
+              env:
+                  ARTIFACTORY_TOKEN: ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND }}
+                  PATHS: ${{ inputs.paths }}
+              with:
+                  script: |
+                      const paths = process.env.PATHS.split(',')
+                          .map(p => p.trim())
+                          .filter(Boolean)
+                          .filter(p => p.startsWith('external/ncd/'))
+                          .filter(p => /^[\w/.-]+$/.test(p));
+
+                      if (paths.length === 0) {
+                          throw new Error('No valid paths provided. Paths must start with "external/ncd/" and contain only word characters, slashes, and hyphens.');
+                      }
+
+                      console.log('Paths to process:', paths);
+
+                      const success = [];
+                      const errors = [];
+
+                      for (const path of paths) {
+                          const url = `https://files.nordicsemi.cn/artifactory/swtools-cache/${path}`;
+                          console.log(`Zapping cache for: ${url}`);
+
+                          try {
+                              const res = await fetch(url, {
+                                  method: 'DELETE',
+                                  headers: {
+                                      'Authorization': `Bearer ${process.env.ARTIFACTORY_TOKEN}`
+                                  }
+                              });
+
+                              if (!res.ok && res.status !== 404) {
+                                  throw new Error(`HTTP error! status: ${res.status}`);
+                              }
+                              console.log(`Successfully cleared cache for ${url}`);
+                              success.push(url);
+                          } catch (error) {
+                              console.error(`Failed to clear cache for ${url}: ${error.message}`);
+                              errors.push(`${url}: ${error.message}`);
+                          }
+                      }
+
+                      if (success.length > 0) {
+                          core.summary.addRaw('Successfully cleared cache for:', true);
+                          core.summary.addList(success, false);
+                      }
+
+                      if (errors.length > 0) {
+                          core.summary.addRaw('Failed to clear cache for:', true);
+                          core.summary.addList(errors, false);
+                      }
+
+                      core.summary.write();
