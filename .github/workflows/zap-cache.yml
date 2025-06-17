@@ -1,4 +1,4 @@
-name: Zap Artifactory Cache
+name: Zap Artifactory cache
 
 on:
     workflow_dispatch:
@@ -21,14 +21,14 @@ jobs:
                   PATHS: ${{ inputs.paths }}
               with:
                   script: |
-                      const paths = process.env.PATHS.split(',')
-                          .map(p => p.trim())
-                          .filter(Boolean)
-                          .filter(p => p.startsWith('external/ncd/'))
-                          .filter(p => /^[\w/.-]+$/.test(p));
+                      const isValidPath = path => path.startsWith('external/ncd/') && /^[\w/.-]+$/.test(path);
+
+                      const allPaths = process.env.PATHS.split(',').map(p => p.trim()).filter(Boolean);
+                      const invalidPaths = allPaths.filter(p => !isValidPath(p));
+                      const paths = allPaths.filter(isValidPath);
 
                       if (paths.length === 0) {
-                          throw new Error('No valid paths provided. Paths must start with "external/ncd/" and contain only word characters, slashes, and hyphens.');
+                          throw new Error('No valid paths provided. Paths must start with "external/ncd/" and contain only word characters, slashes, dots, and hyphens.');
                       }
 
                       console.log('Paths to process:', paths);
@@ -59,14 +59,19 @@ jobs:
                           }
                       }
 
-                      if (success.length > 0) {
-                          core.summary.addRaw('Successfully cleared cache for:', true);
-                          core.summary.addList(success, false);
+                      if (errors.length > 0) {
+                          core.summary.addRaw('🛑 Failed to clear cache for:', true);
+                          core.summary.addList(errors, false);
                       }
 
-                      if (errors.length > 0) {
-                          core.summary.addRaw('Failed to clear cache for:', true);
-                          core.summary.addList(errors, false);
+                      if (invalidPaths.length > 0) {
+                          core.summary.addRaw('⚠️ Paths filtered out (invalid):', true);
+                          core.summary.addList(invalidPaths, false);
+                      }
+
+                      if (success.length > 0) {
+                          core.summary.addRaw('✅ Successfully cleared cache for:', true);
+                          core.summary.addList(success, false);
                       }
 
                       core.summary.write();
