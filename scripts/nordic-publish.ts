@@ -38,7 +38,7 @@ abstract class Client {
     abstract sourceUrl: string;
 
     initialise(options: Options): Promise<void> | void {} // eslint-disable-line @typescript-eslint/no-unused-vars
-    end(): void {}
+    abstract end(): void;
 
     abstract download(filename: string): Promise<string>;
     abstract uploadContent(
@@ -163,8 +163,13 @@ class FtpClient extends Client {
 class ArtifactoryClient extends Client {
     token = process.env.ARTIFACTORY_TOKEN;
 
+    folderName: string;
+
     sourceUrl: string;
     uploadUrl: string;
+    cacheUrl: string;
+
+    filesWhereCacheZappingFailed: string[] = [];
 
     constructor(private readonly options: Options) {
         super();
@@ -175,13 +180,11 @@ class ArtifactoryClient extends Client {
             );
         }
 
-        this.uploadUrl = `https://files.nordicsemi.com/artifactory/swtools/${this.getAccessLevel()}/ncd/apps/${
-            options.source
-        }`;
+        this.folderName = `${this.getAccessLevel()}/ncd/apps/${options.source}`;
 
-        this.sourceUrl = `https://files.nordicsemi.com/ui/api/v1/download?isNativeBrowsing=false&repoKey=swtools&path=${this.getAccessLevel()}/ncd/apps/${
-            options.source
-        }`;
+        this.uploadUrl = `https://files.nordicsemi.com/artifactory/swtools/${this.folderName}`;
+        this.sourceUrl = `https://files.nordicsemi.com/ui/api/v1/download?isNativeBrowsing=false&repoKey=swtools&path=${this.folderName}`;
+        this.cacheUrl = `https://files.nordicsemi.cn/artifactory/swtools-cache/${this.folderName}`;
     }
 
     getAccessLevel = () => {
@@ -205,6 +208,22 @@ class ArtifactoryClient extends Client {
         return res.text();
     };
 
+    zapCache = async (filename: string) => {
+        const url = `${this.cacheUrl}/${filename}`;
+        const res = await fetch(url, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${this.token}` },
+        });
+
+        /* 404 is ok, which happens if the file does not exist on the cache
+           server. Can happen when it is new or was not cached yet */
+        if (res.ok || res.status === 404) return;
+
+        this.filesWhereCacheZappingFailed.push(
+            `${this.folderName}/${filename}`
+        );
+    };
+
     upload = async (content: Buffer, remoteFilename: string) => {
         const url = `${this.uploadUrl}/${remoteFilename}`;
         const res = await fetch(url, {
@@ -216,6 +235,8 @@ class ArtifactoryClient extends Client {
         if (!res.ok) {
             throw new Error(`Failed to upload ${url}: ${res.statusText}`);
         }
+
+        await this.zapCache(remoteFilename);
     };
 
     uploadContent = (content: Buffer, remoteFilename: string) => {
@@ -230,6 +251,22 @@ class ArtifactoryClient extends Client {
         );
 
         return this.upload(fs.readFileSync(localFilename), remoteFilename);
+    };
+
+    end = () => {
+        if (this.filesWhereCacheZappingFailed.length > 0) {
+            console.warn(
+                `\nCache zapping failed for these files, probably because your Artifactory token lacks permission for it:`
+            );
+            this.filesWhereCacheZappingFailed.forEach(file => {
+                console.warn(`- ${file}`);
+            });
+
+            console.warn(
+                '\nGo to https://github.com/NordicSemiconductor/pc-nrfconnect-shared/actions/workflows/zap-cache.yml, run the workflow and paste this string as the list of paths to zap them manually:'
+            );
+            console.warn('  ', this.filesWhereCacheZappingFailed.join(', '));
+        }
     };
 }
 
