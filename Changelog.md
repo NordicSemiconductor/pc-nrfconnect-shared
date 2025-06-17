@@ -7,11 +7,16 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## Unreleased
+## 214.0.0 - 2025-06-17
 
 ### Changed
 
 -   macOS: Removed check if the universal variant of J-Link is used.
+
+### Fixed
+
+-   While publishing apps, updated files on files.nordicsemi.com might become
+    stale on files.nordicsemi.cn.
 
 ## 213.0.0 - 2025-06-11
 
