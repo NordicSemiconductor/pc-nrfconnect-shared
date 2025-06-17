@@ -1,4 +1,4 @@
-name: Zap Artifactory Cache
+name: Zap Artifactory cache
 
 on:
     workflow_dispatch:
