@@ -59,19 +59,19 @@ jobs:
                           }
                       }
 
-                      if (success.length > 0) {
-                          core.summary.addRaw('Successfully cleared cache for:', true);
-                          core.summary.addList(success, false);
-                      }
-
                       if (errors.length > 0) {
-                          core.summary.addRaw('Failed to clear cache for:', true);
+                          core.summary.addRaw('🛑 Failed to clear cache for:', true);
                           core.summary.addList(errors, false);
                       }
 
                       if (invalidPaths.length > 0) {
-                          core.summary.addRaw('Paths filtered out (invalid):', true);
+                          core.summary.addRaw('⚠️ Paths filtered out (invalid):', true);
                           core.summary.addList(invalidPaths, false);
+                      }
+
+                      if (success.length > 0) {
+                          core.summary.addRaw('✅ Successfully cleared cache for:', true);
+                          core.summary.addList(success, false);
                       }
 
                       core.summary.write();
