@@ -36,7 +36,7 @@ const SwitchButton: React.FC<{
     <button
         type="button"
         className={`${classNames(
-            'tw-preflight tw-relative tw-flex-auto tw-rounded-sm tw-text-sm',
+            'tw-relative tw-flex-auto tw-rounded-sm tw-text-sm',
             size === 'sm' && 'tw-p-0',
             size === 'md' && 'tw-p-1',
             variant === 'set' &&
@@ -89,7 +89,7 @@ export default ({
     };
 
     return (
-        <div className="w-100 d-flex flex-row justify-content-center tw-bg-gray-700 tw-p-1">
+        <div className="tw-preflight tw-flex tw-w-full tw-flex-row tw-justify-center tw-bg-gray-700 tw-p-1">
             {items.map((item, index) => selectionButton(item, index))}
         </div>
     );
