@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 215.0.0 - UNRELEASED
+
+## Changed
+
+-   StateSelector:Refactored with tailwind. Added `size` prop to control the
+    height of the selector.
+
 ## 214.0.0 - 2025-06-17
 
 ### Changed
