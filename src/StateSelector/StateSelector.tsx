@@ -56,9 +56,16 @@ export interface Props {
     onSelect: (index: number) => void;
     disabled?: boolean;
     selectedItem: SelectItem;
+    size?: 'sm' | 'md';
 }
 
-export default ({ items, onSelect, disabled = false, selectedItem }: Props) => {
+export default ({
+    items,
+    onSelect,
+    disabled = false,
+    selectedItem,
+    size = 'md',
+}: Props) => {
     const selectionButton = (item: SelectItem, index: number) => {
         const complexItem = convertToComplex(item);
         const complexSelectedItem = convertToComplex(selectedItem);
@@ -74,6 +81,7 @@ export default ({ items, onSelect, disabled = false, selectedItem }: Props) => {
                     onSelect(index);
                 }}
                 disabled={disabled}
+                size={size}
             >
                 {complexItem.renderItem}
             </SwitchButton>
