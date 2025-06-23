@@ -7,6 +7,86 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 214.0.0 - 2025-06-17
+
+### Changed
+
+-   macOS: Removed check if the universal variant of J-Link is used.
+
+### Fixed
+
+-   While publishing apps, updated files on files.nordicsemi.com might become
+    stale on files.nordicsemi.cn.
+
+## 213.0.0 - 2025-06-11
+
+### Fixed
+
+-   Typecheck error when using a recent version of the dependency logform.
+
+## 212.0.0 - 2025-06-05
+
+### Added
+
+-   Specify what core version of nrfutil an app depends on.
+
+### Removed
+
+-   Function `prepareSandbox`.
+
+### Changed
+
+-   Signature of `xRead`.
+
+### Steps to upgrade when using this package
+
+-   In apps in `package.json` set the field `nrfConnectForDesktop.nrfutilCore`
+    to the core version of nrfutil that the nrfutil commands will use.
+-   Replace usage of `prepareSandbox` with `NrfutilSandbox.create`
+-   Update calls of `xRead`.
+
+## 211.0.0 - 2025-05-29
+
+### Fixed
+
+-   It was observed on macOS that we get multiple arrive events and the only
+    change is the number of serial ports. Now the selected device in redux is
+    also updated to reflect these changes.
+
+## 210.0.0 - 2025-05-15
+
+### Fixed
+
+-   Scrollbars no longer appear in the device list for a second when
+    disconnecting a device.
+-   `Dropdown` active label now handles overflow.
+-   nRFUtil device batch will not run if no subcommand has been added to the
+    batch.
+
+### Steps to upgrade when using this package
+
+-   Minimum version of nrfutil-device is 2.7.16.
+
+## 209.0.0 - 2025-04-30
+
+### Changed
+
+-   Nrfutil device use of `fw-read` is replaced with `x-read`.
+
+### Steps to upgrade when using this package
+
+-   Any use of `firmwareRead()` must be replaced with `xRead()`.
+
+## 208.0.0 - 2025-04-17
+
+### Changed
+
+-   The functions `openFile`, `openFileLocation`, and `openUrl` are now async.
+
+### Steps to upgrade when using this package
+
+-   In `package.json` bump `engines.nrfconnect` to at least `>=5.2.0`.
+
 ## 207.0.0 - 2025-04-08
 
 ### Added

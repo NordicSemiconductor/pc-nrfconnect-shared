@@ -253,6 +253,15 @@ export const startWatchingDevices =
 
                     if (!deviceWithPersistedData) return;
 
+                    // Selected device information such as serial port may have been updated ... let's update the state with new information
+                    if (
+                        selectedDevice?.id === deviceWithPersistedData.id &&
+                        selectedDevice?.serialNumber ===
+                            deviceWithPersistedData.serialNumber
+                    ) {
+                        dispatch(selectDevice(deviceWithPersistedData));
+                    }
+
                     // We might get multiple events with the same info so no to trigger auto reconnect multiple times we
                     // only do it once per device id
                     if (

@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { Progress } from '../sandboxTypes';
+import { type OnProgress } from '../sandboxTypes';
 import {
+    coreArg,
     DeviceCore,
     deviceSingleTaskEndOperationVoid,
     NrfutilDevice,
@@ -15,7 +16,7 @@ export default (
     device: NrfutilDevice,
     region: 'All' | 'SecureRegions' | 'Region0' | 'Region0Region1',
     core?: DeviceCore,
-    onProgress?: (progress: Progress) => void,
+    onProgress?: OnProgress,
     controller?: AbortController
 ) =>
     deviceSingleTaskEndOperationVoid(
@@ -23,5 +24,5 @@ export default (
         'protection-set',
         onProgress,
         controller,
-        [region, ...(core ? ['--core', core] : [])]
+        [region, ...coreArg(core)]
     );

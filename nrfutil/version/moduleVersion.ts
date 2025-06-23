@@ -4,13 +4,50 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { packageJsonApp } from '../src/utils/packageJson';
-import {
-    type Dependency,
-    hasVersion,
-    type TopLevelDependency,
-} from './sandboxTypes';
-import { versionToString } from './version';
+import { isLauncher, packageJsonApp } from '../../src/utils/packageJson';
+import { type DiscriminatedVersion, versionToString } from './version';
+
+type FeatureClassification =
+    | 'nrf-internal-confidential'
+    | 'nrf-internal'
+    | 'nrf-external-confidential'
+    | 'nrf-external';
+
+type Plugin = DiscriminatedVersion & {
+    dependencies: TopLevelDependency[];
+    name: string;
+};
+
+type DependencyWithoutVersion = {
+    name: string;
+    description?: string;
+    dependencies?: Dependency[];
+    expectedVersion?: DiscriminatedVersion;
+};
+type DependencyWithVersion = DiscriminatedVersion & DependencyWithoutVersion;
+
+export type Dependency = DependencyWithoutVersion | DependencyWithVersion;
+
+type TopLevelDependency = Dependency & {
+    classification?: FeatureClassification;
+    plugins?: Plugin[];
+};
+
+export type ModuleVersion = {
+    build_timestamp: string;
+    classification: FeatureClassification;
+    commit_date: string;
+    commit_hash: string;
+    dependencies: TopLevelDependency[];
+    host: string;
+    name: string;
+    version: string;
+};
+
+export const hasVersion = (
+    dependency?: Dependency | DiscriminatedVersion
+): dependency is DependencyWithVersion | DiscriminatedVersion =>
+    dependency != null && 'version' in dependency && dependency.version != null;
 
 export const describeVersion = (dependencyOrVersion?: Dependency | string) => {
     if (typeof dependencyOrVersion === 'string') return dependencyOrVersion;
@@ -78,7 +115,7 @@ const versionFromPackageJson = (module: string) =>
     packageJsonApp().nrfConnectForDesktop.nrfutil?.[module][0];
 
 const failToDetermineVersion = (module: string) => {
-    throw new Error(`No version specified for the bundled nrfutil ${module}`);
+    throw new Error(`No version specified for nrfutil ${module}`);
 };
 
 export const versionToInstall = (module: string, version?: string) =>
@@ -86,3 +123,12 @@ export const versionToInstall = (module: string, version?: string) =>
     overriddenVersion(module) ??
     versionFromPackageJson(module) ??
     failToDetermineVersion(module);
+
+const coreVersionFromPackageJson = () =>
+    isLauncher()
+        ? undefined // Will lead to using CORE_VERSION_FOR_LEGACY_APPS
+        : packageJsonApp().nrfConnectForDesktop.nrfutilCore ??
+          failToDetermineVersion('core');
+
+export const coreVersionsToInstall = (coreVersion?: string) =>
+    coreVersion ?? overriddenVersion('core') ?? coreVersionFromPackageJson();

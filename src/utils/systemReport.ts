@@ -11,7 +11,10 @@ import pretty from 'prettysize';
 import si from 'systeminformation';
 
 import { getAllModuleVersions } from '../../nrfutil';
-import { describeVersion, findDependency } from '../../nrfutil/moduleVersion';
+import {
+    describeVersion,
+    findDependency,
+} from '../../nrfutil/version/moduleVersion';
 import { deviceInfo as getDeviceInfo } from '../Device/deviceInfo/deviceInfo';
 import { Device } from '../Device/deviceSlice';
 import logger from '../logging';
@@ -151,7 +154,7 @@ export default async (
     try {
         fs.writeFileSync(filePath, report);
         logger.info(`System report: ${filePath}`);
-        openFile(filePath);
+        await openFile(filePath);
     } catch (error) {
         logger.logError('Failed to generate system report', error);
     }

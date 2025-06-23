@@ -5,29 +5,34 @@
  */
 
 import fs from 'fs';
-import os from 'os';
-import path from 'path';
-import { v4 as uuid } from 'uuid';
 
 import { getModule } from '..';
 import { TaskEnd } from '../sandboxTypes';
 import { BatchOperationWrapper, Callbacks } from './batchTypes';
 import {
+    coreArg,
     DeviceCore,
     DeviceTraits,
     deviceTraitsToArgs,
     NrfutilDevice,
     ResetKind,
 } from './common';
-import { DeviceBuffer } from './firmwareRead';
 import { DeviceCoreInfo } from './getCoreInfo';
 import { FWInfo } from './getFwInfo';
 import { GetProtectionStatusResult } from './getProtectionStatus';
 import {
-    FirmwareType,
+    createTempFile,
+    Firmware,
     ProgrammingOptions,
     programmingOptionsToArgs,
 } from './program';
+import {
+    MemoryReadRaw,
+    ReadResult,
+    toIntelHex,
+    type XReadOptions,
+    xReadOptionsToArgs,
+} from './xRead';
 
 type BatchOperationWrapperUnknown = BatchOperationWrapper<unknown>;
 type CallbacksUnknown = Callbacks<unknown>;
@@ -45,7 +50,7 @@ export class Batch {
     private enqueueBatchOperationObject(
         command: string,
         core: DeviceCore,
-        callbacks?: Callbacks<unknown>,
+        callbacks?: CallbacksUnknown,
         args: string[] = []
     ) {
         const getPromise = async () => {
@@ -55,7 +60,7 @@ export class Batch {
                 await box.singleInfoOperationOptionalData<object>(
                     command,
                     undefined,
-                    ['--generate', '--core', core].concat(args)
+                    ['--generate', ...coreArg(core), ...args]
                 );
 
             return {
@@ -156,25 +161,35 @@ export class Batch {
         return this;
     }
 
-    public firmwareRead(core: DeviceCore, callbacks?: Callbacks<Buffer>) {
-        this.enqueueBatchOperationObject('fw-read', core, {
-            ...callbacks,
-            onTaskEnd: (taskEnd: TaskEnd<DeviceBuffer>) => {
-                if (taskEnd.result === 'success' && taskEnd.data) {
-                    const data = Buffer.from(taskEnd.data.buffer, 'base64');
-                    callbacks?.onTaskEnd?.({
-                        ...taskEnd,
-                        task: {
-                            ...taskEnd.task,
+    public xRead(
+        core: DeviceCore,
+        options: XReadOptions,
+        callbacks?: Callbacks<ReadResult>
+    ) {
+        this.enqueueBatchOperationObject(
+            'x-read',
+            core,
+            {
+                ...callbacks,
+                onTaskEnd: (taskEnd: TaskEnd<MemoryReadRaw>) => {
+                    if (taskEnd.result === 'success' && taskEnd.data) {
+                        const data = toIntelHex(taskEnd.data.memoryData);
+
+                        callbacks?.onTaskEnd?.({
+                            ...taskEnd,
+                            task: {
+                                ...taskEnd.task,
+                                data,
+                            },
                             data,
-                        },
-                        data,
-                    });
-                } else {
-                    callbacks?.onException?.(new Error('Read failed'));
-                }
-            },
-        } as CallbacksUnknown);
+                        });
+                    } else {
+                        callbacks?.onException?.(new Error('Read failed'));
+                    }
+                },
+            } as CallbacksUnknown,
+            xReadOptionsToArgs(options)
+        );
 
         return this;
     }
@@ -216,52 +231,31 @@ export class Batch {
     }
 
     public program(
-        firmware: FirmwareType,
+        firmware: Firmware,
         core: DeviceCore,
         programmingOptions?: ProgrammingOptions,
         deviceTraits?: DeviceTraits,
-        callbacks?: Callbacks
+        callbacks?: CallbacksUnknown
     ) {
-        let args = [
+        const args = [
             ...(deviceTraits ? deviceTraitsToArgs(deviceTraits) : []),
             ...programmingOptionsToArgs(programmingOptions),
         ];
-        let newCallbacks = { ...callbacks };
+        const newCallbacks = { ...callbacks };
 
         if (typeof firmware === 'string') {
-            args = ['--firmware', firmware].concat(args);
+            args.unshift('--firmware', firmware);
         } else {
-            const saveTemp = (): string => {
-                let tempFilePath;
-                do {
-                    tempFilePath = path.join(
-                        os.tmpdir(),
-                        `${uuid()}.${firmware.type}`
-                    );
-                } while (fs.existsSync(tempFilePath));
+            const tempFilePath = createTempFile(firmware);
+            args.unshift('--firmware', tempFilePath);
 
-                fs.writeFileSync(tempFilePath, firmware.buffer);
-
-                return tempFilePath;
+            newCallbacks.onTaskEnd = (taskEnd: TaskEnd<unknown>) => {
+                fs.unlinkSync(tempFilePath);
+                callbacks?.onTaskEnd?.(taskEnd);
             };
-            const tempFilePath = saveTemp();
-            args = ['--firmware', tempFilePath].concat(args);
-
-            newCallbacks = {
-                ...callbacks,
-                onTaskEnd: (taskEnd: TaskEnd<void>) => {
-                    fs.unlinkSync(tempFilePath);
-                    callbacks?.onTaskEnd?.(taskEnd);
-                },
-            } as CallbacksUnknown;
         }
 
-        this.enqueueBatchOperationObject(
-            'program',
-            core,
-            newCallbacks as CallbacksUnknown,
-            args
-        );
+        this.enqueueBatchOperationObject('program', core, newCallbacks, args);
 
         return this;
     }
@@ -308,6 +302,10 @@ export class Batch {
             throw new Error(
                 `Device does not have a serial number, no device operation is possible`
             );
+        }
+
+        if (this.operationBatchGeneration.length === 0) {
+            return []; // this is an empty batch nothing to run
         }
 
         let currentOperationIndex = -1;

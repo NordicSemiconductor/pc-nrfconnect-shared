@@ -8,10 +8,10 @@ import { getUserDataDir } from '../src/utils/appDirs';
 import { isLauncher, packageJsonApp } from '../src/utils/packageJson';
 import { getIsLoggingVerbose } from '../src/utils/persistentStore';
 import logLibVersions from './device/logLibVersions';
-import { describeVersion } from './moduleVersion';
 import { getNrfutilLogger } from './nrfutilLogger';
-import sandbox, { NrfutilSandbox } from './sandbox';
+import { NrfutilSandbox } from './sandbox';
 import { LogLevel } from './sandboxTypes';
+import { describeVersion } from './version/moduleVersion';
 
 const fallbackLevel = process.env.NODE_ENV === 'production' ? 'off' : 'error';
 
@@ -40,31 +40,26 @@ const logModuleVersions = (module: string, moduleSandbox: NrfutilSandbox) => {
 const forwardLogging = (moduleSandbox: NrfutilSandbox) => {
     moduleSandbox.onLogging((evt, pid) => {
         const logger = getNrfutilLogger();
-        const formatMsg = (msg: string) =>
-            `${
-                pid && moduleSandbox?.logLevel === 'trace'
-                    ? `[PID:${pid}] `
-                    : ''
-            }${msg}`;
+        const msg = `${moduleSandbox.pidIfTraceLogging(pid)}${evt.message}`;
 
         switch (evt.level) {
             case 'TRACE':
-                logger?.verbose(formatMsg(evt.message));
+                logger?.verbose(msg);
                 break;
             case 'DEBUG':
-                logger?.debug(formatMsg(evt.message));
+                logger?.debug(msg);
                 break;
             case 'INFO':
-                logger?.info(formatMsg(evt.message));
+                logger?.info(msg);
                 break;
             case 'WARN':
-                logger?.warn(formatMsg(evt.message));
+                logger?.warn(msg);
                 break;
             case 'ERROR':
-                logger?.error(formatMsg(evt.message));
+                logger?.error(msg);
                 break;
             case 'CRITICAL':
-                logger?.error(formatMsg(evt.message));
+                logger?.error(msg);
                 break;
             case 'OFF':
             default:
@@ -79,7 +74,7 @@ const getModuleSandbox = (module: string) => {
 
     const createModuleSandbox = async () => {
         getNrfutilLogger()?.info(`Initialising the bundled nrfutil ${module}`);
-        promiseModuleSandbox = sandbox(getUserDataDir(), module);
+        promiseModuleSandbox = NrfutilSandbox.create(getUserDataDir(), module);
         moduleSandbox = await promiseModuleSandbox;
 
         logModuleVersions(module, moduleSandbox);

@@ -26,6 +26,7 @@ export const parsePackageJson = parseWithPrettifiedErrorMessage(packageJson);
 const nrfConnectForDesktop = z.object({
     supportedDevices: z.enum(knownDevicePcas).array().nonempty().optional(),
     nrfutil: nrfModules.optional(),
+    nrfutilCore: semver,
     html: z.string(),
 });
 
@@ -59,11 +60,11 @@ export const parsePackageJsonApp =
     parseWithPrettifiedErrorMessage(packageJsonApp);
 
 // In the launcher we want to handle that the whole nrfConnectForDesktop may be missing
-// and the html in it can also be undefined, so there we need to use this legacy variant
+// and html or nrfutilCore in it can also be undefined, so there we need to use this legacy variant
 const packageJsonLegacyApp = packageJsonApp.extend({
     nrfConnectForDesktop: nrfConnectForDesktop
         .extend({ supportedDevices: z.array(z.string()).nonempty().optional() })
-        .partial({ html: true })
+        .partial({ html: true, nrfutilCore: true })
         .optional(),
 });
 

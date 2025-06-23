@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { Progress } from '../sandboxTypes';
+import { type OnProgress } from '../sandboxTypes';
 import { deviceSingleTaskEndOperationVoid, NrfutilDevice } from './common';
 
 export default (
     device: NrfutilDevice,
     data: object,
-    onProgress?: (progress: Progress) => void,
+    onProgress?: OnProgress,
     controller?: AbortController
 ) => {
     // "operation: 2, command_id: 0" is the command to set the configuration for the board controller.

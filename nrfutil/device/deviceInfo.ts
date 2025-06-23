@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { Progress } from '../sandboxTypes';
+import { type OnProgress } from '../sandboxTypes';
 import {
+    coreArg,
     DeviceCore,
     deviceSingleTaskEndOperation,
     NrfutilDevice,
@@ -68,7 +69,7 @@ export interface DeviceInfoRaw {
 export default async (
     device: NrfutilDevice,
     core?: DeviceCore,
-    onProgress?: (progress: Progress) => void,
+    onProgress?: OnProgress,
     controller?: AbortController
 ) => {
     try {
@@ -81,7 +82,7 @@ export default async (
                       'device-info',
                       onProgress,
                       controller,
-                      core ? ['--core', core] : []
+                      coreArg(core)
                   )
               ).deviceInfo
             : undefined;

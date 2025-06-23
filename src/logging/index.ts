@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { TransformableInfo } from 'logform';
 import path from 'path';
 import { SPLAT } from 'triple-beam';
 import { createLogger, format, LogEntry, Logger, transports } from 'winston';
@@ -47,23 +46,16 @@ interface SharedLogger extends Logger {
     initialise: () => void;
     getAndClearEntries: () => LogEntry[];
     openLogFile: () => void;
-    openLogFileLocation: () => void;
+    openLogFileLocation: () => Promise<void>;
     logError: (message: string, error: unknown) => void;
 }
-
-/* This function is only needed, because our version of TypeScript still seems
-   unable to accept (unique) symbols as index types. As soon as we have
-   upgraded to a version that is capable of that, the invocations of this
-   function can be replaced by a simple `info[splat]` and this function can
-   be removed. */
-const splat = (info: TransformableInfo) => info[SPLAT as unknown as string];
 
 const logger = createLogger({
     format: format.combine(
         format(info => ({
             ...info,
-            message: splat(info)
-                ? `${info.message} ${splat(info).join(' ')}`
+            message: Array.isArray(info[SPLAT])
+                ? `${info.message} ${info[SPLAT].join(' ')}`
                 : info.message,
         }))(),
         format.timestamp(),
@@ -86,17 +78,17 @@ logger.initialise = () => {
 
 logger.getAndClearEntries = () => logBuffer.clear();
 
-logger.openLogFile = () => {
+logger.openLogFile = async () => {
     try {
-        openFile(logFilePath());
+        await openFile(logFilePath());
     } catch (error) {
         logger.logError('Unable to open the log file', error);
     }
 };
 
-logger.openLogFileLocation = () => {
+logger.openLogFileLocation = async () => {
     try {
-        openFileLocation(logFilePath());
+        await openFileLocation(logFilePath());
     } catch (error) {
         logger.logError('Unable to open the log file location', error);
     }
