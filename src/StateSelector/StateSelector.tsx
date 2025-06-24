@@ -11,6 +11,7 @@ import classNames from '../utils/classNames';
 interface ComplexItem {
     key: string;
     renderItem: React.ReactNode;
+    title?: string;
 }
 
 type SelectItem = string | ComplexItem;
@@ -20,6 +21,7 @@ const convertToComplex = (item: SelectItem): ComplexItem => {
         return {
             key: item,
             renderItem: item,
+            title: undefined,
         } as ComplexItem;
     }
 
@@ -32,7 +34,8 @@ const SwitchButton: React.FC<{
     disabled: boolean;
     children: React.ReactNode;
     size?: 'sm' | 'md';
-}> = ({ variant, onClick, disabled, children, size = 'md' }) => (
+    title?: string;
+}> = ({ variant, onClick, disabled, children, size = 'md', title }) => (
     <button
         type="button"
         className={`${classNames(
@@ -46,6 +49,7 @@ const SwitchButton: React.FC<{
         )}`}
         onClick={onClick}
         disabled={disabled}
+        title={title}
     >
         {children}
     </button>
@@ -82,6 +86,7 @@ export default ({
                 }}
                 disabled={disabled}
                 size={size}
+                title={complexItem.title}
             >
                 {complexItem.renderItem}
             </SwitchButton>
