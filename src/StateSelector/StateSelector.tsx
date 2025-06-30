@@ -39,8 +39,8 @@ const SwitchButton: React.FC<{
     <button
         type="button"
         className={`${classNames(
-            'tw-relative tw-flex-auto tw-rounded-sm tw-text-sm',
-            size === 'sm' && 'tw-p-0',
+            'tw-relative tw-flex-1 tw-flex-shrink-0 tw-rounded-sm tw-text-sm',
+            size === 'sm' && 'tw-p-0 tw-text-xs',
             size === 'md' && 'tw-p-1',
             variant === 'set' &&
                 'tw-border-gray-700 tw-bg-white tw-text-gray-700',
