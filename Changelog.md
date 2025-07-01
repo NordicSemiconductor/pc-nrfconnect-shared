@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 216.0.0 - UNRELEASED
+
+### Fixed
+
+-   InfoDialog: corrected default icon from `mdi-info` to `mdi-information`.
+
 ## 215.0.0 - 2025-06-27
 
 ### Added
