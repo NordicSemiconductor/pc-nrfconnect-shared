@@ -7,7 +7,11 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 216.0.0 - UNRELEASED
+## 216.0.0 - 2025-07-03
+
+### Added
+
+-   Extended the supported devices
 
 ### Fixed
 
