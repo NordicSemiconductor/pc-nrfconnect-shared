@@ -9,6 +9,10 @@ every new version is a new major version.
 
 ## 216.0.0 - UNRELEASED
 
+### Added
+
+-   Extended the supported devices
+
 ### Fixed
 
 -   InfoDialog: corrected default icon from `mdi-info` to `mdi-information`.
