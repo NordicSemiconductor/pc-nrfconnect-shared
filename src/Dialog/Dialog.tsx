@@ -163,7 +163,7 @@ interface InfoProps extends CoreProps {
 export const InfoDialog = ({
     isVisible,
     title = 'Info',
-    headerIcon = 'info',
+    headerIcon = 'information',
     children,
     onHide,
     size,
