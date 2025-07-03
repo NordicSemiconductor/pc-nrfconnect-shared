@@ -13,6 +13,10 @@ every new version is a new major version.
 
 -   Extended the supported devices
 
+### Changed
+
+-   The state selector options are now with equally divided widths
+
 ### Fixed
 
 -   InfoDialog: corrected default icon from `mdi-info` to `mdi-information`.
