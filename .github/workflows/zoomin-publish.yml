@@ -1,0 +1,50 @@
+name: Publish documentation to Zoomin
+run-name: Publish documentation to Zoomin ${{ inputs.release-type }}
+
+on:
+    workflow_call:
+        inputs:
+            bundle-name:
+                type: string
+                required: true
+            release-type:
+                description: Type of release (dev or prod)
+                required: true
+                type: string
+
+jobs:
+    create-zoomin-bundle:
+        name: Create Zoomin bundle
+        uses: './.github/workflows/zoomin.yml'
+        with:
+            bundle-name: ${{ inputs.bundle-name }}
+    publish-zoomin-bundle:
+        name: Publish Zoomin bundle to ${{ inputs.release-type }}
+        needs: create-zoomin-bundle
+        runs-on: ubuntu-latest
+        steps:
+            - name: Get bundle
+              uses: actions/download-artifact@v4
+              with:
+                  name: ${{ inputs.bundle-name }}
+            - name: Upload documentation
+              env:
+                  FOLDER:
+                      ${{ inputs.release-type == 'prod' &&
+                      'docs-be.nordicsemi.com' ||
+                      'nordic-be-dev.zoominsoftware.io' }}
+              run: |
+                  # trust server
+                  mkdir -p ~/.ssh
+                  ssh-keyscan upload-v1.zoominsoftware.io >> ~/.ssh/known_hosts
+
+                  # prepare key
+                  echo "${{ secrets.ZOOMIN_KEY }}" > zoomin_key
+                  chmod 600 zoomin_key
+
+                  # upload bundle:
+                  sftp -v -i zoomin_key nordic@upload-v1.zoominsoftware.io <<EOF
+                  cd /${{ env.FOLDER }}/markdown/incoming
+                  put "${{ inputs.bundle-name }}.zip"
+                  quit
+                  EOF
