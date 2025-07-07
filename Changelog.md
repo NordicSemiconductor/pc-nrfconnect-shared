@@ -7,15 +7,21 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 217.0.0 - 2025-07-07
+
+### Changed
+
+-   Update PCA number of the supported device.
+
 ## 216.0.0 - 2025-07-03
 
 ### Added
 
--   Extended the supported devices
+-   Extended the supported devices.
 
 ### Changed
 
--   The state selector options are now with equally divided widths
+-   The state selector options are now with equally divided widths.
 
 ### Fixed
 
