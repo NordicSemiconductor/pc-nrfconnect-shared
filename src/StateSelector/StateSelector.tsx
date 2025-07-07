@@ -35,7 +35,8 @@ const SwitchButton: React.FC<{
     children: React.ReactNode;
     size?: 'sm' | 'md';
     title?: string;
-}> = ({ variant, onClick, disabled, children, size = 'md', title }) => (
+    active?: boolean;
+}> = ({ variant, onClick, disabled, children, size = 'md', title, active }) => (
     <button
         type="button"
         className={`${classNames(
@@ -45,7 +46,8 @@ const SwitchButton: React.FC<{
             variant === 'set' &&
                 'tw-border-gray-700 tw-bg-white tw-text-gray-700',
             variant === 'unset' &&
-                'tw-border-white tw-bg-gray-700 tw-text-white'
+                'tw-border-white tw-bg-gray-700 tw-text-white',
+            active && 'active tw-z-[1]'
         )}`}
         onClick={onClick}
         disabled={disabled}
@@ -87,6 +89,7 @@ export default ({
                 disabled={disabled}
                 size={size}
                 title={complexItem.title}
+                active={complexSelectedItem.key === complexItem.key}
             >
                 {complexItem.renderItem}
             </SwitchButton>

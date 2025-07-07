@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 218.0.0 - 2025-07-07
+
+### Fixed
+
+-   Add missing active class for the selected option in StateSelector.
+
 ## 217.0.0 - 2025-07-07
 
 ### Changed
