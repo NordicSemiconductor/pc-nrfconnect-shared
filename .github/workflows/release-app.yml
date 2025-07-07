@@ -10,6 +10,8 @@ on:
                 type: string
             node_version:
                 type: number
+            doc_bundle_name:
+                type: string
 
 jobs:
     build:
@@ -38,3 +40,16 @@ jobs:
                     --no-pack \
                     --destination artifactory \
                     --source '${{ inputs.source }}'
+
+    publish-docs:
+        needs: release
+        uses: ./.github/workflows/zoomin-publish.yml
+        if:
+            inputs.doc_bundle_name && 
+            hashFiles('doc/mkdocs.yml') != '' && 
+            (inputs.source == 'official (external)' ||
+             inputs.source == 'latest (internal)')
+        with:
+            release-type:
+                ${{ inputs.source == 'official (external)' && 'prod' || 'dev' }}
+            bundle-name: ${{ inputs.doc_bundle_name }}
