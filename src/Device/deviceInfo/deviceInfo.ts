@@ -260,7 +260,7 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
                 'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF54H20%20DK',
         },
     },
-    PCA10197: {
+    PCA10184: {
         name: 'nRF54LM20 DK',
         cores: 1,
         icon: nrf54logo,
