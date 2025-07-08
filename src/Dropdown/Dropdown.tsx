@@ -77,8 +77,10 @@ export default <T,>({
                     transparentButtonBg
                         ? 'tw-bg-transparent'
                         : classNames(
-                              'tw-bg-gray-700 tw-px-2 tw-text-white',
-                              size === 'sm' ? 'tw-h-6 tw-text-[10px]' : 'tw-h-8'
+                              'tw-bg-gray-700 tw-text-white',
+                              size === 'sm'
+                                  ? 'tw-h-6 tw-pl-2 tw-pr-1 tw-text-[10px]'
+                                  : 'tw-h-8 tw-px-2'
                           )
                 )}
                 onClick={() => setIsActive(!isActive)}
@@ -90,8 +92,9 @@ export default <T,>({
                         : selectedItem.label}
                 </span>
                 <span
-                    className={`mdi mdi-chevron-down tw-text-lg/none ${classNames(
-                        isActive && 'tw-rotate-180'
+                    className={`mdi mdi-chevron-down ${classNames(
+                        isActive && 'tw-rotate-180',
+                        size === 'sm' ? 'tw-text-base' : 'tw-text-lg'
                     )}`}
                 />
             </button>
