@@ -28,6 +28,7 @@ export type DropdownProps<T> = {
     selectedItem: DropdownItem<T>;
     numItemsBeforeScroll?: number;
     className?: string;
+    size?: 'sm' | 'md';
 };
 
 export default <T,>({
@@ -42,6 +43,7 @@ export default <T,>({
     selectedItem,
     numItemsBeforeScroll = 0,
     className = '',
+    size = 'md',
 }: DropdownProps<T>) => {
     const [isActive, setIsActive] = useState(false);
 
@@ -74,7 +76,10 @@ export default <T,>({
                     minWidth ? '' : 'tw-w-full',
                     transparentButtonBg
                         ? 'tw-bg-transparent'
-                        : 'tw-h-8 tw-bg-gray-700 tw-px-2 tw-text-white'
+                        : classNames(
+                              'tw-bg-gray-700 tw-px-2 tw-text-white',
+                              size === 'sm' ? 'tw-h-6 tw-text-[10px]' : 'tw-h-8'
+                          )
                 )}
                 onClick={() => setIsActive(!isActive)}
                 disabled={disabled}
@@ -116,7 +121,10 @@ export default <T,>({
                 {items.map(item => (
                     <button
                         type="button"
-                        className="tw-bg-transparent tw-clear-both tw-block tw-h-6 tw-w-full tw-whitespace-nowrap tw-border-0 tw-px-2 tw-py-1 tw-text-left tw-font-normal tw-text-white hover:tw-bg-gray-600 focus:tw-bg-gray-600"
+                        className={classNames(
+                            'tw-bg-transparent tw-clear-both tw-block tw-h-6 tw-w-full tw-whitespace-nowrap tw-border-0 tw-px-2 tw-py-1 tw-text-left tw-font-normal tw-text-white hover:tw-bg-gray-600 focus:tw-bg-gray-600',
+                            size === 'sm' && 'tw-text-[10px]'
+                        )}
                         key={JSON.stringify(item.value)}
                         onClick={() => onClickItem(item)}
                     >
