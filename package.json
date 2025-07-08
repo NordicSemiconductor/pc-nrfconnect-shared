@@ -58,7 +58,7 @@
         "@typescript-eslint/parser": "5.57.1",
         "@xterm/headless": "^5.5.0",
         "adm-zip": "^0.5.5",
-        "applicationinsights": "^2.9.6",
+        "applicationinsights": "^3.0.0",
         "autoprefixer": "10.4.14",
         "bootstrap": "4.6.2",
         "commander": "10.0.0",
