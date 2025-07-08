@@ -41,14 +41,32 @@ jobs:
                     --destination artifactory \
                     --source '${{ inputs.source }}'
 
-    publish-docs:
+    check-if-docs-exist:
         needs: release
-        uses: ./.github/workflows/zoomin-publish.yml
+        runs-on: ubuntu-latest
         if:
-            inputs.doc_bundle_name && 
-            hashFiles('doc/mkdocs.yml') != '' && 
-            (inputs.source == 'official (external)' ||
-             inputs.source == 'latest (internal)')
+            inputs.doc_bundle_name && (inputs.source == 'official (external)' ||
+            inputs.source == 'latest (internal)')
+        outputs:
+            docs_exist: ${{ steps.check.outputs.docs_exist }}
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  ref: ${{ inputs.ref }}
+
+            - name: Check if docs exist
+              id: check
+              run: |
+                  if [ -f "doc/mkdocs.yml" ]; then
+                      echo "docs_exist=true" >> "$GITHUB_OUTPUT"
+                  else
+                      echo "docs_exist=false" >> "$GITHUB_OUTPUT"
+                  fi
+
+    publish-docs:
+        needs: check-if-docs-exist
+        if: needs.check-if-docs-exist.outputs.docs_exist == 'true'
+        uses: ./.github/workflows/zoomin-publish.yml
         with:
             release-type:
                 ${{ inputs.source == 'official (external)' && 'prod' || 'dev' }}
