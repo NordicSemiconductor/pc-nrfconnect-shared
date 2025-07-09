@@ -45,9 +45,6 @@ jobs:
     check-if-docs-exist:
         needs: release
         runs-on: ubuntu-latest
-        if:
-            inputs.doc_bundle_name && (inputs.source == 'official (external)' ||
-            inputs.source == 'latest (internal)')
         outputs:
             docs_exist: ${{ steps.check.outputs.docs_exist }}
         steps:
@@ -66,10 +63,12 @@ jobs:
 
     publish-docs:
         needs: check-if-docs-exist
-        if: needs.check-if-docs-exist.outputs.docs_exist == 'true'
+        if: |
+            inputs.doc_bundle_name &&
+            inputs.source == 'official (external)' &&
+            needs.check-if-docs-exist.outputs.docs_exist == 'true'
         uses: ./.github/workflows/docs-publish.yml
         with:
-            release-type:
-                ${{ inputs.source == 'official (external)' && 'prod' || 'dev' }}
+            release-type: prod
             bundle-name: ${{ inputs.doc_bundle_name }}
         secrets: inherit
