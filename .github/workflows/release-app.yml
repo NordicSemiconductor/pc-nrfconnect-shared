@@ -32,7 +32,8 @@ jobs:
             - name: Release app to ${{ inputs.source }}
               env:
                   ARTIFACTORY_TOKEN:
-                      ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND }}
+                      ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND
+                      }}
               run: |
                   cd artifact
                   tar xaf *.tgz --strip-components 1
@@ -71,3 +72,4 @@ jobs:
             release-type:
                 ${{ inputs.source == 'official (external)' && 'prod' || 'dev' }}
             bundle-name: ${{ inputs.doc_bundle_name }}
+        secrets: inherit
