@@ -140,9 +140,9 @@ export class NrfutilSandbox {
     public isSandboxInstalled = () =>
         this.executableExists() && this.commandReportsCorrectVersion();
 
-    private log(message: LogMessage, pid: number | undefined) {
+    private log = (message: LogMessage, pid: number | undefined) => {
         this.onLoggingHandlers.forEach(onLogging => onLogging(message, pid));
-    }
+    };
 
     private executableExists() {
         return fs.existsSync(
