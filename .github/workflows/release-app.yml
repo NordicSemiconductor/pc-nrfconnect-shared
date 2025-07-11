@@ -13,6 +13,9 @@ on:
             doc_bundle_name:
                 type: string
 
+env:
+    ARTIFACT_NAME: ${{ github.event.repository.name }}
+
 jobs:
     build:
         uses: ./.github/workflows/build-app.yml
@@ -29,13 +32,15 @@ jobs:
 
         steps:
             - uses: actions/download-artifact@v4
+              with:
+                  name: ${{ env.ARTIFACT_NAME }}
             - name: Release app to ${{ inputs.source }}
               env:
                   ARTIFACTORY_TOKEN:
                       ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND
                       }}
               run: |
-                  cd artifact
+                  cd '${{ env.ARTIFACT_NAME }}'
                   tar xaf *.tgz --strip-components 1
                   node dist/nordic-publish.js \
                     --no-pack \
