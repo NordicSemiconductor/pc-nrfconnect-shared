@@ -13,6 +13,9 @@ on:
             doc_bundle_name:
                 type: string
 
+env:
+    ARTIFACT_NAME: ${{ github.event.repository.name }}
+
 jobs:
     build:
         uses: ./.github/workflows/build-app.yml
@@ -24,23 +27,46 @@ jobs:
     release:
         runs-on: ubuntu-latest
         needs: build
+        permissions:
+            contents: write
         environment:
             name: ${{ inputs.source }}
 
         steps:
             - uses: actions/download-artifact@v4
+              with:
+                  name: ${{ env.ARTIFACT_NAME }}
+
+            - name: Check version and existence
+              id: check
+              run: |
+                  VERSION=$(node -p "require('./package.json').version")
+                  TAG="v$VERSION"
+                  echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+                  # Check if GitHub release already exists
+                  if gh release view "$TAG" --repo ${{ github.repository }} >/dev/null 2>&1; then
+                      echo "::error::Not running because a GitHub release with the tag $TAG already exists"
+                      exit 1
+                  fi
+
             - name: Release app to ${{ inputs.source }}
               env:
                   ARTIFACTORY_TOKEN:
                       ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND
                       }}
+              working-directory: ${{ env.ARTIFACT_NAME }}
               run: |
-                  cd artifact
-                  tar xaf *.tgz --strip-components 1
                   node dist/nordic-publish.js \
                     --no-pack \
                     --destination artifactory \
                     --source '${{ inputs.source }}'
+
+            - name: Create release on GitHub
+              if: ${{ inputs.source }} == 'official'
+              working-directory: ${{ env.ARTIFACT_NAME }}
+              run: |
+                  gh release create ${{ steps.check.outputs.tag }} --target ${{ inputs.ref }}} --repo ${{ github.repository }} --notes release_notes.md ./*.tgz --draft
 
     check-if-docs-exist:
         needs: release
