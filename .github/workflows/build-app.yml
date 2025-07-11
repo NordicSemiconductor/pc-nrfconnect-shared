@@ -9,6 +9,9 @@ on:
                 type: boolean
             node_version:
                 type: number
+        outputs:
+            version:
+                value: ${{ jobs.build.outputs.version }}
 
 env:
     ARTIFACT_NAME: ${{ github.event.repository.name }}
@@ -16,6 +19,8 @@ env:
 jobs:
     build:
         runs-on: ubuntu-latest
+        outputs:
+            version: ${{ steps.extract_release_notes.outputs.version }}
         steps:
             - uses: actions/checkout@v4
               with:
@@ -32,10 +37,26 @@ jobs:
               if:
                   github.event.push.ref == 'refs/heads/main' ||
                   inputs.force_pack
+            - name: Extract release notes
+              id: extract_release_notes
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const fs = require('node:fs');
+
+                      const changelog = fs.readFileSync('Changelog.md', 'utf8');
+                      const latestEntry = changelog.split(/^## .*$/m)[1].trim();
+                      fs.writeFileSync('release_notes.md', latestEntry);
+
+                      const version = require('./package.json').version;
+                      core.setOutput('version', version);
+
             - uses: actions/upload-artifact@v4
               with:
                   name: ${{ env.ARTIFACT_NAME }}
-                  path: ./*.tgz
+                  path: |
+                      *.tgz
+                      release_notes.md
               if:
                   github.event.push.ref == 'refs/heads/main' ||
                   inputs.force_pack
