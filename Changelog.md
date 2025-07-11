@@ -12,6 +12,7 @@ every new version is a new major version.
 ### Added
 
 -   Option to persist the Group collapse state.
+-   Narrower Dropdown variant.
 
 ## 219.0.0 - 2025-07-10
 
