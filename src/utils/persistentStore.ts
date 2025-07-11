@@ -141,6 +141,7 @@ interface SharedAppSpecificStoreSchema {
     isLogVisible?: boolean;
     isLoggingVerbose?: boolean;
     currentPaneName?: string;
+    groupCollapseStates?: Record<string, boolean>;
 }
 
 export const getAppSpecificStore = <
@@ -197,3 +198,19 @@ export const doNotResetVerboseLogginOnRestart = () =>
 
 export const getPersistedLogVisible = () =>
     getAppSpecificStore<SharedAppSpecificStoreSchema>().get(`isLogVisible`);
+
+export const persistGroupCollapseState = (
+    groupId: string,
+    collapsed: boolean
+) =>
+    getAppSpecificStore<SharedAppSpecificStoreSchema>().set(
+        `groupCollapseStates.${groupId}`,
+        collapsed
+    );
+
+export const getPersistedGroupCollapseState = (
+    groupId: string
+): boolean | undefined =>
+    getAppSpecificStore<SharedAppSpecificStoreSchema>().get(
+        `groupCollapseStates.${groupId}`
+    );

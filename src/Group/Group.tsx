@@ -7,6 +7,10 @@
 import React, { useRef, useState } from 'react';
 
 import classNames from '../utils/classNames';
+import {
+    getPersistedGroupCollapseState,
+    persistGroupCollapseState,
+} from '../utils/persistentStore';
 
 const collapseSection = (element: HTMLDivElement) => {
     const sectionHeight = element.scrollHeight;
@@ -81,6 +85,7 @@ export const Group = ({
     collapsible = false,
     defaultCollapsed = !!collapsible,
     onToggled,
+    collapseStatePersistanceId,
 }: {
     className?: string;
     heading: React.ReactNode;
@@ -91,8 +96,22 @@ export const Group = ({
     collapsible?: boolean;
     defaultCollapsed?: boolean;
     onToggled?: (isNowExpanded: boolean) => void;
+    /** Unique identifier for persisting the group's collapse state across sessions. When provided, enables state persistence. */
+    collapseStatePersistanceId?: string;
 }) => {
-    const [collapsed, setCollapsed] = useState(defaultCollapsed);
+    const getInitialCollapseState = () => {
+        if (collapseStatePersistanceId) {
+            const persistedState = getPersistedGroupCollapseState(
+                collapseStatePersistanceId
+            );
+            if (persistedState !== undefined) {
+                return persistedState;
+            }
+        }
+        return defaultCollapsed;
+    };
+
+    const [collapsed, setCollapsed] = useState(getInitialCollapseState());
     const collapsibleDivRef = useRef<HTMLDivElement | null>(null);
     const initStateSet = useRef(false);
 
@@ -126,6 +145,13 @@ export const Group = ({
 
                     onToggled?.(collapsed);
                     setCollapsed(!collapsed);
+
+                    if (collapseStatePersistanceId) {
+                        persistGroupCollapseState(
+                            collapseStatePersistanceId,
+                            !collapsed
+                        );
+                    }
                 }}
             >
                 <p
@@ -146,7 +172,7 @@ export const Group = ({
             <div
                 ref={ref => {
                     if (!initStateSet.current && ref) {
-                        if (defaultCollapsed) {
+                        if (collapsed) {
                             collapseSection(ref);
                         } else {
                             expandSection(ref);
