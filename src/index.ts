@@ -104,6 +104,8 @@ export {
     getPersistedNickname,
     getPersistedApiKey,
     persistApiKey,
+    persistGroupCollapseState,
+    getPersistedGroupCollapseState,
 } from './utils/persistentStore';
 
 export { default as launcherConfig } from './utils/launcherConfig';
