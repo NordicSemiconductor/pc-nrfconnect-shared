@@ -4,9 +4,13 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import classNames from '../utils/classNames';
+import {
+    getPersistedGroupCollapseState,
+    persistGroupCollapseState,
+} from '../utils/persistentStore';
 
 const collapseSection = (element: HTMLDivElement) => {
     const sectionHeight = element.scrollHeight;
@@ -71,6 +75,7 @@ const expandSection = (element: HTMLDivElement) => {
     );
 };
 
+// persId
 export const Group = ({
     className = '',
     heading,
@@ -81,6 +86,8 @@ export const Group = ({
     collapsible = false,
     defaultCollapsed = !!collapsible,
     onToggled,
+    persistCollapseState = false,
+    id = '',
 }: {
     className?: string;
     heading: React.ReactNode;
@@ -91,7 +98,19 @@ export const Group = ({
     collapsible?: boolean;
     defaultCollapsed?: boolean;
     onToggled?: (isNowExpanded: boolean) => void;
+    persistCollapseState?: boolean;
+    id?: string;
 }) => {
+    const getInitialCollapseState = () => {
+        if (persistCollapseState && id) {
+            const persistedState = getPersistedGroupCollapseState(id);
+            if (persistedState !== undefined) {
+                return persistedState;
+            }
+        }
+        return defaultCollapsed;
+    };
+
     const [collapsed, setCollapsed] = useState(defaultCollapsed);
     const collapsibleDivRef = useRef<HTMLDivElement | null>(null);
     const initStateSet = useRef(false);
@@ -125,7 +144,12 @@ export const Group = ({
                     }
 
                     onToggled?.(collapsed);
+                    // UseEffect -> call app specific str
                     setCollapsed(!collapsed);
+
+                    if (persistCollapseState && id) {
+                        persistGroupCollapseState(id, collapsed);
+                    }
                 }}
             >
                 <p
