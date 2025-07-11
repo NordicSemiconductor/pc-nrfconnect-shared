@@ -75,13 +75,6 @@ const expandSection = (element: HTMLDivElement) => {
     );
 };
 
-/**
- * @remarks
- * To enable state persistence, you must provide both `persistCollapseState={true}` and a unique `id`.
- * The collapse state will be saved to local storage and restored on subsequent renders.
- *
- * @returns {React.JSX.Element} A React functional component
- */
 export const Group = ({
     className = '',
     heading,
@@ -92,8 +85,7 @@ export const Group = ({
     collapsible = false,
     defaultCollapsed = !!collapsible,
     onToggled,
-    persistCollapseState = false,
-    id = '',
+    collapseStatePersistanceId,
 }: {
     className?: string;
     heading: React.ReactNode;
@@ -104,14 +96,14 @@ export const Group = ({
     collapsible?: boolean;
     defaultCollapsed?: boolean;
     onToggled?: (isNowExpanded: boolean) => void;
-    /** Whether to persist the collapse state across sessions. **Requires `id` to be provided.** */
-    persistCollapseState?: boolean;
-    /** Unique identifier for the group. **Required when `persistCollapseState` is true.** */
-    id?: string;
+    /** Unique identifier for persisting the group's collapse state across sessions. When provided, enables state persistence. */
+    collapseStatePersistanceId?: string;
 }) => {
     const getInitialCollapseState = () => {
-        if (persistCollapseState && id) {
-            const persistedState = getPersistedGroupCollapseState(id);
+        if (collapseStatePersistanceId) {
+            const persistedState = getPersistedGroupCollapseState(
+                collapseStatePersistanceId
+            );
             if (persistedState !== undefined) {
                 return persistedState;
             }
@@ -154,8 +146,11 @@ export const Group = ({
                     onToggled?.(collapsed);
                     setCollapsed(!collapsed);
 
-                    if (persistCollapseState && id) {
-                        persistGroupCollapseState(id, !collapsed);
+                    if (collapseStatePersistanceId) {
+                        persistGroupCollapseState(
+                            collapseStatePersistanceId,
+                            !collapsed
+                        );
                     }
                 }}
             >
