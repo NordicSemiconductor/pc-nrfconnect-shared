@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import classNames from '../utils/classNames';
 import {
@@ -75,7 +75,13 @@ const expandSection = (element: HTMLDivElement) => {
     );
 };
 
-// persId
+/**
+ * @remarks
+ * To enable state persistence, you must provide both `persistCollapseState={true}` and a unique `id`.
+ * The collapse state will be saved to local storage and restored on subsequent renders.
+ *
+ * @returns {React.JSX.Element} A React functional component
+ */
 export const Group = ({
     className = '',
     heading,
@@ -98,7 +104,9 @@ export const Group = ({
     collapsible?: boolean;
     defaultCollapsed?: boolean;
     onToggled?: (isNowExpanded: boolean) => void;
+    /** Whether to persist the collapse state across sessions. **Requires `id` to be provided.** */
     persistCollapseState?: boolean;
+    /** Unique identifier for the group. **Required when `persistCollapseState` is true.** */
     id?: string;
 }) => {
     const getInitialCollapseState = () => {
@@ -111,7 +119,7 @@ export const Group = ({
         return defaultCollapsed;
     };
 
-    const [collapsed, setCollapsed] = useState(defaultCollapsed);
+    const [collapsed, setCollapsed] = useState(getInitialCollapseState());
     const collapsibleDivRef = useRef<HTMLDivElement | null>(null);
     const initStateSet = useRef(false);
 
@@ -144,11 +152,10 @@ export const Group = ({
                     }
 
                     onToggled?.(collapsed);
-                    // UseEffect -> call app specific str
                     setCollapsed(!collapsed);
 
                     if (persistCollapseState && id) {
-                        persistGroupCollapseState(id, collapsed);
+                        persistGroupCollapseState(id, !collapsed);
                     }
                 }}
             >
@@ -170,7 +177,7 @@ export const Group = ({
             <div
                 ref={ref => {
                     if (!initStateSet.current && ref) {
-                        if (defaultCollapsed) {
+                        if (collapsed) {
                             collapseSection(ref);
                         } else {
                             expandSection(ref);
