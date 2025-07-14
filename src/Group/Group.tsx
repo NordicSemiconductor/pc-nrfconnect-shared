@@ -111,7 +111,7 @@ export const Group = ({
         return defaultCollapsed;
     };
 
-    const [collapsed, setCollapsed] = useState(getInitialCollapseState());
+    const [collapsed, setCollapsed] = useState(getInitialCollapseState);
     const collapsibleDivRef = useRef<HTMLDivElement | null>(null);
     const initStateSet = useRef(false);
 
