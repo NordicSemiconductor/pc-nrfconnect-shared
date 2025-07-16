@@ -74,6 +74,7 @@ export default <T,>({
     minWidth = false,
     inputMinSize,
     preAllocateInputSize,
+    maxCharacters,
 }: {
     range: RangeOrValues;
     value: number;
@@ -88,6 +89,7 @@ export default <T,>({
     minWidth?: boolean;
     inputMinSize?: number;
     preAllocateInputSize?: boolean;
+    maxCharacters?: number;
 }) => (
     <div
         className={`tw-flex tw-flex-col tw-gap-1 tw-text-xs ${classNames(
@@ -111,6 +113,7 @@ export default <T,>({
                     disabled={disabled}
                     minSize={inputMinSize}
                     preAllocateSize={preAllocateInputSize}
+                    maxCharacters={maxCharacters}
                 />
                 {isDropdownUnit(unit) ? (
                     <Dropdown

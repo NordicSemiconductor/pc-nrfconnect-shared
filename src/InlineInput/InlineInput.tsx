@@ -62,6 +62,7 @@ interface Props {
     onValidityChanged?: (validity: boolean) => void;
     preventDefaultInvalidStyle?: boolean;
     minSize?: number;
+    maxCharacters?: number;
 }
 
 const InlineInput = React.forwardRef<HTMLInputElement, Props>(
@@ -80,6 +81,7 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
             onValidityChanged,
             preventDefaultInvalidStyle,
             minSize,
+            maxCharacters,
         },
         ref
     ) => {
@@ -189,6 +191,7 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
                 onKeyUp={onChangeCompleteIfValid}
                 onKeyDown={startKeyboardEvents}
                 onClick={stopPropagation}
+                maxLength={maxCharacters}
             />
         );
     }

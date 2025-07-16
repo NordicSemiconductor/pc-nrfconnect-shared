@@ -32,6 +32,7 @@ interface NumberInlineInput {
     preventDefaultInvalidStyle?: boolean;
     minSize?: number;
     preAllocateSize?: boolean;
+    maxCharacters?: number;
 }
 
 const isInValues = (value: number, values: Values) => values.includes(value);
@@ -110,6 +111,7 @@ export default ({
     preventDefaultInvalidStyle,
     minSize,
     preAllocateSize = true,
+    maxCharacters,
 }: NumberInlineInput) => {
     useValidatedRange(range);
 
@@ -166,6 +168,7 @@ export default ({
                       )
                     : undefined
             }
+            maxCharacters={maxCharacters}
         />
     );
 };
