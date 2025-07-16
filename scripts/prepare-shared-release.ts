@@ -1,4 +1,4 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env -S npx tsx
 
 /*
  * Copyright (c) 2023 Nordic Semiconductor ASA
@@ -20,7 +20,7 @@
 import { spawnSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 
-import { getNextReleaseNumber } from './release-shared';
+import getReleaseNumbers from './get-release-numbers';
 
 const parseJson = <Result>(jsonString: string) =>
     JSON.parse(jsonString) as Result;
@@ -101,19 +101,21 @@ const updateChangelog = (nextReleaseNumber: string) => {
 };
 
 const main = () => {
-    const nextReleaseNumber = getNextReleaseNumber();
+    const releaseNumbers = getReleaseNumbers();
 
-    const updatedPackageJson = updatePackageJson(nextReleaseNumber);
+    console.log(
+        `The currently released version is ${releaseNumbers.latest}, so the next one will be ${releaseNumbers.next}.\n`
+    );
+
+    const updatedPackageJson = updatePackageJson(releaseNumbers.next);
     const { updated: updatedChangelog, error } = updateChangelog(
-        `${nextReleaseNumber}.0.0`
+        `${releaseNumbers.next}.0.0`
     );
 
     if (!updatedPackageJson && !updatedChangelog) {
         console.log('\nEverything already up-to-date.');
     } else if (!error) {
-        console.log(
-            '\nUpdated everything needed. You still need to bring these changes into main.'
-        );
+        console.log('\nUpdated everything needed.');
     }
 };
 
