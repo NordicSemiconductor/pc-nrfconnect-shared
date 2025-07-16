@@ -12,6 +12,8 @@ every new version is a new major version.
 ### Added
 
 -   Option to persist the Group collapse state.
+-   `maxCharacters` prop to number input components to limit the maximum number
+    of characters that can be entered in the input field.
 
 ## 219.0.0 - 2025-07-10
 
