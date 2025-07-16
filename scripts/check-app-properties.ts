@@ -11,6 +11,7 @@ import { existsSync, readdirSync, readFileSync } from 'fs';
 import property from 'lodash/property';
 
 import { PackageJsonApp, parsePackageJsonApp } from '../ipc/schema/packageJson';
+import { getLatestEntry } from './latest-changelog-entry';
 
 const format = (strings: string[]) =>
     strings.map(string => `\`${string}\``).join(', ');
@@ -132,9 +133,6 @@ const readAndCheckPackageJson = () => {
     return packageJson;
 };
 
-const changelogEntryRegexp = (version?: string) =>
-    new RegExp(`^## ${version}`, 'mi');
-
 const checkChangelog = (
     packageJson: PackageJsonApp,
     checkChangelogHasCurrentEntry: boolean
@@ -148,15 +146,11 @@ const checkChangelog = (
             fail('package.json must specify a `version`.');
         }
 
-        const changelog = readFileSync('./Changelog.md', 'utf8');
-        if (!changelog.match(changelogEntryRegexp(packageJson.version))) {
+        const latestChangelogEntry = getLatestEntry();
+        if (!latestChangelogEntry.header.includes(packageJson.version)) {
             fail(
                 `Found no entry for the current version packageJson.version ${packageJson.version} in \`Changelog.md\`.`
             );
-        }
-
-        if (changelog.match(changelogEntryRegexp('unreleased'))) {
-            fail('There must not be an entry `unreleased` in `Changelog.md`.');
         }
     }
 };
