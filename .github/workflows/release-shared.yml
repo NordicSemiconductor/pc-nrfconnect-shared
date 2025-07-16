@@ -42,7 +42,7 @@ jobs:
               with:
                   script: |
                       const version = require('./package.json').version;
-                      core.setOutput('tag', `v${version}`);
+                      core.setOutput('tag', `v${version.replace('.0.0', '')}`);
 
             - name: Create GitHub release
               run: |
@@ -54,4 +54,4 @@ jobs:
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.WAYLAND_NPM_TOKEN }}
               run: |
-                  npm publish --provenance
+                  npm publish --provenance --access public
