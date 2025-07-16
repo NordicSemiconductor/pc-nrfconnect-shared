@@ -13,6 +13,9 @@ on:
 jobs:
     release:
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            id-token: write
         env:
             GH_TOKEN: ${{ github.token }}
         steps:
@@ -22,7 +25,8 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: 22
-                  cache: 'npm'
+                  registry-url: https://registry.npmjs.org
+                  cache: npm
 
             - name: Check if release is possible
               run: |
@@ -53,5 +57,4 @@ jobs:
             - name: Publish to npm
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.WAYLAND_NPM_TOKEN }}
-              run: |
-                  npm publish --provenance --access public
+              run: npm publish --provenance
