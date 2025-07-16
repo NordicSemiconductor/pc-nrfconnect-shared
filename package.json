@@ -20,12 +20,12 @@
         "check": "run-p --silent --continue-on-error --print-label check:*",
         "check:lint": "eslint --color .",
         "check:types": "tsc --noEmit",
-        "check:license": "ts-node scripts/nrfconnect-license.ts check",
+        "check:license": "tsx scripts/nrfconnect-license.ts check",
         "generate-types": "tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./typings/generated --rootDir .",
-        "prepare": "ts-node scripts/installHusky.ts",
-        "prepare-shared-release": "ts-node scripts/prepare-shared-release.ts",
+        "prepare": "tsx scripts/installHusky.ts",
+        "prepare-shared-release": "tsx scripts/prepare-shared-release.ts",
         "clean": "rimraf dist typings/generated scripts/nordic-publish.js",
-        "postinstall": "ts-node scripts/postinstall.ts"
+        "postinstall": "tsx scripts/postinstall.ts"
     },
     "dependencies": {
         "@electron/remote": "^2.1.2",
@@ -116,7 +116,6 @@
         "systeminformation": "^5.25.11",
         "tailwindcss": "3.3.2",
         "tree-kill-promise": "^3.0.14",
-        "ts-node": "10.9.1",
         "tsx": "^4.20.3",
         "typescript": "4.9.5",
         "util": "0.12.5",
