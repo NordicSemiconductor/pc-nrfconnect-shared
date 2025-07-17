@@ -79,7 +79,7 @@ export default <T,>({
                         : classNames(
                               'tw-bg-gray-700 tw-text-white',
                               size === 'sm'
-                                  ? 'tw-h-6 tw-pl-2 tw-pr-1 tw-text-[10px]'
+                                  ? 'tw-h-6 tw-pl-2 tw-pr-1 tw-text-2xs'
                                   : 'tw-h-8 tw-px-2'
                           )
                 )}
@@ -126,7 +126,7 @@ export default <T,>({
                         type="button"
                         className={classNames(
                             'tw-bg-transparent tw-clear-both tw-block tw-h-6 tw-w-full tw-whitespace-nowrap tw-border-0 tw-px-2 tw-py-1 tw-text-left tw-font-normal tw-text-white hover:tw-bg-gray-600 focus:tw-bg-gray-600',
-                            size === 'sm' && 'tw-text-[10px]'
+                            size === 'sm' && 'tw-text-2xs'
                         )}
                         key={JSON.stringify(item.value)}
                         onClick={() => onClickItem(item)}
