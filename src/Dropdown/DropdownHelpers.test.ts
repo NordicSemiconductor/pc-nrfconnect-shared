@@ -28,19 +28,20 @@ describe('getSelectedDropdownItem', () => {
         expect(getSelectedDropdownItem(itemList, 'unknown')).toBe(itemList[0]);
     });
 
-    it('returns the item with the correct value when value is a boolean', () => {
-        const booleanList = [
-            { label: 'on label', value: 'on' },
-            { label: 'off label', value: 'off' },
-        ];
-        expect(getSelectedDropdownItem(booleanList, true)).toBe(booleanList[0]);
-    });
-
     it('returns the notFound item if value is not found', () => {
         const notFound = { label: 'not found', value: 'not found' };
         expect(getSelectedDropdownItem(itemList, 'unknown', notFound)).toBe(
             notFound
         );
+    });
+
+    it('handles booleans as the strings `on` and `off`', () => {
+        const booleanList = [
+            { label: 'on label', value: 'on' },
+            { label: 'off label', value: 'off' },
+        ];
+        expect(getSelectedDropdownItem(booleanList, true).value).toBe('on');
+        expect(getSelectedDropdownItem(booleanList, false).value).toBe('off');
     });
 });
 
