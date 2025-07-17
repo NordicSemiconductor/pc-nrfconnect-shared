@@ -19,7 +19,7 @@ describe('FactoryReset', () => {
         jest.resetAllMocks();
     });
 
-    it('should clear store when confirmed', async () => {
+    it('clears the store', async () => {
         render(<FactoryResetButton label={LABEL} />);
         fireEvent.click(screen.getByText(LABEL));
         await screen.findByText(OKBUTTONTEXT);
@@ -27,7 +27,7 @@ describe('FactoryReset', () => {
         expect(store().clear).toHaveBeenCalled();
     });
 
-    it('should not clear store when cancelled', async () => {
+    it('does not clear the store when cancelled', async () => {
         render(<FactoryResetButton label={LABEL} />);
         fireEvent.click(screen.getByText(LABEL));
         await screen.findByText('Cancel');
@@ -35,7 +35,7 @@ describe('FactoryReset', () => {
         expect(store().clear).not.toHaveBeenCalled();
     });
 
-    it('is possible to override reset function', async () => {
+    it('allows overriding the reset function', async () => {
         const overrideResetFn = jest.fn();
         render(<FactoryResetButton label={LABEL} resetFn={overrideResetFn} />);
         fireEvent.click(screen.getByText(LABEL));
