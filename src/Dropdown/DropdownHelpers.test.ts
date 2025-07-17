@@ -16,16 +16,16 @@ const itemList = [
 ];
 
 describe('getSelectedDropdownItem', () => {
+    it('returns the item with the correct value', () => {
+        expect(getSelectedDropdownItem(itemList, 'bar')).toBe(itemList[1]);
+    });
+
     it('returns the first item if value is undefined', () => {
         expect(getSelectedDropdownItem(itemList, undefined)).toBe(itemList[0]);
     });
 
     it('returns the first item if value is not found', () => {
         expect(getSelectedDropdownItem(itemList, 'unknown')).toBe(itemList[0]);
-    });
-
-    it('returns the item with the correct value', () => {
-        expect(getSelectedDropdownItem(itemList, 'bar')).toBe(itemList[1]);
     });
 
     it('returns the item with the correct value when value is a boolean', () => {
