@@ -7,13 +7,18 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 220.0.0 - UNRELEASED
+## 220.0.0 - 2025-07-16
 
 ### Added
 
 -   Option to persist the Group collapse state.
 -   `maxCharacters` prop to number input components to limit the maximum number
     of characters that can be entered in the input field.
+
+### Changed
+
+-   Use `tsx` instead of `ts-node`.
+-   Switched releasing shared from Azure to GitHub Actions.
 
 ## 219.0.0 - 2025-07-10
 

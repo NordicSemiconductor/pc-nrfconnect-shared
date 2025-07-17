@@ -38,9 +38,10 @@ jobs:
             - run: npm ci
             - env:
                   ARTIFACTORY_TOKEN:
-                      ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND }}
+                      ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND
+                      }}
               run: |
-                  ./node_modules/.bin/ts-node scripts/create-source.ts \
+                  ./scripts/create-source.ts \
                     --id '${{ inputs.id }}' \
                     --access-level '${{ inputs.access-level  }}' \
                     --name '${{ inputs.name }}' \
