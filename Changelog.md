@@ -12,6 +12,7 @@ every new version is a new major version.
 ### Added
 
 -   Narrower Dropdown variant.
+-   Custom tailwind font-size `text-2xs` (0.625rem/10px).
 
 ## 220.0.0 - 2025-07-16
 

@@ -16,7 +16,11 @@ module.exports = {
     ],
     theme: {
         colors,
-        extend: {},
+        extend: {
+            fontSize: {
+                '2xs': '0.625rem', // 10px
+            },
+        },
     },
     corePlugins: {
         preflight: false,
