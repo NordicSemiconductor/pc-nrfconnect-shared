@@ -11,10 +11,10 @@ every new version is a new major version.
 
 ### Added
 
--   `maxCharacters` prop to number input components to limit the maximum number
-    of characters that can be entered in the input field.
 -   Custom tailwind font-size `text-2xs` (0.625rem/10px).
 -   Narrower Dropdown variant.
+-   Automatic character limit derivation for number input components based on
+    their range constraints.
 
 ## 220.0.0 - 2025-07-16
 
