@@ -11,8 +11,8 @@ import {
 } from './DropdownHelpers';
 
 const itemList = [
-    { label: 'foo', value: 'foo' },
-    { label: 'bar', value: 'bar' },
+    { label: 'foo label', value: 'foo' },
+    { label: 'bar label', value: 'bar' },
 ];
 
 describe('getSelectedDropdownItem', () => {
@@ -30,8 +30,8 @@ describe('getSelectedDropdownItem', () => {
 
     it('returns the item with the correct value when value is a boolean', () => {
         const booleanList = [
-            { label: 'on', value: 'on' },
-            { label: 'off', value: 'off' },
+            { label: 'on label', value: 'on' },
+            { label: 'off label', value: 'off' },
         ];
         expect(getSelectedDropdownItem(booleanList, true)).toBe(booleanList[0]);
     });
