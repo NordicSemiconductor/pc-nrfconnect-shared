@@ -155,7 +155,7 @@ export const Group = ({
                 }}
             >
                 <p
-                    className="tw-text-[10px] tw-uppercase tw-tracking-[0.5ex]"
+                    className="tw-text-2xs tw-uppercase tw-tracking-[0.5ex]"
                     title={title}
                 >
                     {heading}
