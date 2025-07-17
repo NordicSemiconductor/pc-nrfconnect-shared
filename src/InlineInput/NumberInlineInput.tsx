@@ -32,7 +32,6 @@ interface NumberInlineInput {
     preventDefaultInvalidStyle?: boolean;
     minSize?: number;
     preAllocateSize?: boolean;
-    maxCharacters?: number;
 }
 
 const isInValues = (value: number, values: Values) => values.includes(value);
@@ -98,6 +97,28 @@ const handleInfinityToNumber = (val: string) => {
     return Number(val);
 };
 
+const calculateMaxCharactersFromRange = (range: RangeOrValues): number => {
+    if (isValues(range)) {
+        return Math.max(
+            ...range.map(v =>
+                Number.isFinite(v)
+                    ? handleInfinityToString(v).length
+                    : v.toString().length
+            )
+        );
+    }
+
+    const { min, max, decimals = 0 } = range;
+    const minStr = Number.isFinite(min)
+        ? min.toFixed(decimals)
+        : handleInfinityToString(min);
+    const maxStr = Number.isFinite(max)
+        ? max.toFixed(decimals)
+        : handleInfinityToString(max);
+
+    return Math.max(minStr.length, maxStr.length);
+};
+
 export default ({
     disabled,
     value,
@@ -111,7 +132,6 @@ export default ({
     preventDefaultInvalidStyle,
     minSize,
     preAllocateSize = true,
-    maxCharacters,
 }: NumberInlineInput) => {
     useValidatedRange(range);
 
@@ -168,7 +188,7 @@ export default ({
                       )
                     : undefined
             }
-            maxCharacters={maxCharacters}
+            maxLength={calculateMaxCharactersFromRange(range)}
         />
     );
 };
