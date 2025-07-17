@@ -7,7 +7,7 @@
 import { isFactor } from './factor';
 
 describe('Factor', () => {
-    it('Test valid integer factors ', () => {
+    test('Valid integer factors ', () => {
         expect(isFactor(20, 5)).toBe(true);
         expect(isFactor(28, 2)).toBe(true);
         expect(isFactor(27, 3)).toBe(true);
@@ -16,7 +16,7 @@ describe('Factor', () => {
         expect(isFactor(21, 7)).toBe(true);
     });
 
-    it('Test invalid integer factors ', () => {
+    test('Invalid integer factors ', () => {
         expect(isFactor(20, 6)).toBe(false);
         expect(isFactor(28, 3)).toBe(false);
         expect(isFactor(27, 4)).toBe(false);
@@ -25,7 +25,7 @@ describe('Factor', () => {
         expect(isFactor(21, 8)).toBe(false);
     });
 
-    it('Test valid decimal factors ', () => {
+    test('Valid decimal factors ', () => {
         expect(isFactor(0.15, 0.05)).toBe(true);
         expect(isFactor(0.2331, 0.0001)).toBe(true);
         expect(isFactor(0.22, 0.02)).toBe(true);
@@ -36,7 +36,7 @@ describe('Factor', () => {
         expect(isFactor(0.2331, 0.1)).toBe(true);
     });
 
-    it('Test invalid decimal factors ', () => {
+    test('Invalid decimal factors ', () => {
         expect(isFactor(0.16, 0.05)).toBe(false);
         expect(isFactor(0.2331, 0.0002)).toBe(false);
         expect(isFactor(0.22, 0.03)).toBe(false);

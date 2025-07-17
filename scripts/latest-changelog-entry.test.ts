@@ -7,7 +7,7 @@
 import { getLatestEntry } from './latest-changelog-entry';
 
 describe('getLatestEntry', () => {
-    it('should extract the latest changelog entry correctly', () => {
+    it('extracts the latest changelog entry', () => {
         const changelog = `# Changelog
 
 All notable changes to this project will be documented in this file.
@@ -29,7 +29,7 @@ All notable changes to this project will be documented in this file.
         expect(result.content).toBe('### Changed\n\n-   Something');
     });
 
-    it('should handle changelog with only one entry', () => {
+    it('handles changelog with only one entry', () => {
         const changelog = `# Changelog
 
 All notable changes to this project will be documented in this file.
@@ -46,7 +46,7 @@ All notable changes to this project will be documented in this file.
         expect(result.content).toBe('### Added\n\n-   Something else');
     });
 
-    it('should handle changelog with empty content', () => {
+    it('handles changelog with empty content', () => {
         const changelog = `# Changelog
 
 All notable changes to this project will be documented in this file.
@@ -65,7 +65,7 @@ All notable changes to this project will be documented in this file.
         expect(result.content).toBe('');
     });
 
-    it('should handle changelog with nothing before the first entry', () => {
+    it('handles changelog with nothing before the first entry', () => {
         const changelog = `## 33.0.0 - 2022-02-01
 
 ### Added

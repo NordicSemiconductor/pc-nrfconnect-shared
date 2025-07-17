@@ -21,14 +21,14 @@ describe('ErrorDialog', () => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
 
-    it('should render visible dialog with one message', () => {
+    it('renders visible dialog with one message', () => {
         render(<ErrorDialog />, [showDialog('An error occured')]);
 
         expect(screen.getByRole('dialog')).toBeInTheDocument();
         expect(screen.getByText('An error occured')).toBeInTheDocument();
     });
 
-    it('should render visible dialog with two messages', () => {
+    it('renders visible dialog with two messages', () => {
         render(<ErrorDialog />, [
             showDialog('An error occured'),
             showDialog('Another error occured'),
@@ -54,7 +54,7 @@ describe('ErrorDialog', () => {
         });
     });
 
-    it('can have a custom error resolutions', () => {
+    it('can have custom error resolutions', () => {
         const specialHandling = jest.fn();
 
         render(<ErrorDialog />, [

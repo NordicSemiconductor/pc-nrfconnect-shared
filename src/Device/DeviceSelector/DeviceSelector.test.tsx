@@ -105,7 +105,7 @@ const validFirmware = {
 };
 
 describe('DeviceSelector', () => {
-    it('should have no device selected by default', () => {
+    it('has no device selected by default', () => {
         render(
             <DeviceSelector
                 deviceListing={{
@@ -119,7 +119,7 @@ describe('DeviceSelector', () => {
         expect(screen.getByText('Select device')).toBeInTheDocument();
     });
 
-    it('should show no connected devices', () => {
+    it('shows an information when no devices are connected', () => {
         render(
             <DeviceSelector
                 deviceListing={{
@@ -134,7 +134,7 @@ describe('DeviceSelector', () => {
         expect(screen.getByText('Nordic development kit')).toBeInTheDocument();
     });
 
-    it('should list connected devices', () => {
+    it('shows a list of connected devices', () => {
         render(
             <DeviceSelector
                 deviceListing={{
@@ -149,7 +149,7 @@ describe('DeviceSelector', () => {
         expect(screen.getByText(DEVICE_SERIAL_NUMBER)).toBeInTheDocument();
     });
 
-    it('should unlist disconnected devices', () => {
+    it('does not show disconnected devices', () => {
         render(
             <DeviceSelector
                 deviceListing={{
@@ -164,7 +164,7 @@ describe('DeviceSelector', () => {
         expect(screen.queryByText(DEVICE_SERIAL_NUMBER)).toBeNull();
     });
 
-    it('should show more device info when selecting the expand button', () => {
+    it('shows more device info when selecting the expand button', () => {
         render(
             <DeviceSelector
                 deviceListing={{
@@ -181,7 +181,7 @@ describe('DeviceSelector', () => {
         expect(screen.getAllByText(/COM/)).toHaveLength(2);
     });
 
-    it('can select connected devices', async () => {
+    it('allows selecting a device', async () => {
         render(
             <DeviceSelector
                 deviceListing={{
@@ -203,7 +203,7 @@ describe('DeviceSelector', () => {
         expect(screen.getAllByText(DEVICE_SERIAL_NUMBER)).toHaveLength(2);
     });
 
-    it('can deselect selected devices', async () => {
+    it('allows disconnecting a device', async () => {
         render(
             <DeviceSelector
                 deviceListing={{
@@ -223,7 +223,7 @@ describe('DeviceSelector', () => {
         expect(screen.getByText('Select device')).toBeInTheDocument();
     });
 
-    it('should allow device selection when custom devices are enabled and no valid firmware is defined', async () => {
+    it('allows selecting a device when custom devices are enabled and no valid firmware is defined', async () => {
         render(
             <DeviceSelector
                 deviceListing={{
@@ -259,7 +259,7 @@ describe('DeviceSelector', () => {
         expect(screen.getAllByText(DEVICE_SERIAL_NUMBER)).toHaveLength(2);
     });
 
-    it('should deselect device when custom devices are disabled and no valid firmware is defined', async () => {
+    it('allows deselecting a device when custom devices are disabled and no valid firmware is defined', async () => {
         render(
             <DeviceSelector
                 deviceListing={{
@@ -295,7 +295,7 @@ describe('DeviceSelector', () => {
         await screen.findByText('Select device');
     });
 
-    it('should show firmware prompt when a valid firmware is defined', async () => {
+    it('shows firmware prompt when a valid firmware is defined', async () => {
         render(
             <DeviceSelector
                 deviceListing={{
@@ -317,7 +317,7 @@ describe('DeviceSelector', () => {
         );
     });
 
-    it('should select device when cancelling firmware prompt', async () => {
+    it('selects a device when cancelling firmware prompt', async () => {
         render(
             <DeviceSelector
                 deviceListing={{

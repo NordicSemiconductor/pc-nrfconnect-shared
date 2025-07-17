@@ -11,13 +11,13 @@ const anErrorMessage = 'An error occurred';
 const anotherErrorMessage = 'Another error occurred';
 
 describe('errorDialogReducer', () => {
-    it('should be hidden by default', () => {
+    it('is hidden by default', () => {
         const initialState = dispatchTo(reducer);
 
         expect(initialState.isVisible).toEqual(false);
     });
 
-    it('should be visible and have the supplied message after show action has been dispatched', () => {
+    it('shows a message', () => {
         const withAnError = dispatchTo(reducer, [
             showDialog(anErrorMessage, {}),
         ]);
@@ -27,7 +27,7 @@ describe('errorDialogReducer', () => {
         });
     });
 
-    it('should be visible and have all messages after multiple show actions have been dispatched', () => {
+    it('shows multiple messages', () => {
         const withTwoErrors = dispatchTo(reducer, [
             showDialog(anErrorMessage, {}),
             showDialog(anotherErrorMessage, {}),
@@ -41,7 +41,7 @@ describe('errorDialogReducer', () => {
         });
     });
 
-    it('should not add message if it already exists in list', () => {
+    it('does not show duplicate messages', () => {
         const withAnError = dispatchTo(reducer, [
             showDialog(anErrorMessage, {}),
             showDialog(anErrorMessage, {}),
@@ -52,7 +52,7 @@ describe('errorDialogReducer', () => {
         ]);
     });
 
-    it('should set dialog to invisible and clear message list when hide action has been dispatched', () => {
+    it('can be hidden and cleared', () => {
         const withAClearedError = dispatchTo(reducer, [
             showDialog(anErrorMessage, {}),
             hideDialog(),

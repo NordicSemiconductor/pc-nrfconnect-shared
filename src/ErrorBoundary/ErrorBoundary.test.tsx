@@ -43,7 +43,7 @@ describe('ErrorBoundary', () => {
         jest.clearAllMocks();
     });
 
-    it('can take custom reporting functions', () => {
+    it('accepts custom reporting functions', () => {
         const sendTelemetryEvent = jest.fn();
 
         render(
@@ -54,7 +54,7 @@ describe('ErrorBoundary', () => {
         expect(sendTelemetryEvent).toHaveBeenCalled();
     });
 
-    it('should render error boundary component when there is an error', () => {
+    it('renders error boundary component when there is an error', () => {
         render(
             <ErrorBoundary>
                 <Child />
@@ -64,7 +64,7 @@ describe('ErrorBoundary', () => {
         expect(errorMessage).toBeDefined();
     });
 
-    it('should clear store if factory reset', async () => {
+    it('clears store on factory reset', async () => {
         render(
             <ErrorBoundary>
                 <Child />
@@ -76,7 +76,7 @@ describe('ErrorBoundary', () => {
         expect(store().clear).toHaveBeenCalled();
     });
 
-    it('should present system information', async () => {
+    it('presents system information', async () => {
         render(
             <ErrorBoundary>
                 <Child />

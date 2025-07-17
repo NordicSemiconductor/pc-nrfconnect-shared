@@ -28,18 +28,17 @@ describe('Dialog', () => {
         </Dialog>
     );
 
-    test('is rendered when visible', () => {
+    it('is rendered when visible', () => {
         render(dialog());
         expect(screen.getByRole('dialog')).toBeInTheDocument();
-        test;
     });
 
-    test('is not rendered when not visible', () => {
+    it('is not rendered when not visible', () => {
         render(dialog(false));
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
 
-    test('shows the expected content', () => {
+    it('shows the expected content', () => {
         render(dialog());
 
         expect(screen.getByText('Test Title')).toBeInTheDocument();
@@ -55,7 +54,7 @@ describe('InfoDialog creator', () => {
         </InfoDialog>
     );
 
-    test('shows the expected content', () => {
+    it('shows the expected content', () => {
         render(dialog());
 
         expect(screen.getByText('Info')).toBeInTheDocument();
@@ -63,7 +62,7 @@ describe('InfoDialog creator', () => {
         expect(screen.getByText('Close')).toBeInTheDocument();
     });
 
-    test('invokes the expected action', () => {
+    it('invokes the expected action', () => {
         render(dialog());
 
         const closeButton = screen.getByText('Close');
@@ -80,7 +79,7 @@ describe('ErrorDialog creator', () => {
         </ErrorDialog>
     );
 
-    test('shows the expected content', () => {
+    it('shows the expected content', () => {
         render(dialog());
 
         expect(screen.getByText('Error')).toBeInTheDocument();
@@ -88,7 +87,7 @@ describe('ErrorDialog creator', () => {
         expect(screen.getByText('Close')).toBeInTheDocument();
     });
 
-    test('invokes the expected action', () => {
+    it('invokes the expected action', () => {
         render(dialog());
 
         const closeButton = screen.getByText('Close');
@@ -111,7 +110,7 @@ describe('ConfirmationDialog creator', () => {
         </ConfirmationDialog>
     );
 
-    test('shows the expected content', () => {
+    it('shows the expected content', () => {
         render(dialog());
 
         expect(screen.getByText('Confirm')).toBeInTheDocument();
@@ -121,7 +120,7 @@ describe('ConfirmationDialog creator', () => {
         expect(screen.getByText('Cancel')).toBeInTheDocument();
     });
 
-    test('invokes the expected action', () => {
+    it('invokes the expected action', () => {
         render(dialog());
 
         fireEvent.click(screen.getByText('Optional'));
