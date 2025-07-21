@@ -7,7 +7,7 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 221.0.0 - Unreleased
+## 221.0.0 - 2025-07-21
 
 ### Added
 
@@ -15,6 +15,10 @@ every new version is a new major version.
 -   Narrower Dropdown variant.
 -   Automatic character limit derivation for number input components based on
     their range constraints.
+
+### Fixed
+
+-   Running build scripts failed on Windows.
 
 ## 220.0.0 - 2025-07-16
 
