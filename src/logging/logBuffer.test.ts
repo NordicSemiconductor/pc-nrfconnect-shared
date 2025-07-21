@@ -13,16 +13,16 @@ describe('logBuffer', () => {
         logBuffer = createLogBuffer();
     });
 
-    it('should have no entries when buffer is empty', () => {
+    it('is initially empty', () => {
         expect(logBuffer.size()).toEqual(0);
     });
 
-    it('should have 1 entry when 1 entry has been added', () => {
+    it('can have an entry added', () => {
         logBuffer.addEntry({ id: 0, level: '', message: '' });
         expect(logBuffer.size()).toEqual(1);
     });
 
-    it('should return all added entries when clearing buffer', () => {
+    it('returns all added entries when clearing buffer', () => {
         const inputEntries = [
             { id: 0, level: '', message: '' },
             { id: 1, level: '', message: '' },
@@ -33,7 +33,7 @@ describe('logBuffer', () => {
         expect(outputEntries).toEqual(inputEntries);
     });
 
-    it('should have no entries when buffer has been cleared', () => {
+    it('is empty after clearing', () => {
         logBuffer.addEntry({ id: 0, level: '', message: '' });
         logBuffer.clear();
         expect(logBuffer.size()).toEqual(0);

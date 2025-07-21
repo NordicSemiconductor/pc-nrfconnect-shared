@@ -22,7 +22,7 @@ const items = [
 ];
 
 describe('Dropdown', () => {
-    it('renders a list of items', () => {
+    it('shows a list of items', () => {
         render(
             <Dropdown
                 items={items}
@@ -34,7 +34,7 @@ describe('Dropdown', () => {
         expect(screen.getByText('Bar')).toBeInTheDocument();
     });
 
-    it('calls onSelect when item is clicked', () => {
+    it('calls onSelect', () => {
         const onSelect = jest.fn();
         const item = items[1];
         render(
@@ -49,7 +49,7 @@ describe('Dropdown', () => {
         expect(onSelect).toHaveBeenCalledWith(item);
     });
 
-    it('correct item is selected', () => {
+    it('selects the correct item', () => {
         render(
             <Dropdown
                 items={items}
