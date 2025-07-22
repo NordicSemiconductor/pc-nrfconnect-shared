@@ -28,19 +28,17 @@ jobs:
                   registry-url: https://registry.npmjs.org
                   cache: npm
 
-            - run: npm ci
-
             - name: Check if release is possible
               run: |
-                  npx tsx ./scripts/is-releasable.ts
+                  ./scripts/is-releasable.ts
 
+            - run: npm ci
             - run: npm run check
             - run: npm test
             - run: npm pack
 
             - name: Extract release notes
-              run:
-                  npx tsx ./scripts/latest-changelog-entry.ts > release_notes.md
+              run: ./scripts/latest-changelog-entry.ts > release_notes.md
 
             - name: Determine next tag
               id: determine-next-tag

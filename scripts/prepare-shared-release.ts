@@ -1,4 +1,4 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env npm exec tsx
 
 /*
  * Copyright (c) 2023 Nordic Semiconductor ASA
