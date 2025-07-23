@@ -34,3 +34,17 @@ updated to the right version and today‘s date.
 
 When those conditions are met, a new release of shared will automatically be
 created when the according PR is merged into main.
+
+## Unpublishing a version
+
+If you need to unpublish a specific version from npm (e.g., due to a critical
+bug), you can use the "Unpublish npm version" GitHub Action:
+
+1. Go to the
+   [Unpublish npm version GitHub Action](https://github.com/NordicSemiconductor/pc-nrfconnect-shared/actions/workflows/unpublish-npm-version.yml)
+   and run the workflow.
+1. Enter the version to unpublish (e.g., `221.0.0`)
+
+**Warning:** Unpublishing a version from npm is irreversible and should only be
+done in exceptional circumstances (e.g., security vulnerabilities, critical
+bugs).
