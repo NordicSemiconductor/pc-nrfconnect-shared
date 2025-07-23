@@ -23,12 +23,11 @@ jobs:
             - name: Check if release is ready
               id: check-release
               run: |
-                  reason=`npx tsx ./scripts/is-releasable.ts`
-                  if [ $? -ne 0 ]; then
+                  if reason=$(npx tsx ./scripts/is-releasable.ts); then
+                    echo "ready_to_release=true" >> $GITHUB_OUTPUT
+                  else
                     echo ":see_no_evil: Not releasing because: $reason" >> $GITHUB_STEP_SUMMARY
                     echo "ready_to_release=false" >> $GITHUB_OUTPUT
-                  else
-                    echo "ready_to_release=true" >> $GITHUB_OUTPUT
                   fi
 
     release:
