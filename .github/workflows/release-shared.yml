@@ -9,6 +9,7 @@ on:
                     where the workflow is triggered, usually the main branch.
                 required: false
                 type: string
+    workflow_call:
 
 jobs:
     release:
@@ -28,12 +29,15 @@ jobs:
                   registry-url: https://registry.npmjs.org
                   cache: npm
 
-            - run: npm ci
-
             - name: Check if release is possible
               run: |
-                  npx tsx ./scripts/is-releasable.ts
+                  reason=`npx tsx ./scripts/is-releasable.ts`
+                  if [ $? -ne 0 ]; then
+                    echo "::error::$reason"
+                    exit 1
+                  fi
 
+            - run: npm ci
             - run: npm run check
             - run: npm test
             - run: npm pack
