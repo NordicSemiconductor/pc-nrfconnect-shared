@@ -35,6 +35,7 @@ jobs:
         needs: check
         if: needs.check.outputs.ready_to_release == 'true'
         uses: ./.github/workflows/release-shared.yml
+        secrets: inherit
 
     test:
         needs: check
