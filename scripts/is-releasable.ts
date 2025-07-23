@@ -18,7 +18,7 @@ import getReleaseNumbers from './get-release-numbers';
 import { getLatestEntry } from './latest-changelog-entry';
 
 const fail = (message: string) => {
-    console.log(`::error::${message}`);
+    console.log(message);
     process.exit(1);
 };
 

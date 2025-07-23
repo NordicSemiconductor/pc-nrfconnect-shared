@@ -1,0 +1,42 @@
+name: Auto-publish shared
+
+on:
+    push:
+        branches: [main]
+
+jobs:
+    check:
+        runs-on: ubuntu-latest
+        env:
+            GH_TOKEN: ${{ github.token }}
+        outputs:
+            ready_to_release:
+                ${{ steps.check-release.outputs.ready_to_release }}
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  registry-url: https://registry.npmjs.org
+                  cache: npm
+
+            - name: Check if release is ready
+              id: check-release
+              run: |
+                  reason=`npx tsx ./scripts/is-releasable.ts`
+                  if [ $? -ne 0 ]; then
+                    echo ":see_no_evil: Not releasing because: $reason" >> $GITHUB_STEP_SUMMARY
+                    echo "ready_to_release=false" >> $GITHUB_OUTPUT
+                  else
+                    echo "ready_to_release=true" >> $GITHUB_OUTPUT
+                  fi
+
+    release:
+        needs: check
+        if: needs.check.outputs.ready_to_release == 'true'
+        uses: ./.github/workflows/release-shared.yml
+
+    test:
+        needs: check
+        if: needs.check.outputs.ready_to_release == 'false'
+        uses: ./.github/workflows/test-shared.yml
