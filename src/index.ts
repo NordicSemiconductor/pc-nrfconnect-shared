@@ -196,12 +196,10 @@ export {
     inMain as apps,
     type App as AppType,
     type AppSpec,
-    type AppWithError,
     type DownloadableApp,
     type InstalledDownloadableApp,
     type LaunchableApp,
     type LocalApp,
-    type SourceWithError,
     type UninstalledDownloadableApp,
     type WithdrawnApp,
 } from '../ipc/apps';

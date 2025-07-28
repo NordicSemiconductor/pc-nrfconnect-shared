@@ -7,6 +7,14 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 223.0.0 - 2025-07-28
+
+### Changed
+
+-   Return value of `getDownloadableApps` has less fields now and some more
+    exports were removed, because they were only needed in the launcher and
+    having them in shared made changes harder in the launcher.
+
 ## 222.0.0 - 2025-07-23
 
 ### Added
