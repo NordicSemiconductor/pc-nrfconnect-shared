@@ -11,7 +11,7 @@ import type {
     NrfutilModuleVersion,
     UrlString,
 } from './MetaFiles';
-import { LOCAL, Source, SourceName } from './sources';
+import { LOCAL, SourceName } from './sources';
 
 export interface AppSpec {
     name: string;
@@ -75,17 +75,10 @@ export type LaunchableApp = LocalApp | InstalledDownloadableApp | WithdrawnApp;
 
 export type App = LocalApp | DownloadableApp;
 
-export interface AppWithError extends AppSpec {
-    reason: unknown;
-    path: string;
-}
-
-const channel = {
+export const channel = {
     getDownloadableApps: 'apps:get-downloadable-apps',
     installDownloadableApp: 'apps:install-downloadable-app',
 };
-
-export type SourceWithError = { source: Source; reason?: string };
 
 export const isDownloadable = (app?: App): app is DownloadableApp =>
     app != null && app?.source !== LOCAL;
@@ -115,10 +108,8 @@ export const isUpdatable = (app?: App): app is InstalledDownloadableApp =>
         latestVersionHasDifferentChecksum(app));
 
 // getDownloadableApps
-type GetDownloadableAppsResult = {
+export type GetDownloadableAppsResult = {
     apps: DownloadableApp[];
-    appsWithErrors: AppWithError[];
-    sourcesWithErrors: SourceWithError[];
 };
 
 type GetDownloadableApps = () => GetDownloadableAppsResult;
