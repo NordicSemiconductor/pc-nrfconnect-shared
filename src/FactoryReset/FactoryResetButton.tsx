@@ -22,7 +22,7 @@ interface Props {
 }
 
 const DEFAULT_MODAL_TEXT =
-    'By restoring defaults, all stored app-specific configuration values will be lost. This does not include configurations such as device renames and favorites. The app will be reloaded after the restore. Are you sure you want to proceed?';
+    'By restoring the default settings, all locally stored, app-specific configuration values will be lost. This does not include configurations such as device renames and favorites. The app will be reloaded. Are you sure you want to proceed?';
 
 const FactoryResetButton: FC<Props> = ({
     resetFn,
