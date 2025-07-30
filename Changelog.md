@@ -11,7 +11,7 @@ every new version is a new major version.
 
 ### Fixed
 
--   Issue with reloading an app after restoring the default settings.
+-   Apps did not reload after restoring the default settings.
 
 ## 223.0.0 - 2025-07-28
 
