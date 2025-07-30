@@ -13,7 +13,6 @@ every new version is a new major version.
 
 -   `rimraf` as an explicit dependency from package.json.
 
-
 ## 223.0.0 - 2025-07-28
 
 ### Changed
