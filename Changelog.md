@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 224.0.0 - UNRELEASED
+
+### Fixed
+
+-   Apps did not reload after restoring the default settings.
+
 ## 223.0.0 - 2025-07-28
 
 ### Changed
