@@ -229,7 +229,7 @@ describe('getJlinkCompatibility', () => {
 
     it(`Reports no installed SEGGER J-Link for for module versions reported by nrfutil device before v2.7`, () => {
         expect(getJlinkCompatibility(createModuleVersion())).toEqual({
-            kind: 'No J-Link installed',
+            kind: 'No SEGGER J-Link installed',
             requiredJlink: '7.94e',
             actualJlink: 'none',
         });
