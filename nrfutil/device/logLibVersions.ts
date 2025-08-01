@@ -35,29 +35,29 @@ export default (moduleVersion: ModuleVersion) => {
     try {
         const dependencies = moduleVersion.dependencies;
 
-        log('nrfutil-device', moduleVersion.version);
+        log('nrfutil device', moduleVersion.version);
         log('nrf-device-lib', findDependency('nrfdl', dependencies));
         log('nrf-probe', findDependency('nrf-probe', dependencies));
-        log('JLink', findDependency('JlinkARM', dependencies));
+        log('SEGGER J-Link', findDependency('JlinkARM', dependencies));
 
         const jlinkCompatibility = getJlinkCompatibility(moduleVersion);
 
         switch (jlinkCompatibility.kind) {
-            case 'No J-Link installed':
+            case 'No SEGGER J-Link installed':
                 logger?.warn(
                     `SEGGER J-Link is not installed. ` +
                         `Install at least version ${jlinkCompatibility.requiredJlink} ` +
                         `from https://www.segger.com/downloads/jlink`
                 );
                 break;
-            case 'Outdated J-Link':
+            case 'Outdated SEGGER J-Link':
                 logger?.warn(
                     `Outdated SEGGER J-Link. Your version of SEGGER J-Link (${jlinkCompatibility.actualJlink}) ` +
                         `is older than the one this app was tested with (${jlinkCompatibility.requiredJlink}). ` +
                         `Install the newer version from https://www.segger.com/downloads/jlink`
                 );
                 break;
-            case 'Newer J-Link is used':
+            case 'Newer SEGGER J-Link is used':
                 logger?.info(
                     `Your version of SEGGER J-Link (${jlinkCompatibility.actualJlink}) ` +
                         `is newer than the one this app was tested with (${jlinkCompatibility.requiredJlink}). ` +

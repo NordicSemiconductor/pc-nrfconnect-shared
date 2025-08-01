@@ -206,7 +206,7 @@ describe('getJlinkCompatibility', () => {
         ...dependencies: Dependency[]
     ): ModuleVersion => ({
         classification: 'nrf-external',
-        name: 'nrfutil-device',
+        name: 'nrfutil device',
         version: '2.5.0',
         build_timestamp: '',
         commit_date: '',
@@ -227,7 +227,7 @@ describe('getJlinkCompatibility', () => {
         host: '',
     });
 
-    it(`Reports no installed J-Link for for module versions reported by nrfutil-device before v2.7`, () => {
+    it(`Reports no installed SEGGER J-Link for for module versions reported by nrfutil device before v2.7`, () => {
         expect(getJlinkCompatibility(createModuleVersion())).toEqual({
             kind: 'No J-Link installed',
             requiredJlink: '7.94e',
@@ -235,7 +235,7 @@ describe('getJlinkCompatibility', () => {
         });
     });
 
-    it(`Reports no installed J-Link for for module versions reported by nrfutil-device since v2.7`, () => {
+    it(`Reports no installed SEGGER J-Link for for module versions reported by nrfutil device since v2.7`, () => {
         expect(
             getJlinkCompatibility(
                 createModuleVersion({
@@ -247,13 +247,13 @@ describe('getJlinkCompatibility', () => {
                 })
             )
         ).toEqual({
-            kind: 'No J-Link installed',
+            kind: 'No SEGGER J-Link installed',
             requiredJlink: '8.10f',
             actualJlink: 'none',
         });
     });
 
-    it(`Reports an outdated J-Link version`, () => {
+    it(`Reports an outdated SEGGER J-Link version`, () => {
         expect(
             getJlinkCompatibility(
                 createModuleVersion({
@@ -267,13 +267,13 @@ describe('getJlinkCompatibility', () => {
                 })
             )
         ).toEqual({
-            kind: 'Outdated J-Link',
+            kind: 'Outdated SEGGER J-Link',
             requiredJlink: '7.94i',
             actualJlink: '7.94e',
         });
     });
 
-    it(`Reports a newer J-Link version is used`, () => {
+    it(`Reports a newer SEGGER J-Link version is used`, () => {
         expect(
             getJlinkCompatibility(
                 createModuleVersion({
@@ -287,13 +287,13 @@ describe('getJlinkCompatibility', () => {
                 })
             )
         ).toEqual({
-            kind: 'Newer J-Link is used',
+            kind: 'Newer SEGGER J-Link is used',
             requiredJlink: '7.94i',
             actualJlink: '8.10f',
         });
     });
 
-    it(`Reports the tested J-Link version is used`, () => {
+    it(`Reports the tested SEGGER J-Link version is used`, () => {
         expect(
             getJlinkCompatibility(
                 createModuleVersion({
@@ -306,10 +306,10 @@ describe('getJlinkCompatibility', () => {
                     },
                 })
             )
-        ).toEqual({ kind: 'Tested J-Link is used' });
+        ).toEqual({ kind: 'Tested SEGGER J-Link is used' });
     });
 
-    it(`Reports the tested J-Link version is used by specifying no expected version`, () => {
+    it(`Reports the tested SEGGER J-Link version is used by specifying no expected version`, () => {
         expect(
             getJlinkCompatibility(
                 createModuleVersion({
@@ -318,6 +318,6 @@ describe('getJlinkCompatibility', () => {
                     versionFormat: 'string',
                 })
             )
-        ).toEqual({ kind: 'Tested J-Link is used' });
+        ).toEqual({ kind: 'Tested SEGGER J-Link is used' });
     });
 });

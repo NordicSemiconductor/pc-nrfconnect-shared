@@ -190,7 +190,7 @@ export class NrfutilSandbox {
             this.coreVersion ?? CORE_VERSION_FOR_LEGACY_APPS;
         if (currentCoreVersion.version === requestedCoreVersion) {
             getNrfutilLogger()?.debug(
-                `Requested nrfutil core version ${requestedCoreVersion} is already installed.`
+                `Requested nRF Util's core version ${requestedCoreVersion} is already installed.`
             );
 
             return;

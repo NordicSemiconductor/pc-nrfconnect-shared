@@ -162,7 +162,7 @@ const removeDeviceFromList =
         }
     };
 /*
- * Starts watching for devices with the given traits. See the nrfutil-device
+ * Starts watching for devices with the given traits. See the nrfutil device
  * library for available traits. Whenever devices are attached/detached, this
  * will dispatch AddDevice or removeDevice and trigger events.
  */
