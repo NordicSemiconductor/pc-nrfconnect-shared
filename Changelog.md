@@ -1028,16 +1028,16 @@ Overrides v202 as it was released a prerelease.
 
 ### Added
 
--   nRF Util sandbox now allows caller to pass optional lambda to manipulate
-    the env values
+-   nRF Util sandbox now allows caller to pass optional lambda to manipulate the
+    env values
 -   nRF Util provides an alternative to spawn and just exec
 -   `nrfutil device` auto logs version information when it is initialed for the
     first time.
 
 ### Changed
 
--   `ErrorBoundary` only collect device lib info if these app adds `nrfutil device`
-    as a dependency in `package.json`
+-   `ErrorBoundary` only collect device lib info if these app adds
+    `nrfutil device` as a dependency in `package.json`
 -   `App` no longer logs `nrfutil device` version.
 
 ## 128.0.0 - 2023-11-08
@@ -1367,8 +1367,8 @@ declare module '!!@svgr!*.svg' {
 
 ### Fixed
 
--   Unable to use `nrfutil device` in production due to issue with `nrfutil device`
-    logging when set to off.
+-   Unable to use `nrfutil device` in production due to issue with
+    `nrfutil device` logging when set to off.
 
 ## 99.0.0 - 2023-09-04
 
