@@ -72,7 +72,7 @@ const generalInfoReport = async () => {
 
     moduleVersions.forEach(moduleVersion => {
         result.push(
-            `    - nrfutil-${moduleVersion.name}: ${moduleVersion.version}`
+            `    - nrfutil ${moduleVersion.name}: ${moduleVersion.version}`
         );
         if (moduleVersion.name === 'device') {
             const dependencies = moduleVersion.dependencies;

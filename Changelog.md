@@ -115,7 +115,7 @@ every new version is a new major version.
 
 ### Added
 
--   Specify what core version of nrfutil an app depends on.
+-   Specify what core version of nRF Util an app depends on.
 
 ### Removed
 
@@ -128,7 +128,7 @@ every new version is a new major version.
 ### Steps to upgrade when using this package
 
 -   In apps in `package.json` set the field `nrfConnectForDesktop.nrfutilCore`
-    to the core version of nrfutil that the nrfutil commands will use.
+    to the core version of nRF Util that the nRF Util commands will use.
 -   Replace usage of `prepareSandbox` with `NrfutilSandbox.create`
 -   Update calls of `xRead`.
 
@@ -147,18 +147,18 @@ every new version is a new major version.
 -   Scrollbars no longer appear in the device list for a second when
     disconnecting a device.
 -   `Dropdown` active label now handles overflow.
--   nRFUtil device batch will not run if no subcommand has been added to the
+-   nRF Util device batch will not run if no subcommand has been added to the
     batch.
 
 ### Steps to upgrade when using this package
 
--   Minimum version of nrfutil-device is 2.7.16.
+-   Minimum version of `nrfutil device` is 2.7.16.
 
 ## 209.0.0 - 2025-04-30
 
 ### Changed
 
--   Nrfutil device use of `fw-read` is replaced with `x-read`.
+-   `nrfutil device` use of `fw-read` is replaced with `x-read`.
 
 ### Steps to upgrade when using this package
 
@@ -215,11 +215,11 @@ every new version is a new major version.
 
 ### Added
 
--   `nrf-probe` verison check for nrfutil device.
+-   `nrf-probe` verison check for `nrfutil device`.
 
 ### Removed
 
--   `nrfjprog` verison check for nrfutil device.
+-   `nrfjprog` verison check for `nrfutil device`.
 
 ### Changed
 
@@ -312,7 +312,7 @@ Overrides v202 as it was released a prerelease.
 
 ### Fixed
 
--   nrfutil: mcu-state-set caused an error if no target was specified.
+-   nRF Util: mcu-state-set caused an error if no target was specified.
 
 ## 193.0.0 - 2024-12-04
 
@@ -335,9 +335,9 @@ Overrides v202 as it was released a prerelease.
 
 ### Changed
 
--   nrfutil: The core gets upgraded before installing a command.
--   nrfutil: The `version` properties of dependencies are now optional,
-    reflecting the behaviour since `nrfutil-device` v2.7.0.
+-   nRF Util: The core gets upgraded before installing a command.
+-   nRF Util: The `version` properties of dependencies are now optional,
+    reflecting the behaviour since `nrfutil device` v2.7.0.
 -   Warning for J-Link versions: Only inform (not warn) if the installed version
     is newer than the tested version. Updated the text for all cases.
 
@@ -357,11 +357,11 @@ Overrides v202 as it was released a prerelease.
 
 -   Dropdown helper functions which are used in `pc-nrfconnect-serial-terminal`
     and `pc-nrfconnect-programmer`.
--   Add nrfutil mcu-state-options for multi target support.
+-   Add nRF Util `mcu-state-options` for multi target support.
 
 ### Steps to upgrade when using this package
 
--   Minimum support version of nrfutil device is now 2.5.0
+-   Minimum support version of `nrfutil device` is now 2.5.0.
 
 ## 188.0.0 - 2024-10-15
 
@@ -403,7 +403,7 @@ Overrides v202 as it was released a prerelease.
 
 ### Fixed
 
--   Stop nrfutil sandbox from starting to run an aborted command.
+-   Stop nRF Util sandbox from starting to run an aborted command.
 -   Device setup event call order when autoreconnecting at the same time as
     selecting.
 
@@ -444,13 +444,13 @@ Overrides v202 as it was released a prerelease.
 
 ### Changed
 
--   nrfutil sandbox deletes any residual sandbox folder before install.
+-   nRF Util sandbox deletes any residual sandbox folder before install.
 
 ## 180.0.0 - 2024-07-01
 
 ### Changed
 
--   nrfutil sandbox folder is deleted if installation fails.
+-   nRF Util sandbox folder is deleted if installation fails.
 
 ## 179.0.0 - 2024-06-20
 
@@ -484,7 +484,7 @@ Overrides v202 as it was released a prerelease.
 
 ### Fixed
 
--   NRFUtil Sandbox s installed on Apple Silicon now uses the arm64 folder and
+-   nRF Util Sandbox s installed on Apple Silicon now uses the arm64 folder and
     not the intel one.
 
 ## 175.0.0 - 2024-05-02
@@ -520,7 +520,7 @@ Overrides v202 as it was released a prerelease.
 
 ### Added
 
--   Support for splitting M1 and x64 nrfutil sandboxes.
+-   Support for splitting M1 and x64 nRF Util sandboxes.
 
 ## 172.0.0 - 2024-04-15
 
@@ -608,7 +608,7 @@ Overrides v202 as it was released a prerelease.
 
 ### Added
 
--   Auto update nrfutil core for sandboxes
+-   Auto update nRF Util core for sandboxes
 
 ## 164.0.0 - 2024-03-05
 
@@ -699,11 +699,11 @@ Overrides v202 as it was released a prerelease.
 ### Changed
 
 -   `getReadbackProtection` now returns protection type `ProtectionStatus` from
-    nrfutil device common.ts
+    `nrfutil device` common.ts
 
 ### Steps to upgrade when using this package
 
--   Minimum support version of nrfutil device is now 2.1.1
+-   Minimum support version of `nrfutil device` is now 2.1.1.
 
 ## 157.0.0 - 2024-02-06
 
@@ -784,9 +784,9 @@ Overrides v202 as it was released a prerelease.
 ### Fixed
 
 -   `Overlay` tooltips weren't centered due to incorrect sizing styles.
--   When spawning the nrfutil process fails in certain ways, an uncaught
+-   When spawning the nRF Util process fails in certain ways, an uncaught
     exception in the main process got thrown. The “certain ways” make this a bit
-    hard to reproduce: On macOS this happened, when the nrfutil executable did
+    hard to reproduce: On macOS this happened, when the nRF Util executable did
     not have the executable file mode. Usually this should not happen, because
     we set that mode ourselves correctly.
 
@@ -810,10 +810,10 @@ Overrides v202 as it was released a prerelease.
 ### Added
 
 -   `getModule` export from `@nordicsemiconductor/pc-nrfconnect-shared/nrfutil`
-    to retrieve/initialise specific nrfutil module sandbox.
+    to retrieve/initialise specific nRF Util module sandbox.
 -   `setVerboseLogging`, `setLogLevel` and `getAllModuleVersions` exports from
     `@nordicsemiconductor/pc-nrfconnect-shared/nrfutil` to target all
-    initialised nrfutil modules.
+    initialised nRF Util modules.
 
 ### Changed
 
@@ -822,14 +822,14 @@ Overrides v202 as it was released a prerelease.
     (previously this was only used to determine whether an app should have
     verbose logging enabled on startup). This allows code which does/should not
     have access to the redux store to still retrieve the verbose logging state.
--   `Create system report` now logs the version of all initialised nrfutil
+-   `Create system report` now logs the version of all initialised nRF Util
     modules.
--   nrfutil device exports have now been moved to
+-   `nrfutil device` exports have now been moved to
     `@nordicsemiconductor/pc-nrfconnect-shared/nrfutil/device`.
 
 ### Steps to upgrade
 
--   Replace all calls of nrfutil device imported from
+-   Replace all calls of `nrfutil device` imported from
     `@nordicsemiconductor/pc-nrfconnect-shared/nrfutil` to
     `@nordicsemiconductor/pc-nrfconnect-shared/nrfutil/device`.
 
@@ -909,7 +909,7 @@ Overrides v202 as it was released a prerelease.
 ### Added
 
 -   Added command wrappers to interact with the Board Controller using
-    `nrfutil-device`. `boardController()` to write board controller config to
+    `nrfutil device`. `boardController()` to write board controller config to
     the DK. `getBoardControllerVersion()` to get the version information from
     the Board Controller. (like firmware version and board hardware revision)
 
@@ -921,7 +921,7 @@ Overrides v202 as it was released a prerelease.
 
 ### Fixed
 
--   `nrfutil sandbox` `execCommand` did not escape executable path leading to
+-   nRF Util sandbox `execCommand` did not escape executable path leading to
     failure when path has whitespace
 
 ## 137.0.0 - 2023-12-04
@@ -945,7 +945,7 @@ Overrides v202 as it was released a prerelease.
     dependency of a useEffect
 -   `useStopWatch` start optional time param no longer default to the last time
     when paused but 0.
--   `nrfutil device` `device-info` return undefined if reading info throws
+-   `nrfutil device device-info` returns undefined if reading info throws
 
 ### Steps to upgrade when using this package
 
@@ -986,7 +986,7 @@ Overrides v202 as it was released a prerelease.
 
 ### Changed
 
--   Nrfutil `sandbox` default logging level to 'off' in production and 'error'
+-   nRF Util `sandbox` default logging level to 'off' in production and 'error'
     in development environments
 
 ## 132.0.0 - 2023-11-14
@@ -1018,7 +1018,7 @@ Overrides v202 as it was released a prerelease.
 ### Fixed
 
 -   Ensure that all enumerated devices are always processed in order to avoid:
-    -   calling nrfutil device-info multiple times for the same device
+    -   calling `nrfutil device-info` multiple times for the same device
     -   only calling onSuccess once when waiting for device when rebooting
 -   `nrfutil device` now calls `device-info` before notifying the app with an
     onSelectedDevice. This is to ensure the operations to the device are
@@ -1028,17 +1028,17 @@ Overrides v202 as it was released a prerelease.
 
 ### Added
 
--   `nrfutil` sandbox now allows caller to pass optional lambda to manipulate
-    the env values
--   `nrfutil` provides an alternative to spawn and just exec
+-   nRF Util sandbox now allows caller to pass optional lambda to manipulate the
+    env values
+-   nRF Util provides an alternative to spawn and just exec
 -   `nrfutil device` auto logs version information when it is initialed for the
     first time.
 
 ### Changed
 
--   `ErrorBoundary` only collect device lib info if these app adds nrfutil
-    device as a dependency in `package.json`
--   `App` no longer logs nrfutil device version.
+-   `ErrorBoundary` only collect device lib info if these app adds
+    `nrfutil device` as a dependency in `package.json`
+-   `App` no longer logs `nrfutil device` version.
 
 ## 128.0.0 - 2023-11-08
 
@@ -1212,7 +1212,7 @@ render(<App panes={[]} />);
 
 ### Fixed
 
--   `nrfutil` abort log messages is now more descriptive
+-   nRF Util's abort log messages is now more descriptive
 -   `nrfutil device batch` could previously call the `onException` when task was
     complete.
 
@@ -1284,7 +1284,7 @@ declare module '!!@svgr!*.svg' {
 
 ### Changed
 
--   Improve `Nrfutil Sandbox` error messages.
+-   Improve nRF Util sandbox error messages.
 
 ### Added
 
@@ -1313,7 +1313,7 @@ declare module '!!@svgr!*.svg' {
 
 ### Added
 
--   Log warning for any nrfutil device that was not enumerated
+-   Log warning for any device that was not enumerated with `nrfutil device`.
 
 ### Fixed
 
@@ -1323,8 +1323,8 @@ declare module '!!@svgr!*.svg' {
 
 ### Changed
 
--   `Nrfutil Device` batch now generate batch JSON using the CLI. Requires
-    nrfutil device 1.4.2
+-   `nrfutil device` batch now generate batch JSON using the CLI. Requires
+    `nrfutil device` 1.4.2
 
 ### Fixed
 
@@ -1367,25 +1367,25 @@ declare module '!!@svgr!*.svg' {
 
 ### Fixed
 
--   Unable to use nrfutil device in production due to issue with nrfutil device
-    logging when set to off.
+-   Unable to use `nrfutil device` in production due to issue with
+    `nrfutil device` logging when set to off.
 
 ## 99.0.0 - 2023-09-04
 
 ### Added
 
--   nrfutil device list now supports optional timeout parameter
+-   `nrfutil device list` now supports optional timeout parameter
 
 ### Changed
 
--   Nrfutil device list now default to 3000ms timeout when enumerating (was
+-   `nrfutil device list` now default to 3000ms timeout when enumerating (was
     1000ms)
--   Nrfutil device now support nrfutil device 1.4.x only
--   Nrfutil device will not log in production unless verbose logging is on
+-   `nrfutil device` now support `nrfutil device` 1.4.x only
+-   `nrfutil device` will not log in production unless verbose logging is on
 
 ### Fixed
 
--   Nrfutil device std error message string
+-   `nrfutil device` std error message string
 -   When SDFU MCU State change fails, wait for device is now canceled
 
 ### Removed
@@ -1460,19 +1460,19 @@ declare module '!!@svgr!*.svg' {
 
 ### Added
 
--   Nrfutil progress now has a new property `totalProgressPercentage` that
+-   nRF Util progress now has a new property `totalProgressPercentage` that
     computes the progress across all steps
 
 ### Changed
 
--   Nrfutil progress properties `step` and `amountOfSteps` are now always
+-   nRF Util progress properties `step` and `amountOfSteps` are now always
     present
--   Nrfutil progress properties `progressPercentage` has been renamed to
+-   nRF Util progress properties `progressPercentage` has been renamed to
     `stepProgressPercentage`
 
 ### Steps to upgrade
 
--   Any usage of Nrfutil property `progressPercentage` need to be renamed to
+-   Any usage of nRF Util property `progressPercentage` need to be renamed to
     `stepProgressPercentage`
 
 ## 92.0.0 - 2023-08-24

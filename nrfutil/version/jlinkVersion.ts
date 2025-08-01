@@ -34,7 +34,7 @@ export const hasExpectedVersionFormat = (
 
     if (!result && logFailure) {
         console.error(
-            `The J-Link version was not reported in the expected format. ` +
+            `The SEGGER J-Link version was not reported in the expected format. ` +
                 `Format: ${dependency.versionFormat}, ` +
                 `version: ${JSON.stringify(dependency)}, `
         );
@@ -99,7 +99,7 @@ export const getJlinkCompatibility = (moduleVersion: ModuleVersion) => {
                 ? strippedVersionName(jlinkVersionDependency.expectedVersion)
                 : nrfutilDeviceToJLink(moduleVersion.version);
         return {
-            kind: 'No J-Link installed',
+            kind: 'No SEGGER J-Link installed',
             requiredJlink: requiredVersion,
             actualJlink: 'none',
         } as const;
@@ -115,7 +115,7 @@ export const getJlinkCompatibility = (moduleVersion: ModuleVersion) => {
         const actualJlink = strippedVersionName(jlinkVersionDependency);
 
         return {
-            kind: 'Outdated J-Link',
+            kind: 'Outdated SEGGER J-Link',
             requiredJlink,
             actualJlink,
         } as const;
@@ -127,7 +127,7 @@ export const getJlinkCompatibility = (moduleVersion: ModuleVersion) => {
             jlinkVersionDependency.expectedVersion.version
     ) {
         return {
-            kind: 'Tested J-Link is used',
+            kind: 'Tested SEGGER J-Link is used',
         } as const;
     }
 
@@ -137,7 +137,7 @@ export const getJlinkCompatibility = (moduleVersion: ModuleVersion) => {
     const actualJlink = strippedVersionName(jlinkVersionDependency);
 
     return {
-        kind: 'Newer J-Link is used',
+        kind: 'Newer SEGGER J-Link is used',
         requiredJlink,
         actualJlink,
     } as const;
