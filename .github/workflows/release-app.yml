@@ -37,20 +37,6 @@ jobs:
               with:
                   name: ${{ env.ARTIFACT_NAME }}
 
-            - name: Release app to ${{ inputs.source }}
-              env:
-                  ARTIFACTORY_TOKEN:
-                      ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND
-                      }}
-              run: |
-                  tar xaf *.tgz
-                  cp *.tgz package
-                  cd package
-                  node dist/nordic-publish.js \
-                    --no-pack \
-                    --destination artifactory \
-                    --source '${{ inputs.source }}'
-
             - name: Create release on GitHub
               if: inputs.source == 'official (external)'
               run: |
@@ -67,6 +53,20 @@ jobs:
                     --repo ${{ github.repository }} \
                     --notes-file release_notes.md \
                     ./*.tgz
+
+            - name: Release app to ${{ inputs.source }}
+              env:
+                  ARTIFACTORY_TOKEN:
+                      ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND
+                      }}
+              run: |
+                  tar xaf *.tgz
+                  cp *.tgz package
+                  cd package
+                  node dist/nordic-publish.js \
+                    --no-pack \
+                    --destination artifactory \
+                    --source '${{ inputs.source }}'
 
     check-if-docs-exist:
         needs: release
