@@ -49,6 +49,7 @@ jobs:
                   fi
 
                   gh release create "$TAG" \
+                    --title "$TAG" \
                     --target ${{ inputs.ref || github.ref }} \
                     --repo ${{ github.repository }} \
                     --notes-file release_notes.md \
