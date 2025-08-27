@@ -8,8 +8,6 @@ import { ipcMain, ipcRenderer } from 'electron';
 
 export interface Configuration {
     isRunningLauncherFromSource: boolean;
-    isSkipUpdateApps: boolean;
-    isSkipUpdateLauncher: boolean;
     launcherVersion: string;
     userDataDir: string;
 }
