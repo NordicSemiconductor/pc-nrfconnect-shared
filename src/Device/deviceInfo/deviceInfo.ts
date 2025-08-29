@@ -278,6 +278,17 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
             buyOnline: '',
         },
     },
+    PCA10201: {
+        name: 'nRF9151 SMA DK',
+        cores: 1,
+        icon: nrf91logo,
+        website: {
+            productPage:
+                'https://www.nordicsemi.com/Products/Development-hardware/nRF9151-DK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=NRF9151-DK',
+        },
+    },
 };
 
 const deviceByPca = (device: Device) =>
