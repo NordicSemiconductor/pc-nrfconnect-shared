@@ -11,6 +11,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import { createRoot } from 'react-dom/client';
 import { useDispatch, useSelector } from 'react-redux';
 import { Reducer } from 'redux';
+import { getCurrentWindow } from '@electron/remote';
 
 import { inMain as open } from '../../ipc/open';
 import { setNrfutilLogger } from '../../nrfutil/nrfutilLogger';
@@ -106,6 +107,13 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
         title: 'Open launcher',
         isGlobal: true,
         action: open.openLauncher,
+    });
+
+    useHotKey({
+        hotKey: 'ctrl+r',
+        title: 'Restart app',
+        isGlobal: true,
+        action: () => getCurrentWindow().reload(),
     });
 
     useEffect(() => {
