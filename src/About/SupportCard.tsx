@@ -35,8 +35,8 @@ export default ({ feedbackCategories }: { feedbackCategories?: string[] }) => {
             <div className="tw-preflight tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
                 <Section title="DevZone">
                     <p>
-                        All support requests must be sent through our developer
-                        portal DevZone.
+                        You can ask for help or open a support request on
+                        DevZone, Nordic Semiconductor's developer portal.
                     </p>
                     <AboutButton
                         url="https://devzone.nordicsemi.com"
@@ -45,10 +45,9 @@ export default ({ feedbackCategories }: { feedbackCategories?: string[] }) => {
                 </Section>
                 <Section title="System report">
                     <p>
-                        In order to get the best support it is helpful for our
-                        employees to know details about your operating system
-                        and related software. Create a system report and add to
-                        your support request.
+                        Provide details about your operating system and related
+                        software to get the best possible assistance. Create a
+                        system report and add it to your support request.
                     </p>
                     <AboutButton
                         onClick={() =>
@@ -70,9 +69,9 @@ export default ({ feedbackCategories }: { feedbackCategories?: string[] }) => {
                 </Section>
                 <Section title="Verbose logging">
                     <p>
-                        Aid our support team with additional log information.
-                        Enable this only when necessary as the log will grow
-                        quickly.
+                        Provide additional log information in your support
+                        request. Enable this only when necessary, as the log
+                        will grow quickly.
                     </p>
                     <div className="tw-w-full">
                         <Toggle
@@ -92,7 +91,7 @@ export default ({ feedbackCategories }: { feedbackCategories?: string[] }) => {
                                 doNotResetVerboseLogginOnRestart();
                                 getCurrentWindow().emit('restart-window');
                             }}
-                            title="Restart application with verbose logging toggled on to get log messages from the initial enumeration."
+                            title="Restart application with verbose logging enabled to get log messages from the initial enumeration."
                             disabled={!verboseLogging}
                         >
                             Restart with verbose logging
