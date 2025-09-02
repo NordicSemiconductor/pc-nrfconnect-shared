@@ -36,7 +36,7 @@ export default ({ feedbackCategories }: { feedbackCategories?: string[] }) => {
                 <Section title="DevZone">
                     <p>
                         You can ask for help or open a support request on
-                        DevZone, Nordic Semiconductor's developer portal.
+                        DevZone, Nordic Semiconductor&apos;s developer portal.
                     </p>
                     <AboutButton
                         url="https://devzone.nordicsemi.com"
