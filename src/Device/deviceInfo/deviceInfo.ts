@@ -166,6 +166,17 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
                 'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF6936&series_token=nRF52832',
         },
     },
+    PCA20053: {
+        name: 'Nordic Thingy:53',
+        cores: 1,
+        icon: nrf53logo,
+        website: {
+            productPage:
+                'https://www.nordicsemi.com/Products/Development-hardware/Nordic-Thingy-53',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=thingy53',
+        },
+    },
     PCA20035: {
         name: 'Nordic Thingy:91',
         cores: 1,
@@ -315,6 +326,9 @@ const deviceByUsb = (device: Device) => {
     if (isNordicDevice(device)) {
         if (device.usb?.product?.startsWith('PPK')) {
             return ppkDeviceInfo(device);
+        }
+        if (device.usb?.product?.includes('Thingy:53')) {
+            return devicesByPca.PCA20053;
         }
         if (device.serialNumber?.startsWith('THINGY91X')) {
             return devicesByPca.PCA20049;
