@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 227.0.0 - unreleased
+
+### Added
+
+-   Added Nordic Thingy:53 to known devices.
+
 ## 226.0.0 - 2025-09-10
 
 ### Changed
