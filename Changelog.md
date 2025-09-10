@@ -13,6 +13,20 @@ every new version is a new major version.
 
 -   Added Nordic Thingy:53 to known devices.
 
+## 226.0.0 - 2025-09-10
+
+### Changed
+
+-   The required lincense file was slightly changed.
+
+### Steps to upgrade when using this package
+
+-   Update your LICENSE file, to match
+    https://nordicsemi.atlassian.net/wiki/spaces/QPDA/pages/145020731/4-Clause+Nordic+License+text.
+    Mostly the heading and the final `</text>` changed, so you can either do
+    these changes manually or copy the LICENSE from pc-nrfconnect-shared, just
+    correct the year.
+
 ## 225.0.0 - 2025-09-01
 
 ### Added

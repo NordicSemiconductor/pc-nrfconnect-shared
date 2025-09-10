@@ -13,10 +13,13 @@ const SHEBANG_LINE = /^#!.*?(\r?\n)+/;
 const SPECIAL_REGEXP_CHARACTERS = /([.*+\\(){}[\]])/g;
 const LINE_ENDINGS = /\r?\n/g;
 
-const correctLicense = `Copyright (c) __YEAR__ Nordic Semiconductor ASA
+const correctLicense = `LicenseID:  LicenseRef-Nordic-4-Clause
+
+ExtractedText: <text>
+
+Copyright (c) __YEAR__ Nordic Semiconductor ASA
 All rights reserved.
 
-SPDX-License-Identifier: Nordic-4-Clause
 
 Use in source and binary forms, redistribution in binary form only, with
 or without modification, are permitted provided that the following conditions
@@ -47,7 +50,8 @@ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.`;
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</text>`;
 
 const correctHeader = `/*
  * Copyright (c) __YEAR__ Nordic Semiconductor ASA
