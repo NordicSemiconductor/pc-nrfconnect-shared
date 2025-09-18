@@ -46,6 +46,7 @@ export class NrfutilSandbox {
 
     private readonly sandboxPath;
     private readonly env;
+    private readonly coreVersion;
 
     public static async create(
         baseDir: string,
@@ -76,7 +77,7 @@ export class NrfutilSandbox {
         private readonly baseDir: string,
         private readonly module: string,
         private readonly version: string,
-        private readonly coreVersion?: string // Must only be undefined when the launcher creates a sandbox for a legacy app, which does not specify the required core version
+        coreVersion?: string // Must only be undefined when the launcher creates a sandbox for a legacy app, which does not specify the required core version
     ) {
         this.sandboxPath = path.join(
             this.baseDir,
@@ -84,11 +85,12 @@ export class NrfutilSandbox {
             ...(process.platform === 'darwin' && process.arch !== 'x64'
                 ? [process.arch]
                 : []),
-            ...(this.coreVersion != null ? [this.coreVersion] : []),
+            ...(coreVersion != null ? [coreVersion] : []),
             this.module,
             this.version
         );
 
+        this.coreVersion = coreVersion ?? CORE_VERSION_FOR_LEGACY_APPS;
         this.env = this.prepareEnv();
     }
 
@@ -184,17 +186,14 @@ export class NrfutilSandbox {
         }
     };
 
-    private installNrfUtilCore = (onProgress?: OnProgress) => {
-        const requestedCoreVersion =
-            this.coreVersion ?? CORE_VERSION_FOR_LEGACY_APPS;
-        return this.install(
+    private installNrfUtilCore = (onProgress?: OnProgress) =>
+        this.install(
             'core',
-            requestedCoreVersion,
+            this.coreVersion,
             'self-upgrade',
-            ['--to-version', requestedCoreVersion],
+            ['--to-version', this.coreVersion],
             onProgress
         );
-    };
 
     public installNrfUtilCommand = (onProgress?: OnProgress) =>
         this.install(
