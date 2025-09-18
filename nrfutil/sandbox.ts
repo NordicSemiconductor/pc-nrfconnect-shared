@@ -184,19 +184,10 @@ export class NrfutilSandbox {
         }
     };
 
-    private installNrfUtilCore = async (onProgress?: OnProgress) => {
-        const currentCoreVersion = await this.getCoreVersion();
+    private installNrfUtilCore = (onProgress?: OnProgress) => {
         const requestedCoreVersion =
             this.coreVersion ?? CORE_VERSION_FOR_LEGACY_APPS;
-        if (currentCoreVersion.version === requestedCoreVersion) {
-            getNrfutilLogger()?.debug(
-                `Requested nRF Util's core version ${requestedCoreVersion} is already installed.`
-            );
-
-            return;
-        }
-
-        await this.install(
+        return this.install(
             'core',
             requestedCoreVersion,
             'self-upgrade',

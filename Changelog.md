@@ -7,11 +7,15 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 227.0.0 - unreleased
+## 227.0.0 - 2025-09-18
 
 ### Added
 
 -   Added Nordic Thingy:53 to known devices.
+
+### Fixed
+
+-   No problematic check for the nRF Util core version.
 
 ## 226.0.0 - 2025-09-10
 
