@@ -164,6 +164,7 @@ export class NrfutilSandbox {
     }
 
     public prepareSandbox = async (onProgress?: OnProgress) => {
+        // eslint-disable-next-line no-useless-catch
         try {
             // Clean up any residual sandbox from before if any
             if (this.env.NRFUTIL_HOME && fs.existsSync(this.env.NRFUTIL_HOME)) {
@@ -175,12 +176,12 @@ export class NrfutilSandbox {
             await this.installNrfUtilCore(onProgress);
             await this.installNrfUtilCommand(onProgress);
         } catch (error) {
-            if (this.env.NRFUTIL_HOME && fs.existsSync(this.env.NRFUTIL_HOME)) {
-                fs.rmSync(this.env.NRFUTIL_HOME, {
-                    recursive: true,
-                    force: true,
-                });
-            }
+            // if (this.env.NRFUTIL_HOME && fs.existsSync(this.env.NRFUTIL_HOME)) {
+            //     fs.rmSync(this.env.NRFUTIL_HOME, {
+            //         recursive: true,
+            //         force: true,
+            //     });
+            // }
 
             throw error;
         }
@@ -344,6 +345,20 @@ export class NrfutilSandbox {
                 args,
                 exec: command,
             });
+            getNrfutilLogger()?.info(
+                `Running: NRFUTIL="${this.sandboxPath}" ${command} ${args.join(
+                    ' '
+                )}`
+            );
+            getNrfutilLogger()?.info(
+                `Using proxy: ${
+                    process.env.HTTPS_PROXY ??
+                    process.env.HTTP_PROXY ??
+                    process.env.https_proxy ??
+                    process.env.http_proxy ??
+                    'none'
+                }`
+            );
             const nrfutil = spawn(command, args, {
                 env: editEnv(this.env),
             });
