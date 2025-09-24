@@ -20,6 +20,12 @@ every new version is a new major version.
 - Functions `createDisposableTempDir` and `createDisposableTempFile` for use in
   the main process.
 
+### Fixed
+
+- `nrfutil-core` is now directly installed with the requested version. Before
+  the bootstrap-version was first installed, which can lead to problems, if the
+  bootstrap-version does not run correctly.
+
 ## 231.0.0 - 2025-10-07
 
 ### Changed

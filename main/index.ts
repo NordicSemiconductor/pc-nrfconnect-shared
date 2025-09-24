@@ -61,3 +61,5 @@ export {
     createDisposableTempDir,
     createDisposableTempFile,
 } from '../nrfutil/fs';
+
+export { getTriplet } from '../nrfutil/sandbox';
