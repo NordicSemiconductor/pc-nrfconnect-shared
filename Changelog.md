@@ -7,6 +7,18 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 228.0.0 - 2025-09-24
+
+### Changed
+
+-   Bump the version of `nrfutil-core` for apps who do not declare it themselves
+    to 8.1.1
+
+### Steps to upgrade when using this package
+
+-   In apps in `package.json` bump `nrfConnectForDesktop.nrfutilCore` to
+    `8.1.1`.
+
 ## 227.0.0 - 2025-09-18
 
 ### Added
