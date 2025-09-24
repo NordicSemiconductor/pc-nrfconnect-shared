@@ -35,7 +35,7 @@ import {
     versionToInstall,
 } from './version/moduleVersion';
 
-const CORE_VERSION_FOR_LEGACY_APPS = '8.0.0';
+const CORE_VERSION_FOR_LEGACY_APPS = '8.1.1';
 
 export class NrfutilSandbox {
     private readonly onLoggingHandlers: ((
