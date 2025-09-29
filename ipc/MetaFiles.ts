@@ -49,7 +49,7 @@ export interface AppInfo {
 export const semver = z.string().regex(
     // From https://semver.org
     /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/,
-    'Is not a valid string for a semantic version'
+    'Is not a valid string for a semantic version',
 );
 
 const nrfutilModuleName = z.string();
@@ -60,7 +60,7 @@ export type NrfutilModuleVersion = z.infer<typeof nrfutilModuleVersion>;
 
 export const nrfModules = z.record(
     nrfutilModuleName,
-    z.tuple([nrfutilModuleVersion])
+    z.tuple([nrfutilModuleVersion]),
 );
 
 export type NrfutilModules = z.infer<typeof nrfModules>;

@@ -33,7 +33,7 @@ const useLegacyHotKey = (hotKey: string | string[], action: () => void) => {
     console.warn(
         `Defining a hot key for '${hotKey}' using a legacy API. ` +
             'Please update the app (or tell the app author to update it to ' +
-            'the latest API).'
+            'the latest API).',
     );
 
     useNewHotKey({
@@ -45,7 +45,7 @@ const useLegacyHotKey = (hotKey: string | string[], action: () => void) => {
 };
 
 const isUsingLegacyHotkey = (
-    args: unknown[]
+    args: unknown[],
 ): args is Parameters<typeof useLegacyHotKey> =>
     args.length === 2 && typeof args[1] === 'function';
 

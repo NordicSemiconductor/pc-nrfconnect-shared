@@ -52,7 +52,7 @@ const slice = createSlice({
 
         clearWaitForDeviceTimeout: (
             state,
-            { payload: clearDevice }: PayloadAction<boolean>
+            { payload: clearDevice }: PayloadAction<boolean>,
         ) => {
             clearTimeout(state.autoReconnectTimeout);
             state.autoReconnectTimeout = undefined;
@@ -65,7 +65,7 @@ const slice = createSlice({
 
         setAutoSelectDevice: (
             state,
-            action: PayloadAction<Device | undefined>
+            action: PayloadAction<Device | undefined>,
         ) => {
             state.device = action.payload ? { ...action.payload } : undefined;
             state.disconnectionTime = undefined;
@@ -75,7 +75,7 @@ const slice = createSlice({
 
         setDisconnectedTime: (
             state,
-            action: PayloadAction<number | undefined>
+            action: PayloadAction<number | undefined>,
         ) => {
             if (state.device) {
                 state.disconnectionTime = action.payload;
@@ -95,13 +95,13 @@ const slice = createSlice({
 
         setLastArrivedDeviceId: (
             state,
-            action: PayloadAction<number | undefined>
+            action: PayloadAction<number | undefined>,
         ) => {
             if (state.device) state.lastArrivedDeviceId = action.payload;
         },
         setArrivedButWrongWhen: (
             state,
-            action: PayloadAction<boolean | undefined>
+            action: PayloadAction<boolean | undefined>,
         ) => {
             state.arrivedButWrongWhen = action.payload;
         },

@@ -14,10 +14,10 @@ const channel = {
 
 type EncryptionAvailable = () => boolean;
 const isEncryptionAvailable = invoke<EncryptionAvailable>(
-    channel.encryptionAvailable
+    channel.encryptionAvailable,
 );
 const registerEncryptionAvailable = handle<EncryptionAvailable>(
-    channel.encryptionAvailable
+    channel.encryptionAvailable,
 );
 
 type EncryptString = (plainText: string) => Buffer;

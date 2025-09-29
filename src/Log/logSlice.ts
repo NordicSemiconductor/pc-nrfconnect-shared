@@ -82,7 +82,7 @@ export const setIsLoggingVerbose =
         } catch (e) {
             logger.error(
                 'Failed to enable verbose logging to nRF Util modules.',
-                e
+                e,
             );
         }
         persistIsLoggingVerbose(enable);

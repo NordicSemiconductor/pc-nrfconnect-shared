@@ -33,13 +33,13 @@ const slice = createSlice({
     reducers: {
         addNewMessage: (
             state,
-            { payload: message }: PayloadAction<FlashMessagePayload>
+            { payload: message }: PayloadAction<FlashMessagePayload>,
         ) => {
             state.messages.push({ ...message, id: nanoid() });
         },
         removeMessage: (state, { payload: id }: PayloadAction<string>) => {
             state.messages = state.messages.filter(
-                message => message.id !== id
+                message => message.id !== id,
             );
         },
     },
@@ -76,7 +76,7 @@ const newFlashMessage =
                 message,
                 variant,
                 dismissTime,
-            })
+            }),
         );
     };
 

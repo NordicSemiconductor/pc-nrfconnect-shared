@@ -72,7 +72,7 @@ const Fillers = ({
                         width: `${width / columns}px`,
                     }}
                 />
-            ) : null
+            ) : null,
         )}
     </>
 );
@@ -185,7 +185,7 @@ export default ({
                 columnHeights: heights,
                 columns: Math.min(
                     metaData.hiddenChildren.filter(v => !v).length,
-                    col
+                    col,
                 ),
                 maxColums: col,
                 hiddenChildren: metaData.hiddenChildren,
@@ -197,7 +197,7 @@ export default ({
                 current.clientWidth >= minWidth
                     ? Math.floor(
                           current.clientWidth /
-                              (minWidth + Number.parseInt(styles.margin, 10))
+                              (minWidth + Number.parseInt(styles.margin, 10)),
                       )
                     : 1;
 
@@ -242,7 +242,7 @@ export default ({
                     columns={columns}
                     minWidth={Math.min(
                         minWidth,
-                        masonryLayoutRef.current?.clientWidth ?? minWidth
+                        masonryLayoutRef.current?.clientWidth ?? minWidth,
                     )}
                     orders={orders}
                 >

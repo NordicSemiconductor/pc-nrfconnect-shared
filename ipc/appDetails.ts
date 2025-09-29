@@ -30,7 +30,7 @@ type GetAppDetails = () => AppDetailsFromLauncher;
 const getAppDetails = invoke<GetAppDetails>(channel.request);
 
 const registerGetAppDetails = (
-    onGetAppDetails: (webContents: WebContents) => AppDetailsFromLauncher
+    onGetAppDetails: (webContents: WebContents) => AppDetailsFromLauncher,
 ) => {
     handleWithSender<GetAppDetails>(channel.request)(onGetAppDetails);
 

@@ -74,7 +74,7 @@ const ErrorDialog = () => {
                         >
                             {label}
                         </DialogButton>
-                    )
+                    ),
                 )
             }
         >

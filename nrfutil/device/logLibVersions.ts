@@ -16,7 +16,7 @@ import {
 
 const log = (
     description: string,
-    dependencyOrVersion?: Dependency | string
+    dependencyOrVersion?: Dependency | string,
 ) => {
     const logger = getNrfutilLogger();
     if (dependencyOrVersion == null) {
@@ -24,8 +24,8 @@ const log = (
     } else {
         logger?.info(
             `Using ${description} version: ${describeVersion(
-                dependencyOrVersion
-            )}`
+                dependencyOrVersion,
+            )}`,
         );
     }
 };
@@ -47,14 +47,14 @@ export default (moduleVersion: ModuleVersion) => {
                 logger?.warn(
                     `SEGGER J-Link is not installed. ` +
                         `Install at least version ${jlinkCompatibility.requiredJlink} ` +
-                        `from https://www.segger.com/downloads/jlink`
+                        `from https://www.segger.com/downloads/jlink`,
                 );
                 break;
             case 'Outdated SEGGER J-Link':
                 logger?.warn(
                     `Outdated SEGGER J-Link. Your version of SEGGER J-Link (${jlinkCompatibility.actualJlink}) ` +
                         `is older than the one this app was tested with (${jlinkCompatibility.requiredJlink}). ` +
-                        `Install the newer version from https://www.segger.com/downloads/jlink`
+                        `Install the newer version from https://www.segger.com/downloads/jlink`,
                 );
                 break;
             case 'Newer SEGGER J-Link is used':
@@ -62,7 +62,7 @@ export default (moduleVersion: ModuleVersion) => {
                     `Your version of SEGGER J-Link (${jlinkCompatibility.actualJlink}) ` +
                         `is newer than the one this app was tested with (${jlinkCompatibility.requiredJlink}). ` +
                         `The tested version is not required, and your J-Link version will most likely work fine.` +
-                        ` If you get issues related to J-Link with your devices, use the tested version.`
+                        ` If you get issues related to J-Link with your devices, use the tested version.`,
                 );
                 break;
         }
@@ -70,7 +70,7 @@ export default (moduleVersion: ModuleVersion) => {
         logger?.error(
             `Failed to get the library versions${
                 error != null ? `: ${describeError(error)}` : ''
-            }`
+            }`,
         );
     }
 };

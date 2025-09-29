@@ -153,11 +153,11 @@ export const deviceSingleTaskEndOperation = async <T = void>(
     command: string,
     onProgress?: OnProgress,
     controller?: AbortController,
-    args: string[] = []
+    args: string[] = [],
 ) => {
     if (!device.serialNumber) {
         throw new Error(
-            `Device does not have a serial number, no device operation is possible`
+            `Device does not have a serial number, no device operation is possible`,
         );
     }
     const box = await getModule('device');
@@ -165,7 +165,7 @@ export const deviceSingleTaskEndOperation = async <T = void>(
         command,
         onProgress,
         controller,
-        [...args, '--serial-number', device.serialNumber]
+        [...args, '--serial-number', device.serialNumber],
     );
 };
 
@@ -174,11 +174,11 @@ export const deviceSingleTaskEndOperationVoid = async (
     command: string,
     onProgress?: OnProgress,
     controller?: AbortController,
-    args: string[] = []
+    args: string[] = [],
 ) => {
     if (!device.serialNumber) {
         throw new Error(
-            `Device does not have a serial number, no device operation is possible`
+            `Device does not have a serial number, no device operation is possible`,
         );
     }
 
@@ -187,7 +187,7 @@ export const deviceSingleTaskEndOperationVoid = async (
         command,
         onProgress,
         controller,
-        [...args, '--serial-number', device.serialNumber]
+        [...args, '--serial-number', device.serialNumber],
     );
 };
 

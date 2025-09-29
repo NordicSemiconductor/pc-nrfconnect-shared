@@ -64,12 +64,12 @@ const getFriendlyAppName = () =>
 const sendEvent = (action: string, metadata?: TelemetryMetadata) =>
     getTelemetrySenderIfEnabled()?.sendEvent(
         `${getFriendlyAppName()}: ${action}`,
-        flatObject(metadata)
+        flatObject(metadata),
     );
 
 const sendPageView = (pageName: string) =>
     getTelemetrySenderIfEnabled()?.sendPageView(
-        `${getFriendlyAppName()} - ${pageName}`
+        `${getFriendlyAppName()} - ${pageName}`,
     );
 
 const sendMetric = (name: string, average: number) =>
@@ -80,7 +80,7 @@ const sendTrace = (message: string) =>
 
 const sendErrorReport = (error: string | Error) =>
     getTelemetrySenderIfEnabled()?.sendErrorReport(
-        typeof error === 'string' ? new Error(error) : error
+        typeof error === 'string' ? new Error(error) : error,
     );
 
 export default {

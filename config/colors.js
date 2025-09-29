@@ -37,7 +37,7 @@ paletteColorsKeys.forEach(color => {
 });
 
 const colors = Object.entries(flattenedColors).filter(
-    ([key]) => !paletteColorsKeys.find(c => key.startsWith(c))
+    ([key]) => !paletteColorsKeys.find(c => key.startsWith(c)),
 );
 
 module.exports = {

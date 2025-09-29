@@ -40,10 +40,10 @@ const slice = createSlice({
     reducers: {
         addConfirmBeforeClose(
             state,
-            action: PayloadAction<ConfirmBeforeCloseOptionalTitle>
+            action: PayloadAction<ConfirmBeforeCloseOptionalTitle>,
         ) {
             const index = state.confirmCloseApp.findIndex(
-                confirmCloseApp => confirmCloseApp.id === action.payload.id
+                confirmCloseApp => confirmCloseApp.id === action.payload.id,
             );
 
             const dialog = {
@@ -59,7 +59,7 @@ const slice = createSlice({
         },
         clearConfirmBeforeClose(state, action: PayloadAction<string>) {
             state.confirmCloseApp = state.confirmCloseApp.filter(
-                confirmCloseApp => confirmCloseApp.id !== action.payload
+                confirmCloseApp => confirmCloseApp.id !== action.payload,
             );
         },
         setShowCloseDialog(state, action: PayloadAction<boolean>) {
@@ -89,7 +89,7 @@ export const preventAppCloseUntilComplete =
     (
         dialogInfo: Omit<ConfirmBeforeCloseOptionalTitle, 'id'>,
         promise: Promise<unknown>,
-        abortController?: AbortController
+        abortController?: AbortController,
     ): AppThunk =>
     dispatch => {
         const id = uuid();
@@ -101,7 +101,7 @@ export const preventAppCloseUntilComplete =
                     dialogInfo.onClose?.();
                     abortController?.abort();
                 },
-            })
+            }),
         );
         promise.finally(() => dispatch(clearConfirmBeforeClose(id)));
     };

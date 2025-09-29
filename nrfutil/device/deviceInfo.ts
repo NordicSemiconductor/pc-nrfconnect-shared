@@ -70,7 +70,7 @@ export default async (
     device: NrfutilDevice,
     core?: DeviceCore,
     onProgress?: OnProgress,
-    controller?: AbortController
+    controller?: AbortController,
 ) => {
     try {
         return device.traits.jlink ||
@@ -82,7 +82,7 @@ export default async (
                       'device-info',
                       onProgress,
                       controller,
-                      coreArg(core)
+                      coreArg(core),
                   )
               ).deviceInfo
             : undefined;

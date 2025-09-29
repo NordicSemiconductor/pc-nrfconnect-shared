@@ -17,12 +17,12 @@ export default (
     region: 'All' | 'SecureRegions' | 'Region0' | 'Region0Region1',
     core?: DeviceCore,
     onProgress?: OnProgress,
-    controller?: AbortController
+    controller?: AbortController,
 ) =>
     deviceSingleTaskEndOperationVoid(
         device,
         'protection-set',
         onProgress,
         controller,
-        [region, ...coreArg(core)]
+        [region, ...coreArg(core)],
     );

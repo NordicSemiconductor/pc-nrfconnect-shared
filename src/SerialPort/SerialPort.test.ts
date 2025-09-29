@@ -17,7 +17,7 @@ test('SerialPort is initialized with the correct setup', async () => {
     expect(ipcRenderer.invoke).toHaveBeenCalledWith(
         'serialport:open',
         defaultOptions,
-        { overwrite: false, settingsLocked: false }
+        { overwrite: false, settingsLocked: false },
     );
 
     expect(port.path).toBe(defaultOptions.path);
@@ -29,7 +29,7 @@ test('SerialPort may be initialized with overwrite and settingsLocked', async ()
     expect(ipcRenderer.invoke).toHaveBeenCalledWith(
         'serialport:open',
         defaultOptions,
-        overwriteOptions
+        overwriteOptions,
     );
 
     overwriteOptions = { settingsLocked: true };
@@ -37,7 +37,7 @@ test('SerialPort may be initialized with overwrite and settingsLocked', async ()
     expect(ipcRenderer.invoke).toHaveBeenCalledWith(
         'serialport:open',
         defaultOptions,
-        overwriteOptions
+        overwriteOptions,
     );
 
     overwriteOptions = { settingsLocked: true, overwrite: true };
@@ -45,6 +45,6 @@ test('SerialPort may be initialized with overwrite and settingsLocked', async ()
     expect(ipcRenderer.invoke).toHaveBeenCalledWith(
         'serialport:open',
         defaultOptions,
-        overwriteOptions
+        overwriteOptions,
     );
 });

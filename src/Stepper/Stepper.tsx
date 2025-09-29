@@ -47,7 +47,7 @@ const isActionCaption = (caption: StepCaption): caption is ActionCaption =>
     (caption as ActionCaption).action !== undefined;
 
 const isStringCaption = (
-    caption: string | StringCaption
+    caption: string | StringCaption,
 ): caption is string | StringCaption =>
     typeof caption === 'string' ||
     (!isToolTipCaption(caption) && !isActionCaption(caption));
@@ -107,7 +107,7 @@ export default ({ title, steps }: Steppers) => (
                 key={step.id}
                 className={classNames(
                     'step',
-                    step.state && `step-${step.state}`
+                    step.state && `step-${step.state}`,
                 )}
             >
                 <div>

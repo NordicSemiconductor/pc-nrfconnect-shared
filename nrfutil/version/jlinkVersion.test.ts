@@ -21,13 +21,13 @@ test('strippedVersionName', () => {
         strippedVersionName({
             version: '7.94i',
             versionFormat: 'string',
-        })
+        }),
     ).toBe('7.94i');
     expect(
         strippedVersionName({
             version: '7.96 ',
             versionFormat: 'string',
-        })
+        }),
     ).toBe('7.96');
 });
 
@@ -39,8 +39,8 @@ describe('expectedFormat', () => {
                     version: 18,
                     versionFormat: 'incremental',
                 },
-                false
-            )
+                false,
+            ),
         ).toBe(false);
 
         expect(
@@ -49,8 +49,8 @@ describe('expectedFormat', () => {
                     version: { major: 1, minor: 2, patch: 3 },
                     versionFormat: 'semantic',
                 },
-                false
-            )
+                false,
+            ),
         ).toBe(false);
     });
 
@@ -81,8 +81,8 @@ describe('expectedFormat', () => {
                     version: 'JLink_V7.94i',
                     versionFormat: 'string',
                 },
-                false
-            )
+                false,
+            ),
         ).toBe(true);
         expect(
             hasExpectedVersionFormat(
@@ -90,8 +90,8 @@ describe('expectedFormat', () => {
                     version: 'JLink_V7.96 ',
                     versionFormat: 'string',
                 },
-                false
-            )
+                false,
+            ),
         ).toBe(true);
         expect(
             hasExpectedVersionFormat(
@@ -99,24 +99,24 @@ describe('expectedFormat', () => {
                     version: 'JLink_V8.10',
                     versionFormat: 'string',
                 },
-                false
-            )
+                false,
+            ),
         ).toBe(true);
     });
 });
 
 test('convertToSemver', () => {
     expect(
-        convertToSemver({ version: 'JLink_V7.94', versionFormat: 'string' })
+        convertToSemver({ version: 'JLink_V7.94', versionFormat: 'string' }),
     ).toBe('7.94.0');
     expect(
-        convertToSemver({ version: 'JLink_V7.96 ', versionFormat: 'string' })
+        convertToSemver({ version: 'JLink_V7.96 ', versionFormat: 'string' }),
     ).toBe('7.96.0');
     expect(
-        convertToSemver({ version: 'JLink_V7.98a', versionFormat: 'string' })
+        convertToSemver({ version: 'JLink_V7.98a', versionFormat: 'string' }),
     ).toBe('7.98.1');
     expect(
-        convertToSemver({ version: 'JLink_V8.10b', versionFormat: 'string' })
+        convertToSemver({ version: 'JLink_V8.10b', versionFormat: 'string' }),
     ).toBe('8.10.2');
 });
 
@@ -140,7 +140,7 @@ describe('existingIsOlderThanExpected', () => {
 
     it('is false if no expected is specified', () => {
         expect(
-            existingIsOlderThanExpected({ ...version794i, name: 'JlinkARM' })
+            existingIsOlderThanExpected({ ...version794i, name: 'JlinkARM' }),
         ).toBe(false);
     });
     it('is false if the actual is equal the expected', () => {
@@ -149,7 +149,7 @@ describe('existingIsOlderThanExpected', () => {
                 ...version794i,
                 name: 'JlinkARM',
                 expectedVersion: version794i,
-            })
+            }),
         ).toBe(false);
     });
     it('is false if the actual is newer than the expected', () => {
@@ -158,21 +158,21 @@ describe('existingIsOlderThanExpected', () => {
                 ...version794k,
                 name: 'JlinkARM',
                 expectedVersion: version794i,
-            })
+            }),
         ).toBe(false);
         expect(
             existingIsOlderThanExpected({
                 ...version796,
                 name: 'JlinkARM',
                 expectedVersion: version794i,
-            })
+            }),
         ).toBe(false);
         expect(
             existingIsOlderThanExpected({
                 ...version810b,
                 name: 'JlinkARM',
                 expectedVersion: version794i,
-            })
+            }),
         ).toBe(false);
     });
 
@@ -182,21 +182,21 @@ describe('existingIsOlderThanExpected', () => {
                 ...version794i,
                 name: 'JlinkARM',
                 expectedVersion: version794k,
-            })
+            }),
         ).toBe(true);
         expect(
             existingIsOlderThanExpected({
                 ...version794i,
                 name: 'JlinkARM',
                 expectedVersion: version796,
-            })
+            }),
         ).toBe(true);
         expect(
             existingIsOlderThanExpected({
                 ...version794i,
                 name: 'JlinkARM',
                 expectedVersion: version810b,
-            })
+            }),
         ).toBe(true);
     });
 });
@@ -244,8 +244,8 @@ describe('getJlinkCompatibility', () => {
                         versionFormat: 'string',
                         version: 'JLink_V8.10f',
                     },
-                })
-            )
+                }),
+            ),
         ).toEqual({
             kind: 'No SEGGER J-Link installed',
             requiredJlink: '8.10f',
@@ -264,8 +264,8 @@ describe('getJlinkCompatibility', () => {
                         version: 'JLink_V7.94i',
                         versionFormat: 'string',
                     },
-                })
-            )
+                }),
+            ),
         ).toEqual({
             kind: 'Outdated SEGGER J-Link',
             requiredJlink: '7.94i',
@@ -284,8 +284,8 @@ describe('getJlinkCompatibility', () => {
                         version: 'JLink_V7.94i',
                         versionFormat: 'string',
                     },
-                })
-            )
+                }),
+            ),
         ).toEqual({
             kind: 'Newer SEGGER J-Link is used',
             requiredJlink: '7.94i',
@@ -304,8 +304,8 @@ describe('getJlinkCompatibility', () => {
                         version: 'JLink_V7.94i',
                         versionFormat: 'string',
                     },
-                })
-            )
+                }),
+            ),
         ).toEqual({ kind: 'Tested SEGGER J-Link is used' });
     });
 
@@ -316,8 +316,8 @@ describe('getJlinkCompatibility', () => {
                     name: 'JlinkARM',
                     version: 'JLink_V7.94i',
                     versionFormat: 'string',
-                })
-            )
+                }),
+            ),
         ).toEqual({ kind: 'Tested SEGGER J-Link is used' });
     });
 });

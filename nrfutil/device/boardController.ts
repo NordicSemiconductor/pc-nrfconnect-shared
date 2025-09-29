@@ -11,7 +11,7 @@ export default (
     device: NrfutilDevice,
     data: object,
     onProgress?: OnProgress,
-    controller?: AbortController
+    controller?: AbortController,
 ) => {
     // "operation: 2, command_id: 0" is the command to set the configuration for the board controller.
     const json = {
@@ -35,6 +35,6 @@ export default (
         'x-execute-batch',
         onProgress,
         controller,
-        ['--batch-json', JSON.stringify(json)]
+        ['--batch-json', JSON.stringify(json)],
     );
 };

@@ -10,7 +10,7 @@ interface MaybeWithMessageAndOrigin {
 }
 
 function hasMaybeMessageAndOrigin(
-    error: unknown
+    error: unknown,
 ): error is MaybeWithMessageAndOrigin {
     return error != null;
 }

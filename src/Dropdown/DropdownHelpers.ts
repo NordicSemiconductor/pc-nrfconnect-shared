@@ -10,7 +10,7 @@ import { DropdownItem } from './Dropdown';
 export const getSelectedDropdownItem = (
     itemList: DropdownItem[],
     value: unknown,
-    notFound?: DropdownItem
+    notFound?: DropdownItem,
 ) => {
     if (typeof value === 'boolean') value = value ? 'on' : 'off';
 
@@ -18,12 +18,12 @@ export const getSelectedDropdownItem = (
 
     const result = itemList[itemList.findIndex(e => e.value === `${value}`)];
 
-    return result === undefined ? notFound ?? itemList[0] : result;
+    return result === undefined ? (notFound ?? itemList[0]) : result;
 };
 
 export const convertToDropDownItems: <T>(
     data: T[],
-    addAuto?: boolean
+    addAuto?: boolean,
 ) => DropdownItem[] = (data, addAuto = true) => {
     const mappedData = data.map(v => ({
         label: `${v}`,
@@ -36,7 +36,7 @@ export const convertToDropDownItems: <T>(
 };
 
 export const convertToNumberDropDownItems: (
-    data: number[]
+    data: number[],
 ) => NumberDropdownItem[] = data =>
     data.map(v => ({
         label: `${v}`,

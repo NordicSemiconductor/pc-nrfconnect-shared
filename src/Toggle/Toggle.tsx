@@ -74,7 +74,7 @@ export const Toggle: FC<Props> = ({
                         isPrimary &&
                             `toggle-bar-primary${isToggled ? '-toggled' : ''}`,
                         isSecondary &&
-                            `toggle-bar-secondary${isToggled ? '-toggled' : ''}`
+                            `toggle-bar-secondary${isToggled ? '-toggled' : ''}`,
                     )}
                     style={{
                         backgroundColor: isToggled ? barColorToggled : barColor,
@@ -99,7 +99,7 @@ export const Toggle: FC<Props> = ({
                             isSecondary &&
                                 `toggle-handle-secondary${
                                     isToggled ? '-toggled' : ''
-                                }`
+                                }`,
                         )}
                         style={{
                             backgroundColor: isToggled

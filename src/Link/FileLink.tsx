@@ -23,7 +23,7 @@ export default ({
         onClick={() => openFile(fileLocation)}
         className={classNames(
             'tw-preflight tw-overflow-hidden tw-text-ellipsis tw-text-nordicBlue hover:tw-underline',
-            className
+            className,
         )}
     >
         {label}

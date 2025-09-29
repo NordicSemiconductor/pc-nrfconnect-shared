@@ -56,7 +56,7 @@ export default abstract class TelemetrySender {
         }
 
         this.logger?.debug(
-            `Telemetry has been ${hasAgreed ? 'enabled' : 'disabled'}`
+            `Telemetry has been ${hasAgreed ? 'enabled' : 'disabled'}`,
         );
     }
 
@@ -72,7 +72,7 @@ export default abstract class TelemetrySender {
 
     abstract sendEvent(
         action: string,
-        metadata?: TelemetryMetadata
+        metadata?: TelemetryMetadata,
     ): MaybePromise<void>;
     abstract sendPageView(pageName: string): MaybePromise<void>;
     abstract sendMetric(name: string, average: number): MaybePromise<void>;

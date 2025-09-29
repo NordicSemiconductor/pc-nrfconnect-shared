@@ -58,7 +58,7 @@ export default ({
             <div
                 className={classNames(
                     'device-list tw-transform tw-duration-200 tw-ease-in-out',
-                    !deviceListVisible && 'tw-h-0 tw-translate-y-full'
+                    !deviceListVisible && 'tw-h-0 tw-translate-y-full',
                 )}
             >
                 {virtualDevices.map(virtualDevice => (
@@ -82,7 +82,7 @@ export default ({
                 <img
                     className={classNames(
                         'tw-transform tw-duration-100 tw-ease-linear',
-                        !deviceListVisible && 'tw-rotate-180'
+                        !deviceListVisible && 'tw-rotate-180',
                     )}
                     src={chevron}
                     alt=""

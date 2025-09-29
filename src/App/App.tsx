@@ -146,7 +146,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
                 <div
                     className={classNames(
                         'core19-side-panel-container',
-                        isSidePanelVisible || 'hidden'
+                        isSidePanelVisible || 'hidden',
                     )}
                 >
                     {currentSidePanel}
@@ -171,7 +171,7 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
                     <div
                         className={classNames(
                             'core19-log-viewer',
-                            isLogVisible || 'hidden'
+                            isLogVisible || 'hidden',
                         )}
                     >
                         <LogViewer />
@@ -229,7 +229,7 @@ const usePersistedPane = () => {
 const useAllPanes = (
     panes: Pane[],
     documentation: ReactNode[] | undefined,
-    feedbackCategories?: string[]
+    feedbackCategories?: string[],
 ) => {
     const dispatch = useDispatch();
 

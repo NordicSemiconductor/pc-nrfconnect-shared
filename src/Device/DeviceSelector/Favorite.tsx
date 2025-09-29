@@ -41,7 +41,7 @@ export const FavoriteIndicator: FC<{ device: Device }> = ({ device }) => {
         <PseudoButton
             className={classNames(
                 !device.favorite && 'tw-invisible group-hover:tw-visible',
-                `mdi ${device.favorite ? 'mdi-star' : 'mdi-star-outline'}`
+                `mdi ${device.favorite ? 'mdi-star' : 'mdi-star-outline'}`,
             )}
             onClick={toggleFavorite}
         />

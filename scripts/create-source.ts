@@ -33,12 +33,12 @@ const parseOptions = () =>
         .addOption(
             new Option('-a, --access-level <access level>', 'Access level')
                 .choices(validAccessLevels)
-                .makeOptionMandatory()
+                .makeOptionMandatory(),
         )
         .requiredOption('-n, --name <name>', 'Name, e.g. "Release Test"')
         .requiredOption(
             '-d, --description <description>',
-            'Longer description, e.g. "Versions we intend to release next"'
+            'Longer description, e.g. "Versions we intend to release next"',
         )
         .parse()
         .opts();

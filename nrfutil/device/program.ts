@@ -46,18 +46,18 @@ interface NordicDfuProgrammingOptions {
 }
 
 const isJLinkProgrammingOptions = (
-    options: ProgrammingOptions
+    options: ProgrammingOptions,
 ): options is JLinkProgrammingOptions =>
     (options as JLinkProgrammingOptions).chipEraseMode !== undefined;
 
 const isMcuBootProgrammingOptions = (
-    options: ProgrammingOptions
+    options: ProgrammingOptions,
 ): options is McuBootProgrammingOptions =>
     (options as McuBootProgrammingOptions).netCoreUploadDelay !== undefined ||
     (options as McuBootProgrammingOptions).target !== undefined;
 
 export const isNordicDfuProgrammingOptions = (
-    options: ProgrammingOptions
+    options: ProgrammingOptions,
 ): options is NordicDfuProgrammingOptions =>
     !isMcuBootProgrammingOptions(options) &&
     (options as NordicDfuProgrammingOptions).mcuEndState !== undefined;
@@ -79,7 +79,7 @@ const programmingOptionsToStrings = (options?: ProgrammingOptions) => {
             options.target && `target=${options.target}`,
             options.netCoreUploadDelay &&
                 `net_core_upload_delay=${Math.round(
-                    options.netCoreUploadDelay
+                    options.netCoreUploadDelay,
                 )}`,
         ].filter(Boolean);
     }
@@ -103,7 +103,7 @@ const program = (
     onProgress?: OnProgress,
     core?: DeviceCore,
     programmingOptions?: ProgrammingOptions,
-    controller?: AbortController
+    controller?: AbortController,
 ) =>
     deviceSingleTaskEndOperationVoid(
         device,
@@ -116,7 +116,7 @@ const program = (
             ...deviceTraitsToArgs(device.traits),
             ...coreArg(core),
             ...programmingOptionsToArgs(programmingOptions),
-        ]
+        ],
     );
 
 export const createTempFile = (firmware: FirmwareBuffer): string => {
@@ -136,7 +136,7 @@ const programBuffer = async (
     onProgress?: OnProgress,
     core?: DeviceCore,
     programmingOptions?: ProgrammingOptions,
-    controller?: AbortController
+    controller?: AbortController,
 ) => {
     const tempFilePath = createTempFile(firmware);
     try {
@@ -146,7 +146,7 @@ const programBuffer = async (
             onProgress,
             core,
             programmingOptions,
-            controller
+            controller,
         );
     } catch (error) {
         fs.unlinkSync(tempFilePath);
@@ -160,7 +160,7 @@ export default async (
     onProgress?: OnProgress,
     core?: DeviceCore,
     programmingOptions?: ProgrammingOptions,
-    controller?: AbortController
+    controller?: AbortController,
 ) => {
     if (typeof firmware === 'string') {
         await program(
@@ -169,7 +169,7 @@ export default async (
             onProgress,
             core,
             programmingOptions,
-            controller
+            controller,
         );
     } else {
         await programBuffer(
@@ -178,7 +178,7 @@ export default async (
             onProgress,
             core,
             programmingOptions,
-            controller
+            controller,
         );
     }
 };

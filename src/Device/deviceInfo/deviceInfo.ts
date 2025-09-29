@@ -350,7 +350,7 @@ export const deviceInfo = (device: Device): DeviceInfo =>
     deviceByPca(device) || deviceByUsb(device) || unknownDevice(device);
 
 const hasNickname = (
-    device: Device
+    device: Device,
 ): device is WrappedDevice & Required<Pick<WrappedDevice, 'nickname'>> =>
     'nickname' in device &&
     device.nickname !== undefined &&
@@ -358,7 +358,7 @@ const hasNickname = (
 
 export const displayedDeviceName = (
     device: Device,
-    { respectNickname = true } = {}
+    { respectNickname = true } = {},
 ) => {
     if (respectNickname && hasNickname(device)) {
         return device.nickname;

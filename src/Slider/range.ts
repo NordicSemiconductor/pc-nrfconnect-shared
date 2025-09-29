@@ -19,7 +19,7 @@ export type Range = {
 export type RangeOrValues = Range | Values;
 
 export const isValues = (
-    rangeOrValues: RangeOrValues
+    rangeOrValues: RangeOrValues,
 ): rangeOrValues is Values => Array.isArray(rangeOrValues);
 
 export const getMin = (rangeOrValues: RangeOrValues) =>
@@ -42,30 +42,30 @@ const assert = (expectedToBeTrue: boolean, warning: string) => {
 const validateRange = (range: Range) => {
     assert(
         !(`explicitRange` in range),
-        'Using `explicitRange` is not supported anymore, use only an array instead of a range object.'
+        'Using `explicitRange` is not supported anymore, use only an array instead of a range object.',
     );
 
     assert(
         range.min < range.max,
-        `range.min must not be higher than range.max: ${JSON.stringify(range)}`
+        `range.min must not be higher than range.max: ${JSON.stringify(range)}`,
     );
 
     if (range.decimals != null)
         assert(
             range.decimals >= 0 && Number.isInteger(range.decimals),
-            `range.decimals must be non-negative integer but is ${range.decimals}`
+            `range.decimals must be non-negative integer but is ${range.decimals}`,
         );
 
     if (range.step != null) {
         assert(
             range.step > 0,
-            `range.step must be larger than zero but is ${range.step}`
+            `range.step must be larger than zero but is ${range.step}`,
         );
         assert(
             isFactor(range.max - range.min, range.step),
             `range.step must be a factor of range.max - range.min: ${JSON.stringify(
-                range
-            )}`
+                range,
+            )}`,
         );
     }
 };

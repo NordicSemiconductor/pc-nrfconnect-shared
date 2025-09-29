@@ -21,7 +21,7 @@ const Ticks: FC<Props> = ({ valueRange, range: rangeOrValues }) => {
     useEffect(() => {
         if (isValues(rangeOrValues)) {
             console.error(
-                'Ticks are not yet implemented for explicit values. Not showing ticks.'
+                'Ticks are not yet implemented for explicit values. Not showing ticks.',
             );
         }
     }, [rangeOrValues]);
@@ -43,7 +43,7 @@ const Ticks: FC<Props> = ({ valueRange, range: rangeOrValues }) => {
                     key={String(value)}
                     className={classNames(
                         'tick',
-                        isSelected(value) && 'selected'
+                        isSelected(value) && 'selected',
                     )}
                 />
             ))}

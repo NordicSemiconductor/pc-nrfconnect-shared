@@ -76,43 +76,43 @@ const slice = createSlice({
             if (
                 !state.currentPane ||
                 !getValidPanes(state.panes).find(
-                    p => p.name === state.currentPane
+                    p => p.name === state.currentPane,
                 )
             ) {
                 setCurrentPaneInState(
                     getValidPanes(state.panes)[0].name,
-                    state
+                    state,
                 );
             }
         },
         switchToNextPane: state => {
             const validPanes = getValidPanes(state.panes);
             const currentPaneIndex = state.panes.findIndex(
-                pane => pane.name === state.currentPane
+                pane => pane.name === state.currentPane,
             );
             setCurrentPaneInState(
                 validPanes[(currentPaneIndex + 1) % validPanes.length].name,
-                state
+                state,
             );
         },
         switchToPreviousPane: state => {
             const currentPaneIndex = state.panes.findIndex(
-                pane => pane.name === state.currentPane
+                pane => pane.name === state.currentPane,
             );
             setCurrentPaneInState(
                 getValidPanes(state.panes)[Math.max(0, currentPaneIndex - 1)]
                     .name,
-                state
+                state,
             );
         },
         setPaneHidden: (
             state,
-            action: PayloadAction<{ name: string; hidden: boolean }>
+            action: PayloadAction<{ name: string; hidden: boolean }>,
         ) => {
             state.panes = state.panes.map(pane =>
                 pane.name === action.payload.name
                     ? { ...pane, hidden: action.payload.hidden }
-                    : pane
+                    : pane,
             );
 
             if (
@@ -121,18 +121,18 @@ const slice = createSlice({
             ) {
                 setCurrentPaneInState(
                     getValidPanes(state.panes)[0].name,
-                    state
+                    state,
                 );
             }
         },
         setPaneDisabled: (
             state,
-            action: PayloadAction<{ name: string; disabled: boolean }>
+            action: PayloadAction<{ name: string; disabled: boolean }>,
         ) => {
             state.panes = state.panes.map(pane =>
                 pane.name === action.payload.name
                     ? { ...pane, disabled: action.payload.disabled }
-                    : pane
+                    : pane,
             );
 
             if (
@@ -141,7 +141,7 @@ const slice = createSlice({
             ) {
                 setCurrentPaneInState(
                     getValidPanes(state.panes)[0].name,
-                    state
+                    state,
                 );
             }
         },

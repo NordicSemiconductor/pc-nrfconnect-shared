@@ -25,7 +25,7 @@ export const on =
     <T extends (...args: never[]) => void>(channel: string) =>
     (handler: T) =>
         ipcRenderer.on(channel, (_event, ...args: unknown[]) =>
-            handler(...(args as Parameters<T>))
+            handler(...(args as Parameters<T>)),
         );
 
 // Broadcast with a subchannel
@@ -44,10 +44,10 @@ export const broadcast =
 export const onBroadcasted =
     <T extends (...args: never[]) => void>(
         channel: string,
-        subChannel: string
+        subChannel: string,
     ) =>
     (handler: T) =>
         ipcRenderer.on(
             `${channel}_${subChannel}`,
-            (_event, ...args: unknown[]) => handler(...(args as Parameters<T>))
+            (_event, ...args: unknown[]) => handler(...(args as Parameters<T>)),
         );

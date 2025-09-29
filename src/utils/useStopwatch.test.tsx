@@ -34,7 +34,7 @@ describe('Stop Watch', () => {
     };
 
     const expectZeroElapsedTime = (
-        stopwatch: ReturnType<typeof useStopWatch>
+        stopwatch: ReturnType<typeof useStopWatch>,
     ) => {
         expect(stopwatch.time).toBe(0);
         expect(stopwatch.seconds).toBe(0);

@@ -18,13 +18,13 @@ const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 
 const projectSpecificTailwindConfigPath = path.join(
     process.cwd(),
-    'tailwind.config.js'
+    'tailwind.config.js',
 );
 const tailwindConfig = () =>
     fs.existsSync(projectSpecificTailwindConfigPath)
         ? projectSpecificTailwindConfigPath
         : require.resolve(
-              '@nordicsemiconductor/pc-nrfconnect-shared/config/tailwind.config.js'
+              '@nordicsemiconductor/pc-nrfconnect-shared/config/tailwind.config.js',
           );
 
 type AdditionalOptions = Required<Pick<BuildOptions, 'entryPoints'>> &
@@ -37,7 +37,7 @@ const outfileOrDir = (additionalOptions: AdditionalOptions) =>
 
 const options = (
     additionalOptions: AdditionalOptions,
-    externalReact: boolean
+    externalReact: boolean,
 ) =>
     ({
         format: 'iife',
@@ -98,7 +98,7 @@ const options = (
                         const [, shortpath] = filter.exec(args.path)!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
                         const resolvedPath = `${path.join(
                             args.resolveDir,
-                            shortpath
+                            shortpath,
                         )}r`;
                         return { path: resolvedPath };
                     });
@@ -107,7 +107,7 @@ const options = (
                         const filePath = args.path.replace('.svgr', '.svg');
                         const svg = await fs.promises.readFile(
                             filePath,
-                            'utf8'
+                            'utf8',
                         );
                         const plugins = ['@svgr/plugin-jsx'];
                         const contents = await svgr(svg, { plugins });
@@ -120,15 +120,15 @@ const options = (
             },
         ],
         ...additionalOptions,
-    } satisfies BuildOptions);
+    }) satisfies BuildOptions;
 
 export const build = async (
     additionalOptions: AdditionalOptions,
-    { externalReact = false } = {}
+    { externalReact = false } = {},
 ) => {
     if (process.argv.includes('--watch')) {
         const context = await esbuild.context(
-            options(additionalOptions, externalReact)
+            options(additionalOptions, externalReact),
         );
 
         await context.rebuild();

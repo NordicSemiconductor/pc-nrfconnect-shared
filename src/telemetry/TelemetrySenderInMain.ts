@@ -23,8 +23,7 @@ export default class TelemetrySenderInMain extends TelemetrySender {
         this.client.config.enableAutoCollectConsole = false;
         this.client.config.enableAutoCollectDependencies = false;
         this.client.config.enableAutoCollectExceptions = false;
-        this.client.config.enableAutoCollectIncomingRequestAzureFunctions =
-            false;
+        this.client.config.enableAutoCollectIncomingRequestAzureFunctions = false;
         this.client.config.enableAutoCollectHeartbeat = false;
         this.client.config.enableAutoCollectPerformance = false;
         this.client.config.enableAutoCollectPreAggregatedMetrics = false;

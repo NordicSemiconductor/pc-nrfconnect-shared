@@ -26,7 +26,7 @@ jest.mocked(generateSystemReport).mockImplementation(
     () =>
         new Promise(res => {
             res(SYSTEM_REPORT);
-        })
+        }),
 );
 
 const Child = () => {
@@ -49,7 +49,7 @@ describe('ErrorBoundary', () => {
         render(
             <ErrorBoundary sendTelemetryEvent={sendTelemetryEvent}>
                 <Child />
-            </ErrorBoundary>
+            </ErrorBoundary>,
         );
         expect(sendTelemetryEvent).toHaveBeenCalled();
     });
@@ -58,7 +58,7 @@ describe('ErrorBoundary', () => {
         render(
             <ErrorBoundary>
                 <Child />
-            </ErrorBoundary>
+            </ErrorBoundary>,
         );
         const errorMessage = screen.getByText('Oops! There was a problem');
         expect(errorMessage).toBeDefined();
@@ -68,7 +68,7 @@ describe('ErrorBoundary', () => {
         render(
             <ErrorBoundary>
                 <Child />
-            </ErrorBoundary>
+            </ErrorBoundary>,
         );
         fireEvent.click(screen.getByText('Restore default settings'));
         await screen.findByText(OKBUTTONTEXT);
@@ -80,7 +80,7 @@ describe('ErrorBoundary', () => {
         render(
             <ErrorBoundary>
                 <Child />
-            </ErrorBoundary>
+            </ErrorBoundary>,
         );
         const report = await screen.findByText(SYSTEM_REPORT);
         expect(report).toBeDefined();

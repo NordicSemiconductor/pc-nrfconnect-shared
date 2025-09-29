@@ -61,8 +61,8 @@ const logger = createLogger({
         format.timestamp(),
         format.printf(
             ({ timestamp, level, message }) =>
-                `${timestamp} ${level.toUpperCase()} ${message || ''}`
-        )
+                `${timestamp} ${level.toUpperCase()} ${message || ''}`,
+        ),
     ),
     transports: logTransports,
 }) as SharedLogger;
@@ -72,7 +72,7 @@ logger.initialise = () => {
         new transports.File({
             filename: logFilePath(),
             level: 'debug',
-        })
+        }),
     );
 };
 

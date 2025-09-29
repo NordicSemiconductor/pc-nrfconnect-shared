@@ -92,7 +92,7 @@ export default ({
                 >
                     <span
                         className={`mdi mdi-chevron-down tw-text-lg ${classNames(
-                            isActive && 'tw-rotate-180'
+                            isActive && 'tw-rotate-180',
                         )}`}
                     />
                 </button>
@@ -116,7 +116,7 @@ export default ({
                 }
                 className={`tw-text-while tw-absolute tw-right-0 tw-z-10 tw-w-full tw-bg-gray-700 tw-p-0 ${classNames(
                     styles.content,
-                    !isActive && 'tw-hidden'
+                    !isActive && 'tw-hidden',
                 )}`}
             >
                 {items.map(item => (

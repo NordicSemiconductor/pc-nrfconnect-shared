@@ -73,12 +73,12 @@ const DeviceList: FC<Props> = ({
 
     const sortedDevices = useMemo(
         () => sorted([...devices.values()]),
-        [devices]
+        [devices],
     );
 
     const filteredDevices = useMemo(
         () => sortedDevices.filter(deviceFilter),
-        [deviceFilter, sortedDevices]
+        [deviceFilter, sortedDevices],
     );
 
     const canUseAutoReconnect =
@@ -88,7 +88,7 @@ const DeviceList: FC<Props> = ({
         <div
             className={classNames(
                 'device-list-container',
-                isVisible || 'hidden'
+                isVisible || 'hidden',
             )}
         >
             <div className="tw-flex tw-h-full tw-flex-col tw-overflow-y-hidden">

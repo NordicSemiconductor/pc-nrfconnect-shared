@@ -16,12 +16,12 @@ export default (
     device: NrfutilDevice,
     core?: DeviceCore,
     onProgress?: OnProgress,
-    controller?: AbortController
+    controller?: AbortController,
 ) =>
     deviceSingleTaskEndOperationVoid(
         device,
         'erase',
         onProgress,
         controller,
-        coreArg(core)
+        coreArg(core),
     );

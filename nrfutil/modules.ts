@@ -22,8 +22,8 @@ const logModuleVersions = (module: string, moduleSandbox: NrfutilSandbox) => {
         moduleSandbox.getModuleVersion().then(moduleVersion => {
             getNrfutilLogger()?.info(
                 `Using the bundled nrfutil ${module} version: ${describeVersion(
-                    moduleVersion.version
-                )}`
+                    moduleVersion.version,
+                )}`,
             );
         });
     }
@@ -31,8 +31,8 @@ const logModuleVersions = (module: string, moduleSandbox: NrfutilSandbox) => {
     moduleSandbox.getCoreVersion().then(moduleVersion => {
         getNrfutilLogger()?.info(
             `Using the bundled core version for nrfutil ${module}: ${describeVersion(
-                moduleVersion.version
-            )}`
+                moduleVersion.version,
+            )}`,
         );
     });
 };
@@ -124,24 +124,24 @@ const getAllIninitialisedModules = () =>
     Promise.all(
         Object.values(modules)
             .filter(module => module.isInitialised())
-            .map(module => module.get())
+            .map(module => module.get()),
     );
 
 export const setLogLevel = async (level: LogLevel) => {
     (await getAllIninitialisedModules()).forEach(moduleSandbox =>
-        moduleSandbox.setLogLevel(level)
+        moduleSandbox.setLogLevel(level),
     );
 };
 
 export const setVerboseLogging = async (verbose: boolean) => {
     (await getAllIninitialisedModules()).forEach(moduleSandbox =>
-        moduleSandbox.setLogLevel(verbose ? 'trace' : fallbackLevel)
+        moduleSandbox.setLogLevel(verbose ? 'trace' : fallbackLevel),
     );
 };
 
 export const getAllModuleVersions = async () =>
     Promise.all(
         (await getAllIninitialisedModules()).map(module =>
-            module.getModuleVersion()
-        )
+            module.getModuleVersion(),
+        ),
     );

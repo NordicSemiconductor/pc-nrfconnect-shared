@@ -72,7 +72,7 @@ const getBootloaderInformation = async (device: Device) => {
     const info = await NrfutilDeviceLib.getFwInfo(device);
 
     const index = info.imageInfoList.findIndex(
-        imageInfo => imageInfo.imageType === 'NRFDL_IMAGE_TYPE_BOOTLOADER'
+        imageInfo => imageInfo.imageType === 'NRFDL_IMAGE_TYPE_BOOTLOADER',
     );
     if (index !== -1) {
         return {
@@ -89,7 +89,7 @@ const updateBootloader =
         device: Device,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void,
-        onProgress: (progress: number, message?: string) => void
+        onProgress: (progress: number, message?: string) => void,
     ): AppThunk =>
     async dispatch => {
         logger.info(`Update bootloader ${device}`);
@@ -107,7 +107,7 @@ const updateBootloader =
                 once: false,
                 onSuccess,
                 onFail,
-            })
+            }),
         );
 
         try {
@@ -117,16 +117,16 @@ const updateBootloader =
                 progress => {
                     onProgress(
                         progress.totalProgressPercentage,
-                        progress.message ?? 'Programming bootloader'
+                        progress.message ?? 'Programming bootloader',
                     );
-                }
+                },
             );
         } catch (error) {
             if (error) {
                 logger.error(
                     `Failed to write bootloader to the target device: ${
                         (error as Error).message || error
-                    }`
+                    }`,
                 );
                 onFail((error as Error).message || error);
             } else {
@@ -137,7 +137,7 @@ const updateBootloader =
                         once: true,
                         onSuccess,
                         onFail,
-                    })
+                    }),
                 );
 
                 onProgress(100, 'Bootloader updated');
@@ -153,7 +153,7 @@ const switchToDeviceMode =
         mcuState: McuState,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void,
-        autoReconnectWhen?: WaitForDeviceWhen
+        autoReconnectWhen?: WaitForDeviceWhen,
     ): AppThunk =>
     dispatch => {
         if (autoReconnectWhen === undefined) {
@@ -169,7 +169,7 @@ const switchToDeviceMode =
                 once: true,
                 onSuccess,
                 onFail,
-            })
+            }),
         );
         NrfutilDeviceLib.setMcuState(device, mcuState).catch(err => {
             dispatch(clearWaitForDevice());
@@ -181,7 +181,7 @@ export const switchToBootloaderMode =
     (
         device: Device,
         onSuccess: (device: Device) => void,
-        onFail: (reason?: unknown) => void
+        onFail: (reason?: unknown) => void,
     ): AppThunk =>
     dispatch => {
         if (!isDeviceInDFUBootloader(device)) {
@@ -193,13 +193,13 @@ export const switchToBootloaderMode =
                         if (!isDeviceInDFUBootloader(d))
                             onFail(
                                 new Error(
-                                    'Failed to switch to the bootloader mode'
-                                )
+                                    'Failed to switch to the bootloader mode',
+                                ),
                             );
                         else onSuccess(d);
                     },
-                    onFail
-                )
+                    onFail,
+                ),
             );
         } else if (onSuccess) {
             onSuccess(device);
@@ -211,7 +211,7 @@ export const switchToApplicationMode =
         device: Device,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void,
-        autoReconnectWhen?: WaitForDeviceWhen
+        autoReconnectWhen?: WaitForDeviceWhen,
     ): AppThunk =>
     dispatch => {
         if (isDeviceInDFUBootloader(device)) {
@@ -223,14 +223,14 @@ export const switchToApplicationMode =
                         if (isDeviceInDFUBootloader(d))
                             onFail(
                                 new Error(
-                                    'Failed to switch to the application mode'
-                                )
+                                    'Failed to switch to the application mode',
+                                ),
                             );
                         else onSuccess(d);
                     },
                     onFail,
-                    autoReconnectWhen
-                )
+                    autoReconnectWhen,
+                ),
             );
         } else {
             onSuccess(device);
@@ -261,7 +261,7 @@ const askAndUpdateBootloader =
         device: Device,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void,
-        onProgress: (progress: number, message?: string) => void
+        onProgress: (progress: number, message?: string) => void,
     ): AppThunk =>
     dispatch => {
         dispatch(
@@ -274,7 +274,7 @@ const askAndUpdateBootloader =
                                 onUserInput: isConfirmed => {
                                     if (isConfirmed) {
                                         logger.info(
-                                            'Continuing with old bootloader'
+                                            'Continuing with old bootloader',
                                         );
                                         onSuccess(d);
                                     } else {
@@ -283,8 +283,8 @@ const askAndUpdateBootloader =
                                                 switchToBootloaderMode(
                                                     dd,
                                                     onSuccess,
-                                                    onFail
-                                                )
+                                                    onFail,
+                                                ),
                                             );
                                         };
                                         dispatch(
@@ -292,21 +292,21 @@ const askAndUpdateBootloader =
                                                 d,
                                                 action,
                                                 onFail,
-                                                onProgress
-                                            )
+                                                onProgress,
+                                            ),
                                         );
                                     }
                                 },
                                 message:
                                     'Device will be programmed. A newer version of the bootloader is available. Do you want to update it as well?',
-                            })
+                            }),
                         );
                     } else {
                         onSuccess(d);
                     }
                 },
-                onFail
-            )
+                onFail,
+            ),
         );
     };
 
@@ -329,7 +329,7 @@ function parseFirmwareImage(firmware: Buffer | string) {
     });
     return memMap.slicePad(
         startAddress,
-        Math.ceil((endAddress - startAddress) / 4) * 4
+        Math.ceil((endAddress - startAddress) / 4) * 4,
     );
 }
 
@@ -360,7 +360,7 @@ const createDfuDataFromImages = (dfuImages: DfuImage[]): DfuData => {
             image.initPacket.hash as Buffer,
             image.initPacket.isDebug,
             image.initPacket.signatureType as number,
-            image.initPacket.signature as []
+            image.initPacket.signature as [],
         ),
     });
 
@@ -422,7 +422,7 @@ const programInDFUBootloader =
         onProgress: (progress: number, message?: string) => void,
         onSuccess: (device: Device) => void,
         onFail: (reason?: unknown) => void,
-        autoReconnectAfterProgrammingWhen: WaitForDeviceWhen = 'applicationMode'
+        autoReconnectAfterProgrammingWhen: WaitForDeviceWhen = 'applicationMode',
     ): AppThunk<RootState, Promise<void>> =>
     async dispatch => {
         logger.debug(`${device.serialNumber} on is now in DFU-Bootloader...`);
@@ -487,7 +487,7 @@ const programInDFUBootloader =
                 once: false,
                 onSuccess,
                 onFail,
-            })
+            }),
         );
 
         NrfutilDeviceLib.program(
@@ -496,13 +496,13 @@ const programInDFUBootloader =
             progress => {
                 onProgress(
                     progress.totalProgressPercentage,
-                    progress.message ?? ''
+                    progress.message ?? '',
                 );
-            }
+            },
         )
             .then(() => {
                 logger.info(
-                    'All DFU images have been written to the target device.'
+                    'All DFU images have been written to the target device.',
                 );
                 logger.debug('DFU completed successfully!');
                 dispatch(
@@ -512,7 +512,7 @@ const programInDFUBootloader =
                         once: true,
                         onSuccess,
                         onFail,
-                    })
+                    }),
                 );
                 onProgress(100, 'Waiting for device to reboot.');
             })
@@ -521,7 +521,7 @@ const programInDFUBootloader =
                     logger.error(
                         `Failed to write to the target device: ${
                             err.message || err
-                        }`
+                        }`,
                     );
                     onFail(err);
                 }
@@ -533,7 +533,7 @@ const programDeviceWithFw =
         device: Device,
         selectedFw: DfuEntry,
         onProgress: (progress: number, message?: string) => void,
-        autoReconnectAfterProgrammingWhen: WaitForDeviceWhen = 'applicationMode'
+        autoReconnectAfterProgrammingWhen: WaitForDeviceWhen = 'applicationMode',
     ): AppThunk<RootState, Promise<Device>> =>
     dispatch =>
         new Promise<Device>((resolve, reject) => {
@@ -545,21 +545,21 @@ const programDeviceWithFw =
                         onProgress,
                         resolve,
                         reject,
-                        autoReconnectAfterProgrammingWhen
-                    )
+                        autoReconnectAfterProgrammingWhen,
+                    ),
                 );
                 logger.debug('DFU finished: ', d);
             };
 
             dispatch(
-                askAndUpdateBootloader(device, action, reject, onProgress)
+                askAndUpdateBootloader(device, action, reject, onProgress),
             );
         });
 
 export const sdfuDeviceSetup = (
     dfuFirmware: DfuEntry[],
     needSerialport = false,
-    autoReconnectAfterProgrammingWhen: WaitForDeviceWhen = 'applicationMode'
+    autoReconnectAfterProgrammingWhen: WaitForDeviceWhen = 'applicationMode',
 ): DeviceSetup => ({
     supportsProgrammingMode: (device, deviceInfo) =>
         ((!!deviceInfo?.dfuTriggerVersion &&
@@ -576,14 +576,14 @@ export const sdfuDeviceSetup = (
                         device,
                         firmwareOption,
                         onProgress,
-                        autoReconnectAfterProgrammingWhen
-                    )
+                        autoReconnectAfterProgrammingWhen,
+                    ),
                 ),
         })),
     isExpectedFirmware: (device, deviceInfo) => () => {
         if (deviceInfo?.dfuTriggerVersion) {
             logger.debug(
-                'Device has DFU trigger interface; the device is in the application mode'
+                'Device has DFU trigger interface; the device is in the application mode',
             );
 
             const { semVer } = deviceInfo.dfuTriggerVersion;
@@ -607,8 +607,8 @@ export const sdfuDeviceSetup = (
                     device,
                     resolve,
                     reject,
-                    autoReconnectAfterProgrammingWhen
-                )
+                    autoReconnectAfterProgrammingWhen,
+                ),
             );
         }),
 });

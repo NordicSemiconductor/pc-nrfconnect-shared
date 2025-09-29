@@ -51,7 +51,7 @@ export default ({ isSidePanelEnabled }: { isSidePanelEnabled: boolean }) => {
             isGlobal: true,
             action: () => dispatch(setLogVisible(!isLogVisible)),
         },
-        [isLogVisible]
+        [isLogVisible],
     );
 
     return (

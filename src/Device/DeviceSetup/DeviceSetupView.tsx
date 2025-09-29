@@ -80,7 +80,7 @@ export default () => {
                             dispatch(deviceSetupUserInputReceived());
                             onUserInput(
                                 false,
-                                choices ? selectedChoices : undefined
+                                choices ? selectedChoices : undefined,
                             );
                         }
                     }}

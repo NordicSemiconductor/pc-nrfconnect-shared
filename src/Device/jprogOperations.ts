@@ -19,7 +19,7 @@ const programDeviceWithFw =
     (
         device: Device,
         selectedFw: JprogEntry,
-        onProgress: (progress: number, message?: string) => void
+        onProgress: (progress: number, message?: string) => void,
     ): AppThunk<RootState, Promise<Device>> =>
     async (dispatch, getState) => {
         try {
@@ -37,7 +37,7 @@ const programDeviceWithFw =
                     onProgress: progress => {
                         onProgress(
                             progress.totalProgressPercentage,
-                            'Recovering device'
+                            'Recovering device',
                         );
                     },
                 });
@@ -50,7 +50,7 @@ const programDeviceWithFw =
                 onProgress: progress => {
                     onProgress(
                         progress.totalProgressPercentage,
-                        progress.message ?? 'programming'
+                        progress.message ?? 'programming',
                     );
                 },
             });
@@ -62,7 +62,7 @@ const programDeviceWithFw =
                 onProgress: progress => {
                     onProgress(
                         progress.totalProgressPercentage,
-                        'Resetting device'
+                        'Resetting device',
                     );
                 },
             });
@@ -78,7 +78,7 @@ const programDeviceWithFw =
             if (programError instanceof Error) {
                 logger.error(programError);
                 throw new Error(
-                    `Error when programming ${programError.message}`
+                    `Error when programming ${programError.message}`,
                 );
             }
         }
@@ -88,7 +88,7 @@ const programDeviceWithFw =
 const firmwareOptions = (
     device: Device,
     firmware: JprogEntry[],
-    deviceInfo?: DeviceInfo
+    deviceInfo?: DeviceInfo,
 ) =>
     firmware.filter(fw => {
         const family = (device.devkit?.deviceFamily || '').toLowerCase();
@@ -110,7 +110,7 @@ const firmwareOptions = (
 export const jprogDeviceSetup = (
     firmware: JprogEntry[],
     needSerialport = false,
-    hideDeviceSetupWhenProtected = false
+    hideDeviceSetupWhenProtected = false,
 ): DeviceSetup => ({
     supportsProgrammingMode: device =>
         (needSerialport === !!device.traits.serialPorts || !needSerialport) &&
@@ -121,7 +121,7 @@ export const jprogDeviceSetup = (
             description: firmwareOption.description,
             programDevice: onProgress => dispatch =>
                 dispatch(
-                    programDeviceWithFw(device, firmwareOption, onProgress)
+                    programDeviceWithFw(device, firmwareOption, onProgress),
                 ),
         })),
     isExpectedFirmware: (device, deviceInfo) => async (_, getState) => {
@@ -137,7 +137,7 @@ export const jprogDeviceSetup = (
             getReadbackProtection(getState()) !== 'NRFDL_PROTECTION_STATUS_NONE'
         ) {
             logger.warn(
-                'Readback protection on device enabled. Unable to verify that the firmware version is correct.'
+                'Readback protection on device enabled. Unable to verify that the firmware version is correct.',
             );
 
             return Promise.resolve({
@@ -153,8 +153,8 @@ export const jprogDeviceSetup = (
                     info.imageInfoList.find(
                         imageInfo =>
                             typeof imageInfo.version === 'string' &&
-                            imageInfo.version.includes(version.fwVersion)
-                    )
+                            imageInfo.version.includes(version.fwVersion),
+                    ),
                 );
 
                 return Promise.resolve({

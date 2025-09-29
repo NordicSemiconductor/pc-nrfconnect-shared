@@ -76,7 +76,7 @@ class ErrorBoundary extends React.Component<
             new Date().toISOString().replace(/:/g, '-'),
             devices,
             selectedDevice,
-            selectedSerialNumber
+            selectedSerialNumber,
         ).then(report => {
             this.setState({ systemReport: report });
         });
@@ -169,7 +169,7 @@ class ErrorBoundary extends React.Component<
                         variant="primary"
                         onClick={() =>
                             openUrl(
-                                'https://devzone.nordicsemi.com/support/add'
+                                'https://devzone.nordicsemi.com/support/add',
                             )
                         }
                     >

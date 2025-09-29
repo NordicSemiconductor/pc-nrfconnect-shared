@@ -37,21 +37,21 @@ export interface JprogEntry {
 export interface DeviceSetup {
     supportsProgrammingMode: (
         device: Device,
-        deviceInfo?: DeviceInfo
+        deviceInfo?: DeviceInfo,
     ) => boolean; // Return true if this device can be programed using this interface e.g. MCU Boot or DFU
     getFirmwareOptions: (
         device: Device,
-        deviceInfo?: DeviceInfo
+        deviceInfo?: DeviceInfo,
     ) => {
         key: string;
         description?: string;
         programDevice: (
-            onProgress: (progress: number, message?: string) => void
+            onProgress: (progress: number, message?: string) => void,
         ) => AppThunk<RootState, Promise<Device>>;
     }[]; // The list of all firmware that can be applied for this device with the program function for that fw item
     isExpectedFirmware: (
         device: Device,
-        deviceInfo?: DeviceInfo
+        deviceInfo?: DeviceInfo,
     ) => AppThunk<
         RootState,
         Promise<{
@@ -60,7 +60,7 @@ export interface DeviceSetup {
         }>
     >; // returns true if device has one of the expected firmware returned by getFirmwareOptions
     tryToSwitchToApplicationMode: (
-        device: Device
+        device: Device,
     ) => AppThunk<RootState, Promise<Device | null>>; // returns the device after switched to app mode. If this is not possible or not relevant return null
 }
 
@@ -79,13 +79,13 @@ export const prepareDevice =
         onFail: (reason?: unknown) => void,
         deviceInfo: DeviceInfo | undefined,
         checkCurrentFirmwareVersion = true,
-        requireUserConfirmation = true
+        requireUserConfirmation = true,
     ): AppThunk<RootState, Promise<void>> =>
     async dispatch => {
         const onSuccessWrapper = (d: Device) => {
             logger.info(
                 `Connected to the device with the serial number ${device.serialNumber} ` +
-                    `and family: ${device.devkit?.deviceFamily || 'Unknown'} `
+                    `and family: ${device.devkit?.deviceFamily || 'Unknown'} `,
             );
             onSuccess(d);
             dispatch(closeDeviceSetupDialog());
@@ -93,12 +93,12 @@ export const prepareDevice =
 
         const validDeviceSetups = deviceSetupConfig.deviceSetups.filter(
             deviceSetup =>
-                deviceSetup.supportsProgrammingMode(device, deviceInfo)
+                deviceSetup.supportsProgrammingMode(device, deviceInfo),
         );
 
         const possibleFirmware = validDeviceSetups
             .map(deviceSetup =>
-                deviceSetup.getFirmwareOptions(device, deviceInfo)
+                deviceSetup.getFirmwareOptions(device, deviceInfo),
             )
             .flat();
 
@@ -107,12 +107,12 @@ export const prepareDevice =
                 logger.info(
                     'Note: no pre-compiled firmware is available for the selected device. ' +
                         'You may still use the app if you have programmed the device ' +
-                        'with a compatible firmware.'
+                        'with a compatible firmware.',
                 );
                 onSuccessWrapper(device);
             } else {
                 logger.info(
-                    'Note: no pre-compiled firmware is available for the selected device. '
+                    'Note: no pre-compiled firmware is available for the selected device. ',
                 );
                 onFail('No device setup found');
             }
@@ -126,7 +126,7 @@ export const prepareDevice =
                 try {
                     // eslint-disable-next-line no-await-in-loop
                     const result = await dispatch(
-                        deviceSetup.isExpectedFirmware(device, deviceInfo)
+                        deviceSetup.isExpectedFirmware(device, deviceInfo),
                     );
                     device = result.device;
                     if (result.validFirmware) {
@@ -142,7 +142,8 @@ export const prepareDevice =
 
         const choices = possibleFirmware
             .map(
-                fw => `${fw.key}${fw.description ? ` - ${fw.description}` : ''}`
+                fw =>
+                    `${fw.key}${fw.description ? ` - ${fw.description}` : ''}`,
             )
             .flat();
 
@@ -158,10 +159,10 @@ export const prepareDevice =
                             dispatch(setDeviceSetupProgress(progress));
                             if (message)
                                 dispatch(
-                                    setDeviceSetupProgressMessage(message)
+                                    setDeviceSetupProgressMessage(message),
                                 );
-                        }
-                    )
+                        },
+                    ),
                 )
                     .then(onSuccessWrapper)
                     .catch(onFail);
@@ -173,8 +174,8 @@ export const prepareDevice =
                             Closing application right now might result in unknown behavior and might also brick the device.
                             Are you sure you want to continue?`,
                         },
-                        task
-                    )
+                        task,
+                    ),
                 );
             }
         };
@@ -187,7 +188,7 @@ export const prepareDevice =
                 try {
                     // eslint-disable-next-line no-await-in-loop
                     const result = await dispatch(
-                        deviceSetup.tryToSwitchToApplicationMode(device)
+                        deviceSetup.tryToSwitchToApplicationMode(device),
                     );
                     if (result) {
                         onSuccessWrapper(result);
@@ -218,7 +219,7 @@ export const prepareDevice =
                         message:
                             deviceSetupConfig.confirmMessage ??
                             'Device must be programmed. Do you want to proceed?',
-                    })
+                    }),
                 );
             } else {
                 dispatch(
@@ -226,7 +227,7 @@ export const prepareDevice =
                         message:
                             deviceSetupConfig.confirmMessage ??
                             'Device must be programmed. Do you want to proceed?',
-                    })
+                    }),
                 );
                 proceedAction(0);
             }
@@ -244,7 +245,7 @@ export const prepareDevice =
                         deviceSetupConfig.choiceMessage ??
                         'Which firmware do you want to program?',
                     choices,
-                })
+                }),
             );
         }
     };
@@ -255,7 +256,7 @@ export const setupDevice =
         deviceSetupConfig: DeviceSetupConfig,
         onDeviceIsReady: (device: Device) => void,
         doDeselectDevice: (device?: Device) => void,
-        deviceInfo: DeviceInfo | undefined
+        deviceInfo: DeviceInfo | undefined,
     ): AppThunk<RootState> =>
     (dispatch, getState) =>
         dispatch(
@@ -279,11 +280,11 @@ export const setupDevice =
                 error => {
                     dispatch(closeDeviceSetupDialog());
                     logger.error(
-                        `Error while setting up device with the serial number ${device.serialNumber}`
+                        `Error while setting up device with the serial number ${device.serialNumber}`,
                     );
                     logger.error(describeError(error));
                     doDeselectDevice(getState().device.selectedDevice);
                 },
-                deviceInfo
-            )
+                deviceInfo,
+            ),
         );

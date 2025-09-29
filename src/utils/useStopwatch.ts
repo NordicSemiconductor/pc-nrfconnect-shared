@@ -85,7 +85,7 @@ export default ({
                 release();
             };
         },
-        [resolution, timer]
+        [resolution, timer],
     );
 
     const start = useCallback(
@@ -98,7 +98,7 @@ export default ({
                 pauseTimeout.current = nextTick(elapsedTime);
             }
         },
-        [nextTick, resolution, timer]
+        [nextTick, resolution, timer],
     );
 
     const pause = useCallback(() => {
@@ -122,7 +122,7 @@ export default ({
                 pauseTimeout.current = null;
             }
         },
-        []
+        [],
     );
 
     if (autoStart && !autoStarted.current) {

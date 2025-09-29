@@ -39,7 +39,7 @@ const nrfConnectForDesktop = z.object({
 const recordOfOptionalStrings = z.record(z.string().optional());
 
 const engines = recordOfOptionalStrings.and(
-    z.object({ nrfconnect: z.string() })
+    z.object({ nrfconnect: z.string() }),
 );
 
 const packageJsonApp = packageJson.extend({

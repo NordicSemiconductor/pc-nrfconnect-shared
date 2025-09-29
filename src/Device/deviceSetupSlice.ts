@@ -36,7 +36,7 @@ const slice = createSlice({
                 onUserInput?: (canceled: boolean, choice?: number) => void;
                 message: string;
                 choices?: string[];
-            }>
+            }>,
         ) => {
             state.visible = true;
             state.onUserInput = action.payload.onUserInput;
@@ -53,7 +53,7 @@ const slice = createSlice({
         },
         setDeviceSetupProgressMessage: (
             state,
-            action: PayloadAction<string>
+            action: PayloadAction<string>,
         ) => {
             state.progressMessage = action.payload;
         },

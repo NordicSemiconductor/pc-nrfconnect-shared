@@ -24,7 +24,7 @@ const ShowMoreInfo = ({
     <PseudoButton
         className={classNames(
             isVisible ? 'tw-visible' : 'tw-invisible  group-hover:tw-visible',
-            `mdi mdi-chevron-${isVisible ? 'up' : 'down'}`
+            `mdi mdi-chevron-${isVisible ? 'up' : 'down'}`,
         )}
         testId="show-more-device-info"
         onClick={toggleVisible}
@@ -55,7 +55,7 @@ export default ({ device, doSelectDevice, allowMoreInfoVisible }: Props) => {
             className={classNames(
                 'tw-flex tw-flex-col tw-gap-2 tw-py-3 tw-font-light group-hover:tw-bg-white',
                 moreVisible && 'tw-bg-white',
-                moreVisible && device.serialNumber && 'tw-pb-0'
+                moreVisible && device.serialNumber && 'tw-pb-0',
             )}
             onClick={() => doSelectDevice(device, false)}
         >

@@ -22,8 +22,8 @@ describe('classNames', () => {
                 [],
                 {},
                 () => {},
-                'important'
-            )
+                'important',
+            ),
         ).toBe('button important');
     });
 });

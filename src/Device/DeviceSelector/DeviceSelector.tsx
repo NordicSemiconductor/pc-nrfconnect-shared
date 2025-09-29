@@ -48,7 +48,7 @@ export interface Props {
     onDeviceSelected?: (
         device: Device,
         autoReselected: boolean,
-        abortController: AbortController
+        abortController: AbortController,
     ) => void;
     onDeviceDeselected?: () => void;
     onDeviceConnected?: (device: Device) => void;
@@ -91,7 +91,7 @@ export default ({
             if (device) {
                 telemetry.sendEvent(
                     'device deselected ',
-                    simplifyDevice(device)
+                    simplifyDevice(device),
                 );
             }
 
@@ -101,7 +101,7 @@ export default ({
             onDeviceDeselected();
             dispatch(deselectDevice());
         },
-        [dispatch, onDeviceDeselected]
+        [dispatch, onDeviceDeselected],
     );
 
     // Ensure that useCallback is
@@ -110,7 +110,7 @@ export default ({
     const doSelectDevice = useCallback(
         async (device: Device, autoReselected: boolean) => {
             logger.info(
-                `Selecting device with the serial number ${device.serialNumber}`
+                `Selecting device with the serial number ${device.serialNumber}`,
             );
             abortController.current?.abort();
             const controller = new AbortController();
@@ -125,7 +125,7 @@ export default ({
                 device,
                 undefined,
                 undefined,
-                controller
+                controller,
             );
 
             // Modem might be set to false when using external jLink or custom PCBs
@@ -141,7 +141,7 @@ export default ({
             if (!controller.signal.aborted) {
                 dispatch(setSelectedDeviceInfo(deviceInfo));
                 logger.info(
-                    `Selected device with the serial number ${device.serialNumber}`
+                    `Selected device with the serial number ${device.serialNumber}`,
                 );
                 onDeviceSelected(device, autoReselected, controller);
 
@@ -158,12 +158,12 @@ export default ({
                                 deviceSetupConfig,
                                 onDeviceIsReady,
                                 doDeselectDevice,
-                                deviceInfo
-                            )
+                                deviceInfo,
+                            ),
                         );
                     } else {
                         logger.warn(
-                            `Selected device has no serial number. Device setup is not supported.`
+                            `Selected device has no serial number. Device setup is not supported.`,
                         );
                         onDeviceIsReady(device);
                     }
@@ -176,7 +176,7 @@ export default ({
             doDeselectDevice,
             onDeviceIsReady,
             onDeviceSelected,
-        ]
+        ],
     );
 
     const doStartWatchingDevices = useCallback(() => {
@@ -186,13 +186,13 @@ export default ({
                 onDeviceConnected,
                 device => {
                     logger.info(
-                        `Device connected with the serial number ${device.serialNumber}`
+                        `Device connected with the serial number ${device.serialNumber}`,
                     );
                     onDeviceDisconnected(device);
                 },
                 onDeviceDeselected,
-                doSelectDevice
-            )
+                doSelectDevice,
+            ),
         );
     }, [
         deviceListing,

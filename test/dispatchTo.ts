@@ -15,7 +15,7 @@ export default <State>(aReducer: Reducer<State>, actions: Action[] = []) => {
 
     if (state === undefined) {
         throw new Error(
-            'Redux is broken, after dispatchig actions, the state must never be undefined.'
+            'Redux is broken, after dispatchig actions, the state must never be undefined.',
         );
     }
 

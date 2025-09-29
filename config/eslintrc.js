@@ -64,10 +64,11 @@ module.exports = {
                 plugins: [
                     'preset-lint-markdown-style-guide',
                     'frontmatter',
-                    ['lint-no-duplicate-headings', false],
-                    ['lint-list-item-indent', false],
                     ['lint-emphasis-marker', false],
+                    ['lint-list-item-content-indent', false],
+                    ['lint-list-item-indent', false],
                     ['lint-list-item-spacing', false],
+                    ['lint-no-duplicate-headings', false],
                     ['lint-no-literal-urls', false],
                 ],
             },

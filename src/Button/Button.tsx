@@ -61,7 +61,7 @@ const Button: React.FC<ButtonProps> = ({
                 'tw-bg-red tw-text-white active:enabled:tw-bg-red-700',
             variant === 'link-button' &&
                 'tw-border tw-border-nordicBlue tw-bg-white tw-text-nordicBlue active:enabled:tw-bg-gray-50',
-            className
+            className,
         )}`}
         disabled={disabled}
         onClick={onClick}

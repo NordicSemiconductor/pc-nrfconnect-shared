@@ -27,7 +27,7 @@ const NavMenuItem: FC<Props> = ({ isSelected, label, disabled }) => {
             className={classNames(
                 'core19-nav-menu-item',
                 isSelected && 'selected',
-                'mr-4'
+                'mr-4',
             )}
             onClick={() => dispatch(setCurrentPane(label))}
             disabled={disabled}

@@ -41,7 +41,7 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
     const dispatch = useDispatch();
     const divRef = useRef(null);
     const [fadeoutTimer, setFadeoutTimer] = useState<string>(
-        dismissTime == null ? 'unset' : `${dismissTime}ms`
+        dismissTime == null ? 'unset' : `${dismissTime}ms`,
     );
     const timeoutHandler = useRef<number | undefined>(undefined);
 
@@ -79,7 +79,7 @@ const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
                 variant === 'error' && 'tw-bg-red',
                 variant === 'success' && 'tw-bg-green',
                 variant === 'info' && 'tw-bg-nordicBlue',
-                variant === 'warning' && 'tw-bg-orange'
+                variant === 'warning' && 'tw-bg-orange',
             )}`}
             style={{
                 zIndex: 1000,
@@ -145,7 +145,7 @@ const FlashMessages = () => {
 
 const flashMessageAnimations = (
     initialRender2: boolean,
-    dismissTime2?: number
+    dismissTime2?: number,
 ): string => {
     if (!dismissTime2) {
         return initialRender2 ? SLIDE_IN_ANIMATION : 'unset';

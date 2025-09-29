@@ -57,7 +57,7 @@ export default <T,>({
             className={classNames(
                 'tw-preflight tw-relative tw-text-xs',
                 minWidth ? '' : 'tw-w-full',
-                className
+                className,
             )}
             onBlur={event => {
                 if (!event.currentTarget.contains(event.relatedTarget)) {
@@ -80,8 +80,8 @@ export default <T,>({
                               'tw-bg-gray-700 tw-text-white',
                               size === 'sm'
                                   ? 'tw-h-6 tw-pl-2 tw-pr-1 tw-text-2xs'
-                                  : 'tw-h-8 tw-px-2'
-                          )
+                                  : 'tw-h-8 tw-px-2',
+                          ),
                 )}
                 onClick={() => setIsActive(!isActive)}
                 disabled={disabled}
@@ -94,7 +94,7 @@ export default <T,>({
                 <span
                     className={`mdi mdi-chevron-down ${classNames(
                         isActive && 'tw-rotate-180',
-                        size === 'sm' ? 'tw-text-base' : 'tw-text-lg'
+                        size === 'sm' ? 'tw-text-base' : 'tw-text-lg',
                     )}`}
                 />
             </button>
@@ -118,7 +118,7 @@ export default <T,>({
                 className={`tw-text-while tw-absolute tw-z-10 tw-border-t-2 tw-border-solid tw-border-gray-600 tw-bg-gray-700 tw-p-0 ${classNames(
                     styles.content,
                     minWidth ? '' : 'tw-right-0 tw-w-full',
-                    !isActive && 'tw-hidden'
+                    !isActive && 'tw-hidden',
                 )}`}
             >
                 {items.map(item => (
@@ -126,7 +126,7 @@ export default <T,>({
                         type="button"
                         className={classNames(
                             'tw-bg-transparent tw-clear-both tw-block tw-h-6 tw-w-full tw-whitespace-nowrap tw-border-0 tw-px-2 tw-py-1 tw-text-left tw-font-normal tw-text-white hover:tw-bg-gray-600 focus:tw-bg-gray-600',
-                            size === 'sm' && 'tw-text-2xs'
+                            size === 'sm' && 'tw-text-2xs',
                         )}
                         key={JSON.stringify(item.value)}
                         onClick={() => onClickItem(item)}

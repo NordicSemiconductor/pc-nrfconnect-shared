@@ -53,7 +53,7 @@ interface DropdownUnit<T> {
 }
 
 const isDropdownUnit = <T,>(
-    unit: React.ReactNode | DropdownUnit<T>
+    unit: React.ReactNode | DropdownUnit<T>,
 ): unit is DropdownUnit<T> =>
     unit != null &&
     Object.keys(unit).includes('selectedItem') &&
@@ -91,13 +91,13 @@ export default <T,>({
 }) => (
     <div
         className={`tw-flex tw-flex-col tw-gap-1 tw-text-xs ${classNames(
-            className
+            className,
         )}`}
     >
         <div
             className={classNames(
                 'tw-flex tw-flex-row',
-                minWidth ? '' : 'tw-justify-between'
+                minWidth ? '' : 'tw-justify-between',
             )}
             title={title}
         >
