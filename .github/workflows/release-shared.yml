@@ -31,8 +31,7 @@ jobs:
 
             - name: Check if release is possible
               run: |
-                  reason=`npx tsx ./scripts/is-releasable.ts`
-                  if [ $? -ne 0 ]; then
+                  if ! reason=$(npx tsx ./scripts/is-releasable.ts); then
                     echo "::error::$reason"
                     exit 1
                   fi
