@@ -42,7 +42,7 @@ abstract class Client {
 
     abstract download(filename: string): Promise<string>;
     abstract uploadContent(
-        content: Buffer,
+        content: Buffer<ArrayBuffer>,
         remoteFilename: string,
     ): Promise<void>;
     abstract uploadLocalFile(
@@ -224,7 +224,7 @@ class ArtifactoryClient extends Client {
         );
     };
 
-    upload = async (content: Buffer, remoteFilename: string) => {
+    upload = async (content: Buffer<ArrayBuffer>, remoteFilename: string) => {
         const url = `${this.uploadUrl}/${remoteFilename}`;
         const res = await fetch(url, {
             method: 'PUT',
@@ -239,7 +239,7 @@ class ArtifactoryClient extends Client {
         await this.zapCache(remoteFilename);
     };
 
-    uploadContent = (content: Buffer, remoteFilename: string) => {
+    uploadContent = (content: Buffer<ArrayBuffer>, remoteFilename: string) => {
         console.log(`Uploading content for ${remoteFilename}`);
 
         return this.upload(content, remoteFilename);

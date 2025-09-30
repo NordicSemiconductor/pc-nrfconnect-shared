@@ -13,6 +13,7 @@ every new version is a new major version.
 
 - Updated Prettier 2.8.8 → 3.6.2
 - Updated typescript-eslint 5.57.1 → 8.45.0
+- Updated TypeScript 4.9.5 → 5.9.2
 
 ### Steps to upgrade when using this package
 
@@ -23,6 +24,13 @@ every new version is a new major version.
   constructs. E.g. if in a `catch` block the exception is intentionally not
   used, then you must now remove it: `try {…} catch (e) {/* Ignore */}` →
   `try {…} catch {/* Ignore */}`.
+- Run `npm run check:types` to check if the new TypeScript version breaks the
+  type checks. As described at
+  https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-9.html#libdts-changes,
+  a typical problem occurs when you use `Buffer`. First run
+  `npm update @types/node --save-dev`, because that might already fix most
+  problems. For the rest, also first check what is written in the above linked
+  section of the release notes of TypeScript 5.9.
 
 ## 230.0.0 - 2025-10-01
 

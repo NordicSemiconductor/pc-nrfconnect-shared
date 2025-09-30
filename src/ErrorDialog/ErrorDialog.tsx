@@ -23,7 +23,7 @@ import {
 
 import './error.scss';
 
-const ErrorMessage = ({
+const SingleErrorMessage = ({
     error: { message, detail },
 }: {
     error: ErrorMessage;
@@ -40,7 +40,7 @@ const MultipleErrorMessages = ({ messages }: { messages: ErrorMessage[] }) => (
         <ul>
             {messages.map(message => (
                 <li key={message.message}>
-                    <ErrorMessage error={message} />
+                    <SingleErrorMessage error={message} />
                 </li>
             ))}
         </ul>
@@ -79,7 +79,7 @@ const ErrorDialog = () => {
             }
         >
             {messages.length === 1 ? (
-                <ErrorMessage error={messages[0]} />
+                <SingleErrorMessage error={messages[0]} />
             ) : (
                 <MultipleErrorMessages messages={messages} />
             )}

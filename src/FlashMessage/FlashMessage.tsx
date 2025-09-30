@@ -31,11 +31,11 @@ const LOADER_ANIMATION = (dismissTime: number) =>
         dismissTime - SLIDE_OUT_DURATION_MS
     }ms flash-message-loader linear forwards`;
 
-interface FlashMessageProps {
+const SingleFlashMessage = ({
+    flashMessage,
+}: {
     flashMessage: FlashMessage;
-}
-
-const FlashMessage = ({ flashMessage }: FlashMessageProps) => {
+}) => {
     const { id, message, variant, dismissTime } = flashMessage;
 
     const dispatch = useDispatch();
@@ -134,7 +134,7 @@ const FlashMessages = () => {
             }}
         >
             {messages.map(flashMessage => (
-                <FlashMessage
+                <SingleFlashMessage
                     key={flashMessage.id}
                     flashMessage={flashMessage}
                 />

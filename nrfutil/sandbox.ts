@@ -359,7 +359,7 @@ export class NrfutilSandbox {
 
             controller?.signal.addEventListener('abort', listener);
 
-            let buffer = Buffer.from('');
+            let buffer: Buffer<ArrayBufferLike> = Buffer.from('');
 
             nrfutil.stdout.on('data', (data: Buffer) => {
                 if (controller?.signal.aborted) return;
