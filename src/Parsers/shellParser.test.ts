@@ -119,14 +119,12 @@ const setupMocks = () => {
     const mockGetLastLine = jest.fn(
         () => terminalBuffer.split('\r\n').pop() as string,
     );
-    const mockTerminalWrite = jest.fn(
-        (data: string, callback: () => void | undefined) => {
-            if (data !== '\r' && data !== '\n') {
-                terminalBuffer += data;
-            }
-            callback();
-        },
-    );
+    const mockTerminalWrite = jest.fn((data: string, callback: () => void) => {
+        if (data !== '\r' && data !== '\n') {
+            terminalBuffer += data;
+        }
+        callback();
+    });
 
     const mockTerminal = jest.fn<XTerminalShellParser, []>(() => ({
         getTerminalData: mockGetTerminalData,

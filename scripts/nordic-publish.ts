@@ -37,7 +37,7 @@ let client: Client;
 abstract class Client {
     abstract sourceUrl: string;
 
-    initialise(options: Options): Promise<void> | void {} // eslint-disable-line @typescript-eslint/no-unused-vars
+    initialise(options: Options): Promise<void> | void {} // eslint-disable-line no-empty-function,@typescript-eslint/no-unused-vars
     abstract end(): void;
 
     abstract download(filename: string): Promise<string>;

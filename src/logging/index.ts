@@ -20,7 +20,7 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 const isConsoleAvailable = (() => {
     try {
         process.stdout.write('');
-    } catch (error) {
+    } catch {
         return false;
     }
     return true;

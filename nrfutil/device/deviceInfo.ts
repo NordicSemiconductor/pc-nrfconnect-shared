@@ -86,7 +86,7 @@ export default async (
                   )
               ).deviceInfo
             : undefined;
-    } catch (_) {
+    } catch {
         return undefined;
     }
 };

@@ -158,7 +158,7 @@ const checkChangelog = (
 const filesIn = (directory: string) => {
     try {
         return readdirSync(directory);
-    } catch (error) {
+    } catch {
         fail(`Unable to read directory \`${directory}\`.`);
         // Unreachable, but not understood by Typescript
         throw new Error();

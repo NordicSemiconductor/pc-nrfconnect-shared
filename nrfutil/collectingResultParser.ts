@@ -21,7 +21,6 @@ export default class CollectingResultParser<Result> {
     private readonly info: Result[] = [];
     private readonly taskEnd: TaskEnd<Result>[] = [];
 
-    // eslint-disable-next-line no-useless-constructor
     constructor(
         private onLog: OnLog,
         private onProgress?: OnProgress,

@@ -12,12 +12,17 @@ every new version is a new major version.
 ### Changed
 
 - Updated Prettier 2.8.8 → 3.6.2
+- Updated typescript-eslint 5.57.1 → 8.45.0
 
 ### Steps to upgrade when using this package
 
 - The new version of prettier will lead to some formatting changes, especially
   added commas and changed whitespaces, but most of those should be
   automatically solvable by running `npm run check:lint -- --fix`.
+- Some linting rules slightly changed and you may need to update some
+  constructs. E.g. if in a `catch` block the exception is intentionally not
+  used, then you must now remove it: `try {…} catch (e) {/* Ignore */}` →
+  `try {…} catch {/* Ignore */}`.
 
 ## 230.0.0 - 2025-10-01
 

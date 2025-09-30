@@ -68,9 +68,11 @@ class ErrorBoundary extends React.Component<
             sendTelemetryEvent,
         } = this.props;
 
-        sendTelemetryEvent != null
-            ? sendTelemetryEvent(error.message)
-            : sendErrorReport(error.message);
+        if (sendTelemetryEvent != null) {
+            sendTelemetryEvent(error.message);
+        } else {
+            sendErrorReport(error.message);
+        }
 
         generateSystemReport(
             new Date().toISOString().replace(/:/g, '-'),

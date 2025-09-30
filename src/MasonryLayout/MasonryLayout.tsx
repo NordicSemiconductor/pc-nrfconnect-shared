@@ -224,8 +224,10 @@ export default ({
         });
 
         return () => {
-            current && observer.unobserve(current);
-            current && mutationObserver.disconnect();
+            if (current) {
+                observer.unobserve(current);
+                mutationObserver.disconnect();
+            }
         };
     }, [columns, maxHeight, minWidth]);
 

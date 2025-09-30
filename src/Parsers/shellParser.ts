@@ -60,7 +60,7 @@ export const xTerminalShellParserWrapper = (terminal: Terminal) => ({
 
         return lastLine.translateToString().trim();
     },
-    write: (data: string, callback: () => void | undefined) =>
+    write: (data: string, callback: () => void) =>
         terminal.write(data, callback),
 });
 

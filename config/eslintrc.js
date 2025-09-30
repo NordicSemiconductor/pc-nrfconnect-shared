@@ -17,9 +17,10 @@ module.exports = {
     extends: [
         'eslint:recommended',
         'airbnb',
-        'plugin:@typescript-eslint/recommended',
+        'plugin:@typescript-eslint/strict',
         'plugin:import/recommended',
         'plugin:import/typescript',
+        'plugin:jsonc/recommended-with-jsonc',
         'prettier',
     ],
     ignorePatterns: [
@@ -35,9 +36,7 @@ module.exports = {
             'error',
             { 'ts-expect-error': 'allow-with-description' },
         ],
-        '@typescript-eslint/no-empty-function': 'off',
         '@typescript-eslint/no-shadow': 'error',
-        '@typescript-eslint/no-var-requires': 'off',
         'import/default': 'error',
         'import/extensions': 'off',
         'import/named': 'error',
@@ -126,6 +125,10 @@ module.exports = {
             },
         ],
         'valid-jsdoc': ['error', { prefer: { return: 'returns' } }],
+        'no-empty-function': [
+            'error',
+            { allow: ['arrowFunctions', 'constructors'] },
+        ],
     },
     overrides: [
         {
@@ -159,8 +162,15 @@ module.exports = {
         },
         {
             files: ['*.json'],
+            parser: 'jsonc-eslint-parser',
             rules: {
                 'no-template-curly-in-string': 'off',
+            },
+        },
+        {
+            files: ['*.js'],
+            rules: {
+                '@typescript-eslint/no-require-imports': 'off',
             },
         },
         {

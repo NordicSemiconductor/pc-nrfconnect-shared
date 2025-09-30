@@ -51,7 +51,8 @@ export const createSerialPort = async (
 
     const openWithRetries = async (retryCount: number) => {
         try {
-            return await inMain.open(options, overwriteOptions);
+            await inMain.open(options, overwriteOptions);
+            return undefined;
         } catch (error) {
             if (
                 (error as Error).message.includes(
@@ -59,7 +60,7 @@ export const createSerialPort = async (
                 ) &&
                 retryCount > 0
             ) {
-                return new Promise<void | string>(resolve => {
+                return new Promise<string | undefined>(resolve => {
                     setTimeout(
                         async () => {
                             resolve(await openWithRetries(retryCount - 1));
@@ -169,7 +170,7 @@ export const getSerialPortOptions = async (path: string) => {
         console.log('will fetch options from path=', path);
 
         return await inMain.getOptions(path);
-    } catch (error) {
+    } catch {
         logger.error(`Failed to get options for port: ${path}`);
     }
 };
