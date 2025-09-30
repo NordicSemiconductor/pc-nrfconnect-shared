@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 229.0.0 - 2025-09-30
+
+### Fixed
+
+-   Remove all event emitter listeners on shellParser `unregister`.
+
 ## 228.0.0 - 2025-09-24
 
 ### Changed
