@@ -523,6 +523,7 @@ export const shellParser = async (
             unregisterOnResponse();
             unregisterOnDataWritten();
             unregisterOnClosed();
+            eventEmitter.removeAllListeners();
         },
         isPaused: () => pausedState,
         unPause,
