@@ -28,6 +28,12 @@ const nrfConnectForDesktop = z.object({
     nrfutil: nrfModules.optional(),
     nrfutilCore: semver,
     html: z.string(),
+    fixedSize: z
+        .object({
+            width: z.number().int().positive(),
+            height: z.number().int().positive(),
+        })
+        .optional(),
 });
 
 const recordOfOptionalStrings = z.record(z.string().optional());

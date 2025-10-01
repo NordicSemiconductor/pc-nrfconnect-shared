@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 230.0.0 - 2025-10-01
+
+### Added
+
+-   Property `nrfConnectForDesktop.fixedSize` an app can specify, to have a
+    window with a fixed size, like the Quick Start app.
+
 ## 229.0.0 - 2025-09-30
 
 ### Fixed

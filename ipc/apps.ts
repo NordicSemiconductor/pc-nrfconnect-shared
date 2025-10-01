@@ -40,6 +40,10 @@ interface Installed {
     html?: string;
     nrfutil?: NrfutilModules;
     nrfutilCore?: NrfutilModuleVersion;
+    fixedSize?: {
+        width: number;
+        height: number;
+    };
     installed: {
         publishTimestamp?: string;
         path: string;
