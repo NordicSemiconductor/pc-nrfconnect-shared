@@ -23,7 +23,7 @@ export const strippedVersionName = (version: DiscriminatedVersion) =>
 
 export const hasExpectedVersionFormat = (
     dependency: Dependency | DiscriminatedVersion,
-    logFailure = true
+    logFailure = true,
 ): dependency is DiscriminatedVersion => {
     if (!hasVersion(dependency)) return false;
 
@@ -36,7 +36,7 @@ export const hasExpectedVersionFormat = (
         console.error(
             `The SEGGER J-Link version was not reported in the expected format. ` +
                 `Format: ${dependency.versionFormat}, ` +
-                `version: ${JSON.stringify(dependency)}, `
+                `version: ${JSON.stringify(dependency)}, `,
         );
     }
 
@@ -55,7 +55,7 @@ export const convertToSemver = (version: DiscriminatedVersion) => {
 };
 
 export const existingIsOlderThanExpected = (
-    jlinkVersionDependency: Dependency
+    jlinkVersionDependency: Dependency,
 ) => {
     if (
         jlinkVersionDependency.expectedVersion == null ||
@@ -66,7 +66,7 @@ export const existingIsOlderThanExpected = (
 
     return semver.lt(
         convertToSemver(jlinkVersionDependency),
-        convertToSemver(jlinkVersionDependency.expectedVersion)
+        convertToSemver(jlinkVersionDependency.expectedVersion),
     );
 };
 
@@ -90,7 +90,7 @@ const nrfutilDeviceToJLink = (nrfutilDeviceVersion: string) => {
 export const getJlinkCompatibility = (moduleVersion: ModuleVersion) => {
     const jlinkVersionDependency = findDependency(
         'JlinkARM',
-        moduleVersion.dependencies
+        moduleVersion.dependencies,
     );
 
     if (!hasVersion(jlinkVersionDependency)) {
@@ -110,7 +110,7 @@ export const getJlinkCompatibility = (moduleVersion: ModuleVersion) => {
         existingIsOlderThanExpected(jlinkVersionDependency)
     ) {
         const requiredJlink = strippedVersionName(
-            jlinkVersionDependency.expectedVersion
+            jlinkVersionDependency.expectedVersion,
         );
         const actualJlink = strippedVersionName(jlinkVersionDependency);
 
@@ -132,7 +132,7 @@ export const getJlinkCompatibility = (moduleVersion: ModuleVersion) => {
     }
 
     const requiredJlink = strippedVersionName(
-        jlinkVersionDependency.expectedVersion
+        jlinkVersionDependency.expectedVersion,
     );
     const actualJlink = strippedVersionName(jlinkVersionDependency);
 

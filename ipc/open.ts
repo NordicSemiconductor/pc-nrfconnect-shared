@@ -17,12 +17,12 @@ const channel = {
 
 // app
 export const isOpenAppOptionsDeviceSN = (
-    device: OpenAppOptionsDevice
+    device: OpenAppOptionsDevice,
 ): device is OpenAppOptionsDeviceSN =>
     (device as OpenAppOptionsDeviceSN).serialNumber !== undefined;
 
 export const isOpenAppOptionsDevicePort = (
-    device: OpenAppOptionsDevice
+    device: OpenAppOptionsDevice,
 ): device is OpenAppOptionsDevicePort =>
     (device as OpenAppOptionsDevicePort).serialPortPath !== undefined;
 

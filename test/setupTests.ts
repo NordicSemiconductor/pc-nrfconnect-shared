@@ -13,7 +13,7 @@ if (process.env.TESTING_ASYNC_TIMEOUT != null) {
 }
 
 window.ResizeObserver = class {
-    observe() {} // eslint-disable-line class-methods-use-this -- because we just stub things here
-    disconnect() {} // eslint-disable-line class-methods-use-this
-    unobserve() {} // eslint-disable-line class-methods-use-this
+    observe() {} // eslint-disable-line no-empty-function,class-methods-use-this -- because we just stub things here
+    disconnect() {} // eslint-disable-line no-empty-function,class-methods-use-this
+    unobserve() {} // eslint-disable-line no-empty-function,class-methods-use-this
 };

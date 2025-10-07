@@ -21,12 +21,11 @@ export default class CollectingResultParser<Result> {
     private readonly info: Result[] = [];
     private readonly taskEnd: TaskEnd<Result>[] = [];
 
-    // eslint-disable-next-line no-useless-constructor
     constructor(
         private onLog: OnLog,
         private onProgress?: OnProgress,
         private onTaskBegin?: OnTaskBegin,
-        private onTaskEnd?: OnTaskEnd<Result>
+        private onTaskEnd?: OnTaskEnd<Result>,
     ) {}
 
     public handleData = (data: Buffer, pid?: number) => {
@@ -42,7 +41,7 @@ export default class CollectingResultParser<Result> {
                 case 'task_progress':
                     this.onProgress?.(
                         convertNrfutilProgress(item.data.progress),
-                        item.data.task
+                        item.data.task,
                     );
                     break;
                 case 'task_begin':
@@ -74,7 +73,7 @@ export default class CollectingResultParser<Result> {
         this.taskEnd
             .filter(end => end.result === 'fail' && !!end.message)
             .map(end =>
-                end.message ? `Message: ${addPunctuation(end.message)}` : ''
+                end.message ? `Message: ${addPunctuation(end.message)}` : '',
             )
             .join('\n');
 

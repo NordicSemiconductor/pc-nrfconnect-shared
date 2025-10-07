@@ -36,7 +36,7 @@ external value and comparing with it to determine whether it has changed.
 
 export const useSynchronisationIfChangedFromOutside = <T,>(
     externalValue: T,
-    setInternalValue: (value: T) => void
+    setInternalValue: (value: T) => void,
 ) => {
     const previousExternalValue = useRef(externalValue);
     useEffect(() => {
@@ -83,7 +83,7 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
             minSize,
             maxLength,
         },
-        ref
+        ref,
     ) => {
         const [internalValue, setInternalValue] = useState(externalValue);
         const [initialValue, setInitialValue] = useState(externalValue);
@@ -175,7 +175,7 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
                         : isValid(internalValue) || 'invalid',
                     disabled && 'disabled',
                     textAlignLeft && 'tw-pl-2 tw-text-left',
-                    className
+                    className,
                 )}
                 size={
                     Math.max(minSize ?? 1, internalValue.length) +
@@ -194,7 +194,7 @@ const InlineInput = React.forwardRef<HTMLInputElement, Props>(
                 maxLength={maxLength}
             />
         );
-    }
+    },
 );
 
 export default InlineInput;

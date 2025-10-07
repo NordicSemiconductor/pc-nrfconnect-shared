@@ -18,7 +18,7 @@ const getLatestReleaseName = () => {
 export default (latestReleaseName = getLatestReleaseName()) => {
     const latest = Number(
         /^v(?<versionNumber>\d+)$/.exec(latestReleaseName)?.groups
-            ?.versionNumber
+            ?.versionNumber,
     );
 
     return { latest, next: latest + 1 };

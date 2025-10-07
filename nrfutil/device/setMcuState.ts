@@ -14,12 +14,12 @@ export default (
     state: McuState,
     onProgress?: OnProgress,
     controller?: AbortController,
-    target?: string
+    target?: string,
 ) =>
     deviceSingleTaskEndOperationVoid(
         device,
         'mcu-state-set',
         onProgress,
         controller,
-        [state, ...(target ? ['--target', target] : [])]
+        [state, ...(target ? ['--target', target] : [])],
     );

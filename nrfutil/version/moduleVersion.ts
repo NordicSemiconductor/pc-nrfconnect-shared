@@ -45,7 +45,7 @@ export type ModuleVersion = {
 };
 
 export const hasVersion = (
-    dependency?: Dependency | DiscriminatedVersion
+    dependency?: Dependency | DiscriminatedVersion,
 ): dependency is DependencyWithVersion | DiscriminatedVersion =>
     dependency != null && 'version' in dependency && dependency.version != null;
 
@@ -64,7 +64,7 @@ const findTopLevel = (module: KnownModule, dependencies: Dependency[]) =>
 
 const findInDependencies = (
     module: KnownModule,
-    dependencies: TopLevelDependency[]
+    dependencies: TopLevelDependency[],
 ) => {
     if (dependencies.length > 0) {
         return findDependency(
@@ -72,9 +72,9 @@ const findInDependencies = (
             dependencies.flatMap(dependency => [
                 ...(dependency.dependencies ?? []),
                 ...(dependency.plugins?.flatMap(
-                    plugin => plugin.dependencies
+                    plugin => plugin.dependencies,
                 ) ?? []),
-            ])
+            ]),
         );
     }
 };
@@ -96,7 +96,7 @@ export const getExpectedVersion = (dependency: Dependency) => {
 
 export const findDependency = (
     module: KnownModule,
-    versions: TopLevelDependency[] = []
+    versions: TopLevelDependency[] = [],
 ): Dependency | undefined =>
     findTopLevel(module, versions) ?? findInDependencies(module, versions);
 
@@ -127,8 +127,8 @@ export const versionToInstall = (module: string, version?: string) =>
 const coreVersionFromPackageJson = () =>
     isLauncher()
         ? undefined // Will lead to using CORE_VERSION_FOR_LEGACY_APPS
-        : packageJsonApp().nrfConnectForDesktop.nrfutilCore ??
-          failToDetermineVersion('core');
+        : (packageJsonApp().nrfConnectForDesktop.nrfutilCore ??
+          failToDetermineVersion('core'));
 
 export const coreVersionsToInstall = (coreVersion?: string) =>
     coreVersion ?? overriddenVersion('core') ?? coreVersionFromPackageJson();

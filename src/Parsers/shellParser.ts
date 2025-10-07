@@ -52,7 +52,7 @@ export const xTerminalShellParserWrapper = (terminal: Terminal) => ({
     clear: () => terminal.clear(),
     getLastLine: () => {
         const lastLine = terminal.buffer.active.getLine(
-            terminal.buffer.active.cursorY
+            terminal.buffer.active.cursorY,
         );
         if (typeof lastLine === 'undefined') {
             return '';
@@ -60,7 +60,7 @@ export const xTerminalShellParserWrapper = (terminal: Terminal) => ({
 
         return lastLine.translateToString().trim();
     },
-    write: (data: string, callback: () => void | undefined) =>
+    write: (data: string, callback: () => void) =>
         terminal.write(data, callback),
 });
 
@@ -74,7 +74,7 @@ export const shellParser = async (
         timeout: 1000,
         columnWidth: 80,
     },
-    shellEchos = true
+    shellEchos = true,
 ) => {
     const eventEmitter = new EventEmitter();
 
@@ -89,7 +89,7 @@ export const shellParser = async (
 
     if (await serialPort.isOpen()) {
         serialPort.write(
-            `${String.fromCharCode(12)}${String.fromCharCode(21)}`
+            `${String.fromCharCode(12)}${String.fromCharCode(21)}`,
         );
     }
 
@@ -113,7 +113,7 @@ export const shellParser = async (
                         if (callback.onTimeout)
                             callback.onTimeout(
                                 `Callback timeout after ${elapsedTime}ms`,
-                                command.command
+                                command.command,
                             );
                     });
 
@@ -156,7 +156,7 @@ export const shellParser = async (
     const responseCallback = (commandAndResponse: string) => {
         if (settings.shellPromptUart == null) {
             logger.error(
-                'Shell Parser: responseCallback: Shell prompt has not been set'
+                'Shell Parser: responseCallback: Shell prompt has not been set',
             );
             return;
         }
@@ -216,12 +216,12 @@ export const shellParser = async (
                     .trim();
                 if (isError) {
                     commandQueue[0].callbacks.forEach(callback =>
-                        callback.onError(response, commandQueue[0].command)
+                        callback.onError(response, commandQueue[0].command),
                     );
                     callbackFound = true;
                 } else {
                     commandQueue[0].callbacks.forEach(callback =>
-                        callback.onSuccess(response, commandQueue[0].command)
+                        callback.onSuccess(response, commandQueue[0].command),
                     );
                     callbackFound = true;
                 }
@@ -285,7 +285,7 @@ export const shellParser = async (
 
         if (settings.shellPromptUart == null) {
             logger.debug(
-                'Shell Parser: loadToBuffer: Shell prompt has not been set'
+                'Shell Parser: loadToBuffer: Shell prompt has not been set',
             );
             return;
         }
@@ -295,7 +295,7 @@ export const shellParser = async (
                 'shellLogging',
                 commandBuffer
                     .replace(settings.shellPromptUart.trim(), '')
-                    .trim()
+                    .trim(),
             ); // TODO Consider improving tests instead of cleaning this here
             commandBuffer = '';
             return;
@@ -318,13 +318,13 @@ export const shellParser = async (
             if (match) {
                 settings.shellPromptUart = `${match[0]} `;
                 logger.debug(
-                    `Shell Parser: found shell prompt: "${settings.shellPromptUart}"`
+                    `Shell Parser: found shell prompt: "${settings.shellPromptUart}"`,
                 );
             }
         } else {
             commandBuffer = parseShellCommands(
                 commandBuffer,
-                settings.shellPromptUart.trim()
+                settings.shellPromptUart.trim(),
             );
         }
 
@@ -336,7 +336,7 @@ export const shellParser = async (
     const unregisterOnClosed = serialPort.onClosed(() => {
         if (settings.shellPromptUart == null) {
             logger.debug(
-                'Shell Parser: unregisterOnClosed: Shell prompt has not been set'
+                'Shell Parser: unregisterOnClosed: Shell prompt has not been set',
             );
             return;
         }
@@ -347,7 +347,7 @@ export const shellParser = async (
 
         commandBuffer = parseShellCommands(
             commandBuffer,
-            settings.shellPromptUart.trim()
+            settings.shellPromptUart.trim(),
         );
 
         xTerminalShellParser.clear();
@@ -431,7 +431,7 @@ export const shellParser = async (
                 command: string;
                 response: string;
                 error: boolean;
-            }) => void
+            }) => void,
         ) => {
             eventEmitter.on('anyCommandResponse', handler);
             return () => {
@@ -448,13 +448,13 @@ export const shellParser = async (
             command: string,
             callbacks?: Callbacks,
             timeout?: number,
-            unique = false
+            unique = false,
         ) => {
             command = command.trim();
 
             if (unique) {
                 const existingCommand = commandQueue.find(
-                    item => item.command === command
+                    item => item.command === command,
                 );
                 if (existingCommand) {
                     if (callbacks) existingCommand.callbacks.push(callbacks);
@@ -462,11 +462,11 @@ export const shellParser = async (
                     if (timeout !== undefined && existingCommand.sent) {
                         console.warn(
                             `Timeout of ${timeout} for command ${command} has been ignored as command
-                            has already been sent. Timeout of ${existingCommand.timeout} was used.`
+                            has already been sent. Timeout of ${existingCommand.timeout} was used.`,
                         );
                     } else if (timeout !== undefined) {
                         console.warn(
-                            `Timeout for command ${command} has been updated to ${timeout}`
+                            `Timeout for command ${command} has been updated to ${timeout}`,
                         );
                         existingCommand.timeout = timeout;
                     }
@@ -491,7 +491,7 @@ export const shellParser = async (
         registerCommandCallback: (
             command: string,
             onSuccess: (data: string, command: string) => void,
-            onError: (error: string, command: string) => void
+            onError: (error: string, command: string) => void,
         ) => {
             // Add Callbacks to the queue for future responses
             const callbacks = { onSuccess, onError };

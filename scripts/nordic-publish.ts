@@ -37,17 +37,17 @@ let client: Client;
 abstract class Client {
     abstract sourceUrl: string;
 
-    initialise(options: Options): Promise<void> | void {} // eslint-disable-line @typescript-eslint/no-unused-vars
+    initialise(options: Options): Promise<void> | void {} // eslint-disable-line no-empty-function,@typescript-eslint/no-unused-vars
     abstract end(): void;
 
     abstract download(filename: string): Promise<string>;
     abstract uploadContent(
-        content: Buffer,
-        remoteFilename: string
+        content: Buffer<ArrayBuffer>,
+        remoteFilename: string,
     ): Promise<void>;
     abstract uploadLocalFile(
         localFilename: string,
-        remoteFilename: string
+        remoteFilename: string,
     ): Promise<void>;
 }
 
@@ -89,7 +89,7 @@ class FtpClient extends Client {
     connect = () =>
         new Promise<void>((resolve, reject) => {
             console.log(
-                `Connecting to ftp://${this.user}@${this.host}:${this.port}`
+                `Connecting to ftp://${this.user}@${this.host}:${this.port}`,
             );
             this.ftpClient.once('error', err => {
                 this.ftpClient.removeAllListeners('ready');
@@ -115,8 +115,8 @@ class FtpClient extends Client {
                     reject(
                         new Error(
                             '\nError: Failed to change to directory. ' +
-                                'Check whether it exists on the FTP server.'
-                        )
+                                'Check whether it exists on the FTP server.',
+                        ),
                     );
                 } else {
                     resolve();
@@ -145,12 +145,12 @@ class FtpClient extends Client {
 
     upload = (
         contentOrLocalFilename: string | Buffer,
-        remoteFilename: string
+        remoteFilename: string,
     ) =>
         new Promise<void>((resolve, reject) => {
             console.log(`Uploading file ${remoteFilename}`);
             this.ftpClient.put(contentOrLocalFilename, remoteFilename, err =>
-                err ? reject(err) : resolve()
+                err ? reject(err) : resolve(),
             );
         });
 
@@ -176,7 +176,7 @@ class ArtifactoryClient extends Client {
 
         if (this.token == null) {
             throw new Error(
-                'The environment variable ARTIFACTORY_TOKEN must be set.'
+                'The environment variable ARTIFACTORY_TOKEN must be set.',
             );
         }
 
@@ -220,11 +220,11 @@ class ArtifactoryClient extends Client {
         if (res.ok || res.status === 404) return;
 
         this.filesWhereCacheZappingFailed.push(
-            `${this.folderName}/${filename}`
+            `${this.folderName}/${filename}`,
         );
     };
 
-    upload = async (content: Buffer, remoteFilename: string) => {
+    upload = async (content: Buffer<ArrayBuffer>, remoteFilename: string) => {
         const url = `${this.uploadUrl}/${remoteFilename}`;
         const res = await fetch(url, {
             method: 'PUT',
@@ -239,7 +239,7 @@ class ArtifactoryClient extends Client {
         await this.zapCache(remoteFilename);
     };
 
-    uploadContent = (content: Buffer, remoteFilename: string) => {
+    uploadContent = (content: Buffer<ArrayBuffer>, remoteFilename: string) => {
         console.log(`Uploading content for ${remoteFilename}`);
 
         return this.upload(content, remoteFilename);
@@ -247,7 +247,7 @@ class ArtifactoryClient extends Client {
 
     uploadLocalFile = (localFilename: string, remoteFilename: string) => {
         console.log(
-            `Uploading local file ${localFilename} as ${remoteFilename}`
+            `Uploading local file ${localFilename} as ${remoteFilename}`,
         );
 
         return this.upload(fs.readFileSync(localFilename), remoteFilename);
@@ -256,14 +256,14 @@ class ArtifactoryClient extends Client {
     end = () => {
         if (this.filesWhereCacheZappingFailed.length > 0) {
             console.warn(
-                `\nCache zapping failed for these files, probably because your Artifactory token lacks permission for it:`
+                `\nCache zapping failed for these files, probably because your Artifactory token lacks permission for it:`,
             );
             this.filesWhereCacheZappingFailed.forEach(file => {
                 console.warn(`- ${file}`);
             });
 
             console.warn(
-                '\nGo to https://github.com/NordicSemiconductor/pc-nrfconnect-shared/actions/workflows/zap-cache.yml, run the workflow and paste this string as the list of paths to zap them manually:'
+                '\nGo to https://github.com/NordicSemiconductor/pc-nrfconnect-shared/actions/workflows/zap-cache.yml, run the workflow and paste this string as the list of paths to zap them manually:',
             );
             console.warn('  ', this.filesWhereCacheZappingFailed.join(', '));
         }
@@ -290,7 +290,7 @@ const isAccessLevel = (value: string): value is AccessLevel =>
 
 const splitSourceAndAccessLevel = (sourceAndMaybeAccessLevel: string) => {
     const match = sourceAndMaybeAccessLevel.match(
-        /(?<source>.*?)\s*\((?<accessLevel>.*)\)/
+        /(?<source>.*?)\s*\((?<accessLevel>.*)\)/,
     );
 
     if (match == null) {
@@ -302,8 +302,8 @@ const splitSourceAndAccessLevel = (sourceAndMaybeAccessLevel: string) => {
     if (!isAccessLevel(accessLevel)) {
         throw new Error(
             `The specified access level "${accessLevel}" must be one of ${validAccessLevels.join(
-                ', '
-            )}.`
+                ', ',
+            )}.`,
         );
     }
 
@@ -326,19 +326,19 @@ const parseOptions = (): Options => {
             '-s, --source <source>',
             'Specify the source to publish (e.g. "official" or "releast-test"). ' +
                 'When publishing to Artifactory, an access level can be ' +
-                'specified at the end in parantheses (e.g. "official (external)").'
+                'specified at the end in parantheses (e.g. "official (external)").',
         )
         .addOption(
             new Option(
                 '-d, --destination <ftp|artifactory>',
-                'Specify where to publish.'
+                'Specify where to publish.',
             )
                 .choices(['ftp', 'artifactory'])
-                .makeOptionMandatory()
+                .makeOptionMandatory(),
         )
         .option(
             '-n, --no-pack',
-            'Publish existing .tgz file at the root directory without npm pack.'
+            'Publish existing .tgz file at the root directory without npm pack.',
         )
         .parse();
 
@@ -377,8 +377,8 @@ const getShasum = (filePath: string) => {
     } catch (error) {
         throw new Error(
             `Unable to read file when verifying shasum: ${filePath}. \nError: ${errorAsString(
-                error
-            )}`
+                error,
+            )}`,
         );
     }
 };
@@ -413,14 +413,14 @@ const packOrReadPackage = (options: Options): App => {
 
 const assertAppVersionIsValid = (
     latestAppVersion: string | undefined,
-    app: App
+    app: App,
 ) => {
     if (latestAppVersion != null) {
         console.log(`Latest published version ${latestAppVersion}`);
 
         if (semver.lte(app.version, latestAppVersion) && app.isOfficial) {
             throw new Error(
-                'Current package version cannot be published, bump it higher'
+                'Current package version cannot be published, bump it higher',
             );
         }
     }
@@ -438,7 +438,7 @@ const downloadSourceJson = async () => {
             (sourceJson.apps !== undefined && !Array.isArray(sourceJson.apps))
         ) {
             throw new Error(
-                '`source.json` does not have the expected content.'
+                '`source.json` does not have the expected content.',
             );
         }
 
@@ -461,21 +461,21 @@ const getUpdatedSourceJson = async (app: App): Promise<SourceJson> => {
         ...sourceJson,
         apps: [
             ...new Set(sourceJson.apps).add(
-                `${app.sourceUrl}/${app.appInfoName}`
+                `${app.sourceUrl}/${app.appInfoName}`,
             ),
         ].sort(),
     };
 };
 
 const downloadExistingAppInfo = async (
-    app: App
+    app: App,
 ): Promise<Partial<Pick<AppInfo, 'latestVersion' | 'versions'>>> => {
     try {
         const appInfoContent = await client.download(app.appInfoName);
         return JSON.parse(appInfoContent) as AppInfo;
     } catch (error) {
         console.log(
-            `No previous app versions found due to: ${errorAsString(error)}`
+            `No previous app versions found due to: ${errorAsString(error)}`,
         );
 
         return {};
@@ -484,7 +484,7 @@ const downloadExistingAppInfo = async (
 
 const failBecauseOfMissingProperty = () => {
     throw new Error(
-        'This must never happen, because the properties were already checked before'
+        'This must never happen, because the properties were already checked before',
     );
 };
 
@@ -529,13 +529,13 @@ const getUpdatedAppInfo = async (app: App): Promise<AppInfo> => {
 const uploadSourceJson = (sourceJson: SourceJson) =>
     client.uploadContent(
         Buffer.from(JSON.stringify(sourceJson, undefined, 2)),
-        'source.json'
+        'source.json',
     );
 
 const uploadAppInfo = (app: App, appInfo: AppInfo) =>
     client.uploadContent(
         Buffer.from(JSON.stringify(appInfo, undefined, 2)),
-        app.appInfoName
+        app.appInfoName,
     );
 
 const uploadPackage = (app: App) =>

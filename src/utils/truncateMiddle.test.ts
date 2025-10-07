@@ -8,7 +8,7 @@ import { truncateMiddle } from './truncateMiddle';
 
 test('truncate strings when necessary', () => {
     expect(
-        truncateMiddle('some long string with more than 36 characters')
+        truncateMiddle('some long string with more than 36 characters'),
     ).toBe('some long string wit...36 characters');
 
     expect(truncateMiddle('short string')).toBe('short string');

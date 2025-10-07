@@ -18,8 +18,8 @@ describe('Slider component', () => {
                     values={[2]}
                     range={{ min: 0, max: 5 }}
                     onChange={[() => {}]}
-                />
-            ).baseElement
+                />,
+            ).baseElement,
         ).toMatchSnapshot();
     });
 });

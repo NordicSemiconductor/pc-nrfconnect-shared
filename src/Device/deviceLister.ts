@@ -41,12 +41,12 @@ let autoSelectDeviceCLISerialUsed = false;
 
 const hasSameDeviceTraits = (
     deviceTraits: DeviceTraits,
-    otherDeviceTraits: DeviceTraits
+    otherDeviceTraits: DeviceTraits,
 ) =>
     Object.keys(otherDeviceTraits).every(
         rule =>
             deviceTraits[rule as keyof DeviceTraits] ===
-            otherDeviceTraits[rule as keyof DeviceTraits]
+            otherDeviceTraits[rule as keyof DeviceTraits],
     );
 
 const shouldAutoReselect = (
@@ -54,7 +54,7 @@ const shouldAutoReselect = (
     globalAutoReselect: boolean,
     autoReselectDevice?: Device,
     disconnectionTime?: number,
-    currentSelectedDevice?: Device
+    currentSelectedDevice?: Device,
 ): boolean => {
     // No device was selected when disconnection occurred
     if (!autoReselectDevice) return false;
@@ -108,37 +108,37 @@ const initAutoReconnectTimeout =
                         waitForDevice?.onFail(
                             `Failed to detect device after reboot. Timed out after ${
                                 timeout / 1000
-                            } seconds.`
+                            } seconds.`,
                         );
                     dispatch(clearWaitForDevice());
                     logger.warn(
                         `Failed to detect device after reboot. Timed out after ${
                             timeout / 1000
-                        } seconds.`
+                        } seconds.`,
                     );
-                }, timeout)
-            )
+                }, timeout),
+            ),
         );
     };
 
 export const hasValidDeviceTraits = (
     deviceTraits: DeviceTraits,
-    requiredTraits: DeviceTraits
+    requiredTraits: DeviceTraits,
 ) =>
     Object.keys(requiredTraits).some(
         rule =>
             deviceTraits[rule as keyof DeviceTraits] &&
-            requiredTraits[rule as keyof DeviceTraits]
+            requiredTraits[rule as keyof DeviceTraits],
     ) ||
     Object.keys(requiredTraits).every(
-        rule => requiredTraits[rule as keyof DeviceTraits] === false
+        rule => requiredTraits[rule as keyof DeviceTraits] === false,
     );
 
 const removeDeviceFromList =
     (
         removedDevice: Device,
         onDeviceDeselected: () => void,
-        onDeviceDisconnected: (device: Device) => void
+        onDeviceDisconnected: (device: Device) => void,
     ): AppThunk =>
     (dispatch, getState) => {
         if (
@@ -174,7 +174,7 @@ const setPersistedData = (device: Device) => {
         newDevice.nickname = getPersistedNickname(device.serialNumber);
 
         const persistedSerialPortSettings = getPersistedSerialPortSettings(
-            device.serialNumber
+            device.serialNumber,
         );
 
         if (persistedSerialPortSettings) {
@@ -202,7 +202,7 @@ export const startWatchingDevices =
         onDeviceConnected: (device: Device) => void,
         onDeviceDisconnected: (device: Device) => void,
         onDeviceDeselected: () => void,
-        doSelectDevice: (device: Device, autoReselected: boolean) => void
+        doSelectDevice: (device: Device, autoReselected: boolean) => void,
     ): AppThunk<RootState, void> =>
     (dispatch, getState) => {
         const deviceToProcess: Device[] = [];
@@ -216,18 +216,18 @@ export const startWatchingDevices =
                 if (hasValidDeviceTraits(device.traits, deviceListing)) {
                     telemetry.sendEvent(
                         'device connected',
-                        simplifyDevice(device)
+                        simplifyDevice(device),
                     );
                     if (
                         !getState().device.devices.find(
                             d =>
                                 d.id === device.id ||
                                 (device.serialNumber && // we want to disregard comparing devices with no sn
-                                    d.serialNumber === device.serialNumber)
+                                    d.serialNumber === device.serialNumber),
                         )
                     ) {
                         logger.info(
-                            `Device connected with the serial number ${device.serialNumber}`
+                            `Device connected with the serial number ${device.serialNumber}`,
                         );
                         onDeviceConnected(device);
                     }
@@ -242,13 +242,13 @@ export const startWatchingDevices =
                         getState().deviceAutoSelect.autoReselect,
                         autoSelectDevice,
                         disconnectionTime,
-                        selectedDevice
+                        selectedDevice,
                     );
 
                     dispatch(addDevice(device));
                     const deviceWithPersistedData =
                         getState().device.devices.find(
-                            d => d.serialNumber === device.serialNumber
+                            d => d.serialNumber === device.serialNumber,
                         );
 
                     if (!deviceWithPersistedData) return;
@@ -270,15 +270,14 @@ export const startWatchingDevices =
                             deviceWithPersistedData.id
                     ) {
                         dispatch(
-                            setLastArrivedDeviceId(deviceWithPersistedData.id)
+                            setLastArrivedDeviceId(deviceWithPersistedData.id),
                         );
 
-                        const deviceInfo = await NrfutilDeviceLib.deviceInfo(
-                            device
-                        );
+                        const deviceInfo =
+                            await NrfutilDeviceLib.deviceInfo(device);
 
                         logger.info(
-                            `Auto-reconnecting to device with the serial number: ${deviceWithPersistedData.serialNumber}`
+                            `Auto-reconnecting to device with the serial number: ${deviceWithPersistedData.serialNumber}`,
                         );
                         doSelectDevice(deviceWithPersistedData, true);
                         dispatch(setSelectedDeviceInfo(deviceInfo));
@@ -313,18 +312,18 @@ export const startWatchingDevices =
                                 waitForDevice.when === 'always' ||
                                 (waitForDevice.when === 'dfuBootLoaderMode' &&
                                     isDeviceInDFUBootloader(
-                                        deviceWithPersistedData
+                                        deviceWithPersistedData,
                                     )) ||
                                 (waitForDevice.when === 'applicationMode' &&
                                     deviceWithPersistedData.traits.nordicDfu &&
                                     !isDeviceInDFUBootloader(
-                                        deviceWithPersistedData
+                                        deviceWithPersistedData,
                                     )) ||
                                 (selectedDevice &&
                                     waitForDevice.when === 'sameTraits' &&
                                     hasSameDeviceTraits(
                                         device.traits,
-                                        selectedDevice.traits
+                                        selectedDevice.traits,
                                     )) ||
                                 (typeof waitForDevice.when === 'function' &&
                                     waitForDevice.when(device))
@@ -332,8 +331,8 @@ export const startWatchingDevices =
                                 dispatch(setArrivedButWrongWhen(undefined));
                                 dispatch(
                                     setLastArrivedDeviceId(
-                                        deviceWithPersistedData.id
-                                    )
+                                        deviceWithPersistedData.id,
+                                    ),
                                 );
                                 dispatch(setDisconnectedTime(undefined));
 
@@ -341,8 +340,8 @@ export const startWatchingDevices =
 
                                 dispatch(
                                     clearWaitForDeviceTimeout(
-                                        waitForDevice.once
-                                    )
+                                        waitForDevice.once,
+                                    ),
                                 );
 
                                 dispatch(selectDevice(deviceWithPersistedData));
@@ -350,7 +349,7 @@ export const startWatchingDevices =
                                 if (!waitForDevice.skipRefetchDeviceInfo) {
                                     const deviceInfo =
                                         await NrfutilDeviceLib.deviceInfo(
-                                            device
+                                            device,
                                         );
                                     dispatch(setSelectedDeviceInfo(deviceInfo));
 
@@ -359,22 +358,21 @@ export const startWatchingDevices =
                                         !deviceWithPersistedData.traits.modem &&
                                         hasModem(
                                             deviceWithPersistedData,
-                                            deviceInfo
+                                            deviceInfo,
                                         )
                                     ) {
-                                        deviceWithPersistedData.traits.modem =
-                                            true;
+                                        deviceWithPersistedData.traits.modem = true;
                                         dispatch(
                                             selectDevice(
-                                                deviceWithPersistedData
-                                            )
+                                                deviceWithPersistedData,
+                                            ),
                                         );
                                     }
                                 }
 
                                 if (waitForDevice.onSuccess)
                                     waitForDevice.onSuccess(
-                                        deviceWithPersistedData
+                                        deviceWithPersistedData,
                                     );
                             } else {
                                 dispatch(setArrivedButWrongWhen(true));
@@ -417,19 +415,19 @@ export const startWatchingDevices =
                                             removeDeviceFromList(
                                                 device,
                                                 onDeviceDeselected,
-                                                onDeviceDisconnected
-                                            )
+                                                onDeviceDisconnected,
+                                            ),
                                         ),
-                                    waitForDevice
-                                )
+                                    waitForDevice,
+                                ),
                             );
                         } else {
                             dispatch(
                                 removeDeviceFromList(
                                     device,
                                     onDeviceDeselected,
-                                    onDeviceDisconnected
-                                )
+                                    onDeviceDisconnected,
+                                ),
                             );
                         }
 
@@ -439,8 +437,8 @@ export const startWatchingDevices =
                             removeDeviceFromList(
                                 device,
                                 onDeviceDeselected,
-                                onDeviceDisconnected
-                            )
+                                onDeviceDisconnected,
+                            ),
                         );
                     }
                 }
@@ -464,7 +462,7 @@ export const startWatchingDevices =
                         onDeviceArrived(d);
                     },
                     onDeviceLeft,
-                }
+                },
             );
 
             stopNrfutilDevice = (callback?: () => void) => {
@@ -477,7 +475,7 @@ export const startWatchingDevices =
 
 const getAutoSelectDeviceCLIProperty = (
     property: string,
-    findDevice: (value: string) => Device | undefined
+    findDevice: (value: string) => Device | undefined,
 ) => {
     const { argv } = process;
     const index = argv.findIndex(arg => arg === property);
@@ -488,12 +486,12 @@ const getAutoSelectDeviceCLIProperty = (
 
 const getAutoSelectDevice = (devices: Device[]) => {
     const serialNumber = getAutoSelectDeviceCLIProperty('--deviceSerial', sn =>
-        devices.find(device => device.serialNumber === sn)
+        devices.find(device => device.serialNumber === sn),
     );
     const serialPort = getAutoSelectDeviceCLIProperty('--comPort', portPath =>
         devices.find(device =>
-            device.serialPorts?.find(port => port.comName === portPath)
-        )
+            device.serialPorts?.find(port => port.comName === portPath),
+        ),
     );
 
     if (serialNumber && serialPort) {
@@ -515,7 +513,7 @@ const getAutoSelectDevice = (devices: Device[]) => {
 
 const autoSelectDeviceCLI = (
     devices: Device[],
-    doSelectDevice: (device: Device, autoReselected: boolean) => void
+    doSelectDevice: (device: Device, autoReselected: boolean) => void,
 ) => {
     if (!autoSelectDeviceCLISerialUsed) {
         const autoSelectDevice = getAutoSelectDevice(devices);

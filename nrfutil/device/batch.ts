@@ -51,7 +51,7 @@ export class Batch {
         command: string,
         core: DeviceCore,
         callbacks?: CallbacksUnknown,
-        args: string[] = []
+        args: string[] = [],
     ) {
         const getPromise = async () => {
             const box = await getModule('device');
@@ -60,7 +60,7 @@ export class Batch {
                 await box.singleInfoOperationOptionalData<object>(
                     command,
                     undefined,
-                    ['--generate', ...coreArg(core), ...args]
+                    ['--generate', ...coreArg(core), ...args],
                 );
 
             return {
@@ -78,7 +78,7 @@ export class Batch {
         this.enqueueBatchOperationObject(
             'device-info',
             core,
-            callbacks as CallbacksUnknown
+            callbacks as CallbacksUnknown,
         );
 
         return this;
@@ -88,7 +88,7 @@ export class Batch {
         this.enqueueBatchOperationObject(
             'erase',
             core,
-            callbacks as CallbacksUnknown
+            callbacks as CallbacksUnknown,
         );
 
         return this;
@@ -111,7 +111,7 @@ export class Batch {
                     },
                     ...callbacks,
                 } as BatchOperationWrapperUnknown);
-            })
+            }),
         );
 
         return this;
@@ -133,7 +133,7 @@ export class Batch {
                     },
                     ...callbacks,
                 } as BatchOperationWrapperUnknown);
-            })
+            }),
         );
 
         return this;
@@ -155,7 +155,7 @@ export class Batch {
                     },
                     ...callbacks,
                 } as BatchOperationWrapperUnknown);
-            })
+            }),
         );
 
         return this;
@@ -164,7 +164,7 @@ export class Batch {
     public xRead(
         core: DeviceCore,
         options: XReadOptions,
-        callbacks?: Callbacks<ReadResult>
+        callbacks?: Callbacks<ReadResult>,
     ) {
         this.enqueueBatchOperationObject(
             'x-read',
@@ -188,7 +188,7 @@ export class Batch {
                     }
                 },
             } as CallbacksUnknown,
-            xReadOptionsToArgs(options)
+            xReadOptionsToArgs(options),
         );
 
         return this;
@@ -196,12 +196,12 @@ export class Batch {
 
     public getCoreInfo(
         core: DeviceCore,
-        callbacks?: Callbacks<DeviceCoreInfo>
+        callbacks?: Callbacks<DeviceCoreInfo>,
     ) {
         this.enqueueBatchOperationObject(
             'core-info',
             core,
-            callbacks as CallbacksUnknown
+            callbacks as CallbacksUnknown,
         );
 
         return this;
@@ -211,7 +211,7 @@ export class Batch {
         this.enqueueBatchOperationObject(
             'fw-info',
             core,
-            callbacks as CallbacksUnknown
+            callbacks as CallbacksUnknown,
         );
 
         return this;
@@ -219,12 +219,12 @@ export class Batch {
 
     public getProtectionStatus(
         core: DeviceCore,
-        callbacks?: Callbacks<GetProtectionStatusResult>
+        callbacks?: Callbacks<GetProtectionStatusResult>,
     ) {
         this.enqueueBatchOperationObject(
             'protection-get',
             core,
-            callbacks as CallbacksUnknown
+            callbacks as CallbacksUnknown,
         );
 
         return this;
@@ -235,7 +235,7 @@ export class Batch {
         core: DeviceCore,
         programmingOptions?: ProgrammingOptions,
         deviceTraits?: DeviceTraits,
-        callbacks?: CallbacksUnknown
+        callbacks?: CallbacksUnknown,
     ) {
         const args = [
             ...(deviceTraits ? deviceTraitsToArgs(deviceTraits) : []),
@@ -264,7 +264,7 @@ export class Batch {
         this.enqueueBatchOperationObject(
             'recover',
             core,
-            callbacks as CallbacksUnknown
+            callbacks as CallbacksUnknown,
         );
 
         return this;
@@ -275,7 +275,7 @@ export class Batch {
             'reset',
             core,
             callbacks as CallbacksUnknown,
-            reset ? ['--reset-kind', reset] : undefined
+            reset ? ['--reset-kind', reset] : undefined,
         );
 
         return this;
@@ -283,7 +283,7 @@ export class Batch {
 
     public collect(
         count: number,
-        callback: (completedTasks: TaskEnd<unknown>[]) => void
+        callback: (completedTasks: TaskEnd<unknown>[]) => void,
     ) {
         this.collectOperations.push({
             callback,
@@ -296,11 +296,11 @@ export class Batch {
 
     public async run(
         device: NrfutilDevice,
-        controller?: AbortController | undefined
+        controller?: AbortController | undefined,
     ): Promise<unknown[]> {
         if (!device.serialNumber) {
             throw new Error(
-                `Device does not have a serial number, no device operation is possible`
+                `Device does not have a serial number, no device operation is possible`,
             );
         }
 
@@ -315,7 +315,7 @@ export class Batch {
 
         const promiseResults =
             await Promise.allSettled<BatchOperationWrapperUnknown>(
-                this.operationBatchGeneration
+                this.operationBatchGeneration,
             );
         promiseResults.forEach(r => {
             if (r.status === 'rejected') {
@@ -345,14 +345,14 @@ export class Batch {
                     if (task && currentOperationIndex !== -1) {
                         operations[currentOperationIndex].onProgress?.(
                             progress,
-                            task
+                            task,
                         );
                     }
                 },
                 onTaskBegin => {
                     currentOperationIndex += 1;
                     operations[currentOperationIndex].onTaskBegin?.(
-                        onTaskBegin
+                        onTaskBegin,
                     );
                 },
                 taskEnd => {
@@ -363,20 +363,20 @@ export class Batch {
                     this.collectOperations
                         .filter(
                             operation =>
-                                operation.operationId === currentOperationIndex
+                                operation.operationId === currentOperationIndex,
                         )
                         .forEach(operation => {
                             operation.callback(
                                 results.slice(
                                     results.length - operation.count,
-                                    results.length
-                                )
+                                    results.length,
+                                ),
                             );
                         });
 
                     lastCompletedOperationIndex += 1;
                 },
-                controller
+                controller,
             );
 
             const errors = results.filter(result => result.result === 'fail');
@@ -384,7 +384,7 @@ export class Batch {
                 const error = new Error(
                     `Batch failed: ${errors
                         .map(e => `error: ${e.error}, message: ${e.message}`)
-                        .join('\n')}`
+                        .join('\n')}`,
                 );
                 if (currentOperationIndex !== -1) {
                     operations[currentOperationIndex].onException?.(error);
@@ -394,7 +394,7 @@ export class Batch {
         } catch (error) {
             if (currentOperationIndex !== lastCompletedOperationIndex) {
                 operations[currentOperationIndex]?.onException?.(
-                    error as Error
+                    error as Error,
                 );
             }
             throw error;

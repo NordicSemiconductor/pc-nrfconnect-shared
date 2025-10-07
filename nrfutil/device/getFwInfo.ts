@@ -59,12 +59,12 @@ export default (
     device: NrfutilDevice,
     core?: DeviceCore,
     onProgress?: OnProgress,
-    controller?: AbortController
+    controller?: AbortController,
 ) =>
     deviceSingleTaskEndOperation<FWInfo>(
         device,
         'fw-info',
         onProgress,
         controller,
-        coreArg(core)
+        coreArg(core),
     );

@@ -14,7 +14,7 @@ export const constrainedToPercentage = (percentage: number) => {
 
 export const toPercentage = (
     valueOrIndex: number,
-    rangeOrValues: RangeOrValues
+    rangeOrValues: RangeOrValues,
 ) => {
     if (isValues(rangeOrValues)) {
         const max = Math.max(0, rangeOrValues.length - 1);
@@ -32,7 +32,7 @@ export const fromPercentage = (
     lastValue: number,
     value: number,
     rangeOrValues: RangeOrValues,
-    directionForward: boolean
+    directionForward: boolean,
 ) => {
     const min = getMin(rangeOrValues);
     const max = getMax(rangeOrValues);

@@ -18,7 +18,7 @@ module.exports = (disabledMocks = []) => ({
         '^electron-store$': `${mockDir}/electronStoreMock.ts`,
         '@electron/remote': `${mockDir}/remoteMock.ts`,
         'react-markdown': require.resolve(
-            'react-markdown/react-markdown.min.js'
+            'react-markdown/react-markdown.min.js',
         ),
         ...(disabledMocks.includes('packageJson')
             ? {}

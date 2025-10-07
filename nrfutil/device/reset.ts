@@ -18,7 +18,7 @@ export default async (
     core?: DeviceCore,
     resetKind?: ResetKind,
     onProgress?: OnProgress,
-    controller?: AbortController
+    controller?: AbortController,
 ) => {
     const args = [
         ...(resetKind ? ['--reset-kind', resetKind] : []),
@@ -30,6 +30,6 @@ export default async (
         'reset',
         onProgress,
         controller,
-        args
+        args,
     );
 };

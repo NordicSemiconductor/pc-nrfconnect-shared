@@ -22,7 +22,7 @@ export default ({ deviceListVisible, toggleDeviceListVisible }: Props) => (
         title="alt+s"
         className={classNames(
             'select-device',
-            deviceListVisible && 'device-list-visible'
+            deviceListVisible && 'device-list-visible',
         )}
         onClick={toggleDeviceListVisible}
     >

@@ -22,17 +22,17 @@ export const createSerialPort = async (
     overwriteOptions: OverwriteOptions = {
         overwrite: false,
         settingsLocked: false,
-    }
+    },
 ) => {
     const { path } = options;
     const eventEmitter = new EventEmitter();
     let closed = false;
 
     forMain.registerOnDataReceived(path)(data =>
-        eventEmitter.emit('onData', data)
+        eventEmitter.emit('onData', data),
     );
     forMain.registerOnDataWritten(path)(data =>
-        eventEmitter.emit('onDataWritten', data)
+        eventEmitter.emit('onDataWritten', data),
     );
 
     forMain.registerOnClosed(path)(() => {
@@ -40,29 +40,33 @@ export const createSerialPort = async (
         closed = true;
     });
     forMain.registerOnUpdated(path)(newOptions =>
-        eventEmitter.emit('onUpdate', newOptions)
+        eventEmitter.emit('onUpdate', newOptions),
     );
     forMain.registerOnSet(path)(newOptions =>
-        eventEmitter.emit('onSet', newOptions)
+        eventEmitter.emit('onSet', newOptions),
     );
     forMain.registerOnChanged(path)(newOptions =>
-        eventEmitter.emit('onChange', newOptions)
+        eventEmitter.emit('onChange', newOptions),
     );
 
     const openWithRetries = async (retryCount: number) => {
         try {
-            return await inMain.open(options, overwriteOptions);
+            await inMain.open(options, overwriteOptions);
+            return undefined;
         } catch (error) {
             if (
                 (error as Error).message.includes(
-                    'PORT_IS_ALREADY_BEING_OPENED'
+                    'PORT_IS_ALREADY_BEING_OPENED',
                 ) &&
                 retryCount > 0
             ) {
-                return new Promise<void | string>(resolve => {
-                    setTimeout(async () => {
-                        resolve(await openWithRetries(retryCount - 1));
-                    }, 50 + Math.random() * 100);
+                return new Promise<string | undefined>(resolve => {
+                    setTimeout(
+                        async () => {
+                            resolve(await openWithRetries(retryCount - 1));
+                        },
+                        50 + Math.random() * 100,
+                    );
                 });
             }
             return (error as Error).message;
@@ -76,7 +80,7 @@ export const createSerialPort = async (
         try {
             if (await inMain.isOpen(path)) {
                 logger.info(
-                    `Port ${options.path} still in use by other window(s)`
+                    `Port ${options.path} still in use by other window(s)`,
                 );
             }
         } catch {
@@ -95,11 +99,11 @@ export const createSerialPort = async (
     if (error) {
         if (error.includes('FAILED_DIFFERENT_SETTINGS')) {
             logger.warn(
-                `Failed to connect to port: ${path}. Port is open with different settings.`
+                `Failed to connect to port: ${path}. Port is open with different settings.`,
             );
         } else {
             logger.error(
-                `Failed to connect to port: ${path}. Make sure the port is not already taken, if you are not sure, try to power cycle the device and try to connect again.`
+                `Failed to connect to port: ${path}. Make sure the port is not already taken, if you are not sure, try to power cycle the device and try to connect again.`,
             );
         }
         throw new Error(error);
@@ -144,8 +148,8 @@ export const createSerialPort = async (
         },
         onChange: (
             handler: (
-                newOptions: SerialPortOpenOptions<AutoDetectTypes>
-            ) => void
+                newOptions: SerialPortOpenOptions<AutoDetectTypes>,
+            ) => void,
         ) => {
             eventEmitter.on('onChange', handler);
             return () => {
@@ -166,7 +170,7 @@ export const getSerialPortOptions = async (path: string) => {
         console.log('will fetch options from path=', path);
 
         return await inMain.getOptions(path);
-    } catch (error) {
+    } catch {
         logger.error(`Failed to get options for port: ${path}`);
     }
 };

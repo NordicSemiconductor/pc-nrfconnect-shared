@@ -42,7 +42,7 @@ describe('FactoryReset', () => {
             <FactoryResetButton
                 label={FACTORY_RESET}
                 resetFn={overrideResetFn}
-            />
+            />,
         );
         fireEvent.click(screen.getByText(FACTORY_RESET));
         await screen.findByText(OK);

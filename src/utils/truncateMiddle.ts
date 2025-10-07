@@ -13,7 +13,7 @@ const truncateMiddle = (str: string, clipStart = 20, clipEnd = 13) => {
         str.length - Math.min(clipEnd, str.length - clipStartWithEllipsis);
     return `${str.substring(0, clipStart)}...${str.substring(
         rightHandStartingPoint,
-        str.length
+        str.length,
     )}`;
 };
 

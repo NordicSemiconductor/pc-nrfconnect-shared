@@ -16,7 +16,7 @@ export interface BoardControllerConfigResponse {
 export default (
     device: NrfutilDevice,
     onProgress?: OnProgress,
-    controller?: AbortController
+    controller?: AbortController,
 ) => {
     // "operation: 0, command_id: 0" is the command to retrieve the configuration from the board controller.
     const json = {
@@ -39,6 +39,6 @@ export default (
         'x-execute-batch',
         onProgress,
         controller,
-        ['--batch-json', JSON.stringify(json)]
+        ['--batch-json', JSON.stringify(json)],
     ).then(res => res.data?.cfg ?? []);
 };

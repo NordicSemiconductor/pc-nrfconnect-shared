@@ -34,12 +34,12 @@ export default (
     device: NrfutilDevice,
     core?: DeviceCore,
     onProgress?: OnProgress,
-    controller?: AbortController
+    controller?: AbortController,
 ) =>
     deviceSingleTaskEndOperation<DeviceCoreInfo>(
         device,
         'core-info',
         onProgress,
         controller,
-        coreArg(core)
+        coreArg(core),
     );

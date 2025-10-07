@@ -63,7 +63,7 @@ export const getPersistedApiKey = async (keyName: string) => {
 
     const encrypted = sharedStore.get(
         `apiKeys.${keyName}`,
-        {} as Array<number>
+        {} as Array<number>,
     );
 
     return encrypted.length > 0
@@ -73,43 +73,43 @@ export const getPersistedApiKey = async (keyName: string) => {
 
 export const persistSerialPortSettings = (
     serialNumber: string,
-    serialPortSettings: Omit<SerialSettings, 'lastUpdated'>
+    serialPortSettings: Omit<SerialSettings, 'lastUpdated'>,
 ) =>
     sharedStore.set(`${serialNumber}.${packageJson().name}`, {
         ...serialPortSettings,
         lastUpdated: Date.now(),
     });
 export const getPersistedSerialPortSettings = (
-    serialNumber: string
+    serialNumber: string,
 ): SerialSettings | undefined => {
     const appName = packageJson().name;
     logger.info(
-        `Getting serial port options from the persistent store for ${serialNumber}.${appName}`
+        `Getting serial port options from the persistent store for ${serialNumber}.${appName}`,
     );
     return sharedStore.get(`${serialNumber}.${appName}`);
 };
 export const persistTerminalSettings = (
     device: Device,
     vComIndex: number,
-    terminalSettings: TerminalSettings
+    terminalSettings: TerminalSettings,
 ) => {
     if (device.serialNumber) {
         sharedStore.set(
             `${device.serialNumber}.vCom-${vComIndex}.TerminalSettings`,
-            terminalSettings
+            terminalSettings,
         );
     }
 };
 export const getPersistedTerminalSettings = (
     device: Device,
-    vComIndex: number
+    vComIndex: number,
 ): TerminalSettings | undefined => {
     if (device.serialNumber) {
         logger.info(
-            `Get terminal settings from the persistent store for ${device.serialNumber}.vCom-${vComIndex}.TerminalSettings`
+            `Get terminal settings from the persistent store for ${device.serialNumber}.vCom-${vComIndex}.TerminalSettings`,
         );
         return sharedStore.get(
-            `${device.serialNumber}.vCom-${vComIndex}.TerminalSettings`
+            `${device.serialNumber}.vCom-${vComIndex}.TerminalSettings`,
         );
     }
     return undefined;
@@ -146,10 +146,10 @@ interface SharedAppSpecificStoreSchema {
 
 export const getAppSpecificStore = <
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    StoreSchema extends Record<string, any>
+    StoreSchema extends Record<string, any>,
 >(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    options?: Store.Options<any>
+    options?: Store.Options<any>,
 ) => {
     if (appSpecificStore == null) {
         appSpecificStore = new Store({
@@ -169,7 +169,7 @@ export const getAppSpecificStore = <
 export const persistCurrentPane = (currentPane: string) =>
     getAppSpecificStore<SharedAppSpecificStoreSchema>().set(
         `currentPaneName`,
-        currentPane
+        currentPane,
     );
 export const getPersistedCurrentPane = () =>
     getAppSpecificStore<SharedAppSpecificStoreSchema>().get(`currentPaneName`);
@@ -177,18 +177,18 @@ export const getPersistedCurrentPane = () =>
 export const persistLogVisible = (visible: boolean) =>
     getAppSpecificStore<SharedAppSpecificStoreSchema>().set(
         `isLogVisible`,
-        visible
+        visible,
     );
 
 export const persistIsLoggingVerbose = (value: boolean) =>
     getAppSpecificStore<SharedAppSpecificStoreSchema>().set(
         'isLoggingVerbose',
-        value
+        value,
     );
 export const getIsLoggingVerbose = () =>
     getAppSpecificStore<SharedAppSpecificStoreSchema>().get(
         'isLoggingVerbose',
-        false
+        false,
     );
 
 const resetIsLoggingVerbose = () => persistIsLoggingVerbose(false);
@@ -201,16 +201,16 @@ export const getPersistedLogVisible = () =>
 
 export const persistGroupCollapseState = (
     groupId: string,
-    collapsed: boolean
+    collapsed: boolean,
 ) =>
     getAppSpecificStore<SharedAppSpecificStoreSchema>().set(
         `groupCollapseStates.${groupId}`,
-        collapsed
+        collapsed,
     );
 
 export const getPersistedGroupCollapseState = (
-    groupId: string
+    groupId: string,
 ): boolean | undefined =>
     getAppSpecificStore<SharedAppSpecificStoreSchema>().get(
-        `groupCollapseStates.${groupId}`
+        `groupCollapseStates.${groupId}`,
     );

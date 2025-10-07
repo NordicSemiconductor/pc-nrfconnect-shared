@@ -119,23 +119,23 @@ export type GetDownloadableAppsResult = {
 type GetDownloadableApps = () => GetDownloadableAppsResult;
 
 const getDownloadableApps = invoke<GetDownloadableApps>(
-    channel.getDownloadableApps
+    channel.getDownloadableApps,
 );
 const registerGetDownloadableApps = handle<GetDownloadableApps>(
-    channel.getDownloadableApps
+    channel.getDownloadableApps,
 );
 
 // installDownloadableApp
 type InstallDownloadableApp = (
     app: DownloadableApp,
-    version?: string
+    version?: string,
 ) => DownloadableApp;
 
 const installDownloadableApp = invoke<InstallDownloadableApp>(
-    channel.installDownloadableApp
+    channel.installDownloadableApp,
 );
 const registerInstallDownloadableApp = handle<InstallDownloadableApp>(
-    channel.installDownloadableApp
+    channel.installDownloadableApp,
 );
 
 export const forRenderer = {

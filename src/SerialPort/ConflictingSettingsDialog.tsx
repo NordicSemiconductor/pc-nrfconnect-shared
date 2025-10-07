@@ -19,7 +19,7 @@ import {
 
 const getCurrentOptions = async (
     portPath: string,
-    setSettings: (options: SerialPortOpenOptions<AutoDetectTypes>) => void
+    setSettings: (options: SerialPortOpenOptions<AutoDetectTypes>) => void,
 ) => {
     try {
         const options = await getSerialPortOptions(portPath);
@@ -57,7 +57,7 @@ const ConflictingSettingsDialog = ({
 
     const connectToSelectedSerialPort = async (
         overwrite: boolean,
-        newSettings: SerialPortOpenOptions<AutoDetectTypes>
+        newSettings: SerialPortOpenOptions<AutoDetectTypes>,
     ) => {
         try {
             const port = await createSerialPort(newSettings, {
@@ -71,7 +71,7 @@ const ConflictingSettingsDialog = ({
                 onCancel();
             } else {
                 console.error(
-                    'Port could not be opened. Verify it is not used by other applications.'
+                    'Port could not be opened. Verify it is not used by other applications.',
                 );
             }
         }
@@ -93,7 +93,7 @@ const ConflictingSettingsDialog = ({
                     connectToSelectedSerialPort(true, activeSettings);
                 } else {
                     logger.error(
-                        'Could not get the active serial port settings.'
+                        'Could not get the active serial port settings.',
                     );
                 }
             }}
@@ -151,7 +151,7 @@ const DisplayConflictingSettings = ({
         ? allKeys.filter(
               key =>
                   activeSettings[key as keyof typeof activeSettings] !==
-                  localSettings[key as keyof typeof localSettings]
+                  localSettings[key as keyof typeof localSettings],
           )
         : [];
 
@@ -167,14 +167,14 @@ const DisplayConflictingSettings = ({
                                 className={`tw-p-1 ${classNames(
                                     conflictingSettings.includes(key)
                                         ? 'tw-bg-red-100'
-                                        : 'tw-bg-green-100'
+                                        : 'tw-bg-green-100',
                                 )}`}
                             >
                                 <span className="tw-font-semibold">{`${key}: `}</span>
                                 {prettifyValue(
                                     activeSettings[
                                         key as keyof typeof activeSettings
-                                    ]
+                                    ],
                                 )}
                             </li>
                         ))}
@@ -191,13 +191,15 @@ const DisplayConflictingSettings = ({
                             className={`tw-p-1 ${classNames(
                                 conflictingSettings.includes(key)
                                     ? 'tw-bg-red-100'
-                                    : 'tw-bg-green-100'
+                                    : 'tw-bg-green-100',
                             )}`}
                             key={key}
                         >
                             <span className="tw-font-semibold">{`${key}: `}</span>
                             {prettifyValue(
-                                localSettings[key as keyof typeof localSettings]
+                                localSettings[
+                                    key as keyof typeof localSettings
+                                ],
                             )}
                         </li>
                     ))}

@@ -22,7 +22,7 @@ const collapseSection = (element: HTMLDivElement) => {
             element.setAttribute('data-animating', 'true');
             element.style.pointerEvents = 'none';
         },
-        { once: true }
+        { once: true },
     );
 
     // on the next frame (as soon as the previous style change has taken effect),
@@ -41,7 +41,7 @@ const collapseSection = (element: HTMLDivElement) => {
                     element.style.pointerEvents = '';
                     element.setAttribute('data-animating', 'false');
                 },
-                { once: true }
+                { once: true },
             );
         });
     });
@@ -61,7 +61,7 @@ const expandSection = (element: HTMLDivElement) => {
             element.style.pointerEvents = 'none';
             element.setAttribute('data-animating', 'true');
         },
-        { once: true }
+        { once: true },
     );
     element.addEventListener(
         'transitionend',
@@ -71,7 +71,7 @@ const expandSection = (element: HTMLDivElement) => {
             element.style.overflow = '';
             element.setAttribute('data-animating', 'false');
         },
-        { once: true }
+        { once: true },
     );
 };
 
@@ -102,7 +102,7 @@ export const Group = ({
     const getInitialCollapseState = () => {
         if (collapseStatePersistanceId) {
             const persistedState = getPersistedGroupCollapseState(
-                collapseStatePersistanceId
+                collapseStatePersistanceId,
             );
             if (persistedState !== undefined) {
                 return persistedState;
@@ -121,7 +121,7 @@ export const Group = ({
                 className={classNames(
                     'tw-row tw-preflight tw- tw-flex tw-items-center tw-justify-between tw-text-left',
                     headingFullWidth && 'tw-w-full',
-                    !collapsible && ' tw-cursor-default'
+                    !collapsible && ' tw-cursor-default',
                 )}
                 type="button"
                 onClick={() => {
@@ -132,7 +132,7 @@ export const Group = ({
 
                     if (
                         collapsibleDivRef.current.getAttribute(
-                            'data-animating'
+                            'data-animating',
                         ) === 'true'
                     )
                         return;
@@ -149,7 +149,7 @@ export const Group = ({
                     if (collapseStatePersistanceId) {
                         persistGroupCollapseState(
                             collapseStatePersistanceId,
-                            !collapsed
+                            !collapsed,
                         );
                     }
                 }}
@@ -164,7 +164,7 @@ export const Group = ({
                     <span
                         className={classNames(
                             'mdi mdi-chevron-down tw-inline tw-text-xl/3 tw-transition-transform',
-                            !collapsed && 'tw-rotate-180'
+                            !collapsed && 'tw-rotate-180',
                         )}
                     />
                 )}
@@ -184,7 +184,7 @@ export const Group = ({
                 className={classNames(
                     'tw-transition-all',
                     !initStateSet.current && collapsed && 'tw-h-0',
-                    !initStateSet.current && !collapsed && 'tw-h-full'
+                    !initStateSet.current && !collapsed && 'tw-h-full',
                 )}
             >
                 <div
@@ -194,7 +194,7 @@ export const Group = ({
                         gap === 1 && 'tw-gap-1',
                         gap === 2 && 'tw-gap-2',
                         gap === 4 && 'tw-gap-4',
-                        gap === 8 && 'tw-gap-8'
+                        gap === 8 && 'tw-gap-8',
                     )}
                 >
                     {children}

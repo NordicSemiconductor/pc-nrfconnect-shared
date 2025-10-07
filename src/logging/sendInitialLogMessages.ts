@@ -31,7 +31,7 @@ export default async () => {
     logger.debug(`App ${name} v${currentVersion} (${source})`);
     logger.debug(`App path: ${installed.path}`);
     logger.debug(
-        `nRFConnect ${coreVersion}, required by the app is (${engineVersion})`
+        `nRFConnect ${coreVersion}, required by the app is (${engineVersion})`,
     );
     logger.debug(`nRFConnect path: ${corePath}`);
     logger.debug(`HomeDir: ${homeDir}`);
@@ -39,7 +39,7 @@ export default async () => {
 
     if (!udevInstalled()) {
         logger.warn(
-            'Required component nrf-udev is not detected. Install it from https://github.com/NordicSemiconductor/nrf-udev and restart the application'
+            'Required component nrf-udev is not detected. Install it from https://github.com/NordicSemiconductor/nrf-udev and restart the application',
         );
     }
 };

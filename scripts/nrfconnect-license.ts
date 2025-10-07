@@ -106,7 +106,7 @@ const asRegexp = (string: string) =>
             .replace(SPECIAL_REGEXP_CHARACTERS, '\\$1')
             .replace(LINE_ENDINGS, '\\r?\\n') // Because reference string and input string could have different EOLs
             .replace('__YEAR__', '\\d{4}')
-            .replace('__YEARS__', '(?<oldStartingYear>\\d{4})( - \\d{4})?')}`
+            .replace('__YEARS__', '(?<oldStartingYear>\\d{4})( - \\d{4})?')}`,
     );
 
 const checkLicense = () => {
@@ -153,7 +153,7 @@ const allSourceFiles = () =>
                 '.git',
             ],
             baseNameMatch: true,
-        }
+        },
     );
 
 const missesCorrectHeader = (file: string) =>
@@ -178,7 +178,7 @@ const checkHeaders = () => {
 
         fail(
             `These files do not contain the correct license, try fixing this` +
-                ` with running 'npx ${nrfconnectLicenseScript}':\n${listOfFiles}`
+                ` with running 'npx ${nrfconnectLicenseScript}':\n${listOfFiles}`,
         );
     }
 };
@@ -242,7 +242,7 @@ const updateHeader = (file: string) => {
     const COMMENT_START = '/*';
     if (!hadOutdatedLicense && remainingContent.startsWith(COMMENT_START)) {
         console.warn(
-            `The file '${file}' has a comment at the beginning which is not a known outdated license. Not touching this file.`
+            `The file '${file}' has a comment at the beginning which is not a known outdated license. Not touching this file.`,
         );
         return;
     }
@@ -254,12 +254,12 @@ const updateHeader = (file: string) => {
 
     writeFileSync(
         file,
-        shebangLine + newHeader + lineEnding + lineEnding + remainingContent
+        shebangLine + newHeader + lineEnding + lineEnding + remainingContent,
     );
     console.log(
         `${
             hadOutdatedLicense ? 'Updated' : 'Added'
-        } license header in file '${file}'`
+        } license header in file '${file}'`,
     );
 };
 

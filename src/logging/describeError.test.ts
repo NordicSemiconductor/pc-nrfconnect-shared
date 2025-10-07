@@ -32,7 +32,7 @@ describe('a reasonable string representation for an error', () => {
             describeError({
                 message: 'a message',
                 origin: SyntaxError('something'),
-            })
+            }),
         ).toBe('a message (Origin: SyntaxError: something)');
     });
 });

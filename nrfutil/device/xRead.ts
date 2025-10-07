@@ -115,14 +115,14 @@ const xRead = async (
     options: XReadOptions,
     core?: DeviceCore,
     onProgress?: OnProgress,
-    controller?: AbortController
+    controller?: AbortController,
 ) => {
     const result = await deviceSingleTaskEndOperation<MemoryReadRaw>(
         device,
         'x-read',
         onProgress,
         controller,
-        [...xReadOptionsToArgs(options), ...coreArg(core)]
+        [...xReadOptionsToArgs(options), ...coreArg(core)],
     );
 
     return toIntelHex(result.memoryData);

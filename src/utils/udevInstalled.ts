@@ -13,7 +13,7 @@ export default () => {
 
     try {
         execSync('dpkg -l nrf-udev');
-    } catch (error) {
+    } catch {
         return false;
     }
 

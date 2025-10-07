@@ -104,7 +104,7 @@ const createInitCommand = (
     blSize: number | undefined,
     appSize: number | undefined,
     hash: protobuf.Message | undefined,
-    isDebug = false
+    isDebug = false,
 ): protobuf.Message => {
     const initCommandMessage = root.lookupType('dfu.InitCommand');
     const initCommandPayload = {
@@ -126,7 +126,7 @@ const createInitCommand = (
 // Create command
 const createCommand = (
     opCode: number,
-    commandInput: protobuf.Message
+    commandInput: protobuf.Message,
 ): protobuf.Message => {
     const commandMessage = root.lookupType('dfu.Command');
     const commandPayload = {
@@ -142,7 +142,7 @@ const createCommand = (
 const createSignedCommand = (
     command: protobuf.Message,
     signatureType: number,
-    signature: []
+    signature: [],
 ): protobuf.Message => {
     const signedCommandMessage = root.lookupType('dfu.SignedCommand');
     const signedCommandPayload = {
@@ -158,7 +158,7 @@ const createSignedCommand = (
 // Create packet
 const createPacket = (
     command: protobuf.Message,
-    isSigned: boolean
+    isSigned: boolean,
 ): protobuf.Message => {
     const packetPayload = {
         [isSigned ? 'signedCommand' : 'command']: command,
@@ -197,7 +197,7 @@ const messageToBuffer = (type: string, message: protobuf.Message) => {
 export const createResetPacket = (
     timeout: number,
     signatureType: number,
-    signature: []
+    signature: [],
 ): protobuf.Message => {
     // Check input parameters
     if (timeout === undefined) {
@@ -242,7 +242,7 @@ export const createResetPacket = (
 export const createResetPacketBuffer = (
     timeout: number,
     signatureType: number,
-    signature: []
+    signature: [],
 ): Uint8Array => {
     const packet = createResetPacket(timeout, signatureType, signature);
     const buffer = messageToBuffer('Packet', packet);
@@ -280,7 +280,7 @@ export const createInitPacket = (
     hash: Buffer | undefined,
     isDebug: boolean,
     signatureType: number | undefined,
-    signature: [] | undefined
+    signature: [] | undefined,
 ): protobuf.Message => {
     // It checks both null and undefined here
     if (
@@ -293,7 +293,7 @@ export const createInitPacket = (
     // Create init command
     const hashInput = createHash(
         hashType || HashType.NO_HASH,
-        hash ?? Buffer.from([])
+        hash ?? Buffer.from([]),
     );
     const initCommand = createInitCommand(
         fwVersion,
@@ -304,7 +304,7 @@ export const createInitPacket = (
         blSize,
         appSize,
         hashInput,
-        isDebug
+        isDebug,
     );
     let command = createCommand(OpCode.INIT, initCommand);
     let isSigned = false;
@@ -351,7 +351,7 @@ export const createInitPacketBuffer = (
     hash: Buffer,
     isDebug: boolean,
     signatureType: number,
-    signature: []
+    signature: [],
 ): Buffer => {
     const packet = createInitPacket(
         fwVersion,
@@ -365,7 +365,7 @@ export const createInitPacketBuffer = (
         hash,
         isDebug,
         signatureType,
-        signature
+        signature,
     );
     const buffer = messageToBuffer('Packet', packet);
 
@@ -380,7 +380,7 @@ export const createInitPacketBuffer = (
  * @returns {Uint8Array} converted from init command packet buffer
  */
 export const createInitPacketUint8Array = (
-    packetParams: InitPacket
+    packetParams: InitPacket,
 ): Uint8Array => {
     const packet = createInitPacket(
         packetParams.fwVersion,
@@ -394,7 +394,7 @@ export const createInitPacketUint8Array = (
         packetParams.hash,
         packetParams.isDebug,
         packetParams.signatureType,
-        packetParams.signature
+        packetParams.signature,
     );
     const buffer = messageToBuffer('Packet', packet);
 

@@ -39,10 +39,10 @@ const mustBeEmpty = (array: string[], errorMessage: string) => {
 const mustContain = (
     existingEntries: readonly string[],
     mandatoryEntries: string[],
-    errorMessage: string
+    errorMessage: string,
 ) => {
     const missingFileEntries = mandatoryEntries.filter(
-        entry => !existingEntries.includes(entry)
+        entry => !existingEntries.includes(entry),
     );
 
     mustBeEmpty(missingFileEntries, errorMessage);
@@ -51,11 +51,11 @@ const mustContain = (
 const mustContainOneOf = (
     existingEntries: readonly string[],
     oneOfTheseEntriesIsMandatory: string[],
-    errorMessage: string
+    errorMessage: string,
 ) => {
     if (
         !oneOfTheseEntriesIsMandatory.some(entry =>
-            existingEntries.includes(entry)
+            existingEntries.includes(entry),
         )
     ) {
         fail(`${errorMessage}: ${format(oneOfTheseEntriesIsMandatory)}`);
@@ -84,7 +84,7 @@ const checkRepoUrl = (packageJson: PackageJsonApp) => {
 
     if (stripped(realGitUrl) !== stripped(declaredGitUrl)) {
         fail(
-            `package.json says the repository is located at \`${declaredGitUrl}\` but \`git remote get-url origin\` says it is at \`${realGitUrl}\`.`
+            `package.json says the repository is located at \`${declaredGitUrl}\` but \`git remote get-url origin\` says it is at \`${realGitUrl}\`.`,
         );
     }
 };
@@ -105,19 +105,19 @@ const checkFileProperty = (packageJson: PackageJsonApp) => {
     mustContain(
         packageJson.files ?? [],
         ['LICENSE', 'dist/', 'Changelog.md'],
-        'These entries are missing in the property `files` in package.json'
+        'These entries are missing in the property `files` in package.json',
     );
 
     mustContainOneOf(
         packageJson.files ?? [],
         ['resources/*', 'resources/icon.*', 'resources/'],
-        'One of these entries must be in the property `files` in package.json'
+        'One of these entries must be in the property `files` in package.json',
     );
 };
 
 const readAndCheckPackageJson = () => {
     const packageJsonResult = parsePackageJsonApp(
-        readFileSync('./package.json', 'utf8')
+        readFileSync('./package.json', 'utf8'),
     );
 
     if (!packageJsonResult.success) {
@@ -135,7 +135,7 @@ const readAndCheckPackageJson = () => {
 
 const checkChangelog = (
     packageJson: PackageJsonApp,
-    checkChangelogHasCurrentEntry: boolean
+    checkChangelogHasCurrentEntry: boolean,
 ) => {
     if (!existsSync('./Changelog.md')) {
         fail('The mandatory file `Changelog.md` is missing.');
@@ -149,7 +149,7 @@ const checkChangelog = (
         const latestChangelogEntry = getLatestEntry();
         if (!latestChangelogEntry.header.includes(packageJson.version)) {
             fail(
-                `Found no entry for the current version packageJson.version ${packageJson.version} in \`Changelog.md\`.`
+                `Found no entry for the current version packageJson.version ${packageJson.version} in \`Changelog.md\`.`,
             );
         }
     }
@@ -158,7 +158,7 @@ const checkChangelog = (
 const filesIn = (directory: string) => {
     try {
         return readdirSync(directory);
-    } catch (error) {
+    } catch {
         fail(`Unable to read directory \`${directory}\`.`);
         // Unreachable, but not understood by Typescript
         throw new Error();
@@ -169,7 +169,7 @@ const checkMandatoryResources = () => {
     mustContain(
         filesIn('./resources'),
         ['icon.svg', 'icon.icns', 'icon.ico', 'icon.png'],
-        'In the directory `resources` these files are missing'
+        'In the directory `resources` these files are missing',
     );
 };
 

@@ -50,17 +50,16 @@ const store = (appReducer?: Reducer) =>
             }),
     });
 
-// Needed only to infer the types below
-const concreteStore = store();
-
 export type AppThunk<AppLayout = RootState, ReturnType = void> = ThunkAction<
     ReturnType,
     AppLayout,
     unknown,
     AnyAction
 >;
-export type RootState = ReturnType<typeof concreteStore.getState>;
-export type AppDispatch = typeof concreteStore.dispatch;
+
+type Store = ReturnType<typeof store>;
+export type RootState = ReturnType<Store['getState']>;
+export type AppDispatch = Store['dispatch'];
 
 export interface NrfConnectState<AppState> extends RootState {
     app: AppState;

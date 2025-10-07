@@ -20,7 +20,7 @@ export default class AppTransport extends Transport {
 
         if (!options.onLogEntry) {
             throw new Error(
-                'Property onLogEntry was not provided to AppTransport'
+                'Property onLogEntry was not provided to AppTransport',
             );
         }
 

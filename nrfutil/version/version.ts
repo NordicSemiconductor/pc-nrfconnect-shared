@@ -33,15 +33,15 @@ export type DiscriminatedVersion =
     | StringVersion;
 
 export const isSemanticVersion = (
-    version?: DiscriminatedVersion
+    version?: DiscriminatedVersion,
 ): version is SemanticVersion => version?.versionFormat === 'semantic';
 
 export const isIncrementalVersion = (
-    version?: DiscriminatedVersion
+    version?: DiscriminatedVersion,
 ): version is IncrementalVersion => version?.versionFormat === 'incremental';
 
 export const isStringVersion = (
-    version?: DiscriminatedVersion
+    version?: DiscriminatedVersion,
 ): version is StringVersion => version?.versionFormat === 'string';
 
 export const versionToString = (version: DiscriminatedVersion) => {

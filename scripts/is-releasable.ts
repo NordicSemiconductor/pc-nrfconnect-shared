@@ -25,7 +25,7 @@ const fail = (message: string) => {
 const assertPackageJsonIsCorrect = (expectedVersionNumber: number) => {
     if (packageJson.version !== `${expectedVersionNumber}.0.0`) {
         fail(
-            `Version number in package.json must be '${expectedVersionNumber}.0.0' but is '${packageJson.version}'`
+            `Version number in package.json must be '${expectedVersionNumber}.0.0' but is '${packageJson.version}'`,
         );
     }
 };
@@ -44,7 +44,7 @@ const assertLatestHeaderIsCorrect = (expectedVersionNumber: number) => {
 
     if (expectedHeaderline !== actualHeaderline) {
         fail(
-            `Latest entry in Changelog.md is not as expected:\n  Expected: ${expectedHeaderline}\n  Actual:   ${actualHeaderline}`
+            `Latest entry in Changelog.md is not as expected:\n  Expected: ${expectedHeaderline}\n  Actual:   ${actualHeaderline}`,
         );
     }
 };
@@ -61,7 +61,7 @@ const main = () => {
     assertChangelogIsCorrect(releaseNumbers.next);
 
     console.log(
-        `The currently released version is ${releaseNumbers.latest}, so the next one will be ${releaseNumbers.next}.\n`
+        `The currently released version is ${releaseNumbers.latest}, so the next one will be ${releaseNumbers.next}.\n`,
     );
 };
 

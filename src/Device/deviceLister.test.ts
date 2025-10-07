@@ -63,16 +63,16 @@ describe('hasValidDeviceTraits Tests', () => {
 
     test('filter all false should be valid', () => {
         expect(
-            hasValidDeviceTraits(allFalseDeviceTraits, allFalseDeviceTraits)
+            hasValidDeviceTraits(allFalseDeviceTraits, allFalseDeviceTraits),
         ).toBeTruthy();
         expect(
-            hasValidDeviceTraits(someTrueDeviceTraits1, allFalseDeviceTraits)
+            hasValidDeviceTraits(someTrueDeviceTraits1, allFalseDeviceTraits),
         ).toBeTruthy();
     });
 
     test('deviceTraits complete mismatch invalid', () => {
         expect(
-            hasValidDeviceTraits(someTrueDeviceTraits1, someTrueDeviceTraits3)
+            hasValidDeviceTraits(someTrueDeviceTraits1, someTrueDeviceTraits3),
         ).toBeFalsy();
 
         expect(hasValidDeviceTraits({}, someTrueDeviceTraits3)).toBeFalsy();
@@ -80,7 +80,7 @@ describe('hasValidDeviceTraits Tests', () => {
 
     test('deviceTraits with at lease one match is valid', () => {
         expect(
-            hasValidDeviceTraits(someTrueDeviceTraits1, someTrueDeviceTraits2)
+            hasValidDeviceTraits(someTrueDeviceTraits1, someTrueDeviceTraits2),
         ).toBeTruthy();
     });
 });

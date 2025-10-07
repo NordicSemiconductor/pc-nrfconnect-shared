@@ -21,7 +21,7 @@ const isListEvent = (event: HotplugEvent | ListEvent): event is ListEvent =>
     (event as ListEvent).devices !== undefined;
 
 const isHotplugEvent = (
-    event: HotplugEvent | ListEvent
+    event: HotplugEvent | ListEvent,
 ): event is HotplugEvent => (event as HotplugEvent).event !== undefined;
 
 export default async (
@@ -32,7 +32,7 @@ export default async (
         onDeviceArrived: (device: NrfutilDevice) => void;
         onDeviceLeft: (id: number) => void;
     },
-    timeout?: number
+    timeout?: number,
 ) => {
     const args = [
         ...deviceTraitsToArgs(traits),

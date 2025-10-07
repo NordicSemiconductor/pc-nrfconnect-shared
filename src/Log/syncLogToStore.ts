@@ -27,7 +27,7 @@ export default (dispatch: AppDispatch) => {
     const LOG_UPDATE_INTERVAL = 400;
     const logListener = setInterval(
         addLogEntriesToStore(dispatch),
-        LOG_UPDATE_INTERVAL
+        LOG_UPDATE_INTERVAL,
     );
 
     return () => {

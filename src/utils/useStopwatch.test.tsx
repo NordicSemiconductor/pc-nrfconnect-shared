@@ -34,7 +34,7 @@ describe('Stop Watch', () => {
     };
 
     const expectZeroElapsedTime = (
-        stopwatch: ReturnType<typeof useStopWatch>
+        stopwatch: ReturnType<typeof useStopWatch>,
     ) => {
         expect(stopwatch.time).toBe(0);
         expect(stopwatch.seconds).toBe(0);
@@ -77,7 +77,6 @@ describe('Stop Watch', () => {
 
         act(() => {
             stopwatch.pause();
-            stopwatch;
         });
 
         expect(stopwatch.time).toBe(433);
@@ -107,7 +106,6 @@ describe('Stop Watch', () => {
 
         act(() => {
             stopwatch.pause();
-            stopwatch;
         });
 
         expect(stopwatch.time).toBe(500);
@@ -121,7 +119,6 @@ describe('Stop Watch', () => {
 
         act(() => {
             stopwatch.start(500);
-            stopwatch;
         });
 
         expect(timerMock.setTimeout).toBeCalledTimes(2);
@@ -153,7 +150,6 @@ describe('Stop Watch', () => {
 
         act(() => {
             stopwatch.start();
-            stopwatch;
         });
 
         expect(timerMock.setTimeout).toBeCalledTimes(1);
@@ -178,7 +174,6 @@ describe('Stop Watch', () => {
 
         act(() => {
             appCallback();
-            stopwatch;
         });
 
         expect(timerMock.setTimeout).nthCalledWith(2, expect.anything(), 800);
@@ -193,7 +188,6 @@ describe('Stop Watch', () => {
         mockNow.mockReturnValue(6800);
         act(() => {
             stopwatch.reset();
-            stopwatch;
         });
 
         expect(timerMock.setTimeout).nthCalledWith(3, expect.anything(), 1000);
@@ -216,7 +210,6 @@ describe('Stop Watch', () => {
 
         act(() => {
             appCallback();
-            stopwatch;
         });
 
         expect(timerMock.setTimeout).toBeCalledTimes(2);
@@ -243,7 +236,6 @@ describe('Stop Watch', () => {
 
         act(() => {
             appCallback();
-            stopwatch;
         });
 
         expect(timerMock.setTimeout).toBeCalledTimes(2);
@@ -271,7 +263,6 @@ describe('Stop Watch', () => {
 
         act(() => {
             appCallback();
-            stopwatch;
         });
 
         expect(timerMock.setTimeout).toBeCalledTimes(2);
@@ -299,7 +290,6 @@ describe('Stop Watch', () => {
 
         act(() => {
             appCallback();
-            stopwatch;
         });
 
         expect(stopwatch.time).toBe(176588500);

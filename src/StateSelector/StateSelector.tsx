@@ -47,7 +47,7 @@ const SwitchButton: React.FC<{
                 'tw-border-gray-700 tw-bg-white tw-text-gray-700',
             variant === 'unset' &&
                 'tw-border-white tw-bg-gray-700 tw-text-white',
-            active && 'active tw-z-[1]'
+            active && 'active tw-z-[1]',
         )}`}
         onClick={onClick}
         disabled={disabled}

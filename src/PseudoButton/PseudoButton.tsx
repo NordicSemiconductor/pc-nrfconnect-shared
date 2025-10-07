@@ -19,7 +19,7 @@ const invokeIfSpaceOrEnterPressed =
 
 const blurAndInvoke =
     (
-        onClick: React.MouseEventHandler<HTMLElement>
+        onClick: React.MouseEventHandler<HTMLElement>,
     ): React.MouseEventHandler<HTMLElement> =>
     (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();

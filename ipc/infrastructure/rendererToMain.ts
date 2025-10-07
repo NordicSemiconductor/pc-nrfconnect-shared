@@ -16,7 +16,7 @@ export const on =
     <T extends (...args: never[]) => void>(channel: string) =>
     (handler: T) =>
         ipcMain.on(channel, (_event, ...args: unknown[]) =>
-            handler(...(args as Parameters<T>))
+            handler(...(args as Parameters<T>)),
         );
 
 // Invoke
@@ -30,10 +30,10 @@ export const handle =
     (
         handler:
             | ((...args: Parameters<T>) => ReturnType<T>)
-            | ((...args: Parameters<T>) => Promise<ReturnType<T>>)
+            | ((...args: Parameters<T>) => Promise<ReturnType<T>>),
     ) =>
         ipcMain.handle(channel, (_event, ...args: unknown[]) =>
-            handler(...(args as Parameters<T>))
+            handler(...(args as Parameters<T>)),
         );
 
 export const handleWithSender =
@@ -44,8 +44,8 @@ export const handleWithSender =
             | ((
                   sender: WebContents,
                   ...args: Parameters<T>
-              ) => Promise<ReturnType<T>>)
+              ) => Promise<ReturnType<T>>),
     ) =>
         ipcMain.handle(channel, ({ sender }, ...args: unknown[]) =>
-            handler(sender, ...(args as Parameters<T>))
+            handler(sender, ...(args as Parameters<T>)),
         );

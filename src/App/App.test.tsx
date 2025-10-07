@@ -43,7 +43,7 @@ const renderApp = (panes: Pane[]) => {
             deviceSelect={dummyNode}
             sidePanel={dummyNode}
             panes={panes}
-        />
+        />,
     );
 };
 

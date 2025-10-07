@@ -72,20 +72,20 @@ const generalInfoReport = async () => {
 
     moduleVersions.forEach(moduleVersion => {
         result.push(
-            `    - nrfutil ${moduleVersion.name}: ${moduleVersion.version}`
+            `    - nrfutil ${moduleVersion.name}: ${moduleVersion.version}`,
         );
         if (moduleVersion.name === 'device') {
             const dependencies = moduleVersion.dependencies;
             result.push(
                 ...[
                     `    - nrf-probe: ${describeVersion(
-                        findDependency('nrf-probe', dependencies)
+                        findDependency('nrf-probe', dependencies),
                     )}`,
                     `    - SEGGER J-Link: ${describeVersion(
-                        findDependency('JlinkARM', dependencies)
+                        findDependency('JlinkARM', dependencies),
                     )}`,
                     '',
-                ]
+                ],
             );
         }
     });
@@ -99,7 +99,7 @@ const allDevicesReport = (allDevices: Device[] = []) => [
         d =>
             `    - ${d.serialNumber} ${
                 d.devkit?.boardVersion || ''
-            }: ${d.serialPorts?.map(s => s.comName).join(', ')}`
+            }: ${d.serialPorts?.map(s => s.comName).join(', ')}`,
     ),
     '',
 ];
@@ -136,7 +136,7 @@ export const generateSystemReport = async (
     timestamp: string,
     allDevices?: Device[],
     currentDevice?: Device,
-    currentSerialNumber?: string
+    currentSerialNumber?: string,
 ) =>
     [
         `# nRFConnect System Report - ${timestamp}`,
@@ -150,7 +150,7 @@ export const generateSystemReport = async (
 export default async (
     allDevices: Device[],
     currentSerialNumber: string,
-    currentDevice?: Device
+    currentDevice?: Device,
 ) => {
     logger.info('Generating system report...');
     const timestamp = new Date().toISOString().replace(/:/g, '-');
@@ -158,7 +158,7 @@ export default async (
         timestamp,
         allDevices,
         currentDevice,
-        currentSerialNumber
+        currentSerialNumber,
     );
 
     const fileName = `nrfconnect-system-report-${timestamp}.txt`;

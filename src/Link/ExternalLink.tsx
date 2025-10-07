@@ -16,7 +16,7 @@ export default ({ href, label }: { href: string; label?: string }) => (
         href={href}
         title={label ? href : undefined}
         className={classNames(
-            'tw-preflight tw-text-nordicBlue hover:tw-underline'
+            'tw-preflight tw-text-nordicBlue hover:tw-underline',
         )}
         onClick={event => {
             telemetry.sendEvent('Visiting link', { href });

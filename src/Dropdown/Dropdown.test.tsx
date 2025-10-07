@@ -28,7 +28,7 @@ describe('Dropdown', () => {
                 items={items}
                 onSelect={jest.fn()}
                 selectedItem={items[0]}
-            />
+            />,
         );
         expect(screen.getAllByText('Foo').length).toBe(2); // default selected + item
         expect(screen.getByText('Bar')).toBeInTheDocument();
@@ -42,7 +42,7 @@ describe('Dropdown', () => {
                 items={items}
                 onSelect={onSelect}
                 selectedItem={items[0]}
-            />
+            />,
         );
         const dropdownItem = screen.getByText(item.label);
         fireEvent.click(dropdownItem);
@@ -55,7 +55,7 @@ describe('Dropdown', () => {
                 items={items}
                 onSelect={jest.fn()}
                 selectedItem={items[1]}
-            />
+            />,
         );
         expect(screen.getAllByText('Bar').length).toBe(2);
     });

@@ -47,7 +47,7 @@ const StartStopButton: FC<Props> = ({
             className={classNames(
                 'start-stop',
                 `${started ? 'active-animation' : ''}`,
-                className
+                className,
             )}
             disabled={disabled}
             size={large ? 'lg' : 'sm'}

@@ -38,14 +38,14 @@ const updatePackageJson = (nextReleaseNumber: number) => {
 
     if (nextVersionString === currentVersion) {
         console.log(
-            `- The version in \`package.json\` is already \`${currentVersion}\`, no need to change it.`
+            `- The version in \`package.json\` is already \`${currentVersion}\`, no need to change it.`,
         );
         return false;
     }
 
     npm('pkg', 'set', `version=${nextVersionString}`);
     console.log(
-        `- Updated the version in \`package.json\` to \`${nextVersionString}\`.`
+        `- Updated the version in \`package.json\` to \`${nextVersionString}\`.`,
     );
 
     return true;
@@ -57,12 +57,12 @@ const updateChangelog = (nextReleaseNumber: string) => {
     const changelog = readFileSync('Changelog.md', { encoding: 'utf-8' });
 
     const match = changelog.match(
-        /(?<beginning>.*?)^## (?<header>.*?)$(?<ending>.*)/ms
+        /(?<beginning>.*?)^## (?<header>.*?)$(?<ending>.*)/ms,
     );
 
     if (match?.groups == null) {
         console.error(
-            'x Unable to correctly parse `Changelog.md`, to play it safe I am not changing it.'
+            'x Unable to correctly parse `Changelog.md`, to play it safe I am not changing it.',
         );
         return { updated: false, error: true };
     }
@@ -72,7 +72,7 @@ const updateChangelog = (nextReleaseNumber: string) => {
     const correctHeader = `${nextReleaseNumber} - ${withoutTime(new Date())}`;
     if (header === correctHeader) {
         console.log(
-            `- The latest entry in \`Changelog.md\` already has the header \`${header}\`, no need to change it.`
+            `- The latest entry in \`Changelog.md\` already has the header \`${header}\`, no need to change it.`,
         );
         return { updated: false, error: false };
     }
@@ -84,17 +84,17 @@ const updateChangelog = (nextReleaseNumber: string) => {
         writeFileSync(
             'Changelog.md',
             `${beginning}## ${correctHeader}${ending}`,
-            { encoding: 'utf-8' }
+            { encoding: 'utf-8' },
         );
         console.log(
-            `- Updated the header of the latest entry in \`Changelog.md\` to \`${correctHeader}\`.`
+            `- Updated the header of the latest entry in \`Changelog.md\` to \`${correctHeader}\`.`,
         );
 
         return { updated: true, error: false };
     }
 
     console.error(
-        `x The latest entry in \`Changelog.md\` is not named \`Unreleased\` or \`${nextReleaseNumber} - Unreleased\`, to play it safe I am not changing it.`
+        `x The latest entry in \`Changelog.md\` is not named \`Unreleased\` or \`${nextReleaseNumber} - Unreleased\`, to play it safe I am not changing it.`,
     );
 
     return { updated: false, error: true };
@@ -104,12 +104,12 @@ const main = () => {
     const releaseNumbers = getReleaseNumbers();
 
     console.log(
-        `The currently released version is ${releaseNumbers.latest}, so the next one will be ${releaseNumbers.next}.\n`
+        `The currently released version is ${releaseNumbers.latest}, so the next one will be ${releaseNumbers.next}.\n`,
     );
 
     const updatedPackageJson = updatePackageJson(releaseNumbers.next);
     const { updated: updatedChangelog, error } = updateChangelog(
-        `${releaseNumbers.next}.0.0`
+        `${releaseNumbers.next}.0.0`,
     );
 
     if (!updatedPackageJson && !updatedChangelog) {

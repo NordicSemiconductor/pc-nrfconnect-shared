@@ -17,7 +17,7 @@ const launchNextCommand = () => {
         spawnSync(command, args, {
             shell: true,
             stdio: 'inherit',
-        }).status ?? undefined
+        }).status ?? undefined,
     );
 };
 
@@ -27,7 +27,7 @@ const assertNoTypeScriptFilesExist = () => {
     klaw('.', { filter: excludeNodeModules }).on('data', ({ path }) => {
         if (path.endsWith('.ts') || path.endsWith('.tsx')) {
             console.log(
-                "Your project contains TypeScript files (with the file ending .ts or .tsx), so it also must contain a file 'tsconfig.json'.\n"
+                "Your project contains TypeScript files (with the file ending .ts or .tsx), so it also must contain a file 'tsconfig.json'.\n",
             );
             process.exit(1);
         }

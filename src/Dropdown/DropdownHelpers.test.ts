@@ -31,7 +31,7 @@ describe('getSelectedDropdownItem', () => {
     it('returns the notFound item if value is not found', () => {
         const notFound = { label: 'not found', value: 'not found' };
         expect(getSelectedDropdownItem(itemList, 'unknown', notFound)).toBe(
-            notFound
+            notFound,
         );
     });
 

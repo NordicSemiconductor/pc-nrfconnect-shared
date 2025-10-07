@@ -54,7 +54,7 @@ const Handle: FC<Props> = ({
     const onChangeCompleteRef = useAutoupdatingRef(onChangeComplete);
 
     const grabHandle: MouseEventHandler<HTMLDivElement> = (
-        event: React.MouseEvent
+        event: React.MouseEvent,
     ) => {
         const sliderWidthStillUnknown = sliderWidth == null;
         if (sliderWidthStillUnknown) return;
@@ -78,7 +78,7 @@ const Handle: FC<Props> = ({
 
         const oldPercentage = onMouseDragStart.current?.percentage as number;
         const newPercentage = constrainedToPercentage(
-            oldPercentage - percentageChange
+            oldPercentage - percentageChange,
         );
 
         const lastValue = onMouseDragStart.current?.lastValue as number;
@@ -87,7 +87,7 @@ const Handle: FC<Props> = ({
             lastValue,
             newPercentage,
             range,
-            event.movementX > 0
+            event.movementX > 0,
         );
         onMouseDragStart.current = {
             mousePosition: oldMousePosition,

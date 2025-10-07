@@ -27,7 +27,7 @@ describe('flatObject', () => {
                 top: true,
                 nested: { once: 1 },
                 and: { nested: { by: { multiple: 'levels' } } },
-            })
+            }),
         ).toEqual({
             top: true,
             'nested.once': 1,

@@ -50,7 +50,7 @@ const isValid = (value: number, rangeOrValues: RangeOrValues) =>
 const nextInValues = (
     current: number,
     values: Values,
-    steps: number
+    steps: number,
 ): number | undefined => {
     const currentIndex = values.indexOf(current);
     const newIndex = currentIndex + steps;
@@ -60,7 +60,7 @@ const nextInValues = (
 
 const nextInRange = (current: number, range: Range, steps: number) => {
     const newValue = Number(
-        (current + steps * getStep(range)).toFixed(range.decimals)
+        (current + steps * getStep(range)).toFixed(range.decimals),
     );
 
     if (newValue >= range.min && newValue <= range.max) {
@@ -71,7 +71,7 @@ const nextInRange = (current: number, range: Range, steps: number) => {
 const changeValueStepwise = (
     current: number,
     rangeOrValues: RangeOrValues,
-    steps: number
+    steps: number,
 ) => {
     const nextValue = isValues(rangeOrValues)
         ? nextInValues(current, rangeOrValues, steps)
@@ -103,8 +103,8 @@ const calculateMaxCharactersFromRange = (range: RangeOrValues): number => {
             ...range.map(v =>
                 Number.isFinite(v)
                     ? handleInfinityToString(v).length
-                    : v.toString().length
-            )
+                    : v.toString().length,
+            ),
         );
     }
 
@@ -147,19 +147,19 @@ export default ({
             }
             onKeyboardIncrementAction={() =>
                 handleInfinityToString(
-                    changeValueStepwise(value, range, 1)
+                    changeValueStepwise(value, range, 1),
                 ).toString()
             }
             onKeyboardDecrementAction={() =>
                 handleInfinityToString(
-                    changeValueStepwise(value, range, -1)
+                    changeValueStepwise(value, range, -1),
                 ).toString()
             }
             textAlignLeft={textAlignLeft}
             isValid={newValue => {
                 const validity = isValid(
                     handleInfinityToNumber(newValue),
-                    range
+                    range,
                 );
                 if (onValidityChanged != null) {
                     // Then propagate the validity back to parent
@@ -171,21 +171,21 @@ export default ({
             preventDefaultInvalidStyle={preventDefaultInvalidStyle}
             minSize={
                 preAllocateSize
-                    ? minSize ??
+                    ? (minSize ??
                       Math.max(
                           ...(isValues(range)
                               ? range.map(v =>
                                     Number.isFinite(v)
                                         ? handleInfinityToString(v)
-                                        : v.toString()
+                                        : v.toString(),
                                 )
                               : [range.min, range.max].map(v =>
                                     Number.isFinite(v)
                                         ? v.toFixed(range.decimals)
-                                        : handleInfinityToString(v)
+                                        : handleInfinityToString(v),
                                 )
-                          ).map(v => v.length)
-                      )
+                          ).map(v => v.length),
+                      ))
                     : undefined
             }
             maxLength={calculateMaxCharactersFromRange(range)}

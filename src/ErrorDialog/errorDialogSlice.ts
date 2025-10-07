@@ -12,7 +12,7 @@ const appendIfNew = (messages: ErrorMessage[], message: ErrorMessage) => {
     const messageExists = messages.some(
         existingMessage =>
             existingMessage.message === message.message &&
-            existingMessage.detail === message.detail
+            existingMessage.detail === message.detail,
     );
 
     return messageExists ? messages : [...messages, message];
@@ -47,7 +47,7 @@ const slice = createSlice({
             prepare: (
                 message: string,
                 errorResolutions?: ErrorResolutions,
-                detail?: string
+                detail?: string,
             ) => ({
                 payload: { message: { message, detail }, errorResolutions },
             }),
@@ -58,7 +58,7 @@ const slice = createSlice({
                 }: PayloadAction<{
                     message: ErrorMessage;
                     errorResolutions?: ErrorResolutions;
-                }>
+                }>,
             ) => {
                 state.isVisible = true;
                 state.errorResolutions = error.errorResolutions;

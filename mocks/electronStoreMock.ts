@@ -11,7 +11,7 @@ export default jest.fn(() => {
     return {
         get: jest.fn(
             (key: string, defaultValue?: unknown) =>
-                cache.get(key) ?? defaultValue
+                cache.get(key) ?? defaultValue,
         ),
         set: jest.fn(cache.set.bind(cache)),
         clear: jest.fn(cache.clear.bind(cache)),

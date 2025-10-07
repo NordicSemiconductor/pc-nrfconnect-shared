@@ -40,7 +40,7 @@ const CORE_VERSION_FOR_LEGACY_APPS = '8.1.1';
 export class NrfutilSandbox {
     private readonly onLoggingHandlers: ((
         logging: LogMessage,
-        pid?: number
+        pid?: number,
     ) => void)[] = [];
     private logLevel: LogLevel = isDevelopment ? 'error' : 'off';
 
@@ -53,13 +53,13 @@ export class NrfutilSandbox {
         module: string,
         version?: string,
         coreVersion?: string,
-        onProgress?: OnProgress
+        onProgress?: OnProgress,
     ) {
         const sandbox = new NrfutilSandbox(
             baseDir,
             module,
             versionToInstall(module, version),
-            coreVersionsToInstall(coreVersion)
+            coreVersionsToInstall(coreVersion),
         );
 
         onProgress?.(convertNrfutilProgress({ progressPercentage: 0 }));
@@ -77,7 +77,7 @@ export class NrfutilSandbox {
         private readonly baseDir: string,
         private readonly module: string,
         private readonly version: string,
-        coreVersion?: string // Must only be undefined when the launcher creates a sandbox for a legacy app, which does not specify the required core version
+        coreVersion?: string, // Must only be undefined when the launcher creates a sandbox for a legacy app, which does not specify the required core version
     ) {
         this.sandboxPath = path.join(
             this.baseDir,
@@ -87,7 +87,7 @@ export class NrfutilSandbox {
                 : []),
             ...(coreVersion != null ? [coreVersion] : []),
             this.module,
-            this.version
+            this.version,
         );
 
         this.coreVersion = coreVersion ?? CORE_VERSION_FOR_LEGACY_APPS;
@@ -153,8 +153,8 @@ export class NrfutilSandbox {
                 'bin',
                 `nrfutil-${this.module}${
                     os.platform() === 'win32' ? '.exe' : ''
-                }`
-            )
+                }`,
+            ),
         );
     }
 
@@ -192,7 +192,7 @@ export class NrfutilSandbox {
             this.coreVersion,
             'self-upgrade',
             ['--to-version', this.coreVersion],
-            onProgress
+            onProgress,
         );
 
     public installNrfUtilCommand = (onProgress?: OnProgress) =>
@@ -201,7 +201,7 @@ export class NrfutilSandbox {
             this.version,
             'install',
             [`${this.module}=${this.version}`, '--force'],
-            onProgress
+            onProgress,
         );
 
     public install = async (
@@ -212,11 +212,11 @@ export class NrfutilSandbox {
         try {
             await this.spawnNrfutil(...args);
             getNrfutilLogger()?.info(
-                `Successfully installed nrfutil ${module} version: ${version}`
+                `Successfully installed nrfutil ${module} version: ${version}`,
             );
         } catch (error) {
             const errorMessage = `Error while installing nrfutil ${module} version ${version}: ${describeError(
-                error
+                error,
             )}`;
 
             getNrfutilLogger()?.error(errorMessage);
@@ -233,7 +233,7 @@ export class NrfutilSandbox {
         onTaskBegin?: OnTaskBegin,
         onTaskEnd?: OnTaskEnd<Result>,
         controller?: AbortController,
-        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
+        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv,
     ) =>
         this.spawnNrfutil<Result>(
             this.module,
@@ -242,7 +242,7 @@ export class NrfutilSandbox {
             onTaskBegin,
             onTaskEnd,
             controller,
-            editEnv
+            editEnv,
         );
 
     private spawnNrfutilCommand = (
@@ -251,7 +251,7 @@ export class NrfutilSandbox {
         parser: (data: Buffer, pid?: number) => Buffer | undefined,
         onStdError: (data: Buffer, pid?: number) => void,
         controller?: AbortController,
-        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
+        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv,
     ) =>
         this.spawnCommand(
             this.getNrfutilExePath(),
@@ -266,7 +266,7 @@ export class NrfutilSandbox {
             parser,
             onStdError,
             controller,
-            editEnv
+            editEnv,
         );
 
     private spawnNrfutil = async <Result>(
@@ -276,7 +276,7 @@ export class NrfutilSandbox {
         onTaskBegin?: OnTaskBegin,
         onTaskEnd?: OnTaskEnd<Result>,
         controller?: AbortController,
-        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
+        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv,
     ) => {
         let stdErr: string | undefined;
         let pid: number | undefined;
@@ -285,7 +285,7 @@ export class NrfutilSandbox {
             this.log,
             onProgress,
             onTaskBegin,
-            onTaskEnd
+            onTaskEnd,
         );
 
         try {
@@ -298,7 +298,7 @@ export class NrfutilSandbox {
                     stdErr = (stdErr ?? '') + data.toString();
                 },
                 controller,
-                editEnv
+                editEnv,
             );
 
             if (stdErr || parser.hasFailures()) throw new Error('Task failed.');
@@ -310,11 +310,11 @@ export class NrfutilSandbox {
             error.message = collectErrorMessages(
                 error.message,
                 stdErr,
-                parser.errorMessage()
+                parser.errorMessage(),
             );
 
             telemetry.sendErrorReport(
-                `${this.pidIfTraceLogging(pid)}${describeError(error)}`
+                `${this.pidIfTraceLogging(pid)}${describeError(error)}`,
             );
             throw error;
         }
@@ -326,16 +326,16 @@ export class NrfutilSandbox {
         parser: (data: Buffer, pid?: number) => Buffer | undefined,
         onStdError: (data: Buffer, pid?: number) => void,
         controller?: AbortController,
-        editEnv: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv = env => env
+        editEnv: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv = env => env,
     ) =>
         new Promise<void>((resolve, reject) => {
             if (controller?.signal.aborted) {
                 reject(
                     new Error(
                         `Aborted before start executing ${path.basename(
-                            command
-                        )} ${JSON.stringify(args)}`
-                    )
+                            command,
+                        )} ${JSON.stringify(args)}`,
+                    ),
                 );
                 return;
             }
@@ -359,7 +359,7 @@ export class NrfutilSandbox {
 
             controller?.signal.addEventListener('abort', listener);
 
-            let buffer = Buffer.from('');
+            let buffer: Buffer<ArrayBufferLike> = Buffer.from('');
 
             nrfutil.stdout.on('data', (data: Buffer) => {
                 if (controller?.signal.aborted) return;
@@ -387,9 +387,9 @@ export class NrfutilSandbox {
                     reject(
                         new Error(
                             `Aborted ongoing ${path.basename(
-                                command
-                            )} ${JSON.stringify(args)}`
-                        )
+                                command,
+                            )} ${JSON.stringify(args)}`,
+                        ),
                     );
                     return;
                 }
@@ -409,7 +409,7 @@ export class NrfutilSandbox {
         onTaskBegin?: OnTaskBegin,
         onTaskEnd?: OnTaskEnd<Result>,
         controller?: AbortController,
-        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
+        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv,
     ) =>
         this.execNrfutilCommand<Result>(
             this.module,
@@ -418,7 +418,7 @@ export class NrfutilSandbox {
             onTaskBegin,
             onTaskEnd,
             controller,
-            editEnv
+            editEnv,
         );
 
     private execNrfutilCommand = async <Result>(
@@ -428,7 +428,7 @@ export class NrfutilSandbox {
         onTaskBegin?: OnTaskBegin,
         onTaskEnd?: OnTaskEnd<Result>,
         controller?: AbortController,
-        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
+        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv,
     ) => {
         let stdErr: string | undefined;
         let pid: number | undefined;
@@ -437,7 +437,7 @@ export class NrfutilSandbox {
             this.log,
             onProgress,
             onTaskBegin,
-            onTaskEnd
+            onTaskEnd,
         );
 
         try {
@@ -450,7 +450,7 @@ export class NrfutilSandbox {
                     stdErr = (stdErr ?? '') + data.toString();
                 },
                 controller,
-                editEnv
+                editEnv,
             );
 
             if (stdErr || parser.hasFailures()) throw new Error('Task failed.');
@@ -462,11 +462,11 @@ export class NrfutilSandbox {
             error.message = collectErrorMessages(
                 error.message,
                 stdErr,
-                parser.errorMessage()
+                parser.errorMessage(),
             );
 
             telemetry.sendErrorReport(
-                `${this.pidIfTraceLogging(pid)}${describeError(error)}`
+                `${this.pidIfTraceLogging(pid)}${describeError(error)}`,
             );
             throw error;
         }
@@ -478,7 +478,7 @@ export class NrfutilSandbox {
         onData: (data: Buffer, pid?: number) => void,
         onStdError: (data: Buffer, pid?: number) => void,
         controller?: AbortController,
-        editEnv: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv = env => env
+        editEnv: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv = env => env,
     ) =>
         new Promise<void>((resolve, reject) => {
             let aborting = false;
@@ -495,7 +495,7 @@ export class NrfutilSandbox {
                 getNrfutilLogger()?.info(
                     `Aborting the ongoing command nrfutil ${
                         this.module
-                    } ${command} ${JSON.stringify(args)}`
+                    } ${command} ${JSON.stringify(args)}`,
                 );
                 aborting = true;
                 if (nrfutil.pid) {
@@ -524,8 +524,8 @@ export class NrfutilSandbox {
                         new Error(
                             `Aborted ongoing ${path.basename(command)} ${
                                 args[0] ?? ''
-                            }`
-                        )
+                            }`,
+                        ),
                     );
                     return;
                 }
@@ -542,7 +542,7 @@ export class NrfutilSandbox {
         command: string,
         args: string[],
         processors: BackgroundTask<Result>,
-        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv
+        editEnv?: (env: NodeJS.ProcessEnv) => NodeJS.ProcessEnv,
     ) => {
         const controller = new AbortController();
         let running = true;
@@ -573,7 +573,7 @@ export class NrfutilSandbox {
                 processors.onError(new Error(data.toString()), pid);
             },
             controller,
-            editEnv
+            editEnv,
         );
 
         operation
@@ -606,13 +606,13 @@ export class NrfutilSandbox {
         command: string,
         onProgress?: OnProgress,
         controller?: AbortController,
-        args: string[] = []
+        args: string[] = [],
     ) => {
         const data = await this.singleTaskEndOperationOptionalData<T>(
             command,
             onProgress,
             controller,
-            args
+            args,
         );
 
         if (data != null) {
@@ -625,7 +625,7 @@ export class NrfutilSandbox {
         command: string,
         onProgress?: OnProgress,
         controller?: AbortController,
-        args: string[] = []
+        args: string[] = [],
     ) => {
         const results = await this.spawnNrfutilSubcommand<T>(
             command,
@@ -633,7 +633,7 @@ export class NrfutilSandbox {
             onProgress,
             undefined,
             undefined,
-            controller
+            controller,
         );
 
         if (results.taskEnd.length === 1) {
@@ -645,7 +645,7 @@ export class NrfutilSandbox {
     public singleInfoOperationOptionalData = async <T = void>(
         command: string,
         controller?: AbortController,
-        args: string[] = []
+        args: string[] = [],
     ) => {
         const results = await this.spawnNrfutilSubcommand<T>(
             command,
@@ -653,7 +653,7 @@ export class NrfutilSandbox {
             undefined,
             undefined,
             undefined,
-            controller
+            controller,
         );
 
         if (results.info.length === 1) {
@@ -663,14 +663,14 @@ export class NrfutilSandbox {
     };
 
     public onLogging = (
-        handler: (logging: LogMessage, pid?: number) => void
+        handler: (logging: LogMessage, pid?: number) => void,
     ) => {
         this.onLoggingHandlers.push(handler);
 
         return () =>
             this.onLoggingHandlers.splice(
                 this.onLoggingHandlers.indexOf(handler),
-                1
+                1,
             );
     };
 

@@ -67,7 +67,7 @@ const FeedbackDialog = ({
                                 handleFormData(
                                     feedback,
                                     setSayThankYou,
-                                    selectedCategory?.value
+                                    selectedCategory?.value,
                                 ).then(() => setSendingFeedback(false));
                             }}
                             disabled={feedback === '' || sendingFeedback}
@@ -136,7 +136,7 @@ const FeedbackDialog = ({
 const handleFormData = async (
     feedback: string,
     setResponse: (response: boolean) => void,
-    category?: string
+    category?: string,
 ) => {
     try {
         await sendFeedback(feedback, category);
@@ -144,7 +144,7 @@ const handleFormData = async (
         setResponse(true);
     } catch (error: unknown) {
         logger.error(
-            `FeedbackForm: Could not send feedback. ${describeError(error)}`
+            `FeedbackForm: Could not send feedback. ${describeError(error)}`,
         );
     }
 };

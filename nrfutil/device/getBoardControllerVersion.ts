@@ -23,7 +23,7 @@ export interface BoardControllerVersion {
 export default (
     device: NrfutilDevice,
     onProgress?: OnProgress,
-    controller?: AbortController
+    controller?: AbortController,
 ) => {
     // "operation: 0, command_id: 1" is the command to retrieve version information from the board controller.
     const json = {
@@ -46,6 +46,6 @@ export default (
         'x-execute-batch',
         onProgress,
         controller,
-        ['--batch-json', JSON.stringify(json)]
+        ['--batch-json', JSON.stringify(json)],
     ).then(res => res.data);
 };

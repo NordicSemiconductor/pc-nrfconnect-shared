@@ -18,14 +18,14 @@ import './slider.scss';
 
 const useValidatedArraySizes = (
     values: readonly number[],
-    onChange: ((v: number) => void)[]
+    onChange: ((v: number) => void)[],
 ) => {
     useEffect(() => {
         if (values.length === 0)
             console.error('"values" must contain at least on element');
         if (values.length !== onChange.length)
             console.error(
-                `Props 'values' and 'onChange' must have the same size but were ${values} and ${onChange}`
+                `Props 'values' and 'onChange' must have the same size but were ${values} and ${onChange}`,
             );
     }, [onChange, values]);
 };

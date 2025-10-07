@@ -94,7 +94,7 @@ const deviceSetupMock: ReturnType<typeof jprogDeviceSetup> = {
             Promise.resolve({
                 device,
                 validFirmware: false,
-            })
+            }),
     ),
     tryToSwitchToApplicationMode: jest.fn(() => () => Promise.resolve(null)),
 };
@@ -114,7 +114,7 @@ describe('DeviceSelector', () => {
                     jlink: true,
                     mcuBoot: true,
                 }}
-            />
+            />,
         );
         expect(screen.getByText('Select device')).toBeInTheDocument();
     });
@@ -128,7 +128,7 @@ describe('DeviceSelector', () => {
                     jlink: true,
                     mcuBoot: true,
                 }}
-            />
+            />,
         );
         fireEvent.click(screen.getByText('Select device'));
         expect(screen.getByText('Nordic development kit')).toBeInTheDocument();
@@ -144,7 +144,7 @@ describe('DeviceSelector', () => {
                     mcuBoot: true,
                 }}
             />,
-            [addDevice(testDevice)]
+            [addDevice(testDevice)],
         );
         expect(screen.getByText(DEVICE_SERIAL_NUMBER)).toBeInTheDocument();
     });
@@ -159,7 +159,7 @@ describe('DeviceSelector', () => {
                     mcuBoot: true,
                 }}
             />,
-            [addDevice(testDevice), removeDevice(testDevice)]
+            [addDevice(testDevice), removeDevice(testDevice)],
         );
         expect(screen.queryByText(DEVICE_SERIAL_NUMBER)).toBeNull();
     });
@@ -174,7 +174,7 @@ describe('DeviceSelector', () => {
                     mcuBoot: true,
                 }}
             />,
-            [addDevice(testDevice)]
+            [addDevice(testDevice)],
         );
         fireEvent.click(screen.getByText('Select device'));
         fireEvent.click(screen.getByTestId('show-more-device-info'));
@@ -191,7 +191,7 @@ describe('DeviceSelector', () => {
                     mcuBoot: true,
                 }}
             />,
-            [addDevice(testDevice)]
+            [addDevice(testDevice)],
         );
 
         fireEvent.click(screen.getByText('Select device'));
@@ -213,7 +213,7 @@ describe('DeviceSelector', () => {
                     mcuBoot: true,
                 }}
             />,
-            [addDevice(testDevice)]
+            [addDevice(testDevice)],
         );
         fireEvent.click(screen.getByText('Select device'));
         fireEvent.click(screen.getByText(DEVICE_SERIAL_NUMBER));
@@ -246,7 +246,7 @@ describe('DeviceSelector', () => {
                     allowCustomDevice: true,
                 }}
             />,
-            [addDevice(testDevice)]
+            [addDevice(testDevice)],
         );
         fireEvent.click(screen.getByText('Select device'));
 
@@ -282,7 +282,7 @@ describe('DeviceSelector', () => {
                     allowCustomDevice: false,
                 }}
             />,
-            [addDevice(testDevice)]
+            [addDevice(testDevice)],
         );
 
         fireEvent.click(screen.getByText('Select device'));
@@ -306,14 +306,14 @@ describe('DeviceSelector', () => {
                 }}
                 deviceSetupConfig={validFirmware}
             />,
-            [addDevice(testDevice)]
+            [addDevice(testDevice)],
         );
 
         fireEvent.click(screen.getByText('Select device'));
         fireEvent.click(screen.getByText(DEVICE_SERIAL_NUMBER));
 
         await screen.findByText(
-            'Device must be programmed. Do you want to proceed?'
+            'Device must be programmed. Do you want to proceed?',
         );
     });
 
@@ -328,22 +328,22 @@ describe('DeviceSelector', () => {
                 }}
                 deviceSetupConfig={validFirmware}
             />,
-            [addDevice(testDevice)]
+            [addDevice(testDevice)],
         );
 
         fireEvent.click(screen.getByText('Select device'));
         fireEvent.click(screen.getByText(DEVICE_SERIAL_NUMBER));
 
         await screen.findByText(
-            'Device must be programmed. Do you want to proceed?'
+            'Device must be programmed. Do you want to proceed?',
         );
 
         fireEvent.click(screen.getByText('No'));
 
         expect(
             screen.queryByText(
-                'Device must be programmed. Do you want to proceed?'
-            )
+                'Device must be programmed. Do you want to proceed?',
+            ),
         ).toBeNull();
 
         expect(screen.getAllByText(DEVICE_SERIAL_NUMBER)).toHaveLength(2);

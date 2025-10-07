@@ -3,10 +3,10 @@
 This project provides shared commodities for developing nRF Connect for Desktop
 apps and their launcher:
 
--   React components
--   Build scripts
--   Configurations
--   Test facilities
+- React components
+- Build scripts
+- Configurations
+- Test facilities
 
 ## Developing a new feature or fixing an error
 
@@ -21,10 +21,10 @@ change as a new version right ahead, add a new section with the heading
 
 To release, two files must be up-to-date:
 
--   `package.json` contain the correct version number (one more than the last
-    release).
--   `Changelog.md` must contain an entry, with that version number and today's
-    date.
+- `package.json` contain the correct version number (one more than the last
+  release).
+- `Changelog.md` must contain an entry, with that version number and today's
+  date.
 
 By running `npm run prepare-shared-release` you update the version in
 `package.json` and in `Changelog.md` a potential `## Unreleased` heading is

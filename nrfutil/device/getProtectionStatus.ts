@@ -30,12 +30,12 @@ export default (
     device: NrfutilDevice,
     core?: DeviceCore,
     onProgress?: OnProgress,
-    controller?: AbortController
+    controller?: AbortController,
 ) =>
     deviceSingleTaskEndOperation<GetProtectionStatusResult>(
         device,
         'protection-get',
         onProgress,
         controller,
-        coreArg(core)
+        coreArg(core),
     );

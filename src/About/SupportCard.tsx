@@ -54,7 +54,7 @@ export default ({ feedbackCategories }: { feedbackCategories?: string[] }) => {
                             systemReport(
                                 [...devices.values()],
                                 currentSerialNumber as string,
-                                currentDevice
+                                currentDevice,
                             )
                         }
                         label="Create system report"

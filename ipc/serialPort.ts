@@ -59,7 +59,7 @@ export type OverwriteOptions = {
 
 type Open = (
     options: SerialPortOpenOptions<AutoDetectTypes>,
-    overwriteOptions: OverwriteOptions
+    overwriteOptions: OverwriteOptions,
 ) => void;
 const open = invoke<Open>(channel.open);
 const registerOpen = handleWithSender<Open>(channel.open);
@@ -89,7 +89,7 @@ const isOpen = invoke<IsOpen>(channel.isOpen);
 const registerIsOpen = handle<IsOpen>(channel.isOpen);
 
 type GetOptions = (
-    path: string
+    path: string,
 ) => SerialPortOpenOptions<AutoDetectTypes> | undefined;
 const getOptions = invoke<GetOptions>(channel.getOptions);
 const registerGetOptions = handle<GetOptions>(channel.getOptions);

@@ -26,7 +26,7 @@ describe('AppTransport', () => {
         expect(onLogEntry).toHaveBeenCalledWith(
             expect.objectContaining({
                 message,
-            })
+            }),
         );
     });
 
@@ -40,7 +40,7 @@ describe('AppTransport', () => {
         expect(onLogEntry).toHaveBeenCalledWith(
             expect.objectContaining({
                 level,
-            })
+            }),
         );
     });
 

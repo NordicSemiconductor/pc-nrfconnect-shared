@@ -41,7 +41,7 @@ function hrefReplacer(str: string) {
                 onKeyPress={() => {}}
             >
                 {href}
-            </a>
+            </a>,
         );
         return '';
     });

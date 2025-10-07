@@ -28,17 +28,17 @@ export interface DeviceWithSerialNumber extends Device {
 }
 
 export const isDeviceWithSerialNumber = (
-    device: Device
+    device: Device,
 ): device is DeviceWithSerialNumber =>
     !!(device as DeviceWithSerialNumber).serialNumber;
 
 const findDeviceItem = (
     devices: Device[],
     id: number,
-    serialNumber?: string | null
+    serialNumber?: string | null,
 ) => {
     const index = devices.findIndex(
-        d => d.id === id || d.serialNumber === serialNumber
+        d => d.id === id || d.serialNumber === serialNumber,
     );
 
     return { index, device: devices[index] };
@@ -48,7 +48,7 @@ const updateDevice = (
     state: DeviceState,
     updateToMergeIn: Partial<Device>,
     id: number,
-    serialNumber?: string | null
+    serialNumber?: string | null,
 ) => {
     const device = findDeviceItem(state.devices, id, serialNumber).device;
     if (device) {
@@ -80,7 +80,7 @@ const slice = createSlice({
 
         setSelectedDeviceInfo: (
             state,
-            action: PayloadAction<DeviceInfo | undefined>
+            action: PayloadAction<DeviceInfo | undefined>,
         ) => {
             state.selectedDeviceInfo = action.payload;
         },
@@ -97,7 +97,7 @@ const slice = createSlice({
             const index = state.devices.findIndex(
                 item =>
                     item.serialNumber === action.payload.serialNumber ||
-                    item.id === action.payload.id
+                    item.id === action.payload.id,
             );
             if (index !== -1) {
                 state.devices[index] = action.payload;
@@ -108,7 +108,7 @@ const slice = createSlice({
 
         persistSerialPortOptions: (
             state,
-            action: PayloadAction<SerialPortOpenOptions<AutoDetectTypes>>
+            action: PayloadAction<SerialPortOpenOptions<AutoDetectTypes>>,
         ) => {
             if (!state.selectedDevice) return;
 
@@ -116,7 +116,7 @@ const slice = createSlice({
 
             if (selectedDevice) {
                 const vComIndex = selectedDevice.serialPorts?.findIndex(
-                    e => e.comName === action.payload.path
+                    e => e.comName === action.payload.path,
                 );
 
                 if (
@@ -132,7 +132,7 @@ const slice = createSlice({
                         {
                             serialPortOptions,
                             vComIndex,
-                        }
+                        },
                     );
 
                     updateDevice(
@@ -142,7 +142,7 @@ const slice = createSlice({
                             persistedSerialPortOptions: action.payload,
                         },
                         selectedDevice.id,
-                        selectedDevice.serialNumber
+                        selectedDevice.serialNumber,
                     );
                 }
             }
@@ -152,7 +152,7 @@ const slice = createSlice({
             const index = findDeviceItem(
                 state.devices,
                 action.payload.id,
-                action.payload.serialNumber
+                action.payload.serialNumber,
             ).index;
             state.devices.splice(index, 1);
 
@@ -166,7 +166,7 @@ const slice = createSlice({
             const device = findDeviceItem(
                 state.devices,
                 action.payload.id,
-                action.payload.serialNumber
+                action.payload.serialNumber,
             ).device;
 
             if (!device.serialNumber) return;
@@ -180,7 +180,7 @@ const slice = createSlice({
                     favorite: newFavoriteState,
                 },
                 action.payload.id,
-                action.payload.serialNumber
+                action.payload.serialNumber,
             );
         },
 
@@ -193,13 +193,13 @@ const slice = createSlice({
                 action: PayloadAction<{
                     device: Device;
                     nickname: string;
-                }>
+                }>,
             ) => {
                 if (!action.payload.device.serialNumber) return;
 
                 persistNickname(
                     action.payload.device.serialNumber,
-                    action.payload.nickname
+                    action.payload.nickname,
                 );
                 updateDevice(
                     state,
@@ -207,7 +207,7 @@ const slice = createSlice({
                         nickname: action.payload.nickname,
                     },
                     action.payload.device.id,
-                    action.payload.device.serialNumber
+                    action.payload.device.serialNumber,
                 );
             },
         },
@@ -222,7 +222,7 @@ const slice = createSlice({
                     nickname: '',
                 },
                 action.payload.id,
-                action.payload.serialNumber
+                action.payload.serialNumber,
             );
         },
 
