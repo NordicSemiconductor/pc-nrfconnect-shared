@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import fs from 'fs';
-
 import { getModule } from '..';
+import { createDisposableTempFile } from '../fs';
 import { TaskEnd } from '../sandboxTypes';
 import { BatchOperationWrapper, Callbacks } from './batchTypes';
 import {
@@ -21,7 +20,6 @@ import { DeviceCoreInfo } from './getCoreInfo';
 import { FWInfo } from './getFwInfo';
 import { GetProtectionStatusResult } from './getProtectionStatus';
 import {
-    createTempFile,
     Firmware,
     ProgrammingOptions,
     programmingOptionsToArgs,
@@ -246,11 +244,15 @@ export class Batch {
         if (typeof firmware === 'string') {
             args.unshift('--firmware', firmware);
         } else {
-            const tempFilePath = createTempFile(firmware);
-            args.unshift('--firmware', tempFilePath);
+            const tempFile = createDisposableTempFile(
+                firmware.buffer,
+                firmware.type,
+            );
+            args.unshift('--firmware', tempFile.path);
 
             newCallbacks.onTaskEnd = (taskEnd: TaskEnd<unknown>) => {
-                fs.unlinkSync(tempFilePath);
+                using _ = tempFile; // Dispose the temp file at the end of this function
+
                 callbacks?.onTaskEnd?.(taskEnd);
             };
         }
