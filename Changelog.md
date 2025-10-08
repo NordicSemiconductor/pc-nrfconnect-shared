@@ -15,6 +15,11 @@ every new version is a new major version.
 - Changed `no-unused-vars` ESLint rule config so that only unused args and vars
   beginning with an underscore are allowed.
 
+### Added
+
+- Functions `createDisposableTempDir` and `createDisposableTempFile` for use in
+  the main process.
+
 ## 231.0.0 - 2025-10-07
 
 ### Changed

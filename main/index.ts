@@ -56,3 +56,8 @@ export {
     isOpenAppOptionsDevicePort,
     isOpenAppOptionsDeviceSN,
 } from '../ipc/open';
+
+export {
+    createDisposableTempDir,
+    createDisposableTempFile,
+} from '../nrfutil/fs';
