@@ -30,7 +30,7 @@ const regex = /(.*?)(https?:\/\/[^\s]+)/g;
  */
 function hrefReplacer(str: string) {
     const message = [];
-    const remainder = str.replace(regex, (match, before, href, index) => {
+    const remainder = str.replace(regex, (_match, before, href, index) => {
         message.push(before);
         message.push(
             <a
