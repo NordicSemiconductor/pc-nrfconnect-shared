@@ -129,6 +129,7 @@ module.exports = {
             'error',
             { allow: ['arrowFunctions', 'constructors'] },
         ],
+        'no-return-await': 'off',
     },
     overrides: [
         {
