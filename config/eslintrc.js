@@ -130,6 +130,14 @@ module.exports = {
             { allow: ['arrowFunctions', 'constructors'] },
         ],
         'no-return-await': 'off',
+        '@typescript-eslint/no-unused-vars': [
+            'error',
+            {
+                args: 'all',
+                argsIgnorePattern: '^_',
+                varsIgnorePattern: '^_',
+            },
+        ],
     },
     overrides: [
         {

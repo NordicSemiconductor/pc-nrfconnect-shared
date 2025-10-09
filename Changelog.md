@@ -12,6 +12,8 @@ every new version is a new major version.
 ### Changed
 
 - Disabled deprecated `no-return-await` ESLint rule.
+- Changed `no-unused-vars` ESLint rule config so that only unused args and vars
+  beginning with an underscore are allowed.
 
 ## 231.0.0 - 2025-10-07
 

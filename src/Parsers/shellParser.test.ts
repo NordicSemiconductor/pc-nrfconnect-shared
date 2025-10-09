@@ -29,22 +29,18 @@ const setupMocks = () => {
         return () => {};
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const mockOnClose = jest.fn((_handler: () => void) => () => {});
 
     const mockOnUpdate = jest.fn(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         (_handler: (newOptions: UpdateOptions) => void) => () => {},
     );
 
     const mockOnSet = jest.fn(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         (_handler: (newOptions: SetOptions) => void) => () => {},
     );
 
     const mockOnChange = jest.fn(
         (
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             _handler: (
                 newOptions: SerialPortOpenOptions<AutoDetectTypes>,
             ) => void,

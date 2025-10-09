@@ -124,7 +124,6 @@ const slice = createSlice({
                     vComIndex !== undefined &&
                     vComIndex !== -1
                 ) {
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- used to filter out the path property
                     const { path: _, ...serialPortOptions } = action.payload;
 
                     persistSerialPortSettingsToStore(
