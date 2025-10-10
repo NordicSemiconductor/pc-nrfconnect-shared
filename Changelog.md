@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 233.0.0 - 2025-10-10
+
+### Changed
+
+- Use correct Chrome version when building for the renderer process.
+
 ## 232.0.0 - 2025-10-10
 
 ### Changed
