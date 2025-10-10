@@ -4,11 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import fs from 'fs';
-import os from 'os';
-import path from 'path';
-import { v4 as uuid } from 'uuid';
-
+import { createDisposableTempFile } from '../fs';
 import { type OnProgress } from '../sandboxTypes';
 import {
     coreArg,
@@ -119,17 +115,6 @@ const program = (
         ],
     );
 
-export const createTempFile = (firmware: FirmwareBuffer): string => {
-    let tempFilePath;
-    do {
-        tempFilePath = path.join(os.tmpdir(), `${uuid()}.${firmware.type}`);
-    } while (fs.existsSync(tempFilePath));
-
-    fs.writeFileSync(tempFilePath, firmware.buffer);
-
-    return tempFilePath;
-};
-
 const programBuffer = async (
     device: NrfutilDevice,
     firmware: FirmwareBuffer,
@@ -138,20 +123,16 @@ const programBuffer = async (
     programmingOptions?: ProgrammingOptions,
     controller?: AbortController,
 ) => {
-    const tempFilePath = createTempFile(firmware);
-    try {
-        await program(
-            device,
-            tempFilePath,
-            onProgress,
-            core,
-            programmingOptions,
-            controller,
-        );
-    } catch (error) {
-        fs.unlinkSync(tempFilePath);
-        throw error;
-    }
+    using tempFile = createDisposableTempFile(firmware.buffer, firmware.type);
+
+    await program(
+        device,
+        tempFile.path,
+        onProgress,
+        core,
+        programmingOptions,
+        controller,
+    );
 };
 
 export default async (

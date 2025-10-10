@@ -8,6 +8,7 @@ import { exec, spawn } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import process from 'process';
 import treeKill from 'tree-kill';
 
 import describeError from '../src/logging/describeError';
@@ -19,6 +20,7 @@ import {
     convertNrfutilProgress,
     parseJsonBuffers,
 } from './common';
+import { createDisposableTempDir } from './fs';
 import { getNrfutilLogger } from './nrfutilLogger';
 import type {
     BackgroundTask,
@@ -36,6 +38,23 @@ import {
 } from './version/moduleVersion';
 
 const CORE_VERSION_FOR_LEGACY_APPS = '8.1.1';
+
+export const getTriplet = () => {
+    switch (process.platform) {
+        case 'darwin':
+            return process.arch === 'arm64'
+                ? 'aarch64-apple-darwin'
+                : 'x86_64-apple-darwin';
+        case 'linux':
+            return process.arch === 'arm64'
+                ? 'aarch64-unknown-linux-gnu'
+                : 'x86_64-unknown-linux-gnu';
+        case 'win32':
+            return 'x86_64-pc-windows-msvc';
+        default:
+            throw new Error(`Unsupported platform: ${process.platform}`);
+    }
+};
 
 export class NrfutilSandbox {
     private readonly onLoggingHandlers: ((
@@ -186,14 +205,43 @@ export class NrfutilSandbox {
         }
     };
 
-    private installNrfUtilCore = (onProgress?: OnProgress) =>
-        this.install(
+    private installNrfUtilCore = async (onProgress?: OnProgress) => {
+        using tmpDir = createDisposableTempDir();
+
+        const nrfutilTarGzFile = await this.downloadNrfutilTarGz(tmpDir.path);
+
+        await this.install(
             'core',
             this.coreVersion,
-            'self-upgrade',
-            ['--to-version', this.coreVersion],
+            '--version',
+            [],
             onProgress,
+            undefined,
+            undefined,
+            undefined,
+            env => ({
+                ...env,
+                NRFUTIL_BOOTSTRAP_TARBALL_PATH: nrfutilTarGzFile,
+            }),
         );
+    };
+
+    private downloadNrfutilTarGz = async (folder: string) => {
+        const baseUrl =
+            'https://files.nordicsemi.com/ui/api/v1/download?isNativeBrowsing=true&repoKey=swtools&path=external/nrfutil/packages/nrfutil/';
+        const fileName = `nrfutil-${getTriplet()}-${this.coreVersion}.tar.gz`;
+        const url = baseUrl + fileName;
+
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+        }
+
+        const filePath = path.join(folder, fileName);
+        fs.writeFileSync(filePath, new DataView(await response.arrayBuffer()));
+
+        return filePath;
+    };
 
     public installNrfUtilCommand = (onProgress?: OnProgress) =>
         this.install(

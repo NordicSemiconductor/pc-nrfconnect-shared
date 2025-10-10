@@ -7,13 +7,24 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## Unreleased
+## 232.0.0 - 2025-10-10
 
 ### Changed
 
 - Disabled deprecated `no-return-await` ESLint rule.
 - Changed `no-unused-vars` ESLint rule config so that only unused args and vars
   beginning with an underscore are allowed.
+
+### Added
+
+- Functions `createDisposableTempDir` and `createDisposableTempFile` for use in
+  the main process.
+
+### Fixed
+
+- `nrfutil-core` is now directly installed with the requested version. Before
+  the bootstrap-version was first installed, which can lead to problems, if the
+  bootstrap-version does not run correctly.
 
 ## 231.0.0 - 2025-10-07
 
