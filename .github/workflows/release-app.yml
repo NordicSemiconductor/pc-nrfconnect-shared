@@ -33,6 +33,16 @@ jobs:
             name: ${{ inputs.source }}
 
         steps:
+            - name: Fail on missing Artifactory token
+              env:
+                  ARTIFACTORY_TOKEN:
+                      ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND
+                      }}
+              if: ${{ !env.ARTIFACTORY_TOKEN }}
+              run: |
+                  echo '::error::Aborting release because the Artifactory token secret COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND is missing. To give this repository access to the secret, create a ticket at the CI Help Desk.'
+                  exit 1
+
             - uses: actions/download-artifact@v4
               with:
                   name: ${{ env.ARTIFACT_NAME }}
