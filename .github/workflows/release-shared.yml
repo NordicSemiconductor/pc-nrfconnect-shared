@@ -1,65 +1,13 @@
-name: Release shared
+name: Release shared - Test variant that actually unpublishes
 
 on:
     workflow_dispatch:
         inputs:
-            ref:
-                description:
-                    Ref (Tag, branch, commit SHA) to release. Defaults to from
-                    where the workflow is triggered, usually the main branch.
+            marker:
+                description: Yes, this is the different version
                 required: false
-                type: string
-    workflow_call:
+                type: boolean
 
 jobs:
     release:
-        runs-on: ubuntu-latest
-        permissions:
-            contents: write
-            id-token: write
-        env:
-            GH_TOKEN: ${{ github.token }}
-        steps:
-            - uses: actions/checkout@v4
-              with:
-                  ref: ${{ inputs.ref }}
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 22
-                  registry-url: https://registry.npmjs.org
-                  cache: npm
-
-            - name: Check if release is possible
-              run: |
-                  if ! reason=$(npx tsx ./scripts/is-releasable.ts); then
-                    echo "::error::$reason"
-                    exit 1
-                  fi
-
-            - run: npm ci
-            - run: npm run check
-            - run: npm test
-            - run: npm pack
-
-            - name: Extract release notes
-              run:
-                  npx tsx ./scripts/latest-changelog-entry.ts > release_notes.md
-
-            - name: Determine next tag
-              id: determine-next-tag
-              uses: actions/github-script@v7
-              with:
-                  script: |
-                      const version = require('./package.json').version;
-                      core.setOutput('tag', `v${version.replace('.0.0', '')}`);
-
-            - name: Create GitHub release
-              run: |
-                  gh release create "${{ steps.determine-next-tag.outputs.tag }}" \
-                    --title "${{ steps.determine-next-tag.outputs.tag }}" \
-                    --notes-file release_notes.md
-
-            - name: Publish to npm
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.WAYLAND_NPM_TOKEN }}
-              run: npm publish --provenance
+        uses: ./.github/workflows/create-source.yml

@@ -1,25 +1,22 @@
-name: Unpublish npm version
+name: Unpublish npm version - Test variant
 
 on:
     workflow_dispatch:
         inputs:
             version:
-                description: 'Version to unpublish from npm (e.g., 221.0.0)'
+                description: Version to unpublish from npm (e.g., 221.0.0)
                 required: true
                 type: string
+            marker:
+                description: Yes, this is the different version
+                required: false
+                type: boolean
 
 jobs:
     unpublish:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 22
-                  registry-url: https://registry.npmjs.org
-            - name: Unpublish version from npm
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.WAYLAND_NPM_TOKEN }}
-              run: |
-                  set -euo pipefail
-                  npm unpublish "@nordicsemiconductor/pc-nrfconnect-shared@${{ inputs.version }}"
-                  echo "🗑️ Unpublished [pc-nrfconnect-shared](https://www.npmjs.com/package/@nordicsemiconductor/pc-nrfconnect-shared) version ${{ inputs.version }} from npm 🗑️" >> $GITHUB_STEP_SUMMARY
+        uses: ./.github/workflows/release-shared.yml
+        secrets: inherit
+        with:
+            unpublish: true
+            version: ${{ inputs.version }}
+            prerelease: false
