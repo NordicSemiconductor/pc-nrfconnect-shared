@@ -60,6 +60,4 @@ jobs:
                     --notes-file release_notes.md
 
             - name: Publish to npm
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.WAYLAND_NPM_TOKEN }}
-              run: npm publish --provenance
+              run: npm publish
