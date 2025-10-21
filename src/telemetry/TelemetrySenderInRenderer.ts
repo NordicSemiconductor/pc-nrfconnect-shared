@@ -24,12 +24,24 @@ export default class TelemetrySenderInRenderer extends TelemetrySender {
 
         const accountId = getTelemetryClientId();
 
+        // Fix issue with duplicate events being sent https://github.com/microsoft/ApplicationInsights-JS/issues/796
+        const removeDuplicateEvents = {
+            isStorageUseDisabled: true,
+            namePrefix: applicationName,
+        };
+
+        // According to https://github.com/microsoft/ApplicationInsights-JS/issues/2655#issuecomment-3423857757 this might be the way to disable dependency events
+        const disableDependencyEvents = {
+            disableAjaxTracking: true,
+            disableFetchTracking: true,
+        };
+
         this.client = new ApplicationInsights({
             config: {
                 instrumentationKey: this.INSTRUMENTATION_KEY,
                 accountId, // to hide with removeAllMetadata
-                isStorageUseDisabled: true, // fix issue with duplicate events being sent https://github.com/microsoft/ApplicationInsights-JS/issues/796
-                namePrefix: applicationName, // fix issue with duplicate events being sent https://github.com/microsoft/ApplicationInsights-JS/issues/796
+                ...removeDuplicateEvents,
+                ...disableDependencyEvents,
             },
         });
 

@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 234.0.0 - 2025-10-21
+
+### Changed
+
+- In Telemetry disabled sending dependency events.
+
 ## 233.0.0 - 2025-10-10
 
 ### Changed
