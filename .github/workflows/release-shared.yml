@@ -1,7 +1,7 @@
 name: Release shared
 
 on:
-    workflow_dispatch:
+    workflow_call:
         inputs:
             ref:
                 description:
@@ -9,7 +9,6 @@ on:
                     where the workflow is triggered, usually the main branch.
                 required: false
                 type: string
-    workflow_call:
 
 jobs:
     release:
@@ -36,6 +35,7 @@ jobs:
                     exit 1
                   fi
 
+            - run: npm install --global npm@latest
             - run: npm ci
             - run: npm run check
             - run: npm test
@@ -60,6 +60,4 @@ jobs:
                     --notes-file release_notes.md
 
             - name: Publish to npm
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.WAYLAND_NPM_TOKEN }}
-              run: npm publish --provenance
+              run: npm publish
