@@ -12,6 +12,9 @@ on:
                 type: number
             doc_bundle_name:
                 type: string
+        secrets:
+            COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND:
+                required: false
 
 env:
     ARTIFACT_NAME: ${{ github.event.repository.name }}
