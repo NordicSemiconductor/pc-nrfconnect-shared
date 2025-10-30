@@ -8,6 +8,8 @@ import React, { useState } from 'react';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
+import classNames from '../utils/classNames';
+
 import './overlay.scss';
 
 export default ({
@@ -20,6 +22,7 @@ export default ({
     tooltipId,
     placement = 'bottom-start',
     tooltipChildren,
+    className,
 }: {
     keepShowingOnHoverTooltip?: boolean;
     children: React.ReactNode;
@@ -38,6 +41,7 @@ export default ({
         | 'left'
         | 'left-start';
     tooltipChildren: React.ReactNode;
+    className?: string;
 }) => {
     const [show, setShow] = useState<boolean>();
 
@@ -65,7 +69,9 @@ export default ({
                 </Tooltip>
             }
         >
-            <div className="tw-cursor-help">{children}</div>
+            <div className={classNames('tw-cursor-help', className)}>
+                {children}
+            </div>
         </OverlayTrigger>
     );
 };
