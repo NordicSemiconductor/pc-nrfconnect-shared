@@ -24,7 +24,8 @@ jobs:
                   if reason=$(npx tsx ./scripts/is-releasable.ts); then
                     echo "ready_to_release=true" >> $GITHUB_OUTPUT
                   else
-                    echo ":see_no_evil: Not releasing because: $reason" >> $GITHUB_STEP_SUMMARY
+                    echo "ℹ️ Doing no release, just testing if it is otherwise releasable." >> $GITHUB_STEP_SUMMARY
+                    echo "If you want an automatic release, you need to change this: $reason" >> $GITHUB_STEP_SUMMARY
                     echo "ready_to_release=false" >> $GITHUB_OUTPUT
                   fi
 
