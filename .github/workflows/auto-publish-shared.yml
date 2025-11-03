@@ -1,4 +1,4 @@
-name: Auto-publish shared
+name: Maybe auto-release shared
 
 on: workflow_call
 
