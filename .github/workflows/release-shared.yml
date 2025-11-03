@@ -1,4 +1,7 @@
-name: Release shared
+name: Release shared - Helper workflow
+
+# This workflow is intended to be invoked by other workflows.
+# It is no longer meant to be invoked directly.
 
 on:
     workflow_call:
@@ -31,7 +34,7 @@ jobs:
             - name: Check if release is possible
               run: |
                   if ! reason=$(npx tsx ./scripts/is-releasable.ts); then
-                    echo "::error::$reason"
+                    echo "🛑 Unable to release: $reason" >> $GITHUB_STEP_SUMMARY
                     exit 1
                   fi
 
@@ -45,19 +48,23 @@ jobs:
               run:
                   npx tsx ./scripts/latest-changelog-entry.ts > release_notes.md
 
-            - name: Determine next tag
-              id: determine-next-tag
+            - name: Determine next version
+              id: determine-next-version
               uses: actions/github-script@v7
               with:
                   script: |
-                      const version = require('./package.json').version;
-                      core.setOutput('tag', `v${version.replace('.0.0', '')}`);
+                      const version = require('./package.json').version.replace('.0.0', '');
+                      core.setOutput('version', version);
+                      core.setOutput('tag', `v${version}`);
 
             - name: Create GitHub release
               run: |
-                  gh release create "${{ steps.determine-next-tag.outputs.tag }}" \
-                    --title "${{ steps.determine-next-tag.outputs.tag }}" \
+                  gh release create "${{ steps.determine-next-version.outputs.tag }}" \
+                    --title "${{ steps.determine-next-version.outputs.tag }}" \
                     --notes-file release_notes.md
 
             - name: Publish to npm
-              run: npm publish
+              run: |
+                  npm publish
+
+                  echo "✅ Successfully released package [pc-nrfconnect-shared@${{ steps.determine-next-version.outputs.version }}](https://www.npmjs.com/package/@nordicsemiconductor/pc-nrfconnect-shared/v/${{ steps.determine-next-version.outputs.version }}.0.0) to npm." >> $GITHUB_STEP_SUMMARY

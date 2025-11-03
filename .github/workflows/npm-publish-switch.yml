@@ -1,15 +1,22 @@
 name: Release shared
 
+run-name: |
+    ${{
+        github.event_name == 'push'
+        && 'Maybe release shared automatically'
+        || 'Release shared explicitly'
+    }}
+
 # With the trusted publisher model, npm now allows only a single workflow to
 # be registered as the trusted publisher. But this workflow can then invoke
-# other workflows, which may do the actual publishing.
+# other workflows, which may do the actual releasing.
 
 # So this workflow will act as a switch which:
 # - If run on main branch as a result of a push, will check try to
 #   automatically release a new version
-# - Can be run directly to explicitly publish a new version to npm (which only
+# - Can be run directly to explicitly release a new version to npm (which only
 #   makes sense when running it on a branch apart from main, because there the
-#   auto-publish workflow will take care of it)
+#   auto-release workflow will take care of it)
 #
 # The idea of this setup is also shown in
 # https://github.com/orgs/community/discussions/174507#discussioncomment-14723818
@@ -27,12 +34,12 @@ on:
                 type: string
 
 jobs:
-    auto-publish:
+    auto-release:
         if: ${{ github.event_name == 'push' }}
         uses: ./.github/workflows/auto-publish-shared.yml
         secrets: inherit
 
-    explicit-publish:
+    explicit-release:
         if: ${{ github.event_name == 'workflow_dispatch' }}
         uses: ./.github/workflows/release-shared.yml
         with:
