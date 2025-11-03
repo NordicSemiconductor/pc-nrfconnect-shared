@@ -1,4 +1,7 @@
-name: Release shared
+name: Release shared - Helper workflow
+
+# This workflow is intended to be invoked by other workflows.
+# It is no longer meant to be invoked directly.
 
 on:
     workflow_call:
