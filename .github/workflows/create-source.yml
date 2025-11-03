@@ -41,7 +41,7 @@ jobs:
                       ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND
                       }}
               run: |
-                  ./scripts/create-source.ts \
+                  npm run create-source -- \
                     --id '${{ inputs.id }}' \
                     --access-level '${{ inputs.access-level  }}' \
                     --name '${{ inputs.name }}' \
