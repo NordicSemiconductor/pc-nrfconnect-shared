@@ -1,5 +1,12 @@
 name: Release shared
 
+run-name: |
+    ${{
+        github.event_name == 'push'
+        && 'Maybe release shared automatically'
+        || 'Release shared explicitly'
+    }}
+
 # With the trusted publisher model, npm now allows only a single workflow to
 # be registered as the trusted publisher. But this workflow can then invoke
 # other workflows, which may do the actual releasing.
