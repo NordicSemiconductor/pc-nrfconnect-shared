@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 235.0.0 - 2025-11-06
+
+### Fixed
+
+- A text sizing problem with Dropdown's chevron.
+
 ## 234.0.0 - 2025-10-21
 
 ### Changed
