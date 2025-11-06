@@ -94,7 +94,7 @@ export default <T,>({
                 <span
                     className={`mdi mdi-chevron-down ${classNames(
                         isActive && 'tw-rotate-180',
-                        size === 'sm' ? 'tw-text-base' : 'tw-text-lg',
+                        size === 'sm' ? 'tw-text-base' : 'tw-text-lg/none',
                     )}`}
                 />
             </button>
