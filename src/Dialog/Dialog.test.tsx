@@ -146,4 +146,14 @@ describe('ConfirmationDialog creator', () => {
         fireEvent.keyDown(document, { key: 'Escape', keyCode: 27 });
         expect(mockedCancel).toHaveBeenCalled();
     });
+
+    it('hides the Cancel button if onCancel is not provided', () => {
+        render(
+            <ConfirmationDialog isVisible onConfirm={() => {}}>
+                Test Body
+            </ConfirmationDialog>,
+        );
+
+        expect(screen.queryByText('Cancel')).not.toBeInTheDocument();
+    });
 });
