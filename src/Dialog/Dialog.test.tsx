@@ -48,8 +48,8 @@ describe('Dialog', () => {
 });
 
 describe('InfoDialog creator', () => {
-    const dialog = (isVisible = true) => (
-        <InfoDialog isVisible={isVisible} onHide={noop}>
+    const dialog = () => (
+        <InfoDialog isVisible onHide={noop}>
             Test Body
         </InfoDialog>
     );
@@ -73,8 +73,8 @@ describe('InfoDialog creator', () => {
 });
 
 describe('ErrorDialog creator', () => {
-    const dialog = (isVisible = true) => (
-        <ErrorDialog isVisible={isVisible} onHide={noop}>
+    const dialog = () => (
+        <ErrorDialog isVisible onHide={noop}>
             Test Body
         </ErrorDialog>
     );
@@ -97,9 +97,9 @@ describe('ErrorDialog creator', () => {
     });
 });
 describe('ConfirmationDialog creator', () => {
-    const dialog = (isVisible = true) => (
+    const dialog = () => (
         <ConfirmationDialog
-            isVisible={isVisible}
+            isVisible
             confirmLabel="ConfButton"
             onConfirm={() => noop(true)}
             onCancel={() => noop(false)}
