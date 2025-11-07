@@ -139,4 +139,11 @@ describe('ConfirmationDialog creator', () => {
         fireEvent.click(screen.getByText('Cancel'));
         expect(mockedCancel).toHaveBeenCalled();
     });
+
+    it('invokes onCancel on pressing ESC', () => {
+        render(dialog());
+
+        fireEvent.keyDown(document, { key: 'Escape', keyCode: 27 });
+        expect(mockedCancel).toHaveBeenCalled();
+    });
 });
