@@ -97,18 +97,26 @@ describe('ErrorDialog creator', () => {
     });
 });
 describe('ConfirmationDialog creator', () => {
+    const mockedConfirm = jest.fn();
+    const mockedCancel = jest.fn();
+    const mockedOptional = jest.fn();
+
     const dialog = () => (
         <ConfirmationDialog
             isVisible
             confirmLabel="ConfButton"
-            onConfirm={() => noop(true)}
-            onCancel={() => noop(false)}
+            onConfirm={mockedConfirm}
+            onCancel={mockedCancel}
             optionalLabel="Optional"
-            onOptional={() => noop()}
+            onOptional={mockedOptional}
         >
             Test Body
         </ConfirmationDialog>
     );
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
     it('shows the expected content', () => {
         render(dialog());
@@ -123,11 +131,12 @@ describe('ConfirmationDialog creator', () => {
     it('invokes the expected action', () => {
         render(dialog());
 
+        jest.resetAllMocks();
         fireEvent.click(screen.getByText('Optional'));
-        expect(noop).toHaveBeenCalled();
+        expect(mockedOptional).toHaveBeenCalled();
         fireEvent.click(screen.getByText('ConfButton'));
-        expect(noop).toHaveBeenCalledWith(true);
+        expect(mockedConfirm).toHaveBeenCalled();
         fireEvent.click(screen.getByText('Cancel'));
-        expect(noop).toHaveBeenCalledWith(false);
+        expect(mockedCancel).toHaveBeenCalled();
     });
 });
