@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 236.0.0 - 2025-11-07
+
+### Changed
+
+- In a `ConfirmationDialog` a cancel button is only displayed if `onCancel` is
+  defined (before it was mandatory to define it).
+
 ## 235.0.0 - 2025-11-06
 
 ### Fixed

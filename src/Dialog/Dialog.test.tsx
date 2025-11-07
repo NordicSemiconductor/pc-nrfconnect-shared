@@ -48,8 +48,8 @@ describe('Dialog', () => {
 });
 
 describe('InfoDialog creator', () => {
-    const dialog = (isVisible = true) => (
-        <InfoDialog isVisible={isVisible} onHide={noop}>
+    const dialog = () => (
+        <InfoDialog isVisible onHide={noop}>
             Test Body
         </InfoDialog>
     );
@@ -73,8 +73,8 @@ describe('InfoDialog creator', () => {
 });
 
 describe('ErrorDialog creator', () => {
-    const dialog = (isVisible = true) => (
-        <ErrorDialog isVisible={isVisible} onHide={noop}>
+    const dialog = () => (
+        <ErrorDialog isVisible onHide={noop}>
             Test Body
         </ErrorDialog>
     );
@@ -97,18 +97,26 @@ describe('ErrorDialog creator', () => {
     });
 });
 describe('ConfirmationDialog creator', () => {
-    const dialog = (isVisible = true) => (
+    const mockedConfirm = jest.fn();
+    const mockedCancel = jest.fn();
+    const mockedOptional = jest.fn();
+
+    const dialog = () => (
         <ConfirmationDialog
-            isVisible={isVisible}
+            isVisible
             confirmLabel="ConfButton"
-            onConfirm={() => noop(true)}
-            onCancel={() => noop(false)}
+            onConfirm={mockedConfirm}
+            onCancel={mockedCancel}
             optionalLabel="Optional"
-            onOptional={() => noop()}
+            onOptional={mockedOptional}
         >
             Test Body
         </ConfirmationDialog>
     );
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
     it('shows the expected content', () => {
         render(dialog());
@@ -123,11 +131,29 @@ describe('ConfirmationDialog creator', () => {
     it('invokes the expected action', () => {
         render(dialog());
 
+        jest.resetAllMocks();
         fireEvent.click(screen.getByText('Optional'));
-        expect(noop).toHaveBeenCalled();
+        expect(mockedOptional).toHaveBeenCalled();
         fireEvent.click(screen.getByText('ConfButton'));
-        expect(noop).toHaveBeenCalledWith(true);
+        expect(mockedConfirm).toHaveBeenCalled();
         fireEvent.click(screen.getByText('Cancel'));
-        expect(noop).toHaveBeenCalledWith(false);
+        expect(mockedCancel).toHaveBeenCalled();
+    });
+
+    it('invokes onCancel on pressing ESC', () => {
+        render(dialog());
+
+        fireEvent.keyDown(document, { key: 'Escape', keyCode: 27 });
+        expect(mockedCancel).toHaveBeenCalled();
+    });
+
+    it('hides the Cancel button if onCancel is not provided', () => {
+        render(
+            <ConfirmationDialog isVisible onConfirm={() => {}}>
+                Test Body
+            </ConfirmationDialog>,
+        );
+
+        expect(screen.queryByText('Cancel')).not.toBeInTheDocument();
     });
 });

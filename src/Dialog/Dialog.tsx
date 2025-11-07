@@ -207,7 +207,7 @@ interface ConfirmationDialogProps extends Omit<CoreProps, 'onHide'> {
     confirmLabel?: string;
     onConfirm: () => void;
     cancelLabel?: string;
-    onCancel: () => void;
+    onCancel?: () => void;
     optionalLabel?: string;
     onOptional?: () => void;
 }
@@ -223,12 +223,12 @@ export const ConfirmationDialog = ({
     cancelLabel = 'Cancel',
     onCancel,
     optionalLabel,
-    onOptional = () => {},
+    onOptional,
     size,
 }: ConfirmationDialogProps) => (
     <GenericDialog
         onHide={onCancel}
-        closeOnEsc
+        closeOnEsc={onCancel != null}
         isVisible={isVisible}
         headerIcon={headerIcon}
         title={title}
@@ -239,12 +239,16 @@ export const ConfirmationDialog = ({
                 <DialogButton variant="primary" onClick={onConfirm}>
                     {confirmLabel}
                 </DialogButton>
-                {optionalLabel && (
+                {onOptional && optionalLabel && (
                     <DialogButton onClick={onOptional}>
                         {optionalLabel}
                     </DialogButton>
                 )}
-                <DialogButton onClick={onCancel}>{cancelLabel}</DialogButton>
+                {onCancel && (
+                    <DialogButton onClick={onCancel}>
+                        {cancelLabel}
+                    </DialogButton>
+                )}
             </>
         }
     >
