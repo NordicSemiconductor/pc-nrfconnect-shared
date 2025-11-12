@@ -8,8 +8,11 @@
 export const colors = {
     blueSlate: '#0033a0',
     blueSlateLighter: '#7c98d3',
+
     white: 'white',
     black: 'black',
+    transparent: 'transparent',
+
     primary: '#00a9ce',
     primaryDarkened: '#0098b9',
     secondary: 'white',
