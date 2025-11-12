@@ -276,8 +276,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf54logo,
         website: {
-            productPage: '',
-            buyOnline: '',
+            productPage:
+                'https://www.nordicsemi.com/Products/Development-hardware/nRF54LM20-DK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF54LM20%20DK',
         },
     },
     PCA10188: {
