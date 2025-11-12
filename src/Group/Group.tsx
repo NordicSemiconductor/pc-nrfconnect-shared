@@ -85,7 +85,7 @@ export const Group = ({
     collapsible = false,
     defaultCollapsed = !!collapsible,
     onToggled,
-    collapseStatePersistanceId,
+    collapseStatePersistenceId,
 }: {
     className?: string;
     heading: React.ReactNode;
@@ -97,12 +97,12 @@ export const Group = ({
     defaultCollapsed?: boolean;
     onToggled?: (isNowExpanded: boolean) => void;
     /** Unique identifier for persisting the group's collapse state across sessions. When provided, enables state persistence. */
-    collapseStatePersistanceId?: string;
+    collapseStatePersistenceId?: string;
 }) => {
     const getInitialCollapseState = () => {
-        if (collapseStatePersistanceId) {
+        if (collapseStatePersistenceId) {
             const persistedState = getPersistedGroupCollapseState(
-                collapseStatePersistanceId,
+                collapseStatePersistenceId,
             );
             if (persistedState !== undefined) {
                 return persistedState;
@@ -146,9 +146,9 @@ export const Group = ({
                     onToggled?.(collapsed);
                     setCollapsed(!collapsed);
 
-                    if (collapseStatePersistanceId) {
+                    if (collapseStatePersistenceId) {
                         persistGroupCollapseState(
-                            collapseStatePersistanceId,
+                            collapseStatePersistenceId,
                             !collapsed,
                         );
                     }
