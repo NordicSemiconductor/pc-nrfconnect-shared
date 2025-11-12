@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 239.0.0 - unreleased
+
+### Added
+
+- Link to the nRF54LM20 DK product page.
+
 ## 238.0.0 - 2025-11-12
 
 ### Fixed
