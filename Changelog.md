@@ -7,11 +7,17 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 239.0.0 - unreleased
+## 239.0.0 - 2025-11-12
 
 ### Added
 
 - Link to the nRF54LM20 DK product page.
+
+### Changed
+
+- The width of buttons with the variants `primary`, `success`, `info`,
+  `warning`, and `danger` is slightly increased to match the width of the
+  variant `secondary`.
 
 ## 238.0.0 - 2025-11-12
 
