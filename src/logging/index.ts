@@ -9,8 +9,9 @@ import { SPLAT } from 'triple-beam';
 import { createLogger, format, LogEntry, Logger, transports } from 'winston';
 import Transport from 'winston-transport';
 
-import { getAppLogDir } from '../utils/appDirs';
+import { getAppLogDir, getUserDataDir } from '../utils/appDirs';
 import { openFile, openFileLocation } from '../utils/open';
+import { isLauncher } from '../utils/packageJson';
 import AppTransport from './appTransport';
 import describeError from './describeError';
 import createLogBuffer from './logBuffer';
@@ -27,7 +28,11 @@ const isConsoleAvailable = (() => {
 })();
 
 const filePrefix = new Date().toISOString().replace(/:/gi, '_');
-const logFilePath = () => path.join(getAppLogDir(), `${filePrefix}-log.txt`);
+
+const logFilePath = () =>
+    isLauncher()
+        ? path.join(getUserDataDir(), 'logs', 'renderer.log')
+        : path.join(getAppLogDir(), `${filePrefix}-log.txt`);
 
 const logBuffer = createLogBuffer();
 
