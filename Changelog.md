@@ -7,7 +7,7 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 237.0.0 - 2025-11-12
+## 238.0.0 - 2025-11-12
 
 ### Fixed
 
@@ -18,6 +18,13 @@ every new version is a new major version.
 - Rename prop `collapseStatePersistanceId` to `collapseStatePersistenceId`
   everywhere it is used. Running the type check will highlight remaining
   occurrences. No data migration is needed; only the prop name changed.
+
+## 237.0.0 - 2025-11-12
+
+### Changed
+
+- The logger now also supports being used in the renderer process of the
+  launcher.
 
 ## 236.0.0 - 2025-11-07
 
