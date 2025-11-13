@@ -129,8 +129,5 @@
         "@commander-js/extra-typings": "^10.0.3"
     },
     "typings": "./typings/generated/src/index.d.ts",
-    "eslintConfig": {
-        "extends": "./config/eslintrc"
-    },
     "prettier": "./config/prettier.config.js"
 }
