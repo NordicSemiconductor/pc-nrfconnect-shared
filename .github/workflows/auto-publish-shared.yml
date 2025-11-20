@@ -11,7 +11,7 @@ jobs:
             ready_to_release:
                 ${{ steps.check-release.outputs.ready_to_release }}
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
             - uses: actions/setup-node@v4
               with:
                   node-version: 22
