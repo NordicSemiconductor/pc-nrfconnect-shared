@@ -47,7 +47,7 @@ export class Batch {
 
     private enqueueBatchOperationObject(
         command: string,
-        core: DeviceCore,
+        core?: DeviceCore,
         callbacks?: CallbacksUnknown,
         args: string[] = [],
     ) {
@@ -72,7 +72,7 @@ export class Batch {
         this.operationBatchGeneration.push(getPromise());
     }
 
-    public getDeviceInfo(core: DeviceCore, callbacks?: Callbacks<FWInfo>) {
+    public getDeviceInfo(core?: DeviceCore, callbacks?: Callbacks<FWInfo>) {
         this.enqueueBatchOperationObject(
             'device-info',
             core,
@@ -82,7 +82,7 @@ export class Batch {
         return this;
     }
 
-    public erase(core: DeviceCore, callbacks?: Callbacks) {
+    public erase(core?: DeviceCore, callbacks?: Callbacks) {
         this.enqueueBatchOperationObject(
             'erase',
             core,
@@ -160,7 +160,7 @@ export class Batch {
     }
 
     public xRead(
-        core: DeviceCore,
+        core?: DeviceCore,
         options: XReadOptions,
         callbacks?: Callbacks<ReadResult>,
     ) {
@@ -216,7 +216,7 @@ export class Batch {
     }
 
     public getProtectionStatus(
-        core: DeviceCore,
+        core?: DeviceCore,
         callbacks?: Callbacks<GetProtectionStatusResult>,
     ) {
         this.enqueueBatchOperationObject(
@@ -230,7 +230,7 @@ export class Batch {
 
     public program(
         firmware: Firmware,
-        core: DeviceCore,
+        core?: DeviceCore,
         programmingOptions?: ProgrammingOptions,
         deviceTraits?: DeviceTraits,
         callbacks?: CallbacksUnknown,
@@ -262,7 +262,7 @@ export class Batch {
         return this;
     }
 
-    public recover(core: DeviceCore, callbacks?: Callbacks) {
+    public recover(core?: DeviceCore, callbacks?: Callbacks) {
         this.enqueueBatchOperationObject(
             'recover',
             core,
@@ -272,7 +272,7 @@ export class Batch {
         return this;
     }
 
-    public reset(core: DeviceCore, reset?: ResetKind, callbacks?: Callbacks) {
+    public reset(core?: DeviceCore, reset?: ResetKind, callbacks?: Callbacks) {
         this.enqueueBatchOperationObject(
             'reset',
             core,
