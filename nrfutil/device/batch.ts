@@ -160,8 +160,8 @@ export class Batch {
     }
 
     public xRead(
-        core?: DeviceCore,
         options: XReadOptions,
+        core?: DeviceCore,
         callbacks?: Callbacks<ReadResult>,
     ) {
         this.enqueueBatchOperationObject(
