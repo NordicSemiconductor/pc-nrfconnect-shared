@@ -11,7 +11,12 @@ every new version is a new major version.
 
 ### Changed
 
-- nrfutil `batch.x()` now take core as an optional argument.
+- nrfutil `batch.[x]()` now take core as an optional argument.
+- nrfutil `batch.xRead()` parameter order changed.
+
+### Steps to upgrade when using this package
+
+- Adjust paramter order for nrfutil `batch.xRead()`.
 
 ## 239.0.0 - 2025-11-12
 
