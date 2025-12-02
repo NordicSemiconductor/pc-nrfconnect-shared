@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 240.0.0 - 2025-12-02
+
+### Fixed
+
+- Checking the order of Tailwind classes was not done anymore.
+
 ## 239.0.0 - 2025-11-12
 
 ### Added
