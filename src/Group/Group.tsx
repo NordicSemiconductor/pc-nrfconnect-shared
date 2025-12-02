@@ -119,7 +119,7 @@ export const Group = ({
         <div className={className}>
             <button
                 className={classNames(
-                    'tw-row tw-preflight tw- tw-flex tw-items-center tw-justify-between tw-text-left',
+                    'tw-row tw-preflight tw-flex tw-items-center tw-justify-between tw-text-left',
                     headingFullWidth && 'tw-w-full',
                     !collapsible && 'tw-cursor-default',
                 )}
