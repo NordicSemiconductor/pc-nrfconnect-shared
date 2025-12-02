@@ -11,8 +11,8 @@ import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
 import { Device } from '../../deviceSlice';
 
 const Row = ({ children }: { children: ReactNode }) => (
-    <div className=" tw-flex tw-flex-row tw-pr-5">
-        <div className=" tw-w-[68px]" />
+    <div className="tw-flex tw-flex-row tw-pr-5">
+        <div className="tw-w-[68px]" />
         {children}
     </div>
 );

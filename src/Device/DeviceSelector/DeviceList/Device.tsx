@@ -23,7 +23,7 @@ const ShowMoreInfo = ({
 }) => (
     <PseudoButton
         className={classNames(
-            isVisible ? 'tw-visible' : 'tw-invisible  group-hover:tw-visible',
+            isVisible ? 'tw-visible' : 'tw-invisible group-hover:tw-visible',
             `mdi mdi-chevron-${isVisible ? 'up' : 'down'}`,
         )}
         testId="show-more-device-info"
