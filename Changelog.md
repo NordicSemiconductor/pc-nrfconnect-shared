@@ -9,6 +9,10 @@ every new version is a new major version.
 
 ## 240.0.0 - 2025-12-02
 
+### Changed
+
+- Duplicate Tailwind classes and surrounding whitespaces are now removed.
+
 ### Fixed
 
 - Checking the order of Tailwind classes was not done anymore.

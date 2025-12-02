@@ -50,9 +50,9 @@ const Button: React.FC<ButtonProps> = ({
             variant === 'primary' &&
                 'tw-border tw-border-transparent tw-bg-nordicBlue tw-text-white active:enabled:tw-bg-nordicBlue-700',
             variant === 'secondary' &&
-                'tw-border tw-border-gray-700 tw-bg-white tw-text-gray-700  active:enabled:tw-bg-gray-50',
+                'tw-border tw-border-gray-700 tw-bg-white tw-text-gray-700 active:enabled:tw-bg-gray-50',
             variant === 'success' &&
-                'tw-border tw-border-transparent tw-bg-green tw-text-white  active:enabled:tw-bg-green-700',
+                'tw-border tw-border-transparent tw-bg-green tw-text-white active:enabled:tw-bg-green-700',
             variant === 'info' &&
                 'tw-border tw-border-transparent tw-bg-nordicBlue tw-text-white active:enabled:tw-bg-nordicBlue-700',
             variant === 'warning' &&

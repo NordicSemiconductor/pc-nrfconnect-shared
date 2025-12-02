@@ -121,7 +121,7 @@ export const Group = ({
                 className={classNames(
                     'tw-row tw-preflight tw- tw-flex tw-items-center tw-justify-between tw-text-left',
                     headingFullWidth && 'tw-w-full',
-                    !collapsible && ' tw-cursor-default',
+                    !collapsible && 'tw-cursor-default',
                 )}
                 type="button"
                 onClick={() => {
