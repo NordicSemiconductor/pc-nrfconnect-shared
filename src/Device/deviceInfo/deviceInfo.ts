@@ -301,7 +301,7 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
             productPage:
                 'https://www.nordicsemi.com/Products/Development-hardware/nRF9151-SMA-DK',
             buyOnline:
-                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=NRF9151-SMA-DK',
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=NRF9151%20SMA%20DK',
         },
     },
 };
