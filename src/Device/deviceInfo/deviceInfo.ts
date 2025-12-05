@@ -290,7 +290,7 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
             productPage: 
                'https://www.nordicsemi.com/Products/Development-hardware/nRF54LV10-DK',
             buyOnline: 
-               'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF54LV10-DK',
+               'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF54LV10%20DK',
         },
     },
     PCA10201: {
