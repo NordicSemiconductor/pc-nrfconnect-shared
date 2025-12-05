@@ -9,11 +9,11 @@ every new version is a new major version.
 
 ## 241.0.0 - Unreleased
 
-### Changed
+### Added
 
 - Product links for nRF54LV10 DK
 
-### Added
+### Changed
 
 - Product links for nRF9151 SMA DK
 
