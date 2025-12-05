@@ -287,8 +287,10 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         cores: 1,
         icon: nrf54logo,
         website: {
-            productPage: '',
-            buyOnline: '',
+            productPage: 
+               'https://www.nordicsemi.com/Products/Development-hardware/nRF54LV10-DK',
+            buyOnline: 
+               'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF54LV10-DK',
         },
     },
     PCA10201: {
@@ -297,9 +299,9 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
         icon: nrf91logo,
         website: {
             productPage:
-                'https://www.nordicsemi.com/Products/Development-hardware/nRF9151-DK',
+                'https://www.nordicsemi.com/Products/Development-hardware/nRF9151-SMA-DK',
             buyOnline:
-                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=NRF9151-DK',
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=NRF9151-SMA-DK',
         },
     },
 };
