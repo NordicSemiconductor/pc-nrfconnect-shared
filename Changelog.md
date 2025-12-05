@@ -7,6 +7,16 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 241.0.0 - Unreleased
+
+### Changed
+
+- Product links for nRF54LV10 DK
+
+### Added
+
+- Product links for nRF9151 SMA DK
+
 ## 240.0.0 - 2025-12-02
 
 ### Changed
