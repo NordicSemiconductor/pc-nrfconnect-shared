@@ -11,11 +11,11 @@ every new version is a new major version.
 
 ### Added
 
-- Product links for nRF54LV10 DK
+- Product links for the nRF54LV10 DK.
 
 ### Changed
 
-- Product links for nRF9151 SMA DK
+- Product links for the nRF9151 SMA DK.
 
 ## 240.0.0 - 2025-12-02
 
