@@ -11,6 +11,10 @@ on:
                 description: Type of release (dev or prod)
                 required: true
                 type: string
+            ref:
+                description:
+                    Ref (Tag, branch, commit SHA) to publish the docs from.
+                type: string
 
 jobs:
     create-doc-bundle:
@@ -18,6 +22,7 @@ jobs:
         uses: './.github/workflows/docs-bundle.yml'
         with:
             bundle-name: ${{ inputs.bundle-name }}
+            ref: ${{ inputs.ref }}
     publish-zoomin-bundle:
         name: Publish Zoomin bundle to ${{ inputs.release-type }}
         needs: create-doc-bundle
