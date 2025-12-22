@@ -8,6 +8,9 @@ env:
 jobs:
     check_label:
         runs-on: ubuntu-latest
+        env:
+            missing_doc_label: 'false'
+            missing_ui_label: 'false'
         steps:
             - name: 'Check for missing doc label'
               if: >
