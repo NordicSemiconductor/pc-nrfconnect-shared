@@ -37,8 +37,7 @@ jobs:
                   COMMENT_TEXT="${COMMENT_TEXT}\n- 'doc required' or 'doc not required'"
                 fi
                 if [[ "${{ env.missing_ui_label }}" == 'true' ]]; then
-                COMMENT_TEXT="${COMMENT_TEXT}\n
-                - 'ui required' or 'ui not required'\n\n
+                  COMMENT_TEXT="${COMMENT_TEXT}\n- 'ui required' or 'ui not required'\n\n
                 For UI review:\n
                 - describe the changes\n
                 - add pictures\n
