@@ -9,6 +9,7 @@ jobs:
     check_label:
         runs-on: ubuntu-latest
         env:
+            TAG_IDENTIFIER: "<!--labels-->"
             missing_doc_label: 'false'
             missing_ui_label: 'false'
         steps:
@@ -31,7 +32,6 @@ jobs:
                   ! contains(github.event.pull_request.labels.*.name, 'documentation')
               run: |
                 URL="${{ github.event.pull_request.html_url }}"
-                TAG_IDENTIFIER="<!--labels-->"
                 COMMENT_TEXT="${TAG_IDENTIFIER}\nAdd labels:"
                 if [[ "${{ env.missing_doc_label }}" == 'true' ]]; then
                   COMMENT_TEXT="${COMMENT_TEXT}\n- 'doc required' or 'doc not required'"
@@ -60,3 +60,27 @@ jobs:
                   ! contains(github.event.pull_request.labels.*.name, 'documentation')
               with:
                   script: core.setFailed('Required doc and/or ui labels missing.')
+
+            - name: Hide comment when resolved
+              if: >
+                  (env.missing_doc_label != 'true' &&
+                   env.missing_ui_label != 'true') ||
+                  contains(github.event.pull_request.labels.*.name, 'documentation')
+              run: |
+                PR_NUMBER=${{ github.event.pull_request.number }}
+
+                node_id=$(gh api "repos/${{ github.repository }}/issues/$PR_NUMBER/comments" \
+                  --jq '.[] | select(.body | startswith("'"$TAG_IDENTIFIER"'")) | .node_id' | head -n 1)
+
+                if [ -n "$node_id" ]; then
+                  gh api graphql -f query="
+                    mutation {
+                      minimizeComment(input: {
+                        subjectId: \"$node_id\",
+                        classifier: RESOLVED
+                      }) {
+                        clientMutationId
+                      }
+                    }
+                  "
+                fi
