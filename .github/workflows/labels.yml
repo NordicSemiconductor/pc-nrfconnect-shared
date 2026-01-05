@@ -14,13 +14,13 @@ jobs:
             missing_ui_label: 'false'
             labels_are_missing: 'false'
         steps:
-            - name: 'Check for missing doc label'
+            - name: Check for missing doc label
               if: >
                   ! contains(github.event.pull_request.labels.*.name, 'doc required') &&
                   ! contains(github.event.pull_request.labels.*.name, 'doc not required')
               run: echo "missing_doc_label=true" >> "$GITHUB_ENV"
 
-            - name: 'Check for missing ui label'
+            - name: Check for missing ui label
               if: >
                   ! contains(github.event.pull_request.labels.*.name, 'ui required') &&
                   ! contains(github.event.pull_request.labels.*.name, 'ui not required')
@@ -33,7 +33,7 @@ jobs:
                   ! contains(github.event.pull_request.labels.*.name, 'documentation')
               run: echo "labels_are_missing=true" >> "$GITHUB_ENV"
 
-            - name: 'Notify user if label(s) is missing'
+            - name: Notify user if label(s) is missing
               if: env.labels_are_missing == 'true'
               run: |
                 URL="${{ github.event.pull_request.html_url }}"
