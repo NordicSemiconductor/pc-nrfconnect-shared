@@ -12,6 +12,7 @@ jobs:
             TAG_IDENTIFIER: "<!--labels-->"
             missing_doc_label: 'false'
             missing_ui_label: 'false'
+            labels_are_missing: 'false'
         steps:
             - name: 'Check for missing doc label'
               if: >
@@ -25,11 +26,15 @@ jobs:
                   ! contains(github.event.pull_request.labels.*.name, 'ui not required')
               run: echo "missing_ui_label=true" >> "$GITHUB_ENV"
 
-            - name: 'Notify user if label(s) is missing'
+            - name: Detect missing labels
               if: >
                   (env.missing_doc_label == 'true' ||
                    env.missing_ui_label == 'true') &&
                   ! contains(github.event.pull_request.labels.*.name, 'documentation')
+              run: echo "labels_are_missing=true" >> "$GITHUB_ENV"
+
+            - name: 'Notify user if label(s) is missing'
+              if: env.labels_are_missing == 'true'
               run: |
                 URL="${{ github.event.pull_request.html_url }}"
                 COMMENT_TEXT="${TAG_IDENTIFIER}\nAdd labels:"
@@ -54,18 +59,12 @@ jobs:
 
             - name: 'Fail'
               uses: actions/github-script@v7
-              if: >
-                  (env.missing_doc_label == 'true' ||
-                   env.missing_ui_label == 'true') &&
-                  ! contains(github.event.pull_request.labels.*.name, 'documentation')
+              if: env.labels_are_missing == 'true'
               with:
                   script: core.setFailed('Required doc and/or ui labels missing.')
 
             - name: Hide comment when resolved
-              if: >
-                  (env.missing_doc_label != 'true' &&
-                   env.missing_ui_label != 'true') ||
-                  contains(github.event.pull_request.labels.*.name, 'documentation')
+              if: env.labels_are_missing != 'true'
               run: |
                 PR_NUMBER=${{ github.event.pull_request.number }}
 
