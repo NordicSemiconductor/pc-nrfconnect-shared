@@ -22,11 +22,9 @@
         "check:types": "tsc --noEmit",
         "check:license": "tsx scripts/nrfconnect-license.ts check",
         "create-source": "tsx scripts/create-source.ts",
-        "generate-types": "tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./typings/generated --rootDir .",
-        "prepare": "tsx scripts/installHusky.ts",
+        "prepare": "tsx scripts/installHusky.ts && tsx scripts/build-shared.ts",
         "prepare-shared-release": "tsx scripts/prepare-shared-release.ts",
-        "clean": "rimraf dist typings/generated scripts/nordic-publish.js",
-        "postinstall": "tsx scripts/postinstall.ts"
+        "clean": "rimraf dist typings/generated scripts/nordic-publish.js"
     },
     "dependencies": {
         "@electron/remote": "^2.1.2",

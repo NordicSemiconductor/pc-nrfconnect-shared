@@ -136,6 +136,6 @@ export const build = async (
         await context.rebuild();
         await context.watch();
     } else {
-        esbuild.build(options(additionalOptions, externalReact));
+        return esbuild.build(options(additionalOptions, externalReact));
     }
 };
