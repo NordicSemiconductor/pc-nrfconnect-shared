@@ -12,7 +12,7 @@
         "check-for-typescript": "scripts/check-for-typescript.ts",
         "check-app-properties": "scripts/check-app-properties.ts",
         "nrfconnect-license": "scripts/nrfconnect-license.ts",
-        "run-esbuild": "scripts/esbuild.ts"
+        "run-esbuild": "scripts/build-app.ts"
     },
     "main": "src",
     "scripts": {
