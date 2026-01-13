@@ -20,21 +20,6 @@ const validate = (packageJson: string) => {
     }
 };
 
-const entry = () => {
-    const result = [
-        './src/index.jsx',
-        './lib/index.jsx',
-        './index.jsx',
-        './src/index.tsx',
-    ].find(fs.existsSync);
-
-    if (result == null) {
-        throw new Error('Found no entry point file');
-    }
-
-    return result;
-};
-
 const bundle = () => {
     const packageJson = fs.readFileSync('package.json', 'utf8');
 
@@ -43,9 +28,8 @@ const bundle = () => {
     build({
         define: {
             'process.env.PACKAGE_JSON': JSON.stringify(packageJson),
-            'process.env.APPLICATIONINSIGHTS_CONFIGURATION_CONTENT': '"{}"', // Needed because of https://github.com/microsoft/ApplicationInsights-node.js/issues/1226
         },
-        entryPoints: [entry()],
+        entryPoints: ['./src/index.tsx'],
     });
 };
 
