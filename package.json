@@ -24,7 +24,7 @@
         "create-source": "tsx scripts/create-source.ts",
         "prepare": "tsx scripts/installHusky.ts && tsx scripts/build-shared.ts",
         "prepare-shared-release": "tsx scripts/prepare-shared-release.ts",
-        "clean": "rimraf dist typings/generated scripts/nordic-publish.js"
+        "clean": "rimraf dist"
     },
     "dependencies": {
         "@electron/remote": "^2.1.2",
@@ -126,6 +126,6 @@
     "devDependencies": {
         "@commander-js/extra-typings": "^10.0.3"
     },
-    "typings": "./typings/generated/src/index.d.ts",
+    "typings": "./dist/typings/src/index.d.ts",
     "prettier": "./config/prettier.config.js"
 }

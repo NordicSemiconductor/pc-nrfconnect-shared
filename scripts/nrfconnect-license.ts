@@ -146,12 +146,7 @@ const allSourceFiles = () =>
             '*.sass',
         ],
         {
-            ignore: [
-                ...entriesInGitignore,
-                'scripts/nordic-publish.js',
-                'typings/generated',
-                '.git',
-            ],
+            ignore: [...entriesInGitignore, 'dist/', '.git'],
             baseNameMatch: true,
         },
     );

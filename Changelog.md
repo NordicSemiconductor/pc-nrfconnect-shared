@@ -15,6 +15,7 @@ every new version is a new major version.
     - Moved artifact generation from `postinstall` to `prepare` so that
       generated artifacts are included in the published package.
     - Simplified build script for apps.
+    - Place all generated files in `dist/`.
 
 ## 241.0.0 - 2025-12-12
 

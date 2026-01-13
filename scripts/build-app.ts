@@ -45,7 +45,7 @@ const copyFileToDist = (file: string) =>
 const copyFiles = () => {
     fs.mkdirSync('dist', { recursive: true });
 
-    copyFileToDist('scripts/nordic-publish.js');
+    copyFileToDist('dist/scripts/nordic-publish.js');
     copyFileToDist('dist/bootstrap.css');
     copyFileToDist('src/index.html');
 

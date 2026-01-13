@@ -14,7 +14,7 @@ import { build as esbuildRenderer } from './esbuild-renderer';
 const main = async () => {
     console.log('Generate types');
     execSync(
-        'tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./typings/generated --rootDir .',
+        'tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./dist/typings --rootDir .',
         { encoding: 'utf-8', stdio: 'inherit' },
     );
 
@@ -29,7 +29,7 @@ const main = async () => {
     console.log('Build nordic-publish.js');
     await build({
         entryPoints: ['scripts/nordic-publish.ts'],
-        outdir: 'scripts/',
+        outdir: 'dist/scripts/',
         bundle: true,
         platform: 'node',
         logLevel: 'warning',
