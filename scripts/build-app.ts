@@ -30,6 +30,7 @@ const bundle = () => {
             'process.env.PACKAGE_JSON': JSON.stringify(packageJson),
         },
         entryPoints: ['./src/index.tsx'],
+        outfile: './dist/bundle.js',
     });
 };
 

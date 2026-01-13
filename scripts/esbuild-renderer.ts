@@ -29,13 +29,7 @@ const tailwindConfig = () =>
               '@nordicsemiconductor/pc-nrfconnect-shared/config/tailwind.config.js',
           );
 
-type AdditionalOptions = Required<Pick<BuildOptions, 'entryPoints'>> &
-    Partial<BuildOptions>;
-
-const outfileOrDir = (additionalOptions: AdditionalOptions) =>
-    additionalOptions.entryPoints.length === 1
-        ? { outfile: './dist/bundle.js' }
-        : { outdir: './dist' };
+type AdditionalOptions = Partial<BuildOptions>;
 
 const options = (
     additionalOptions: AdditionalOptions,
@@ -43,7 +37,6 @@ const options = (
 ) =>
     ({
         format: 'iife',
-        ...outfileOrDir(additionalOptions),
         target: `chrome${chromeWithoutBuild}`,
         sourcemap: true,
         metafile: false,
