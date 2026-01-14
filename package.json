@@ -12,7 +12,7 @@
         "check-for-typescript": "scripts/check-for-typescript.ts",
         "check-app-properties": "scripts/check-app-properties.ts",
         "nrfconnect-license": "scripts/nrfconnect-license.ts",
-        "run-esbuild": "scripts/esbuild.ts"
+        "run-esbuild": "scripts/build-app.ts"
     },
     "main": "src",
     "scripts": {
@@ -22,11 +22,9 @@
         "check:types": "tsc --noEmit",
         "check:license": "tsx scripts/nrfconnect-license.ts check",
         "create-source": "tsx scripts/create-source.ts",
-        "generate-types": "tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./typings/generated --rootDir .",
-        "prepare": "tsx scripts/installHusky.ts",
+        "prepare": "tsx scripts/installHusky.ts && tsx scripts/build-shared.ts",
         "prepare-shared-release": "tsx scripts/prepare-shared-release.ts",
-        "clean": "rimraf dist typings/generated scripts/nordic-publish.js",
-        "postinstall": "tsx scripts/postinstall.ts"
+        "clean": "rimraf dist"
     },
     "dependencies": {
         "@electron/remote": "^2.1.2",
@@ -128,6 +126,6 @@
     "devDependencies": {
         "@commander-js/extra-typings": "^10.0.3"
     },
-    "typings": "./typings/generated/src/index.d.ts",
+    "typings": "./dist/typings/src/index.d.ts",
     "prettier": "./config/prettier.config.js"
 }

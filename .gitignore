@@ -6,5 +6,4 @@
 /scripts/check-for-typescript.js
 /scripts/nrfconnect-license.js
 /dist
-/typings/generated/*
 /.vscode/settings.json

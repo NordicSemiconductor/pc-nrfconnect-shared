@@ -7,6 +7,16 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## Unreleased
+
+### Changed
+
+- Build scripts:
+    - Moved artifact generation from `postinstall` to `prepare` so that
+      generated artifacts are included in the published package.
+    - Simplified build script for apps.
+    - Place all generated files in `dist/`.
+
 ## 241.0.0 - 2025-12-12
 
 ### Added

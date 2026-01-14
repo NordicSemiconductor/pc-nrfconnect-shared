@@ -5,7 +5,6 @@
         "./nrfutil/**/*.ts",
         "./main/**/*.ts",
         "./src/**/*.ts",
-        "./src/**/*.tsx",
-        "./typings/*.d.ts"
+        "./src/**/*.tsx"
     ]
 }
