@@ -10,7 +10,7 @@ import { act, screen } from '@testing-library/react';
 import { OFFICIAL } from '../../ipc/sources';
 import packageJsonFromShared from '../../package.json';
 import render from '../../test/testrenderer';
-import App, { Pane } from './App';
+import App, { type Pane } from './App';
 
 jest.mock('../Log/LogViewer', () => ({
     __esModule: true,

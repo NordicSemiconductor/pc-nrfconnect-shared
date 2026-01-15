@@ -14,7 +14,7 @@ import {
     ErrorDialog as BaseErrorDialog,
 } from '../Dialog/Dialog';
 import {
-    ErrorMessage,
+    type ErrorMessage,
     errorResolutions as errorResolutionsSelector,
     hideDialog,
     isVisible as isVisibleSelector,

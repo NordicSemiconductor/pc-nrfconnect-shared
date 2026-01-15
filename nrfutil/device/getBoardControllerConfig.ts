@@ -5,7 +5,7 @@
  */
 
 import { type OnProgress } from '../sandboxTypes';
-import { deviceSingleTaskEndOperation, NrfutilDevice } from './common';
+import { deviceSingleTaskEndOperation, type NrfutilDevice } from './common';
 
 export interface BoardControllerConfigResponse {
     data: {

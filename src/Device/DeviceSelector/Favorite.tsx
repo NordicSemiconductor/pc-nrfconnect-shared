@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { useDispatch } from 'react-redux';
 
 import PseudoButton from '../../PseudoButton/PseudoButton';
 import classNames from '../../utils/classNames';
-import { Device, toggleDeviceFavorited } from '../deviceSlice';
+import { type Device, toggleDeviceFavorited } from '../deviceSlice';
 
 export const MakeDeviceFavorite: FC<{ device: Device }> = ({ device }) => {
     const dispatch = useDispatch();

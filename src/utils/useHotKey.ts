@@ -4,11 +4,15 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { DependencyList, useEffect } from 'react';
+import { type DependencyList, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Mousetrap from 'mousetrap';
 
-import { addShortcut, removeShortcut, Shortcut } from '../About/shortcutSlice';
+import {
+    addShortcut,
+    removeShortcut,
+    type Shortcut,
+} from '../About/shortcutSlice';
 import telemetry from '../telemetry/telemetry';
 
 const useNewHotKey = (shortcut: Shortcut, deps: DependencyList = []) => {

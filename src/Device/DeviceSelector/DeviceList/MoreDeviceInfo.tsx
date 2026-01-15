@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 
-import { SerialPort } from '../../../../nrfutil/device/common';
+import { type SerialPort } from '../../../../nrfutil/device/common';
 import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
-import { Device } from '../../deviceSlice';
+import { type Device } from '../../deviceSlice';
 
 const Row = ({ children }: { children: ReactNode }) => (
     <div className="tw-flex tw-flex-row tw-pr-5">

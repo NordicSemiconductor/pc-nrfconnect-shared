@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { Action, Reducer } from 'redux';
+import { type Action, type Reducer } from 'redux';
 
 const initAction = {
     type: '@@INIT',

@@ -5,7 +5,7 @@
  */
 
 import { type OnProgress } from '../sandboxTypes';
-import { deviceSingleTaskEndOperationVoid, NrfutilDevice } from './common';
+import { deviceSingleTaskEndOperationVoid, type NrfutilDevice } from './common';
 
 export type McuState = 'Application' | 'Programming';
 

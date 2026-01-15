@@ -9,11 +9,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
 
 import { ConfirmationDialog } from '../Dialog/Dialog';
-import { AppThunk } from '../store';
+import { type AppThunk } from '../store';
 import {
     addConfirmBeforeClose,
     clearConfirmBeforeClose,
-    ConfirmBeforeCloseApp,
+    type ConfirmBeforeCloseApp,
     getNextConfirmDialog,
     getShowConfirmCloseDialog,
     setShowCloseDialog,

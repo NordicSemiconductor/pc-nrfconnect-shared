@@ -16,6 +16,14 @@ every new version is a new major version.
       generated artifacts are included in the published package.
     - Simplified build script for apps.
     - Place all generated files in `dist/`.
+- Enabled the ESLint rule `@typescript-eslint/consistent-type-imports` to assert
+  that type imports are always marked as such.
+
+### Steps to upgrade when using this package
+
+- The additional linting rule will most likely show that some type imports are
+  not marked as such. Those should be fixable by running
+  `npm run lint -- --fix`.
 
 ## 241.0.0 - 2025-12-12
 

@@ -10,7 +10,7 @@ import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import { OFFICIAL } from '../../../ipc/sources';
 import packageJsonFromShared from '../../../package.json';
 import render from '../../../test/testrenderer';
-import { addDevice, Device, removeDevice } from '../deviceSlice';
+import { addDevice, type Device, removeDevice } from '../deviceSlice';
 import { jprogDeviceSetup } from '../jprogOperations';
 import DeviceSelector from './DeviceSelector';
 

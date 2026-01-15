@@ -8,7 +8,7 @@ import { TelemetryClient } from 'applicationinsights';
 
 import { isDevelopment } from '../utils/environment';
 import { packageJson } from '../utils/packageJson';
-import TelemetryMetadata from './TelemetryMetadata';
+import type TelemetryMetadata from './TelemetryMetadata';
 import TelemetrySender from './TelemetrySender';
 
 export default class TelemetrySenderInMain extends TelemetrySender {

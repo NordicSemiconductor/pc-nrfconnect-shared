@@ -7,9 +7,9 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
-import { Action as SimpleAction, Reducer } from 'redux';
+import { type Action as SimpleAction, type Reducer } from 'redux';
 
-import createStore, { AppThunk } from '../src/store';
+import createStore, { type AppThunk } from '../src/store';
 
 type Action = SimpleAction | AppThunk<never>;
 

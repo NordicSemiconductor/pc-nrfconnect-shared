@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, useEffect } from 'react';
+import React, { type FC, useEffect } from 'react';
 import lodashRange from 'lodash.range';
 
 import classNames from '../utils/classNames';
-import { getStep, isValues, RangeOrValues } from './range';
+import { getStep, isValues, type RangeOrValues } from './range';
 
 import './ticks.scss';
 

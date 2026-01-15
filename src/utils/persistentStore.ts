@@ -6,7 +6,7 @@
 
 import type { AutoDetectTypes } from '@serialport/bindings-cpp';
 import Store from 'electron-store';
-import { SerialPortOpenOptions } from 'serialport';
+import { type SerialPortOpenOptions } from 'serialport';
 import { v4 as uuid } from 'uuid';
 
 import { inMain as safeStorage } from '../../ipc/safeStorage';

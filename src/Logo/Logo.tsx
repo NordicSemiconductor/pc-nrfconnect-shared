@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { useSelector } from 'react-redux';
 
 import { deviceIsSelected as deviceIsSelectedSelector } from '../Device/deviceSlice';

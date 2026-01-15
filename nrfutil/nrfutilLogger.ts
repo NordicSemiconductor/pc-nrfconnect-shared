@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import winston from 'winston';
+import type winston from 'winston';
 
 let nrfutilLogger: winston.Logger | undefined;
 

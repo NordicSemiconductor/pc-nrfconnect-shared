@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, useEffect } from 'react';
+import React, { type FC, useEffect } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 
 import classNames from '../utils/classNames';
 import Bar from './Bar';
 import Handle from './Handle';
 import { toPercentage } from './percentage';
-import { isValues, RangeOrValues, useValidatedRange } from './range';
+import { isValues, type RangeOrValues, useValidatedRange } from './range';
 import Ticks from './Ticks';
 
 import './slider.scss';

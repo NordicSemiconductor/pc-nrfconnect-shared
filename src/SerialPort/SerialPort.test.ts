@@ -6,7 +6,7 @@
 
 import { ipcRenderer } from 'electron';
 
-import { OverwriteOptions } from '../../ipc/serialPort';
+import { type OverwriteOptions } from '../../ipc/serialPort';
 import { createSerialPort } from './SerialPort';
 
 const defaultOptions = { path: '/dev/ROBOT', baudRate: 115200 };

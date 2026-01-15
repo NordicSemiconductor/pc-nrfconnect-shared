@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 
 import { deviceInfo } from '../deviceInfo/deviceInfo';
-import { Device } from '../deviceSlice';
+import { type Device } from '../deviceSlice';
 
 import './device-icon.scss';
 

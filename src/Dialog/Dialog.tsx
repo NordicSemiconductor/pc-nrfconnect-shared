@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import Modal from 'react-bootstrap/Modal';
 
-import Button, { ButtonVariants } from '../Button/Button';
+import Button, { type ButtonVariants } from '../Button/Button';
 import Spinner from '../Spinner/Spinner';
 
 import './dialog.scss';

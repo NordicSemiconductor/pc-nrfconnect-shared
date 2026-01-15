@@ -16,7 +16,7 @@ import {
     findDependency,
 } from '../../nrfutil/version/moduleVersion';
 import { deviceInfo as getDeviceInfo } from '../Device/deviceInfo/deviceInfo';
-import { Device } from '../Device/deviceSlice';
+import { type Device } from '../Device/deviceSlice';
 import logger from '../logging';
 import appDetails from './appDetails';
 import { getAppDataDir } from './appDirs';

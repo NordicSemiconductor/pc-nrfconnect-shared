@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { BrowserWindow, ipcRenderer, WebContents } from 'electron';
+import { type BrowserWindow, ipcRenderer, type WebContents } from 'electron';
 
 let launcherWindow: BrowserWindow | undefined;
 

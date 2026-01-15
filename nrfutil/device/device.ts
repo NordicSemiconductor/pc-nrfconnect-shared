@@ -5,7 +5,7 @@
  */
 
 import { getModule } from '..';
-import { LogLevel, LogMessage } from '../sandboxTypes';
+import { type LogLevel, type LogMessage } from '../sandboxTypes';
 import { Batch } from './batch';
 import boardController from './boardController';
 import deviceInfo from './deviceInfo';

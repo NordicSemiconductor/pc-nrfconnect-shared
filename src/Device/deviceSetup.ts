@@ -3,19 +3,19 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
-import { DeviceInfo } from '../../nrfutil/device/deviceInfo';
+import { type DeviceInfo } from '../../nrfutil/device/deviceInfo';
 import { preventAppCloseUntilComplete } from '../ConfirmBeforeClose/confirmBeforeCloseSlice';
 import logger from '../logging';
 import describeError from '../logging/describeError';
-import { AppThunk, RootState } from '../store';
+import { type AppThunk, type RootState } from '../store';
 import {
     closeDeviceSetupDialog,
     openDeviceSetupDialog,
     setDeviceSetupProgress,
     setDeviceSetupProgressMessage,
 } from './deviceSetupSlice';
-import { Device, DeviceWithSerialNumber } from './deviceSlice';
-import { InitPacket } from './initPacket';
+import { type Device, type DeviceWithSerialNumber } from './deviceSlice';
+import { type InitPacket } from './initPacket';
 
 export interface DfuEntry {
     key: string;

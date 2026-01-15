@@ -13,7 +13,11 @@ import Icon from '@mdi/react';
 
 import classNames from '../utils/classNames';
 import { colors } from '../utils/colors';
-import { FlashMessage, getMessages, removeMessage } from './FlashMessageSlice';
+import {
+    type FlashMessage,
+    getMessages,
+    removeMessage,
+} from './FlashMessageSlice';
 
 import './FlashMessage.scss';
 

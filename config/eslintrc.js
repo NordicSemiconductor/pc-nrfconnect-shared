@@ -14,6 +14,11 @@ const entriesInGitignore = fs
 module.exports = {
     reportUnusedDisableDirectives: true,
     parser: '@typescript-eslint/parser',
+    parserOptions: {
+        projectService: {
+            allowDefaultProject: ['Changelog.md.ts*'],
+        },
+    },
     extends: [
         'eslint:recommended',
         'airbnb',
@@ -36,6 +41,10 @@ module.exports = {
             { 'ts-expect-error': 'allow-with-description' },
         ],
         '@typescript-eslint/no-shadow': 'error',
+        '@typescript-eslint/consistent-type-imports': [
+            'error',
+            { fixStyle: 'inline-type-imports' },
+        ],
         'import/default': 'error',
         'import/extensions': 'off',
         'import/named': 'error',
@@ -160,6 +169,7 @@ module.exports = {
             parser: 'markdown-eslint-parser',
             rules: {
                 'prettier/prettier': ['error', { parser: 'markdown' }],
+                '@typescript-eslint/consistent-type-imports': 'off',
             },
         },
         {
@@ -173,6 +183,7 @@ module.exports = {
             parser: 'jsonc-eslint-parser',
             rules: {
                 'no-template-curly-in-string': 'off',
+                '@typescript-eslint/consistent-type-imports': 'off',
             },
         },
         {
@@ -180,6 +191,7 @@ module.exports = {
             rules: {
                 '@typescript-eslint/no-require-imports': 'off',
             },
+            extends: ['plugin:@typescript-eslint/disable-type-checked'],
         },
         {
             files: [

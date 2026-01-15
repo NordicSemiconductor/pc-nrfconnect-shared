@@ -6,8 +6,8 @@
 
 import React, { useState } from 'react';
 
-import { DropdownItem } from '../Dropdown/Dropdown';
-import { RangeOrValues } from '../Slider/range';
+import { type DropdownItem } from '../Dropdown/Dropdown';
+import { type RangeOrValues } from '../Slider/range';
 import classNames from '../utils/classNames';
 import { useSynchronisationIfChangedFromOutside } from './InlineInput';
 import NumberInlineInput from './NumberInlineInput';

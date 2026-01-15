@@ -10,7 +10,7 @@ import { getIsLoggingVerbose } from '../src/utils/persistentStore';
 import logLibVersions from './device/logLibVersions';
 import { getNrfutilLogger } from './nrfutilLogger';
 import { NrfutilSandbox } from './sandbox';
-import { LogLevel } from './sandboxTypes';
+import { type LogLevel } from './sandboxTypes';
 import { describeVersion } from './version/moduleVersion';
 
 const fallbackLevel = process.env.NODE_ENV === 'production' ? 'off' : 'error';

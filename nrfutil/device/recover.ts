@@ -7,9 +7,9 @@
 import { type OnProgress } from '../sandboxTypes';
 import {
     coreArg,
-    DeviceCore,
+    type DeviceCore,
     deviceSingleTaskEndOperationVoid,
-    NrfutilDevice,
+    type NrfutilDevice,
 } from './common';
 
 export default (

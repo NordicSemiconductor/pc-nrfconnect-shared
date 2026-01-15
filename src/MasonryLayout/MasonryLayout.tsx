@@ -3,7 +3,12 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
-import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import React, {
+    type PropsWithChildren,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 
 import classNames from '../utils/classNames';
 

@@ -12,7 +12,7 @@ import type {
 import EventEmitter from 'events';
 import type { SerialPortOpenOptions } from 'serialport';
 
-import { forMain, inMain, OverwriteOptions } from '../../ipc/serialPort';
+import { forMain, inMain, type OverwriteOptions } from '../../ipc/serialPort';
 import logger from '../logging';
 
 export type SerialPort = Awaited<ReturnType<typeof createSerialPort>>;

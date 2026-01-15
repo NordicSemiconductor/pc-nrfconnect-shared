@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { Logger } from 'winston';
+import { type Logger } from 'winston';
 
 import { packageJson } from '../utils/packageJson';
 import flatObject from './flatObject';
-import TelemetryMetadata from './TelemetryMetadata';
-import TelemetrySender from './TelemetrySender';
+import type TelemetryMetadata from './TelemetryMetadata';
+import type TelemetrySender from './TelemetrySender';
 import TelemetrySenderInMain from './TelemetrySenderInMain';
 import TelemetrySenderInRenderer from './TelemetrySenderInRenderer';
 

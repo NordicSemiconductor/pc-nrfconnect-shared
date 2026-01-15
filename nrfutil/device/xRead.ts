@@ -8,9 +8,9 @@
 import { type OnProgress } from '../sandboxTypes';
 import {
     coreArg,
-    DeviceCore,
+    type DeviceCore,
     deviceSingleTaskEndOperation,
-    NrfutilDevice,
+    type NrfutilDevice,
 } from './common';
 
 export interface MemoryData {

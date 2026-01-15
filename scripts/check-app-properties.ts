@@ -10,7 +10,10 @@ import { execSync } from 'child_process';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import property from 'lodash/property';
 
-import { PackageJsonApp, parsePackageJsonApp } from '../ipc/schema/packageJson';
+import {
+    type PackageJsonApp,
+    parsePackageJsonApp,
+} from '../ipc/schema/packageJson';
 import { getLatestEntry } from './latest-changelog-entry';
 
 const format = (strings: string[]) =>

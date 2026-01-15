@@ -5,7 +5,11 @@
  */
 
 import { getModule } from '..';
-import { DeviceTraits, deviceTraitsToArgs, NrfutilDevice } from './common';
+import {
+    type DeviceTraits,
+    deviceTraitsToArgs,
+    type NrfutilDevice,
+} from './common';
 
 export interface HotplugEvent {
     id: number;

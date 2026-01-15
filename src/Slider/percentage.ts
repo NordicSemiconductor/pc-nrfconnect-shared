@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { getMax, getMin, isValues, RangeOrValues } from './range';
+import { getMax, getMin, isValues, type RangeOrValues } from './range';
 
 export const constrainedToPercentage = (percentage: number) => {
     if (percentage < 0) return 0;

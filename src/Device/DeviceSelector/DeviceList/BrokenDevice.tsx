@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 
 import PseudoButton from '../../../PseudoButton/PseudoButton';
 import { showDialog } from '../../BrokenDeviceDialog/brokenDeviceDialogSlice';
-import { Device as DeviceProps } from '../../deviceSlice';
+import { type Device as DeviceProps } from '../../deviceSlice';
 import BasicDeviceInfo from '../BasicDeviceInfo';
 
 import './broken-device.scss';

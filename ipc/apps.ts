@@ -11,7 +11,7 @@ import type {
     NrfutilModuleVersion,
     UrlString,
 } from './MetaFiles';
-import { LOCAL, SourceName } from './sources';
+import { LOCAL, type SourceName } from './sources';
 
 export interface AppSpec {
     name: string;

@@ -4,8 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { DeviceInfo } from '../../nrfutil/device';
-import { DeviceTraits, NrfutilDevice } from '../../nrfutil/device/common';
+import { type DeviceInfo } from '../../nrfutil/device';
+import {
+    type DeviceTraits,
+    type NrfutilDevice,
+} from '../../nrfutil/device/common';
 import NrfutilDeviceLib from '../../nrfutil/device/device';
 import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
@@ -24,12 +27,12 @@ import {
     setLastArrivedDeviceId,
     setOnCancelTimeout,
     setWaitForDeviceTimeout,
-    WaitForDevice,
+    type WaitForDevice,
 } from './deviceAutoSelectSlice';
 import { closeDeviceSetupDialog } from './deviceSetupSlice';
 import {
     addDevice,
-    Device,
+    type Device,
     removeDevice,
     selectDevice,
     setSelectedDeviceInfo,

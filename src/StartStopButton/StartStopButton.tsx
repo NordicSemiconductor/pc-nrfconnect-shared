@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, ReactNode } from 'react';
+import React, { type FC, type ReactNode } from 'react';
 
-import Button, { ButtonVariants } from '../Button/Button';
+import Button, { type ButtonVariants } from '../Button/Button';
 import classNames from '../utils/classNames';
 import playSvg from './play-circle.svg';
 import stopSvg from './stop-circle.svg';

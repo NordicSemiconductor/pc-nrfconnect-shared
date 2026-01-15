@@ -8,7 +8,7 @@
 
 import { Command, Option } from '@commander-js/extra-typings';
 
-import { SourceJson } from '../ipc/MetaFiles';
+import { type SourceJson } from '../ipc/MetaFiles';
 
 const fail = (message: string) => {
     console.error(message);

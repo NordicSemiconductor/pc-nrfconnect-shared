@@ -28,8 +28,8 @@
    through CSS, e.g. to change the colours.
 */
 
-import { KnownDevicePCA } from '../../../ipc/device';
-import { NrfutilDevice } from '../../../nrfutil/device';
+import { type KnownDevicePCA } from '../../../ipc/device';
+import { type NrfutilDevice } from '../../../nrfutil/device';
 import type { Device as WrappedDevice } from '../deviceSlice';
 
 import nPMFamilyLogo from '!!@svgr!./nPM-Family-Series-logo.svg';

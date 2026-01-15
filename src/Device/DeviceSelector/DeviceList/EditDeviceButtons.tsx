@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
-import { Device } from '../../deviceSlice';
+import { type Device } from '../../deviceSlice';
 import { MakeDeviceFavorite } from '../Favorite';
 import RenameDevice from './RenameDevice';
 

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { z } from 'zod';
+import { type z } from 'zod';
 import { fromZodError } from 'zod-validation-error';
 
 export const parseWithPrettifiedErrorMessage =

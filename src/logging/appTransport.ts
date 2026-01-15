@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { LogEntry } from 'winston';
-import Transport, { TransportStreamOptions } from 'winston-transport';
+import { type LogEntry } from 'winston';
+import Transport, { type TransportStreamOptions } from 'winston-transport';
 
 interface Options extends TransportStreamOptions {
     onLogEntry: (entry: LogEntry) => void;

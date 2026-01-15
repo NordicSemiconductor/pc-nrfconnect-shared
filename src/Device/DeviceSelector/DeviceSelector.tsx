@@ -8,7 +8,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { NrfutilDeviceLib } from '../../../nrfutil/device';
-import { DeviceTraits } from '../../../nrfutil/device/common';
+import { type DeviceTraits } from '../../../nrfutil/device/common';
 import logger from '../../logging';
 import simplifyDevice from '../../telemetry/simplifyDevice';
 import telemetry from '../../telemetry/telemetry';
@@ -23,12 +23,12 @@ import {
     startWatchingDevices,
     stopWatchingDevices,
 } from '../deviceLister';
-import { DeviceSetupConfig, setupDevice } from '../deviceSetup';
+import { type DeviceSetupConfig, setupDevice } from '../deviceSetup';
 import DeviceSetupView from '../DeviceSetup/DeviceSetupView';
 import {
     deselectDevice,
     deselectVirtualDevice,
-    Device,
+    type Device,
     deviceIsSelected as deviceIsSelectedSelector,
     isDeviceWithSerialNumber,
     selectDevice,

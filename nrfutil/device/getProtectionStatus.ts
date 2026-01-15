@@ -7,10 +7,10 @@
 import { type OnProgress } from '../sandboxTypes';
 import {
     coreArg,
-    DeviceCore,
+    type DeviceCore,
     deviceSingleTaskEndOperation,
-    NrfutilDevice,
-    ProtectionStatus,
+    type NrfutilDevice,
+    type ProtectionStatus,
 } from './common';
 
 type DeviceFamily =

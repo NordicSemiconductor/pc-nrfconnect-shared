@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { AppDetailsFromLauncher } from '../../ipc/appDetails';
+import { type AppDetailsFromLauncher } from '../../ipc/appDetails';
 import Card from '../Card/Card';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import appDetails from '../utils/appDetails';

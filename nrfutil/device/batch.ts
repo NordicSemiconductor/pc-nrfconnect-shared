@@ -6,27 +6,27 @@
 
 import { getModule } from '..';
 import { createDisposableTempFile } from '../fs';
-import { TaskEnd } from '../sandboxTypes';
-import { BatchOperationWrapper, Callbacks } from './batchTypes';
+import { type TaskEnd } from '../sandboxTypes';
+import { type BatchOperationWrapper, type Callbacks } from './batchTypes';
 import {
     coreArg,
-    DeviceCore,
-    DeviceTraits,
+    type DeviceCore,
+    type DeviceTraits,
     deviceTraitsToArgs,
-    NrfutilDevice,
-    ResetKind,
+    type NrfutilDevice,
+    type ResetKind,
 } from './common';
-import { DeviceCoreInfo } from './getCoreInfo';
-import { FWInfo } from './getFwInfo';
-import { GetProtectionStatusResult } from './getProtectionStatus';
+import { type DeviceCoreInfo } from './getCoreInfo';
+import { type FWInfo } from './getFwInfo';
+import { type GetProtectionStatusResult } from './getProtectionStatus';
 import {
-    Firmware,
-    ProgrammingOptions,
+    type Firmware,
+    type ProgrammingOptions,
     programmingOptionsToArgs,
 } from './program';
 import {
-    MemoryReadRaw,
-    ReadResult,
+    type MemoryReadRaw,
+    type ReadResult,
     toIntelHex,
     type XReadOptions,
     xReadOptionsToArgs,

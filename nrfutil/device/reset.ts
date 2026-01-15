@@ -7,10 +7,10 @@
 import { type OnProgress } from '../sandboxTypes';
 import {
     coreArg,
-    DeviceCore,
+    type DeviceCore,
     deviceSingleTaskEndOperationVoid,
-    NrfutilDevice,
-    ResetKind,
+    type NrfutilDevice,
+    type ResetKind,
 } from './common';
 
 export default async (

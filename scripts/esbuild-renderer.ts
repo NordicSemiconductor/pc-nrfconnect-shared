@@ -6,7 +6,7 @@
 
 import { transform as svgr } from '@svgr/core';
 import autoprefixer from 'autoprefixer';
-import esbuild, { BuildOptions } from 'esbuild';
+import esbuild, { type BuildOptions } from 'esbuild';
 import { postcssModules, sassPlugin } from 'esbuild-sass-plugin';
 import postCssPlugin from 'esbuild-style-plugin';
 import * as fs from 'node:fs';
