@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { ipcMain, WebContents } from 'electron';
+import { ipcMain, type WebContents } from 'electron';
 
-import { LaunchableApp } from './apps';
+import { type LaunchableApp } from './apps';
 import { handleWithSender, invoke } from './infrastructure/rendererToMain';
 
 const channel = {

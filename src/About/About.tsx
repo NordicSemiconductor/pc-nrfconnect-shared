@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 
 import ApplicationCard from './ApplicationCard';
 import DeviceCard from './DeviceCard';

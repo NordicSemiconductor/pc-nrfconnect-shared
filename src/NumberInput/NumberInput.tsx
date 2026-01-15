@@ -8,7 +8,7 @@ import React from 'react';
 
 import Dropdown, { type DropdownItem } from '../Dropdown/Dropdown';
 import NumberInlineInput from '../InlineInput/NumberInlineInput';
-import { RangeOrValues } from '../Slider/range';
+import { type RangeOrValues } from '../Slider/range';
 import BaseSlider from '../Slider/Slider';
 import classNames from '../utils/classNames';
 

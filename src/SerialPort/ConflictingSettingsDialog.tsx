@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 import type { AutoDetectTypes } from '@serialport/bindings-cpp';
-import { SerialPortOpenOptions } from 'serialport';
+import { type SerialPortOpenOptions } from 'serialport';
 
 import { ConfirmationDialog } from '../Dialog/Dialog';
 import logger from '../logging';
@@ -14,7 +14,7 @@ import classNames from '../utils/classNames';
 import {
     createSerialPort,
     getSerialPortOptions,
-    SerialPort,
+    type SerialPort,
 } from './SerialPort';
 
 const getCurrentOptions = async (

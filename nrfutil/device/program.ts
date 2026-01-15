@@ -8,11 +8,11 @@ import { createDisposableTempFile } from '../fs';
 import { type OnProgress } from '../sandboxTypes';
 import {
     coreArg,
-    DeviceCore,
+    type DeviceCore,
     deviceSingleTaskEndOperationVoid,
     deviceTraitsToArgs,
-    NrfutilDevice,
-    ResetKind,
+    type NrfutilDevice,
+    type ResetKind,
 } from './common';
 
 export type FileExtension = 'zip' | 'hex';

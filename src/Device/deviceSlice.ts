@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { AutoDetectTypes } from '@serialport/bindings-cpp';
-import { SerialPortOpenOptions } from 'serialport';
+import { type SerialPortOpenOptions } from 'serialport';
 
-import { DeviceInfo } from '../../nrfutil/device';
-import { NrfutilDevice } from '../../nrfutil/device/common';
+import { type DeviceInfo } from '../../nrfutil/device';
+import { type NrfutilDevice } from '../../nrfutil/device/common';
 import type { RootState } from '../store';
 import {
     persistIsFavorite,

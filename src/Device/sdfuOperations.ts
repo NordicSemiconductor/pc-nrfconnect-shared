@@ -10,25 +10,25 @@ import fs from 'fs';
 import MemoryMap from 'nrf-intel-hex';
 
 import NrfutilDeviceLib from '../../nrfutil/device/device';
-import { McuState } from '../../nrfutil/device/setMcuState';
+import { type McuState } from '../../nrfutil/device/setMcuState';
 import logger from '../logging';
-import { AppThunk, RootState } from '../store';
+import { type AppThunk, type RootState } from '../store';
 import { getAppFile } from '../utils/appDirs';
 import {
     clearWaitForDevice,
     setWaitForDevice,
-    WaitForDeviceWhen,
+    type WaitForDeviceWhen,
 } from './deviceAutoSelectSlice';
-import { DeviceSetup, DfuEntry } from './deviceSetup';
+import { type DeviceSetup, type DfuEntry } from './deviceSetup';
 import { openDeviceSetupDialog } from './deviceSetupSlice';
-import { Device } from './deviceSlice';
+import { type Device } from './deviceSlice';
 import {
     createInitPacketBuffer,
     defaultInitPacket,
-    DfuImage,
+    type DfuImage,
     FwType,
     HashType,
-    InitPacket,
+    type InitPacket,
 } from './initPacket';
 
 const NORDIC_DFU_PRODUCT_ID = 0x521f;

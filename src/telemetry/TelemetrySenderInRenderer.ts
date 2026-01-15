@@ -10,7 +10,7 @@ import appDetails from '../utils/appDetails';
 import { isDevelopment } from '../utils/environment';
 import { isLauncher, packageJson } from '../utils/packageJson';
 import { getTelemetryClientId } from '../utils/persistentStore';
-import TelemetryMetadata from './TelemetryMetadata';
+import type TelemetryMetadata from './TelemetryMetadata';
 import TelemetrySender from './TelemetrySender';
 
 export default class TelemetrySenderInRenderer extends TelemetrySender {

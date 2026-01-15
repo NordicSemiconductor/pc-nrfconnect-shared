@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, useState } from 'react';
+import React, { type FC, useState } from 'react';
 
 import Button from '../Button/Button';
 import ShortcutModal from '../Shortcuts/ShortcutModal';

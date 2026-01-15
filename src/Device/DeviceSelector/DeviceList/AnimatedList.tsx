@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, ReactNode } from 'react';
+import React, { type FC, type ReactNode } from 'react';
 import { Flipped, Flipper, spring } from 'react-flip-toolkit';
 
-import { Device } from '../../deviceSlice';
+import { type Device } from '../../deviceSlice';
 
 const changesOnReorder = (devices: Device[]) =>
     devices.map(device => device.serialNumber).join('\n');

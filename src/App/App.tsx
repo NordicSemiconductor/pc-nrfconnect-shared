@@ -6,11 +6,17 @@
 
 import 'focus-visible';
 
-import React, { FC, ReactNode, useEffect, useMemo, useRef } from 'react';
+import React, {
+    type FC,
+    type ReactNode,
+    useEffect,
+    useMemo,
+    useRef,
+} from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import { createRoot } from 'react-dom/client';
 import { useDispatch, useSelector } from 'react-redux';
-import { Reducer } from 'redux';
+import { type Reducer } from 'redux';
 
 import { inMain as open } from '../../ipc/open';
 import { setNrfutilLogger } from '../../nrfutil/nrfutilLogger';

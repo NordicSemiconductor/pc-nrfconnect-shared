@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { ipcMain, ipcRenderer, WebContents } from 'electron';
+import { ipcMain, ipcRenderer, type WebContents } from 'electron';
 
 // Send
 export const send =

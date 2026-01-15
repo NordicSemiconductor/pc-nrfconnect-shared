@@ -4,7 +4,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, MouseEventHandler, useRef, useState } from 'react';
+import React, {
+    type FC,
+    type MouseEventHandler,
+    useRef,
+    useState,
+} from 'react';
 
 import classNames from '../utils/classNames';
 import {
@@ -12,7 +17,7 @@ import {
     fromPercentage,
     toPercentage,
 } from './percentage';
-import { RangeOrValues } from './range';
+import { type RangeOrValues } from './range';
 
 import './handle.scss';
 

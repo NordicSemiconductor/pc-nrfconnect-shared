@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { Terminal } from '@xterm/headless';
+import { type Terminal } from '@xterm/headless';
 import EventEmitter from 'events';
 
 import logger from '../logging';
-import { SerialPort } from '../SerialPort/SerialPort';
+import { type SerialPort } from '../SerialPort/SerialPort';
 
 export interface Callbacks {
     onSuccess: (response: string, command: string) => void;

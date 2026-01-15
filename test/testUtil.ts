@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { combineReducers, Reducer } from 'redux';
+import { combineReducers, type Reducer } from 'redux';
 
 import { rootReducerSpec } from '../src/store';
 import dispatchTo from './dispatchTo';

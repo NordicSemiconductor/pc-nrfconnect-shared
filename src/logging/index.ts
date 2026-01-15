@@ -6,8 +6,14 @@
 
 import path from 'path';
 import { SPLAT } from 'triple-beam';
-import { createLogger, format, LogEntry, Logger, transports } from 'winston';
-import Transport from 'winston-transport';
+import {
+    createLogger,
+    format,
+    type LogEntry,
+    type Logger,
+    transports,
+} from 'winston';
+import type Transport from 'winston-transport';
 
 import { getAppLogDir, getUserDataDir } from '../utils/appDirs';
 import { openFile, openFileLocation } from '../utils/open';

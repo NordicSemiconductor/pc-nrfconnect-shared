@@ -4,8 +4,12 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { AnyAction, configureStore, ThunkAction } from '@reduxjs/toolkit';
-import { Reducer } from 'redux';
+import {
+    type AnyAction,
+    configureStore,
+    type ThunkAction,
+} from '@reduxjs/toolkit';
+import { type Reducer } from 'redux';
 
 import { reducer as shortcuts } from './About/shortcutSlice';
 import { reducer as appLayout } from './App/appLayout';

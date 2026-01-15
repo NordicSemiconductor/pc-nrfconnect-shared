@@ -6,7 +6,7 @@
 
 import React from 'react';
 import formatDate from 'date-fns/format';
-import { LogEntry } from 'winston';
+import { type LogEntry } from 'winston';
 
 import { openUrl } from '../utils/open';
 

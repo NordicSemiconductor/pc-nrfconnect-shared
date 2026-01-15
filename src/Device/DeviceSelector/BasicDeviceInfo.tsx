@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { type ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import InlineInput from '../../InlineInput/InlineInput';
@@ -14,7 +14,11 @@ import {
     getWaitingToAutoReselect,
 } from '../deviceAutoSelectSlice';
 import { displayedDeviceName } from '../deviceInfo/deviceInfo';
-import { Device, resetDeviceNickname, setDeviceNickname } from '../deviceSlice';
+import {
+    type Device,
+    resetDeviceNickname,
+    setDeviceNickname,
+} from '../deviceSlice';
 import DeviceIcon from './DeviceIcon';
 
 import './basic-device-info.scss';

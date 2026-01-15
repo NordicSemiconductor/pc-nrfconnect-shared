@@ -11,11 +11,11 @@ import type {
 } from '@serialport/bindings-cpp';
 import type { SerialPortOpenOptions } from 'serialport';
 
-import { SerialPort } from '../SerialPort/SerialPort';
+import { type SerialPort } from '../SerialPort/SerialPort';
 import {
     shellParser as CreateShellParser,
-    ShellParserSettings,
-    XTerminalShellParser,
+    type ShellParserSettings,
+    type XTerminalShellParser,
 } from './shellParser';
 
 jest.useFakeTimers();

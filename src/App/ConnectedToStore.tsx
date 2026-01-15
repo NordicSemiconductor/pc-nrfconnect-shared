@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { Provider } from 'react-redux';
-import { Reducer } from 'redux';
+import { type Reducer } from 'redux';
 
 import store from '../store';
 

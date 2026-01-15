@@ -5,7 +5,7 @@
  */
 
 import logger from '../logging';
-import { AppDispatch } from '../store';
+import { type AppDispatch } from '../store';
 import { addEntries } from './logSlice';
 
 const addLogEntriesToStore = (dispatch: AppDispatch) => () => {

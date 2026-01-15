@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { LogEntry } from 'winston';
+import { type LogEntry } from 'winston';
 
 class LogBuffer {
     entries: LogEntry[] = [];

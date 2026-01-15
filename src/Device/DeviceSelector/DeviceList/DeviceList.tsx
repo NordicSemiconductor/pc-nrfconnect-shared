@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { FC, useMemo } from 'react';
+import React, { type FC, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Toggle } from '../../../Toggle/Toggle';
@@ -12,7 +12,7 @@ import classNames from '../../../utils/classNames';
 import { getAutoReselect, setAutoReselect } from '../../deviceAutoSelectSlice';
 import { displayedDeviceName } from '../../deviceInfo/deviceInfo';
 import {
-    Device as DeviceProps,
+    type Device as DeviceProps,
     getDevices,
     selectedDevice,
 } from '../../deviceSlice';

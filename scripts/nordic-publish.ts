@@ -15,8 +15,8 @@ import LowlevelFtpClient from 'ftp';
 import semver from 'semver';
 import calculateShasum from 'shasum';
 
-import { AppInfo, SourceJson } from '../ipc/MetaFiles';
-import { PackageJsonApp } from '../ipc/schema/packageJson';
+import { type AppInfo, type SourceJson } from '../ipc/MetaFiles';
+import { type PackageJsonApp } from '../ipc/schema/packageJson';
 import checkAppProperties from './check-app-properties';
 
 interface App {

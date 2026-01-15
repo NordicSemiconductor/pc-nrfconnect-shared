@@ -5,14 +5,14 @@
  */
 
 import si from 'systeminformation';
-import { Logger } from 'winston';
+import { type Logger } from 'winston';
 
 import {
     deleteHasUserAgreedToTelemetry,
     getHasUserAgreedToTelemetry,
     persistHasUserAgreedToTelemetry,
 } from '../utils/persistentStore';
-import TelemetryMetadata from './TelemetryMetadata';
+import type TelemetryMetadata from './TelemetryMetadata';
 
 type MaybePromise<T> = T | Promise<T>;
 

@@ -7,7 +7,7 @@
 import React, { useMemo, useState } from 'react';
 
 import { DialogButton, GenericDialog } from '../Dialog/Dialog';
-import Dropdown, { DropdownItem } from '../Dropdown/Dropdown';
+import Dropdown, { type DropdownItem } from '../Dropdown/Dropdown';
 import logger from '../logging';
 import describeError from '../logging/describeError';
 import AboutButton from './AboutButton';

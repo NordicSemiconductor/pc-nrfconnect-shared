@@ -5,12 +5,12 @@
  */
 
 import NrfutilDeviceLib from '../../nrfutil/device/device';
-import { DeviceInfo } from '../../nrfutil/device/deviceInfo';
+import { type DeviceInfo } from '../../nrfutil/device/deviceInfo';
 import logger from '../logging';
 import type { AppThunk, RootState } from '../store';
-import { DeviceSetup, JprogEntry } from './deviceSetup';
+import { type DeviceSetup, type JprogEntry } from './deviceSetup';
 import {
-    Device,
+    type Device,
     getReadbackProtection,
     setSelectedDeviceInfo,
 } from './deviceSlice';

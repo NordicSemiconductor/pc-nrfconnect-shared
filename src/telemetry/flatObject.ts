@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
-import TelemetryMetadata from './TelemetryMetadata';
+import type TelemetryMetadata from './TelemetryMetadata';
 
 const flatObject = (obj?: unknown, parentKey?: string): TelemetryMetadata =>
     Object.entries(obj ?? {}).reduce((acc, [key, value]) => {

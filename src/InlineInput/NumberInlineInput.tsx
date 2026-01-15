@@ -10,10 +10,10 @@ import { isFactor } from '../Slider/factor';
 import {
     getStep,
     isValues,
-    Range,
-    RangeOrValues,
+    type Range,
+    type RangeOrValues,
     useValidatedRange,
-    Values,
+    type Values,
 } from '../Slider/range';
 import InlineInput from './InlineInput';
 
