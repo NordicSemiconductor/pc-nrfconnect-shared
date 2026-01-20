@@ -24,7 +24,10 @@ export {
     DialogButton,
 } from './Dialog/Dialog';
 export type { DialogButtonProps } from './Dialog/Dialog';
+
 export { default as Slider } from './Slider/Slider';
+export { type Range, type RangeOrValues, type Values } from './Slider/range';
+
 export { Toggle } from './Toggle/Toggle';
 export { default as RootErrorDialog } from './ErrorDialog/ErrorDialog';
 export { Alert } from './Alert/Alert';
