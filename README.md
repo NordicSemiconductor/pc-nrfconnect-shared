@@ -17,6 +17,16 @@ If there is no latest entry there yet, and you do not intend to release the
 change as a new version right ahead, add a new section with the heading
 `## Unreleased` at the top.
 
+## Disabled Sass warnings
+
+Because we still use an outdated version of Bootstrap, we would get several Sass
+warnings when using the latest version of Sass. Our goal is to move away from
+Bootstrap (and mostly also plain CSS/Sass) but until that is accomplished we
+would get those warnings. Because of that, some Sass warnings are silenced. If
+you want to see all Sass warnings, set the env variable
+`ENABLE_ALL_SASS_WARNINGS` to `true` while building an app or shared, e.g. by
+calling `ENABLE_ALL_SASS_WARNINGS=true npm run build:dev`.
+
 ## Releasing
 
 To release, two files must be up-to-date:

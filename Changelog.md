@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 244.0.0 - 2026-01-22
+
+### Changed
+
+- Major upgrade of `esbuild` and `esbuild-sass-plugin` which brings along Sass
+  updates and deprecations.
+
 ## 243.0.0 - 2026-01-22
 
 ### Fixed

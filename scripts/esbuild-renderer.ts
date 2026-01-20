@@ -69,14 +69,16 @@ const options = (
             sassPlugin({
                 filter: /\.(module|icss)\.scss/,
                 cssImports: true,
-                quietDeps: false,
-
                 transform: postcssModules({}),
             }),
             sassPlugin({
                 filter: /\.scss$/,
                 cssImports: true,
-                quietDeps: false,
+                silenceDeprecations:
+                    process.env.ENABLE_ALL_SASS_WARNINGS === 'true'
+                        ? undefined
+                        : ['import'],
+                quietDeps: process.env.ENABLE_ALL_SASS_WARNINGS !== 'true',
             }),
             postCssPlugin({
                 postcss: {
