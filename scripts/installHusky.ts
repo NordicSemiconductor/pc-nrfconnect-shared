@@ -8,10 +8,11 @@
 
 import { existsSync } from 'fs';
 import { install as installHusky } from 'husky';
-import { cwd } from 'process';
 
 if (existsSync('.git')) {
     installHusky();
 } else {
-    console.log(`Not installing husky, because ${cwd()} is no git repo.`);
+    console.log(
+        `Not installing husky, because ${process.cwd()} is no git repo.`,
+    );
 }

@@ -82,6 +82,19 @@ module.exports = {
         ],
         'no-console': 'off',
         'no-param-reassign': 'off',
+        'no-restricted-imports': [
+            'error',
+            {
+                name: 'process',
+                message:
+                    'Do not import process, it is available as a global `process` and importing it may cause issues with replacing NODE_ENV.',
+            },
+            {
+                name: 'node:process',
+                message:
+                    'Do not import node:process, it is available as a global `process` and importing it may cause issues with replacing NODE_ENV.',
+            },
+        ],
         'no-shadow': 'off',
         'no-undef': 'error',
         'no-unused-expressions': 'off',
