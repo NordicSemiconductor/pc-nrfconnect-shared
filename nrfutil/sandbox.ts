@@ -8,7 +8,6 @@ import { exec, spawn } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import process from 'process';
 import treeKill from 'tree-kill';
 
 import describeError from '../src/logging/describeError';

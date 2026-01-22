@@ -7,6 +7,20 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 243.0.0 - 2026-01-22
+
+### Fixed
+
+- shared@232 introduced a bug that the `NRFUTIL_*` env variables were not
+  cleared which could cause problems if users set them in their environment.
+
+### Changed
+
+- Added an ESLint error if the module 'process' is imported. This is usually not
+  needed (because it is available as the global `process`) and might cause
+  problems (if it is imported as `process` it may hinder replacing NODE_ENV
+  during compilation).
+
 ## 242.0.0 - 2026-01-20
 
 ### Added
