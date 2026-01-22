@@ -4,6 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+@use "sass:color";
+@use "sass:math";
+
 @import '../styles.scss';
 
 //
@@ -49,7 +52,7 @@ $h6-font-size: ($font-size-base * 0.85); // ~12px
 //** Unit-less `line-height` for use in components like buttons.
 $line-height-base: 1.428571429; // 20/14
 //** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
-$line-height-computed: floor(($font-size-base * $line-height-base)); // ~20px
+$line-height-computed: math.floor(($font-size-base * $line-height-base)); // ~20px
 
 //** By default, this inherits from the `<body>`.
 $headings-font-family: inherit;
@@ -335,20 +338,20 @@ $navbar-collapse-max-height: 340px;
 
 $navbar-default-color: #777;
 $navbar-default-bg: #f8f8f8;
-$navbar-default-border: darken($navbar-default-bg, 6.5%);
+$navbar-default-border: color.adjust($navbar-default-bg, $lightness: -6.5%);
 
 // Navbar links
 $navbar-default-link-color: #777;
 $navbar-default-link-hover-color: #333;
 $navbar-default-link-hover-bg: transparent;
 $navbar-default-link-active-color: #555;
-$navbar-default-link-active-bg: darken($navbar-default-bg, 6.5%);
+$navbar-default-link-active-bg: color.adjust($navbar-default-bg, $lightness: -6.5%);
 $navbar-default-link-disabled-color: #ccc;
 $navbar-default-link-disabled-bg: transparent;
 
 // Navbar brand label
 $navbar-default-brand-color: $navbar-default-link-color;
-$navbar-default-brand-hover-color: darken($navbar-default-brand-color, 10%);
+$navbar-default-brand-hover-color: color.adjust($navbar-default-brand-color, $lightness: -10%);
 $navbar-default-brand-hover-bg: transparent;
 
 // Navbar toggle
@@ -360,14 +363,14 @@ $navbar-default-toggle-border-color: #ddd;
 // Reset inverted navbar basics
 $navbar-inverse-color: $gray-200;
 $navbar-inverse-bg: #222;
-$navbar-inverse-border: darken($navbar-inverse-bg, 10%);
+$navbar-inverse-border: color.adjust($navbar-inverse-bg, $lightness: -10%);
 
 // Inverted navbar links
 $navbar-inverse-link-color: $gray-200;
 $navbar-inverse-link-hover-color: #fff;
 $navbar-inverse-link-hover-bg: transparent;
 $navbar-inverse-link-active-color: $navbar-inverse-link-hover-color;
-$navbar-inverse-link-active-bg: darken($navbar-inverse-bg, 10%);
+$navbar-inverse-link-active-bg: color.adjust($navbar-inverse-bg, $lightness: -10%);
 $navbar-inverse-link-disabled-color: #444;
 $navbar-inverse-link-disabled-bg: transparent;
 
@@ -452,8 +455,8 @@ $jumbotron-padding: 30px;
 $jumbotron-color: inherit;
 $jumbotron-bg: $gray-50;
 $jumbotron-heading-color: inherit;
-$jumbotron-font-size: ceil(($font-size-base * 1.5));
-$jumbotron-heading-font-size: ceil(($font-size-base * 4.5));
+$jumbotron-font-size: math.ceil(($font-size-base * 1.5));
+$jumbotron-heading-font-size: math.ceil(($font-size-base * 4.5));
 
 //== Form states and alerts
 //
@@ -461,19 +464,18 @@ $jumbotron-heading-font-size: ceil(($font-size-base * 4.5));
 
 $state-success-text: #3c763d;
 $state-success-bg: #dff0d8;
-$state-success-border: darken(adjust-hue($state-success-bg, -10), 5%);
+$state-success-border: color.adjust($state-success-bg, $hue: -10deg, $lightness: -5%);
 
 $state-info-text: #31708f;
 $state-info-bg: #d9edf7;
-$state-info-border: darken(adjust-hue($state-info-bg, -10), 7%);
-
+$state-info-border: color.adjust($state-info-bg, $hue: -10deg, $lightness: -7%);
 $state-warning-text: #8a6d3b;
 $state-warning-bg: #fcf8e3;
-$state-warning-border: darken(adjust-hue($state-warning-bg, -10), 5%);
+$state-warning-border: color.adjust($state-warning-bg, $hue: -10deg, $lightness: -5%);
 
 $state-danger-text: #a94442;
 $state-danger-bg: #f2dede;
-$state-danger-border: darken(adjust-hue($state-danger-bg, -10), 5%);
+$state-danger-border: color.adjust($state-danger-bg, $hue: -10deg, $lightness: -5%);
 
 //== Tooltips
 //
@@ -506,7 +508,7 @@ $popover-border-color: rgba(0, 0, 0, 0.2);
 $popover-fallback-border-color: #ccc;
 
 //** Popover title background color
-$popover-title-bg: darken($popover-bg, 3%);
+$popover-title-bg: color.adjust($popover-bg, $lightness: -3%);
 
 //** Popover arrow width
 $popover-arrow-width: 10px;
@@ -518,9 +520,9 @@ $popover-arrow-outer-width: ($popover-arrow-width + 1);
 //** Popover outer arrow color
 $popover-arrow-outer-color: fadein($popover-border-color, 5%);
 //** Popover outer arrow fallback color
-$popover-arrow-outer-fallback-color: darken(
+$popover-arrow-outer-fallback-color: color.adjust(
     $popover-fallback-border-color,
-    20%
+    $lightness: -20%
 );
 
 //== Labels
@@ -644,7 +646,7 @@ $list-group-active-bg: $component-active-bg;
 //** Border color of active list elements
 $list-group-active-border: $list-group-active-bg;
 //** Text color for content within active list items
-$list-group-active-text-color: lighten($list-group-active-bg, 40%);
+$list-group-active-text-color: color.adjust($list-group-active-bg, $lightness: 40%);
 
 //** Text color of disabled list items
 $list-group-disabled-color: $gray-400;
@@ -718,7 +720,7 @@ $thumbnail-caption-padding: 9px;
 //##
 
 $well-bg: #f5f5f5;
-$well-border: darken($well-bg, 7%);
+$well-border: color.adjust($well-bg, $lightness: -7%);
 
 //== Badges
 //
