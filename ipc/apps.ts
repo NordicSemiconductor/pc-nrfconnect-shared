@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import { on, send } from './infrastructure/mainToRenderer';
 import { handle, invoke } from './infrastructure/rendererToMain';
 import type {
     AppVersions,
@@ -126,15 +127,12 @@ const registerGetDownloadableApps = handle<GetDownloadableApps>(
 );
 
 // installDownloadableApp
-type InstallDownloadableApp = (
-    app: DownloadableApp,
-    version?: string,
-) => DownloadableApp;
+type InstallDownloadableApp = (app: DownloadableApp, version?: string) => void;
 
-const installDownloadableApp = invoke<InstallDownloadableApp>(
+const installDownloadableApp = send<InstallDownloadableApp>(
     channel.installDownloadableApp,
 );
-const registerInstallDownloadableApp = handle<InstallDownloadableApp>(
+const registerInstallDownloadableApp = on<InstallDownloadableApp>(
     channel.installDownloadableApp,
 );
 
