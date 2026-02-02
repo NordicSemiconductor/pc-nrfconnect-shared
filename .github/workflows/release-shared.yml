@@ -25,7 +25,7 @@ jobs:
         env:
             GH_TOKEN: ${{ github.token }}
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
               with:
                   ref: ${{ inputs.ref }}
             - uses: actions/setup-node@v4
