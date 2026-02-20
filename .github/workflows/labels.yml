@@ -5,6 +5,10 @@ on: workflow_call
 env:
     GH_TOKEN: ${{ github.token }}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
     check_label:
         runs-on: ubuntu-latest
@@ -32,6 +36,14 @@ jobs:
                    env.missing_ui_label == 'true') &&
                   ! contains(github.event.pull_request.labels.*.name, 'documentation')
               run: echo "labels_are_missing=true" >> "$GITHUB_ENV"
+
+            - name: Add Greg as reviewer for doc PRs
+              if: >
+                  (contains(github.event.pull_request.labels.*.name, 'documentation') ||
+                   contains(github.event.pull_request.labels.*.name, 'doc required')) &&
+                  github.event.pull_request.user.login != 'greg-fer' &&
+                  ! contains(github.event.pull_request.requested_reviewers.*.login, 'greg-fer')
+              run: gh pr edit ${{ github.event.pull_request.html_url }} --add-reviewer greg-fer
 
             - name: Notify user if label(s) is missing
               if: env.labels_are_missing == 'true'
