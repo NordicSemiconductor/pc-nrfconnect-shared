@@ -15,12 +15,16 @@ on:
 
 env:
     ARTIFACT_NAME: ${{ github.event.repository.name }}
+    GH_TOKEN: ${{ github.token }}
 
 jobs:
     build:
         runs-on: ubuntu-latest
         outputs:
             version: ${{ steps.extract_release_notes.outputs.version }}
+        env:
+            TAG_IDENTIFIER: '<!--doc_revision_history-->'
+            missing_revision_history: 'false'
         steps:
             - uses: actions/checkout@v4
               with:
@@ -60,3 +64,80 @@ jobs:
               if:
                   github.event.push.ref == 'refs/heads/main' ||
                   inputs.force_pack
+
+            - name: Detect missing doc revision history
+              if: |
+                  github.event_name == 'pull_request'
+                  && ! contains(github.event.pull_request.labels.*.name, 'no doc revision history')
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const pr = context.payload.pull_request;
+                      if (!pr) {
+                          core.warning('No pull_request in context. Skipping. But this should not happen because of the `if` condition.');
+                          return;
+                      }
+
+                      const files = await github.paginate(
+                          github.rest.pulls.listFiles,
+                          {
+                              owner: context.repo.owner,
+                              repo: context.repo.repo,
+                              pull_number: pr.number,
+                          }
+                      );
+
+                      const filenames = files.map(f => f.filename);
+
+                      const docsChanged = filenames.some(fn => fn.startsWith('doc/docs/'));
+                      const revisionChanged = filenames.includes('doc/docs/revision_history.yml');
+
+                      if (docsChanged && !revisionChanged) {
+                          core.exportVariable('missing_revision_history', 'true');
+                      }
+
+            - name: Notify if doc revision history is missing
+              if: env.missing_revision_history == 'true'
+              run: |
+                  URL="${{ github.event.pull_request.html_url }}"
+                  COMMENT_TEXT="${TAG_IDENTIFIER}
+                  Missing doc revision history:
+                  This PR modifies files under 'doc/docs/' but does not update 'doc/docs/revision_history.yml'.
+
+                  You need to either:
+                  - update 'doc/docs/revision_history.yml' accordingly, or
+                  - add the label 'no doc revision history' if the change does not require an update to the revision history."
+
+                  if [[ ! \
+                    $(gh pr view $URL \
+                         --json comments \
+                         --jq '.comments[].body | select(. | startswith("'"$TAG_IDENTIFIER"'"))') \
+                  ]]; then
+                    gh pr comment $URL --body "$(printf '%b' "$COMMENT_TEXT")"
+                  fi
+
+                  echo "::error::Required update to doc/docs/revision_history.yml missing."
+                  exit 1
+
+            - name: Hide comment when resolved
+              if: |
+                  github.event_name == 'pull_request'
+                  && env.missing_revision_history != 'true'
+              run: |
+                  PR_NUMBER=${{ github.event.pull_request.number }}
+
+                  node_id=$(gh api "repos/${{ github.repository }}/issues/$PR_NUMBER/comments" \
+                    --jq '.[] | select(.body | startswith("'"$TAG_IDENTIFIER"'")) | .node_id' | head -n 1)
+
+                  if [ -n "$node_id" ]; then
+                    gh api graphql -f query="
+                      mutation {
+                        minimizeComment(input: {
+                          subjectId: \"$node_id\",
+                          classifier: RESOLVED
+                        }) {
+                          clientMutationId
+                        }
+                      }
+                    "
+                  fi
