@@ -6,89 +6,90 @@ env:
     GH_TOKEN: ${{ github.token }}
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
 
 jobs:
     check_label:
         runs-on: ubuntu-latest
         env:
-            TAG_IDENTIFIER: "<!--labels-->"
+            TAG_IDENTIFIER: '<!--labels-->'
             missing_doc_label: 'false'
             missing_ui_label: 'false'
             labels_are_missing: 'false'
         steps:
             - name: Check for missing doc label
-              if: >
+              if: |
                   ! contains(github.event.pull_request.labels.*.name, 'doc required') &&
                   ! contains(github.event.pull_request.labels.*.name, 'doc not required')
               run: echo "missing_doc_label=true" >> "$GITHUB_ENV"
 
             - name: Check for missing ui label
-              if: >
+              if: |
                   ! contains(github.event.pull_request.labels.*.name, 'ui required') &&
                   ! contains(github.event.pull_request.labels.*.name, 'ui not required')
               run: echo "missing_ui_label=true" >> "$GITHUB_ENV"
 
             - name: Detect missing labels
-              if: >
+              if: |
                   (env.missing_doc_label == 'true' ||
-                   env.missing_ui_label == 'true') &&
-                  ! contains(github.event.pull_request.labels.*.name, 'documentation')
+                   env.missing_ui_label == 'true')
+                  && ! contains(github.event.pull_request.labels.*.name, 'documentation')
               run: echo "labels_are_missing=true" >> "$GITHUB_ENV"
 
             - name: Add Greg as reviewer for doc PRs
-              if: >
-                  (contains(github.event.pull_request.labels.*.name, 'documentation') ||
-                   contains(github.event.pull_request.labels.*.name, 'doc required')) &&
-                  github.event.pull_request.user.login != 'greg-fer' &&
-                  ! contains(github.event.pull_request.requested_reviewers.*.login, 'greg-fer')
-              run: gh pr edit ${{ github.event.pull_request.html_url }} --add-reviewer greg-fer
+              if: |
+                  (   contains(github.event.pull_request.labels.*.name, 'documentation')
+                   || contains(github.event.pull_request.labels.*.name, 'doc required'))
+                  && github.event.pull_request.user.login != 'greg-fer'
+                  && ! contains(github.event.pull_request.requested_reviewers.*.login, 'greg-fer')
+              run: |
+                  gh pr edit ${{ github.event.pull_request.html_url }} --add-reviewer greg-fer
 
             - name: Notify user if label(s) is missing
               if: env.labels_are_missing == 'true'
               run: |
-                URL="${{ github.event.pull_request.html_url }}"
-                COMMENT_TEXT="${TAG_IDENTIFIER}\nAdd labels:"
-                if [[ "${{ env.missing_doc_label }}" == 'true' ]]; then
-                  COMMENT_TEXT="${COMMENT_TEXT}\n- 'doc required' or 'doc not required'"
-                fi
-                if [[ "${{ env.missing_ui_label }}" == 'true' ]]; then
-                  COMMENT_TEXT="${COMMENT_TEXT}\n- 'ui required' or 'ui not required'\n\n
-                For UI review:\n
-                - describe the changes\n
-                - add pictures\n
-                - add the relevant UI responsible(s) as a reviewer"
-                fi
+                  URL="${{ github.event.pull_request.html_url }}"
+                  COMMENT_TEXT="${TAG_IDENTIFIER}\nAdd labels:"
+                  if [[ "${{ env.missing_doc_label }}" == 'true' ]]; then
+                    COMMENT_TEXT="${COMMENT_TEXT}\n- 'doc required' or 'doc not required'"
+                  fi
+                  if [[ "${{ env.missing_ui_label }}" == 'true' ]]; then
+                    COMMENT_TEXT="${COMMENT_TEXT}\n- 'ui required' or 'ui not required'\n\n
+                  For UI review:\n
+                  - describe the changes\n
+                  - add pictures\n
+                  - add the relevant UI responsible(s) as a reviewer"
+                  fi
 
-                if [[ ! \
-                  $(gh pr view $URL \
-                       --json comments \
-                       --jq '.comments[].body | select(. | startswith("'"$TAG_IDENTIFIER"'"))') \
-                ]]; then
-                  gh pr comment $URL --body "$(echo -e $COMMENT_TEXT)"
-                fi
+                  if [[ ! \
+                    $(gh pr view $URL \
+                         --json comments \
+                         --jq '.comments[].body | select(. | startswith("'"$TAG_IDENTIFIER"'"))') \
+                  ]]; then
+                    gh pr comment $URL --body "$(echo -e $COMMENT_TEXT)"
+                  fi
 
-                echo "::error::Required doc and/or ui labels missing."
-                exit 1
+                  echo "::error::Required doc and/or ui labels missing."
+                  exit 1
 
             - name: Hide comment when resolved
               if: env.labels_are_missing != 'true'
               run: |
-                PR_NUMBER=${{ github.event.pull_request.number }}
+                  PR_NUMBER=${{ github.event.pull_request.number }}
 
-                node_id=$(gh api "repos/${{ github.repository }}/issues/$PR_NUMBER/comments" \
-                  --jq '.[] | select(.body | startswith("'"$TAG_IDENTIFIER"'")) | .node_id' | head -n 1)
+                  node_id=$(gh api "repos/${{ github.repository }}/issues/$PR_NUMBER/comments" \
+                    --jq '.[] | select(.body | startswith("'"$TAG_IDENTIFIER"'")) | .node_id' | head -n 1)
 
-                if [ -n "$node_id" ]; then
-                  gh api graphql -f query="
-                    mutation {
-                      minimizeComment(input: {
-                        subjectId: \"$node_id\",
-                        classifier: RESOLVED
-                      }) {
-                        clientMutationId
+                  if [ -n "$node_id" ]; then
+                    gh api graphql -f query="
+                      mutation {
+                        minimizeComment(input: {
+                          subjectId: \"$node_id\",
+                          classifier: RESOLVED
+                        }) {
+                          clientMutationId
+                        }
                       }
-                    }
-                  "
-                fi
+                    "
+                  fi
