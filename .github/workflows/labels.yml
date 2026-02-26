@@ -39,8 +39,9 @@ jobs:
 
             - name: Add Greg as reviewer for doc PRs
               if: |
-                  (   contains(github.event.pull_request.labels.*.name, 'documentation')
-                   || contains(github.event.pull_request.labels.*.name, 'doc required'))
+                  github.event.pull_request.head.repo.full_name == github.repository
+                  && (   contains(github.event.pull_request.labels.*.name, 'documentation')
+                      || contains(github.event.pull_request.labels.*.name, 'doc required'))
                   && github.event.pull_request.user.login != 'greg-fer'
                   && ! contains(github.event.pull_request.requested_reviewers.*.login, 'greg-fer')
               run: |
