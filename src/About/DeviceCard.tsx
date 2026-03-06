@@ -31,7 +31,7 @@ export default ({ className }: DeviceCardProps) => {
 
     if (device == null) {
         return (
-            <Card title="Device">
+            <Card title="Device" className={className}>
                 <Section title="No device selected" />
             </Card>
         );
