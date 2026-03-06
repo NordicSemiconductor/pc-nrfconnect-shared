@@ -23,7 +23,12 @@ import AboutButton from './AboutButton';
 import Feedback from './Feedback';
 import Section from './Section';
 
-export default ({ feedbackCategories }: { feedbackCategories?: string[] }) => {
+export interface SupportCardProps {
+    feedbackCategories?: Array<string>;
+    className?: string;
+}
+
+export default ({ feedbackCategories, className }: SupportCardProps) => {
     const dispatch = useDispatch();
     const devices = useSelector(getDevices);
     const currentSerialNumber = useSelector(selectedSerialNumber);
@@ -31,7 +36,7 @@ export default ({ feedbackCategories }: { feedbackCategories?: string[] }) => {
     const currentDevice = useSelector(selectedDevice);
 
     return (
-        <Card title="Support">
+        <Card title="Support" className={className}>
             <div className="tw-preflight tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
                 <Section title="DevZone">
                     <p>

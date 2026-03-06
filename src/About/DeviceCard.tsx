@@ -21,7 +21,11 @@ const memorySize = (memoryInBytes: number) => {
     return `${memoryInBytes / 1024}KiB`;
 };
 
-export default () => {
+export interface DeviceCardProps {
+    className?: string;
+}
+
+export default ({ className }: DeviceCardProps) => {
     const device = useSelector(selectedDevice);
     const info = useSelector(selectedDeviceInfo);
 
@@ -37,7 +41,7 @@ export default () => {
     const { name, cores, website } = deviceInfo(device);
 
     return (
-        <Card title="Device">
+        <Card title="Device" className={className}>
             <div className="tw-preflight tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
                 <Section title="Name">{name || 'Unknown'}</Section>
                 <Section title="ID">{device.serialNumber}</Section>
