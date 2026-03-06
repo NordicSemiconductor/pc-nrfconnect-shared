@@ -21,7 +21,7 @@ export default ({ children, title, className }: CardProps) => (
             // prettier-ignore
             // Prettier has a bugged rule. Prettier doesn't care about multiline strings,
             // yet outputs an error on multiline strings in jsx/tsx files
-            flatstr`tw-preflight tw-relative tw-flex tw-flex-1 tw-flex-col tw-gap-4 tw-break-words tw-border
+            flatstr`tw-preflight tw-relative tw-flex tw-flex-col tw-gap-4 tw-break-words tw-border
             tw-border-solid tw-border-black tw-border-opacity-10 tw-bg-white tw-px-4 tw-pb-4`,
             className,
         )}
