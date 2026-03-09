@@ -11,22 +11,24 @@ import DeviceCard from './DeviceCard';
 import DocumentationCard from './DocumentationCard';
 import SupportCard from './SupportCard';
 
-import './about.scss';
-
-interface AboutPaneProps {
+export interface AboutPaneProps {
     documentation?: ReactNode[];
     feedbackCategories?: string[];
 }
 
 export default ({ documentation, feedbackCategories }: AboutPaneProps) => (
-    <div className="about">
-        <div className="about-inner">
-            <ApplicationCard />
-            <DeviceCard />
-            {documentation && documentation.length && (
-                <DocumentationCard documentationSections={documentation} />
-            )}
-            <SupportCard feedbackCategories={feedbackCategories} />
-        </div>
-    </div>
+    <section className="tw-preflight tw-flex tw-flex-row tw-flex-wrap tw-justify-center tw-gap-4 tw-pb-4">
+        <ApplicationCard className="tw-max-w-xs tw-flex-1 tw-basis-60" />
+        <DeviceCard className="tw-max-w-xs tw-flex-1 tw-basis-60" />
+        {documentation && documentation.length && (
+            <DocumentationCard
+                documentationSections={documentation}
+                className="tw-max-w-xs tw-flex-1 tw-basis-60"
+            />
+        )}
+        <SupportCard
+            feedbackCategories={feedbackCategories}
+            className="tw-max-w-xs tw-flex-1 tw-basis-60"
+        />
+    </section>
 );
