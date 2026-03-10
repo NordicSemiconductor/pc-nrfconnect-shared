@@ -18,17 +18,17 @@ export interface AboutPaneProps {
 
 export default ({ documentation, feedbackCategories }: AboutPaneProps) => (
     <section className="tw-preflight tw-flex tw-flex-row tw-flex-wrap tw-justify-center tw-gap-4 tw-pb-4">
-        <ApplicationCard className="tw-max-w-xs tw-flex-1 tw-basis-60" />
-        <DeviceCard className="tw-max-w-xs tw-flex-1 tw-basis-60" />
+        <ApplicationCard className="tw-max-w-80 tw-flex-1 tw-basis-60" />
+        <DeviceCard className="tw-max-w-80 tw-flex-1 tw-basis-60" />
         {documentation && documentation.length && (
             <DocumentationCard
                 documentationSections={documentation}
-                className="tw-max-w-xs tw-flex-1 tw-basis-60"
+                className="tw-max-w-80 tw-flex-1 tw-basis-60"
             />
         )}
         <SupportCard
             feedbackCategories={feedbackCategories}
-            className="tw-max-w-xs tw-flex-1 tw-basis-60"
+            className="tw-max-w-80 tw-flex-1 tw-basis-60"
         />
     </section>
 );
