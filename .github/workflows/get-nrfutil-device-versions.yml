@@ -1,0 +1,36 @@
+name: Get nrfutil device versions
+
+on:
+    workflow_call:
+        inputs:
+            repository:
+               type: string
+
+jobs:
+    extract:
+        runs-on: ubuntu-latest
+        outputs:
+            version: ${{ steps.extract_nrfutil_device_version.outputs.version }}
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  ref: https://github.com/NordicSemiconductor/pc-nrfconnect-${{ inputs.repository }}/
+            - name: Extract nrfutil device version
+              id: extract_nrfutil_device_version
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                        const version = require('./package.json').nrfConnectForDesktop.nrfutil.device;
+                        core.setOutput('version', version);
+
+    upload:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Save version to file
+              run: echo "some content ${{ matrix.my_var }}" > artifact_${{ github.run_id }}_${{ matrix.my_var }}.txt
+
+            - name: Upload file
+              uses: actions/upload-artifact@v4
+              with:
+                name: ${{ github.run_id }}_${{ inputs.ref }}
+                path: ${{ github.run_id }}_${{ inputs.ref }}.txt

@@ -1,0 +1,33 @@
+name: Collect nrfutil device versions
+
+on:
+    workflow_dispatch:
+
+env:
+    ARTIFACT_NAME: ${{ github.event.repository.name }}
+
+jobs:
+    extract-versions:
+        runs-on: ubuntu-latest
+        strategy:
+          matrix:
+              repositories: [dtm, ppk, cellular-monitor, serial-terminal, quickstart, programmer, rssi, board-configurator]
+        steps:
+            - uses: ./.github/workflows/get-nrfutil-device-version
+              with:
+                target: ${{ matrix.target }}
+
+    upload-versions:
+        runs-on: ubuntu-latest
+        needs: extract-versions
+        steps:
+            - name: Download artifacts of matrix jobs
+              uses: actions/download-artifact@v4
+              with:
+                pattern: ${{ github.run_id }}_*
+                path: ./output
+                merge-multiple: true
+
+            - name: combine versions
+              run: |
+                tail -n 1 -- ./outputs/* | jq -R -s -c 'trim|{versions: split("\n")}'
