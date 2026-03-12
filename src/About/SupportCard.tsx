@@ -36,8 +36,11 @@ export default ({ feedbackCategories, className }: SupportCardProps) => {
     const currentDevice = useSelector(selectedDevice);
 
     return (
-        <Card title="Support" className={className}>
-            <div className="tw-preflight tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
+        <Card className={className}>
+            <Card.Header className="tw-text-center">
+                <Card.Header.Title title="Support" />
+            </Card.Header>
+            <Card.Body className="tw-gap-4">
                 <Section title="DevZone">
                     <p>
                         You can ask for help or open a support request on
@@ -103,7 +106,7 @@ export default ({ feedbackCategories, className }: SupportCardProps) => {
                         </Button>
                     </Section>
                 </Section>
-            </div>
+            </Card.Body>
         </Card>
     );
 };

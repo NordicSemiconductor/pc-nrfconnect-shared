@@ -28,8 +28,11 @@ export default ({ className }: ApplicationCardProps) => {
     if (appInfo == null) return null;
 
     return (
-        <Card title="Application" className={className}>
-            <div className="tw-preflight tw-flex tw-flex-1 tw-select-text tw-flex-col tw-flex-wrap tw-gap-4">
+        <Card className={className}>
+            <Card.Header className="tw-text-center">
+                <Card.Header.Title title="Application" />
+            </Card.Header>
+            <Card.Body className="tw-select-text tw-gap-4">
                 <Section title="Title">{appInfo.displayName}</Section>
                 <Section title="Purpose">{appInfo.description}</Section>
                 <Section title="Version">{appInfo.currentVersion}</Section>
@@ -48,7 +51,7 @@ export default ({ className }: ApplicationCardProps) => {
                     <FactoryResetButton label="Restore defaults..." />
                     <ShortcutButton label="Show shortcuts" />
                 </Section>
-            </div>
+            </Card.Body>
         </Card>
     );
 };

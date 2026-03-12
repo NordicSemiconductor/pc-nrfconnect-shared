@@ -31,8 +31,13 @@ export default ({ className }: DeviceCardProps) => {
 
     if (device == null) {
         return (
-            <Card title="Device" className={className}>
-                <Section title="No device selected" />
+            <Card className={className}>
+                <Card.Header className="tw-text-center">
+                    <Card.Header.Title title="Device" />
+                </Card.Header>
+                <Card.Body>
+                    <Section title="No device selected" />
+                </Card.Body>
             </Card>
         );
     }
@@ -41,8 +46,11 @@ export default ({ className }: DeviceCardProps) => {
     const { name, cores, website } = deviceInfo(device);
 
     return (
-        <Card title="Device" className={className}>
-            <div className="tw-preflight tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
+        <Card className={className}>
+            <Card.Header className="tw-text-center">
+                <Card.Header.Title title="Device" />
+            </Card.Header>
+            <Card.Body className="tw-gap-4">
                 <Section title="Name">{name || 'Unknown'}</Section>
                 <Section title="ID">{device.serialNumber}</Section>
                 <Section title="PCA">{pca || 'Unknown'}</Section>
@@ -71,7 +79,7 @@ export default ({ className }: DeviceCardProps) => {
                         label="Go to product page"
                     />
                 </Section>
-            </div>
+            </Card.Body>
         </Card>
     );
 };

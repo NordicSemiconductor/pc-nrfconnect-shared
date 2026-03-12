@@ -17,9 +17,10 @@ export default ({
     documentationSections,
     className,
 }: DocumentationCardProps) => (
-    <Card title="Documentation" className={className}>
-        <div className="tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
-            {documentationSections}
-        </div>
+    <Card className={className}>
+        <Card.Header className="tw-text-center">
+            <Card.Header.Title title="Documentation" />
+        </Card.Header>
+        <Card.Body className="tw-gap-4">{documentationSections}</Card.Body>
     </Card>
 );
