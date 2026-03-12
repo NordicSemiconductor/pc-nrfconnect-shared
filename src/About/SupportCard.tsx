@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
 
 import Button from '../Button/Button';
-import Card from '../Card/Card';
+import { Card } from '../Card/Card';
 import {
     getDevices,
     selectedDevice,
@@ -38,7 +38,7 @@ export default ({ feedbackCategories, className }: SupportCardProps) => {
     return (
         <Card className={className}>
             <Card.Header className="tw-text-center">
-                <Card.Header.Title title="Support" />
+                <Card.Header.Title cardTitle="Support" />
             </Card.Header>
             <Card.Body className="tw-gap-4">
                 <Section title="DevZone">

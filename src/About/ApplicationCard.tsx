@@ -7,7 +7,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { type AppDetailsFromLauncher } from '../../ipc/appDetails';
-import Card from '../Card/Card';
+import { Card } from '../Card/Card';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import appDetails from '../utils/appDetails';
 import AboutButton from './AboutButton';
@@ -30,7 +30,7 @@ export default ({ className }: ApplicationCardProps) => {
     return (
         <Card className={className}>
             <Card.Header className="tw-text-center">
-                <Card.Header.Title title="Application" />
+                <Card.Header.Title cardTitle="Application" />
             </Card.Header>
             <Card.Body className="tw-select-text tw-gap-4">
                 <Section title="Title">{appInfo.displayName}</Section>

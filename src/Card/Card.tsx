@@ -9,30 +9,32 @@ import React from 'react';
 import classNames from '../utils/classNames';
 import flatstr from '../utils/flatstr';
 
-export interface CardTitleProps {
-    title: string;
-    subtitle?: string;
-    className?: string;
+export interface CardTitleProps extends React.HTMLAttributes<HTMLElement> {
+    cardTitle: React.ReactNode;
+    cardSubtitle?: React.ReactNode;
 }
 
 export type CardTitleComponent = React.FC<CardTitleProps>;
 
-const CardTitle: CardTitleComponent = ({ title, subtitle, className }) => (
-    <hgroup className={className}>
-        <h3 className="tw-text-base tw-font-medium">{title}</h3>
-        {subtitle && <p>{subtitle}</p>}
+const CardTitle: CardTitleComponent = ({
+    cardTitle,
+    cardSubtitle,
+    className,
+    ...attrs
+}) => (
+    <hgroup className={className} {...attrs}>
+        <h3 className="tw-text-base tw-font-medium">{cardTitle}</h3>
+        {cardSubtitle && <p>{cardSubtitle}</p>}
     </hgroup>
 );
 
-export interface CardHeaderProps {
-    className?: string;
-}
+export type CardHeaderProps = React.HTMLAttributes<HTMLElement>;
 
 export interface CardHeaderComponent extends React.FC<CardHeaderProps> {
     Title: CardTitleComponent;
 }
 
-const CardHeader: CardHeaderComponent = ({ children, className }) => (
+const CardHeader: CardHeaderComponent = ({ children, className, ...attrs }) => (
     <header
         className={classNames(
             // prettier-ignore
@@ -40,6 +42,7 @@ const CardHeader: CardHeaderComponent = ({ children, className }) => (
             tw-border-opacity-10 tw-py-4`,
             className,
         )}
+        {...attrs}
     >
         {children}
     </header>
@@ -47,9 +50,7 @@ const CardHeader: CardHeaderComponent = ({ children, className }) => (
 
 CardHeader.Title = CardTitle;
 
-export interface CardBodyProps {
-    className?: string;
-}
+export type CardBodyProps = React.HTMLAttributes<HTMLDivElement>;
 
 export type CardBodyComponent = React.FC<CardBodyProps>;
 
@@ -68,7 +69,7 @@ export interface CardComponent extends React.FC<CardProps> {
     Body: CardBodyComponent;
 }
 
-const Card: CardComponent = ({ children, className }) => (
+export const Card: CardComponent = ({ children, className }) => (
     <article
         className={classNames(
             // prettier-ignore
@@ -87,5 +88,3 @@ const Card: CardComponent = ({ children, className }) => (
 
 Card.Header = CardHeader;
 Card.Body = CardBody;
-
-export default Card;

@@ -7,7 +7,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import Card from '../Card/Card';
+import { Card } from '../Card/Card';
 import { deviceInfo } from '../Device/deviceInfo/deviceInfo';
 import { selectedDevice, selectedDeviceInfo } from '../Device/deviceSlice';
 import AboutButton from './AboutButton';
@@ -33,7 +33,7 @@ export default ({ className }: DeviceCardProps) => {
         return (
             <Card className={className}>
                 <Card.Header className="tw-text-center">
-                    <Card.Header.Title title="Device" />
+                    <Card.Header.Title cardTitle="Device" />
                 </Card.Header>
                 <Card.Body>
                     <Section title="No device selected" />
@@ -48,7 +48,7 @@ export default ({ className }: DeviceCardProps) => {
     return (
         <Card className={className}>
             <Card.Header className="tw-text-center">
-                <Card.Header.Title title="Device" />
+                <Card.Header.Title cardTitle="Device" />
             </Card.Header>
             <Card.Body className="tw-gap-4">
                 <Section title="Name">{name || 'Unknown'}</Section>

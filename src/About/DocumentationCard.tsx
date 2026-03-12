@@ -6,7 +6,7 @@
 
 import React, { type ReactNode } from 'react';
 
-import Card from '../Card/Card';
+import { Card } from '../Card/Card';
 
 export interface DocumentationCardProps {
     documentationSections: Array<ReactNode>;
@@ -19,7 +19,7 @@ export default ({
 }: DocumentationCardProps) => (
     <Card className={className}>
         <Card.Header className="tw-text-center">
-            <Card.Header.Title title="Documentation" />
+            <Card.Header.Title cardTitle="Documentation" />
         </Card.Header>
         <Card.Body className="tw-gap-4">{documentationSections}</Card.Body>
     </Card>
