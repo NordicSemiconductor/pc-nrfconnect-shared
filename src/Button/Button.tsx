@@ -20,25 +20,18 @@ export type ButtonVariants =
 
 export type ButtonSize = 'sm' | 'lg' | 'xl';
 
-type ButtonProps = {
-    id?: string;
+export interface ButtonProps
+    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant: ButtonVariants;
-    className?: string;
-    onClick: React.MouseEventHandler<HTMLButtonElement>;
-    disabled?: boolean;
-    title?: string;
     size?: ButtonSize;
-};
+}
 
-const Button: React.FC<ButtonProps> = ({
+export const Button: React.FC<ButtonProps> = ({
     children,
-    id,
     className,
     variant,
-    onClick,
-    disabled = false,
-    title,
     size = 'sm',
+    ...attrs
 }) => {
     // Rust-style assignment from `if`/`match`
     const sizeStyles = (() => {
@@ -80,20 +73,15 @@ const Button: React.FC<ButtonProps> = ({
     return (
         <button
             type="button"
-            id={id}
             className={`${classNames(
                 'tw-preflight',
                 sizeStyles,
                 variantStyles,
                 className,
             )}`}
-            disabled={disabled}
-            onClick={onClick}
-            title={title}
+            {...attrs}
         >
             {children}
         </button>
     );
 };
-
-export default Button;

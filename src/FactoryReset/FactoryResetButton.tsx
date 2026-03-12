@@ -7,7 +7,7 @@
 import React, { type FC, useRef, useState } from 'react';
 import { getCurrentWindow } from '@electron/remote';
 
-import Button, { type ButtonVariants } from '../Button/Button';
+import { Button, type ButtonVariants } from '../Button/Button';
 import { Dialog, DialogButton } from '../Dialog/Dialog';
 import logger from '../logging';
 import { getAppSpecificStore as store } from '../utils/persistentStore';

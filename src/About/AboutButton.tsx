@@ -6,7 +6,7 @@
 
 import React, { type FC } from 'react';
 
-import Button from '../Button/Button';
+import { Button } from '../Button/Button';
 import { openUrl } from '../utils/open';
 
 interface Props {

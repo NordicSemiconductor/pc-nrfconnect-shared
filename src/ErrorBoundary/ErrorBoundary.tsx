@@ -7,7 +7,7 @@
 import React, { type ReactNode } from 'react';
 import { getCurrentWindow } from '@electron/remote';
 
-import Button from '../Button/Button';
+import { Button } from '../Button/Button';
 import { type Device } from '../Device/deviceSlice';
 import FactoryResetButton from '../FactoryReset/FactoryResetButton';
 import { Group } from '../Group/Group';

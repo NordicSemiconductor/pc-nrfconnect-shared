@@ -8,7 +8,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
 
-import Button from '../Button/Button';
+import { Button } from '../Button/Button';
 import Card from '../Card/Card';
 import {
     getDevices,

@@ -6,7 +6,7 @@
 
 import React, { type FC, useState } from 'react';
 
-import Button from '../Button/Button';
+import { Button } from '../Button/Button';
 import ShortcutModal from '../Shortcuts/ShortcutModal';
 import useHotKey from '../utils/useHotKey';
 

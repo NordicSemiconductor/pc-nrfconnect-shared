@@ -7,7 +7,7 @@
 import React, { type ReactNode } from 'react';
 import Modal from 'react-bootstrap/Modal';
 
-import Button, { type ButtonVariants } from '../Button/Button';
+import { Button, type ButtonVariants } from '../Button/Button';
 import Spinner from '../Spinner/Spinner';
 
 import './dialog.scss';
