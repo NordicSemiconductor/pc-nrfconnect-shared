@@ -20,8 +20,7 @@ export type ButtonVariants =
 
 export type ButtonSize = 'sm' | 'lg' | 'xl';
 
-export interface ButtonProps
-    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ComponentPropsWithRef<'button'> {
     variant: ButtonVariants;
     size?: ButtonSize;
 }
