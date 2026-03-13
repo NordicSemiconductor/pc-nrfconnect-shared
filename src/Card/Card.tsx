@@ -9,7 +9,7 @@ import React from 'react';
 import classNames from '../utils/classNames';
 import flatstr from '../utils/flatstr';
 
-export interface CardTitleProps extends React.HTMLAttributes<HTMLElement> {
+export interface CardTitleProps extends React.ComponentPropsWithRef<'div'> {
     cardTitle: React.ReactNode;
     cardSubtitle?: React.ReactNode;
 }
@@ -27,7 +27,7 @@ const CardTitle: CardTitleComponent = ({
     </hgroup>
 );
 
-export type CardHeaderProps = React.HTMLAttributes<HTMLElement>;
+export type CardHeaderProps = React.ComponentPropsWithRef<'header'>;
 
 export interface CardHeaderComponent extends React.FC<CardHeaderProps> {
     Title: CardTitleComponent;
@@ -49,7 +49,7 @@ const CardHeader: CardHeaderComponent = ({ children, className, ...attrs }) => (
 
 CardHeader.Title = CardTitle;
 
-export type CardBodyProps = React.HTMLAttributes<HTMLDivElement>;
+export type CardBodyProps = React.ComponentPropsWithRef<'div'>;
 
 export type CardBodyComponent = React.FC<CardBodyProps>;
 
@@ -59,16 +59,14 @@ const CardBody: CardBodyComponent = ({ className, children, ...attrs }) => (
     </div>
 );
 
-export interface CardProps {
-    className?: string;
-}
+export type CardProps = React.ComponentPropsWithRef<'article'>;
 
 export interface CardComponent extends React.FC<CardProps> {
     Header: CardHeaderComponent;
     Body: CardBodyComponent;
 }
 
-export const Card: CardComponent = ({ children, className }) => (
+export const Card: CardComponent = ({ children, className, ...attrs }) => (
     <article
         className={classNames(
             // prettier-ignore
@@ -80,6 +78,7 @@ export const Card: CardComponent = ({ children, className }) => (
             tw-border-opacity-10 tw-bg-white tw-px-4 tw-pb-4`,
             className,
         )}
+        {...attrs}
     >
         {children}
     </article>
