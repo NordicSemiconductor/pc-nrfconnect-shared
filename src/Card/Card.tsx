@@ -19,10 +19,9 @@ export type CardTitleComponent = React.FC<CardTitleProps>;
 const CardTitle: CardTitleComponent = ({
     cardTitle,
     cardSubtitle,
-    className,
     ...attrs
 }) => (
-    <hgroup className={className} {...attrs}>
+    <hgroup {...attrs}>
         <h3 className="tw-text-base tw-font-medium">{cardTitle}</h3>
         {cardSubtitle && <p>{cardSubtitle}</p>}
     </hgroup>
