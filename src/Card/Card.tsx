@@ -54,8 +54,11 @@ export type CardBodyProps = React.HTMLAttributes<HTMLDivElement>;
 
 export type CardBodyComponent = React.FC<CardBodyProps>;
 
-const CardBody: CardBodyComponent = ({ className, children }) => (
-    <div className={classNames('tw-flex tw-flex-auto tw-flex-col', className)}>
+const CardBody: CardBodyComponent = ({ className, children, ...attrs }) => (
+    <div
+        className={classNames('tw-flex tw-flex-auto tw-flex-col', className)}
+        {...attrs}
+    >
         {children}
     </div>
 );
