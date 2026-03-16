@@ -16,6 +16,10 @@ every new version is a new major version.
 
 ## 244.0.0 - 2026-01-22
 
+### Added
+
+- Added `primary-outline` variant for `Button`
+
 ### Changed
 
 - Major upgrade of `esbuild` and `esbuild-sass-plugin` which brings along Sass
