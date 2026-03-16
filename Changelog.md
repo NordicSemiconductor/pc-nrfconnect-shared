@@ -9,10 +9,39 @@ every new version is a new major version.
 
 ## 245.0.0 - UNRELEASED
 
+### Added
+
+- Added proto-slot components `Card.Header`, `Card.Header.Title`, `Card.Body`.
+- Added support for `className` and `ref` on `Card` and its proto-slot
+  components.
+
 ### Changed
 
 - Upgraded `tailwind` to `3.4.14` to allow for use of min/max width and min/max
   height with usual spacing units instead of screen sizes.
+- Refactored `Card` component to remove dependency on bootstrap and to allow for
+  more flexibility.
+
+### Steps to upgrade when using this package
+
+#### Migrating the `Card` component
+
+The `title` and `titleButton` are no longer available on `Card`, and the overall
+structure of `Card` changed. Follow this format:
+
+```tsx
+import { Card } from '@nordicsemiconductor/pc-nrfconnect-shared';
+
+<Card>
+  <Card.Header>
+    <Card.Header.Title cardTitle="your title here" />
+    { /* your button here */ }
+  </Card.Header>
+  <Card.Body>
+    { /* your card content here */ }
+  </Card.Body>
+</Card>
+```
 
 ## 244.0.0 - 2026-01-22
 
