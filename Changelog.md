@@ -35,7 +35,7 @@ structure of `Card` changed. Follow this format:
 import { Card } from '@nordicsemiconductor/pc-nrfconnect-shared';
 
 <Card>
-  <Card.Header>
+  <Card.Header className="tw-flex tw-flex-row tw-justify-between">
     <Card.Header.Title cardTitle="your title here" />
     { /* your button here */ }
   </Card.Header>
