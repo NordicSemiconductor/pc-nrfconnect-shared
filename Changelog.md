@@ -11,8 +11,8 @@ every new version is a new major version.
 
 ### Changed
 
-- Upgraded `tailwind` to `3.4.14` to allow for use of min/max width
-  and min/max height with usual spacing units instead of screen sizes.
+- Upgraded `tailwind` to `3.4.14` to allow for use of min/max width and min/max
+  height with usual spacing units instead of screen sizes.
 
 ## 244.0.0 - 2026-01-22
 
