@@ -32,7 +32,7 @@ export { Toggle } from './Toggle/Toggle';
 export { default as RootErrorDialog } from './ErrorDialog/ErrorDialog';
 export { Alert } from './Alert/Alert';
 export { default as Main } from './Main/Main';
-export { Button } from './Button/Button';
+export { default as Button } from './Button/Button';
 export type { ButtonVariants } from './Button/Button';
 export { default as Card } from './Card/Card';
 export { default as ErrorBoundary } from './ErrorBoundary/ErrorBoundary';

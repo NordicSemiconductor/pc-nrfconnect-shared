@@ -18,14 +18,17 @@ export type ButtonVariants =
     | 'danger'
     | 'link-button';
 
-export type ButtonSize = 'sm' | 'lg' | 'xl';
+type ButtonSize = 'sm' | 'lg' | 'xl';
 
-export interface ButtonProps extends React.ComponentPropsWithRef<'button'> {
+type PickedButtonProps = 'ref' | 'className' | 'disabled' | 'onClick' | 'title';
+
+interface ButtonProps
+    extends Pick<React.ComponentPropsWithRef<'button'>, PickedButtonProps> {
     variant: ButtonVariants;
     size?: ButtonSize;
 }
 
-export const Button: React.FC<ButtonProps> = ({
+const Button: React.FC<ButtonProps> = ({
     children,
     className,
     variant,
@@ -84,3 +87,5 @@ export const Button: React.FC<ButtonProps> = ({
         </button>
     );
 };
+
+export default Button;
