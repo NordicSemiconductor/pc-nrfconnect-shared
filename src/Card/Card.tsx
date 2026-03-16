@@ -22,21 +22,39 @@ interface CardTitleProps
 type CardTitleComponent = React.FC<CardTitleProps>;
 
 const CardTitle: CardTitleComponent = ({
+    className,
     cardTitle,
     cardSubtitle,
     cardTitleClassName,
     cardSubtitleClassName,
     ...attrs
-}) => (
-    <hgroup {...attrs}>
-        <h3 className={classNames('tw-font-medium', cardTitleClassName)}>
+}) => {
+    if (cardSubtitle) {
+        return (
+            <hgroup className={className} {...attrs}>
+                <h3
+                    className={classNames('tw-font-medium', cardTitleClassName)}
+                >
+                    {cardTitle}
+                </h3>
+                <p className={cardSubtitleClassName}>{cardSubtitle}</p>
+            </hgroup>
+        );
+    }
+
+    return (
+        <h3
+            className={classNames(
+                'tw-font-medium',
+                className,
+                cardTitleClassName,
+            )}
+            {...attrs}
+        >
             {cardTitle}
         </h3>
-        {cardSubtitle && (
-            <p className={cardSubtitleClassName}>{cardSubtitle}</p>
-        )}
-    </hgroup>
-);
+    );
+};
 
 type PickedCardHeaderProps = 'ref' | 'className';
 
