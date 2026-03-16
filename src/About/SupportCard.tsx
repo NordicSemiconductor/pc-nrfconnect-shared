@@ -37,7 +37,7 @@ export default ({ feedbackCategories, className }: SupportCardProps) => {
 
     return (
         <Card className={className}>
-            <Card.Header className="tw-text-center">
+            <Card.Header className="tw-text-center tw-text-base">
                 <Card.Header.Title cardTitle="Support" />
             </Card.Header>
             <Card.Body className="tw-gap-4">

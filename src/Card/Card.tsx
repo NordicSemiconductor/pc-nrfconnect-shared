@@ -15,6 +15,8 @@ interface CardTitleProps
     extends Pick<React.ComponentPropsWithRef<'div'>, PickedCardTitleProps> {
     cardTitle: React.ReactNode;
     cardSubtitle?: React.ReactNode;
+    cardTitleClassName?: string;
+    cardSubtitleClassName?: string;
 }
 
 type CardTitleComponent = React.FC<CardTitleProps>;
@@ -22,11 +24,17 @@ type CardTitleComponent = React.FC<CardTitleProps>;
 const CardTitle: CardTitleComponent = ({
     cardTitle,
     cardSubtitle,
+    cardTitleClassName,
+    cardSubtitleClassName,
     ...attrs
 }) => (
     <hgroup {...attrs}>
-        <h3 className="tw-text-base tw-font-medium">{cardTitle}</h3>
-        {cardSubtitle && <p>{cardSubtitle}</p>}
+        <h3 className={classNames('tw-font-medium', cardTitleClassName)}>
+            {cardTitle}
+        </h3>
+        {cardSubtitle && (
+            <p className={cardSubtitleClassName}>{cardSubtitle}</p>
+        )}
     </hgroup>
 );
 

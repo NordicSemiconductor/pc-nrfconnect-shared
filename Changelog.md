@@ -14,6 +14,8 @@ every new version is a new major version.
 - Added proto-slot components `Card.Header`, `Card.Header.Title`, `Card.Body`.
 - Added support for `className` and `ref` on `Card` and its proto-slot
   components.
+- Added support for `cardTitleClassName` and `cardSubtitleClassName` on
+  `Card.Header.Title`
 
 ### Changed
 

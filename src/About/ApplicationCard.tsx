@@ -29,7 +29,7 @@ export default ({ className }: ApplicationCardProps) => {
 
     return (
         <Card className={className}>
-            <Card.Header className="tw-text-center">
+            <Card.Header className="tw-text-center tw-text-base">
                 <Card.Header.Title cardTitle="Application" />
             </Card.Header>
             <Card.Body className="tw-select-text tw-gap-4">
