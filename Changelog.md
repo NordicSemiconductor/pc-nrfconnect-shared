@@ -7,6 +7,13 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 245.0.0 - UNRELEASED
+
+### Changed
+
+- Upgraded `tailwind` to `3.4.14` to allow for use of min/max width and min/max
+  height with usual spacing units instead of screen sizes.
+
 ## 244.0.0 - 2026-01-22
 
 ### Changed
