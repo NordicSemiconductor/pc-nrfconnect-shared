@@ -20,7 +20,13 @@ export type ButtonVariants =
 
 type ButtonSize = 'sm' | 'lg' | 'xl';
 
-type PickedButtonProps = 'ref' | 'className' | 'disabled' | 'onClick' | 'title';
+type PickedButtonProps =
+    | 'ref'
+    | 'key'
+    | 'className'
+    | 'disabled'
+    | 'onClick'
+    | 'title';
 
 interface ButtonProps
     extends Pick<React.ComponentPropsWithRef<'button'>, PickedButtonProps> {
