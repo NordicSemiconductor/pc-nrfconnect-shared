@@ -6,7 +6,7 @@
 
 import React, { type ReactNode } from 'react';
 
-import { Card } from '../Card/Card';
+import Card from '../Card/Card';
 
 export interface DocumentationCardProps {
     documentationSections: Array<ReactNode>;

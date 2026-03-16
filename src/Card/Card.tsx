@@ -9,12 +9,12 @@ import React from 'react';
 import classNames from '../utils/classNames';
 import flatstr from '../utils/flatstr';
 
-export interface CardTitleProps extends React.ComponentPropsWithRef<'div'> {
+interface CardTitleProps extends React.ComponentPropsWithRef<'div'> {
     cardTitle: React.ReactNode;
     cardSubtitle?: React.ReactNode;
 }
 
-export type CardTitleComponent = React.FC<CardTitleProps>;
+type CardTitleComponent = React.FC<CardTitleProps>;
 
 const CardTitle: CardTitleComponent = ({
     cardTitle,
@@ -27,9 +27,9 @@ const CardTitle: CardTitleComponent = ({
     </hgroup>
 );
 
-export type CardHeaderProps = React.ComponentPropsWithRef<'header'>;
+type CardHeaderProps = React.ComponentPropsWithRef<'header'>;
 
-export interface CardHeaderComponent extends React.FC<CardHeaderProps> {
+interface CardHeaderComponent extends React.FC<CardHeaderProps> {
     Title: CardTitleComponent;
 }
 
@@ -49,9 +49,9 @@ const CardHeader: CardHeaderComponent = ({ children, className, ...attrs }) => (
 
 CardHeader.Title = CardTitle;
 
-export type CardBodyProps = React.ComponentPropsWithRef<'div'>;
+type CardBodyProps = React.ComponentPropsWithRef<'div'>;
 
-export type CardBodyComponent = React.FC<CardBodyProps>;
+type CardBodyComponent = React.FC<CardBodyProps>;
 
 const CardBody: CardBodyComponent = ({ className, children, ...attrs }) => (
     <div className={classNames('tw-flex tw-flex-col', className)} {...attrs}>
@@ -59,14 +59,14 @@ const CardBody: CardBodyComponent = ({ className, children, ...attrs }) => (
     </div>
 );
 
-export type CardProps = React.ComponentPropsWithRef<'article'>;
+type CardProps = React.ComponentPropsWithRef<'article'>;
 
-export interface CardComponent extends React.FC<CardProps> {
+interface CardComponent extends React.FC<CardProps> {
     Header: CardHeaderComponent;
     Body: CardBodyComponent;
 }
 
-export const Card: CardComponent = ({ children, className, ...attrs }) => (
+const Card: CardComponent = ({ children, className, ...attrs }) => (
     <article
         className={classNames(
             // prettier-ignore
@@ -86,3 +86,5 @@ export const Card: CardComponent = ({ children, className, ...attrs }) => (
 
 Card.Header = CardHeader;
 Card.Body = CardBody;
+
+export default Card;

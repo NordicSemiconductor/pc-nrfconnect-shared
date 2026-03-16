@@ -7,7 +7,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import { Card } from '../Card/Card';
+import Card from '../Card/Card';
 import { deviceInfo } from '../Device/deviceInfo/deviceInfo';
 import { selectedDevice, selectedDeviceInfo } from '../Device/deviceSlice';
 import AboutButton from './AboutButton';
