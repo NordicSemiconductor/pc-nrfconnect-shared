@@ -9,7 +9,10 @@ import React from 'react';
 import classNames from '../utils/classNames';
 import flatstr from '../utils/flatstr';
 
-interface CardTitleProps extends React.ComponentPropsWithRef<'div'> {
+type PickedCardTitleProps = 'ref' | 'className';
+
+interface CardTitleProps
+    extends Pick<React.ComponentPropsWithRef<'div'>, PickedCardTitleProps> {
     cardTitle: React.ReactNode;
     cardSubtitle?: React.ReactNode;
 }
@@ -27,7 +30,12 @@ const CardTitle: CardTitleComponent = ({
     </hgroup>
 );
 
-type CardHeaderProps = React.ComponentPropsWithRef<'header'>;
+type PickedCardHeaderProps = 'ref' | 'className';
+
+type CardHeaderProps = Pick<
+    React.ComponentPropsWithRef<'header'>,
+    PickedCardHeaderProps
+>;
 
 interface CardHeaderComponent extends React.FC<CardHeaderProps> {
     Title: CardTitleComponent;
@@ -49,7 +57,12 @@ const CardHeader: CardHeaderComponent = ({ children, className, ...attrs }) => (
 
 CardHeader.Title = CardTitle;
 
-type CardBodyProps = React.ComponentPropsWithRef<'div'>;
+type PickedCardBodyProps = 'ref' | 'className';
+
+type CardBodyProps = Pick<
+    React.ComponentPropsWithRef<'div'>,
+    PickedCardBodyProps
+>;
 
 type CardBodyComponent = React.FC<CardBodyProps>;
 
@@ -59,7 +72,9 @@ const CardBody: CardBodyComponent = ({ className, children, ...attrs }) => (
     </div>
 );
 
-type CardProps = React.ComponentPropsWithRef<'article'>;
+type PickedCardProps = 'ref' | 'className';
+
+type CardProps = Pick<React.ComponentPropsWithRef<'article'>, PickedCardProps>;
 
 interface CardComponent extends React.FC<CardProps> {
     Header: CardHeaderComponent;
