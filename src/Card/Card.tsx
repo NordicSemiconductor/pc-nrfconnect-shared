@@ -56,7 +56,11 @@ const CardTitle: CardTitleComponent = ({
     );
 };
 
-type PickedCardHeaderProps = 'ref' | 'className';
+type PickedCardHeaderProps =
+    | 'ref'
+    | 'className'
+    | 'onPointerEnter'
+    | 'onPointerLeave';
 
 type CardHeaderProps = Pick<
     React.ComponentPropsWithRef<'header'>,
