@@ -25,32 +25,19 @@ const CardTitle: CardTitleComponent = ({
     className,
     cardTitle,
     cardSubtitle,
-    cardTitleClassName,
-    cardSubtitleClassName,
     ...attrs
 }) => {
     if (cardSubtitle) {
         return (
             <hgroup className={className} {...attrs}>
-                <h3
-                    className={classNames('tw-font-medium', cardTitleClassName)}
-                >
-                    {cardTitle}
-                </h3>
-                <p className={cardSubtitleClassName}>{cardSubtitle}</p>
+                <h3 className="tw-font-medium">{cardTitle}</h3>
+                <p>{cardSubtitle}</p>
             </hgroup>
         );
     }
 
     return (
-        <h3
-            className={classNames(
-                'tw-font-medium',
-                className,
-                cardTitleClassName,
-            )}
-            {...attrs}
-        >
+        <h3 className={classNames('tw-font-medium', className)} {...attrs}>
             {cardTitle}
         </h3>
     );
