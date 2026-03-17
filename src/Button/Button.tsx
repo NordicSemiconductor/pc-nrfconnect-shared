@@ -10,6 +10,7 @@ import classNames from '../utils/classNames';
 
 export type ButtonVariants =
     | 'primary'
+    | 'primary-outline'
     | 'secondary'
     | 'success'
     | 'info'
@@ -17,31 +18,34 @@ export type ButtonVariants =
     | 'danger'
     | 'link-button';
 
-export type ButtonSize = 'sm' | 'lg' | 'xl';
+type ButtonSize = 'sm' | 'lg' | 'xl';
 
-type ButtonProps = {
-    id?: string;
+type PickedButtonProps =
+    | 'ref'
+    | 'key'
+    | 'className'
+    | 'disabled'
+    | 'onClick'
+    | 'title';
+
+interface ButtonProps
+    extends Pick<React.ComponentPropsWithRef<'button'>, PickedButtonProps> {
     variant: ButtonVariants;
-    className?: string;
-    onClick: React.MouseEventHandler<HTMLButtonElement>;
-    disabled?: boolean;
-    title?: string;
     size?: ButtonSize;
-};
+}
 
 const Button: React.FC<ButtonProps> = ({
     children,
-    id,
     className,
     variant,
-    onClick,
-    disabled = false,
-    title,
     size = 'sm',
+    ...attrs
 }) => (
+    // Ideally we'd use switch-case statements beforehand but that'd disable
+    // Tailwind utility classes' validation
+    // Also, flatstr should be used to respect line width
     <button
         type="button"
-        id={id}
         className={`${classNames(
             'tw-preflight',
             size === 'sm' && 'tw-h-6 tw-px-2 tw-text-xs',
@@ -49,6 +53,8 @@ const Button: React.FC<ButtonProps> = ({
             size === 'xl' && 'tw-h-8 tw-px-4 tw-text-base',
             variant === 'primary' &&
                 'tw-border tw-border-transparent tw-bg-nordicBlue tw-text-white active:enabled:tw-bg-nordicBlue-700',
+            variant === 'primary-outline' &&
+                'tw-border tw-border-nordicBlue tw-bg-white tw-text-nordicBlue active:enabled:tw-bg-nordicBlue-50',
             variant === 'secondary' &&
                 'tw-border tw-border-gray-700 tw-bg-white tw-text-gray-700 active:enabled:tw-bg-gray-50',
             variant === 'success' &&
@@ -63,9 +69,7 @@ const Button: React.FC<ButtonProps> = ({
                 'tw-border tw-border-nordicBlue tw-bg-white tw-text-nordicBlue active:enabled:tw-bg-gray-50',
             className,
         )}`}
-        disabled={disabled}
-        onClick={onClick}
-        title={title}
+        {...attrs}
     >
         {children}
     </button>
