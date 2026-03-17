@@ -23,7 +23,12 @@ import AboutButton from './AboutButton';
 import Feedback from './Feedback';
 import Section from './Section';
 
-export default ({ feedbackCategories }: { feedbackCategories?: string[] }) => {
+export interface SupportCardProps {
+    feedbackCategories?: Array<string>;
+    className?: string;
+}
+
+export default ({ feedbackCategories, className }: SupportCardProps) => {
     const dispatch = useDispatch();
     const devices = useSelector(getDevices);
     const currentSerialNumber = useSelector(selectedSerialNumber);
@@ -31,8 +36,11 @@ export default ({ feedbackCategories }: { feedbackCategories?: string[] }) => {
     const currentDevice = useSelector(selectedDevice);
 
     return (
-        <Card title="Support">
-            <div className="tw-preflight tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
+        <Card className={className}>
+            <Card.Header className="tw-text-center tw-text-base">
+                <Card.Header.Title cardTitle="Support" />
+            </Card.Header>
+            <Card.Body className="tw-gap-4">
                 <Section title="DevZone">
                     <p>
                         You can ask for help or open a support request on
@@ -98,7 +106,7 @@ export default ({ feedbackCategories }: { feedbackCategories?: string[] }) => {
                         </Button>
                     </Section>
                 </Section>
-            </div>
+            </Card.Body>
         </Card>
     );
 };

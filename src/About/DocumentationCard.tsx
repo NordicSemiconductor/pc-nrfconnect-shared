@@ -8,14 +8,19 @@ import React, { type ReactNode } from 'react';
 
 import Card from '../Card/Card';
 
+export interface DocumentationCardProps {
+    documentationSections: Array<ReactNode>;
+    className?: string;
+}
+
 export default ({
     documentationSections,
-}: {
-    documentationSections: ReactNode[];
-}) => (
-    <Card title="Documentation">
-        <div className="tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
-            {documentationSections}
-        </div>
+    className,
+}: DocumentationCardProps) => (
+    <Card className={className}>
+        <Card.Header className="tw-text-center tw-text-base">
+            <Card.Header.Title cardTitle="Documentation" />
+        </Card.Header>
+        <Card.Body className="tw-gap-4">{documentationSections}</Card.Body>
     </Card>
 );

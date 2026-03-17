@@ -14,7 +14,11 @@ import AboutButton from './AboutButton';
 import Section from './Section';
 import ShortcutButton from './ShortcutButton';
 
-export default () => {
+export interface ApplicationCardProps {
+    className?: string;
+}
+
+export default ({ className }: ApplicationCardProps) => {
     const [appInfo, setAppInfo] = useState<AppDetailsFromLauncher>();
 
     useEffect(() => {
@@ -24,8 +28,11 @@ export default () => {
     if (appInfo == null) return null;
 
     return (
-        <Card title="Application">
-            <div className="tw-preflight tw-flex tw-select-text tw-flex-col tw-flex-wrap tw-gap-4">
+        <Card className={className}>
+            <Card.Header className="tw-text-center tw-text-base">
+                <Card.Header.Title cardTitle="Application" />
+            </Card.Header>
+            <Card.Body className="tw-select-text tw-gap-4">
                 <Section title="Title">{appInfo.displayName}</Section>
                 <Section title="Purpose">{appInfo.description}</Section>
                 <Section title="Version">{appInfo.currentVersion}</Section>
@@ -44,7 +51,7 @@ export default () => {
                     <FactoryResetButton label="Restore defaults..." />
                     <ShortcutButton label="Show shortcuts" />
                 </Section>
-            </div>
+            </Card.Body>
         </Card>
     );
 };

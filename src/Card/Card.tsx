@@ -5,22 +5,118 @@
  */
 
 import React from 'react';
-import Card from 'react-bootstrap/Card';
 
-import styles from './card.module.scss';
+import classNames from '../utils/classNames';
+import flatstr from '../utils/flatstr';
 
-type NrfCardProps = {
-    children: React.ReactNode;
-    title: React.ReactNode;
+type PickedCardTitleProps = 'ref' | 'className';
+
+interface CardTitleProps
+    extends Pick<React.ComponentPropsWithRef<'div'>, PickedCardTitleProps> {
+    cardTitle: React.ReactNode;
+    cardSubtitle?: React.ReactNode;
+    cardTitleClassName?: string;
+    cardSubtitleClassName?: string;
+}
+
+type CardTitleComponent = React.FC<CardTitleProps>;
+
+const CardTitle: CardTitleComponent = ({
+    className,
+    cardTitle,
+    cardSubtitle,
+    ...attrs
+}) => {
+    if (cardSubtitle) {
+        return (
+            <hgroup className={className} {...attrs}>
+                <h3 className="tw-font-medium">{cardTitle}</h3>
+                <p>{cardSubtitle}</p>
+            </hgroup>
+        );
+    }
+
+    return (
+        <h3 className={classNames('tw-font-medium', className)} {...attrs}>
+            {cardTitle}
+        </h3>
+    );
 };
 
-export default ({ children, title }: NrfCardProps) => (
-    <Card className={styles.card}>
-        <Card.Header className={styles.header}>
-            <Card.Title>
-                <span className={styles.title}>{title}</span>
-            </Card.Title>
-        </Card.Header>
-        <Card.Body className={styles.body}>{children}</Card.Body>
-    </Card>
+type PickedCardHeaderProps =
+    | 'ref'
+    | 'className'
+    | 'onPointerEnter'
+    | 'onPointerLeave';
+
+type CardHeaderProps = Pick<
+    React.ComponentPropsWithRef<'header'>,
+    PickedCardHeaderProps
+>;
+
+interface CardHeaderComponent extends React.FC<CardHeaderProps> {
+    Title: CardTitleComponent;
+}
+
+const CardHeader: CardHeaderComponent = ({ children, className, ...attrs }) => (
+    <header
+        className={classNames(
+            // prettier-ignore
+            flatstr`tw-border-b tw-border-solid tw-border-b-black
+            tw-border-opacity-10 tw-py-4`,
+            className,
+        )}
+        {...attrs}
+    >
+        {children}
+    </header>
 );
+
+CardHeader.Title = CardTitle;
+
+type PickedCardBodyProps = 'ref' | 'className';
+
+type CardBodyProps = Pick<
+    React.ComponentPropsWithRef<'div'>,
+    PickedCardBodyProps
+>;
+
+type CardBodyComponent = React.FC<CardBodyProps>;
+
+const CardBody: CardBodyComponent = ({ className, children, ...attrs }) => (
+    <div className={classNames('tw-flex tw-flex-col', className)} {...attrs}>
+        {children}
+    </div>
+);
+
+type PickedCardProps = 'ref' | 'className';
+
+type CardProps = Pick<React.ComponentPropsWithRef<'article'>, PickedCardProps>;
+
+interface CardComponent extends React.FC<CardProps> {
+    Header: CardHeaderComponent;
+    Body: CardBodyComponent;
+}
+
+const Card: CardComponent = ({ children, className, ...attrs }) => (
+    <article
+        className={classNames(
+            // prettier-ignore
+            // Prettier has a bugged rule. Prettier doesn't care about multiline
+            // strings, yet outputs an error on multiline strings
+            // in jsx/tsx files
+            flatstr`tw-preflight tw-relative tw-flex tw-flex-col tw-gap-4
+            tw-break-words tw-border tw-border-solid tw-border-black
+            tw-border-opacity-10 tw-bg-white tw-px-4 tw-pb-4`,
+            className,
+        )}
+        {...attrs}
+    >
+        {children}
+    </article>
+);
+
+Card.Header = CardHeader;
+Card.Body = CardBody;
+
+export default Card;

@@ -21,14 +21,23 @@ const memorySize = (memoryInBytes: number) => {
     return `${memoryInBytes / 1024}KiB`;
 };
 
-export default () => {
+export interface DeviceCardProps {
+    className?: string;
+}
+
+export default ({ className }: DeviceCardProps) => {
     const device = useSelector(selectedDevice);
     const info = useSelector(selectedDeviceInfo);
 
     if (device == null) {
         return (
-            <Card title="Device">
-                <Section title="No device selected" />
+            <Card className={className}>
+                <Card.Header className="tw-text-center tw-text-base">
+                    <Card.Header.Title cardTitle="Device" />
+                </Card.Header>
+                <Card.Body>
+                    <Section title="No device selected" />
+                </Card.Body>
             </Card>
         );
     }
@@ -37,8 +46,11 @@ export default () => {
     const { name, cores, website } = deviceInfo(device);
 
     return (
-        <Card title="Device">
-            <div className="tw-preflight tw-flex tw-flex-col tw-flex-wrap tw-gap-4">
+        <Card className={className}>
+            <Card.Header className="tw-text-center tw-text-base">
+                <Card.Header.Title cardTitle="Device" />
+            </Card.Header>
+            <Card.Body className="tw-gap-4">
                 <Section title="Name">{name || 'Unknown'}</Section>
                 <Section title="ID">{device.serialNumber}</Section>
                 <Section title="PCA">{pca || 'Unknown'}</Section>
@@ -67,7 +79,7 @@ export default () => {
                         label="Go to product page"
                     />
                 </Section>
-            </div>
+            </Card.Body>
         </Card>
     );
 };
