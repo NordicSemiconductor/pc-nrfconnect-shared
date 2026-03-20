@@ -23,6 +23,9 @@ every new version is a new major version.
   height with usual spacing units instead of screen sizes.
 - Refactored `Card` component to remove dependency on bootstrap and to allow for
   more flexibility.
+- Upgraded `electron` to Electron 41, which packs Chromium 146 and Node 24.
+  Electron packing Chromium 146 allows for usage of the Popover API, dialogs,
+  position anchoring, and more.
 
 ### Steps to upgrade when using this package
 
