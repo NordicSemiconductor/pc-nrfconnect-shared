@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Provider } from 'react-redux';
+import { Provider, type ProviderProps } from 'react-redux';
 import { render } from '@testing-library/react';
 import { type Action as SimpleAction, type Reducer } from 'redux';
 
@@ -21,7 +21,8 @@ const createPreparedStore = (actions: Action[], appReducer?: Reducer) => {
 };
 
 const preparedProvider =
-    (actions: Action[], appReducer?: Reducer) => (props: object) => (
+    (actions: Action[], appReducer?: Reducer) =>
+    (props: Omit<ProviderProps, 'store'>) => (
         <Provider store={createPreparedStore(actions, appReducer)} {...props} />
     );
 
