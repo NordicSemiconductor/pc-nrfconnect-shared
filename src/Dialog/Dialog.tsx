@@ -12,48 +12,71 @@ import Spinner from '../Spinner/Spinner';
 
 import './dialog.scss';
 
-type CoreProps = {
+type DialogSize = 'sm' | 'm' | 'lg' | 'xl';
+
+type DialogClosingBehavior = 'manual' | 'request' | 'any';
+
+interface CoreProps
+    extends Pick<React.ComponentPropsWithRef<'dialog'>, 'className'> {
     isVisible: boolean;
     onHide?: () => void;
-    className?: string;
-    size?: 'sm' | 'm' | 'lg' | 'xl';
-    children: ReactNode;
-};
+    size?: DialogSize;
+}
 
-type DialogProps = CoreProps & {
-    closeOnUnfocus?: boolean;
-    closeOnEsc?: boolean;
-};
+interface DialogProps extends CoreProps {
+    closingBehavior?: DialogClosingBehavior;
+}
 
-export const Dialog = ({
+export const Dialog: React.FC<React.PropsWithChildren<DialogProps>> = ({
     isVisible,
-    closeOnUnfocus = false,
-    closeOnEsc = false,
+    closingBehavior = 'manual',
     onHide = () => {},
     className = '',
     size = 'm',
     children,
-}: DialogProps) => (
-    <Modal
-        onEscapeKeyDown={() => {
-            if (closeOnEsc && onHide) {
-                onHide();
-            }
-        }}
-        show={isVisible}
-        size={size === 'm' ? undefined : size}
-        backdrop={closeOnUnfocus ? true : 'static'}
-        onHide={() => {
-            if (closeOnUnfocus && onHide) {
-                onHide();
-            }
-        }}
-        centered
-        className={`dialog ${className}`}
-    >
-        {children}
-    </Modal>
-);
+}) => {
+    const closedBy = (() => {
+        switch (closingBehavior) {
+            case 'manual':
+                return 'none';
+            case 'request':
+                return 'closerequest';
+            case 'any':
+                return 'any';
+        }
+    })();
+
+    // Separate component in Modal and Popover
+    return (
+        <>
+            <dialog
+                closedby={closedBy}
+
+            >
+
+            </dialog>
+            <Modal
+                onEscapeKeyDown={() => {
+                    if (closeOnEsc && onHide) {
+                        onHide();
+                    }
+                }}
+                show={isVisible}
+                size={size === 'm' ? undefined : size}
+                backdrop={closeOnUnfocus ? true : 'static'}
+                onHide={() => {
+                    if (closeOnUnfocus && onHide) {
+                        onHide();
+                    }
+                }}
+                centered
+                className={`dialog ${className}`}
+            >
+                {children}
+            </Modal>
+        </>
+    );
+};
 
 const DialogHeader: React.FC<{
     title: string;
