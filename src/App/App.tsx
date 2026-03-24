@@ -195,7 +195,9 @@ const ConnectedApp: FC<ConnectedAppProps> = ({
     );
 };
 
-const ConnectedErrorBoundary: React.FC = ({ children }) => {
+const ConnectedErrorBoundary: React.FC<React.PropsWithChildren> = ({
+    children,
+}) => {
     const devices = useSelector(getDevices);
     const selectedDevice = useSelector(selectedDeviceSelector);
     const selectedSerialNumber = useSelector(selectedSerialNumberSelector);
