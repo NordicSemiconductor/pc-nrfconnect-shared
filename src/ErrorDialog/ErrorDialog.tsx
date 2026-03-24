@@ -29,7 +29,9 @@ const SingleErrorMessage = ({
     error: ErrorMessage;
 }) => (
     <>
-        <ReactMarkdown linkTarget="_blank">{message}</ReactMarkdown>
+        {/* check if we actually need https://github.com/rehypejs/rehype-external-links (as per https://github.com/remarkjs/react-markdown/blob/main/changelog.md#remove-linktarget) */}
+        {/* try to remove it first (trigger launcher error by deleting .nrfconnect-apps/source.json and opening launcher without internet) */}
+        <ReactMarkdown>{message}</ReactMarkdown>
         {detail != null && <ErrorDetails detail={detail} />}
     </>
 );

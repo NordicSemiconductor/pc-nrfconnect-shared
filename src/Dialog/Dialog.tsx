@@ -55,7 +55,11 @@ export const Dialog = ({
     </Modal>
 );
 
-Dialog.Header = ({
+const DialogHeader: React.FC<{
+    title: string;
+    headerIcon?: string;
+    showSpinner?: boolean;
+}> = ({
     title,
     headerIcon,
     showSpinner,
@@ -64,7 +68,7 @@ Dialog.Header = ({
     headerIcon?: string;
     showSpinner?: boolean;
 }) => (
-    <Modal.Header closeButton={false}>
+    <Modal.Header>
         <div className="tw-flex tw-flex-row">
             <b>{title}</b>
             {showSpinner && (
@@ -76,6 +80,8 @@ Dialog.Header = ({
         {headerIcon && <span className={`mdi mdi-${headerIcon}`} />}
     </Modal.Header>
 );
+
+Dialog.Header = DialogHeader;
 
 Dialog.Body = ({ children }: { children: ReactNode }) => (
     <Modal.Body className="tw-select-text">{children}</Modal.Body>
