@@ -28,7 +28,7 @@ type PickedButtonProps =
     | 'onClick'
     | 'title';
 
-interface ButtonProps
+export interface ButtonProps
     extends Pick<React.ComponentPropsWithRef<'button'>, PickedButtonProps> {
     variant: ButtonVariants;
     size?: ButtonSize;
