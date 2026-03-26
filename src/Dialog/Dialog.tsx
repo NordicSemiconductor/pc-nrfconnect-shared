@@ -12,77 +12,50 @@ import Spinner from '../Spinner/Spinner';
 
 import './dialog.scss';
 
-type DialogSize = 'sm' | 'm' | 'lg' | 'xl';
-
-type DialogClosingBehavior = 'manual' | 'request' | 'any';
-
-interface CoreProps
-    extends Pick<React.ComponentPropsWithRef<'dialog'>, 'className'> {
+type CoreProps = {
     isVisible: boolean;
     onHide?: () => void;
-    size?: DialogSize;
-}
+    className?: string;
+    size?: 'sm' | 'm' | 'lg' | 'xl';
+    children: ReactNode;
+};
 
-interface DialogProps extends CoreProps {
-    closingBehavior?: DialogClosingBehavior;
-}
+type DialogProps = CoreProps & {
+    closeOnUnfocus?: boolean;
+    closeOnEsc?: boolean;
+};
 
-export const Dialog: React.FC<React.PropsWithChildren<DialogProps>> = ({
+export const Dialog = ({
     isVisible,
-    closingBehavior = 'manual',
+    closeOnUnfocus = false,
+    closeOnEsc = false,
     onHide = () => {},
     className = '',
     size = 'm',
     children,
-}) => {
-    const closedBy = (() => {
-        switch (closingBehavior) {
-            case 'manual':
-                return 'none';
-            case 'request':
-                return 'closerequest';
-            case 'any':
-                return 'any';
-        }
-    })();
+}: DialogProps) => (
+    <Modal
+        onEscapeKeyDown={() => {
+            if (closeOnEsc && onHide) {
+                onHide();
+            }
+        }}
+        show={isVisible}
+        size={size === 'm' ? undefined : size}
+        backdrop={closeOnUnfocus ? true : 'static'}
+        onHide={() => {
+            if (closeOnUnfocus && onHide) {
+                onHide();
+            }
+        }}
+        centered
+        className={`dialog ${className}`}
+    >
+        {children}
+    </Modal>
+);
 
-    // Separate component in Modal and Popover
-    return (
-        <>
-            <dialog
-                closedby={closedBy}
-
-            >
-
-            </dialog>
-            <Modal
-                onEscapeKeyDown={() => {
-                    if (closeOnEsc && onHide) {
-                        onHide();
-                    }
-                }}
-                show={isVisible}
-                size={size === 'm' ? undefined : size}
-                backdrop={closeOnUnfocus ? true : 'static'}
-                onHide={() => {
-                    if (closeOnUnfocus && onHide) {
-                        onHide();
-                    }
-                }}
-                centered
-                className={`dialog ${className}`}
-            >
-                {children}
-            </Modal>
-        </>
-    );
-};
-
-const DialogHeader: React.FC<{
-    title: string;
-    headerIcon?: string;
-    showSpinner?: boolean;
-}> = ({
+Dialog.Header = ({
     title,
     headerIcon,
     showSpinner,
@@ -91,7 +64,7 @@ const DialogHeader: React.FC<{
     headerIcon?: string;
     showSpinner?: boolean;
 }) => (
-    <Modal.Header>
+    <Modal.Header closeButton={false}>
         <div className="tw-flex tw-flex-row">
             <b>{title}</b>
             {showSpinner && (
@@ -103,8 +76,6 @@ const DialogHeader: React.FC<{
         {headerIcon && <span className={`mdi mdi-${headerIcon}`} />}
     </Modal.Header>
 );
-
-Dialog.Header = DialogHeader;
 
 Dialog.Body = ({ children }: { children: ReactNode }) => (
     <Modal.Body className="tw-select-text">{children}</Modal.Body>
