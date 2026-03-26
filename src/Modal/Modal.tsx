@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type DialogHTMLAttributes } from 'react';
 
 import Button, { type ButtonProps } from '../Button/Button';
 import classNames from '../utils/classNames';
@@ -99,7 +99,8 @@ const ModalFooter: ModalFooterComponent = ({
     </footer>
 );
 
-interface ModalOpenButtonProps extends ButtonProps {
+interface ModalOpenButtonProps
+    extends Omit<ButtonProps, 'command' | 'commandfor'> {
     modalId: string;
 }
 
@@ -112,13 +113,13 @@ const ModalOpenButton: ModalOpenButtonComponent = ({
     modalId,
     ...attrs
 }) => (
-    // @ts-expect-error command and commandfor attributes do not exist
     <Button command="show-modal" commandfor={modalId} {...attrs}>
         {children}
     </Button>
 );
 
-interface ModalCloseButtonProps extends ButtonProps {
+interface ModalCloseButtonProps
+    extends Omit<ButtonProps, 'command' | 'commandfor'> {
     modalId: string;
 }
 
@@ -131,14 +132,23 @@ const ModalCloseButton: ModalCloseButtonComponent = ({
     modalId,
     ...attrs
 }) => (
-    // @ts-expect-error command and commandfor attributes do not exist
     <Button command="request-close" commandfor={modalId} {...attrs}>
         {children}
     </Button>
 );
 
 type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
+
 type ModalClosingBehavior = 'manual' | 'request' | 'any';
+
+const modalClosingBehaviorLookup: Record<
+    ModalClosingBehavior,
+    DialogHTMLAttributes<HTMLDialogElement>['closedby']
+> = {
+    manual: 'none',
+    request: 'closerequest',
+    any: 'any',
+};
 
 interface ModalProps
     extends Pick<
@@ -168,9 +178,7 @@ const Modal: ModalComponent = ({
     hasBackdrop = true,
     ...attrs
 }) => {
-    const closedBy = { manual: 'none', request: 'closerequest', any: 'any' }[
-        closingBehavior
-    ];
+    const closedBy = modalClosingBehaviorLookup[closingBehavior];
 
     return (
         <dialog
@@ -184,9 +192,8 @@ const Modal: ModalComponent = ({
                 hasBackdrop && styles.backdrop,
                 className,
             )}
-            // @ts-expect-error closedBy attribute does not exist
             // eslint-disable-next-line react/no-unknown-property
-            closedBy={closedBy}
+            closedby={closedBy}
             {...attrs}
         >
             {children}
