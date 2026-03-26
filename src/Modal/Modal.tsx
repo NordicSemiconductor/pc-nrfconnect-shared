@@ -206,3 +206,5 @@ Modal.Body = ModalBody;
 Modal.Footer = ModalFooter;
 Modal.OpenButton = ModalOpenButton;
 Modal.CloseButton = ModalCloseButton;
+
+export default Modal;
