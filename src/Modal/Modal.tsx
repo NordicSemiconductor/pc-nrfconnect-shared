@@ -184,7 +184,7 @@ const Modal: ModalComponent = ({
         <dialog
             id={id}
             className={classNames(
-                'tw-m-4 tw-p-4',
+                'tw-fixed tw-left-1/2 tw-m-4 -tw-translate-x-1/2 tw-p-4',
                 modalSize === 'sm' && 'tw-max-w-20',
                 modalSize === 'md' && 'tw-max-w-40',
                 modalSize === 'lg' && 'tw-max-w-60',
