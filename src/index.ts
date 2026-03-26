@@ -24,6 +24,8 @@ export {
     DialogButton,
 } from './Dialog/Dialog';
 export type { DialogButtonProps } from './Dialog/Dialog';
+export { default as Modal } from './Modal/Modal';
+export { default as Popover } from './Popover/Popover';
 
 export { default as Slider } from './Slider/Slider';
 export { type Range, type RangeOrValues, type Values } from './Slider/range';

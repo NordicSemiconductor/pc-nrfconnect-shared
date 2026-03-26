@@ -70,3 +70,5 @@ const Popover: PopoverComponent = ({
 };
 
 Popover.OpenButton = PopoverOpenButton;
+
+export default Popover;
