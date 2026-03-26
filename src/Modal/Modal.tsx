@@ -184,11 +184,11 @@ const Modal: ModalComponent = ({
         <dialog
             id={id}
             className={classNames(
-                'tw-fixed tw-left-1/2 tw-m-4 -tw-translate-x-1/2 tw-p-4',
-                modalSize === 'sm' && 'tw-max-w-20',
-                modalSize === 'md' && 'tw-max-w-40',
-                modalSize === 'lg' && 'tw-max-w-60',
-                modalSize === 'xl' && 'tw-max-w-80',
+                'tw-preflight tw-fixed tw-left-1/2 tw-m-4 -tw-translate-x-1/2 tw-border tw-border-solid tw-border-black/10 tw-p-4',
+                modalSize === 'sm' && 'tw-w-50',
+                modalSize === 'md' && 'tw-w-100',
+                modalSize === 'lg' && 'tw-w-150',
+                modalSize === 'xl' && 'tw-w-200',
                 hasBackdrop && styles.backdrop,
                 className,
             )}
