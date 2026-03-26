@@ -76,10 +76,10 @@ const ModalBody: ModalBodyComponent = ({ className, children, ...attrs }) => (
     </div>
 );
 
-interface ModalFooterProps
-    extends Pick<React.ComponentPropsWithRef<'footer'>, 'ref' | 'className'> {
-    idk: number;
-}
+type ModalFooterProps = Pick<
+    React.ComponentPropsWithRef<'footer'>,
+    'ref' | 'className'
+>;
 
 type ModalFooterComponent = React.FC<React.PropsWithChildren<ModalFooterProps>>;
 
