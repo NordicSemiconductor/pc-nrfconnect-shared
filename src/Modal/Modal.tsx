@@ -17,7 +17,11 @@ type ModalHeaderTitleComponent = React.FC<
 const ModalHeaderTitle: ModalHeaderTitleComponent = ({
     className,
     children,
-}) => <h3 className={classNames('tw-font-medium', className)}>{children}</h3>;
+}) => (
+    <h3 className={classNames('tw-text-xl tw-font-medium', className)}>
+        {children}
+    </h3>
+);
 
 interface ModalHeaderProps
     extends Pick<React.ComponentPropsWithRef<'header'>, 'ref' | 'className'> {
@@ -55,7 +59,7 @@ const ModalHeader: ModalHeaderComponent = ({
                 // eslint-disable-next-line react/no-unknown-property
                 commandfor={modalId}
             >
-                <span className="mdi mdi-close" />
+                <span className="mdi mdi-close tw-text-2xl" />
             </button>
         )}
     </header>
@@ -71,7 +75,10 @@ type ModalBodyProps = Pick<
 >;
 
 const ModalBody: ModalBodyComponent = ({ className, children, ...attrs }) => (
-    <div className={classNames('tw-flex tw-flex-col', className)} {...attrs}>
+    <div
+        className={classNames('tw-flex tw-flex-col tw-py-4', className)}
+        {...attrs}
+    >
         {children}
     </div>
 );
@@ -90,7 +97,7 @@ const ModalFooter: ModalFooterComponent = ({
 }) => (
     <footer
         className={classNames(
-            'tw-flex tw-flex-row tw-items-center tw-justify-end tw-border-t tw-border-solid tw-border-t-black/10 tw-py-4',
+            'tw-flex tw-flex-row tw-items-center tw-justify-end tw-gap-4 tw-border-t tw-border-solid tw-border-t-black/10 tw-py-4',
             className,
         )}
         {...attrs}
@@ -184,11 +191,11 @@ const Modal: ModalComponent = ({
         <dialog
             id={id}
             className={classNames(
-                'tw-preflight tw-fixed tw-left-1/2 tw-m-4 -tw-translate-x-1/2 tw-border tw-border-solid tw-border-black/10 tw-p-4',
-                modalSize === 'sm' && 'tw-w-50',
-                modalSize === 'md' && 'tw-w-100',
-                modalSize === 'lg' && 'tw-w-150',
-                modalSize === 'xl' && 'tw-w-200',
+                'tw-preflight tw-fixed tw-mx-auto tw-my-4 tw-min-w-60 tw-overflow-x-auto tw-border tw-border-solid tw-border-black/10 tw-px-4',
+                modalSize === 'sm' && 'tw-w-1/3',
+                modalSize === 'md' && 'tw-w-1/2',
+                modalSize === 'lg' && 'tw-w-3/4',
+                modalSize === 'xl' && 'tw-w-[90%]',
                 hasBackdrop && styles.backdrop,
                 className,
             )}
