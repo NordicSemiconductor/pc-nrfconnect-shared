@@ -200,7 +200,7 @@ const Modal: ModalComponent = ({
                 modalSize === 'md' && 'tw-w-1/2',
                 modalSize === 'lg' && 'tw-w-3/4',
                 modalSize === 'xl' && 'tw-w-[90%]',
-                hasBackdrop && styles.backdrop,
+                hasBackdrop && 'open:backdrop:tw-bg-black/50',
                 className,
             )}
             // eslint-disable-next-line react/no-unknown-property
