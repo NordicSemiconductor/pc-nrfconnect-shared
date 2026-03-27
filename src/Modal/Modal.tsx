@@ -43,7 +43,7 @@ const ModalHeader: ModalHeaderComponent = ({
 }) => (
     <header
         className={classNames(
-            'tw-flex tw-flex-row tw-items-center tw-border-b tw-border-solid tw-border-b-black/10 tw-py-4',
+            'tw-flex tw-flex-none tw-flex-row tw-items-center tw-border-b tw-border-solid tw-border-b-black/10 tw-py-4',
             className,
         )}
         {...attrs}
@@ -76,7 +76,11 @@ type ModalBodyProps = Pick<
 
 const ModalBody: ModalBodyComponent = ({ className, children, ...attrs }) => (
     <div
-        className={classNames('tw-flex tw-flex-col tw-py-4', className)}
+        className={classNames(
+            'tw-flex tw-flex-1 tw-flex-col tw-overflow-y-auto tw-py-4',
+            styles.modalBody,
+            className,
+        )}
         {...attrs}
     >
         {children}
@@ -97,7 +101,7 @@ const ModalFooter: ModalFooterComponent = ({
 }) => (
     <footer
         className={classNames(
-            'tw-flex tw-flex-row tw-items-center tw-justify-end tw-gap-4 tw-border-t tw-border-solid tw-border-t-black/10 tw-py-4',
+            'tw-flex tw-flex-none tw-flex-row tw-items-center tw-justify-end tw-gap-4 tw-border-t tw-border-solid tw-border-t-black/10 tw-py-4',
             className,
         )}
         {...attrs}
@@ -191,7 +195,7 @@ const Modal: ModalComponent = ({
         <dialog
             id={id}
             className={classNames(
-                'tw-preflight tw-fixed tw-mx-auto tw-my-4 tw-min-w-60 tw-overflow-x-auto tw-border tw-border-solid tw-border-black/10 tw-px-4',
+                'tw-preflight tw-fixed tw-mx-auto tw-my-4 tw-min-w-60 tw-flex-col tw-border tw-border-solid tw-border-black/10 tw-px-4 open:tw-flex',
                 modalSize === 'sm' && 'tw-w-1/3',
                 modalSize === 'md' && 'tw-w-1/2',
                 modalSize === 'lg' && 'tw-w-3/4',
