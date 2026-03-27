@@ -3,7 +3,7 @@ import React, { type DialogHTMLAttributes } from 'react';
 import Button, { type ButtonProps } from '../Button/Button';
 import classNames from '../utils/classNames';
 
-import styles from './modal.scss';
+import styles from './Modal.module.scss';
 
 type ModalHeaderTitleProps = Pick<
     React.ComponentPropsWithRef<'h3'>,
