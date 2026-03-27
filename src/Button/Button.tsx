@@ -41,9 +41,6 @@ const Button: React.FC<ButtonProps> = ({
     size = 'sm',
     ...attrs
 }) => (
-    // Ideally we'd use switch-case statements beforehand but that'd disable
-    // Tailwind utility classes' validation
-    // Also, flatstr should be used to respect line width
     <button
         type="button"
         className={`${classNames(

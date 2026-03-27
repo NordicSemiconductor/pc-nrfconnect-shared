@@ -7,7 +7,6 @@
 import React from 'react';
 
 import classNames from '../utils/classNames';
-import flatstr from '../utils/flatstr';
 
 type PickedCardTitleProps = 'ref' | 'className';
 
@@ -61,9 +60,7 @@ interface CardHeaderComponent extends React.FC<CardHeaderProps> {
 const CardHeader: CardHeaderComponent = ({ children, className, ...attrs }) => (
     <header
         className={classNames(
-            // prettier-ignore
-            flatstr`tw-border-b tw-border-solid tw-border-b-black
-            tw-border-opacity-10 tw-py-4`,
+            `tw-border-b tw-border-solid tw-border-b-black tw-border-opacity-10 tw-py-4`,
             className,
         )}
         {...attrs}
@@ -101,13 +98,7 @@ interface CardComponent extends React.FC<CardProps> {
 const Card: CardComponent = ({ children, className, ...attrs }) => (
     <article
         className={classNames(
-            // prettier-ignore
-            // Prettier has a bugged rule. Prettier doesn't care about multiline
-            // strings, yet outputs an error on multiline strings
-            // in jsx/tsx files
-            flatstr`tw-preflight tw-relative tw-flex tw-flex-col tw-gap-4
-            tw-break-words tw-border tw-border-solid tw-border-black
-            tw-border-opacity-10 tw-bg-white tw-px-4 tw-pb-4`,
+            `tw-preflight tw-relative tw-flex tw-flex-col tw-gap-4 tw-break-words tw-border tw-border-solid tw-border-black tw-border-opacity-10 tw-bg-white tw-px-4 tw-pb-4`,
             className,
         )}
         {...attrs}
