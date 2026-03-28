@@ -60,3 +60,39 @@ jobs:
               if:
                   github.event.push.ref == 'refs/heads/main' ||
                   inputs.force_pack
+
+            - name: Enforce revision_history update when docs change
+              if: >
+                  github.event_name == 'pull_request' &&
+                  ! contains(github.event.pull_request.labels.*.name, 'no doc revision history')
+              uses: actions/github-script@v7
+              with:
+                script: |
+                  const pr = context.payload.pull_request;
+                  if (!pr) {
+                    core.warning('No pull_request in context; skipping.');
+                    return;
+                  }
+
+                  const files = await github.paginate(
+                    github.rest.pulls.listFiles,
+                    {
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      pull_number: pr.number,
+                    }
+                  );
+
+                  const filenames = files.map(f => f.filename);
+
+                  const docsChanged = filenames.some(fn => fn.startsWith('doc/docs/'));
+                  const revisionChanged = filenames.includes('doc/docs/revision_history.yml');
+
+                  core.info(`docsChanged=${docsChanged}, revisionChanged=${revisionChanged}`);
+
+                  if (docsChanged && !revisionChanged) {
+                    core.setFailed(
+                      `Files under 'doc/docs/' were modified but 'doc/docs/revision_history.yml' was not. ` +
+                      `Update revision history or add label 'no doc revision history'.`
+                    );
+                  }
