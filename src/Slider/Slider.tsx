@@ -5,8 +5,6 @@
  */
 
 import React, { type FC, useEffect } from 'react';
-// This version of ESLint is bugged af
-// eslint-disable-next-line import/no-unresolved
 import { useResizeDetector } from 'react-resize-detector';
 
 import classNames from '../utils/classNames';
