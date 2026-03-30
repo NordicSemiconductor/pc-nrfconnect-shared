@@ -5,6 +5,7 @@
  */
 
 import React, { type FC, useEffect } from 'react';
+// eslint-disable-next-line import/no-unresolved
 import { useResizeDetector } from 'react-resize-detector';
 
 import classNames from '../utils/classNames';

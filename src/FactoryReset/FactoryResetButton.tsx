@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { type FC, useRef, useState } from 'react';
+import React, { type FC, useState } from 'react';
 import { getCurrentWindow } from '@electron/remote';
 
 import Button, { type ButtonVariants } from '../Button/Button';
@@ -33,7 +33,6 @@ const FactoryResetButton: FC<Props> = ({
     large = false,
 }) => {
     const [showDialog, setShowDialog] = useState(false);
-    useRef(); // showdialog
     const defaultResetFn = () => {
         store().clear();
         logger.info('Successfully restored defaults');

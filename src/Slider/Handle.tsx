@@ -52,7 +52,7 @@ const Handle: FC<Props> = ({
         mousePosition: number;
         percentage: number;
         lastValue: number;
-    }>();
+    }>({ mousePosition: 0, percentage: 0, lastValue: 0 });
 
     // We have to put the callbacks into refs, so that we do not call outdated references later
     const onChangeRef = useAutoupdatingRef(onChange);

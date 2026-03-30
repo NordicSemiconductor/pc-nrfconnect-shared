@@ -4,12 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import {
-    type AnyAction,
-    configureStore,
-    type ThunkAction,
-} from '@reduxjs/toolkit';
-import { type Reducer } from 'redux';
+import { configureStore, type ThunkAction } from '@reduxjs/toolkit';
+import { type Reducer, type UnknownAction } from 'redux';
 
 import { reducer as shortcuts } from './About/shortcutSlice';
 import { reducer as appLayout } from './App/appLayout';
@@ -58,7 +54,7 @@ export type AppThunk<AppLayout = RootState, ReturnType = void> = ThunkAction<
     ReturnType,
     AppLayout,
     unknown,
-    AnyAction
+    UnknownAction
 >;
 
 type Store = ReturnType<typeof store>;
