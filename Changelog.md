@@ -44,19 +44,18 @@ structure of `Card` changed. Follow this format:
 import { Card } from '@nordicsemiconductor/pc-nrfconnect-shared';
 
 <Card>
-  <Card.Header className="tw-flex tw-flex-row tw-justify-between">
-    <Card.Header.Title cardTitle="your title here" />
-    { /* your button here */ }
-  </Card.Header>
-  <Card.Body>
-    { /* your card content here */ }
-  </Card.Body>
-</Card>
+    <Card.Header className="tw-flex tw-flex-row tw-justify-between">
+        <Card.Header.Title cardTitle="your title here" />
+        {/* your button here */}
+    </Card.Header>
+    <Card.Body>{/* your card content here */}</Card.Body>
+</Card>;
 ```
 
 #### Migrating to React 19
 
-See [React 19 upgrade guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide).
+See
+[React 19 upgrade guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide).
 
 ## 244.0.0 - 2026-01-22
 
