@@ -21,7 +21,7 @@ const Markdown: React.FC<MarkdownProps> = ({
     return (
         <div
             className={classNames(
-                'tw-preflight tw-flex tw-flex-col tw-gap-4 [&_h1]:tw-text-lg [&_h1]:tw-font-medium [&_h2]:tw-text-lg [&_h2]:tw-font-medium [&_h3]:tw-text-lg [&_h3]:tw-font-medium [&_h4]:tw-text-lg [&_h4]:tw-font-medium [&_h5]:tw-text-lg [&_h5]:tw-font-medium [&_h6]:tw-text-lg [&_h6]:tw-font-medium [&_ol]:tw-list-inside [&_ol]:tw-list-decimal [&_ul]:tw-list-inside [&_ul]:tw-list-disc',
+                'tw-preflight tw-flex tw-flex-col tw-gap-4 [&_code]:tw-font-mono [&_code]:tw-text-pink [&_h1]:tw-text-lg [&_h1]:tw-font-medium [&_h2]:tw-text-lg [&_h2]:tw-font-medium [&_h3]:tw-text-lg [&_h3]:tw-font-medium [&_h4]:tw-text-lg [&_h4]:tw-font-medium [&_h5]:tw-text-lg [&_h5]:tw-font-medium [&_h6]:tw-text-lg [&_h6]:tw-font-medium [&_i]:tw-italic [&_ol]:tw-list-inside [&_ol]:tw-list-decimal [&_strong]:tw-font-bold [&_ul]:tw-list-inside [&_ul]:tw-list-disc',
                 className,
             )}
             {...attrs}
