@@ -59,7 +59,7 @@ const Popover: PopoverComponent = ({
             popover={popoverType}
             id={id}
             className={classNames(
-                'tw-preflight tw-absolute tw-border tw-border-solid tw-border-black/10',
+                'tw-preflight tw-absolute tw-overflow-auto tw-border tw-border-solid tw-border-black/10',
                 className,
             )}
             {...attrs}
