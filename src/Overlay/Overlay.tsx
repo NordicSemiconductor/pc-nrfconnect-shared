@@ -10,7 +10,79 @@ import Tooltip from 'react-bootstrap/Tooltip';
 
 import './overlay.scss';
 
-export default ({
+type OverlayBaseProps = Pick<
+    React.ComponentPropsWithRef<'div'>,
+    'ref' | 'className'
+>;
+
+type OverlayBaseComponent = React.FC<React.PropsWithChildren<OverlayBaseProps>>;
+
+const OverlayBase: OverlayBaseComponent = ({ children, ...attrs }) => (
+    <div className="tw-cursor-help" {...attrs}>
+        {children}
+    </div>
+);
+
+type OverlayOverlayProps = Pick<
+    React.ComponentPropsWithRef<'div'>,
+    'ref' | 'className'
+>;
+
+type OverlayOverlayComponent = React.FC<
+    React.PropsWithChildren<OverlayOverlayProps>
+>;
+
+const OverlayOverlay: OverlayOverlayComponent = ({ children, ...attrs }) => (
+    <div {...attrs}>{children}</div>
+);
+
+type OverlayTriggerElem = 'base' | 'base-or-overlay';
+type OverlayTriggerRestraint = null | 'only-active';
+type OverlayPlacement =
+    | 'top-left'
+    | 'top'
+    | 'top-right'
+    | 'right-span-top'
+    | 'right'
+    | 'right-span-bottom'
+    | 'bottom-left'
+    | 'bottom'
+    | 'bottom-right'
+    | 'left-span-top'
+    | 'left'
+    | 'left-span-bottom';
+
+interface OverlayProps
+    extends Pick<React.ComponentPropsWithRef<'div'>, 'ref' | 'className'> {
+    triggerElem?: OverlayTriggerElem;
+    triggerRestraint?: OverlayTriggerRestraint;
+    placement?: OverlayPlacement;
+}
+
+interface OverlayComponent
+    extends React.FC<React.PropsWithChildren<OverlayProps>> {
+    Base: OverlayBaseComponent;
+    Overlay: OverlayOverlayComponent;
+}
+
+const Overlay: OverlayComponent = ({
+    triggerElem = 'base',
+    triggerRestraint = 'only-active',
+    placement = 'bottom',
+    children,
+    ...attrs
+}) => {
+    const [showOverlay, setShowOverlay] = useState<boolean>(false);
+
+    return <div {...attrs}>{children}</div>;
+};
+
+Overlay.Base = OverlayBase;
+Overlay.Overlay = OverlayOverlay;
+
+export default Overlay;
+
+const old = ({
     keepShowingOnHoverTooltip,
     /*
      * To show a tooltip when hovering over disabled elements,
