@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2026 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
 import React, { type HTMLAttributes } from 'react';
 
 import Button, { type ButtonProps } from '../Button/Button';
