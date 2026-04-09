@@ -40,7 +40,10 @@ const popoverClosingBehaviorLookup: Record<
 };
 
 interface PopoverProps
-    extends Pick<React.ComponentPropsWithRef<'dialog'>, 'ref' | 'className'> {
+    extends Pick<
+        React.ComponentPropsWithRef<'dialog'>,
+        'ref' | 'className' | 'onMouseEnter' | 'onMouseLeave'
+    > {
     id: string;
     closingBehavior?: PopoverClosingBehavior;
 }
