@@ -170,7 +170,12 @@ const modalClosingBehaviorLookup: Record<
 interface ModalProps
     extends Pick<
         React.ComponentPropsWithRef<'dialog'>,
-        'ref' | 'className' | 'onCancel' | 'onClose'
+        | 'ref'
+        | 'className'
+        | 'onCancel'
+        | 'onClose'
+        | 'onMouseEnter'
+        | 'onMouseLeave'
     > {
     id: string;
     modalSize?: ModalSize;
