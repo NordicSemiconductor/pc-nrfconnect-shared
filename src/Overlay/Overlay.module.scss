@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2026 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
+.overlayBase {
+    anchor-name: --overlay-anchor;
+}
+
+.overlayOverlay {
+    position-anchor: --overlay-anchor;
+}
+
+.posTopLeft {
+    position-area: top left;
+}
+
+.posTop {
+    position-area: top;
+}
+
+.posTopRight {
+    position-area: top right;
+}
+
+.posRightSpanTop {
+    position-area: right span-top;
+}
+
+.posRight {
+    position-area: right;
+}
+
+.posRightSpanBottom {
+    position-area: right span-bottom;
+}
+
+.posBottomLeft {
+    position-area: bottom left;
+}
+
+.posBottom {
+    position-area: bottom;
+}
+
+.posBottomRight {
+    position-area: bottom right;
+}
+
+.posLeftSpanTop {
+    position-area: left span-top;
+}
+
+.posLeft {
+    position-area: left;
+}
+
+.posLeftSpanBottom {
+    position-area: left span-bottom;
+}

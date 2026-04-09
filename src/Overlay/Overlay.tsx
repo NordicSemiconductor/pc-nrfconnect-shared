@@ -4,12 +4,21 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
+import React, {
+    createContext,
+    useContext,
+    useEffect,
+    useId,
+    useRef,
+    useState,
+} from 'react';
+import _ from 'lodash';
+
+import Popover from '../Popover/Popover';
+import classNames from '../utils/classNames';
 
 import './overlay.scss';
-import Popover from '../Popover/Popover';
+import styles from './Overlay.module.scss';
 
 const isElementEnabled = (elem: React.ReactNode): boolean =>
     !(
@@ -26,14 +35,22 @@ type OverlayBaseProps = Pick<
 
 type OverlayBaseComponent = React.FC<React.PropsWithChildren<OverlayBaseProps>>;
 
-const OverlayBase: OverlayBaseComponent = ({ children, ...attrs }) => {
+const OverlayBase: OverlayBaseComponent = ({
+    className,
+    children,
+    ...attrs
+}) => {
     const { setIsBaseHovered, setIsBaseEnabled } = useContext(OverlayContext);
 
     setIsBaseEnabled?.(isElementEnabled(children));
 
     return (
         <div
-            className="tw-cursor-help"
+            className={classNames(
+                'tw-cursor-help',
+                styles.overlayBase,
+                className,
+            )}
             onMouseEnter={() => {
                 setIsBaseHovered?.(true);
             }}
@@ -48,7 +65,7 @@ const OverlayBase: OverlayBaseComponent = ({ children, ...attrs }) => {
 };
 
 type OverlayOverlayProps = Pick<
-    React.ComponentPropsWithRef<'div'>,
+    React.ComponentPropsWithRef<'dialog'>,
     'ref' | 'className'
 >;
 
@@ -56,17 +73,73 @@ type OverlayOverlayComponent = React.FC<
     React.PropsWithChildren<OverlayOverlayProps>
 >;
 
-const OverlayOverlay: OverlayOverlayComponent = ({ children, ...attrs }) => {
-    const { setIsOverlayHovered, showOverlay } = useContext(OverlayContext);
+const OverlayOverlay: OverlayOverlayComponent = ({
+    className,
+    children,
+    ...attrs
+}) => {
+    const overlayRef = useRef<HTMLDialogElement>(null);
+
+    const { setIsOverlayHovered, showOverlay, placement } =
+        useContext(OverlayContext);
+
+    const positionAreaStyle = (() => {
+        switch (placement) {
+            case 'top-left':
+                return styles.posTopLeft;
+            case 'top':
+                return styles.posTop;
+            case 'top-right':
+                return styles.posTopRight;
+            case 'right-span-top':
+                return styles.posRightSpanTop;
+            case 'right':
+                return styles.posRight;
+            case 'right-span-bottom':
+                return styles.posRightSpanBottom;
+            case 'bottom-left':
+                return styles.posBottomLeft;
+            case 'bottom':
+                return styles.posBottom;
+            case 'bottom-right':
+                return styles.posBottomRight;
+            case 'left-span-top':
+                return styles.posLeftSpanTop;
+            case 'left':
+                return styles.posLeft;
+            case 'left-span-bottom':
+                return styles.posLeftSpanBottom;
+        }
+    })();
+
+    useEffect(() => {
+        if (showOverlay) {
+            if (!overlayRef.current?.open) {
+                overlayRef.current?.showPopover();
+            }
+        } else if (overlayRef.current?.open) {
+            overlayRef.current?.hidePopover();
+        }
+    }, [overlayRef, showOverlay]);
 
     return (
         <Popover
+            id={`${useId()}-overlay`}
+            ref={overlayRef}
+            closingBehavior="manual"
+            className={classNames(
+                'tw-inset-1',
+                styles.overlayOverlay,
+                positionAreaStyle,
+                className,
+            )}
             onMouseEnter={() => {
                 setIsOverlayHovered?.(true);
             }}
             onMouseLeave={() => {
                 setIsOverlayHovered?.(false);
             }}
+            // onClick={e => e.stopPropagation()}
             {...attrs}
         >
             {children}
@@ -108,9 +181,13 @@ interface OverlayContextTy {
     setIsBaseHovered?: (isBaseHovered: boolean) => void;
     setIsOverlayHovered?: (isOverlayHovered: boolean) => void;
     showOverlay: boolean;
+    placement: OverlayPlacement;
 }
 
-const OverlayContext = createContext<OverlayContextTy>({});
+const OverlayContext = createContext<OverlayContextTy>({
+    showOverlay: false,
+    placement: 'bottom',
+});
 
 const Overlay: OverlayComponent = ({
     triggerElem = 'base',
@@ -124,6 +201,10 @@ const Overlay: OverlayComponent = ({
     const [isBaseHovered, setIsBaseHovered] = useState<boolean>(false);
     const [isOverlayHovered, setIsOverlayHovered] = useState<boolean>(false);
     const [isBaseEnabled, setIsBaseEnabled] = useState<boolean>(false);
+
+    const showOverlayDebounce: React.RefObject<_.DebouncedFunc<
+        () => void
+    > | null> = useRef(null);
 
     useEffect(() => {
         const satisfiesTriggerElem = () => {
@@ -146,7 +227,15 @@ const Overlay: OverlayComponent = ({
             }
         };
 
-        setShowOverlay(satisfiesTriggerElem() && satisfiesTriggerRestraint());
+        if (satisfiesTriggerElem() && satisfiesTriggerRestraint()) {
+            showOverlayDebounce.current = _.debounce(
+                () => setShowOverlay(true),
+                500,
+                { leading: false, trailing: true },
+            );
+        } else {
+            showOverlayDebounce.current?.cancel();
+        }
     }, [
         triggerElem,
         triggerRestraint,
@@ -163,6 +252,7 @@ const Overlay: OverlayComponent = ({
                     setIsBaseHovered,
                     setIsOverlayHovered,
                     showOverlay,
+                    placement,
                 }}
             >
                 {children}
@@ -175,63 +265,3 @@ Overlay.Base = OverlayBase;
 Overlay.Overlay = OverlayOverlay;
 
 export default Overlay;
-
-const old = ({
-    keepShowingOnHoverTooltip,
-    /*
-     * To show a tooltip when hovering over disabled elements,
-     * add `pointer-events: none;`
-     */
-    children,
-    tooltipId,
-    placement = 'bottom-start',
-    tooltipChildren,
-}: {
-    keepShowingOnHoverTooltip?: boolean;
-    children: React.ReactNode;
-    tooltipId: string;
-    placement?:
-        | 'top-start'
-        | 'top'
-        | 'top-end'
-        | 'right-start'
-        | 'right'
-        | 'right-end'
-        | 'bottom-end'
-        | 'bottom'
-        | 'bottom-start'
-        | 'left-end'
-        | 'left'
-        | 'left-start';
-    tooltipChildren: React.ReactNode;
-}) => {
-    const [show, setShow] = useState<boolean>();
-
-    return (
-        <OverlayTrigger
-            placement={placement}
-            show={show}
-            delay={500}
-            overlay={
-                <Tooltip
-                    id={tooltipId}
-                    show={show}
-                    className="shared-tooltip"
-                    onMouseEnter={() => {
-                        if (keepShowingOnHoverTooltip) {
-                            setShow(true);
-                        }
-                    }}
-                    onMouseLeave={() => {
-                        setShow(undefined);
-                    }}
-                    onClick={e => e.stopPropagation()}
-                >
-                    {tooltipChildren}
-                </Tooltip>
-            }
-        >
-            <div className="tw-cursor-help">{children}</div>
-        </OverlayTrigger>
-    );
-};
