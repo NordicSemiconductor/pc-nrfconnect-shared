@@ -17,7 +17,6 @@ import _ from 'lodash';
 import Popover from '../Popover/Popover';
 import classNames from '../utils/classNames';
 
-import './overlay.scss';
 import styles from './Overlay.module.scss';
 
 const isElementEnabled = (elem: React.ReactNode): boolean =>
