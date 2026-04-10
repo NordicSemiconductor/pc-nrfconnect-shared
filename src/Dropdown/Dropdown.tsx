@@ -25,7 +25,6 @@ export interface DropdownProps<T>
     items: DropdownItem<T>[];
     onSelect: (item: DropdownItem<T>) => void;
     transparentButtonBg?: boolean;
-    minWidth?: boolean;
     disabled?: boolean;
     selectedItem: DropdownItem<T>;
     // numItemsBeforeScroll?: number;
@@ -38,7 +37,6 @@ const Dropdown = <T,>({
     items,
     onSelect,
     transparentButtonBg = false,
-    minWidth = false,
     disabled = false,
     selectedItem,
     className,
@@ -54,6 +52,9 @@ const Dropdown = <T,>({
     const [isActive, setIsActive] = useState(false);
 
     useEffect(() => {
+        // Manual popover control is mainly for the dropdown button
+        // Otherwise the popover and the buttons in the dropdown manage
+        // the popover's state through HTML `command` attribute
         if (isActive) {
             if (!dropdownPopoverRef.current?.open) {
                 dropdownPopoverRef.current?.showPopover();
@@ -63,21 +64,8 @@ const Dropdown = <T,>({
         }
     }, [isActive]);
 
-    const onClickItem = (item: DropdownItem<T>) => {
-        onSelect(item);
-        setIsActive(false);
-    };
-
     return (
-        <div
-            className={classNames('tw-preflight', className)}
-            // onBlur={event => {
-            //     if (!event.currentTarget.contains(event.relatedTarget)) {
-            //         setIsActive(false);
-            //     }
-            // }}
-            {...attrs}
-        >
+        <div className={classNames('tw-preflight', className)} {...attrs}>
             {label && (
                 <label className="tw-text-xs" htmlFor={dropdownBtnId}>
                     {label}
@@ -87,9 +75,8 @@ const Dropdown = <T,>({
                 id={dropdownBtnId}
                 type="button"
                 className={classNames(
-                    'tw-flex tw-items-center tw-justify-between tw-border-0',
+                    'tw-flex tw-min-w-12 tw-items-center tw-justify-between tw-border-0',
                     styles.anchor,
-                    !minWidth && 'tw-w-full',
                     transparentButtonBg
                         ? 'tw-bg-transparent'
                         : classNames(
@@ -120,10 +107,19 @@ const Dropdown = <T,>({
                 closingBehavior="hint"
                 id={dropdownPopoverId}
                 className={classNames(
-                    'tw-absolute tw-overflow-y-auto tw-border-x-2 tw-border-t-2 tw-border-solid tw-border-gray-600 tw-bg-gray-700 tw-p-0 tw-text-white open:tw-flex open:tw-flex-col',
+                    'tw-absolute tw-overflow-y-auto tw-border-2 tw-border-solid tw-border-gray-600 tw-bg-gray-700 tw-text-white [&:popover-open]:tw-flex [&:popover-open]:tw-flex-col',
                     styles.popover,
-                    // !minWidth && 'tw-right-0 tw-w-full',
                 )}
+                onToggle={ev => {
+                    switch (ev.newState) {
+                        case 'open':
+                            setIsActive(true);
+                            break;
+                        case 'closed':
+                            setIsActive(false);
+                            break;
+                    }
+                }}
             >
                 {items.map(item => (
                     <button
@@ -141,7 +137,7 @@ const Dropdown = <T,>({
                             size === 'sm' && 'tw-text-2xs',
                         )}
                         key={JSON.stringify(item.value)}
-                        onClick={() => onClickItem(item)}
+                        onClick={() => onSelect(item)}
                     >
                         {item.label}
                     </button>
