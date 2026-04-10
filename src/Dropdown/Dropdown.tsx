@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useState } from 'react';
-import { nanoid } from '@reduxjs/toolkit';
+import React, { useEffect, useId, useRef, useState } from 'react';
 
+import Popover from '../Popover/Popover';
 import classNames from '../utils/classNames';
 
 import styles from './Dropdown.module.scss';
@@ -41,16 +41,27 @@ const Dropdown = <T,>({
     minWidth = false,
     disabled = false,
     selectedItem,
-    // numItemsBeforeScroll = 0,
     className,
     size = 'md',
+    ...attrs
 }: DropdownProps<T>) => {
-    // TODO: Replace with useId() after upgrading to newer React >=18.0
-    const dropdownId = nanoid();
+    const dropdownId = useId();
     const dropdownBtnId = `${dropdownId}-btn`;
     const dropdownPopoverId = `${dropdownId}-dropdown`;
 
+    const dropdownPopoverRef = useRef<HTMLDialogElement>(null);
+
     const [isActive, setIsActive] = useState(false);
+
+    useEffect(() => {
+        if (isActive) {
+            if (!dropdownPopoverRef.current?.open) {
+                dropdownPopoverRef.current?.showPopover();
+            }
+        } else if (dropdownPopoverRef.current?.open) {
+            dropdownPopoverRef.current?.hidePopover();
+        }
+    }, [isActive]);
 
     const onClickItem = (item: DropdownItem<T>) => {
         onSelect(item);
@@ -59,16 +70,13 @@ const Dropdown = <T,>({
 
     return (
         <div
-            className={classNames(
-                'tw-preflight tw-relative tw-flex tw-flex-col tw-gap-1 tw-text-xs',
-                !minWidth && 'tw-w-full',
-                className,
-            )}
+            className={classNames('tw-preflight', className)}
             // onBlur={event => {
             //     if (!event.currentTarget.contains(event.relatedTarget)) {
             //         setIsActive(false);
             //     }
             // }}
+            {...attrs}
         >
             {label && (
                 <label className="tw-text-xs" htmlFor={dropdownBtnId}>
@@ -78,14 +86,6 @@ const Dropdown = <T,>({
             <button
                 id={dropdownBtnId}
                 type="button"
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                // eslint-disable-next-line react/no-unknown-property
-                command="show-popover"
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                // eslint-disable-next-line react/no-unknown-property
-                commandfor={dropdownPopoverId}
                 className={classNames(
                     'tw-flex tw-items-center tw-justify-between tw-border-0',
                     styles.anchor,
@@ -115,32 +115,14 @@ const Dropdown = <T,>({
                     )}`}
                 />
             </button>
-            <dialog
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                // eslint-disable-next-line react/no-unknown-property
-                popover="hint"
+            <Popover
+                ref={dropdownPopoverRef}
+                closingBehavior="hint"
                 id={dropdownPopoverId}
-                // onMouseDown={ev => {
-                //     // To prevent the dropdown from closing when users click on the scrollbar of the items
-                //     ev.preventDefault();
-                // }}
-                // style={
-                //     numItemsBeforeScroll > 0
-                //         ? {
-                //             maxHeight: `${numItemsBeforeScroll * 24}px`,
-                //         }
-                //         : {}
-                // }
-                // data-height={
-                //     numItemsBeforeScroll > 0 &&
-                //     items.length > numItemsBeforeScroll
-                // }
                 className={classNames(
-                    'tw-fixed tw-overflow-y-scroll tw-border-x-2 tw-border-t-2 tw-border-solid tw-border-gray-600 tw-bg-gray-700 tw-p-0 tw-text-white',
+                    'tw-absolute tw-overflow-y-auto tw-border-x-2 tw-border-t-2 tw-border-solid tw-border-gray-600 tw-bg-gray-700 tw-p-0 tw-text-white open:tw-flex open:tw-flex-col',
                     styles.popover,
-                    !minWidth && 'tw-right-0 tw-w-full',
-                    !isActive && 'tw-hidden',
+                    // !minWidth && 'tw-right-0 tw-w-full',
                 )}
             >
                 {items.map(item => (
@@ -155,7 +137,7 @@ const Dropdown = <T,>({
                         // eslint-disable-next-line react/no-unknown-property
                         commandfor={dropdownPopoverId}
                         className={classNames(
-                            'tw-clear-both tw-block tw-h-6 tw-w-full tw-whitespace-nowrap tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-text-left tw-font-normal tw-text-white hover:tw-bg-gray-600 focus:tw-bg-gray-600',
+                            'tw-h-6 tw-whitespace-nowrap tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-text-left tw-font-normal tw-text-white hover:tw-bg-gray-600 focus:tw-bg-gray-600',
                             size === 'sm' && 'tw-text-2xs',
                         )}
                         key={JSON.stringify(item.value)}
@@ -164,7 +146,7 @@ const Dropdown = <T,>({
                         {item.label}
                     </button>
                 ))}
-            </dialog>
+            </Popover>
         </div>
     );
 };
