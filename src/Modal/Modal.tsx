@@ -206,7 +206,7 @@ const Modal: ModalComponent = ({
         <dialog
             id={id}
             className={classNames(
-                'tw-preflight tw-fixed tw-mx-auto tw-my-4 tw-min-w-60 tw-flex-col tw-border tw-border-solid tw-border-black/10 tw-px-4 open:tw-flex',
+                'tw-preflight tw-fixed tw-mx-auto tw-my-4 tw-min-w-60 tw-border tw-border-solid tw-border-black/10 tw-px-4 open:tw-flex open:tw-flex-col',
                 modalSize === 'sm' && 'tw-w-1/3',
                 modalSize === 'md' && 'tw-w-1/2',
                 modalSize === 'lg' && 'tw-w-3/4',

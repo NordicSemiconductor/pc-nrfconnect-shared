@@ -72,10 +72,7 @@ const Popover: PopoverComponent = ({
             // eslint-disable-next-line react/no-unknown-property
             popover={popoverType}
             id={id}
-            className={classNames(
-                'tw-preflight tw-absolute tw-overflow-auto tw-border tw-border-solid tw-border-black/10',
-                className,
-            )}
+            className={classNames('tw-preflight tw-absolute', className)}
             {...attrs}
         >
             {children}
