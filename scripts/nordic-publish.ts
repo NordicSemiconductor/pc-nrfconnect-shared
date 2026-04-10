@@ -263,7 +263,7 @@ class ArtifactoryClient extends Client {
             });
 
             console.warn(
-                '\nGo to https://github.com/NordicSemiconductor/pc-nrfconnect-shared/actions/workflows/zap-cache.yml, run the workflow and paste this string as the list of paths to zap them manually:',
+                '\nGo to https://github.com/nordicsemi/pc-nrfconnect-shared/actions/workflows/zap-cache.yml, run the workflow and paste this string as the list of paths to zap them manually:',
             );
             console.warn('  ', this.filesWhereCacheZappingFailed.join(', '));
         }

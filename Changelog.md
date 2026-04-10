@@ -538,7 +538,7 @@ Overrides v202 as it was released a prerelease.
 - When publishing the app via FTP (usually in the azure release pipeline), add
   the parameter `--destination ftp` when calling the nordic-publish script.
 - Copy the files `build.yml`, `release.yml`, and `release-latest.yml` from
-  https://github.com/NordicSemiconductor/pc-nrfconnect-boilerplate/tree/main/.github/workflows
+  https://github.com/nordicsemi/pc-nrfconnect-boilerplate/tree/main/.github/workflows
   to `.github/workflows`. If appropriate for an app, customise the list of
   sources to deploy to in `release.yml`.
 
@@ -2051,7 +2051,7 @@ The package.json can be changed as follows:
 - Turn off tree-shaking for tailwind classes during a development build.
 - Added .tw-preflight css class to be used when transitioning to tailwind. For
   more details:
-  https://github.com/NordicSemiconductor/pc-nrfconnect-shared/blob/main/src/App/preflight.scss
+  https://github.com/nordicsemi/pc-nrfconnect-shared/blob/main/src/App/preflight.scss
 
 ### Changed
 
@@ -4723,9 +4723,9 @@ module.exports = require('pc-nrfconnect-shared/config/jest.config')();
   JavaScript to TypeScript: `deviceInfo`. While most is already prepared for
   that, the `webpack.config.js` in the launcher still needs two adjustments to
   work with this: The lines
-  [39](https://github.com/NordicSemiconductor/pc-nrfconnect-launcher/blob/497c1fde51246e1a4fcbc9efbb595d6764a7e056/webpack.config.js#L39)
+  [39](https://github.com/nordicsemi/pc-nrfconnect-launcher/blob/497c1fde51246e1a4fcbc9efbb595d6764a7e056/webpack.config.js#L39)
   and
-  [69](https://github.com/NordicSemiconductor/pc-nrfconnect-launcher/blob/497c1fde51246e1a4fcbc9efbb595d6764a7e056/webpack.config.js#L69)
+  [69](https://github.com/nordicsemi/pc-nrfconnect-launcher/blob/497c1fde51246e1a4fcbc9efbb595d6764a7e056/webpack.config.js#L69)
   needs to be changed, so that webpack does not only pick up files with the
   ending `.jsx?` but also `.tsx?`. Apps, on the other hand, do not need to be
   changed for this.
@@ -4916,7 +4916,7 @@ module.exports = require('pc-nrfconnect-shared/config/jest.config')();
   be shown. Add a `@include scrollbars(BACKGROUND-COLOUR);` with an appropriate
   replacement for `BACKGROUND-COLOUR` to the fitting selector in the SCSS files.
   When searching for `@include scrollbars` you can find
-  [an example for this in the source code of `pc-nrfconnect-shared`](https://github.com/NordicSemiconductor/pc-nrfconnect-shared/blob/cef186fcc4631d6c737ce4c5d299fef53a0ffcc2/src/Device/DeviceSelector/DeviceList/device-list.scss#L7).
+  [an example for this in the source code of `pc-nrfconnect-shared`](https://github.com/nordicsemi/pc-nrfconnect-shared/blob/cef186fcc4631d6c737ce4c5d299fef53a0ffcc2/src/Device/DeviceSelector/DeviceList/device-list.scss#L7).
 
 ## 4.8.8
 
