@@ -13,8 +13,8 @@
  * If the returned ratio is negative, it indicates by how much `y` is greater than `x`.
  * If the returned ratio is zero, `x` is equal to `y`.
  *
- * For example, `signedRatio(1500, 500)` will return `+0.66666…`, as `x` is greater than `y`
- * by `+66.66…%` (`500 + 66.66…% of 1500 = 1500`).
+ * For example, `signedRatio(500, 1500)` will return `-0.66666…`, as `y` is greater than `x`
+ * by `+66.66…%` (the sign from the function indicates who is greater). `500 + 66.66…% of 1500 = 1500`.
  *
  * @param {number} x x
  * @param {number} y y
