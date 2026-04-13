@@ -10,14 +10,21 @@
     anchor-name: --dropdown-anchor;
 }
 
-.popover {
+.anchoredPopover {
     position-anchor: --dropdown-anchor;
     width: anchor-size(width);
-    position-area: bottom;
-    position-try-fallbacks:
-        top, right span-bottom, right span-up,
-        left span-bottom, left span-up,
-        right, left;
+    // position-area: bottom;
+    // position-try-fallbacks:
+    //     top, right span-bottom, right span-top, right,
+    //     left span-bottom, left span-top, left;
     
     @include scrollbars($gray-700);
+}
+
+.anchorToBottom {
+    top: anchor(bottom);
+}
+
+.anchorToTop {
+    bottom: anchor(top);
 }
