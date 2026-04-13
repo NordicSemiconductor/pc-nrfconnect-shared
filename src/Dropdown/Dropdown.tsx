@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 
 import Popover from '../Popover/Popover';
 import classNames from '../utils/classNames';
+import { signedRatio } from '../utils/signedRatio';
 
 import styles from './Dropdown.module.scss';
 
@@ -31,7 +32,11 @@ export interface DropdownProps<T>
     size?: 'sm' | 'md';
 }
 
-const Dropdown = <T,>({
+interface DropdownComponent {
+    <T>(props: DropdownProps<T>): ReturnType<React.FC>;
+}
+
+const Dropdown: DropdownComponent = ({
     label,
     defaultButtonLabel = '',
     items,
@@ -42,12 +47,83 @@ const Dropdown = <T,>({
     className,
     size = 'md',
     ...attrs
-}: DropdownProps<T>) => {
+}) => {
     const dropdownId = useId();
     const dropdownBtnId = `${dropdownId}-btn`;
     const dropdownPopoverId = `${dropdownId}-dropdown`;
 
+    const dropdownBtnRef = useRef<HTMLButtonElement>(null);
     const dropdownPopoverRef = useRef<HTMLDialogElement>(null);
+
+    const intersectionObs = useRef<IntersectionObserver>(null);
+
+    // Prefer placing the dropdown at the bottom even if there's up to <rate> percent more space at the top
+    // 0.0 = Only prefer amount of available space
+    // 0.25 = Prefer bottom placement even if there's up to 25% more space available at the top
+    const bottomPreferenceRate = 0.1;
+
+    const onIntersect: (entries: Array<IntersectionObserverEntry>) => void =
+        useCallback(
+            ([observed]) => {
+                if (
+                    !observed ||
+                    !observed.rootBounds ||
+                    !dropdownBtnRef.current
+                ) {
+                    return;
+                }
+
+                const dropdownBtnRect =
+                    dropdownBtnRef.current.getBoundingClientRect();
+
+                const distanceToViewportTop =
+                    dropdownBtnRect.top - observed.rootBounds.top;
+                const distanceToViewportBottom =
+                    observed.rootBounds.bottom - dropdownBtnRect.bottom;
+
+                if (distanceToViewportTop <= 0) {
+                    // Place dropdown at bottom
+                }
+
+                if (distanceToViewportBottom <= 0) {
+                    // Place dropdown at top
+                }
+
+                const topBottomSignedRatio = signedRatio(
+                    distanceToViewportTop,
+                    distanceToViewportBottom,
+                );
+
+                if (topBottomSignedRatio > bottomPreferenceRate) {
+                    // Place dropdown at top
+                } else {
+                    // Place dropdown at bottom
+                }
+            },
+            [dropdownBtnRef],
+        );
+
+    // Create `IntersectionObserver` at mount only
+    useEffect(() => {
+        intersectionObs.current = new IntersectionObserver(onIntersect);
+    }, [onIntersect]);
+
+    // Start/Stop observing dropdown menu
+    useEffect(() => {
+        // See https://stackoverflow.com/questions/67069827/cleanup-ref-issues-in-react
+        let observed = null;
+
+        if (dropdownPopoverRef.current && intersectionObs.current) {
+            observed = dropdownPopoverRef.current;
+            intersectionObs.current?.observe(observed);
+        }
+
+        return () => {
+            // if (observed && intersectionObs.current) {
+            //     intersectionObs.current.unobserve(observed);
+            // }
+        };
+    }, [intersectionObs, dropdownPopoverRef]);
 
     const [isActive, setIsActive] = useState(false);
 
@@ -73,6 +149,7 @@ const Dropdown = <T,>({
             )}
             <button
                 id={dropdownBtnId}
+                ref={dropdownBtnRef}
                 type="button"
                 className={classNames(
                     'tw-flex tw-min-w-12 tw-items-center tw-justify-between tw-border-0',
@@ -108,7 +185,7 @@ const Dropdown = <T,>({
                 id={dropdownPopoverId}
                 className={classNames(
                     'tw-absolute tw-overflow-y-auto tw-border-2 tw-border-solid tw-border-gray-600 tw-bg-gray-700 tw-text-white [&:popover-open]:tw-flex [&:popover-open]:tw-flex-col',
-                    styles.popover,
+                    styles.anchoredPopover,
                 )}
                 onToggle={ev => {
                     switch (ev.newState) {

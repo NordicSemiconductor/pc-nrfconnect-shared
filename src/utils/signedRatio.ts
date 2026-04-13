@@ -1,0 +1,24 @@
+/*
+ * Copyright (c) 2026 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
+/**
+ * Returns the signed ratio of two numbers
+ *
+ * A.k.a "How much greater is the maximum compared to the minimum?"
+ *
+ * If the returned ratio is positive, it indicates by how much `x` is greater than `y`.
+ * If the returned ratio is negative, it indicates by how much `y` is greater than `x`.
+ * If the returned ratio is zero, `x` is equal to `y`.
+ *
+ * For example, `signedRatio(1500, 500)` will return `+0.66666…`, as `x` is greater than `y`
+ * by `+66.66…%` (`500 + 66.66…% of 1500 = 1500`).
+ *
+ * @param {number} x x
+ * @param {number} y y
+ * @returns {number} Signed ratio of x and y
+ */
+export const signedRatio = (x: number, y: number): number =>
+    Math.sign(x - y) * (1 - Math.min(x, y) / Math.max(x, y));
