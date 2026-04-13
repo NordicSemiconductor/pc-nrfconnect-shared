@@ -1195,21 +1195,21 @@ Overrides v202 as it was released a prerelease.
 
 ### Fixed
 
-- `useStopWatch` milliseconds was not correctly calculated
+- `useStopwatch` milliseconds was not correctly calculated
 - External JLink devices would not connect to apps device list properly if
   selected before they are connected to the debug-in heder of the device
 
 ### Changed
 
-- `useStopWatch` reset and start no longer force a rerender if these are a
+- `useStopwatch` reset and start no longer force a rerender if these are a
   dependency of a useEffect
-- `useStopWatch` start optional time param no longer default to the last time
+- `useStopwatch` start optional time param no longer default to the last time
   when paused but 0.
 - `nrfutil device device-info` returns undefined if reading info throws
 
 ### Steps to upgrade when using this package
 
-- `useStopWatch` If start() was used after a pause() with no call to reset()
+- `useStopwatch` If start() was used after a pause() with no call to reset()
   start need to be called with time i.e. start(time)
 
 ## 135.0.0 - 2023-11-29
@@ -2669,7 +2669,7 @@ module.exports = {
 
 ### Added
 
-- `useStopWatch` hook
+- `useStopwatch` hook
 
 ### Fix
 
