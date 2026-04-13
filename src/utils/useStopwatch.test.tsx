@@ -7,18 +7,18 @@
 import React from 'react';
 import { act, render } from '@testing-library/react';
 
-import useStopWatch, { type ITimer, type Stopwatch } from './useStopwatch';
+import useStopwatch, { type ITimer, type Stopwatch } from './useStopwatch';
 
 let appCallback = () => {};
 
 const setup = (stopwatch: Stopwatch) => {
     const returnVal = {};
     const TestComponent = () => {
-        Object.assign(returnVal, useStopWatch(stopwatch));
+        Object.assign(returnVal, useStopwatch(stopwatch));
         return null;
     };
     render(<TestComponent />);
-    return returnVal as ReturnType<typeof useStopWatch>;
+    return returnVal as ReturnType<typeof useStopwatch>;
 };
 
 describe('Stop Watch', () => {
@@ -34,7 +34,7 @@ describe('Stop Watch', () => {
     };
 
     const expectZeroElapsedTime = (
-        stopwatch: ReturnType<typeof useStopWatch>,
+        stopwatch: ReturnType<typeof useStopwatch>,
     ) => {
         expect(stopwatch.time).toBe(0);
         expect(stopwatch.seconds).toBe(0);
