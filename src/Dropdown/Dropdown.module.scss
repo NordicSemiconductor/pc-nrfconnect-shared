@@ -13,10 +13,7 @@
 .anchoredPopover {
     position-anchor: --dropdown-anchor;
     width: anchor-size(width);
-    // position-area: bottom;
-    // position-try-fallbacks:
-    //     top, right span-bottom, right span-top, right,
-    //     left span-bottom, left span-top, left;
+    left: anchor(left);
     
     @include scrollbars($gray-700);
 }
