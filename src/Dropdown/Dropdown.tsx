@@ -17,6 +17,8 @@ export interface DropdownItem<T = string> {
     value: T;
 }
 
+type DropdownPosition = 'bottom' | 'top';
+
 type PickedDropdownProps = 'ref' | 'className';
 
 export interface DropdownProps<T>
@@ -28,7 +30,6 @@ export interface DropdownProps<T>
     transparentButtonBg?: boolean;
     disabled?: boolean;
     selectedItem: DropdownItem<T>;
-    // numItemsBeforeScroll?: number;
     size?: 'sm' | 'md';
 }
 
@@ -57,75 +58,172 @@ const Dropdown: DropdownComponent = ({
 
     const intersectionObs = useRef<IntersectionObserver>(null);
 
-    // Prefer placing the dropdown at the bottom even if there's up to <rate> percent more space at the top
-    // 0.0 = Only prefer amount of available space
-    // 0.25 = Prefer bottom placement even if there's up to 25% more space available at the top
-    const bottomPreferenceRate = 0.1;
+    const [dropdownPos, setDropdownPos] = useState<DropdownPosition>('bottom');
+    const [dropdownMaxHeight, setDropdownMaxHeight] = useState<number>(100);
 
-    const onIntersect: (entries: Array<IntersectionObserverEntry>) => void =
-        useCallback(
-            ([observed]) => {
-                if (
-                    !observed ||
-                    !observed.rootBounds ||
-                    !dropdownBtnRef.current
-                ) {
-                    return;
-                }
+    const [isActive, setIsActive] = useState(false);
 
-                const dropdownBtnRect =
-                    dropdownBtnRef.current.getBoundingClientRect();
+    const onChange = useCallback(() => {
+        if (
+            !dropdownBtnRef.current ||
+            !dropdownPopoverRef.current?.checkVisibility()
+        ) {
+            return;
+        }
 
-                const distanceToViewportTop =
-                    dropdownBtnRect.top - observed.rootBounds.top;
-                const distanceToViewportBottom =
-                    observed.rootBounds.bottom - dropdownBtnRect.bottom;
+        const dropdownBtnRect = dropdownBtnRef.current.getBoundingClientRect();
 
-                if (distanceToViewportTop <= 0) {
-                    // Place dropdown at bottom
-                }
-
-                if (distanceToViewportBottom <= 0) {
-                    // Place dropdown at top
-                }
-
-                const topBottomSignedRatio = signedRatio(
-                    distanceToViewportTop,
-                    distanceToViewportBottom,
-                );
-
-                if (topBottomSignedRatio > bottomPreferenceRate) {
-                    // Place dropdown at top
-                } else {
-                    // Place dropdown at bottom
-                }
-            },
-            [dropdownBtnRef],
+        const rootRect = new DOMRect(
+            window.scrollX,
+            window.scrollY,
+            document.documentElement.clientWidth,
+            document.documentElement.clientHeight,
         );
 
-    // Create `IntersectionObserver` at mount only
-    useEffect(() => {
-        intersectionObs.current = new IntersectionObserver(onIntersect);
-    }, [onIntersect]);
+        const distanceToViewportTop = Math.trunc(
+            dropdownBtnRect.top - rootRect.top,
+        );
+        const distanceToViewportBottom = Math.trunc(
+            rootRect.bottom - dropdownBtnRect.bottom,
+        );
 
-    // Start/Stop observing dropdown menu
+        const placeDropdownAtTop = () => {
+            setDropdownPos('top');
+            setDropdownMaxHeight(distanceToViewportTop);
+        };
+        const placeDropdownAtBottom = () => {
+            setDropdownPos('bottom');
+            setDropdownMaxHeight(distanceToViewportBottom);
+        };
+
+        // Early returns
+        if (distanceToViewportTop <= 0) {
+            placeDropdownAtBottom();
+            return;
+        }
+
+        if (distanceToViewportBottom <= 0) {
+            placeDropdownAtTop();
+            return;
+        }
+
+        const dropdownPopoverComputedStyleValues = window.getComputedStyle(
+            dropdownPopoverRef.current,
+        );
+
+        // Since our dropdown can be scrollable, here we want to know its
+        // full height of border box, not just the height of what's visible.
+        // ACK: Used CSS values are strings ending in `px` for lengths and we
+        // pass it directly to `parseFloat`, that's because `parseFloat`
+        // will ignore any "unparseable" characters after the parseable number.
+        // This is not very elegant, but there's no method to cleanly retrieve
+        // the border box of an element, including its overflow ("scroll height")
+        const dropdownPopoverHeight = Math.trunc(
+            dropdownPopoverRef.current.scrollHeight +
+                parseFloat(dropdownPopoverComputedStyleValues.borderTop) +
+                parseFloat(dropdownPopoverComputedStyleValues.borderBottom),
+        );
+
+        // Enough space to fit the dropdown without scroll
+        if (distanceToViewportBottom >= dropdownPopoverHeight) {
+            placeDropdownAtBottom();
+            return;
+        }
+
+        if (distanceToViewportTop >= dropdownPopoverHeight) {
+            placeDropdownAtTop();
+            return;
+        }
+
+        // Thereafter, neither top nor bottom has enough space to fit the dropdown,
+        // so we instead refer to an arbitrary 15% preference of bottom placement
+        // over top placement
+        const bottomPreference = 0.15;
+        const topBottomRatio =
+            Math.trunc(
+                20 *
+                    signedRatio(
+                        distanceToViewportTop,
+                        distanceToViewportBottom,
+                    ),
+            ) / 20; // Smoothes out floating point errors (step = 0.05)
+
+        if (topBottomRatio <= bottomPreference) {
+            placeDropdownAtBottom();
+        } else {
+            placeDropdownAtTop();
+        }
+    }, [dropdownPopoverRef]);
+
+    useEffect(() => {
+        switch (dropdownPos) {
+            case 'bottom':
+                dropdownPopoverRef.current?.classList.remove(
+                    styles.anchorToTop,
+                );
+                dropdownPopoverRef.current?.classList.add(
+                    styles.anchorToBottom,
+                );
+                break;
+            case 'top':
+                dropdownPopoverRef.current?.classList.remove(
+                    styles.anchorToBottom,
+                );
+                dropdownPopoverRef.current?.classList.add(styles.anchorToTop);
+                break;
+        }
+    }, [dropdownPos, dropdownPopoverRef]);
+
+    useEffect(() => {
+        // This prevents the dropdown from overflowing past the viewport,
+        // allowing the user to scroll the list.
+        // The list will become visible if window scrolling makes the entire
+        // list visible.
+        dropdownPopoverRef.current?.style.setProperty(
+            'max-height',
+            `${dropdownMaxHeight}px`,
+        );
+    }, [dropdownMaxHeight, dropdownPopoverRef]);
+
+    // Setup/Cleanup scroll observer and window resizing observer
+    useEffect(() => {
+        intersectionObs.current = new IntersectionObserver(() => {
+            onChange();
+        });
+
+        const resizeEventHandler = () => {
+            onChange();
+        };
+
+        window.addEventListener('resize', resizeEventHandler);
+
+        return () => {
+            intersectionObs.current = null;
+            window.removeEventListener('resize', resizeEventHandler);
+        };
+    }, [onChange]);
+
+    // Start/Stop observing dropdown for scroll
     useEffect(() => {
         // See https://stackoverflow.com/questions/67069827/cleanup-ref-issues-in-react
         let observed = null;
 
-        if (dropdownPopoverRef.current && intersectionObs.current) {
-            observed = dropdownPopoverRef.current;
+        if (dropdownBtnRef.current && intersectionObs.current) {
+            observed = dropdownBtnRef.current;
             intersectionObs.current?.observe(observed);
         }
 
         return () => {
-            // if (observed && intersectionObs.current) {
-            //     intersectionObs.current.unobserve(observed);
-            // }
+            if (observed && intersectionObs.current) {
+                intersectionObs.current.unobserve(observed);
+            }
         };
-    }, [intersectionObs, dropdownPopoverRef]);
+    }, [intersectionObs, dropdownBtnRef]);
 
-    const [isActive, setIsActive] = useState(false);
+    // Watch for property changes that may affect the dropdown's height (items)
+    useEffect(() => {
+        onChange();
+    }, [items, onChange]);
 
     useEffect(() => {
         // Manual popover control is mainly for the dropdown button
@@ -134,11 +232,12 @@ const Dropdown: DropdownComponent = ({
         if (isActive) {
             if (!dropdownPopoverRef.current?.open) {
                 dropdownPopoverRef.current?.showPopover();
+                onChange();
             }
         } else if (dropdownPopoverRef.current?.open) {
             dropdownPopoverRef.current?.hidePopover();
         }
-    }, [isActive]);
+    }, [isActive, onChange]);
 
     return (
         <div className={classNames('tw-preflight', className)} {...attrs}>
@@ -184,8 +283,10 @@ const Dropdown: DropdownComponent = ({
                 closingBehavior="hint"
                 id={dropdownPopoverId}
                 className={classNames(
-                    'tw-absolute tw-overflow-y-auto tw-border-2 tw-border-solid tw-border-gray-600 tw-bg-gray-700 tw-text-white [&:popover-open]:tw-flex [&:popover-open]:tw-flex-col',
+                    'tw-absolute tw-m-0 tw-overflow-y-auto tw-border-2 tw-border-solid tw-border-gray-600 tw-bg-gray-700 tw-text-white [&:popover-open]:tw-flex [&:popover-open]:tw-flex-col',
                     styles.anchoredPopover,
+                    dropdownPos === 'bottom' && 'tw-bottom-auto',
+                    dropdownPos === 'top' && 'tw-top-auto',
                 )}
                 onToggle={ev => {
                     switch (ev.newState) {

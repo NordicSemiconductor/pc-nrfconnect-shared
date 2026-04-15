@@ -16,9 +16,9 @@
  * For example, `signedRatio(500, 1500)` will return `-0.66666…`, as `y` is greater than `x`
  * by `+66.66…%` (the sign from the function indicates who is greater). `500 + 66.66…% of 1500 = 1500`.
  *
- * @param {number} x x
- * @param {number} y y
- * @returns {number} Signed ratio of x and y
+ * @param {number} x x ∈ [0; +∞)
+ * @param {number} y y ∈ [0; +∞)
+ * @returns {number} Signed ratio of x and y, ∈ [-1; 1]
  */
 export const signedRatio = (x: number, y: number): number =>
     Math.sign(x - y) * (1 - Math.min(x, y) / Math.max(x, y));
