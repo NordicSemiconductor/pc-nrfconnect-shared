@@ -28,6 +28,7 @@ export interface DropdownProps<T>
     items: DropdownItem<T>[];
     onSelect: (item: DropdownItem<T>) => void;
     transparentButtonBg?: boolean;
+    minWidth?: boolean;
     disabled?: boolean;
     selectedItem: DropdownItem<T>;
     size?: 'sm' | 'md';
@@ -43,6 +44,7 @@ const Dropdown: DropdownComponent = ({
     items,
     onSelect,
     transparentButtonBg = false,
+    minWidth = false,
     disabled = false,
     selectedItem,
     className,
@@ -251,8 +253,9 @@ const Dropdown: DropdownComponent = ({
                 ref={dropdownBtnRef}
                 type="button"
                 className={classNames(
-                    'tw-flex tw-min-w-12 tw-items-center tw-justify-between tw-border-0',
+                    'tw-flex tw-items-center tw-justify-between tw-border-0',
                     styles.anchor,
+                    minWidth && 'tw-w-full',
                     transparentButtonBg
                         ? 'tw-bg-transparent'
                         : classNames(

@@ -33,6 +33,7 @@ every new version is a new major version.
   `10.1.10`, `react-redux` to `9.2.0`, `react-resize-detector` to `12.3.0`,
   `react-test-renderer` to `19.2.4`, `@testing-library/react` to `16.3.2`,
   `redux` to `5.0.1`, `redux-thunk` to `3.1.0`, `@reduxjs/toolkit` to `2.11.2`.
+- Migrated `Dropdown` component to Tailwind and implemented placement logic
 
 ### Steps to upgrade when using this package
 
@@ -108,6 +109,11 @@ modal's visibility through `isVisible`.
 
 Instead, apply an effect (`useEffect`) on the desired trigger to open/close the
 modal through `showModal()`/`requestClose()`.
+
+#### Migrating `Dropdown`
+
+The `numItemsBeforeScroll` property no longer exists as now the placement of the
+dropdown menu is managed by the component. Simply remove it when migrating.
 
 ## 244.0.0 - 2026-01-22
 
