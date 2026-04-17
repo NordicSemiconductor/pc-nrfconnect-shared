@@ -4,9 +4,18 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
+import React, {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useId,
+    useMemo,
+    useReducer,
+    useRef,
+} from 'react';
 
-import Popover from '../Popover/Popover';
+import Popover, { type PopoverProps } from '../Popover/Popover';
 import classNames from '../utils/classNames';
 import { signedRatio } from '../utils/signedRatio';
 
@@ -17,61 +26,396 @@ export interface DropdownItem<T = string> {
     value: T;
 }
 
-type DropdownPosition = 'bottom' | 'top';
+type DropdownSize = 'sm' | 'md';
 
-type PickedDropdownProps = 'ref' | 'className';
+type MenuPosition = 'bottom' | 'top';
 
-export interface DropdownProps<T>
-    extends Pick<React.ComponentPropsWithRef<'div'>, PickedDropdownProps> {
-    label?: React.ReactNode;
-    defaultButtonLabel?: string;
-    items: DropdownItem<T>[];
-    onSelect: (item: DropdownItem<T>) => void;
-    transparentButtonBg?: boolean;
-    disabled?: boolean;
-    selectedItem: DropdownItem<T>;
-    size?: 'sm' | 'md';
+interface DropdownState<T = string> {
+    dropdownSize: DropdownSize;
+    isMenuActive: boolean;
+    menuPos: MenuPosition;
+    menuMaxHeight: number;
+    items: Map<string, DropdownItem<T>>;
+    selectedItem: DropdownItem<T> | null;
+    toggleRef?: React.RefObject<HTMLElement | null>;
+    menuRef?: React.RefObject<HTMLDialogElement | null>;
 }
 
-interface DropdownComponent {
-    <T>(props: DropdownProps<T>): ReturnType<React.FC>;
+const initialDropdownState: DropdownState = {
+    dropdownSize: 'md',
+    isMenuActive: false,
+    menuPos: 'bottom',
+    menuMaxHeight: 100,
+    items: new Map(),
+    selectedItem: null,
+};
+
+interface DropdownSetMenuActiveAction {
+    type: 'setMenuActive';
+    isMenuActive: DropdownState['isMenuActive'];
+}
+
+interface DropdownSetMenuPosAction {
+    type: 'setMenuPos';
+    menuPos: DropdownState['menuPos'];
+}
+
+interface DropdownSetMenuMaxHeightAction {
+    type: 'setMenuMaxHeight';
+    menuMaxHeight: DropdownState['menuMaxHeight'];
+}
+
+interface DropdownAddItemAction<T = string> {
+    type: 'addItem';
+    item: DropdownState<T>['items'] extends Map<infer _K, infer Item>
+        ? Item
+        : never;
+}
+
+interface DropdownRemoveItemAction<T = string> {
+    type: 'removeItem';
+    key: DropdownState<T>['items'] extends Map<infer K, infer _Item>
+        ? K
+        : never;
+}
+
+interface DropdownSelectItemAction<T = string> {
+    type: 'selectItem';
+    selectedItem: DropdownState<T>['selectedItem'];
+}
+
+interface DropdownSetToggleRefAction {
+    type: 'setToggleRef';
+    toggleRef: DropdownState['toggleRef'];
+}
+
+interface DropdownSetMenuRefAction {
+    type: 'setMenuRef';
+    menuRef: DropdownState['menuRef'];
+}
+
+type DropdownAction<T = string> =
+    | DropdownSetMenuActiveAction
+    | DropdownSetMenuPosAction
+    | DropdownSetMenuMaxHeightAction
+    | DropdownAddItemAction<T>
+    | DropdownRemoveItemAction<T>
+    | DropdownSelectItemAction<T>
+    | DropdownSetToggleRefAction
+    | DropdownSetMenuRefAction;
+
+// Since we are not in a scope were the generic types are defined,
+// we set them to `unknown` but guarantee consistency over T in and out.
+export const DropdownContext =
+    createContext<DropdownState<unknown>>(initialDropdownState);
+export const DropdownDispatchContext = createContext<React.ActionDispatch<
+    [DropdownAction<unknown>]
+> | null>(null);
+
+const dropdownReducer: React.Reducer<
+    DropdownState<unknown>,
+    DropdownAction<unknown>
+> = (state, action) => {
+    switch (action.type) {
+        case 'setMenuActive':
+            return {
+                ...state,
+                isMenuActive: action.isMenuActive,
+            };
+        case 'setMenuPos':
+            return {
+                ...state,
+                menuPos: action.menuPos,
+            };
+        case 'setMenuMaxHeight':
+            return {
+                ...state,
+                menuMaxHeight: action.menuMaxHeight,
+            };
+        case 'addItem': {
+            // React frowns upon mutating the old state, so we do a clone
+            const clonedItems = structuredClone(state.items);
+            clonedItems.set(JSON.stringify(action.item.value), action.item);
+
+            return {
+                ...state,
+                items: clonedItems,
+            };
+        }
+        case 'removeItem': {
+            // React frowns upon mutating the old state, so we do a clone
+            const clonedItems = structuredClone(state.items);
+            clonedItems.delete(action.key);
+
+            return {
+                ...state,
+                items: clonedItems,
+            };
+        }
+        case 'selectItem':
+            return {
+                ...state,
+                selectedItem: action.selectedItem,
+            };
+        case 'setToggleRef':
+            return {
+                ...state,
+                toggleRef: action.toggleRef,
+            };
+        case 'setMenuRef':
+            return {
+                ...state,
+                menuRef: action.menuRef,
+            };
+    }
+};
+
+interface DropdownToggleButtonProps
+    extends Pick<
+        React.ComponentPropsWithRef<'button'>,
+        'className' | 'id' | 'title' | 'disabled'
+    > {
+    label?: React.ReactNode;
+    btnDefaultText?: string;
+    transparentButtonBg?: boolean;
+    minWidth?: boolean;
+}
+
+type DropdownToggleButtonComponent = React.FC<DropdownToggleButtonProps>;
+
+const DropdownToggleButton: DropdownToggleButtonComponent = ({
+    id,
+    label,
+    btnDefaultText = '',
+    transparentButtonBg = false,
+    minWidth = false,
+    className,
+    ...attrs
+}) => {
+    const { isMenuActive, items, selectedItem, dropdownSize } =
+        useContext(DropdownContext);
+    const dispatch = useContext(DropdownDispatchContext);
+
+    const toggleRef = useRef<HTMLButtonElement>(null);
+    dispatch?.({ type: 'setToggleRef', toggleRef });
+
+    return (
+        <>
+            {label && (
+                <label className="tw-text-xs" htmlFor={id}>
+                    {label}
+                </label>
+            )}
+            <button
+                id={id}
+                ref={toggleRef}
+                type="button"
+                className={classNames(
+                    'tw-flex tw-items-center tw-justify-between tw-border-0',
+                    styles.anchor,
+                    minWidth && 'tw-min-w-12',
+                    transparentButtonBg
+                        ? 'tw-bg-transparent'
+                        : classNames(
+                              'tw-bg-gray-700 tw-text-white',
+                              dropdownSize === 'sm' &&
+                                  'tw-h-6 tw-pl-2 tw-pr-1 tw-text-2xs',
+                              dropdownSize === 'md' && 'tw-h-8 tw-px-2',
+                          ),
+                    className,
+                )}
+                onClick={() =>
+                    dispatch?.({
+                        type: 'setMenuActive',
+                        isMenuActive: !isMenuActive,
+                    })
+                }
+                {...attrs}
+            >
+                <span className="tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap">
+                    {selectedItem &&
+                    items.has(JSON.stringify(selectedItem.value))
+                        ? selectedItem.label
+                        : btnDefaultText}
+                </span>
+                <span
+                    className={`mdi mdi-chevron-down ${classNames(
+                        isMenuActive && 'tw-rotate-180',
+                        dropdownSize === 'sm' && 'tw-text-base',
+                        dropdownSize === 'md' && 'tw-text-lg/none',
+                    )}`}
+                />
+            </button>
+        </>
+    );
+};
+
+interface DropdownMenuItemProps<T>
+    extends Pick<
+        React.ComponentPropsWithRef<'button'>,
+        'ref' | 'key' | 'className'
+    > {
+    dataValue: T;
+    children: string;
+}
+
+interface DropdownMenuItemComponent {
+    <T>(props: DropdownMenuItemProps<T>): ReturnType<React.FC>;
+}
+
+const DropdownMenuItem: DropdownMenuItemComponent = ({
+    dataValue,
+    children,
+    ...attrs
+}) => {
+    const { id: menuId } = useContext(DropdownMenuContext);
+    const { dropdownSize } = useContext(DropdownContext);
+    const dispatch = useContext(DropdownDispatchContext);
+
+    const item: DropdownItem<typeof dataValue> = {
+        label: children,
+        value: dataValue,
+    };
+
+    return (
+        <button
+            type="button"
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            // eslint-disable-next-line react/no-unknown-property
+            command="hide-popover"
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            // eslint-disable-next-line react/no-unknown-property
+            commandfor={menuId}
+            className={classNames(
+                'tw-h-6 tw-whitespace-nowrap tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-text-left tw-font-normal tw-text-white hover:tw-bg-gray-600 focus:tw-bg-gray-600',
+                dropdownSize === 'sm' && 'tw-text-2xs',
+            )}
+            onClick={() =>
+                dispatch?.({ type: 'selectItem', selectedItem: item })
+            }
+            {...attrs}
+        >
+            {children}
+        </button>
+    );
+};
+
+interface DropdownMenuState {
+    id?: string;
+}
+
+const DropdownMenuContext = createContext<DropdownMenuState>({});
+
+interface DropdownMenuProps<T> extends Pick<PopoverProps, 'className'> {
+    selectedItem?: DropdownItem<T>;
+    onSelect?: (item: DropdownItem<T>) => void;
+}
+
+interface DropdownMenuComponent {
+    <T>(
+        props: React.PropsWithChildren<DropdownMenuProps<T>>,
+    ): ReturnType<React.FC>;
+    Item: DropdownMenuItemComponent;
+}
+
+const DropdownMenu: DropdownMenuComponent = ({
+    onSelect,
+    className,
+    children,
+    ...attrs
+}) => {
+    const { menuPos, selectedItem } = useContext(DropdownContext);
+    const dispatch = useContext(DropdownDispatchContext);
+
+    const menuId = useId();
+    const menuContext = useMemo<DropdownMenuState>(
+        () => ({ id: menuId }),
+        [menuId],
+    );
+
+    const menuRef = useRef<HTMLDialogElement>(null);
+    dispatch?.({ type: 'setMenuRef', menuRef });
+
+    useEffect(() => {
+        if (selectedItem) {
+            onSelect?.(selectedItem as DropdownItem<a>);
+        }
+    }, [selectedItem, onSelect]);
+
+    return (
+        <DropdownMenuContext.Provider value={menuContext}>
+            <Popover
+                id={menuId}
+                ref={menuRef}
+                closingBehavior="hint"
+                className={classNames(
+                    'tw-absolute tw-m-0 tw-overflow-y-auto tw-border-2 tw-border-solid tw-border-gray-600 tw-bg-gray-700 tw-text-white [&:popover-open]:tw-flex [&:popover-open]:tw-flex-col',
+                    styles.anchoredPopover,
+                    menuPos === 'bottom' && 'tw-bottom-auto',
+                    menuPos === 'top' && 'tw-top-auto',
+                    className,
+                )}
+                onToggle={ev => {
+                    switch (ev.newState) {
+                        case 'open':
+                            dispatch?.({
+                                type: 'setMenuActive',
+                                isMenuActive: true,
+                            });
+                            break;
+                        case 'closed':
+                            dispatch?.({
+                                type: 'setMenuActive',
+                                isMenuActive: false,
+                            });
+                            break;
+                    }
+                }}
+                {...attrs}
+            >
+                {children}
+            </Popover>
+        </DropdownMenuContext.Provider>
+    );
+};
+
+DropdownMenu.Item = DropdownMenuItem;
+
+interface DropdownProps
+    extends Pick<React.ComponentPropsWithRef<'div'>, 'ref' | 'className'> {
+    size?: DropdownSize;
+}
+
+interface DropdownComponent
+    extends React.FC<React.PropsWithChildren<DropdownProps>> {
+    ToggleButton: DropdownToggleButtonComponent;
+    Menu: DropdownMenuComponent;
 }
 
 const Dropdown: DropdownComponent = ({
-    label,
-    defaultButtonLabel = '',
-    items,
-    onSelect,
-    transparentButtonBg = false,
-    disabled = false,
-    selectedItem,
-    className,
     size = 'md',
+    className,
+    children,
     ...attrs
 }) => {
-    const dropdownId = useId();
-    const dropdownBtnId = `${dropdownId}-btn`;
-    const dropdownPopoverId = `${dropdownId}-dropdown`;
-
-    const dropdownBtnRef = useRef<HTMLButtonElement>(null);
-    const dropdownPopoverRef = useRef<HTMLDialogElement>(null);
-
     const intersectionObs = useRef<IntersectionObserver>(null);
 
-    const [dropdownPos, setDropdownPos] = useState<DropdownPosition>('bottom');
-    const [dropdownMaxHeight, setDropdownMaxHeight] = useState<number>(100);
-
-    const [isActive, setIsActive] = useState(false);
+    const [state, dispatch] = useReducer(dropdownReducer, {
+        ...initialDropdownState,
+        dropdownSize: size,
+    });
 
     const onChange = useCallback(() => {
         if (
-            !dropdownBtnRef.current ||
-            !dropdownPopoverRef.current?.checkVisibility()
+            !state.toggleRef?.current ||
+            !state.menuRef?.current?.checkVisibility()
         ) {
             return;
         }
 
-        const dropdownBtnRect = dropdownBtnRef.current.getBoundingClientRect();
+        const toggleRect = state.toggleRef.current.getBoundingClientRect();
 
         const rootRect = new DOMRect(
             window.scrollX,
@@ -80,20 +424,24 @@ const Dropdown: DropdownComponent = ({
             document.documentElement.clientHeight,
         );
 
-        const distanceToViewportTop = Math.trunc(
-            dropdownBtnRect.top - rootRect.top,
-        );
+        const distanceToViewportTop = Math.trunc(toggleRect.top - rootRect.top);
         const distanceToViewportBottom = Math.trunc(
-            rootRect.bottom - dropdownBtnRect.bottom,
+            rootRect.bottom - toggleRect.bottom,
         );
 
         const placeDropdownAtTop = () => {
-            setDropdownPos('top');
-            setDropdownMaxHeight(distanceToViewportTop);
+            dispatch({ type: 'setMenuPos', menuPos: 'top' });
+            dispatch({
+                type: 'setMenuMaxHeight',
+                menuMaxHeight: distanceToViewportTop,
+            });
         };
         const placeDropdownAtBottom = () => {
-            setDropdownPos('bottom');
-            setDropdownMaxHeight(distanceToViewportBottom);
+            dispatch({ type: 'setMenuPos', menuPos: 'bottom' });
+            dispatch({
+                type: 'setMenuMaxHeight',
+                menuMaxHeight: distanceToViewportBottom,
+            });
         };
 
         // Early returns
@@ -108,7 +456,7 @@ const Dropdown: DropdownComponent = ({
         }
 
         const dropdownPopoverComputedStyleValues = window.getComputedStyle(
-            dropdownPopoverRef.current,
+            state.menuRef.current,
         );
 
         // Since our dropdown can be scrollable, here we want to know its
@@ -119,7 +467,7 @@ const Dropdown: DropdownComponent = ({
         // This is not very elegant, but there's no method to cleanly retrieve
         // the border box of an element, including its overflow ("scroll height")
         const dropdownPopoverHeight = Math.trunc(
-            dropdownPopoverRef.current.scrollHeight +
+            state.menuRef.current.scrollHeight +
                 parseFloat(dropdownPopoverComputedStyleValues.borderTop) +
                 parseFloat(dropdownPopoverComputedStyleValues.borderBottom),
         );
@@ -153,37 +501,31 @@ const Dropdown: DropdownComponent = ({
         } else {
             placeDropdownAtTop();
         }
-    }, [dropdownPopoverRef]);
+    }, [state.toggleRef, state.menuRef, dispatch]);
 
     useEffect(() => {
-        switch (dropdownPos) {
+        switch (state.menuPos) {
             case 'bottom':
-                dropdownPopoverRef.current?.classList.remove(
-                    styles.anchorToTop,
-                );
-                dropdownPopoverRef.current?.classList.add(
-                    styles.anchorToBottom,
-                );
+                state.menuRef?.current?.classList.remove(styles.anchorToTop);
+                state.menuRef?.current?.classList.add(styles.anchorToBottom);
                 break;
             case 'top':
-                dropdownPopoverRef.current?.classList.remove(
-                    styles.anchorToBottom,
-                );
-                dropdownPopoverRef.current?.classList.add(styles.anchorToTop);
+                state.menuRef?.current?.classList.remove(styles.anchorToBottom);
+                state.menuRef?.current?.classList.add(styles.anchorToTop);
                 break;
         }
-    }, [dropdownPos, dropdownPopoverRef]);
+    }, [state.menuPos, state.menuRef]);
 
     useEffect(() => {
         // This prevents the dropdown from overflowing past the viewport,
         // allowing the user to scroll the list.
         // The list will become visible if window scrolling makes the entire
         // list visible.
-        dropdownPopoverRef.current?.style.setProperty(
+        state.menuRef?.current?.style.setProperty(
             'max-height',
-            `${dropdownMaxHeight}px`,
+            `${state.menuMaxHeight}px`,
         );
-    }, [dropdownMaxHeight, dropdownPopoverRef]);
+    }, [state.menuMaxHeight, state.menuRef]);
 
     // Setup/Cleanup scroll observer and window resizing observer
     useEffect(() => {
@@ -208,8 +550,8 @@ const Dropdown: DropdownComponent = ({
         // See https://stackoverflow.com/questions/67069827/cleanup-ref-issues-in-react
         let observed = null;
 
-        if (dropdownBtnRef.current && intersectionObs.current) {
-            observed = dropdownBtnRef.current;
+        if (state.toggleRef?.current && intersectionObs.current) {
+            observed = state.toggleRef.current;
             intersectionObs.current?.observe(observed);
         }
 
@@ -218,111 +560,39 @@ const Dropdown: DropdownComponent = ({
                 intersectionObs.current.unobserve(observed);
             }
         };
-    }, [intersectionObs, dropdownBtnRef]);
+    }, [intersectionObs, state.toggleRef]);
 
     // Watch for property changes that may affect the dropdown's height (items)
     useEffect(() => {
         onChange();
-    }, [items, onChange]);
+    }, [state.items, onChange]);
 
     useEffect(() => {
         // Manual popover control is mainly for the dropdown button
         // Otherwise the popover and the buttons in the dropdown manage
         // the popover's state through HTML `command` attribute
-        if (isActive) {
-            if (!dropdownPopoverRef.current?.open) {
-                dropdownPopoverRef.current?.showPopover();
+        if (state.isMenuActive) {
+            if (!state.menuRef?.current?.open) {
+                state.menuRef?.current?.showPopover();
                 onChange();
             }
-        } else if (dropdownPopoverRef.current?.open) {
-            dropdownPopoverRef.current?.hidePopover();
+        } else if (state.menuRef?.current?.open) {
+            state.menuRef?.current?.hidePopover();
         }
-    }, [isActive, onChange]);
+    }, [state.isMenuActive, state.menuRef, onChange]);
 
     return (
         <div className={classNames('tw-preflight', className)} {...attrs}>
-            {label && (
-                <label className="tw-text-xs" htmlFor={dropdownBtnId}>
-                    {label}
-                </label>
-            )}
-            <button
-                id={dropdownBtnId}
-                ref={dropdownBtnRef}
-                type="button"
-                className={classNames(
-                    'tw-flex tw-min-w-12 tw-items-center tw-justify-between tw-border-0',
-                    styles.anchor,
-                    transparentButtonBg
-                        ? 'tw-bg-transparent'
-                        : classNames(
-                              'tw-bg-gray-700 tw-text-white',
-                              size === 'sm' &&
-                                  'tw-h-6 tw-pl-2 tw-pr-1 tw-text-2xs',
-                              size === 'md' && 'tw-h-8 tw-px-2',
-                          ),
-                )}
-                onClick={() => setIsActive(!isActive)}
-                disabled={disabled}
-            >
-                <span className="tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap">
-                    {items.findIndex(e => e.value === selectedItem.value) === -1
-                        ? defaultButtonLabel
-                        : selectedItem.label}
-                </span>
-                <span
-                    className={`mdi mdi-chevron-down ${classNames(
-                        isActive && 'tw-rotate-180',
-                        size === 'sm' && 'tw-text-base',
-                        size === 'md' && 'tw-text-lg/none',
-                    )}`}
-                />
-            </button>
-            <Popover
-                ref={dropdownPopoverRef}
-                closingBehavior="hint"
-                id={dropdownPopoverId}
-                className={classNames(
-                    'tw-absolute tw-m-0 tw-overflow-y-auto tw-border-2 tw-border-solid tw-border-gray-600 tw-bg-gray-700 tw-text-white [&:popover-open]:tw-flex [&:popover-open]:tw-flex-col',
-                    styles.anchoredPopover,
-                    dropdownPos === 'bottom' && 'tw-bottom-auto',
-                    dropdownPos === 'top' && 'tw-top-auto',
-                )}
-                onToggle={ev => {
-                    switch (ev.newState) {
-                        case 'open':
-                            setIsActive(true);
-                            break;
-                        case 'closed':
-                            setIsActive(false);
-                            break;
-                    }
-                }}
-            >
-                {items.map(item => (
-                    <button
-                        type="button"
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        // eslint-disable-next-line react/no-unknown-property
-                        command="hide-popover"
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        // eslint-disable-next-line react/no-unknown-property
-                        commandfor={dropdownPopoverId}
-                        className={classNames(
-                            'tw-h-6 tw-whitespace-nowrap tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-text-left tw-font-normal tw-text-white hover:tw-bg-gray-600 focus:tw-bg-gray-600',
-                            size === 'sm' && 'tw-text-2xs',
-                        )}
-                        key={JSON.stringify(item.value)}
-                        onClick={() => onSelect(item)}
-                    >
-                        {item.label}
-                    </button>
-                ))}
-            </Popover>
+            <DropdownContext.Provider value={state}>
+                <DropdownDispatchContext value={dispatch}>
+                    {children}
+                </DropdownDispatchContext>
+            </DropdownContext.Provider>
         </div>
     );
 };
+
+Dropdown.ToggleButton = DropdownToggleButton;
+Dropdown.Menu = DropdownMenu;
 
 export default Dropdown;

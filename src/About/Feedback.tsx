@@ -107,13 +107,21 @@ const FeedbackDialog = ({
                         <form className="tw-flex tw-w-full tw-flex-col tw-gap-4">
                             {categoryItems?.length && (
                                 <div className="tw-w-52">
-                                    <Dropdown
-                                        items={categoryItems}
-                                        onSelect={setSelectedCategory}
-                                        selectedItem={
-                                            selectedCategory || categoryItems[0]
-                                        }
-                                    />
+                                    <Dropdown>
+                                        <Dropdown.ToggleButton />
+                                        <Dropdown.Menu
+                                            onSelect={setSelectedCategory}
+                                        >
+                                            {categoryItems.map(item => (
+                                                <Dropdown.Menu.Item
+                                                    dataValue={item.value}
+                                                    key={item.value}
+                                                >
+                                                    {item.label}
+                                                </Dropdown.Menu.Item>
+                                            ))}
+                                        </Dropdown.Menu>
+                                    </Dropdown>
                                 </div>
                             )}
                             <div className="tw-pt-4">

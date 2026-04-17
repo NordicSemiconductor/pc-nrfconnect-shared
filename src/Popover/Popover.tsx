@@ -39,7 +39,7 @@ const popoverClosingBehaviorLookup: Record<
     manual: 'manual',
 };
 
-interface PopoverProps
+export interface PopoverProps
     extends Pick<
         React.ComponentPropsWithRef<'dialog'>,
         | 'ref'
