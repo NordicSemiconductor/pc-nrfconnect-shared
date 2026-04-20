@@ -293,6 +293,17 @@ const devicesByPca: { [P in KnownDevicePCA]: DeviceInfo } = {
                 'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF54LV10%20DK',
         },
     },
+    PCA10214: {
+        name: 'nRF54LS05 DK',
+        cores: 1,
+        icon: nrf54logo,
+        website: {
+            productPage:
+                'https://www.nordicsemi.com/Products/Development-hardware/nRF54LS05-DK',
+            buyOnline:
+                'https://www.nordicsemi.com/About-us/BuyOnline?search_token=nRF54LS05%20DK',
+        },
+    },
     PCA10201: {
         name: 'nRF9151 SMA DK',
         cores: 1,
