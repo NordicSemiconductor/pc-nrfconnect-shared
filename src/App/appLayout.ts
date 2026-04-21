@@ -165,7 +165,7 @@ export const {
 export const isSidePanelVisible = (state: RootState) =>
     state.appLayout.isSidePanelVisible;
 export const isLogVisible = (state: RootState) => state.appLayout.isLogVisible;
-export const panes = (state: RootState) =>
-    state.appLayout.panes.filter(p => !p.hidden);
+export const panes = (state: RootState) => state.appLayout.panes;
+// state.appLayout.panes.filter(p => !p.hidden);
 
 export const currentPane = ({ appLayout }: RootState) => appLayout.currentPane;

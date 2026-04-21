@@ -4,23 +4,29 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { type FC } from 'react';
+import React, { useMemo } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { useSelector } from 'react-redux';
 
-import { globalShortcuts, localShortcuts } from '../About/shortcutSlice';
+import { type Shortcut, shortcutsSelector } from '../About/shortcutSlice';
 import ShortcutItem from './ShortcutItem';
 
 import './Shortcut-modal.scss';
+
+const sortedShortcuts = (shortcuts: Iterable<Shortcut>, global: boolean) =>
+    Array.from(shortcuts)
+        .filter(shortcut => shortcut.isGlobal === global)
+        .sort((s1, s2) => s1.title.localeCompare(s2.title));
 
 export interface Props {
     isVisible: boolean;
     onCancel: () => void;
 }
 
-const ShortcutModal: FC<Props> = ({ isVisible, onCancel }) => {
-    const local = useSelector(localShortcuts);
-    const global = useSelector(globalShortcuts);
+const ShortcutModal: React.FC<Props> = ({ isVisible, onCancel }) => {
+    const shortcuts = useSelector(shortcutsSelector);
+    const local = useMemo(() => sortedShortcuts(shortcuts, false), [shortcuts]);
+    const global = useMemo(() => sortedShortcuts(shortcuts, true), [shortcuts]);
 
     return (
         <Modal

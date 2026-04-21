@@ -18,7 +18,7 @@ import NavMenuItem from './NavMenuItem';
 
 const NavMenu = () => {
     const currentPane = useSelector(currentPaneSelector);
-    const panes = useSelector(panesSelector);
+    const panes = useSelector(panesSelector).filter(p => !p.hidden);
     const dispatch = useDispatch();
 
     useHotKey({

@@ -42,7 +42,6 @@ export const {
 
 export const isVisible = (state: RootState) =>
     state.brokenDeviceDialog.isVisible;
-export const info = (state: RootState) => ({
-    description: state.brokenDeviceDialog.description,
-    url: state.brokenDeviceDialog.url,
-});
+
+export const brokenDeviceSelector = (state: RootState) =>
+    state.brokenDeviceDialog;
