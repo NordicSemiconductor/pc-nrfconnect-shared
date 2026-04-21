@@ -90,7 +90,7 @@ return (
         <Modal.Body>
             <p>
                 This content will automatically have a scrollbar if it goes past
-                the dialog's limit height.
+                the dialog&apos;s limit height.
             </p>
         </Modal.Body>
         <Modal.Footer>
