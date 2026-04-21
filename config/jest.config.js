@@ -17,7 +17,7 @@ module.exports = (disabledMocks = []) => ({
         '^electron$': `${mockDir}/electronMock.ts`,
         '^electron-store$': `${mockDir}/electronStoreMock.ts`,
         '@electron/remote': `${mockDir}/remoteMock.ts`,
-        '^react-markdown$': `${mockDir}/reactMarkdownMock.ts`,
+        '^react-markdown$': `${mockDir}/reactMarkdownMock.tsx`,
         ...(disabledMocks.includes('packageJson')
             ? {}
             : {
