@@ -246,7 +246,7 @@ const OverlayOverlay: OverlayOverlayComponent = ({
             ref={overlayRef}
             closingBehavior="manual"
             className={classNames(
-                'tw-inset-1',
+                'tw-inset-1 tw-border tw-border-solid tw-border-black tw-bg-black/80 tw-p-4 tw-text-white',
                 styles.overlayOverlay,
                 positionAreaStyle,
                 className,
@@ -300,7 +300,7 @@ const Overlay: OverlayComponent = ({
             useCallback(() => {
                 stateDispatch({ type: 'setShowOverlay', showOverlay: true });
             }, [stateDispatch]),
-            2000,
+            500,
             {
                 leading: false,
                 trailing: true,
@@ -312,7 +312,7 @@ const Overlay: OverlayComponent = ({
             useCallback(() => {
                 stateDispatch({ type: 'setShowOverlay', showOverlay: false });
             }, [stateDispatch]),
-            2000,
+            500,
             {
                 leading: false,
                 trailing: true,
