@@ -15,17 +15,13 @@ interface Props {
     label: string;
 }
 
-const AboutButton: React.FC<React.PropsWithChildren<Props>> = ({
-    url,
-    children,
-    onClick,
-}) => (
+const AboutButton: React.FC<Props> = ({ url, label, onClick }) => (
     <Button
         disabled={!url && !onClick}
         onClick={onClick || (() => openUrl(url as string))}
         variant="secondary"
     >
-        {children}
+        {label}
     </Button>
 );
 
