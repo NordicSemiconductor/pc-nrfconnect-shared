@@ -21,7 +21,7 @@ describe('FactoryReset', () => {
     });
 
     it('clears the store', async () => {
-        render(<FactoryResetButton label={FACTORY_RESET} />);
+        render(<FactoryResetButton>{FACTORY_RESET}</FactoryResetButton>);
         fireEvent.click(screen.getByText(FACTORY_RESET));
         await screen.findByText(OK);
         fireEvent.click(screen.getByText(OK));
@@ -29,7 +29,7 @@ describe('FactoryReset', () => {
     });
 
     it('does not clear the store when cancelled', async () => {
-        render(<FactoryResetButton label={FACTORY_RESET} />);
+        render(<FactoryResetButton>{FACTORY_RESET}</FactoryResetButton>);
         fireEvent.click(screen.getByText(FACTORY_RESET));
         await screen.findByText(CANCEL);
         fireEvent.click(screen.getByText(CANCEL));
@@ -39,10 +39,9 @@ describe('FactoryReset', () => {
     it('allows overriding the reset function', async () => {
         const overrideResetFn = jest.fn();
         render(
-            <FactoryResetButton
-                label={FACTORY_RESET}
-                resetFn={overrideResetFn}
-            />,
+            <FactoryResetButton resetFn={overrideResetFn}>
+                {FACTORY_RESET}
+            </FactoryResetButton>,
         );
         fireEvent.click(screen.getByText(FACTORY_RESET));
         await screen.findByText(OK);

@@ -44,12 +44,11 @@ export default ({ className }: ApplicationCardProps) => {
                     nRF Connect {appInfo.coreVersion}
                 </Section>
                 <Section>
-                    <AboutButton
-                        url={appInfo.repositoryUrl}
-                        label="Get source code"
-                    />
-                    <FactoryResetButton label="Restore defaults..." />
-                    <ShortcutButton label="Show shortcuts" />
+                    <AboutButton url={appInfo.repositoryUrl}>
+                        Get source code
+                    </AboutButton>
+                    <FactoryResetButton>Restore defaults…</FactoryResetButton>
+                    <ShortcutButton>Show shortcuts</ShortcutButton>
                 </Section>
             </Card.Body>
         </Card>

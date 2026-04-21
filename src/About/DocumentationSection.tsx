@@ -19,6 +19,6 @@ interface Props {
 export default ({ title, link, linkLabel, children }: Props) => (
     <Section title={title}>
         <p>{children}</p>
-        {link && <AboutButton url={link} label={linkLabel as string} />}
+        {link && <AboutButton url={link}>{linkLabel}</AboutButton>}
     </Section>
 );

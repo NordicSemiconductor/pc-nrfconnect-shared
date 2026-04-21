@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { type FC, useState } from 'react';
+import React, { useState } from 'react';
 import { getCurrentWindow } from '@electron/remote';
 
 import Button, { type ButtonVariants } from '../Button/Button';
@@ -12,25 +12,26 @@ import { Dialog, DialogButton } from '../Dialog/Dialog';
 import logger from '../logging';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
 
-interface Props {
+interface FactoryResetButtonProps
+    extends Pick<React.ComponentPropsWithRef<'button'>, 'ref' | 'className'> {
     resetFn?: () => void;
-    label: string;
     modalText?: string;
     variant?: ButtonVariants;
-    classNames?: string;
     large?: boolean;
 }
 
 const DEFAULT_MODAL_TEXT =
     'By restoring the default settings, all locally stored, app-specific configuration values will be lost. This does not include configurations such as device renames and favorites. The app will be reloaded. Are you sure you want to proceed?';
 
-const FactoryResetButton: FC<Props> = ({
+const FactoryResetButton: React.FC<
+    React.PropsWithChildren<FactoryResetButtonProps>
+> = ({
     resetFn,
-    label,
     modalText,
     variant = 'secondary',
-    classNames,
     large = false,
+    children,
+    ...attrs
 }) => {
     const [showDialog, setShowDialog] = useState(false);
     const defaultResetFn = () => {
@@ -45,9 +46,9 @@ const FactoryResetButton: FC<Props> = ({
                 size={large ? 'lg' : 'sm'}
                 variant={variant}
                 onClick={() => setShowDialog(true)}
-                className={classNames}
+                {...attrs}
             >
-                {label}
+                {children}
             </Button>
             <Dialog
                 isVisible={showDialog}

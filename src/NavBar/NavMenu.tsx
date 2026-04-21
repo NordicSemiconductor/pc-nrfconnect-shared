@@ -41,9 +41,10 @@ const NavMenu = () => {
                 <NavMenuItem
                     key={pane.name}
                     isSelected={currentPane === pane.name}
-                    label={pane.name}
                     disabled={pane.disabled}
-                />
+                >
+                    {pane.name}
+                </NavMenuItem>
             ))}
         </div>
     );

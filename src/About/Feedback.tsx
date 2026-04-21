@@ -154,10 +154,9 @@ export default ({ categories }: { categories?: string[] }) => {
 
     return (
         <>
-            <AboutButton
-                label="Give Feedback"
-                onClick={() => setIsVisible(true)}
-            />
+            <AboutButton onClick={() => setIsVisible(true)}>
+                Give Feedback
+            </AboutButton>
             <FeedbackDialog
                 isVisible={isVisible}
                 categories={categories}

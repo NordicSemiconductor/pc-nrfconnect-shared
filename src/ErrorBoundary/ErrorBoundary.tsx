@@ -126,9 +126,10 @@ class ErrorBoundary extends React.Component<
                         <FactoryResetButton
                             large
                             resetFn={restoreDefaults || genericRestoreDefaults}
-                            label="Restore default settings"
                             variant="primary"
-                        />
+                        >
+                            Restore default settings
+                        </FactoryResetButton>
                     </div>
                 </div>
                 <div className="error-boundary__footer">

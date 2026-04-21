@@ -4,17 +4,13 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { type FC, useState } from 'react';
+import React, { useState } from 'react';
 
 import Button from '../Button/Button';
 import ShortcutModal from '../Shortcuts/ShortcutModal';
 import useHotKey from '../utils/useHotKey';
 
-interface Props {
-    label: string;
-}
-
-const ShortcutButton: FC<Props> = ({ label }) => {
+const ShortcutButton: React.FC<React.PropsWithChildren> = ({ children }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const toggleModalVisible = () => setIsModalVisible(!isModalVisible);
 
@@ -28,7 +24,7 @@ const ShortcutButton: FC<Props> = ({ label }) => {
     return (
         <>
             <Button variant="secondary" onClick={toggleModalVisible}>
-                {label}
+                {children}
             </Button>
             <ShortcutModal
                 isVisible={isModalVisible}
