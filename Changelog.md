@@ -7,7 +7,7 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
-## 245.0.0 - UNRELEASED
+## 245.0.0 - 2026-04-21
 
 ### Added
 
@@ -16,6 +16,7 @@ every new version is a new major version.
   components.
 - Added support for `cardTitleClassName` and `cardSubtitleClassName` on
   `Card.Header.Title`
+- nRF54LS05 to the list of the known devices.
 
 ### Changed
 
