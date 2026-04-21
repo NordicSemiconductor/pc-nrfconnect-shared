@@ -6,11 +6,12 @@
 
 import React, {
     createContext,
+    useCallback,
     useContext,
     useEffect,
     useId,
+    useReducer,
     useRef,
-    useState,
 } from 'react';
 import _ from 'lodash';
 
@@ -27,34 +28,149 @@ const isElementEnabled = (elem: React.ReactNode): boolean =>
         elem.props.disabled
     );
 
-type OverlayBaseProps = Pick<
+type OverlayTriggerElem = 'base' | 'base-or-overlay';
+type OverlayTriggerRestraint = 'only-enabled';
+type OverlayPlacement =
+    | 'top-left'
+    | 'top'
+    | 'top-right'
+    | 'right-span-top'
+    | 'right'
+    | 'right-span-bottom'
+    | 'bottom-left'
+    | 'bottom'
+    | 'bottom-right'
+    | 'left-span-top'
+    | 'left'
+    | 'left-span-bottom';
+
+interface OverlayState {
+    isTriggerEnabled: boolean;
+    isTriggerHovered: boolean;
+    isOverlayHovered: boolean;
+    showOverlay: boolean;
+    placement: OverlayPlacement;
+}
+
+const initialOverlayState: OverlayState = {
+    isTriggerEnabled: true,
+    isTriggerHovered: false,
+    isOverlayHovered: false,
+    showOverlay: false,
+    placement: 'bottom',
+};
+
+interface OverlaySetIsTriggerEnabledAction {
+    type: 'setIsTriggerEnabled';
+    isTriggerEnabled: OverlayState['isTriggerEnabled'];
+}
+
+interface OverlaySetIsTriggerHoveredAction {
+    type: 'setIsTriggerHovered';
+    isTriggerHovered: OverlayState['isTriggerHovered'];
+}
+
+interface OverlaySetIsOverlayHovered {
+    type: 'setIsOverlayHovered';
+    isOverlayHovered: OverlayState['isOverlayHovered'];
+}
+
+interface OverlaySetShowOverlayAction {
+    type: 'setShowOverlay';
+    showOverlay: OverlayState['showOverlay'];
+}
+
+interface OverlaySetPlacementAction {
+    type: 'setPlacement';
+    placement: OverlayPlacement;
+}
+
+type OverlayAction =
+    | OverlaySetIsTriggerEnabledAction
+    | OverlaySetIsTriggerHoveredAction
+    | OverlaySetIsOverlayHovered
+    | OverlaySetShowOverlayAction
+    | OverlaySetPlacementAction;
+
+const overlayReducer: React.Reducer<OverlayState, OverlayAction> = (
+    state,
+    action,
+) => {
+    switch (action.type) {
+        case 'setIsTriggerEnabled':
+            return {
+                ...state,
+                isTriggerEnabled: action.isTriggerEnabled,
+            };
+        case 'setIsTriggerHovered':
+            return {
+                ...state,
+                isTriggerHovered: action.isTriggerHovered,
+            };
+        case 'setIsOverlayHovered':
+            return {
+                ...state,
+                isOverlayHovered: action.isOverlayHovered,
+            };
+        case 'setShowOverlay':
+            return {
+                ...state,
+                showOverlay: action.showOverlay,
+            };
+        case 'setPlacement':
+            return {
+                ...state,
+                placement: action.placement,
+            };
+    }
+};
+
+const OverlayContext = createContext<OverlayState>(initialOverlayState);
+const OverlayDispatchContext = createContext<React.ActionDispatch<
+    [OverlayAction]
+> | null>(null);
+
+type OverlayTriggerProps = Pick<
     React.ComponentPropsWithRef<'div'>,
     'ref' | 'className'
 >;
 
-type OverlayBaseComponent = React.FC<React.PropsWithChildren<OverlayBaseProps>>;
+type OverlayTriggerComponent = React.FC<
+    React.PropsWithChildren<OverlayTriggerProps>
+>;
 
-const OverlayBase: OverlayBaseComponent = ({
+const OverlayTrigger: OverlayTriggerComponent = ({
     className,
     children,
     ...attrs
 }) => {
-    const { setIsBaseHovered, setIsBaseEnabled } = useContext(OverlayContext);
+    const stateDispatch = useContext(OverlayDispatchContext);
 
-    setIsBaseEnabled?.(isElementEnabled(children));
+    useEffect(() => {
+        stateDispatch?.({
+            type: 'setIsTriggerEnabled',
+            isTriggerEnabled: isElementEnabled(children),
+        });
+    }, [stateDispatch, children]);
 
     return (
         <div
             className={classNames(
                 'tw-cursor-help',
-                styles.overlayBase,
+                styles.overlayTrigger,
                 className,
             )}
             onMouseEnter={() => {
-                setIsBaseHovered?.(true);
+                stateDispatch?.({
+                    type: 'setIsTriggerHovered',
+                    isTriggerHovered: true,
+                });
             }}
             onMouseLeave={() => {
-                setIsBaseHovered?.(false);
+                stateDispatch?.({
+                    type: 'setIsTriggerHovered',
+                    isTriggerHovered: false,
+                });
             }}
             {...attrs}
         >
@@ -79,8 +195,8 @@ const OverlayOverlay: OverlayOverlayComponent = ({
 }) => {
     const overlayRef = useRef<HTMLDialogElement>(null);
 
-    const { setIsOverlayHovered, showOverlay, placement } =
-        useContext(OverlayContext);
+    const { showOverlay, placement } = useContext(OverlayContext);
+    const stateDispatch = useContext(OverlayDispatchContext);
 
     const positionAreaStyle = (() => {
         switch (placement) {
@@ -113,10 +229,13 @@ const OverlayOverlay: OverlayOverlayComponent = ({
 
     useEffect(() => {
         if (showOverlay) {
-            if (!overlayRef.current?.open) {
+            // Currently there's no dedicated JS API for knowing if a popover
+            // is open. Instead, we use the CSS API to know that through
+            // the :popover-open pseudo-class.
+            if (!overlayRef.current?.matches(':popover-open')) {
                 overlayRef.current?.showPopover();
             }
-        } else if (overlayRef.current?.open) {
+        } else if (overlayRef.current?.matches(':popover-open')) {
             overlayRef.current?.hidePopover();
         }
     }, [overlayRef, showOverlay]);
@@ -133,34 +252,23 @@ const OverlayOverlay: OverlayOverlayComponent = ({
                 className,
             )}
             onMouseEnter={() => {
-                setIsOverlayHovered?.(true);
+                stateDispatch?.({
+                    type: 'setIsOverlayHovered',
+                    isOverlayHovered: true,
+                });
             }}
             onMouseLeave={() => {
-                setIsOverlayHovered?.(false);
+                stateDispatch?.({
+                    type: 'setIsOverlayHovered',
+                    isOverlayHovered: false,
+                });
             }}
-            // onClick={e => e.stopPropagation()}
             {...attrs}
         >
             {children}
         </Popover>
     );
 };
-
-type OverlayTriggerElem = 'base' | 'base-or-overlay';
-type OverlayTriggerRestraint = 'only-enabled';
-type OverlayPlacement =
-    | 'top-left'
-    | 'top'
-    | 'top-right'
-    | 'right-span-top'
-    | 'right'
-    | 'right-span-bottom'
-    | 'bottom-left'
-    | 'bottom'
-    | 'bottom-right'
-    | 'left-span-top'
-    | 'left'
-    | 'left-span-bottom';
 
 interface OverlayProps
     extends Pick<React.ComponentPropsWithRef<'div'>, 'ref' | 'className'> {
@@ -171,22 +279,9 @@ interface OverlayProps
 
 interface OverlayComponent
     extends React.FC<React.PropsWithChildren<OverlayProps>> {
-    Base: OverlayBaseComponent;
+    Trigger: OverlayTriggerComponent;
     Overlay: OverlayOverlayComponent;
 }
-
-interface OverlayContextTy {
-    setIsBaseEnabled?: (isBaseEnabled: boolean) => void;
-    setIsBaseHovered?: (isBaseHovered: boolean) => void;
-    setIsOverlayHovered?: (isOverlayHovered: boolean) => void;
-    showOverlay: boolean;
-    placement: OverlayPlacement;
-}
-
-const OverlayContext = createContext<OverlayContextTy>({
-    showOverlay: false,
-    placement: 'bottom',
-});
 
 const Overlay: OverlayComponent = ({
     triggerElem = 'base',
@@ -195,23 +290,43 @@ const Overlay: OverlayComponent = ({
     children,
     ...attrs
 }) => {
-    const [showOverlay, setShowOverlay] = useState<boolean>(false);
+    const [state, stateDispatch] = useReducer(overlayReducer, {
+        ...initialOverlayState,
+        placement,
+    });
 
-    const [isBaseHovered, setIsBaseHovered] = useState<boolean>(false);
-    const [isOverlayHovered, setIsOverlayHovered] = useState<boolean>(false);
-    const [isBaseEnabled, setIsBaseEnabled] = useState<boolean>(false);
-
-    const showOverlayDebounce: React.RefObject<_.DebouncedFunc<
-        () => void
-    > | null> = useRef(null);
+    const debouncedShowOverlay = useRef(
+        _.debounce(
+            useCallback(() => {
+                stateDispatch({ type: 'setShowOverlay', showOverlay: true });
+            }, [stateDispatch]),
+            2000,
+            {
+                leading: false,
+                trailing: true,
+            },
+        ),
+    );
+    const debouncedHideOverlay = useRef(
+        _.debounce(
+            useCallback(() => {
+                stateDispatch({ type: 'setShowOverlay', showOverlay: false });
+            }, [stateDispatch]),
+            2000,
+            {
+                leading: false,
+                trailing: true,
+            },
+        ),
+    );
 
     useEffect(() => {
         const satisfiesTriggerElem = () => {
             switch (triggerElem) {
                 case 'base':
-                    return isBaseHovered;
+                    return state.isTriggerHovered;
                 case 'base-or-overlay':
-                    return isBaseHovered || isOverlayHovered;
+                    return state.isTriggerHovered || state.isOverlayHovered;
             }
         };
 
@@ -222,45 +337,37 @@ const Overlay: OverlayComponent = ({
 
             switch (triggerRestraint) {
                 case 'only-enabled':
-                    return isBaseEnabled;
+                    return state.isTriggerEnabled;
             }
         };
 
         if (satisfiesTriggerElem() && satisfiesTriggerRestraint()) {
-            showOverlayDebounce.current = _.debounce(
-                () => setShowOverlay(true),
-                500,
-                { leading: false, trailing: true },
-            );
+            debouncedShowOverlay.current();
+            debouncedHideOverlay.current.cancel();
         } else {
-            showOverlayDebounce.current?.cancel();
+            debouncedHideOverlay.current();
+            debouncedShowOverlay.current.cancel();
         }
     }, [
         triggerElem,
         triggerRestraint,
-        isBaseEnabled,
-        isBaseHovered,
-        isOverlayHovered,
+        state.isTriggerEnabled,
+        state.isTriggerHovered,
+        state.isOverlayHovered,
     ]);
 
     return (
         <div {...attrs}>
-            <OverlayContext
-                value={{
-                    setIsBaseEnabled,
-                    setIsBaseHovered,
-                    setIsOverlayHovered,
-                    showOverlay,
-                    placement,
-                }}
-            >
-                {children}
-            </OverlayContext>
+            <OverlayContext.Provider value={state}>
+                <OverlayDispatchContext.Provider value={stateDispatch}>
+                    {children}
+                </OverlayDispatchContext.Provider>
+            </OverlayContext.Provider>
         </div>
     );
 };
 
-Overlay.Base = OverlayBase;
+Overlay.Trigger = OverlayTrigger;
 Overlay.Overlay = OverlayOverlay;
 
 export default Overlay;
