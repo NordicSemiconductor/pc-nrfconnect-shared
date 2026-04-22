@@ -9,16 +9,16 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import {
     currentPane as currentPaneSelector,
-    panes as panesSelector,
     switchToNextPane,
     switchToPreviousPane,
+    visiblePanes,
 } from '../App/appLayout';
 import useHotKey from '../utils/useHotKey';
 import NavMenuItem from './NavMenuItem';
 
 const NavMenu = () => {
     const currentPane = useSelector(currentPaneSelector);
-    const panes = useSelector(panesSelector).filter(p => !p.hidden);
+    const panes = useSelector(visiblePanes);
     const dispatch = useDispatch();
 
     useHotKey({
