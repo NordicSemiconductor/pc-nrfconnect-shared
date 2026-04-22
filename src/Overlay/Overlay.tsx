@@ -29,7 +29,7 @@ const isElementEnabled = (elem: React.ReactNode): boolean =>
         elem.props.disabled
     );
 
-type OverlayTriggerElem = 'base' | 'base-or-overlay';
+type OverlayTriggerElem = 'trigger' | 'trigger-or-overlay';
 type OverlayTriggerRestraint = 'only-enabled';
 type OverlayPlacement =
     | 'top-span-right'
@@ -333,7 +333,7 @@ interface OverlayComponent
 }
 
 const Overlay: OverlayComponent = ({
-    triggerElem = 'base',
+    triggerElem = 'trigger',
     triggerRestraint = 'only-enabled',
     placement = 'bottom',
     arrowPlacement = 'top-center',
@@ -374,9 +374,9 @@ const Overlay: OverlayComponent = ({
     useEffect(() => {
         const satisfiesTriggerElem = () => {
             switch (triggerElem) {
-                case 'base':
+                case 'trigger':
                     return state.isTriggerHovered;
-                case 'base-or-overlay':
+                case 'trigger-or-overlay':
                     return state.isTriggerHovered || state.isOverlayHovered;
             }
         };
