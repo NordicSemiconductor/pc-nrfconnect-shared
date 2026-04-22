@@ -9,53 +9,68 @@
 }
 
 .overlayOverlay {
+    --overlay-spacing: 0.25rem;
+
     position-anchor: --overlay-anchor;
+    position-visibility: always;
 }
 
-.posTopLeft {
-    position-area: top left;
+/* Currently there's no way to make position-area allow
+viewport overflow or forbid overflow over the anchor,
+therefore we manually set the position using the anchor function */
+
+.posTopSpanRight {
+    bottom: calc(anchor(top) + var(--overlay-spacing, 0.25rem));
+    left: anchor(left);
+}
+
+.posTopSpanLeft {
+    bottom: calc(anchor(top) + var(--overlay-spacing, 0.25rem));
+    right: anchor(right);
 }
 
 .posTop {
-    position-area: top;
+    bottom: calc(anchor(top) + var(--overlay-spacing, 0.25rem));
 }
 
-.posTopRight {
-    position-area: top right;
+.posBottomSpanRight {
+    top: calc(anchor(bottom) + var(--overlay-spacing, 0.25rem));
+    left: anchor(left);
 }
 
-.posRightSpanTop {
-    position-area: right span-top;
-}
-
-.posRight {
-    position-area: right;
-}
-
-.posRightSpanBottom {
-    position-area: right span-bottom;
-}
-
-.posBottomLeft {
-    position-area: bottom left;
+.posBottomSpanLeft {
+    top: calc(anchor(bottom) + var(--overlay-spacing, 0.25rem));
+    right: anchor(right);
 }
 
 .posBottom {
-    position-area: bottom;
-}
-
-.posBottomRight {
-    position-area: bottom right;
+    top: calc(anchor(bottom) + var(--overlay-spacing, 0.25rem));
 }
 
 .posLeftSpanTop {
-    position-area: left span-top;
-}
-
-.posLeft {
-    position-area: left;
+    right: calc(anchor(left) + var(--overlay-spacing, 0.25rem));
+    bottom: anchor(bottom);
 }
 
 .posLeftSpanBottom {
-    position-area: left span-bottom;
+    right: calc(anchor(left) + var(--overlay-spacing, 0.25rem));
+    top: anchor(top);
+}
+
+.posLeft {
+    right: calc(anchor(left) + var(--overlay-spacing, 0.25rem));
+}
+
+.posRightSpanTop {
+    left: calc(anchor(right) + var(--overlay-spacing, 0.25rem));
+    bottom: anchor(bottom);
+}
+
+.posRightSpanBottom {
+    left: calc(anchor(right) + var(--overlay-spacing, 0.25rem));
+    top: anchor(top);
+}
+
+.posRight {
+    left: calc(anchor(right) + var(--overlay-spacing, 0.25rem));
 }

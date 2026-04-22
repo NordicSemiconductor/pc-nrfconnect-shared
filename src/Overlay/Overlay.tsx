@@ -10,6 +10,7 @@ import React, {
     useContext,
     useEffect,
     useId,
+    useMemo,
     useReducer,
     useRef,
 } from 'react';
@@ -31,18 +32,32 @@ const isElementEnabled = (elem: React.ReactNode): boolean =>
 type OverlayTriggerElem = 'base' | 'base-or-overlay';
 type OverlayTriggerRestraint = 'only-enabled';
 type OverlayPlacement =
-    | 'top-left'
+    | 'top-span-right'
+    | 'top-span-left'
     | 'top'
-    | 'top-right'
-    | 'right-span-top'
-    | 'right'
-    | 'right-span-bottom'
-    | 'bottom-left'
+    | 'bottom-span-right'
+    | 'bottom-span-left'
     | 'bottom'
-    | 'bottom-right'
     | 'left-span-top'
+    | 'left-span-bottom'
     | 'left'
-    | 'left-span-bottom';
+    | 'right-span-top'
+    | 'right-span-bottom'
+    | 'right';
+
+type OverlayArrowPlacement =
+    | 'top-left'
+    | 'top-center'
+    | 'top-right'
+    | 'bottom-left'
+    | 'bottom-center'
+    | 'bottom-right'
+    | 'left-top'
+    | 'left-center'
+    | 'left-bottom'
+    | 'right-top'
+    | 'right-center'
+    | 'right-bottom';
 
 interface OverlayState {
     isTriggerEnabled: boolean;
@@ -50,6 +65,7 @@ interface OverlayState {
     isOverlayHovered: boolean;
     showOverlay: boolean;
     placement: OverlayPlacement;
+    arrowPlacement: OverlayArrowPlacement;
 }
 
 const initialOverlayState: OverlayState = {
@@ -58,6 +74,7 @@ const initialOverlayState: OverlayState = {
     isOverlayHovered: false,
     showOverlay: false,
     placement: 'bottom',
+    arrowPlacement: 'top-center',
 };
 
 interface OverlaySetIsTriggerEnabledAction {
@@ -195,37 +212,67 @@ const OverlayOverlay: OverlayOverlayComponent = ({
 }) => {
     const overlayRef = useRef<HTMLDialogElement>(null);
 
-    const { showOverlay, placement } = useContext(OverlayContext);
+    const { showOverlay, placement, arrowPlacement } =
+        useContext(OverlayContext);
     const stateDispatch = useContext(OverlayDispatchContext);
 
-    const positionAreaStyle = (() => {
+    const positionStyleClass = useMemo(() => {
         switch (placement) {
-            case 'top-left':
-                return styles.posTopLeft;
+            case 'top-span-right':
+                return styles.posTopSpanRight;
+            case 'top-span-left':
+                return styles.posTopSpanLeft;
             case 'top':
                 return styles.posTop;
-            case 'top-right':
-                return styles.posTopRight;
-            case 'right-span-top':
-                return styles.posRightSpanTop;
-            case 'right':
-                return styles.posRight;
-            case 'right-span-bottom':
-                return styles.posRightSpanBottom;
-            case 'bottom-left':
-                return styles.posBottomLeft;
+            case 'bottom-span-right':
+                return styles.posBottomSpanRight;
+            case 'bottom-span-left':
+                return styles.posBottomSpanLeft;
             case 'bottom':
                 return styles.posBottom;
-            case 'bottom-right':
-                return styles.posBottomRight;
             case 'left-span-top':
                 return styles.posLeftSpanTop;
-            case 'left':
-                return styles.posLeft;
             case 'left-span-bottom':
                 return styles.posLeftSpanBottom;
+            case 'left':
+                return styles.posLeft;
+            case 'right-span-top':
+                return styles.posRightSpanTop;
+            case 'right-span-bottom':
+                return styles.posRightSpanBottom;
+            case 'right':
+                return styles.posRight;
         }
-    })();
+    }, [placement]);
+
+    const arrowPositionStyleClass = useMemo(() => {
+        switch (arrowPlacement) {
+            case 'top-left':
+                return '-tw-top-1.5 tw-left-1/4';
+            case 'top-center':
+                return '-tw-top-1.5 tw-left-1/2';
+            case 'top-right':
+                return '-tw-top-1.5 tw-left-3/4';
+            case 'bottom-left':
+                return '-tw-bottom-1.5 tw-left-1/4';
+            case 'bottom-center':
+                return '-tw-bottom-1.5 tw-left-1/2';
+            case 'bottom-right':
+                return '-tw-bottom-1.5 tw-left-3/4';
+            case 'left-top':
+                return 'tw-top-1/4 -tw-left-1.5';
+            case 'left-center':
+                return 'tw-top-1/2 -tw-left-1.5';
+            case 'left-bottom':
+                return 'tw-top-3/4 -tw-left-1.5';
+            case 'right-top':
+                return 'tw-top-1/4 -tw-right-1.5';
+            case 'right-center':
+                return 'tw-top-1/2 -tw-right-1.5';
+            case 'right-bottom':
+                return 'tw-top-3/4 -tw-right-1.5';
+        }
+    }, [arrowPlacement]);
 
     useEffect(() => {
         if (showOverlay) {
@@ -246,9 +293,10 @@ const OverlayOverlay: OverlayOverlayComponent = ({
             ref={overlayRef}
             closingBehavior="manual"
             className={classNames(
-                'tw-inset-1 tw-border tw-border-solid tw-border-black tw-bg-black/80 tw-p-4 tw-text-white',
+                'tw-overflow-auto tw-border tw-border-solid tw-bg-gray-900 tw-p-4 tw-px-6 tw-py-3 tw-text-white before:tw-relative before:tw-block before:tw-h-2 before:tw-w-2 before:tw-rotate-45 before:tw-bg-gray-900 before:tw-content-none',
                 styles.overlayOverlay,
-                positionAreaStyle,
+                positionStyleClass,
+                arrowPositionStyleClass,
                 className,
             )}
             onMouseEnter={() => {
@@ -275,6 +323,7 @@ interface OverlayProps
     triggerElem?: OverlayTriggerElem;
     triggerRestraint?: OverlayTriggerRestraint;
     placement?: OverlayPlacement;
+    arrowPlacement?: OverlayArrowPlacement;
 }
 
 interface OverlayComponent
@@ -287,12 +336,14 @@ const Overlay: OverlayComponent = ({
     triggerElem = 'base',
     triggerRestraint = 'only-enabled',
     placement = 'bottom',
+    arrowPlacement = 'top-center',
     children,
     ...attrs
 }) => {
     const [state, stateDispatch] = useReducer(overlayReducer, {
         ...initialOverlayState,
         placement,
+        arrowPlacement,
     });
 
     const debouncedShowOverlay = useRef(
