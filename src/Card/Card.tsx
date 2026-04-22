@@ -60,7 +60,7 @@ interface CardHeaderComponent extends React.FC<CardHeaderProps> {
 const CardHeader: CardHeaderComponent = ({ children, className, ...attrs }) => (
     <header
         className={classNames(
-            `tw-border-b tw-border-solid tw-border-b-black tw-border-opacity-10 tw-py-4`,
+            `tw-border-b tw-border-solid tw-border-b-black tw-border-opacity-10 tw-pb-3 tw-pt-5`,
             className,
         )}
         {...attrs}
@@ -98,7 +98,7 @@ interface CardComponent extends React.FC<CardProps> {
 const Card: CardComponent = ({ children, className, ...attrs }) => (
     <article
         className={classNames(
-            `tw-preflight tw-relative tw-flex tw-flex-col tw-gap-4 tw-break-words tw-border tw-border-solid tw-border-black tw-border-opacity-10 tw-bg-white tw-px-4 tw-pb-4`,
+            `tw-preflight tw-relative tw-flex tw-flex-col tw-gap-3.5 tw-break-words tw-border tw-border-solid tw-border-black tw-border-opacity-10 tw-bg-white tw-px-4 tw-pb-4`,
             className,
         )}
         {...attrs}
