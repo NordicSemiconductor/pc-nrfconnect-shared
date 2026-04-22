@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { type FC } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 
 import { setCurrentPane } from '../App/appLayout';
@@ -12,13 +12,21 @@ import classNames from '../utils/classNames';
 
 import './nav-menu-item.scss';
 
-interface Props {
+interface NavMenuItemProps
+    extends Pick<
+        React.ComponentPropsWithRef<'button'>,
+        'ref' | 'className' | 'disabled'
+    > {
     isSelected: boolean;
-    label: string;
-    disabled: boolean;
+    children: string;
 }
 
-const NavMenuItem: FC<Props> = ({ isSelected, label, disabled }) => {
+const NavMenuItem: React.FC<NavMenuItemProps> = ({
+    isSelected,
+    children,
+    className,
+    ...attrs
+}) => {
     const dispatch = useDispatch();
 
     return (
@@ -28,11 +36,12 @@ const NavMenuItem: FC<Props> = ({ isSelected, label, disabled }) => {
                 'core19-nav-menu-item',
                 isSelected && 'selected',
                 'mr-4',
+                className,
             )}
-            onClick={() => dispatch(setCurrentPane(label))}
-            disabled={disabled}
+            onClick={() => dispatch(setCurrentPane(children))}
+            {...attrs}
         >
-            {label}
+            {children}
         </button>
     );
 };

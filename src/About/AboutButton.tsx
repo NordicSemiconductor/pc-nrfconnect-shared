@@ -9,19 +9,27 @@ import React from 'react';
 import Button from '../Button/Button';
 import { openUrl } from '../utils/open';
 
-interface Props {
-    onClick?: () => void;
+interface AboutButtonProps
+    extends Pick<
+        React.ComponentPropsWithRef<'button'>,
+        'ref' | 'className' | 'onClick'
+    > {
     url?: string;
-    label: string;
 }
 
-const AboutButton: React.FC<Props> = ({ url, label, onClick }) => (
+const AboutButton: React.FC<React.PropsWithChildren<AboutButtonProps>> = ({
+    url,
+    onClick,
+    children,
+    ...attrs
+}) => (
     <Button
         disabled={!url && !onClick}
         onClick={onClick || (() => openUrl(url as string))}
         variant="secondary"
+        {...attrs}
     >
-        {label}
+        {children}
     </Button>
 );
 

@@ -9,14 +9,16 @@ import React from 'react';
 import classNames from '../utils/classNames';
 import { openFile } from '../utils/open';
 
-export default ({
-    label,
-    fileLocation,
-    className,
-}: {
-    label: string;
+interface FileLinkProps
+    extends Pick<React.ComponentProps<'button'>, 'ref' | 'className'> {
     fileLocation: string;
-    className?: string;
+}
+
+const FileLink: React.FC<React.PropsWithChildren<FileLinkProps>> = ({
+    fileLocation,
+    children,
+    className,
+    ...attrs
 }) => (
     <button
         type="button"
@@ -25,7 +27,10 @@ export default ({
             'tw-preflight tw-overflow-hidden tw-text-ellipsis tw-text-nordicBlue hover:tw-underline',
             className,
         )}
+        {...attrs}
     >
-        {label}
+        {children}
     </button>
 );
+
+export default FileLink;

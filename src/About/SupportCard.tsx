@@ -47,10 +47,9 @@ export default ({ feedbackCategories, className }: SupportCardProps) => {
                         You can ask for help or open a support request on
                         DevZone, Nordic Semiconductor&apos;s developer portal.
                     </p>
-                    <AboutButton
-                        url="https://devzone.nordicsemi.com"
-                        label="Go to DevZone"
-                    />
+                    <AboutButton url="https://devzone.nordicsemi.com">
+                        Go to DevZone
+                    </AboutButton>
                 </Section>
                 <Section title="System report">
                     <p>
@@ -66,8 +65,9 @@ export default ({ feedbackCategories, className }: SupportCardProps) => {
                                 currentDevice,
                             )
                         }
-                        label="Create system report"
-                    />
+                    >
+                        Create system report
+                    </AboutButton>
                 </Section>
                 <Section title="Other feedback">
                     <p>

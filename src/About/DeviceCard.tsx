@@ -68,16 +68,14 @@ export default ({ className }: DeviceCardProps) => {
                 )}
 
                 <Section>
-                    <AboutButton
-                        url={website.buyOnline}
-                        label="Find distributor"
-                    />
+                    <AboutButton url={website.buyOnline}>
+                        Find distributor
+                    </AboutButton>
                 </Section>
                 <Section>
-                    <AboutButton
-                        url={website.productPage}
-                        label="Go to product page"
-                    />
+                    <AboutButton url={website.productPage}>
+                        Go to product page
+                    </AboutButton>
                 </Section>
             </Card.Body>
         </Card>
