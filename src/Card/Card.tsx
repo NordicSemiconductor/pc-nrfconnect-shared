@@ -98,7 +98,7 @@ interface CardComponent extends React.FC<CardProps> {
 const Card: CardComponent = ({ children, className, ...attrs }) => (
     <article
         className={classNames(
-            `tw-preflight tw-relative tw-flex tw-flex-col tw-gap-4 tw-break-words tw-border tw-border-solid tw-border-black tw-border-opacity-10 tw-bg-white tw-px-4 tw-pb-4`,
+            `tw-preflight tw-relative tw-flex tw-flex-col tw-gap-3.5 tw-break-words tw-border tw-border-solid tw-border-black tw-border-opacity-10 tw-bg-white tw-px-4 tw-pb-4`,
             className,
         )}
         {...attrs}
