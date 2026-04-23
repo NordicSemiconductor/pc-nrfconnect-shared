@@ -72,9 +72,11 @@ Example — Not migrated:
 ```tsx
 import ReactMarkdown from 'react-markdown';
 
-<div className="release-notes">
-    <ReactMarkdown linkTarget="_blank">{'**Some Markdown**'}</ReactMarkdown>
-</div>;
+return (
+    <div className="release-notes">
+        <ReactMarkdown linkTarget="_blank">{'**Some Markdown**'}</ReactMarkdown>
+    </div>
+);
 ```
 
 Example — Migrated:
@@ -82,7 +84,7 @@ Example — Migrated:
 ```tsx
 import { Markdown } from '@nordicsemiconductor/pc-nrfconnect-shared';
 
-<Markdown className="release-notes">{'**Some Markdown**'}</Markdown>;
+return <Markdown className="release-notes">{'**Some Markdown**'}</Markdown>;
 ```
 
 ## 244.0.0 - 2026-01-22

@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2026 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeExternalLinks from 'rehype-external-links';
