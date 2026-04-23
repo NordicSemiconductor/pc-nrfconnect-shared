@@ -6,10 +6,26 @@
 
 @import '../../styles';
 
-.content {
-    &[data-height='true'] {
-        overflow-y: scroll; // Make Scroll Fixed Height Scrollable
+.dropdownScope {
+    anchor-scope: --dropdown-anchor;
+}
 
-        @include scrollbars($gray-700);
-    }
+.anchor {
+    anchor-name: --dropdown-anchor;
+}
+
+.anchoredPopover {
+    position-anchor: --dropdown-anchor;
+    width: anchor-size(width);
+    left: anchor(left);
+    
+    @include scrollbars($gray-700);
+}
+
+.anchorToBottom {
+    top: anchor(bottom);
+}
+
+.anchorToTop {
+    bottom: anchor(top);
 }

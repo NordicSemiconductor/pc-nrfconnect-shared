@@ -117,7 +117,6 @@ export default <T,>({
                         items={unit.items}
                         selectedItem={unit.selectedItem}
                         transparentButtonBg
-                        minWidth
                         onSelect={unit.onUnitChange}
                         disabled={disabled}
                     />
