@@ -242,7 +242,14 @@ const Dropdown: DropdownComponent = ({
     }, [isActive, onChange]);
 
     return (
-        <div className={classNames('tw-preflight', className)} {...attrs}>
+        <div
+            className={classNames(
+                'tw-preflight',
+                styles.dropdownScope,
+                className,
+            )}
+            {...attrs}
+        >
             {label && (
                 <label className="tw-text-xs" htmlFor={dropdownBtnId}>
                     {label}

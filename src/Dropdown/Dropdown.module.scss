@@ -6,6 +6,10 @@
 
 @import '../../styles';
 
+.dropdownScope {
+    anchor-scope: --dropdown-anchor;
+}
+
 .anchor {
     anchor-name: --dropdown-anchor;
 }
