@@ -329,9 +329,10 @@ const OverlayOverlay: OverlayOverlayComponent = ({
 interface OverlayProps
     extends Pick<React.ComponentPropsWithRef<'div'>, 'ref' | 'className'> {
     triggerElem?: OverlayTriggerElem;
-    triggerRestraint?: OverlayTriggerRestraint;
+    triggerRestraint?: OverlayTriggerRestraint | null;
     placement?: OverlayPlacement;
     arrowPlacement?: OverlayArrowPlacement;
+    delay?: number;
 }
 
 interface OverlayComponent
@@ -345,6 +346,7 @@ const Overlay: OverlayComponent = ({
     triggerRestraint = 'only-enabled',
     placement = 'bottom',
     arrowPlacement = 'top-center',
+    delay = 500,
     children,
     ...attrs
 }) => {
@@ -359,7 +361,7 @@ const Overlay: OverlayComponent = ({
             useCallback(() => {
                 stateDispatch({ type: 'setShowOverlay', showOverlay: true });
             }, [stateDispatch]),
-            500,
+            delay,
             {
                 leading: false,
                 trailing: true,
@@ -371,7 +373,7 @@ const Overlay: OverlayComponent = ({
             useCallback(() => {
                 stateDispatch({ type: 'setShowOverlay', showOverlay: false });
             }, [stateDispatch]),
-            500,
+            delay,
             {
                 leading: false,
                 trailing: true,
