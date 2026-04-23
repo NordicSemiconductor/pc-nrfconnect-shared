@@ -33,6 +33,7 @@ every new version is a new major version.
   `10.1.10`, `react-redux` to `9.2.0`, `react-resize-detector` to `12.3.0`,
   `react-test-renderer` to `19.2.4`, `@testing-library/react` to `16.3.2`,
   `redux` to `5.0.1`, `redux-thunk` to `3.1.0`, `@reduxjs/toolkit` to `2.11.2`.
+- Refactored `Overlay` component to remove dependency on bootstrap.
 
 ### Steps to upgrade when using this package
 
@@ -108,6 +109,45 @@ modal's visibility through `isVisible`.
 
 Instead, apply an effect (`useEffect`) on the desired trigger to open/close the
 modal through `showModal()`/`requestClose()`.
+
+#### Migrating `Overlay` component
+
+The structure of `Overlay` has been changed to this format:
+
+```tsx
+import { Overlay } from '@nordicsemiconductor/pc-nrfconnect-shared';
+
+return (
+    <Overlay>
+        <Overlay.Trigger>
+            {/* Button or any element that triggers the overlay */}
+        </Overlay.Trigger>
+        <Overlay.Overlay>{/* Content of the overlay */}</Overlay.Overlay>
+    </Overlay>
+);
+```
+
+Instead of using a `keepShowingOnHoverTooltip` or having to add
+`pointer-events: none;` to disable showing the tooltip when the trigger is
+disabled, the props `triggerElem` and `triggerRestraint` replace it.
+
+`triggerElem` defines which element triggers the overlay. It can either be set
+to `trigger`, which triggers the overlay only if the trigger element is hovered
+(default), or to `trigger-or-overlay`, which keeps the aforementionned behavior,
+but also keeps the overlay opened if it is hovered.
+
+`triggerRestraint` defines what restraints the trigger element must satisfy in
+order to trigger the overlay. It can be either set to `only-enabled`, which
+checks if the topmost element within the `Overlay.Trigger` slot is enabled for
+it to be able to trigger the overlay (default). Otherwise, it can be set to null
+to disable any restraints.
+
+The `placement` property has changed to support only
+`top`/`bottom`/`left`/`right`, for each one a spanning direction can be added.
+E.g. `top-span-right`, `left-span-bottom`.
+
+To define where the _tooltip arrow_ is placed, use the `arrowPlacement` prop. It
+supports combinations such as `top-center`, `left-top`, `bottom-right`.
 
 ## 244.0.0 - 2026-01-22
 

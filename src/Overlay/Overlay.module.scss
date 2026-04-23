@@ -1,0 +1,112 @@
+/*
+ * Copyright (c) 2026 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
+ */
+
+.overlayScope {
+    anchor-scope: --overlay-anchor;
+}
+
+.overlayTrigger {
+    anchor-name: --overlay-anchor;
+}
+
+.overlayOverlay {
+    --overlay-spacing: 0.5rem;
+
+    position-anchor: --overlay-anchor;
+    position-visibility: always;
+}
+
+/* Currently there's no way to make position-area allow
+viewport overflow or forbid overflow over the anchor,
+therefore we manually set the position using the anchor function */
+
+.posTopSpanRight {
+    top: auto;
+    bottom: calc(anchor(top) + var(--overlay-spacing, 0.5rem));
+    left: anchor(left);
+    right: auto;
+}
+
+.posTopSpanLeft {
+    top: auto;
+    bottom: calc(anchor(top) + var(--overlay-spacing, 0.5rem));
+    left: auto;
+    right: anchor(right);
+}
+
+.posTop {
+    top: auto;
+    bottom: calc(anchor(top) + var(--overlay-spacing, 0.5rem));
+    left: anchor(center);
+    right: auto;
+    transform: translateX(-50%);
+}
+
+.posBottomSpanRight {
+    top: calc(anchor(bottom) + var(--overlay-spacing, 0.5rem));
+    bottom: auto;
+    left: anchor(left);
+    right: auto;
+}
+
+.posBottomSpanLeft {
+    top: calc(anchor(bottom) + var(--overlay-spacing, 0.5rem));
+    bottom: auto;
+    left: auto;
+    right: anchor(right);
+}
+
+.posBottom {
+    top: calc(anchor(bottom) + var(--overlay-spacing, 0.5rem));
+    bottom: auto;
+    left: anchor(center);
+    right: auto;
+    transform: translateX(-50%);
+}
+
+.posLeftSpanTop {
+    top: auto;
+    bottom: anchor(bottom);
+    left: auto;
+    right: calc(anchor(left) + var(--overlay-spacing, 0.5rem));
+}
+
+.posLeftSpanBottom {
+    top: anchor(top);
+    bottom: auto;
+    left: auto;
+    right: calc(anchor(left) + var(--overlay-spacing, 0.5rem));
+}
+
+.posLeft {
+    top: anchor(center);
+    bottom: auto;
+    left: auto;
+    right: calc(anchor(left) + var(--overlay-spacing, 0.5rem));
+    transform: translateY(-50%);
+}
+
+.posRightSpanTop {
+    top: auto;
+    bottom: anchor(bottom);
+    left: calc(anchor(right) + var(--overlay-spacing, 0.5rem));
+    right: auto;
+}
+
+.posRightSpanBottom {
+    top: anchor(top);
+    bottom: auto;
+    left: calc(anchor(right) + var(--overlay-spacing, 0.5rem));
+    right: auto;
+}
+
+.posRight {
+    top: anchor(center);
+    bottom: auto;
+    left: calc(anchor(right) + var(--overlay-spacing, 0.5rem));
+    right: auto;
+    transform: translateY(-50%);
+}
