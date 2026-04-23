@@ -74,7 +74,7 @@ import ReactMarkdown from 'react-markdown';
 
 return (
     <div className="release-notes">
-        <ReactMarkdown linkTarget="_blank">{'**Some Markdown**'}</ReactMarkdown>
+        <ReactMarkdown linkTarget="_blank">**Some Markdown**</ReactMarkdown>
     </div>
 );
 ```
@@ -84,7 +84,7 @@ Example — Migrated:
 ```tsx
 import { Markdown } from '@nordicsemiconductor/pc-nrfconnect-shared';
 
-return <Markdown className="release-notes">{'**Some Markdown**'}</Markdown>;
+return <Markdown className="release-notes">**Some Markdown**</Markdown>;
 ```
 
 ## 244.0.0 - 2026-01-22
