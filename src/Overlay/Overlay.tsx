@@ -248,29 +248,29 @@ const OverlayOverlay: OverlayOverlayComponent = ({
     const arrowPositionStyleClass = useMemo(() => {
         switch (arrowPlacement) {
             case 'top-left':
-                return '-tw-top-1.5 tw-left-1/4';
+                return '-tw-top-2 tw-left-1/4 -tw-translate-x-1/2';
             case 'top-center':
-                return '-tw-top-1.5 tw-left-1/2';
+                return '-tw-top-2 tw-left-1/2 -tw-translate-x-1/2';
             case 'top-right':
-                return '-tw-top-1.5 tw-left-3/4';
+                return '-tw-top-2 tw-left-3/4 -tw-translate-x-1/2';
             case 'bottom-left':
-                return '-tw-bottom-1.5 tw-left-1/4';
+                return '-tw-bottom-2 tw-left-1/4 -tw-translate-x-1/2';
             case 'bottom-center':
-                return '-tw-bottom-1.5 tw-left-1/2';
+                return '-tw-bottom-2 tw-left-1/2 -tw-translate-x-1/2';
             case 'bottom-right':
-                return '-tw-bottom-1.5 tw-left-3/4';
+                return '-tw-bottom-2 tw-left-3/4 -tw-translate-x-1/2';
             case 'left-top':
-                return 'tw-top-1/4 -tw-left-1.5';
+                return 'tw-top-1/4 -tw-left-2 -tw-translate-y-1/2';
             case 'left-center':
-                return 'tw-top-1/2 -tw-left-1.5';
+                return 'tw-top-1/2 -tw-left-2 -tw-translate-y-1/2';
             case 'left-bottom':
-                return 'tw-top-3/4 -tw-left-1.5';
+                return 'tw-top-3/4 -tw-left-2 -tw-translate-y-1/2';
             case 'right-top':
-                return 'tw-top-1/4 -tw-right-1.5';
+                return 'tw-top-1/4 -tw-right-2 -tw-translate-y-1/2';
             case 'right-center':
-                return 'tw-top-1/2 -tw-right-1.5';
+                return 'tw-top-1/2 -tw-right-2 -tw-translate-y-1/2';
             case 'right-bottom':
-                return 'tw-top-3/4 -tw-right-1.5';
+                return 'tw-top-3/4 -tw-right-2 -tw-translate-y-1/2';
         }
     }, [arrowPlacement]);
 
@@ -293,10 +293,10 @@ const OverlayOverlay: OverlayOverlayComponent = ({
             ref={overlayRef}
             closingBehavior="manual"
             className={classNames(
-                'tw-overflow-auto tw-border tw-border-solid tw-bg-gray-900 tw-p-4 tw-px-6 tw-py-3 tw-text-white before:tw-relative before:tw-block before:tw-h-2 before:tw-w-2 before:tw-rotate-45 before:tw-bg-gray-900 before:tw-content-none',
+                // Overflow needs to be visible so that the arrow is visible
+                'tw-m-0 tw-overflow-visible',
                 styles.overlayOverlay,
                 positionStyleClass,
-                arrowPositionStyleClass,
                 className,
             )}
             onMouseEnter={() => {
@@ -313,7 +313,15 @@ const OverlayOverlay: OverlayOverlayComponent = ({
             }}
             {...attrs}
         >
-            {children}
+            <span
+                className={classNames(
+                    'tw-absolute tw-block tw-h-4 tw-w-4 tw-rotate-45 tw-bg-gray-900',
+                    arrowPositionStyleClass,
+                )}
+            />
+            <div className="tw-overflow-auto tw-bg-gray-900 tw-px-6 tw-py-3 tw-text-white">
+                {children}
+            </div>
         </Popover>
     );
 };
@@ -408,7 +416,7 @@ const Overlay: OverlayComponent = ({
     ]);
 
     return (
-        <div {...attrs}>
+        <div className={styles.overlayScope} {...attrs}>
             <OverlayContext.Provider value={state}>
                 <OverlayDispatchContext.Provider value={stateDispatch}>
                     {children}
