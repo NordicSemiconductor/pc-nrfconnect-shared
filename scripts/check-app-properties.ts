@@ -69,9 +69,7 @@ export const sameRepoURLs = (url1: string, url2: string) => {
     const withoutPostfix = (gitUrl: string) => gitUrl.replace(/\.git$/, '');
 
     const withoutProtocol = (gitUrl: string) =>
-        gitUrl
-            .replace(/^git@github\.com:/, 'github.com/')
-            .replace(/^https:\/\//, '');
+        gitUrl.replace(/^git@[^:]+:/, 'github.com/').replace(/^https:\/\//, '');
 
     const stripped = (gitUrl: string) =>
         withoutProtocol(withoutPostfix(gitUrl));

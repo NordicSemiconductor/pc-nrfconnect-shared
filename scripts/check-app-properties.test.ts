@@ -48,4 +48,13 @@ describe('sameRepoURLs', () => {
             ),
         ).toBe(true);
     });
+
+    it('ignores the host name for the git protocol', () => {
+        expect(
+            sameRepoURLs(
+                'https://github.com/nordicsemi/pc-nrfconnect-ppk',
+                'git@nordic-git:nordicsemi/pc-nrfconnect-ppk.git',
+            ),
+        ).toBe(true);
+    });
 });
