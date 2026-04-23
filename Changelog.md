@@ -7,6 +7,12 @@ This project does _not_ adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) but contrary to it
 every new version is a new major version.
 
+## 247.0.0 - 2026-04-23
+
+### Changed
+
+- In the repo URL check, ignore the hostname for ssh git URLs.
+
 ## 246.0.0 - 2026-04-22
 
 ### Changed
