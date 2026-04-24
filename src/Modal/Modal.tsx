@@ -107,7 +107,7 @@ const ModalFooter: ModalFooterComponent = ({
 }) => (
     <footer
         className={classNames(
-            'tw-flex tw-flex-none tw-flex-row tw-items-center tw-justify-end tw-gap-4 tw-border-t tw-border-solid tw-border-t-black/10 tw-py-4',
+            'tw-flex tw-flex-none tw-flex-row tw-items-center tw-border-t tw-border-solid tw-border-t-black/10 tw-py-4',
             className,
         )}
         {...attrs}
