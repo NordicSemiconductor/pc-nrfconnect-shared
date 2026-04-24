@@ -109,6 +109,12 @@ modal's visibility through `isVisible`.
 Instead, apply an effect (`useEffect`) on the desired trigger to open/close the
 modal through `showModal()`/`requestClose()`.
 
+If you really want to control the modal's state through a prop, use the
+`overrideModalState` prop.
+
+Modals are by default centered. You can turn off that behavior by setting the
+`center` prop to `false`.
+
 ## 244.0.0 - 2026-01-22
 
 ### Added

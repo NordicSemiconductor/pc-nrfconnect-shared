@@ -49,7 +49,7 @@ const ModalHeader: ModalHeaderComponent = ({
 }) => (
     <header
         className={classNames(
-            'tw-flex tw-flex-none tw-flex-row tw-items-center tw-border-b tw-border-solid tw-border-b-black/10 tw-py-4 tw-font-bold',
+            'tw-flex tw-flex-none tw-flex-row tw-items-center tw-border-b tw-border-solid tw-border-b-black/10 tw-py-4',
             className,
         )}
         {...attrs}
@@ -182,6 +182,7 @@ interface ModalProps
     closingBehavior: ModalClosingBehavior;
     hasBackdrop?: boolean;
     overrideModalState?: 'open' | 'request-close' | 'force-close' | null;
+    center?: boolean;
 }
 
 interface ModalComponent extends React.FC<React.PropsWithChildren<ModalProps>> {
@@ -200,6 +201,7 @@ const Modal: ModalComponent = ({
     closingBehavior,
     hasBackdrop = true,
     overrideModalState = null,
+    center = true,
     ...attrs
 }) => {
     const closedBy = modalClosingBehaviorLookup[closingBehavior];
@@ -234,12 +236,13 @@ const Modal: ModalComponent = ({
             ref={dialogRef}
             id={id}
             className={classNames(
-                'tw-preflight tw-fixed tw-mx-auto tw-my-4 tw-min-w-60 tw-border tw-border-solid tw-border-black/10 tw-px-4 open:tw-flex open:tw-flex-col',
+                'tw-preflight tw-fixed tw-bottom-4 tw-top-4 tw-mx-auto tw-min-w-60 tw-border tw-border-solid tw-border-black/10 tw-px-4 open:tw-flex open:tw-flex-col',
                 modalSize === 'sm' && 'tw-w-1/3',
                 modalSize === 'md' && 'tw-w-1/2',
                 modalSize === 'lg' && 'tw-w-3/4',
                 modalSize === 'xl' && 'tw-w-[90%]',
                 hasBackdrop && 'open:backdrop:tw-bg-black/50',
+                center ? 'tw-my-auto' : 'tw-my-0',
                 className,
             )}
             // eslint-disable-next-line react/no-unknown-property
