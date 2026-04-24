@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { type DialogHTMLAttributes } from 'react';
+import React, { type DialogHTMLAttributes, useEffect, useRef } from 'react';
 
 import Button, { type ButtonProps } from '../Button/Button';
 import classNames from '../utils/classNames';
@@ -49,7 +49,7 @@ const ModalHeader: ModalHeaderComponent = ({
 }) => (
     <header
         className={classNames(
-            'tw-flex tw-flex-none tw-flex-row tw-items-center tw-border-b tw-border-solid tw-border-b-black/10 tw-py-4',
+            'tw-flex tw-flex-none tw-flex-row tw-items-center tw-border-b tw-border-solid tw-border-b-black/10 tw-py-4 tw-font-bold',
             className,
         )}
         {...attrs}
@@ -181,6 +181,7 @@ interface ModalProps
     modalSize?: ModalSize;
     closingBehavior: ModalClosingBehavior;
     hasBackdrop?: boolean;
+    overrideModalState?: 'open' | 'request-close' | 'force-close' | null;
 }
 
 interface ModalComponent extends React.FC<React.PropsWithChildren<ModalProps>> {
@@ -198,12 +199,39 @@ const Modal: ModalComponent = ({
     modalSize = 'md',
     closingBehavior,
     hasBackdrop = true,
+    overrideModalState = null,
     ...attrs
 }) => {
     const closedBy = modalClosingBehaviorLookup[closingBehavior];
+    const dialogRef = useRef<HTMLDialogElement>(null);
+
+    useEffect(() => {
+        if (overrideModalState === null) {
+            return;
+        }
+
+        switch (overrideModalState) {
+            case 'open':
+                if (dialogRef.current && dialogRef.current.open) {
+                    dialogRef.current?.showModal();
+                }
+                break;
+            case 'request-close':
+                if (dialogRef.current?.open) {
+                    dialogRef.current?.requestClose();
+                }
+                break;
+            case 'force-close':
+                if (dialogRef.current?.open) {
+                    dialogRef.current?.close();
+                }
+                break;
+        }
+    }, [dialogRef, overrideModalState]);
 
     return (
         <dialog
+            ref={dialogRef}
             id={id}
             className={classNames(
                 'tw-preflight tw-fixed tw-mx-auto tw-my-4 tw-min-w-60 tw-border tw-border-solid tw-border-black/10 tw-px-4 open:tw-flex open:tw-flex-col',
