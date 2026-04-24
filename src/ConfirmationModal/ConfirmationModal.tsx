@@ -8,7 +8,7 @@ import React from 'react';
 
 import Modal, { type ModalProps } from '../Modal/Modal';
 
-interface ConfirmationDialogProps extends ModalProps {
+interface ConfirmationModalProps extends ModalProps {
     title?: string;
     headerIcon?: string;
     confirmLabel?: string;
@@ -19,8 +19,8 @@ interface ConfirmationDialogProps extends ModalProps {
     onOptional?: () => void;
 }
 
-export const ConfirmationDialog: React.FC<
-    React.PropsWithChildren<ConfirmationDialogProps>
+export const ConfirmationModal: React.FC<
+    React.PropsWithChildren<ConfirmationModalProps>
 > = ({
     title = 'Confirm',
     id,

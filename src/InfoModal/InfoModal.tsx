@@ -8,12 +8,12 @@ import React, { type ReactNode } from 'react';
 
 import Modal, { type ModalProps } from '../Modal/Modal';
 
-interface InfoDialogProps extends ModalProps {
+interface InfoModalProps extends ModalProps {
     title?: string;
     footer?: ReactNode;
 }
 
-export const InfoDialog: React.FC<React.PropsWithChildren<InfoDialogProps>> = ({
+export const InfoModal: React.FC<React.PropsWithChildren<InfoModalProps>> = ({
     id,
     title = 'Info',
     footer,

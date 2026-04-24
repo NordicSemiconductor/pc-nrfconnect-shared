@@ -7,28 +7,44 @@
 import React, { type ReactNode } from 'react';
 
 import Modal, { type ModalProps } from '../Modal/Modal';
+import classNames from '../utils/classNames';
 
-interface ErrorDetailsProps {
+import styles from './ErrorModal.module.scss';
+
+interface ErrorDetailsProps
+    extends Pick<React.ComponentPropsWithRef<'details'>, 'ref' | 'className'> {
     details: string;
 }
 
-export const ErrorDetails: React.FC<ErrorDetailsProps> = ({ details }) => (
-    <details>
+export const ErrorDetails: React.FC<ErrorDetailsProps> = ({
+    details,
+    ...attrs
+}) => (
+    <details {...attrs}>
         <summary>Show technical details</summary>
-        <pre className="error-details tw-m-1 tw-max-h-40 tw-overflow-y-auto tw-whitespace-pre-wrap">
+        <pre
+            className={classNames(
+                'error-details tw-m-1 tw-max-h-40 tw-overflow-y-auto tw-whitespace-pre-wrap',
+                styles.errorDetails,
+            )}
+        >
             {details}
         </pre>
     </details>
 );
 
-interface ErrorDialogProps extends ModalProps {
+interface ErrorModalProps extends ModalProps {
     title?: string;
     footer?: ReactNode;
 }
 
-export const ErrorDialog: React.FC<
-    React.PropsWithChildren<ErrorDialogProps>
-> = ({ id, title = 'Error', footer, children, ...attrs }) => (
+export const ErrorModal: React.FC<React.PropsWithChildren<ErrorModalProps>> = ({
+    id,
+    title = 'Error',
+    footer,
+    children,
+    ...attrs
+}) => (
     <Modal id={id} {...attrs}>
         <Modal.Header>
             <span className="mdi mdi-alert" />

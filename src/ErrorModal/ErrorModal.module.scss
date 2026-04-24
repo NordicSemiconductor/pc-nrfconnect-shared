@@ -1,0 +1,5 @@
+@use "../../styles.scss" as shared;
+
+.errorDetails {
+    @include shared.scrollbars(shared.$white);
+}
