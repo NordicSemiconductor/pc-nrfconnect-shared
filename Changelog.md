@@ -16,6 +16,7 @@ every new version is a new major version.
   components.
 - Added support for `cardTitleClassName` and `cardSubtitleClassName` on
   `Card.Header.Title`
+- Created `Modal` and `Popover` components to replace `Dialog`s
 
 ### Changed
 
@@ -56,6 +57,63 @@ import { Card } from '@nordicsemiconductor/pc-nrfconnect-shared';
 
 See
 [React 19 upgrade guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide).
+
+#### Migrating modal `Dialog`s
+
+Modal dialogs are dialogs that requires user action, rendering the rest of the
+page's content inert until action is taken.
+
+Previously, the manner a user could close the modal were defined in terms of two
+booleans: `closeOnEsc` and `closeOnUnfocus`. Now, we simply use
+`closingBehavior`.
+
+Follow this conversion table:
+
+| `closeOnEsc` | `closeOnUnfocus` | Equivalent `closingBehavior` |
+| ------------ | ---------------- | ---------------------------- |
+| `true`       | `true`           | `'any'`                      |
+| `true`       | `false`          | `'request'`                  |
+| `false`      | `true`           | N/A                          |
+| `false`      | `false`          | `'manual'`                   |
+
+Follow this format for shared's `Modal` component:
+
+```tsx
+import { Modal } from '@nordicsemiconductor/pc-nrfconnect-shared';
+
+return (
+    <Modal id="your-modal" size="lg" closingBehavior="any">
+        {/* modalId is only required if closeButton is present */}
+        <Modal.Header closeButton modalId="your-modal">
+            <Modal.Header.Title>New Modal</Modal.Header.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <p>
+                This content will automatically have a scrollbar if it goes past
+                the dialog&apos;s limit height.
+            </p>
+        </Modal.Body>
+        <Modal.Footer>
+            <p>Nordic Semi © 2026</p>
+        </Modal.Footer>
+    </Modal>
+);
+```
+
+To open/close the modal, either use `Modal.OpenButton`/`Modal.CloseButton` or
+use React `ref`s to call `showModal()`/`requestClose()` on the `Modal`.
+
+In some places the modals are controlled by Redux's state and control the
+modal's visibility through `isVisible`.
+
+Instead, apply an effect (`useEffect`) on the desired trigger to open/close the
+modal through `showModal()`/`requestClose()`.
+
+If you really want to control the modal's state through a prop, use the
+`overrideModalState` prop.
+
+Modals are by default centered. You can turn off that behavior by setting the
+`center` prop to `false`.
 
 ## 244.0.0 - 2026-01-22
 

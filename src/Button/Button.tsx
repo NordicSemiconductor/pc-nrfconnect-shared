@@ -27,11 +27,15 @@ type PickedButtonProps =
     | 'disabled'
     | 'onClick'
     | 'title';
+//     | 'command'
+//     | 'commandfor';
 
-interface ButtonProps
+export interface ButtonProps
     extends Pick<React.ComponentPropsWithRef<'button'>, PickedButtonProps> {
     variant: ButtonVariants;
     size?: ButtonSize;
+    command?: string;
+    commandfor?: string;
 }
 
 const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
