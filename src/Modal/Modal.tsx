@@ -11,7 +11,7 @@ import classNames from '../utils/classNames';
 
 import styles from './Modal.module.scss';
 
-type ModalHeaderTitleProps = Pick<
+export type ModalHeaderTitleProps = Pick<
     React.ComponentPropsWithRef<'h3'>,
     'ref' | 'className'
 >;
@@ -29,7 +29,7 @@ const ModalHeaderTitle: ModalHeaderTitleComponent = ({
     </h3>
 );
 
-interface ModalHeaderProps
+export interface ModalHeaderProps
     extends Pick<React.ComponentPropsWithRef<'header'>, 'ref' | 'className'> {
     closeButton?: boolean;
     modalId?: string; // Only needed if closeButton is true
@@ -75,7 +75,7 @@ ModalHeader.Title = ModalHeaderTitle;
 
 type ModalBodyComponent = React.FC<React.PropsWithChildren<ModalBodyProps>>;
 
-type ModalBodyProps = Pick<
+export type ModalBodyProps = Pick<
     React.ComponentPropsWithRef<'div'>,
     'ref' | 'className'
 >;
@@ -93,7 +93,7 @@ const ModalBody: ModalBodyComponent = ({ className, children, ...attrs }) => (
     </div>
 );
 
-type ModalFooterProps = Pick<
+export type ModalFooterProps = Pick<
     React.ComponentPropsWithRef<'footer'>,
     'ref' | 'className'
 >;
@@ -154,9 +154,9 @@ const ModalCloseButton: ModalCloseButtonComponent = ({
     </Button>
 );
 
-type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
+export type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
 
-type ModalClosingBehavior = 'manual' | 'request' | 'any';
+export type ModalClosingBehavior = 'manual' | 'request' | 'any';
 
 const modalClosingBehaviorLookup: Record<
     ModalClosingBehavior,
@@ -167,7 +167,7 @@ const modalClosingBehaviorLookup: Record<
     any: 'any',
 };
 
-interface ModalProps
+export interface ModalProps
     extends Pick<
         React.ComponentPropsWithRef<'dialog'>,
         | 'ref'
