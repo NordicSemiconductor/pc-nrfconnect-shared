@@ -172,7 +172,7 @@ export interface ModalProps
         React.ComponentPropsWithRef<'dialog'>,
         | 'ref'
         | 'className'
-        | 'onCancel'
+        // | 'onCancel'
         | 'onClose'
         | 'onMouseEnter'
         | 'onMouseLeave'

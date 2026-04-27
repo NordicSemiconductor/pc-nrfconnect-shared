@@ -12,22 +12,23 @@ interface ConfirmationModalProps extends ModalProps {
     title?: string;
     headerIcon?: string;
     confirmLabel?: string;
-    onConfirm: () => void;
+    onConfirmPrompt: () => void;
     cancelLabel?: string;
-    onCancel?: () => void;
+    onCancelPrompt?: () => void;
     optionalLabel?: string;
     onOptional?: () => void;
 }
 
-export const ConfirmationModal: React.FC<
+const ConfirmationModal: React.FC<
     React.PropsWithChildren<ConfirmationModalProps>
 > = ({
     title = 'Confirm',
+    headerIcon,
     id,
     confirmLabel = 'Confirm',
-    onConfirm,
+    onConfirmPrompt: onConfirm,
     cancelLabel = 'Cancel',
-    onCancel,
+    onCancelPrompt: onCancel,
     optionalLabel,
     onOptional,
     children,
@@ -36,6 +37,7 @@ export const ConfirmationModal: React.FC<
     <Modal id={id} {...attrs}>
         <Modal.Header>
             <Modal.Header.Title>{title}</Modal.Header.Title>
+            {headerIcon && <span className={`mdi mdi-${headerIcon}`} />}
         </Modal.Header>
         <Modal.Body>{children}</Modal.Body>
         <Modal.Footer className="tw-justify-end">
@@ -70,3 +72,5 @@ export const ConfirmationModal: React.FC<
         </Modal.Footer>
     </Modal>
 );
+
+export default ConfirmationModal;

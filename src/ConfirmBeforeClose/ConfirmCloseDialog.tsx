@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useId, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
 
-import { ConfirmationDialog } from '../Dialog/Dialog';
+import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import { type AppDispatch } from '../store';
 import {
     addConfirmBeforeClose,
@@ -57,12 +57,18 @@ export default () => {
         };
     }, [dispatch]);
 
+    const id = `${useId()}-modal`;
+
     return (
-        <ConfirmationDialog
+        <ConfirmationModal
+            id={id}
+            closingBehavior="manual"
             headerIcon="alert-outline"
             title={nextConfirmDialog?.title ?? ''}
-            isVisible={showCloseDialog && !!nextConfirmDialog}
-            onConfirm={() => {
+            overrideModalState={
+                showCloseDialog && !!nextConfirmDialog ? 'open' : 'force-close'
+            }
+            onConfirmPrompt={() => {
                 if (nextConfirmDialog) {
                     setConfirmedDialogs([
                         ...confirmedDialogs,
@@ -71,7 +77,7 @@ export default () => {
                     dispatch(clearConfirmBeforeClose(nextConfirmDialog.id));
                 }
             }}
-            onCancel={() => {
+            onCancelPrompt={() => {
                 getCurrentWindow().emit('restart-cancelled');
                 dispatch(setShowCloseDialog(false));
                 confirmedDialogs.forEach(confirmedDialog =>
@@ -81,6 +87,6 @@ export default () => {
             }}
         >
             {nextConfirmDialog?.message}
-        </ConfirmationDialog>
+        </ConfirmationModal>
     );
 };
