@@ -14,7 +14,7 @@ import { reducer as brokenDeviceDialog } from './Device/BrokenDeviceDialog/broke
 import { reducer as deviceAutoSelect } from './Device/deviceAutoSelectSlice';
 import { reducer as deviceSetup } from './Device/deviceSetupSlice';
 import { reducer as device } from './Device/deviceSlice';
-import { reducer as errorDialog } from './ErrorDialog/errorDialogSlice';
+import { reducer as errorModal } from './ErrorModal/errorModalSlice';
 import { reducer as flashMessages } from './FlashMessage/FlashMessageSlice';
 import { reducer as log } from './Log/logSlice';
 
@@ -30,7 +30,7 @@ export const rootReducerSpec = (appReducer: Reducer = noopReducer) => ({
     deviceSetup,
     deviceAutoSelect,
     brokenDeviceDialog,
-    errorDialog,
+    errorModal,
     log,
     shortcuts,
     flashMessages,

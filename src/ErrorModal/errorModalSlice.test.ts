@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2015 Nordic Semiconductor ASA
+ * Copyright (c) 2026 Nordic Semiconductor ASA
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
 import dispatchTo from '../../test/dispatchTo';
-import { hideDialog, reducer, showDialog } from './errorDialogSlice';
+import { hideModal, reducer, showModal } from './errorModalSlice';
 
 const anErrorMessage = 'An error occurred';
 const anotherErrorMessage = 'Another error occurred';
 
-describe('errorDialogReducer', () => {
+describe('errorModalReducer', () => {
     it('is hidden by default', () => {
         const initialState = dispatchTo(reducer);
 
@@ -19,7 +19,7 @@ describe('errorDialogReducer', () => {
 
     it('shows a message', () => {
         const withAnError = dispatchTo(reducer, [
-            showDialog(anErrorMessage, {}),
+            showModal(anErrorMessage, {}),
         ]);
         expect(withAnError.isVisible).toEqual(true);
         expect(withAnError.messages).toContainEqual({
@@ -29,8 +29,8 @@ describe('errorDialogReducer', () => {
 
     it('shows multiple messages', () => {
         const withTwoErrors = dispatchTo(reducer, [
-            showDialog(anErrorMessage, {}),
-            showDialog(anotherErrorMessage, {}),
+            showModal(anErrorMessage, {}),
+            showModal(anotherErrorMessage, {}),
         ]);
         expect(withTwoErrors.isVisible).toEqual(true);
         expect(withTwoErrors.messages).toContainEqual({
@@ -43,8 +43,8 @@ describe('errorDialogReducer', () => {
 
     it('does not show duplicate messages', () => {
         const withAnError = dispatchTo(reducer, [
-            showDialog(anErrorMessage, {}),
-            showDialog(anErrorMessage, {}),
+            showModal(anErrorMessage, {}),
+            showModal(anErrorMessage, {}),
         ]);
 
         expect(withAnError.messages).toEqual([
@@ -54,8 +54,8 @@ describe('errorDialogReducer', () => {
 
     it('can be hidden and cleared', () => {
         const withAClearedError = dispatchTo(reducer, [
-            showDialog(anErrorMessage, {}),
-            hideDialog(),
+            showModal(anErrorMessage, {}),
+            hideModal(),
         ]);
 
         expect(withAClearedError.isVisible).toEqual(false);

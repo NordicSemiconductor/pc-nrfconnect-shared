@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Nordic Semiconductor ASA
+ * Copyright (c) 2026 Nordic Semiconductor ASA
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
@@ -27,23 +27,23 @@ export interface ErrorMessage {
     detail?: string;
 }
 
-export interface ErrorDialog {
+export interface ErrorModal {
     isVisible: boolean;
     messages: ErrorMessage[];
     errorResolutions?: ErrorResolutions;
 }
 
-const initialState: ErrorDialog = {
+const initialState: ErrorModal = {
     messages: [],
     isVisible: false,
     errorResolutions: undefined,
 };
 
 const slice = createSlice({
-    name: 'errorDialog',
+    name: 'errorModal',
     initialState,
     reducers: {
-        showDialog: {
+        showModal: {
             prepare: (
                 message: string,
                 errorResolutions?: ErrorResolutions,
@@ -65,16 +65,16 @@ const slice = createSlice({
                 state.messages = appendIfNew(state.messages, error.message);
             },
         },
-        hideDialog: () => initialState,
+        hideModal: () => initialState,
     },
 });
 
 export const {
     reducer,
-    actions: { hideDialog, showDialog },
+    actions: { hideModal, showModal },
 } = slice;
 
-export const isVisible = (state: RootState) => state.errorDialog.isVisible;
-export const messages = (state: RootState) => state.errorDialog.messages;
+export const isVisible = (state: RootState) => state.errorModal.isVisible;
+export const messages = (state: RootState) => state.errorModal.messages;
 export const errorResolutions = (state: RootState) =>
-    state.errorDialog.errorResolutions;
+    state.errorModal.errorResolutions;
