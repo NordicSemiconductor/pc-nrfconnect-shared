@@ -4,12 +4,13 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useId, useMemo, useState } from 'react';
 
-import { DialogButton, GenericDialog } from '../Dialog/Dialog';
 import Dropdown, { type DropdownItem } from '../Dropdown/Dropdown';
 import logger from '../logging';
 import describeError from '../logging/describeError';
+import Modal from '../Modal/Modal';
+import Spinner from '../Spinner/Spinner';
 import AboutButton from './AboutButton';
 import sendFeedback from './sendFeedback';
 
@@ -50,86 +51,101 @@ const FeedbackDialog = ({
         onHide();
     };
 
+    const id = `${useId()}-modal`;
+
     return (
-        <GenericDialog
-            isVisible={isVisible}
-            onHide={onClose}
-            closeOnUnfocus
-            title="Feedback"
-            showSpinner={sendingFeedback}
-            footer={
-                <>
-                    {!sayThankYou && (
-                        <DialogButton
-                            variant="primary"
-                            onClick={() => {
-                                setSendingFeedback(true);
-                                handleFormData(
-                                    feedback,
-                                    setSayThankYou,
-                                    selectedCategory?.value,
-                                ).then(() => setSendingFeedback(false));
-                            }}
-                            disabled={feedback === '' || sendingFeedback}
-                        >
-                            Send feedback
-                        </DialogButton>
-                    )}
-                    <DialogButton onClick={onClose}>Close</DialogButton>
-                </>
-            }
+        <Modal
+            id={id}
+            overrideModalState={isVisible ? 'open' : 'force-close'}
+            closingBehavior="any"
+            onClose={onClose}
         >
-            <div className="tw-flex tw-flex-col tw-items-start tw-justify-center tw-bg-white">
-                {sayThankYou ? (
-                    <>
-                        <b className="tw-mb-3">Thank you!</b>
-                        <p>
-                            Thank you for providing feedback about how to
-                            improve nRF Connect for Desktop applications.
-                        </p>
-                    </>
-                ) : (
-                    <>
-                        <p>
-                            We value your feedback and any ideas you may have
-                            for improving nRF Connect for Desktop applications.
-                            Use the form below.
-                        </p>
-                        <p>
-                            We only collect the following information when you
-                            send feedback:
-                        </p>
-                        <ul className="tw-list-disc tw-pl-8">
-                            <li>Application name</li>
-                            <li>Your feedback</li>
-                            <li>Operating system</li>
-                        </ul>
-                        <form className="tw-flex tw-w-full tw-flex-col tw-gap-4">
-                            {categoryItems?.length && (
-                                <div className="tw-w-52">
-                                    <Dropdown
-                                        items={categoryItems}
-                                        onSelect={setSelectedCategory}
-                                        selectedItem={
-                                            selectedCategory || categoryItems[0]
+            <Modal.Header>
+                <Modal.Header.Title>Feedback</Modal.Header.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <div className="tw-flex tw-flex-col tw-items-start tw-justify-center tw-bg-white">
+                    {sayThankYou ? (
+                        <>
+                            <b className="tw-mb-3">Thank you!</b>
+                            <p>
+                                Thank you for providing feedback about how to
+                                improve nRF Connect for Desktop applications.
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <p>
+                                We value your feedback and any ideas you may
+                                have for improving nRF Connect for Desktop
+                                applications. Use the form below.
+                            </p>
+                            <p>
+                                We only collect the following information when
+                                you send feedback:
+                            </p>
+                            <ul className="tw-list-disc tw-pl-8">
+                                <li>Application name</li>
+                                <li>Your feedback</li>
+                                <li>Operating system</li>
+                            </ul>
+                            <form className="tw-flex tw-w-full tw-flex-col tw-gap-4">
+                                {categoryItems?.length && (
+                                    <div className="tw-w-52">
+                                        <Dropdown
+                                            items={categoryItems}
+                                            onSelect={setSelectedCategory}
+                                            selectedItem={
+                                                selectedCategory ||
+                                                categoryItems[0]
+                                            }
+                                        />
+                                    </div>
+                                )}
+                                <div className="tw-pt-4">
+                                    <textarea
+                                        name="feedback-text"
+                                        className="tw-h-32 tw-w-full tw-border tw-border-gray-700 tw-p-2"
+                                        required
+                                        value={feedback}
+                                        onChange={e =>
+                                            setFeedback(e.target.value)
                                         }
                                     />
                                 </div>
-                            )}
-                            <div className="tw-pt-4">
-                                <textarea
-                                    name="feedback-text"
-                                    className="tw-h-32 tw-w-full tw-border tw-border-gray-700 tw-p-2"
-                                    required
-                                    value={feedback}
-                                    onChange={e => setFeedback(e.target.value)}
-                                />
-                            </div>
-                        </form>
-                    </>
+                            </form>
+                        </>
+                    )}
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
+                {!sayThankYou && (
+                    <Modal.CloseButton
+                        variant="primary"
+                        size="lg"
+                        modalId={id}
+                        onClick={() => {
+                            setSendingFeedback(true);
+                            handleFormData(
+                                feedback,
+                                setSayThankYou,
+                                selectedCategory?.value,
+                            ).then(() => setSendingFeedback(false));
+                        }}
+                        disabled={feedback === '' || sendingFeedback}
+                    >
+                        {sendingFeedback ? (
+                            <Spinner size="lg" />
+                        ) : (
+                            'Send feedback'
+                        )}
+                    </Modal.CloseButton>
                 )}
-            </div>
-        </GenericDialog>
+                <Modal.CloseButton variant="secondary" size="lg" modalId={id}>
+                    Close
+                </Modal.CloseButton>
+            </Modal.Footer>
+        </Modal>
     );
 };
 
