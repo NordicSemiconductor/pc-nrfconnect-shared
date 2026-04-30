@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React from 'react';
+import React, { useId } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { ErrorDialog } from '../../Dialog/Dialog';
+import { ErrorModalBase } from '../../ErrorModal/ErrorModal';
 import {
     brokenDeviceSelector,
     hideDialog,
@@ -22,17 +22,21 @@ const BrokenDeviceDialog = () => {
     const isVisible = useSelector(isVisibleSelector);
     const { description, url } = useSelector(brokenDeviceSelector);
 
+    const id = `${useId()}-modal`;
+
     return (
-        <ErrorDialog
-            isVisible={isVisible}
-            onHide={() => dispatch(hideDialog())}
+        <ErrorModalBase
+            id={id}
+            closingBehavior="request"
+            overrideModalState={isVisible ? 'open' : 'force-close'}
+            onClose={() => dispatch(hideDialog())}
             title="Unusable device"
         >
             <p>{description}</p>
             <a target="_blank" rel="noreferrer" href={url}>
                 {url}
             </a>
-        </ErrorDialog>
+        </ErrorModalBase>
     );
 };
 

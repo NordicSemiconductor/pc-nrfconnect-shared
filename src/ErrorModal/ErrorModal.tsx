@@ -96,7 +96,7 @@ type ErrorModalProps = Omit<
     'closingBehavior' | 'onClose' | 'onCancel'
 >;
 
-export const ErrorModal: React.FC<ErrorModalProps> = ({ id, ...attrs }) => {
+const ErrorModal: React.FC<ErrorModalProps> = ({ id, ...attrs }) => {
     const dispatch = useDispatch();
 
     const isVisible = useSelector(isVisibleSelector);
@@ -139,3 +139,5 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({ id, ...attrs }) => {
         </ErrorModalBase>
     );
 };
+
+export default ErrorModal;
