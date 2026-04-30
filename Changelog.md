@@ -29,6 +29,14 @@ every new version is a new major version.
 
 ### Steps to upgrade when using this package
 
+#### Electron 41
+
+Check the
+[Electron 41 changelog](https://www.electronjs.org/blog/electron-41-0).
+
+Moreover, the `engines.nrfconnect` entry in the `package.json` of apps must be
+at least `>=5.4.0`.
+
 #### Migrating the `Card` component
 
 The `title` and `titleButton` are no longer available on `Card`, and the overall
@@ -38,14 +46,12 @@ structure of `Card` changed. Follow this format:
 import { Card } from '@nordicsemiconductor/pc-nrfconnect-shared';
 
 <Card>
-  <Card.Header className="tw-flex tw-flex-row tw-justify-between">
-    <Card.Header.Title cardTitle="your title here" />
-    { /* your button here */ }
-  </Card.Header>
-  <Card.Body>
-    { /* your card content here */ }
-  </Card.Body>
-</Card>
+    <Card.Header className="tw-flex tw-flex-row tw-justify-between">
+        <Card.Header.Title cardTitle="your title here" />
+        {/* your button here */}
+    </Card.Header>
+    <Card.Body>{/* your card content here */}</Card.Body>
+</Card>;
 ```
 
 ## 244.0.0 - 2026-01-22
