@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { type FC } from 'react';
+import React from 'react';
 
 import Button from '../Button/Button';
 import { openUrl } from '../utils/open';
@@ -15,7 +15,7 @@ interface Props {
     label: string;
 }
 
-const AboutButton: FC<Props> = ({ url, label, onClick }) => (
+const AboutButton: React.FC<Props> = ({ url, label, onClick }) => (
     <Button
         disabled={!url && !onClick}
         onClick={onClick || (() => openUrl(url as string))}

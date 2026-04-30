@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NrfutilDeviceLib } from '../../../nrfutil/device';
 import { type DeviceTraits } from '../../../nrfutil/device/common';
 import logger from '../../logging';
+import { type AppDispatch } from '../../store';
 import simplifyDevice from '../../telemetry/simplifyDevice';
 import telemetry from '../../telemetry/telemetry';
 import useHotKey from '../../utils/useHotKey';
@@ -74,7 +75,7 @@ export default ({
     onVirtualDeviceSelected = noop,
     onVirtualDeviceDeselected = noop,
 }: Props) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const [deviceListVisible, setDeviceListVisible] = useState(false);
 
     const deviceIsSelected = useSelector(deviceIsSelectedSelector);
@@ -83,7 +84,7 @@ export default ({
     const showSelectedDevice = deviceIsSelected || waitingToAutoReconnect;
     const virtualDeviceSelected = useSelector(selectedVirtualDevice);
 
-    const abortController = useRef<AbortController>();
+    const abortController = useRef<AbortController>(null);
 
     const doDeselectDevice = useCallback(
         (device?: Device) => {

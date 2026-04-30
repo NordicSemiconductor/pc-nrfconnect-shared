@@ -17,9 +17,7 @@ module.exports = (disabledMocks = []) => ({
         '^electron$': `${mockDir}/electronMock.ts`,
         '^electron-store$': `${mockDir}/electronStoreMock.ts`,
         '@electron/remote': `${mockDir}/remoteMock.ts`,
-        'react-markdown': require.resolve(
-            'react-markdown/react-markdown.min.js',
-        ),
+        '^react-markdown$': `${mockDir}/reactMarkdownMock.tsx`,
         ...(disabledMocks.includes('packageJson')
             ? {}
             : {
@@ -33,7 +31,7 @@ module.exports = (disabledMocks = []) => ({
         '^.+\\.[jt]sx?$': '@swc/jest',
     },
     transformIgnorePatterns: [
-        'node_modules/(?!(@nordicsemiconductor/pc-nrfconnect-shared)/)',
+        'node_modules/(?!(@nordicsemiconductor/pc-nrfconnect-shared|react-resize-detector)/)',
     ],
     setupFilesAfterEnv: [`${__dirname}/../test/setupTests.ts`],
     resolver: `${__dirname}/../test/jestResolver.js`,

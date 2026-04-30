@@ -26,6 +26,12 @@ every new version is a new major version.
 - Upgraded `electron` to Electron 41, which packs Chromium 146 and Node 24.
   Electron packing Chromium 146 allows for usage of the Popover API, dialogs,
   position anchoring, and more.
+- Upgraded React to `19.2.4`, which in turn upgraded `@types/react` to
+  `19.2.14`, `@types/react-dom` to `19.2.3`, `@types/react-redux` to `7.1.34`,
+  `react-bootstrap` to `2.10.10`, `react-dom` to `19.2.4`, `react-markdown` to
+  `10.1.10`, `react-redux` to `9.2.0`, `react-resize-detector` to `12.3.0`,
+  `react-test-renderer` to `19.2.4`, `@testing-library/react` to `16.3.2`,
+  `redux` to `5.0.1`, `redux-thunk` to `3.1.0`, `@reduxjs/toolkit` to `2.11.2`.
 
 ### Steps to upgrade when using this package
 
@@ -53,6 +59,11 @@ import { Card } from '@nordicsemiconductor/pc-nrfconnect-shared';
     <Card.Body>{/* your card content here */}</Card.Body>
 </Card>;
 ```
+
+#### Migrating to React 19
+
+See
+[React 19 upgrade guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide).
 
 ## 244.0.0 - 2026-01-22
 

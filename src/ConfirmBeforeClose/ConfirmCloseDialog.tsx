@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
 
 import { ConfirmationDialog } from '../Dialog/Dialog';
-import { type AppThunk } from '../store';
+import { type AppDispatch } from '../store';
 import {
     addConfirmBeforeClose,
     clearConfirmBeforeClose,
@@ -20,7 +20,7 @@ import {
 } from './confirmBeforeCloseSlice';
 
 export default () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const [confirmedDialogs, setConfirmedDialogs] = useState<
         ConfirmBeforeCloseApp[]
     >([]);
@@ -40,7 +40,7 @@ export default () => {
 
     useEffect(() => {
         const action = (ev: BeforeUnloadEvent) =>
-            dispatch<AppThunk>((_, getState) => {
+            dispatch((_, getState) => {
                 const hasToGetExplicitConform =
                     getState().confirmBeforeCloseDialog.confirmCloseApp.length >
                     0;

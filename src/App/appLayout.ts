@@ -4,7 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import {
+    createSelector,
+    createSlice,
+    type PayloadAction,
+} from '@reduxjs/toolkit';
 
 import type { RootState } from '../store';
 import {
@@ -165,7 +169,10 @@ export const {
 export const isSidePanelVisible = (state: RootState) =>
     state.appLayout.isSidePanelVisible;
 export const isLogVisible = (state: RootState) => state.appLayout.isLogVisible;
-export const panes = (state: RootState) =>
-    state.appLayout.panes.filter(p => !p.hidden);
+export const panes = (state: RootState) => state.appLayout.panes;
 
 export const currentPane = ({ appLayout }: RootState) => appLayout.currentPane;
+
+export const visiblePanes = createSelector([panes], allPanes =>
+    allPanes.filter(p => !p.hidden),
+);

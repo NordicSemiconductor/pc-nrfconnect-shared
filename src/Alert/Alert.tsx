@@ -17,7 +17,7 @@ export interface AlertProps {
     onClose?: () => void;
 }
 
-export const Alert: React.FC<AlertProps> = ({
+export const Alert: React.FC<React.PropsWithChildren<AlertProps>> = ({
     children,
     label,
     variant,

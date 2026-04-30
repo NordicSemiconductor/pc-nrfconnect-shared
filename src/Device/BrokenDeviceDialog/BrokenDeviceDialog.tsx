@@ -9,8 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { ErrorDialog } from '../../Dialog/Dialog';
 import {
+    brokenDeviceSelector,
     hideDialog,
-    info as infoSelector,
     isVisible as isVisibleSelector,
 } from './brokenDeviceDialogSlice';
 
@@ -20,7 +20,7 @@ const BrokenDeviceDialog = () => {
     const dispatch = useDispatch();
 
     const isVisible = useSelector(isVisibleSelector);
-    const { description, url } = useSelector(infoSelector);
+    const { description, url } = useSelector(brokenDeviceSelector);
 
     return (
         <ErrorDialog

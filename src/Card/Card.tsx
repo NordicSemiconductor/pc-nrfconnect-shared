@@ -53,7 +53,8 @@ type CardHeaderProps = Pick<
     PickedCardHeaderProps
 >;
 
-interface CardHeaderComponent extends React.FC<CardHeaderProps> {
+interface CardHeaderComponent
+    extends React.FC<React.PropsWithChildren<CardHeaderProps>> {
     Title: CardTitleComponent;
 }
 
@@ -78,7 +79,7 @@ type CardBodyProps = Pick<
     PickedCardBodyProps
 >;
 
-type CardBodyComponent = React.FC<CardBodyProps>;
+type CardBodyComponent = React.FC<React.PropsWithChildren<CardBodyProps>>;
 
 const CardBody: CardBodyComponent = ({ className, children, ...attrs }) => (
     <div className={classNames('tw-flex tw-flex-col', className)} {...attrs}>
@@ -90,7 +91,7 @@ type PickedCardProps = 'ref' | 'className';
 
 type CardProps = Pick<React.ComponentPropsWithRef<'article'>, PickedCardProps>;
 
-interface CardComponent extends React.FC<CardProps> {
+interface CardComponent extends React.FC<React.PropsWithChildren<CardProps>> {
     Header: CardHeaderComponent;
     Body: CardBodyComponent;
 }

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import React, { type FC } from 'react';
+import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { useSelector } from 'react-redux';
 
@@ -18,7 +18,7 @@ export interface Props {
     onCancel: () => void;
 }
 
-const ShortcutModal: FC<Props> = ({ isVisible, onCancel }) => {
+const ShortcutModal: React.FC<Props> = ({ isVisible, onCancel }) => {
     const local = useSelector(localShortcuts);
     const global = useSelector(globalShortcuts);
 

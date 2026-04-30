@@ -4,7 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import {
+    createSelector,
+    createSlice,
+    type PayloadAction,
+} from '@reduxjs/toolkit';
 import { enableMapSet } from 'immer';
 
 import type { RootState } from '../store';
@@ -35,18 +39,22 @@ const slice = createSlice({
     },
 });
 
-export const {
-    reducer,
-    actions: { addShortcut, removeShortcut },
-} = slice;
+export const shortcutsSelector = (state: RootState) => state.shortcuts;
 
 const sortedShortcuts = (shortcuts: Iterable<Shortcut>, global: boolean) =>
     Array.from(shortcuts)
         .filter(shortcut => shortcut.isGlobal === global)
         .sort((s1, s2) => s1.title.localeCompare(s2.title));
 
-export const globalShortcuts = (state: RootState) =>
-    sortedShortcuts(state.shortcuts, true);
+export const localShortcuts = createSelector([shortcutsSelector], shortcuts =>
+    sortedShortcuts(shortcuts, false),
+);
 
-export const localShortcuts = (state: RootState) =>
-    sortedShortcuts(state.shortcuts, false);
+export const globalShortcuts = createSelector([shortcutsSelector], shortcuts =>
+    sortedShortcuts(shortcuts, true),
+);
+
+export const {
+    reducer,
+    actions: { addShortcut, removeShortcut },
+} = slice;

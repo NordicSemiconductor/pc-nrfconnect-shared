@@ -16,6 +16,7 @@ import {
     selectedSerialNumber,
 } from '../Device/deviceSlice';
 import { isLoggingVerbose, setIsLoggingVerbose } from '../Log/logSlice';
+import { type AppDispatch } from '../store';
 import { Toggle } from '../Toggle/Toggle';
 import { doNotResetVerboseLogginOnRestart } from '../utils/persistentStore';
 import systemReport from '../utils/systemReport';
@@ -29,7 +30,7 @@ export interface SupportCardProps {
 }
 
 export default ({ feedbackCategories, className }: SupportCardProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const devices = useSelector(getDevices);
     const currentSerialNumber = useSelector(selectedSerialNumber);
     const verboseLogging = useSelector(isLoggingVerbose);
