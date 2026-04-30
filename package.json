@@ -59,7 +59,7 @@
         "bootstrap": "4.6.2",
         "commander": "10.0.0",
         "date-fns": "2.29.3",
-        "electron": "^32.1.2",
+        "electron": "^41.0.2",
         "electron-store": "8.1.0",
         "esbuild": "^0.27.2",
         "esbuild-sass-plugin": "^3.6.0",

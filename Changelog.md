@@ -36,8 +36,19 @@ every new version is a new major version.
   height with usual spacing units instead of screen sizes.
 - Refactored `Card` component to remove dependency on bootstrap and to allow for
   more flexibility.
+- Upgraded `electron` to Electron 41, which packs Chromium 146 and Node 24.
+  Electron packing Chromium 146 allows for usage of the Popover API, dialogs,
+  position anchoring, and more.
 
 ### Steps to upgrade when using this package
+
+#### Electron 41
+
+Check the
+[Electron 41 changelog](https://www.electronjs.org/blog/electron-41-0).
+
+Moreover, the `engines.nrfconnect` entry in the `package.json` of apps must be
+at least `>=5.4.0`.
 
 #### Migrating the `Card` component
 
@@ -48,14 +59,12 @@ structure of `Card` changed. Follow this format:
 import { Card } from '@nordicsemiconductor/pc-nrfconnect-shared';
 
 <Card>
-  <Card.Header className="tw-flex tw-flex-row tw-justify-between">
-    <Card.Header.Title cardTitle="your title here" />
-    { /* your button here */ }
-  </Card.Header>
-  <Card.Body>
-    { /* your card content here */ }
-  </Card.Body>
-</Card>
+    <Card.Header className="tw-flex tw-flex-row tw-justify-between">
+        <Card.Header.Title cardTitle="your title here" />
+        {/* your button here */}
+    </Card.Header>
+    <Card.Body>{/* your card content here */}</Card.Body>
+</Card>;
 ```
 
 ## 244.0.0 - 2026-01-22
