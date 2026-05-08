@@ -9,6 +9,8 @@ on:
                 type: boolean
             node_version:
                 type: number
+        secrets:
+            GH_PACKAGES_TOKEN:
         outputs:
             version:
                 value: ${{ jobs.build.outputs.version }}
@@ -33,6 +35,9 @@ jobs:
               with:
                   node-version: ${{ inputs.node_version || 22 }}
                   cache: 'npm'
+                  token: ${{ secrets.GH_PACKAGES_TOKEN }}
+                  registry-url: ${{ secrets.GH_PACKAGES_TOKEN && 'https://npm.pkg.github.com' || '' }}
+                  scope: non-existent # it caused problems, if this is was '@nordicsemiconductor' and may again cause problems if we start having packages as '@nordicsemi'
             - run: npm ci
             - run: npm run check
             - run: npm test

@@ -14,7 +14,7 @@ on:
                 type: string
         secrets:
             COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND:
-                required: false
+            GH_PACKAGES_TOKEN:
 
 env:
     ARTIFACT_NAME: ${{ github.event.repository.name }}
@@ -26,6 +26,7 @@ jobs:
             ref: ${{ inputs.ref }}
             force_pack: true
             node_version: ${{ inputs.node_version }}
+        secrets: inherit
 
     release:
         runs-on: ubuntu-latest
