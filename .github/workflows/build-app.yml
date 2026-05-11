@@ -31,14 +31,23 @@ jobs:
             - uses: actions/checkout@v4
               with:
                   ref: ${{ inputs.ref }}
-            - uses: actions/setup-node@v4
+            - uses: actions/setup-node@v6.4.0
               with:
                   node-version: ${{ inputs.node_version || 22 }}
                   cache: 'npm'
-                  token: ${{ secrets.GH_PACKAGES_TOKEN }}
-                  registry-url: ${{ secrets.GH_PACKAGES_TOKEN && 'https://npm.pkg.github.com' || '' }}
-                  scope: non-existent # it caused problems, if this is was '@nordicsemiconductor' and may again cause problems if we start having packages as '@nordicsemi'
-            - run: npm ci
+            - name: Install dependencies
+              env:
+                  GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+              run: |
+                  if [ -n "$GH_PACKAGES_TOKEN" ]; then
+                      cleanup() {
+                          npm config delete "//npm.pkg.github.com/:_authToken" --location=user || true
+                      }
+                      trap cleanup EXIT
+                      npm config set "//npm.pkg.github.com/:_authToken=$GH_PACKAGES_TOKEN" --location=user
+                  fi
+
+                  npm ci
             - run: npm run check
             - run: npm test
             - run: npm run build:prod
