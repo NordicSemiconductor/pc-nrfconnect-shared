@@ -17,6 +17,7 @@ import {
     getNextConfirmDialog,
     getShowConfirmCloseDialog,
     onUserConfirmAll,
+    setActionOnAllComplete,
     setShowCloseDialog,
 } from './confirmBeforeCloseSlice';
 
@@ -79,6 +80,7 @@ export default () => {
                     dispatch(addConfirmBeforeClose(confirmedDialog)),
                 );
                 setConfirmedDialogs([]);
+                dispatch(setActionOnAllComplete('close'));
             }}
         >
             {nextConfirmDialog?.message}

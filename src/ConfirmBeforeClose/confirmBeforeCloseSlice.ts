@@ -69,7 +69,7 @@ const slice = createSlice({
         setShowCloseDialog(state, action: PayloadAction<boolean>) {
             state.showCloseDialog = action.payload;
         },
-        setActionOnAllCompelte(state, action: PayloadAction<OnCompleteAction>) {
+        setActionOnAllComplete(state, action: PayloadAction<OnCompleteAction>) {
             state.actionOnAllComplete = action.payload;
         },
     },
@@ -81,7 +81,7 @@ export const {
         addConfirmBeforeClose,
         setShowCloseDialog,
         clearConfirmBeforeClose,
-        setActionOnAllCompelte,
+        setActionOnAllComplete,
     },
 } = slice;
 
