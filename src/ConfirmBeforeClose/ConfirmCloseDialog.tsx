@@ -16,6 +16,7 @@ import {
     type ConfirmBeforeCloseApp,
     getNextConfirmDialog,
     getShowConfirmCloseDialog,
+    onUserConfirmAll,
     setShowCloseDialog,
 } from './confirmBeforeCloseSlice';
 
@@ -34,7 +35,7 @@ export default () => {
                 if (confirmedDialog.onClose) confirmedDialog.onClose();
             });
             setConfirmedDialogs([]);
-            getCurrentWindow().close();
+            dispatch(onUserConfirmAll());
         }
     }, [nextConfirmDialog, dispatch, showCloseDialog, confirmedDialogs]);
 
