@@ -82,6 +82,9 @@ export const getNextConfirmDialog = (state: RootState) =>
         ? state.confirmBeforeCloseDialog.confirmCloseApp[0]
         : undefined;
 
+export const hasCloseCriticalNextConfirmDialog = (state: RootState) =>
+    !!state.confirmBeforeCloseDialog.confirmCloseApp.length;
+
 export const getShowConfirmCloseDialog = (state: RootState) =>
     state.confirmBeforeCloseDialog.showCloseDialog;
 

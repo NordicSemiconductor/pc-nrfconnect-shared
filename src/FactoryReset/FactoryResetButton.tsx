@@ -5,9 +5,11 @@
  */
 
 import React, { type FC, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { getCurrentWindow } from '@electron/remote';
 
 import Button, { type ButtonVariants } from '../Button/Button';
+import { hasCloseCriticalNextConfirmDialog } from '../ConfirmBeforeClose/confirmBeforeCloseSlice';
 import { Dialog, DialogButton } from '../Dialog/Dialog';
 import logger from '../logging';
 import { getAppSpecificStore as store } from '../utils/persistentStore';
@@ -33,6 +35,7 @@ const FactoryResetButton: FC<Props> = ({
     large = false,
 }) => {
     const [showDialog, setShowDialog] = useState(false);
+    const unableToReload = useSelector(hasCloseCriticalNextConfirmDialog);
     useRef(); // showdialog
     const defaultResetFn = () => {
         store().clear();
@@ -47,6 +50,12 @@ const FactoryResetButton: FC<Props> = ({
                 variant={variant}
                 onClick={() => setShowDialog(true)}
                 className={classNames}
+                disabled={unableToReload}
+                title={
+                    unableToReload
+                        ? 'Application is currently running some task that prevents it from reloading.'
+                        : undefined
+                }
             >
                 {label}
             </Button>
